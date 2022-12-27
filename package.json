@@ -23,11 +23,14 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^4.13.0",
+    "@rainbow-me/rainbowkit": "^0.8.1",
     "@walletconnect/sign-client": "^2.1.5",
     "@web3modal/standalone": "^2.0.0-rc.1",
     "ajv": "^8.11.2",
     "arweave": "^1.11.8",
     "dotbit": "^0.4.13",
-    "swr": "^2.0.0"
+    "ethers": "^5.7.2",
+    "swr": "^2.0.0",
+    "wagmi": "^0.9.5"
   }
 }

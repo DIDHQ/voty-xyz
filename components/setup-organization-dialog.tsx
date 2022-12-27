@@ -1,8 +1,8 @@
 import { Button, DialogStep, MultistepDialog } from '@blueprintjs/core'
-import { createInstance } from 'dotbit'
+import { CoinType, createInstance } from 'dotbit'
 import { useState } from 'react'
 import useSWR from 'swr'
-import useWallet from '../hooks/use-wallet'
+import { useAccount } from 'wagmi'
 
 const dotbit = createInstance()
 
@@ -33,13 +33,13 @@ function SelectBitPanel(props: {
   value: string
   onChange(value: string): void
 }) {
-  const wallet = useWallet()
+  const account = useAccount()
   const { data: accounts } = useSWR(
-    wallet.address ? ['accounts', wallet.address, wallet.coinType] : null,
+    account.address ? ['accounts', account.address] : null,
     () => {
       return dotbit.accountsOfOwner({
-        key: wallet.address,
-        coin_type: wallet.coinType,
+        key: account.address!,
+        coin_type: CoinType.ETH,
       })
     },
   )
