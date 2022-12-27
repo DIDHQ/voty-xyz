@@ -5,10 +5,13 @@ import {
   DialogStepId,
   FormGroup,
   InputGroup,
+  Intent,
   MultistepDialog,
+  NonIdealState,
   Radio,
   RadioGroup,
   TextArea,
+  Toaster,
 } from '@blueprintjs/core'
 import { CoinType, createInstance } from 'dotbit'
 import { useCallback, useEffect, useState } from 'react'
@@ -20,37 +23,76 @@ import {
 } from 'react-hook-form'
 import useSWR from 'swr'
 import { useAccount } from 'wagmi'
+import useAsync from '../hooks/use-async'
+import { Organization } from '../src/schemas'
 import AvatarUploader from './avatar-uploader'
 
 const dotbit = createInstance()
 
+const toaster = Toaster.create()
+
 export default function SetupOrganizationDialog() {
   const [isOpen, setIsOpen] = useState(false)
-  const [did, setDid] = useState('')
-  const methods = useForm<Profile>()
+  const methods = useForm<Organization>()
   const [stepId, setStepId] = useState<DialogStepId>('')
-  const onSubmit = useCallback((data: Profile) => {
-    console.log(data)
-    setIsOpen(false)
-  }, [])
+  const handleSubmit = useAsync(
+    useCallback(async (data: Organization) => {
+      const response = await fetch('/api/setup-organization', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      const text = await response.text()
+      if (!response.ok) {
+        throw new Error(text)
+      }
+      return text
+    }, []),
+  )
   useEffect(() => {
     setStepId('did')
   }, [isOpen])
+  useEffect(() => {
+    if (handleSubmit.status === 'success') {
+      setIsOpen(false)
+    }
+  }, [handleSubmit.status])
+  useEffect(() => {
+    if (handleSubmit.value) {
+      toaster.show({
+        intent: Intent.SUCCESS,
+        message: handleSubmit.value,
+      })
+    }
+  }, [handleSubmit.value])
+  useEffect(() => {
+    if (handleSubmit.error) {
+      toaster.show({
+        intent: Intent.DANGER,
+        message: handleSubmit.error.message,
+      })
+    }
+  }, [handleSubmit.error])
 
   return (
     <>
       <Button onClick={() => setIsOpen(true)}>Setup Organization</Button>
       <MultistepDialog
-        title="Setup Organization"
+        title={
+          methods.watch('organization')
+            ? `Setup Organization for ${methods.watch('organization')}`
+            : 'Setup Organization'
+        }
         icon="settings"
         nextButtonProps={{
           disabled: {
-            did: !did,
-            profile: !methods.watch('name'),
+            did: !methods.watch('organization'),
+            profile: !methods.watch('profile.name'),
           }[stepId],
         }}
         finalButtonProps={{
-          onClick: methods.handleSubmit(onSubmit),
+          loading: handleSubmit.status === 'pending',
+          onClick: methods.handleSubmit(handleSubmit.execute),
         }}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
@@ -60,14 +102,18 @@ export default function SetupOrganizationDialog() {
         <DialogStep
           id="did"
           title="Choose DID"
-          panel={<ChooseDidPanel value={did} onChange={setDid} />}
+          panel={
+            <FormProvider {...methods}>
+              <ChooseDidPanel />
+            </FormProvider>
+          }
         />
         <DialogStep
           id="profile"
           title="Profile"
           panel={
             <FormProvider {...methods}>
-              <ProfilePanel did={did} />
+              <ProfilePanel />
             </FormProvider>
           }
         />
@@ -82,10 +128,8 @@ export default function SetupOrganizationDialog() {
   )
 }
 
-function ChooseDidPanel(props: {
-  value: string
-  onChange(value: string): void
-}) {
+function ChooseDidPanel() {
+  const { setValue, watch } = useFormContext<Organization>()
   const account = useAccount()
   const { data: accounts } = useSWR(
     account.address ? ['accounts', account.address] : null,
@@ -102,8 +146,8 @@ function ChooseDidPanel(props: {
       <RadioGroup
         label="Choose one of your DIDs as organization id."
         inline
-        selectedValue={props.value}
-        onChange={(e) => props.onChange(e.currentTarget.value)}
+        selectedValue={watch('organization')}
+        onChange={(e) => setValue('organization', e.currentTarget.value)}
       >
         {accounts?.map((account) => (
           <Radio key={account.account} value={account.account}>
@@ -115,38 +159,37 @@ function ChooseDidPanel(props: {
   )
 }
 
-type Profile = {
-  avatar: string
-  name: string
-  about: string
-  website: string
-  tos: string
-}
-
-function ProfilePanel(props: { did: string }) {
-  const { register } = useFormContext<Profile>()
+function ProfilePanel() {
+  const { register, setValue, watch } = useFormContext<Organization>()
 
   return (
     <div className={Classes.DIALOG_BODY}>
       <FormGroup label="Avatar">
-        <AvatarUploader did={props.did} {...wrapRegister(register('avatar'))} />
+        <AvatarUploader
+          did={watch('organization')}
+          onChange={(v) =>
+            setValue('profile.avatar', Buffer.from(v).toString('base64'))
+          }
+        />
       </FormGroup>
       <FormGroup label="Name" labelInfo="(Required)">
-        <InputGroup {...wrapRegister(register('name', { required: true }))} />
+        <InputGroup
+          {...wrapRegister(register('profile.name', { required: true }))}
+        />
       </FormGroup>
       <FormGroup label="About">
-        <TextArea fill {...wrapRegister(register('about'))} />
+        <TextArea fill {...wrapRegister(register('profile.about'))} />
       </FormGroup>
       <FormGroup label="Website">
         <InputGroup
           leftIcon="globe-network"
-          {...wrapRegister(register('website'))}
+          {...wrapRegister(register('profile.website'))}
         />
       </FormGroup>
       <FormGroup label="Terms of service">
         <InputGroup
           leftIcon="globe-network"
-          {...wrapRegister(register('tos'))}
+          {...wrapRegister(register('profile.tos'))}
         />
       </FormGroup>
     </div>
@@ -154,11 +197,19 @@ function ProfilePanel(props: { did: string }) {
 }
 
 function ProposersPanel(props: {}) {
-  return null
+  return (
+    <div className={Classes.DIALOG_BODY}>
+      <NonIdealState title="WIP" icon="build" />
+    </div>
+  )
 }
 
 function VotersPanel(props: {}) {
-  return null
+  return (
+    <div className={Classes.DIALOG_BODY}>
+      <NonIdealState title="WIP" icon="build" />
+    </div>
+  )
 }
 
 function wrapRegister<T>(value: UseFormRegisterReturn) {
