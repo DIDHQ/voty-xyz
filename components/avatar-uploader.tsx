@@ -1,34 +1,41 @@
 /* eslint-disable @next/next/no-img-element */
 
 import Avatar from 'boring-avatars'
-import { useRef } from 'react'
+import { forwardRef, InputHTMLAttributes, useRef } from 'react'
 
-export default function AvatarUploader(props: {
-  value?: string
-  onChange(value: string): void
-}) {
-  const ref = useRef<HTMLInputElement>(null)
+export default forwardRef<
+  HTMLDivElement,
+  {
+    did: string
+  } & InputHTMLAttributes<HTMLInputElement>
+>(function AvatarUploader(props, ref) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const { did, ...rest } = props
 
   return (
-    <>
-      {props.value ? (
+    <div
+      ref={ref}
+      onClick={() => inputRef.current?.click()}
+      style={{ cursor: 'pointer', width: 80, height: 80, lineHeight: 0 }}
+    >
+      {props.value && typeof props.value === 'string' ? (
         <img
           src={props.value.replace('ar://', 'https://arweave.net/')}
-          alt="avatar"
+          alt={did}
           width={80}
           height={80}
           style={{ width: 80, height: 80 }}
-          onClick={ref.current?.click}
         />
       ) : (
-        <Avatar size={80} variant="pixel" />
+        <Avatar size={80} name={did} variant="pixel" />
       )}
       <input
-        ref={ref}
+        ref={inputRef}
         type="file"
         accept="image/png"
         style={{ display: 'none' }}
+        {...rest}
       />
-    </>
+    </div>
   )
-}
+})

@@ -2,7 +2,7 @@ import {
   Button,
   Classes,
   DialogStep,
-  FileInput,
+  DialogStepId,
   FormGroup,
   InputGroup,
   MultistepDialog,
@@ -11,7 +11,13 @@ import {
   TextArea,
 } from '@blueprintjs/core'
 import { CoinType, createInstance } from 'dotbit'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import {
+  FormProvider,
+  useForm,
+  useFormContext,
+  UseFormRegisterReturn,
+} from 'react-hook-form'
 import useSWR from 'swr'
 import { useAccount } from 'wagmi'
 import AvatarUploader from './avatar-uploader'
@@ -21,7 +27,15 @@ const dotbit = createInstance()
 export default function SetupOrganizationDialog() {
   const [isOpen, setIsOpen] = useState(false)
   const [did, setDid] = useState('')
-  const [profile, setProfile] = useState<Profile>({})
+  const methods = useForm<Profile>()
+  const [stepId, setStepId] = useState<DialogStepId>('')
+  const onSubmit = useCallback((data: Profile) => {
+    console.log(data)
+    setIsOpen(false)
+  }, [])
+  useEffect(() => {
+    setStepId('did')
+  }, [isOpen])
 
   return (
     <>
@@ -29,9 +43,19 @@ export default function SetupOrganizationDialog() {
       <MultistepDialog
         title="Setup Organization"
         icon="settings"
-        nextButtonProps={{ disabled: !did }}
+        nextButtonProps={{
+          disabled: {
+            did: !did,
+            profile: !methods.watch('name'),
+          }[stepId],
+        }}
+        finalButtonProps={{
+          onClick: methods.handleSubmit(onSubmit),
+        }}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
+        usePortal={false}
+        onChange={setStepId}
       >
         <DialogStep
           id="did"
@@ -41,8 +65,18 @@ export default function SetupOrganizationDialog() {
         <DialogStep
           id="profile"
           title="Profile"
-          panel={<ProfilePanel value={profile} onChange={setProfile} />}
+          panel={
+            <FormProvider {...methods}>
+              <ProfilePanel did={did} />
+            </FormProvider>
+          }
         />
+        <DialogStep
+          id="proposers"
+          title="Proposers"
+          panel={<ProposersPanel />}
+        />
+        <DialogStep id="voters" title="Voters" panel={<VotersPanel />} />
       </MultistepDialog>
     </>
   )
@@ -82,30 +116,52 @@ function ChooseDidPanel(props: {
 }
 
 type Profile = {
-  avatar?: string
+  avatar: string
+  name: string
+  about: string
+  website: string
+  tos: string
 }
 
-function ProfilePanel(props: {
-  value: Profile
-  onChange(value: Profile): void
-}) {
+function ProfilePanel(props: { did: string }) {
+  const { register } = useFormContext<Profile>()
+
   return (
     <div className={Classes.DIALOG_BODY}>
       <FormGroup label="Avatar">
-        <AvatarUploader value={props.value.avatar} onChange={() => {}} />
+        <AvatarUploader did={props.did} {...wrapRegister(register('avatar'))} />
       </FormGroup>
-      <FormGroup label="Name">
-        <InputGroup />
+      <FormGroup label="Name" labelInfo="(Required)">
+        <InputGroup {...wrapRegister(register('name', { required: true }))} />
       </FormGroup>
       <FormGroup label="About">
-        <TextArea fill />
+        <TextArea fill {...wrapRegister(register('about'))} />
       </FormGroup>
       <FormGroup label="Website">
-        <InputGroup leftIcon="globe-network" />
+        <InputGroup
+          leftIcon="globe-network"
+          {...wrapRegister(register('website'))}
+        />
       </FormGroup>
       <FormGroup label="Terms of service">
-        <InputGroup leftIcon="globe-network" />
+        <InputGroup
+          leftIcon="globe-network"
+          {...wrapRegister(register('tos'))}
+        />
       </FormGroup>
     </div>
   )
+}
+
+function ProposersPanel(props: {}) {
+  return null
+}
+
+function VotersPanel(props: {}) {
+  return null
+}
+
+function wrapRegister<T>(value: UseFormRegisterReturn) {
+  const { ref, ...rest } = value
+  return { inputRef: ref, ...rest }
 }
