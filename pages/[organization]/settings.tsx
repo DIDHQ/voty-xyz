@@ -1,7 +1,9 @@
+import { Code, Pre } from '@blueprintjs/core'
 import { createInstance } from 'dotbit'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import useArweaveFile from '../../hooks/use-arweave-file'
+import { Organization } from '../../src/schemas'
 
 const dotbit = createInstance()
 
@@ -15,7 +17,11 @@ export default function OrganizationSettingsPage() {
       return records.find((record) => record.label === 'voty')?.value
     },
   )
-  const { data } = useArweaveFile(hash)
+  const { data } = useArweaveFile<Organization>(hash)
 
-  return <>{String(data)}</>
+  return (
+    <Pre wrap="">
+      <Code>{JSON.stringify(data, null, 2)}</Code>
+    </Pre>
+  )
 }
