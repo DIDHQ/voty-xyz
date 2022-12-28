@@ -7,11 +7,7 @@ const ajv = new Ajv()
 
 const validateOrganization = ajv.compile(organizationSchema)
 
-const arweave = Arweave.init({
-  host: 'arweave.net',
-  port: 443,
-  protocol: 'https',
-})
+const arweave = Arweave.init({})
 
 const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
 
@@ -23,10 +19,9 @@ export default async function handler(
     res.status(400).send('validation error')
     return
   }
-  const transaction = await arweave.createTransaction(
-    { data: JSON.stringify(req.body) },
-    jwk,
-  )
+  const transaction = await arweave.createTransaction({
+    data: JSON.stringify(req.body),
+  })
   transaction.addTag('content-type', 'application/json')
   transaction.addTag('app-name', 'voty')
   transaction.addTag('app-version', '0.0.0')
