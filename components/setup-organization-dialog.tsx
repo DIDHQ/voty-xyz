@@ -13,7 +13,7 @@ import {
   TextArea,
   Toaster,
 } from '@blueprintjs/core'
-import { CoinType, createInstance } from 'dotbit'
+import { BitNetwork, CoinType, createInstance, ProviderSigner } from 'dotbit'
 import { useCallback, useEffect, useState } from 'react'
 import {
   FormProvider,
@@ -25,9 +25,7 @@ import useSWR from 'swr'
 import { useAccount } from 'wagmi'
 import useAsync from '../hooks/use-async'
 import { Organization } from '../src/schemas'
-import AvatarUploader from './avatar-uploader'
-
-const dotbit = createInstance()
+import AvatarFileInput from './avatar-file-input'
 
 const toaster = Toaster.create()
 
@@ -37,16 +35,32 @@ export default function SetupOrganizationDialog() {
   const [stepId, setStepId] = useState<DialogStepId>('')
   const handleSubmit = useAsync(
     useCallback(async (data: Organization) => {
+      if (!window.ethereum) {
+        return
+      }
       const response = await fetch('/api/setup-organization', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(data),
       })
-      const text = await response.text()
       if (!response.ok) {
-        throw new Error(text)
+        throw new Error('server error')
       }
-      return text
+      const json = (await response.json()) as { transaction: { id: string } }
+      const dotbit = createInstance({
+        network: BitNetwork.mainnet,
+        signer: new ProviderSigner(window.ethereum as any),
+      })
+      await window.ethereum.request({ method: 'eth_requestAccounts' })
+      await dotbit.account(data.organization).updateRecords([
+        {
+          key: 'dweb.arweave',
+          value: json.transaction.id,
+          label: 'voty',
+          ttl: '',
+        },
+      ])
+      return json.transaction.id
     }, []),
   )
   useEffect(() => {
@@ -80,8 +94,8 @@ export default function SetupOrganizationDialog() {
       <MultistepDialog
         title={
           methods.watch('organization')
-            ? `Setup Organization for ${methods.watch('organization')}`
-            : 'Setup Organization'
+            ? `Setup organization for ${methods.watch('organization')}`
+            : 'Setup organization'
         }
         icon="settings"
         nextButtonProps={{
@@ -134,6 +148,7 @@ function ChooseDidPanel() {
   const { data: accounts } = useSWR(
     account.address ? ['accounts', account.address] : null,
     () => {
+      const dotbit = createInstance()
       return dotbit.accountsOfOwner({
         key: account.address!,
         coin_type: CoinType.ETH,
@@ -165,11 +180,10 @@ function ProfilePanel() {
   return (
     <div className={Classes.DIALOG_BODY}>
       <FormGroup label="Avatar">
-        <AvatarUploader
+        <AvatarFileInput
           did={watch('organization')}
-          onChange={(v) =>
-            setValue('profile.avatar', Buffer.from(v).toString('base64'))
-          }
+          value={watch('profile.avatar')}
+          onChange={(avatar) => setValue('profile.avatar', avatar)}
         />
       </FormGroup>
       <FormGroup label="Name" labelInfo="(Required)">
