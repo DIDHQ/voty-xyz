@@ -13,6 +13,8 @@ import {
   TextArea,
   Toaster,
 } from '@blueprintjs/core'
+import Arweave from 'arweave/web/index'
+import { SerializedUploader } from 'arweave/node/lib/transaction-uploader'
 import { BitNetwork, CoinType, createInstance, ProviderSigner } from 'dotbit'
 import { useCallback, useEffect, useState } from 'react'
 import {
@@ -29,37 +31,52 @@ import AvatarFileInput from './avatar-file-input'
 
 const toaster = Toaster.create()
 
+const arweave = Arweave.init({
+  host: 'arweave.net',
+  port: 443,
+  protocol: 'https',
+})
+
 export default function SetupOrganizationDialog() {
   const [isOpen, setIsOpen] = useState(false)
   const methods = useForm<Organization>()
   const [stepId, setStepId] = useState<DialogStepId>('')
   const handleSubmit = useAsync(
     useCallback(async (data: Organization) => {
-      if (!window.ethereum) {
-        return
-      }
+      // if (!window.ethereum) {
+      //   return
+      // }
+      const body = JSON.stringify(data)
       const response = await fetch('/api/setup-organization', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(data),
+        body,
       })
       if (!response.ok) {
         throw new Error('server error')
       }
-      const json = (await response.json()) as { transaction: { id: string } }
-      const dotbit = createInstance({
-        network: BitNetwork.mainnet,
-        signer: new ProviderSigner(window.ethereum as any),
-      })
-      await window.ethereum.request({ method: 'eth_requestAccounts' })
-      await dotbit.account(data.organization).updateRecords([
-        {
-          key: 'dweb.arweave',
-          value: json.transaction.id,
-          label: 'voty',
-          ttl: '',
-        },
-      ])
+      const json = (await response.json()) as SerializedUploader
+      // const dotbit = createInstance({
+      //   network: BitNetwork.mainnet,
+      //   signer: new ProviderSigner(window.ethereum as any),
+      // })
+      // await window.ethereum.request({ method: 'eth_requestAccounts' })
+      // await dotbit.account(data.organization).updateRecords([
+      //   {
+      //     key: 'dweb.arweave',
+      //     value: json.transaction.id,
+      //     label: 'voty',
+      //     ttl: '',
+      //   },
+      // ])
+      const textEncoder = new TextEncoder()
+      const uploader = await arweave.transactions.getUploader(
+        json,
+        textEncoder.encode(body),
+      )
+      while (!uploader.isComplete) {
+        await uploader.uploadChunk()
+      }
       return json.transaction.id
     }, []),
   )
