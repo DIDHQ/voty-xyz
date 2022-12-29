@@ -187,6 +187,9 @@ function ChooseDidPanel() {
           </Radio>
         ))}
       </RadioGroup>
+      <p>
+        I don’t have .bit account, <a href="https://did.id">Register Now</a>
+      </p>
     </div>
   )
 }
