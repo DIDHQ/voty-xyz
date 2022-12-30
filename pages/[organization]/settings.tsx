@@ -1,4 +1,3 @@
-import { Code, Pre } from '@blueprintjs/core'
 import { createInstance } from 'dotbit'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
@@ -20,8 +19,8 @@ export default function OrganizationSettingsPage() {
   const { data } = useArweaveFile<Organization>(hash)
 
   return (
-    <Pre wrap="">
-      <Code>{JSON.stringify(data, null, 2)}</Code>
-    </Pre>
+    <pre>
+      <code>{JSON.stringify(data, null, 2)}</code>
+    </pre>
   )
 }
