@@ -1,50 +1,73 @@
-import type { JSONSchemaType } from 'ajv'
+import { z } from 'zod'
 
-export type Organization = {
-  organization: string
-  profile: {
-    avatar: string | null
-    name: string
-    about: string | null
-    website: string | null
-    tos: string | null
-  }
+export const proposerLibertyUnitSchema = z.object({
+  function: z.string(),
+  arguments: z.array(z.unknown()),
+})
+export type ProposerLibertyUnit = z.infer<typeof proposerLibertyUnitSchema>
+
+export const proposerLibertySetsSchema: z.ZodType<ProposerLibertySets> = z.lazy(
+  () =>
+    z.object({
+      operator: z.enum(['and', 'or', 'not']),
+      operands: z.array(
+        z.union([proposerLibertySetsSchema, proposerLibertyUnitSchema]),
+      ),
+    }),
+)
+export type ProposerLibertySets = {
+  operator: 'and' | 'or' | 'not'
+  operands: (ProposerLibertyUnit | ProposerLibertySets)[]
 }
 
-export const organizationSchema: JSONSchemaType<Organization> = {
-  type: 'object',
-  properties: {
-    organization: { type: 'string' },
-    profile: {
-      type: 'object',
-      properties: {
-        avatar: { type: 'string' },
-        name: { type: 'string', minLength: 1 },
-        about: { type: 'string' },
-        website: { type: 'string' },
-        tos: { type: 'string' },
-      },
-      required: ['name'],
-    },
-  },
-  required: ['organization', 'profile'],
-  additionalProperties: false,
+export const votingPowerUnitSchema = z.object({
+  function: z.string(),
+  arguments: z.array(z.unknown()),
+})
+export type VotingPowerUnit = z.infer<typeof votingPowerUnitSchema>
+
+export const votingPowerSetsSchema: z.ZodType<VotingPowerSets> = z.lazy(() =>
+  z.object({
+    operator: z.enum(['sum', 'max', 'sqrt']),
+    operands: z.array(z.union([votingPowerSetsSchema, votingPowerUnitSchema])),
+  }),
+)
+export type VotingPowerSets = {
+  operator: 'sum' | 'max' | 'sqrt'
+  operands: (VotingPowerUnit | VotingPowerSets)[]
 }
 
-export const workgroupSchema: JSONSchemaType<{}> = {
-  type: 'object',
-  properties: {},
-  additionalProperties: false,
-}
-
-export const proposalSchema: JSONSchemaType<{}> = {
-  type: 'object',
-  properties: {},
-  additionalProperties: false,
-}
-
-export const voteSchema: JSONSchemaType<{}> = {
-  type: 'object',
-  properties: {},
-  additionalProperties: false,
-}
+export const organizationSchema = z.object({
+  organization: z.string(),
+  profile: z.object({
+    avatar: z.string().optional(),
+    name: z.string(),
+    about: z.string().optional(),
+    website: z.string().optional(),
+    tos: z.string().optional(),
+  }),
+  communities: z.array(
+    z.object({
+      type: z.enum(['twitter', 'github', 'discord']),
+      value: z.string(),
+    }),
+  ),
+  workgroups: z.map(
+    z.string(),
+    z.object({
+      profile: z.object({
+        avatar: z.string().optional(),
+        name: z.string(),
+        about: z.string().optional(),
+      }),
+      proposer_liberty: proposerLibertySetsSchema,
+      voting_power: votingPowerSetsSchema,
+      rules: z.object({
+        voting_duration: z.number(),
+        voting_start_delay: z.number(),
+        approval_condition_description: z.string(),
+      }),
+    }),
+  ),
+})
+export type Organization = z.infer<typeof organizationSchema>
