@@ -9,7 +9,7 @@ export async function resolve_bit(
   snapshot: bigint,
 ): Promise<{ coin_type: bigint; address: string }> {
   const manager = await dotbit.account(did).manager()
-  invariant(manager.coin_type)
+  invariant(manager.coin_type !== undefined)
   return {
     coin_type: BigInt(manager.coin_type),
     address: manager.key,
