@@ -10,11 +10,11 @@ const provider = new providers.StaticJsonRpcProvider(
 export async function resolve_eth(
   did: DID<'eth'>,
   snapshot: bigint,
-): Promise<{ coin_type: bigint; address: string }> {
+): Promise<{ coin_type: number; address: string }> {
   const address = await provider.resolveName(did)
   invariant(address)
   return {
-    coin_type: BigInt(60),
+    coin_type: 60,
     address,
   }
 }

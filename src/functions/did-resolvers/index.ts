@@ -5,7 +5,7 @@ import { resolve_eth } from './eth'
 export async function resolve_did(
   did: DID,
   snapshot: bigint,
-): Promise<{ coin_type: bigint; address: string }> {
+): Promise<{ coin_type: number; address: string }> {
   if (did.endsWith('.bit')) {
     return resolve_bit(did as DID<'bit'>, snapshot)
   }
