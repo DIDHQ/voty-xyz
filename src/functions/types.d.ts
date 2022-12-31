@@ -1,4 +1,4 @@
-export type DID = `${string}.bit` | `${string}.eth`
+export type DID<S extends 'bit' | 'eth' = string> = `${string}.${S}`
 
 export type ProposerLibertyFunction<T> = (
   ...args: T
