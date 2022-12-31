@@ -8,12 +8,24 @@ export type ProposerLibertyUnit = z.infer<typeof proposerLibertyUnitSchema>
 
 export const proposerLibertySetsSchema: z.ZodType<ProposerLibertySets> = z.lazy(
   () =>
-    z.object({
-      operator: z.enum(['and', 'or', 'not']),
-      operands: z.array(
-        z.union([proposerLibertySetsSchema, proposerLibertyUnitSchema]),
-      ),
-    }),
+    z.union([
+      z.object({
+        operator: z.enum(['and', 'or']),
+        operands: z
+          .array(
+            z.union([proposerLibertySetsSchema, proposerLibertyUnitSchema]),
+          )
+          .min(1),
+      }),
+      z.object({
+        operator: z.enum(['not']),
+        operands: z
+          .array(
+            z.union([proposerLibertySetsSchema, proposerLibertyUnitSchema]),
+          )
+          .length(1),
+      }),
+    ]),
 )
 export type ProposerLibertySets = {
   operator: 'and' | 'or' | 'not'
@@ -27,10 +39,20 @@ export const votingPowerUnitSchema = z.object({
 export type VotingPowerUnit = z.infer<typeof votingPowerUnitSchema>
 
 export const votingPowerSetsSchema: z.ZodType<VotingPowerSets> = z.lazy(() =>
-  z.object({
-    operator: z.enum(['sum', 'max', 'sqrt']),
-    operands: z.array(z.union([votingPowerSetsSchema, votingPowerUnitSchema])),
-  }),
+  z.union([
+    z.object({
+      operator: z.enum(['sum', 'max']),
+      operands: z
+        .array(z.union([votingPowerSetsSchema, votingPowerUnitSchema]))
+        .min(1),
+    }),
+    z.object({
+      operator: z.enum(['sqrt']),
+      operands: z
+        .array(z.union([votingPowerSetsSchema, votingPowerUnitSchema]))
+        .length(1),
+    }),
+  ]),
 )
 export type VotingPowerSets = {
   operator: 'sum' | 'max' | 'sqrt'
