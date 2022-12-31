@@ -18,7 +18,9 @@ export const erc20_balance: VotingPowerFunction<[number, string]> = async (
 
   return async (did, snapshot) => {
     const { coin_type, address } = await resolve_did(did, snapshot)
-    invariant(coin_type_to_chain_id[coin_type])
+    if (coin_type_to_chain_id[coin_type] === undefined) {
+      return 0
+    }
     const balance = await contract.balanceOf(address)
     return parseFloat(formatUnits(balance, decimals))
   }
