@@ -6,7 +6,7 @@ const dotbit = createInstance()
 
 export async function resolve_bit(
   did: DID<'bit'>,
-  snapshot: bigint,
+  snapshot: bigint, // TODO: use snapshot
 ): Promise<{ coin_type: number; address: string }> {
   const manager = await dotbit.account(did).manager()
   invariant(manager.coin_type !== undefined)

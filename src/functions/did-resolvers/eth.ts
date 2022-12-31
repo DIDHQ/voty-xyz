@@ -9,7 +9,7 @@ const provider = new providers.StaticJsonRpcProvider(
 
 export async function resolve_eth(
   did: DID<'eth'>,
-  snapshot: bigint,
+  snapshot: bigint, // TODO: use snapshot
 ): Promise<{ coin_type: number; address: string }> {
   const address = await provider.resolveName(did)
   invariant(address)
