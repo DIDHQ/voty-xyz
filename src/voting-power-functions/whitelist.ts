@@ -1,7 +1,7 @@
-import { DID, VotingPowerFunction } from '../types'
+import { VotingPowerFunction } from '../types'
 
-export const whitelist: VotingPowerFunction<[string]> = (csv: string) => {
-  return (did: DID, snapshot: bigint) => {
+export const whitelist: VotingPowerFunction<[string]> = (csv) => {
+  return async (did, snapshot) => {
     return 1
   }
 }
