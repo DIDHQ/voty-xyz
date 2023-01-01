@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 
 import Avatar from 'boring-avatars'
-import { forwardRef, useRef } from 'react'
+import { ChangeEvent, forwardRef, useCallback, useRef } from 'react'
 
 export default forwardRef<
-  HTMLDivElement,
+  HTMLSpanElement,
   {
     did: string
     value?: string
@@ -12,6 +12,19 @@ export default forwardRef<
   }
 >(function AvatarFileInput(props, ref) {
   const inputRef = useRef<HTMLInputElement>(null)
+  const { onChange } = props
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files?.[0]) {
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          onChange(reader.result as string)
+        }
+        reader.readAsDataURL(e.target.files[0])
+      }
+    },
+    [onChange],
+  )
 
   return (
     <span
@@ -40,15 +53,7 @@ export default forwardRef<
         type="file"
         accept="image/*"
         style={{ display: 'none' }}
-        onChange={async (e) => {
-          if (e.target.files?.[0]) {
-            const reader = new FileReader()
-            reader.onloadend = () => {
-              props.onChange(reader.result as string)
-            }
-            reader.readAsDataURL(e.target.files[0])
-          }
-        }}
+        onChange={handleChange}
       />
     </span>
   )
