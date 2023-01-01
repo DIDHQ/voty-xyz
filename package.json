@@ -13,6 +13,7 @@
   "dependencies": {
     "@rainbow-me/rainbowkit": "^0.8.1",
     "arweave": "^1.11.8",
+    "boring-avatars": "^1.7.0",
     "dotbit": "^0.4.14",
     "ethers": "^5.7.2",
     "lodash-es": "^4.17.21",
