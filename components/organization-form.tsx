@@ -1,6 +1,6 @@
 import { createInstance } from 'dotbit'
 import { Fragment, useCallback, useEffect } from 'react'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import useArweaveFile from '../hooks/use-arweave-file'
 import useAsync from '../hooks/use-async'
@@ -18,8 +18,7 @@ export default function OrganizationForm(props: { organization: string }) {
     },
   )
   const { data } = useArweaveFile<Organization>(hash)
-  const { control, register, watch, handleSubmit, reset, setValue } =
-    useForm<Organization>()
+  const { control, register, handleSubmit, reset } = useForm<Organization>()
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'communities',
@@ -33,10 +32,16 @@ export default function OrganizationForm(props: { organization: string }) {
     <form onSubmit={handleSubmit(onSubmit.execute)}>
       <h1>{props.organization}</h1>
       <label>avatar</label>
-      <AvatarInput
-        did={props.organization}
-        value={watch('profile.avatar')}
-        onChange={(avatar) => setValue('profile.avatar', avatar)}
+      <Controller
+        control={control}
+        name="profile.avatar"
+        render={({ field: { value, onChange } }) => (
+          <AvatarInput
+            did={props.organization}
+            value={value}
+            onChange={onChange}
+          />
+        )}
       />
       <br />
       <label>name</label>
