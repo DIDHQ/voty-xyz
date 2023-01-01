@@ -27,9 +27,13 @@ export const proposerLibertySetsSchema: z.ZodType<ProposerLibertySets> = z.lazy(
       }),
     ]),
 )
+type ProposerLibertyArray = {
+  // https://github.com/react-hook-form/react-hook-form/issues/4055
+  [index: number]: Omit<ProposerLibertyUnit | ProposerLibertySets, ''>
+}
 export type ProposerLibertySets = {
   operator: 'and' | 'or' | 'not'
-  operands: (ProposerLibertyUnit | ProposerLibertySets)[]
+  operands: ProposerLibertyArray
 }
 
 export const votingPowerUnitSchema = z.object({
@@ -54,10 +58,31 @@ export const votingPowerSetsSchema: z.ZodType<VotingPowerSets> = z.lazy(() =>
     }),
   ]),
 )
+type VotingPowerArray = {
+  // https://github.com/react-hook-form/react-hook-form/issues/4055
+  [index: number]: Omit<VotingPowerUnit | VotingPowerSets, ''>
+}
 export type VotingPowerSets = {
   operator: 'sum' | 'max' | 'sqrt'
-  operands: (VotingPowerUnit | VotingPowerSets)[]
+  operands: VotingPowerArray
 }
+
+export const workgroupSchema = z.object({
+  id: z.string(),
+  profile: z.object({
+    avatar: z.string().optional(),
+    name: z.string(),
+    about: z.string().optional(),
+  }),
+  proposer_liberty: proposerLibertySetsSchema,
+  voting_power: votingPowerSetsSchema,
+  rules: z.object({
+    voting_duration: z.number(),
+    voting_start_delay: z.number(),
+    approval_condition_description: z.string(),
+  }),
+})
+export type Workgroup = z.infer<typeof workgroupSchema>
 
 export const organizationSchema = z.object({
   profile: z.object({
@@ -75,24 +100,6 @@ export const organizationSchema = z.object({
       }),
     )
     .optional(),
-  workgroups: z
-    .map(
-      z.string(),
-      z.object({
-        profile: z.object({
-          avatar: z.string().optional(),
-          name: z.string(),
-          about: z.string().optional(),
-        }),
-        proposer_liberty: proposerLibertySetsSchema,
-        voting_power: votingPowerSetsSchema,
-        rules: z.object({
-          voting_duration: z.number(),
-          voting_start_delay: z.number(),
-          approval_condition_description: z.string(),
-        }),
-      }),
-    )
-    .optional(),
+  workgroups: z.array(workgroupSchema).optional(),
 })
 export type Organization = z.infer<typeof organizationSchema>
