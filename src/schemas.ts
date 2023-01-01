@@ -60,7 +60,6 @@ export type VotingPowerSets = {
 }
 
 export const organizationSchema = z.object({
-  organization: z.string(),
   profile: z.object({
     avatar: z.string().optional(),
     name: z.string(),
@@ -70,7 +69,7 @@ export const organizationSchema = z.object({
   }),
   communities: z.array(
     z.object({
-      type: z.enum(['twitter', 'github', 'discord']),
+      type: z.enum(['twitter', 'discord', 'github']),
       value: z.string(),
     }),
   ),
