@@ -19,10 +19,9 @@ export default function OrganizationForm(props: { organization: string }) {
     },
   )
   const { data } = useArweaveFile<Organization>(hash)
-  const { control, register, handleSubmit, reset, formState } =
-    useForm<Organization>({
-      resolver: zodResolver(organizationSchema),
-    })
+  const { control, register, handleSubmit, reset } = useForm<Organization>({
+    resolver: zodResolver(organizationSchema),
+  })
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'communities',
@@ -81,9 +80,6 @@ export default function OrganizationForm(props: { organization: string }) {
       ))}
       <br />
       <input type="submit" disabled={onSubmit.status === 'pending'} />
-      <pre>
-        <code>{JSON.stringify(formState.errors, null, 2)}</code>
-      </pre>
     </form>
   )
 }
