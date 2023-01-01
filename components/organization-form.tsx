@@ -58,7 +58,7 @@ export default function OrganizationForm(props: { organization: string }) {
         name="profile.avatar"
         render={({ field: { value, onChange } }) => (
           <AvatarInput
-            did={props.organization}
+            name={props.organization}
             value={value}
             onChange={onChange}
           />

@@ -6,7 +6,7 @@ import { ChangeEvent, forwardRef, useCallback, useRef } from 'react'
 export default forwardRef<
   HTMLSpanElement,
   {
-    did: string
+    name: string
     value?: string
     onChange(value: string): void
   }
@@ -35,7 +35,7 @@ export default forwardRef<
       {props.value ? (
         <img
           src={props.value}
-          alt={props.did}
+          alt={props.name}
           width={80}
           height={80}
           style={{
@@ -46,7 +46,7 @@ export default forwardRef<
           }}
         />
       ) : (
-        <Avatar size={80} name={props.did} variant="pixel" />
+        <Avatar size={80} name={props.name} variant="pixel" />
       )}
       <input
         ref={inputRef}
