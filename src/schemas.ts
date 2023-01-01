@@ -15,7 +15,7 @@ export const proposerLibertySetsSchema: z.ZodType<ProposerLibertySets> = z.lazy(
           .array(
             z.union([proposerLibertySetsSchema, proposerLibertyUnitSchema]),
           )
-          .min(1),
+          .nonempty(),
       }),
       z.object({
         operator: z.enum(['not']),
@@ -44,7 +44,7 @@ export const votingPowerSetsSchema: z.ZodType<VotingPowerSets> = z.lazy(() =>
       operator: z.enum(['sum', 'max']),
       operands: z
         .array(z.union([votingPowerSetsSchema, votingPowerUnitSchema]))
-        .min(1),
+        .nonempty(),
     }),
     z.object({
       operator: z.enum(['sqrt']),
