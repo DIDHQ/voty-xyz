@@ -2,9 +2,10 @@ import { createInstance } from 'dotbit'
 import { Fragment, useCallback, useEffect } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import useSWR from 'swr'
+import { zodResolver } from '@hookform/resolvers/zod'
 import useArweaveFile from '../hooks/use-arweave-file'
 import useAsync from '../hooks/use-async'
-import { Organization } from '../src/schemas'
+import { Organization, organizationSchema } from '../src/schemas'
 import AvatarInput from './avatar-input'
 
 const dotbit = createInstance()
@@ -18,7 +19,10 @@ export default function OrganizationForm(props: { organization: string }) {
     },
   )
   const { data } = useArweaveFile<Organization>(hash)
-  const { control, register, handleSubmit, reset } = useForm<Organization>()
+  const { control, register, handleSubmit, reset, formState } =
+    useForm<Organization>({
+      resolver: zodResolver(organizationSchema),
+    })
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'communities',
@@ -26,7 +30,11 @@ export default function OrganizationForm(props: { organization: string }) {
   useEffect(() => {
     reset(data)
   }, [data, reset])
-  const onSubmit = useAsync(useCallback(async () => {}, []))
+  const onSubmit = useAsync(
+    useCallback(async (value: Organization) => {
+      console.log(value)
+    }, []),
+  )
 
   return (
     <form onSubmit={handleSubmit(onSubmit.execute)}>
@@ -73,6 +81,9 @@ export default function OrganizationForm(props: { organization: string }) {
       ))}
       <br />
       <input type="submit" disabled={onSubmit.status === 'pending'} />
+      <pre>
+        <code>{JSON.stringify(formState.errors, null, 2)}</code>
+      </pre>
     </form>
   )
 }

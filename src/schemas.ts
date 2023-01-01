@@ -15,7 +15,7 @@ export const proposerLibertySetsSchema: z.ZodType<ProposerLibertySets> = z.lazy(
           .array(
             z.union([proposerLibertySetsSchema, proposerLibertyUnitSchema]),
           )
-          .nonempty(),
+          .min(1),
       }),
       z.object({
         operator: z.enum(['not']),
@@ -44,7 +44,7 @@ export const votingPowerSetsSchema: z.ZodType<VotingPowerSets> = z.lazy(() =>
       operator: z.enum(['sum', 'max']),
       operands: z
         .array(z.union([votingPowerSetsSchema, votingPowerUnitSchema]))
-        .nonempty(),
+        .min(1),
     }),
     z.object({
       operator: z.enum(['sqrt']),
@@ -62,33 +62,37 @@ export type VotingPowerSets = {
 export const organizationSchema = z.object({
   profile: z.object({
     avatar: z.string().optional(),
-    name: z.string(),
+    name: z.string().min(1),
     about: z.string().optional(),
     website: z.string().optional(),
     tos: z.string().optional(),
   }),
-  communities: z.array(
-    z.object({
-      type: z.enum(['twitter', 'discord', 'github']),
-      value: z.string(),
-    }),
-  ),
-  workgroups: z.map(
-    z.string(),
-    z.object({
-      profile: z.object({
-        avatar: z.string().optional(),
-        name: z.string(),
-        about: z.string().optional(),
+  communities: z
+    .array(
+      z.object({
+        type: z.enum(['twitter', 'discord', 'github']),
+        value: z.string().min(1),
       }),
-      proposer_liberty: proposerLibertySetsSchema,
-      voting_power: votingPowerSetsSchema,
-      rules: z.object({
-        voting_duration: z.number(),
-        voting_start_delay: z.number(),
-        approval_condition_description: z.string(),
+    )
+    .optional(),
+  workgroups: z
+    .map(
+      z.string(),
+      z.object({
+        profile: z.object({
+          avatar: z.string().optional(),
+          name: z.string(),
+          about: z.string().optional(),
+        }),
+        proposer_liberty: proposerLibertySetsSchema,
+        voting_power: votingPowerSetsSchema,
+        rules: z.object({
+          voting_duration: z.number(),
+          voting_start_delay: z.number(),
+          approval_condition_description: z.string(),
+        }),
       }),
-    }),
-  ),
+    )
+    .optional(),
 })
 export type Organization = z.infer<typeof organizationSchema>

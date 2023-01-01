@@ -11,6 +11,7 @@
     "typechain": "typechain --target=ethers-v5 abis/*"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.9.10",
     "@rainbow-me/rainbowkit": "^0.8.1",
     "arweave": "^1.11.8",
     "boring-avatars": "^1.7.0",
