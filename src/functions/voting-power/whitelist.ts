@@ -1,11 +1,12 @@
 import { VotingPowerFunction } from '../types'
 
-export const whitelist: VotingPowerFunction<[[string, number][]]> = async (
-  list,
-) => {
+export const whitelist: VotingPowerFunction<[[string, number][]]> = (list) => {
   const map = new Map(list)
 
-  return async (did) => {
-    return map.get(did) || 0
+  return {
+    coin_types: [],
+    execute: (did) => {
+      return map.get(did) || 0
+    },
   }
 }

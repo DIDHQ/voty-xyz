@@ -1,3 +1,4 @@
+import { uniq } from 'lodash-es'
 import pMap from 'p-map'
 import { ProposerLibertySets, ProposerLibertyUnit } from '../../schemas'
 import { DID, ProposerLibertyFunction } from '../types'
@@ -27,5 +28,18 @@ export async function check_proposer_liberty(
     }
     throw new Error(`unsupported operator: ${data.operator}`)
   }
-  return (await functions[data.function](...data.arguments))(did, snapshot)
+  return functions[data.function](...data.arguments).execute(did, snapshot)
+}
+
+export function coin_types_of_proposer_liberty(
+  data: ProposerLibertySets | ProposerLibertyUnit,
+): number[] {
+  if ('operator' in data) {
+    return uniq(
+      data.operands.flatMap((operand) =>
+        coin_types_of_proposer_liberty(operand),
+      ),
+    )
+  }
+  return functions[data.function](...data.arguments).coin_types
 }

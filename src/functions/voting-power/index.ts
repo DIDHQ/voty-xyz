@@ -1,4 +1,4 @@
-import { max, sum } from 'lodash-es'
+import { max, sum, uniq } from 'lodash-es'
 import pMap from 'p-map'
 import { VotingPowerSets, VotingPowerUnit } from '../../schemas'
 import { DID, VotingPowerFunction } from '../types'
@@ -30,5 +30,16 @@ export async function calculate_voting_power(
     }
     throw new Error(`unsupported operator: ${data.operator}`)
   }
-  return (await functions[data.function](...data.arguments))(did, snapshot)
+  return functions[data.function](...data.arguments).execute(did, snapshot)
+}
+
+export function coin_types_of_voting_power(
+  data: VotingPowerSets | VotingPowerUnit,
+): number[] {
+  if ('operator' in data) {
+    return uniq(
+      data.operands.flatMap((operand) => coin_types_of_voting_power(operand)),
+    )
+  }
+  return functions[data.function](...data.arguments).coin_types
 }

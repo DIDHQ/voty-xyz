@@ -1,9 +1,12 @@
 import { ProposerLibertyFunction } from '../types'
 
-export const whitelist: ProposerLibertyFunction<[string[]]> = async (list) => {
+export const whitelist: ProposerLibertyFunction<[string[]]> = (list) => {
   const set = new Set(list)
 
-  return async (did) => {
-    return set.has(did)
+  return {
+    coin_types: [],
+    execute: (did) => {
+      return set.has(did)
+    },
   }
 }
