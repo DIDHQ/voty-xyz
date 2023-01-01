@@ -51,6 +51,9 @@ export default function OrganizationForm(props: { organization: string }) {
       <label>term of service</label>
       <input {...register('profile.tos')} />
       <br />
+      <label>communities</label>
+      <button onClick={() => append({ type: 'twitter', value: '' })}>+</button>
+      <br />
       {fields.map((field, index) => (
         <Fragment key={field.id}>
           <select {...register(`communities.${index}.type`)}>
@@ -59,13 +62,10 @@ export default function OrganizationForm(props: { organization: string }) {
             <option value="github">github</option>
           </select>
           <input {...register(`communities.${index}.value`)} />
-          <button onClick={() => remove(index)}>X</button>
+          <button onClick={() => remove(index)}>-</button>
           <br />
         </Fragment>
       ))}
-      <button onClick={() => append({ type: 'twitter', value: '' })}>
-        + community
-      </button>
       <br />
       <input type="submit" disabled={onSubmit.status === 'pending'} />
     </form>
