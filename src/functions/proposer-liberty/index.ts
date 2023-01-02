@@ -36,7 +36,7 @@ export function coin_types_of_proposer_liberty(
 ): number[] {
   if ('operator' in data) {
     return uniq(
-      data.operands.flatMap((operand) =>
+      Array.from(data.operands).flatMap((operand) =>
         coin_types_of_proposer_liberty(operand),
       ),
     )

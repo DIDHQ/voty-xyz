@@ -38,7 +38,9 @@ export function coin_types_of_voting_power(
 ): number[] {
   if ('operator' in data) {
     return uniq(
-      data.operands.flatMap((operand) => coin_types_of_voting_power(operand)),
+      Array.from(data.operands).flatMap((operand) =>
+        coin_types_of_voting_power(operand),
+      ),
     )
   }
   return functions[data.function](...data.arguments).coin_types

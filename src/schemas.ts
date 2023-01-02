@@ -27,10 +27,11 @@ export const proposerLibertySetsSchema: z.ZodType<ProposerLibertySets> = z.lazy(
       }),
     ]),
 )
-type ProposerLibertyArray = {
-  // https://github.com/react-hook-form/react-hook-form/issues/4055
-  [index: number]: Omit<ProposerLibertyUnit | ProposerLibertySets, ''>
-}
+// [index: number]: Omit<VotingPowerUnit, ''> | Omit<VotingPowerSets, ''>
+// https://github.com/react-hook-form/react-hook-form/issues/4055
+type ProposerLibertyArray = Iterable<
+  Omit<ProposerLibertyUnit, ''> | Omit<ProposerLibertySets, ''>
+>
 export type ProposerLibertySets = {
   operator: 'and' | 'or' | 'not'
   operands: ProposerLibertyArray
@@ -58,10 +59,11 @@ export const votingPowerSetsSchema: z.ZodType<VotingPowerSets> = z.lazy(() =>
     }),
   ]),
 )
-type VotingPowerArray = {
-  // https://github.com/react-hook-form/react-hook-form/issues/4055
-  [index: number]: Omit<VotingPowerUnit | VotingPowerSets, ''>
-}
+// [index: number]: Omit<VotingPowerUnit, ''> | Omit<VotingPowerSets, ''>
+// https://github.com/react-hook-form/react-hook-form/issues/4055
+type VotingPowerArray = Iterable<
+  Omit<VotingPowerUnit, ''> | Omit<VotingPowerSets, ''>
+>
 export type VotingPowerSets = {
   operator: 'sum' | 'max' | 'sqrt'
   operands: VotingPowerArray
