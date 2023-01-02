@@ -155,7 +155,7 @@ export default function TestPage() {
       <label>test DID: </label>
       <input value={text} onChange={(e) => setText(e.target.value)} />
       <select value={text} onChange={(e) => setText(e.target.value)}>
-        <option>-</option>
+        <option />
         {accounts?.map((account) => (
           <option key={account} value={account}>
             {account}
