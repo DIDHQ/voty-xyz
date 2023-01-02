@@ -94,7 +94,7 @@ export default function OrganizationForm(props: { organization: string }) {
 
   return (
     <div>
-      <h1>{props.organization}</h1>
+      <h1>Organization: {props.organization}</h1>
       <label>avatar</label>
       <Controller
         control={control}

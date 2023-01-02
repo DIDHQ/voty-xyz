@@ -20,7 +20,7 @@ export default function WorkgroupForm(props: {
 
   return (
     <div>
-      <h2>{props.value.id}</h2>
+      <h2>Workgroup: {props.value.id}</h2>
       <label>avatar</label>
       <Controller
         control={control}
