@@ -124,17 +124,20 @@ export default function TestPage() {
             <td>{calculatedError?.message}</td>
           </tr>
           <tr>
+            <td>loading</td>
+            <td>{isCheckedValidating ? '🕙' : '🛑'}</td>
+            <td>{isCalculatedValidating ? '🕙' : '🛑'}</td>
+          </tr>
+          <tr>
             <td>required coin types</td>
-            <td>{requiredCoinTypesOfProposerLiberty.join(', ') || 'none'}</td>
-            <td>{requiredCoinTypesOfVotingPower.join(', ') || 'none'}</td>
+            <td>{JSON.stringify(requiredCoinTypesOfProposerLiberty)}</td>
+            <td>{JSON.stringify(requiredCoinTypesOfVotingPower)}</td>
           </tr>
         </tbody>
       </table>
       <br />
       <label>test DID: </label>
       <input value={text} onChange={(e) => setText(e.target.value)} />
-      <br />
-      {isCheckedValidating || isCalculatedValidating ? <span>⏳</span> : null}
     </>
   )
 }
