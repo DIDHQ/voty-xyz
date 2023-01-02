@@ -141,8 +141,8 @@ export default function TestPage() {
           </tr>
           <tr>
             <td>loading</td>
-            <td>{isCheckedValidating ? '🕙' : '🛑'}</td>
-            <td>{isCalculatedValidating ? '🕙' : '🛑'}</td>
+            <td>{isCheckedValidating ? 'loading' : 'idle'}</td>
+            <td>{isCalculatedValidating ? 'loading' : 'idle'}</td>
           </tr>
           <tr>
             <td>required coin types</td>
