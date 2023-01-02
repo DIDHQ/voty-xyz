@@ -4,6 +4,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { Workgroup, workgroupSchema } from '../src/schemas'
 import AvatarInput from './avatar-input'
 import JsonInput from './json-input'
+import NumericInput from './numeric-input'
 
 export default function WorkgroupForm(props: {
   value: Workgroup
@@ -58,10 +59,22 @@ export default function WorkgroupForm(props: {
       />
       <br />
       <label>voting duration</label>
-      <input {...register('rules.voting_duration')} />
+      <Controller
+        control={control}
+        name="rules.voting_duration"
+        render={({ field: { value, onChange } }) => (
+          <NumericInput value={value} onChange={onChange} />
+        )}
+      />
       <br />
       <label>voting start delay</label>
-      <input {...register('rules.voting_start_delay')} />
+      <Controller
+        control={control}
+        name="rules.voting_start_delay"
+        render={({ field: { value, onChange } }) => (
+          <NumericInput value={value} onChange={onChange} />
+        )}
+      />
       <br />
       <label>approval condition description</label>
       <input {...register('rules.approval_condition_description')} />
