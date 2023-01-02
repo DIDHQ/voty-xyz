@@ -20,6 +20,10 @@ const defaultProposerLiberty: ProposerLibertySets = {
       function: 'whitelist',
       arguments: [['aliez.eth', 'regex.bit', 'vitalik.eth']],
     },
+    {
+      function: 'sub_did',
+      arguments: [['regex.bit']],
+    },
   ],
 }
 
