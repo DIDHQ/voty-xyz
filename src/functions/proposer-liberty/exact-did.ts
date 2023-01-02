@@ -1,6 +1,6 @@
 import { ProposerLibertyFunction } from '../types'
 
-export const whitelist: ProposerLibertyFunction<[string[]]> = (list) => {
+export const exact_did: ProposerLibertyFunction<[string[]]> = (list) => {
   const set = new Set(list)
 
   return {

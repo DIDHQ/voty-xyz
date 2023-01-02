@@ -3,13 +3,13 @@ import pMap from 'p-map'
 import { ProposerLibertySets, ProposerLibertyUnit } from '../../schemas'
 import { DID, ProposerLibertyFunction, Snapshots } from '../types'
 import { sub_did } from './sub-did'
-import { whitelist } from './whitelist'
+import { exact_did } from './exact-did'
 
 export const check_proposer_liberty_functions: {
   [name: string]: ProposerLibertyFunction<any[]>
 } = {
   sub_did,
-  whitelist,
+  exact_did,
 }
 
 export async function check_proposer_liberty(

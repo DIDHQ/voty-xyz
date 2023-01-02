@@ -1,6 +1,8 @@
 import { VotingPowerFunction } from '../types'
 
-export const whitelist: VotingPowerFunction<[[string, number][]]> = (list) => {
+export const weight_list: VotingPowerFunction<[[string, number][]]> = (
+  list,
+) => {
   const map = new Map(list)
 
   return {

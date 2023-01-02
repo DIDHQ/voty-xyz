@@ -17,7 +17,7 @@ const defaultProposerLiberty: ProposerLibertySets = {
   operator: 'or',
   operands: [
     {
-      function: 'whitelist',
+      function: 'exact_did',
       arguments: [['aliez.eth', 'regex.bit', 'vitalik.eth']],
     },
     {
@@ -31,7 +31,7 @@ const defaultVotingPower: VotingPowerSets = {
   operator: 'sum',
   operands: [
     {
-      function: 'whitelist',
+      function: 'weight_list',
       arguments: [
         [
           ['aliez.eth', 1],

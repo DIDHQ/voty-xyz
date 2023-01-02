@@ -3,13 +3,13 @@ import pMap from 'p-map'
 import { VotingPowerSets, VotingPowerUnit } from '../../schemas'
 import { DID, Snapshots, VotingPowerFunction } from '../types'
 import { erc20_balance } from './erc20-balance'
-import { whitelist } from './whitelist'
+import { weight_list } from './weight-list'
 
 export const calculate_voting_power_functions: {
   [name: string]: VotingPowerFunction<any[]>
 } = {
   erc20_balance,
-  whitelist,
+  weight_list,
 }
 
 export async function calculate_voting_power(
