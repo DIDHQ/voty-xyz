@@ -3,7 +3,6 @@ import type { AppProps } from 'next/app'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { mainnet, polygon, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
-
 import Layout from '../components/layout'
 import '../styles/globals.css'
 

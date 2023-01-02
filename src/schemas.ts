@@ -1,50 +1,107 @@
-import type { JSONSchemaType } from 'ajv'
+import { z } from 'zod'
 
-export type Organization = {
-  organization: string
-  profile: {
-    avatar: string | null
-    name: string
-    about: string | null
-    website: string | null
-    tos: string | null
-  }
+export const proposerLibertyUnitSchema = z.object({
+  function: z.string(),
+  arguments: z.array(z.unknown()),
+})
+export type ProposerLibertyUnit = z.infer<typeof proposerLibertyUnitSchema>
+
+export const proposerLibertySetsSchema: z.ZodType<ProposerLibertySets> = z.lazy(
+  () =>
+    z.union([
+      z.object({
+        operator: z.enum(['and', 'or']),
+        operands: z
+          .array(
+            z.union([proposerLibertySetsSchema, proposerLibertyUnitSchema]),
+          )
+          .min(1),
+      }),
+      z.object({
+        operator: z.enum(['not']),
+        operands: z
+          .array(
+            z.union([proposerLibertySetsSchema, proposerLibertyUnitSchema]),
+          )
+          .length(1),
+      }),
+    ]),
+)
+// [index: number]: Omit<VotingPowerUnit, ''> | Omit<VotingPowerSets, ''>
+// https://github.com/react-hook-form/react-hook-form/issues/4055
+type ProposerLibertyArray = Iterable<
+  Omit<ProposerLibertyUnit, ''> | Omit<ProposerLibertySets, ''>
+>
+export type ProposerLibertySets = {
+  operator: 'and' | 'or' | 'not'
+  operands: ProposerLibertyArray
 }
 
-export const organizationSchema: JSONSchemaType<Organization> = {
-  type: 'object',
-  properties: {
-    organization: { type: 'string' },
-    profile: {
-      type: 'object',
-      properties: {
-        avatar: { type: 'string' },
-        name: { type: 'string', minLength: 1 },
-        about: { type: 'string' },
-        website: { type: 'string' },
-        tos: { type: 'string' },
-      },
-      required: ['name'],
-    },
-  },
-  required: ['organization', 'profile'],
-  additionalProperties: false,
+export const votingPowerUnitSchema = z.object({
+  function: z.string(),
+  arguments: z.array(z.unknown()),
+})
+export type VotingPowerUnit = z.infer<typeof votingPowerUnitSchema>
+
+export const votingPowerSetsSchema: z.ZodType<VotingPowerSets> = z.lazy(() =>
+  z.union([
+    z.object({
+      operator: z.enum(['sum', 'max']),
+      operands: z
+        .array(z.union([votingPowerSetsSchema, votingPowerUnitSchema]))
+        .min(1),
+    }),
+    z.object({
+      operator: z.enum(['sqrt']),
+      operands: z
+        .array(z.union([votingPowerSetsSchema, votingPowerUnitSchema]))
+        .length(1),
+    }),
+  ]),
+)
+// [index: number]: Omit<VotingPowerUnit, ''> | Omit<VotingPowerSets, ''>
+// https://github.com/react-hook-form/react-hook-form/issues/4055
+type VotingPowerArray = Iterable<
+  Omit<VotingPowerUnit, ''> | Omit<VotingPowerSets, ''>
+>
+export type VotingPowerSets = {
+  operator: 'sum' | 'max' | 'sqrt'
+  operands: VotingPowerArray
 }
 
-export const workgroupSchema: JSONSchemaType<{}> = {
-  type: 'object',
-  properties: {},
-  additionalProperties: false,
-}
+export const workgroupSchema = z.object({
+  id: z.string(),
+  profile: z.object({
+    avatar: z.string().optional(),
+    name: z.string(),
+    about: z.string().optional(),
+  }),
+  proposer_liberty: proposerLibertySetsSchema,
+  voting_power: votingPowerSetsSchema,
+  rules: z.object({
+    voting_duration: z.number(),
+    voting_start_delay: z.number(),
+    approval_condition_description: z.string(),
+  }),
+})
+export type Workgroup = z.infer<typeof workgroupSchema>
 
-export const proposalSchema: JSONSchemaType<{}> = {
-  type: 'object',
-  properties: {},
-  additionalProperties: false,
-}
-
-export const voteSchema: JSONSchemaType<{}> = {
-  type: 'object',
-  properties: {},
-  additionalProperties: false,
-}
+export const organizationSchema = z.object({
+  profile: z.object({
+    avatar: z.string().optional(),
+    name: z.string().min(1),
+    about: z.string().optional(),
+    website: z.string().optional(),
+    tos: z.string().optional(),
+  }),
+  communities: z
+    .array(
+      z.object({
+        type: z.enum(['twitter', 'discord', 'github']),
+        value: z.string().min(1),
+      }),
+    )
+    .optional(),
+  workgroups: z.array(workgroupSchema).optional(),
+})
+export type Organization = z.infer<typeof organizationSchema>
