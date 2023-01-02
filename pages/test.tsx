@@ -1,8 +1,14 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import useSWR from 'swr'
-import { check_proposer_liberty } from '../src/functions/proposer-liberty'
+import {
+  check_proposer_liberty,
+  required_coin_types_of_proposer_liberty,
+} from '../src/functions/proposer-liberty'
 import { DID } from '../src/functions/types'
-import { calculate_voting_power } from '../src/functions/voting-power'
+import {
+  calculate_voting_power,
+  required_coin_types_of_voting_power,
+} from '../src/functions/voting-power'
 import { ProposerLibertySets, VotingPowerSets } from '../src/schemas'
 
 const defaultProposerLiberty: ProposerLibertySets = {
@@ -50,6 +56,22 @@ export default function TestPage() {
     votingPower ? ['votingPower', votingPower, text] : null,
     () => calculate_voting_power(JSON.parse(votingPower), text as DID, {}),
   )
+  const requiredCoinTypesOfProposerLiberty = useMemo(() => {
+    try {
+      return required_coin_types_of_proposer_liberty(
+        JSON.parse(proposerLiberty),
+      )
+    } catch {
+      return []
+    }
+  }, [proposerLiberty])
+  const requiredCoinTypesOfVotingPower = useMemo(() => {
+    try {
+      return required_coin_types_of_voting_power(JSON.parse(votingPower))
+    } catch {
+      return []
+    }
+  }, [votingPower])
 
   return (
     <>
@@ -62,12 +84,16 @@ export default function TestPage() {
         onChange={(e) => setProposerLiberty(e.target.value)}
       />
       <p>result: {checked ? '✅' : '❌'}</p>
+      <p>
+        required_coin_types: {requiredCoinTypesOfProposerLiberty.join(', ')}
+      </p>
       <h2>VotingPower</h2>
       <textarea
         value={votingPower}
         onChange={(e) => setVotingPower(e.target.value)}
       />
       <p>result: {calculated}</p>
+      <p>required_coin_types: {requiredCoinTypesOfVotingPower.join(', ')}</p>
     </>
   )
 }
