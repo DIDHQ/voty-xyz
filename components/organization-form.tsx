@@ -11,6 +11,7 @@ import useAsync from '../hooks/use-async'
 import { Organization, organizationSchema } from '../src/schemas'
 import AvatarInput from './avatar-input'
 import WorkgroupForm from './workgroup-form'
+import { fetchJson } from '../src/utils/fetcher'
 
 const dotbit = createInstance()
 
@@ -57,16 +58,16 @@ export default function OrganizationForm(props: { organization: string }) {
       // if (!window.ethereum) {
       //   return
       // }
-      const body = JSON.stringify(organization)
-      const response = await fetch('/api/setup-organization', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body,
-      })
-      if (!response.ok) {
-        throw new Error('server error')
-      }
-      const serializedUploader = (await response.json()) as SerializedUploader
+      const textEncoder = new TextEncoder()
+      const body = textEncoder.encode(JSON.stringify(organization))
+      const serializedUploader = await fetchJson<SerializedUploader>(
+        '/api/sign-organization',
+        {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body,
+        },
+      )
       // const dotbit = createInstance({
       //   network: BitNetwork.mainnet,
       //   signer: new ProviderSigner(window.ethereum as any),
@@ -80,10 +81,9 @@ export default function OrganizationForm(props: { organization: string }) {
       //     ttl: '',
       //   },
       // ])
-      const textEncoder = new TextEncoder()
       const uploader = await arweave.transactions.getUploader(
         serializedUploader,
-        textEncoder.encode(body),
+        body,
       )
       while (!uploader.isComplete) {
         await uploader.uploadChunk()
