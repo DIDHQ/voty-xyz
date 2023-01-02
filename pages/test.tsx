@@ -49,13 +49,23 @@ export default function TestPage() {
   const [votingPower, setVotingPower] = useState(
     JSON.stringify(defaultVotingPower, null, 2),
   )
-  const { data: checked, isValidating: isCheckedValidating } = useSWR(
+  const {
+    data: checked,
+    isValidating: isCheckedValidating,
+    error: checkedError,
+  } = useSWR(
     proposerLiberty ? ['proposerLiberty', proposerLiberty, text] : null,
     () => check_proposer_liberty(JSON.parse(proposerLiberty), text as DID, {}),
+    { revalidateOnFocus: false },
   )
-  const { data: calculated, isValidating: isCalculatedValidating } = useSWR(
+  const {
+    data: calculated,
+    isValidating: isCalculatedValidating,
+    error: calculatedError,
+  } = useSWR(
     votingPower ? ['votingPower', votingPower, text] : null,
     () => calculate_voting_power(JSON.parse(votingPower), text as DID, {}),
+    { revalidateOnFocus: false },
   )
   const requiredCoinTypesOfProposerLiberty = useMemo(() => {
     try {
@@ -105,8 +115,13 @@ export default function TestPage() {
           </tr>
           <tr>
             <td>result</td>
-            <td>{checked ? '✅' : '❌'}</td>
+            <td>{checked === true ? '✅' : checked === false ? '❌' : null}</td>
             <td>{calculated}</td>
+          </tr>
+          <tr>
+            <td>error</td>
+            <td>{checkedError?.message}</td>
+            <td>{calculatedError?.message}</td>
           </tr>
           <tr>
             <td>required coin types</td>
