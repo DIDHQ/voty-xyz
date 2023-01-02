@@ -1,11 +1,14 @@
-import { DID, Snapshots } from '../types'
+import { common_coin_types } from '../../constants'
+import { DID, DidResolver } from '../types'
 import { resolve_bit } from './bit'
 import { resolve_eth } from './eth'
 
-export async function resolve_did(
-  did: DID,
-  snapshots: Snapshots,
-): Promise<{ coin_type: number; address: string }> {
+export const required_coin_types_of_did_resolver = [
+  common_coin_types.ETH,
+  common_coin_types.CKB,
+]
+
+export const resolve_did: DidResolver = async (did, snapshots) => {
   if (did.endsWith('.bit')) {
     return resolve_bit(did as DID<'bit'>, snapshots)
   }

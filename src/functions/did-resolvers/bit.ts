@@ -1,13 +1,13 @@
 import { createInstance } from 'dotbit'
 import invariant from 'tiny-invariant'
-import { DID, Snapshots } from '../types'
+import { DidResolver } from '../types'
 
 const dotbit = createInstance()
 
-export async function resolve_bit(
-  did: DID<'bit'>,
-  snapshots: Snapshots, // TODO: use snapshots
-): Promise<{ coin_type: number; address: string }> {
+export const resolve_bit: DidResolver<'bit'> = async (
+  did,
+  snapshots, // TODO: use snapshots
+) => {
   const manager = await dotbit.account(did).manager()
   invariant(manager.coin_type !== undefined)
   return {

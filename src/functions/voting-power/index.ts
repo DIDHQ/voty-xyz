@@ -5,7 +5,9 @@ import { DID, Snapshots, VotingPowerFunction } from '../types'
 import { erc20_balance } from './erc20-balance'
 import { whitelist } from './whitelist'
 
-const functions: { [name: string]: VotingPowerFunction<any[]> } = {
+export const calculate_voting_power_functions: {
+  [name: string]: VotingPowerFunction<any[]>
+} = {
   erc20_balance,
   whitelist,
 }
@@ -30,7 +32,9 @@ export async function calculate_voting_power(
     }
     throw new Error(`unsupported operator: ${data.operator}`)
   }
-  return functions[data.function](...data.arguments).execute(did, snapshots)
+  return calculate_voting_power_functions[data.function](
+    ...data.arguments,
+  ).execute(did, snapshots)
 }
 
 export function required_coin_types_of_voting_power(
@@ -43,5 +47,6 @@ export function required_coin_types_of_voting_power(
       ),
     )
   }
-  return functions[data.function](...data.arguments).required_coin_types
+  return calculate_voting_power_functions[data.function](...data.arguments)
+    .required_coin_types
 }

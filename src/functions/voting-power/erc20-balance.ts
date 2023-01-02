@@ -1,5 +1,6 @@
 import { providers } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils.js'
+import { uniq } from 'lodash-es'
 import invariant from 'tiny-invariant'
 import { Erc20__factory } from '../../../types/ethers-contracts'
 import {
@@ -7,7 +8,10 @@ import {
   chain_id_to_rpc,
   coin_type_to_chain_id,
 } from '../../constants'
-import { resolve_did } from '../did-resolvers'
+import {
+  required_coin_types_of_did_resolver,
+  resolve_did,
+} from '../did-resolvers'
 import { VotingPowerFunction } from '../types'
 
 export const erc20_balance: VotingPowerFunction<[number, string]> = (
@@ -21,7 +25,10 @@ export const erc20_balance: VotingPowerFunction<[number, string]> = (
   const contract = Erc20__factory.connect(token_contract, provider)
 
   return {
-    required_coin_types: [chain_id_to_coin_type[chain_id]],
+    required_coin_types: uniq([
+      ...required_coin_types_of_did_resolver,
+      chain_id_to_coin_type[chain_id],
+    ]),
     execute: async (did, snapshots) => {
       const decimals = await contract.decimals()
       const { coin_type, address } = await resolve_did(did, snapshots)

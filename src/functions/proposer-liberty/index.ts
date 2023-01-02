@@ -4,7 +4,9 @@ import { ProposerLibertySets, ProposerLibertyUnit } from '../../schemas'
 import { DID, ProposerLibertyFunction, Snapshots } from '../types'
 import { whitelist } from './whitelist'
 
-const functions: { [name: string]: ProposerLibertyFunction<any[]> } = {
+export const check_proposer_liberty_functions: {
+  [name: string]: ProposerLibertyFunction<any[]>
+} = {
   whitelist,
 }
 
@@ -28,7 +30,9 @@ export async function check_proposer_liberty(
     }
     throw new Error(`unsupported operator: ${data.operator}`)
   }
-  return functions[data.function](...data.arguments).execute(did, snapshots)
+  return check_proposer_liberty_functions[data.function](
+    ...data.arguments,
+  ).execute(did, snapshots)
 }
 
 export function required_coin_types_of_proposer_liberty(
@@ -41,5 +45,6 @@ export function required_coin_types_of_proposer_liberty(
       ),
     )
   }
-  return functions[data.function](...data.arguments).required_coin_types
+  return check_proposer_liberty_functions[data.function](...data.arguments)
+    .required_coin_types
 }
