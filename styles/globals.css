@@ -1,1 +1,5 @@
 @import '~@rainbow-me/rainbowkit/styles.css';
+
+* {
+  box-sizing: border-box;
+}
