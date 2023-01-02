@@ -93,7 +93,7 @@ export default function OrganizationForm(props: { organization: string }) {
   )
 
   return (
-    <form onSubmit={handleSubmit(onSubmit.execute, console.error)}>
+    <div>
       <h1>{props.organization}</h1>
       <label>avatar</label>
       <Controller
@@ -169,10 +169,12 @@ export default function OrganizationForm(props: { organization: string }) {
           <br />
         </Fragment>
       ))}
-      <input
-        type="submit"
+      <button
         disabled={!formState.isValid || onSubmit.status === 'pending'}
-      />
+        onClick={handleSubmit(onSubmit.execute, console.error)}
+      >
+        submit
+      </button>
       <br />
       {onSubmit.error ? <p>{onSubmit.error.message}</p> : null}
       {onSubmit.value ? (
@@ -180,6 +182,6 @@ export default function OrganizationForm(props: { organization: string }) {
           ar://{onSubmit.value}
         </a>
       ) : null}
-    </form>
+    </div>
   )
 }
