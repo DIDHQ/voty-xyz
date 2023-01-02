@@ -16,7 +16,7 @@ const defaultProposerLiberty: ProposerLibertySets = {
   operands: [
     {
       function: 'whitelist',
-      arguments: [['regex.bit', 'vitalik.eth']],
+      arguments: [['aliez.eth', 'regex.bit', 'vitalik.eth']],
     },
   ],
 }
@@ -28,7 +28,8 @@ const defaultVotingPower: VotingPowerSets = {
       function: 'whitelist',
       arguments: [
         [
-          ['regex.bit', 1],
+          ['aliez.eth', 1],
+          ['regex.bit', 5],
           ['vitalik.eth', 10],
         ],
       ],
@@ -48,11 +49,11 @@ export default function TestPage() {
   const [votingPower, setVotingPower] = useState(
     JSON.stringify(defaultVotingPower, null, 2),
   )
-  const { data: checked } = useSWR(
+  const { data: checked, isValidating: isCheckedValidating } = useSWR(
     proposerLiberty ? ['proposerLiberty', proposerLiberty, text] : null,
     () => check_proposer_liberty(JSON.parse(proposerLiberty), text as DID, {}),
   )
-  const { data: calculated } = useSWR(
+  const { data: calculated, isValidating: isCalculatedValidating } = useSWR(
     votingPower ? ['votingPower', votingPower, text] : null,
     () => calculate_voting_power(JSON.parse(votingPower), text as DID, {}),
   )
@@ -76,24 +77,49 @@ export default function TestPage() {
   return (
     <>
       <br />
-      <label>DID: </label>
+      <table border={1} style={{ borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th />
+            <th>Proposer Liberty</th>
+            <th>Voting Power</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>input data</td>
+            <td>
+              <textarea
+                value={proposerLiberty}
+                onChange={(e) => setProposerLiberty(e.target.value)}
+                style={{ height: 500, width: 400 }}
+              />
+            </td>
+            <td>
+              <textarea
+                value={votingPower}
+                onChange={(e) => setVotingPower(e.target.value)}
+                style={{ height: 500, width: 400 }}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>result</td>
+            <td>{checked ? '✅' : '❌'}</td>
+            <td>{calculated}</td>
+          </tr>
+          <tr>
+            <td>required coin types</td>
+            <td>{requiredCoinTypesOfProposerLiberty.join(', ') || 'none'}</td>
+            <td>{requiredCoinTypesOfVotingPower.join(', ') || 'none'}</td>
+          </tr>
+        </tbody>
+      </table>
+      <br />
+      <label>test DID: </label>
       <input value={text} onChange={(e) => setText(e.target.value)} />
-      <h2>ProposerLiberty</h2>
-      <textarea
-        value={proposerLiberty}
-        onChange={(e) => setProposerLiberty(e.target.value)}
-      />
-      <p>result: {checked ? '✅' : '❌'}</p>
-      <p>
-        required_coin_types: {requiredCoinTypesOfProposerLiberty.join(', ')}
-      </p>
-      <h2>VotingPower</h2>
-      <textarea
-        value={votingPower}
-        onChange={(e) => setVotingPower(e.target.value)}
-      />
-      <p>result: {calculated}</p>
-      <p>required_coin_types: {requiredCoinTypesOfVotingPower.join(', ')}</p>
+      <br />
+      {isCheckedValidating || isCalculatedValidating ? <span>⏳</span> : null}
     </>
   )
 }
