@@ -1,5 +1,7 @@
+import { createInstance } from 'dotbit'
 import { useMemo, useState } from 'react'
 import useSWR from 'swr'
+import { useAccount } from 'wagmi'
 import {
   check_proposer_liberty,
   required_coin_types_of_proposer_liberty,
@@ -83,6 +85,16 @@ export default function TestPage() {
       return []
     }
   }, [votingPower])
+  const account = useAccount()
+  const { data: accounts } = useSWR(
+    account.address ? ['account', account] : null,
+    async () => {
+      const dotbit = createInstance()
+      const accounts = await dotbit.accountsOfOwner({ key: account.address! })
+      return accounts.map(({ account }) => account)
+    },
+    { revalidateOnFocus: false },
+  )
 
   return (
     <>
@@ -138,6 +150,14 @@ export default function TestPage() {
       <br />
       <label>test DID: </label>
       <input value={text} onChange={(e) => setText(e.target.value)} />
+      <select value={text} onChange={(e) => setText(e.target.value)}>
+        <option>-</option>
+        {accounts?.map((account) => (
+          <option key={account} value={account}>
+            {account}
+          </option>
+        ))}
+      </select>
     </>
   )
 }
