@@ -4,13 +4,21 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { nanoid } from 'nanoid'
+import Arweave from 'arweave'
+import type { SerializedUploader } from 'arweave/web/lib/transaction-uploader'
 import useArweaveFile from '../hooks/use-arweave-file'
 import useAsync from '../hooks/use-async'
-import { Organization, organizationSchema, Workgroup } from '../src/schemas'
+import { Organization, organizationSchema } from '../src/schemas'
 import AvatarInput from './avatar-input'
 import WorkgroupForm from './workgroup-form'
 
 const dotbit = createInstance()
+
+const arweave = Arweave.init({
+  host: 'arweave.net',
+  port: 443,
+  protocol: 'https',
+})
 
 export default function OrganizationForm(props: { organization: string }) {
   const { data: hash } = useSWR(
@@ -21,9 +29,10 @@ export default function OrganizationForm(props: { organization: string }) {
     },
   )
   const { data } = useArweaveFile<Organization>(hash)
-  const { control, register, handleSubmit, reset } = useForm<Organization>({
-    resolver: zodResolver(organizationSchema),
-  })
+  const { control, register, handleSubmit, reset, formState } =
+    useForm<Organization>({
+      resolver: zodResolver(organizationSchema),
+    })
   const {
     fields: communities,
     append: appendCommunity,
@@ -44,13 +53,47 @@ export default function OrganizationForm(props: { organization: string }) {
     reset(data)
   }, [data, reset])
   const onSubmit = useAsync(
-    useCallback(async (value: Organization) => {
-      console.log(value)
+    useCallback(async (organization: Organization) => {
+      // if (!window.ethereum) {
+      //   return
+      // }
+      const body = JSON.stringify(organization)
+      const response = await fetch('/api/setup-organization', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body,
+      })
+      if (!response.ok) {
+        throw new Error('server error')
+      }
+      const serializedUploader = (await response.json()) as SerializedUploader
+      // const dotbit = createInstance({
+      //   network: BitNetwork.mainnet,
+      //   signer: new ProviderSigner(window.ethereum as any),
+      // })
+      // await window.ethereum.request({ method: 'eth_requestAccounts' })
+      // await dotbit.account(props.organization).updateRecords([
+      //   {
+      //     key: 'dweb.arweave',
+      //     value: json.transaction.id,
+      //     label: 'voty',
+      //     ttl: '',
+      //   },
+      // ])
+      const textEncoder = new TextEncoder()
+      const uploader = await arweave.transactions.getUploader(
+        serializedUploader,
+        textEncoder.encode(body),
+      )
+      while (!uploader.isComplete) {
+        await uploader.uploadChunk()
+      }
+      return serializedUploader.transaction.id as string
     }, []),
   )
 
   return (
-    <form onSubmit={handleSubmit(onSubmit.execute)}>
+    <form onSubmit={handleSubmit(onSubmit.execute, console.error)}>
       <h1>{props.organization}</h1>
       <label>avatar</label>
       <Controller
@@ -126,7 +169,14 @@ export default function OrganizationForm(props: { organization: string }) {
           <br />
         </Fragment>
       ))}
-      <input type="submit" disabled={onSubmit.status === 'pending'} />
+      <input
+        type="submit"
+        disabled={!formState.isValid || onSubmit.status === 'pending'}
+      />
+      {onSubmit.error ? <p>{onSubmit.error.message}</p> : null}
+      {onSubmit.value ? (
+        <a href={`https://arweave.net/${onSubmit.value}`}>{onSubmit.value}</a>
+      ) : null}
     </form>
   )
 }
