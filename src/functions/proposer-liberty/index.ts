@@ -1,7 +1,7 @@
 import { uniq } from 'lodash-es'
 import pMap from 'p-map'
 import { ProposerLibertySets, ProposerLibertyUnit } from '../../schemas'
-import { DID, ProposerLibertyFunction } from '../types'
+import { DID, ProposerLibertyFunction, Snapshots } from '../types'
 import { whitelist } from './whitelist'
 
 const functions: { [name: string]: ProposerLibertyFunction<any[]> } = {
@@ -11,12 +11,12 @@ const functions: { [name: string]: ProposerLibertyFunction<any[]> } = {
 export async function check_proposer_liberty(
   data: ProposerLibertySets | ProposerLibertyUnit,
   did: DID,
-  snapshot: bigint,
+  snapshots: Snapshots,
 ): Promise<boolean> {
   if ('operator' in data) {
     const results = await pMap(
       data.operands,
-      (operand) => check_proposer_liberty(operand, did, snapshot),
+      (operand) => check_proposer_liberty(operand, did, snapshots),
       { concurrency: 5 },
     )
     if (data.operator === 'and') {
@@ -28,18 +28,18 @@ export async function check_proposer_liberty(
     }
     throw new Error(`unsupported operator: ${data.operator}`)
   }
-  return functions[data.function](...data.arguments).execute(did, snapshot)
+  return functions[data.function](...data.arguments).execute(did, snapshots)
 }
 
-export function coin_types_of_proposer_liberty(
+export function required_coin_types_of_proposer_liberty(
   data: ProposerLibertySets | ProposerLibertyUnit,
 ): number[] {
   if ('operator' in data) {
     return uniq(
       Array.from(data.operands).flatMap((operand) =>
-        coin_types_of_proposer_liberty(operand),
+        required_coin_types_of_proposer_liberty(operand),
       ),
     )
   }
-  return functions[data.function](...data.arguments).coin_types
+  return functions[data.function](...data.arguments).required_coin_types
 }

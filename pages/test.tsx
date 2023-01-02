@@ -44,17 +44,11 @@ export default function TestPage() {
   )
   const { data: checked } = useSWR(
     proposerLiberty ? ['proposerLiberty', proposerLiberty, text] : null,
-    () =>
-      check_proposer_liberty(
-        JSON.parse(proposerLiberty),
-        text as DID,
-        BigInt(0),
-      ),
+    () => check_proposer_liberty(JSON.parse(proposerLiberty), text as DID, {}),
   )
   const { data: calculated } = useSWR(
     votingPower ? ['votingPower', votingPower, text] : null,
-    () =>
-      calculate_voting_power(JSON.parse(votingPower), text as DID, BigInt(0)),
+    () => calculate_voting_power(JSON.parse(votingPower), text as DID, {}),
   )
 
   return (

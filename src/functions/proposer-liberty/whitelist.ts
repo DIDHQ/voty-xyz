@@ -4,7 +4,7 @@ export const whitelist: ProposerLibertyFunction<[string[]]> = (list) => {
   const set = new Set(list)
 
   return {
-    coin_types: [],
+    required_coin_types: [],
     execute: (did) => {
       return set.has(did)
     },

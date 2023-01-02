@@ -21,10 +21,10 @@ export const erc20_balance: VotingPowerFunction<[number, string]> = (
   const contract = Erc20__factory.connect(token_contract, provider)
 
   return {
-    coin_types: [chain_id_to_coin_type[chain_id]],
-    execute: async (did, snapshot) => {
+    required_coin_types: [chain_id_to_coin_type[chain_id]],
+    execute: async (did, snapshots) => {
       const decimals = await contract.decimals()
-      const { coin_type, address } = await resolve_did(did, snapshot)
+      const { coin_type, address } = await resolve_did(did, snapshots)
       if (coin_type_to_chain_id[coin_type] === undefined) {
         return 0
       }
