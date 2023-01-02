@@ -173,9 +173,12 @@ export default function OrganizationForm(props: { organization: string }) {
         type="submit"
         disabled={!formState.isValid || onSubmit.status === 'pending'}
       />
+      <br />
       {onSubmit.error ? <p>{onSubmit.error.message}</p> : null}
       {onSubmit.value ? (
-        <a href={`https://arweave.net/${onSubmit.value}`}>{onSubmit.value}</a>
+        <a href={`https://arweave.net/${onSubmit.value}`}>
+          ar://{onSubmit.value}
+        </a>
       ) : null}
     </form>
   )
