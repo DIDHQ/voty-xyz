@@ -1,17 +1,20 @@
 import { createInstance } from 'dotbit'
-import { Fragment, useCallback, useEffect } from 'react'
+import { Fragment, useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { nanoid } from 'nanoid'
 import Arweave from 'arweave'
 import type { SerializedUploader } from 'arweave/web/lib/transaction-uploader'
+import { useAccount, useNetwork, useSignMessage } from 'wagmi'
 import useArweaveFile from '../hooks/use-arweave-file'
 import useAsync from '../hooks/use-async'
 import { Organization, organizationSchema } from '../src/schemas'
 import AvatarInput from './avatar-input'
 import WorkgroupForm from './workgroup-form'
 import { fetchJson } from '../src/utils/fetcher'
+import { chain_id_to_coin_type } from '../src/constants'
+import DidSelect from './did-select'
 
 const dotbit = createInstance()
 
@@ -30,10 +33,17 @@ export default function OrganizationForm(props: { organization: string }) {
     },
   )
   const { data } = useArweaveFile<Organization>(hash)
-  const { control, register, handleSubmit, reset, formState } =
-    useForm<Organization>({
-      resolver: zodResolver(organizationSchema),
-    })
+  const {
+    control,
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    getValues,
+    formState,
+  } = useForm<Organization>({
+    resolver: zodResolver(organizationSchema),
+  })
   const {
     fields: communities,
     append: appendCommunity,
@@ -90,6 +100,42 @@ export default function OrganizationForm(props: { organization: string }) {
       }
       return serializedUploader.transaction.id as string
     }, []),
+  )
+  const { signMessageAsync } = useSignMessage()
+  const account = useAccount()
+  const network = useNetwork()
+  const [did, setDid] = useState('')
+  const handleSign = useAsync(
+    useCallback(async () => {
+      if (!network.chain || !account.address || !did) {
+        return
+      }
+      const { signature: _omit, ...rest } = getValues()
+      const sig = Buffer.from(
+        (await signMessageAsync({ message: JSON.stringify(rest) })).substring(
+          2,
+        ),
+        'hex',
+      ).toString('base64')
+      setValue(
+        'signature',
+        {
+          did,
+          snapshot: '0', // TODO: use real snapshot
+          coin_type: chain_id_to_coin_type[network.chain.id],
+          address: account.address,
+          sig,
+        },
+        { shouldValidate: true },
+      )
+    }, [
+      account.address,
+      did,
+      getValues,
+      network.chain,
+      setValue,
+      signMessageAsync,
+    ]),
   )
 
   return (
@@ -169,6 +215,18 @@ export default function OrganizationForm(props: { organization: string }) {
           <br />
         </Fragment>
       ))}
+      <DidSelect value={did} onChange={setDid} />
+      <button
+        disabled={
+          !network.chain ||
+          !account.address ||
+          !did ||
+          handleSign.status === 'pending'
+        }
+        onClick={handleSign.execute}
+      >
+        sign
+      </button>
       <button
         disabled={!formState.isValid || onSubmit.status === 'pending'}
         onClick={handleSubmit(onSubmit.execute, console.error)}

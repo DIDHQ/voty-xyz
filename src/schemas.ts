@@ -1,5 +1,14 @@
 import { z } from 'zod'
 
+export const signatureSchema = z.object({
+  did: z.string().min(1),
+  snapshot: z.string().min(1),
+  coin_type: z.number(),
+  address: z.string().min(1),
+  sig: z.string().min(1),
+})
+export type Signature = z.infer<typeof signatureSchema>
+
 export const proposerLibertyUnitSchema = z.object({
   function: z.string(),
   arguments: z.array(z.unknown()),
@@ -11,11 +20,10 @@ export const proposerLibertySetsSchema: z.ZodType<ProposerLibertySets> = z.lazy(
     z.union([
       z.object({
         operator: z.enum(['and', 'or']),
-        operands: z
-          .array(
-            z.union([proposerLibertySetsSchema, proposerLibertyUnitSchema]),
-          )
-          .min(1),
+        operands: z.array(
+          z.union([proposerLibertySetsSchema, proposerLibertyUnitSchema]),
+        ),
+        // .min(1),
       }),
       z.object({
         operator: z.enum(['not']),
@@ -47,9 +55,10 @@ export const votingPowerSetsSchema: z.ZodType<VotingPowerSets> = z.lazy(() =>
   z.union([
     z.object({
       operator: z.enum(['sum', 'max']),
-      operands: z
-        .array(z.union([votingPowerSetsSchema, votingPowerUnitSchema]))
-        .min(1),
+      operands: z.array(
+        z.union([votingPowerSetsSchema, votingPowerUnitSchema]),
+      ),
+      // .min(1),
     }),
     z.object({
       operator: z.enum(['sqrt']),
@@ -103,5 +112,6 @@ export const organizationSchema = z.object({
     )
     .optional(),
   workgroups: z.array(workgroupSchema).optional(),
+  signature: signatureSchema,
 })
 export type Organization = z.infer<typeof organizationSchema>
