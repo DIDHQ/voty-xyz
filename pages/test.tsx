@@ -6,12 +6,12 @@ import {
   checkProposerLiberty,
   requiredCoinTypesOfProposerLiberty,
 } from '../src/functions/proposer-liberty'
-import { DID } from '../src/functions/types'
 import {
   calculateVotingPower,
   requiredCoinTypesOfVotingPower,
 } from '../src/functions/voting-power'
 import { ProposerLibertySets, VotingPowerSets } from '../src/schemas'
+import { DID } from '../src/types'
 
 const defaultProposerLiberty: ProposerLibertySets = {
   operator: 'or',
@@ -73,14 +73,14 @@ export default function TestPage() {
     () => calculateVotingPower(JSON.parse(votingPower), text as DID, {}),
     { revalidateOnFocus: false },
   )
-  const requiredCoinTypesOfProposerLiberty = useMemo(() => {
+  const coinTypesOfProposerLiberty = useMemo(() => {
     try {
       return requiredCoinTypesOfProposerLiberty(JSON.parse(proposerLiberty))
     } catch {
       return []
     }
   }, [proposerLiberty])
-  const requiredCoinTypesOfVotingPower = useMemo(() => {
+  const coinTypesOfVotingPower = useMemo(() => {
     try {
       return requiredCoinTypesOfVotingPower(JSON.parse(votingPower))
     } catch {
@@ -144,8 +144,8 @@ export default function TestPage() {
           </tr>
           <tr>
             <td>required coin types</td>
-            <td>{JSON.stringify(requiredCoinTypesOfProposerLiberty)}</td>
-            <td>{JSON.stringify(requiredCoinTypesOfVotingPower)}</td>
+            <td>{JSON.stringify(coinTypesOfProposerLiberty)}</td>
+            <td>{JSON.stringify(coinTypesOfVotingPower)}</td>
           </tr>
         </tbody>
       </table>
