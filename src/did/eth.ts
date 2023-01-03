@@ -1,6 +1,6 @@
 import { providers } from 'ethers'
 import invariant from 'tiny-invariant'
-import { DidResolver } from '../types'
+import { DidResolver } from '../functions/types'
 
 const provider = new providers.StaticJsonRpcProvider(
   'https://rpc.ankr.com/eth',
