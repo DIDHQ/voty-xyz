@@ -14,8 +14,8 @@ import AvatarInput from './avatar-input'
 import WorkgroupForm from './workgroup-form'
 import { fetchJson } from '../src/utils/fetcher'
 import { chain_id_to_coin_type } from '../src/constants'
-import DidSelect from './did-select'
 import { useCurrentSnapshot } from '../hooks/use-snapshot'
+import { resolve_did } from '../src/functions/did-resolvers'
 
 const dotbit = createInstance()
 
@@ -105,15 +105,29 @@ export default function OrganizationForm(props: { organization: string }) {
   const { signMessageAsync } = useSignMessage()
   const account = useAccount()
   const network = useNetwork()
-  const [did, setDid] = useState('')
   const coinType = useMemo(
     () => (network.chain ? chain_id_to_coin_type[network.chain.id] : undefined),
     [network.chain],
   )
   const { data: snapshot } = useCurrentSnapshot(coinType)
+  const { data: resolved } = useSWR(
+    coinType !== undefined && snapshot
+      ? ['resolve did', props.organization]
+      : null,
+    async () => {
+      return resolve_did(props.organization, {
+        [coinType!]: snapshot!,
+      })
+    },
+  )
+  const isAdmin = useMemo(
+    () =>
+      resolved?.coin_type === coinType && resolved?.address === account.address,
+    [account.address, coinType, resolved?.address, resolved?.coin_type],
+  )
   const handleSign = useAsync(
     useCallback(async () => {
-      if (!account.address || !did || !snapshot || coinType === undefined) {
+      if (!account.address || !snapshot || coinType === undefined) {
         return
       }
       const { signature: _omit, ...rest } = getValues()
@@ -126,7 +140,7 @@ export default function OrganizationForm(props: { organization: string }) {
       setValue(
         'signature',
         {
-          did,
+          did: props.organization,
           snapshot: snapshot.toString(),
           coin_type: coinType,
           address: account.address,
@@ -136,7 +150,7 @@ export default function OrganizationForm(props: { organization: string }) {
       )
     }, [
       account.address,
-      did,
+      props.organization,
       getValues,
       coinType,
       setValue,
@@ -222,12 +236,11 @@ export default function OrganizationForm(props: { organization: string }) {
           <br />
         </Fragment>
       ))}
-      <DidSelect value={did} onChange={setDid} />
       <button
         disabled={
+          !isAdmin ||
           !network.chain ||
           !account.address ||
-          !did ||
           handleSign.status === 'pending'
         }
         onClick={handleSign.execute}
@@ -235,7 +248,9 @@ export default function OrganizationForm(props: { organization: string }) {
         sign
       </button>
       <button
-        disabled={!formState.isValid || onSubmit.status === 'pending'}
+        disabled={
+          !isAdmin || !formState.isValid || onSubmit.status === 'pending'
+        }
         onClick={handleSubmit(onSubmit.execute, console.error)}
       >
         submit
