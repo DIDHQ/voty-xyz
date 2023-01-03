@@ -1,4 +1,4 @@
-export const common_coin_types = {
+export const commonCoinTypes = {
   ETH: 60,
   TRX: 195,
   CKB: 309,
@@ -6,26 +6,26 @@ export const common_coin_types = {
   BSC: 9006,
 }
 
-export const common_chain_ids = {
+export const commonChainIds = {
   ETH: 1,
   BSC: 56,
   MATIC: 137,
 }
 
-export const chain_id_to_rpc: { [chain_id: number]: string } = {
-  [common_chain_ids.ETH]: 'https://rpc.ankr.com/eth',
-  [common_chain_ids.BSC]: 'https://rpc.ankr.com/bsc',
-  [common_chain_ids.MATIC]: 'https://rpc.ankr.com/polygon',
+export const chainIdToRpc: { [chainId: number]: string } = {
+  [commonChainIds.ETH]: 'https://rpc.ankr.com/eth',
+  [commonChainIds.BSC]: 'https://rpc.ankr.com/bsc',
+  [commonChainIds.MATIC]: 'https://rpc.ankr.com/polygon',
 }
 
-export const chain_id_to_coin_type: { [chain_id: number]: number } = {
-  [common_chain_ids.ETH]: common_coin_types.ETH,
-  [common_chain_ids.BSC]: common_coin_types.BSC,
-  [common_chain_ids.MATIC]: common_coin_types.MATIC,
+export const chainIdToCoinType: { [chainId: number]: number } = {
+  [commonChainIds.ETH]: commonCoinTypes.ETH,
+  [commonChainIds.BSC]: commonCoinTypes.BSC,
+  [commonChainIds.MATIC]: commonCoinTypes.MATIC,
 }
 
-export const coin_type_to_chain_id: { [coin_type: number]: number } = {
-  [common_coin_types.ETH]: common_chain_ids.ETH,
-  [common_coin_types.MATIC]: common_chain_ids.MATIC,
-  [common_coin_types.BSC]: common_chain_ids.BSC,
+export const coinTypeToChainId: { [coinType: number]: number } = {
+  [commonCoinTypes.ETH]: commonChainIds.ETH,
+  [commonCoinTypes.MATIC]: commonChainIds.MATIC,
+  [commonCoinTypes.BSC]: commonChainIds.BSC,
 }

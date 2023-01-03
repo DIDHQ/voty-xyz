@@ -4,7 +4,7 @@ export const exact_did: ProposerLibertyFunction<[string[]]> = (list) => {
   const set = new Set(list)
 
   return {
-    required_coin_types: [],
+    requiredCoinTypes: [],
     execute: (did) => {
       return set.has(did)
     },

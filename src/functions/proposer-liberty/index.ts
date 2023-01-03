@@ -1,18 +1,19 @@
 import { uniq } from 'lodash-es'
 import pMap from 'p-map'
 import { ProposerLibertySets, ProposerLibertyUnit } from '../../schemas'
-import { DID, ProposerLibertyFunction, Snapshots } from '../types'
+import { ProposerLibertyFunction } from '../types'
 import { sub_did } from './sub-did'
 import { exact_did } from './exact-did'
+import { DID, Snapshots } from '../../types'
 
-export const check_proposer_liberty_functions: {
+export const checkProposerLibertyFunctions: {
   [name: string]: ProposerLibertyFunction<any[]>
 } = {
   sub_did,
   exact_did,
 }
 
-export async function check_proposer_liberty(
+export async function checkProposerLiberty(
   data: ProposerLibertySets | ProposerLibertyUnit,
   did: DID,
   snapshots: Snapshots,
@@ -20,7 +21,7 @@ export async function check_proposer_liberty(
   if ('operator' in data) {
     const results = await pMap(
       data.operands,
-      (operand) => check_proposer_liberty(operand, did, snapshots),
+      (operand) => checkProposerLiberty(operand, did, snapshots),
       { concurrency: 5 },
     )
     if (data.operator === 'and') {
@@ -32,21 +33,21 @@ export async function check_proposer_liberty(
     }
     throw new Error(`unsupported operator: ${data.operator}`)
   }
-  return check_proposer_liberty_functions[data.function](
+  return checkProposerLibertyFunctions[data.function](
     ...data.arguments,
   ).execute(did, snapshots)
 }
 
-export function required_coin_types_of_proposer_liberty(
+export function requiredCoinTypesOfProposerLiberty(
   data: ProposerLibertySets | ProposerLibertyUnit,
 ): number[] {
   if ('operator' in data) {
     return uniq(
       Array.from(data.operands).flatMap((operand) =>
-        required_coin_types_of_proposer_liberty(operand),
+        requiredCoinTypesOfProposerLiberty(operand),
       ),
     )
   }
-  return check_proposer_liberty_functions[data.function](...data.arguments)
-    .required_coin_types
+  return checkProposerLibertyFunctions[data.function](...data.arguments)
+    .requiredCoinTypes
 }

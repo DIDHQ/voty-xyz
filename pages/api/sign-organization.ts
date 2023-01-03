@@ -1,6 +1,6 @@
 import Arweave from 'arweave'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { resolve_did } from '../../src/functions/did-resolvers'
+import { resolveDid } from '../../src/did'
 import { organizationSchema } from '../../src/schemas'
 import { verifySignature } from '../../src/signature'
 import { getCurrentSnapshot } from '../../src/snapshot'
@@ -28,11 +28,11 @@ export default async function handler(
   const { signature, ...rest } = parsed.data
   const message = JSON.stringify(rest)
   const snapshot = BigInt(signature.snapshot)
-  const { coin_type, address } = await resolve_did(signature.did, {
+  const { coinType, address } = await resolveDid(signature.did, {
     [signature.coin_type]: snapshot,
   })
   if (
-    coin_type !== signature.coin_type ||
+    coinType !== signature.coin_type ||
     address !== signature.address ||
     !verifySignature(message, signature)
   ) {
@@ -41,7 +41,7 @@ export default async function handler(
   }
 
   // check snapshot timeliness
-  const currentSnapshot = await getCurrentSnapshot(coin_type)
+  const currentSnapshot = await getCurrentSnapshot(coinType)
   if (
     currentSnapshot > snapshot + BigInt(5) ||
     currentSnapshot < snapshot - BigInt(5)

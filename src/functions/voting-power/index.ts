@@ -1,18 +1,19 @@
 import { max, sum, uniq } from 'lodash-es'
 import pMap from 'p-map'
 import { VotingPowerSets, VotingPowerUnit } from '../../schemas'
-import { DID, Snapshots, VotingPowerFunction } from '../types'
+import { DID, Snapshots } from '../../types'
+import { VotingPowerFunction } from '../types'
 import { erc20_balance } from './erc20-balance'
 import { weight_list } from './weight-list'
 
-export const calculate_voting_power_functions: {
+export const calculateVotingPowerFunctions: {
   [name: string]: VotingPowerFunction<any[]>
 } = {
   erc20_balance,
   weight_list,
 }
 
-export async function calculate_voting_power(
+export async function calculateVotingPower(
   data: VotingPowerSets | VotingPowerUnit,
   did: DID,
   snapshots: Snapshots,
@@ -20,7 +21,7 @@ export async function calculate_voting_power(
   if ('operator' in data) {
     const results = await pMap(
       data.operands,
-      (operand) => calculate_voting_power(operand, did, snapshots),
+      (operand) => calculateVotingPower(operand, did, snapshots),
       { concurrency: 5 },
     )
     if (data.operator === 'max') {
@@ -32,21 +33,21 @@ export async function calculate_voting_power(
     }
     throw new Error(`unsupported operator: ${data.operator}`)
   }
-  return calculate_voting_power_functions[data.function](
+  return calculateVotingPowerFunctions[data.function](
     ...data.arguments,
   ).execute(did, snapshots)
 }
 
-export function required_coin_types_of_voting_power(
+export function requiredCoinTypesOfVotingPower(
   data: VotingPowerSets | VotingPowerUnit,
 ): number[] {
   if ('operator' in data) {
     return uniq(
       Array.from(data.operands).flatMap((operand) =>
-        required_coin_types_of_voting_power(operand),
+        requiredCoinTypesOfVotingPower(operand),
       ),
     )
   }
-  return calculate_voting_power_functions[data.function](...data.arguments)
-    .required_coin_types
+  return calculateVotingPowerFunctions[data.function](...data.arguments)
+    .requiredCoinTypes
 }
