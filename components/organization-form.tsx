@@ -1,5 +1,5 @@
 import { createInstance } from 'dotbit'
-import { Fragment, useCallback, useEffect, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,6 +15,7 @@ import WorkgroupForm from './workgroup-form'
 import { fetchJson } from '../src/utils/fetcher'
 import { chain_id_to_coin_type } from '../src/constants'
 import DidSelect from './did-select'
+import { useCurrentSnapshot } from '../hooks/use-snapshot'
 
 const dotbit = createInstance()
 
@@ -105,9 +106,14 @@ export default function OrganizationForm(props: { organization: string }) {
   const account = useAccount()
   const network = useNetwork()
   const [did, setDid] = useState('')
+  const coinType = useMemo(
+    () => (network.chain ? chain_id_to_coin_type[network.chain.id] : undefined),
+    [network.chain],
+  )
+  const { data: snapshot } = useCurrentSnapshot(coinType)
   const handleSign = useAsync(
     useCallback(async () => {
-      if (!network.chain || !account.address || !did) {
+      if (!account.address || !did || !snapshot || coinType === undefined) {
         return
       }
       const { signature: _omit, ...rest } = getValues()
@@ -121,8 +127,8 @@ export default function OrganizationForm(props: { organization: string }) {
         'signature',
         {
           did,
-          snapshot: '0', // TODO: use real snapshot
-          coin_type: chain_id_to_coin_type[network.chain.id],
+          snapshot: snapshot.toString(),
+          coin_type: coinType,
           address: account.address,
           sig,
         },
@@ -132,9 +138,10 @@ export default function OrganizationForm(props: { organization: string }) {
       account.address,
       did,
       getValues,
-      network.chain,
+      coinType,
       setValue,
       signMessageAsync,
+      snapshot,
     ]),
   )
 

@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { resolve_did } from '../../src/functions/did-resolvers'
 import { organizationSchema } from '../../src/schemas'
 import { verifySignature } from '../../src/signature'
+import { getCurrentSnapshot } from '../../src/snapshot'
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -26,8 +27,9 @@ export default async function handler(
   // verify signature
   const { signature, ...rest } = parsed.data
   const message = JSON.stringify(rest)
+  const snapshot = BigInt(signature.snapshot)
   const { coin_type, address } = await resolve_did(signature.did, {
-    [signature.coin_type]: BigInt(signature.snapshot),
+    [signature.coin_type]: snapshot,
   })
   if (
     coin_type !== signature.coin_type ||
@@ -35,6 +37,16 @@ export default async function handler(
     !verifySignature(message, signature)
   ) {
     res.status(400).send('invalid signature')
+    return
+  }
+
+  // check snapshot timeliness
+  const currentSnapshot = await getCurrentSnapshot(coin_type)
+  if (
+    currentSnapshot > snapshot + BigInt(5) ||
+    currentSnapshot < snapshot - BigInt(5)
+  ) {
+    res.status(400).send('outdated snapshot')
     return
   }
 
