@@ -3,13 +3,13 @@ import { useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { useAccount } from 'wagmi'
 import {
-  check_proposer_liberty,
-  required_coin_types_of_proposer_liberty,
+  checkProposerLiberty,
+  requiredCoinTypesOfProposerLiberty,
 } from '../src/functions/proposer-liberty'
 import { DID } from '../src/functions/types'
 import {
-  calculate_voting_power,
-  required_coin_types_of_voting_power,
+  calculateVotingPower,
+  requiredCoinTypesOfVotingPower,
 } from '../src/functions/voting-power'
 import { ProposerLibertySets, VotingPowerSets } from '../src/schemas'
 
@@ -61,7 +61,7 @@ export default function TestPage() {
     error: checkedError,
   } = useSWR(
     proposerLiberty ? ['proposerLiberty', proposerLiberty, text] : null,
-    () => check_proposer_liberty(JSON.parse(proposerLiberty), text as DID, {}),
+    () => checkProposerLiberty(JSON.parse(proposerLiberty), text as DID, {}),
     { revalidateOnFocus: false },
   )
   const {
@@ -70,21 +70,19 @@ export default function TestPage() {
     error: calculatedError,
   } = useSWR(
     votingPower ? ['votingPower', votingPower, text] : null,
-    () => calculate_voting_power(JSON.parse(votingPower), text as DID, {}),
+    () => calculateVotingPower(JSON.parse(votingPower), text as DID, {}),
     { revalidateOnFocus: false },
   )
   const requiredCoinTypesOfProposerLiberty = useMemo(() => {
     try {
-      return required_coin_types_of_proposer_liberty(
-        JSON.parse(proposerLiberty),
-      )
+      return requiredCoinTypesOfProposerLiberty(JSON.parse(proposerLiberty))
     } catch {
       return []
     }
   }, [proposerLiberty])
   const requiredCoinTypesOfVotingPower = useMemo(() => {
     try {
-      return required_coin_types_of_voting_power(JSON.parse(votingPower))
+      return requiredCoinTypesOfVotingPower(JSON.parse(votingPower))
     } catch {
       return []
     }

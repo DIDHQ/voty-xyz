@@ -13,9 +13,9 @@ import { Organization, organizationSchema } from '../src/schemas'
 import AvatarInput from './avatar-input'
 import WorkgroupForm from './workgroup-form'
 import { fetchJson } from '../src/utils/fetcher'
-import { chain_id_to_coin_type } from '../src/constants'
+import { chainIdToCoinType } from '../src/constants'
 import { useCurrentSnapshot } from '../hooks/use-snapshot'
-import { resolve_did } from '../src/functions/did-resolvers'
+import { resolveDid } from '../src/did'
 
 const dotbit = createInstance()
 
@@ -106,7 +106,7 @@ export default function OrganizationForm(props: { organization: string }) {
   const account = useAccount()
   const network = useNetwork()
   const coinType = useMemo(
-    () => (network.chain ? chain_id_to_coin_type[network.chain.id] : undefined),
+    () => (network.chain ? chainIdToCoinType[network.chain.id] : undefined),
     [network.chain],
   )
   const { data: snapshot } = useCurrentSnapshot(coinType)
@@ -115,15 +115,15 @@ export default function OrganizationForm(props: { organization: string }) {
       ? ['resolve did', props.organization]
       : null,
     async () => {
-      return resolve_did(props.organization, {
+      return resolveDid(props.organization, {
         [coinType!]: snapshot!,
       })
     },
   )
   const isAdmin = useMemo(
     () =>
-      resolved?.coin_type === coinType && resolved?.address === account.address,
-    [account.address, coinType, resolved?.address, resolved?.coin_type],
+      resolved?.coinType === coinType && resolved?.address === account.address,
+    [account.address, coinType, resolved?.address, resolved?.coinType],
   )
   const handleSign = useAsync(
     useCallback(async () => {
