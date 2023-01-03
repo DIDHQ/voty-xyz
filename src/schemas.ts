@@ -11,10 +11,11 @@ export const proposerLibertySetsSchema: z.ZodType<ProposerLibertySets> = z.lazy(
     z.union([
       z.object({
         operator: z.enum(['and', 'or']),
-        operands: z.array(
-          z.union([proposerLibertySetsSchema, proposerLibertyUnitSchema]),
-        ),
-        // .min(1),
+        operands: z
+          .array(
+            z.union([proposerLibertySetsSchema, proposerLibertyUnitSchema]),
+          )
+          .min(1),
       }),
       z.object({
         operator: z.enum(['not']),
@@ -46,10 +47,9 @@ export const votingPowerSetsSchema: z.ZodType<VotingPowerSets> = z.lazy(() =>
   z.union([
     z.object({
       operator: z.enum(['sum', 'max']),
-      operands: z.array(
-        z.union([votingPowerSetsSchema, votingPowerUnitSchema]),
-      ),
-      // .min(1),
+      operands: z
+        .array(z.union([votingPowerSetsSchema, votingPowerUnitSchema]))
+        .min(1),
     }),
     z.object({
       operator: z.enum(['sqrt']),
