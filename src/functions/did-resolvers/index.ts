@@ -9,11 +9,18 @@ export const required_coin_types_of_did_resolver = [
 ]
 
 export const resolve_did: DidResolver = async (did, snapshots) => {
-  if (did.endsWith('.bit')) {
-    return resolve_bit(did as DID<'bit'>, snapshots)
+  if (did_suffix_is(did, 'bit')) {
+    return resolve_bit(did, snapshots)
   }
-  if (did.endsWith('.eth')) {
-    return resolve_eth(did as DID<'eth'>, snapshots)
+  if (did_suffix_is(did, 'eth')) {
+    return resolve_eth(did, snapshots)
   }
   throw new Error(`unsupported did: ${did}`)
+}
+
+export function did_suffix_is<S extends 'bit' | 'eth'>(
+  did: string,
+  suffix: S,
+): did is DID<S> {
+  return did.endsWith(`.${suffix}`)
 }
