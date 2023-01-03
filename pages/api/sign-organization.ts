@@ -1,6 +1,6 @@
 import Arweave from 'arweave'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { resolve_did } from '../../src/did'
+import { resolve_did } from '../../src/functions/did-resolvers'
 import { organizationSchema } from '../../src/schemas'
 import { verifySignature } from '../../src/signature'
 

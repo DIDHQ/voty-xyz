@@ -1,5 +1,5 @@
-import { common_coin_types } from '../constants'
-import { DID, DidResolver } from '../functions/types'
+import { common_coin_types } from '../../constants'
+import { DID, DidResolver } from '../types'
 import { resolve_bit } from './bit'
 import { resolve_eth } from './eth'
 

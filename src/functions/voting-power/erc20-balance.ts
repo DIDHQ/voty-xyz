@@ -8,7 +8,10 @@ import {
   chain_id_to_rpc,
   coin_type_to_chain_id,
 } from '../../constants'
-import { required_coin_types_of_did_resolver, resolve_did } from '../../did'
+import {
+  required_coin_types_of_did_resolver,
+  resolve_did,
+} from '../did-resolvers'
 import { VotingPowerFunction } from '../types'
 
 export const erc20_balance: VotingPowerFunction<[number, string]> = (
