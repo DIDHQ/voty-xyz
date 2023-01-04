@@ -4,6 +4,9 @@ import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { mainnet, polygon, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import { IconProvider, DEFAULT_ICON_CONFIGS } from '@icon-park/react'
+import { useDarkMode } from 'usehooks-ts'
+import { useTheme } from 'react-daisyui'
+import { useEffect } from 'react'
 
 import Layout from '../components/layout'
 import '../styles/globals.css'
@@ -28,6 +31,12 @@ const wagmiClient = createClient({
 const iconConfig = { ...DEFAULT_ICON_CONFIGS, size: '1.5rem' }
 
 export default function App({ Component, pageProps }: AppProps) {
+  const isDarkMode = useDarkMode()
+  const { setTheme } = useTheme()
+  useEffect(() => {
+    setTheme(isDarkMode ? 'dark' : 'light')
+  }, [isDarkMode, setTheme])
+
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>
