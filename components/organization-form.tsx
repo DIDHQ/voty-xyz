@@ -17,6 +17,7 @@ import { fetchJson } from '../src/utils/fetcher'
 import { chainIdToCoinType } from '../src/constants'
 import { useCurrentSnapshot } from '../hooks/use-snapshot'
 import { resolveDid } from '../src/did'
+import FormItem from './form-item'
 
 const dotbit = createInstance()
 
@@ -163,8 +164,7 @@ export default function OrganizationForm(props: { organization: string }) {
   return (
     <div>
       <h1>Organization: {props.organization}</h1>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">avatar</label>
+      <FormItem label="avatar">
         <Controller
           control={control}
           name="profile.avatar"
@@ -176,29 +176,24 @@ export default function OrganizationForm(props: { organization: string }) {
             />
           )}
         />
-      </div>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">name</label>
+      </FormItem>
+      <FormItem label="name">
         <Input {...register('profile.name')} />
-      </div>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">about</label>
+      </FormItem>
+      <FormItem label="about">
         <Input {...register('profile.about')} />
-      </div>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">website</label>
+      </FormItem>
+      <FormItem label="website">
         <Input {...register('profile.website')} />
-      </div>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">term of service</label>
+      </FormItem>
+      <FormItem label="term of service<">
         <Input {...register('profile.tos')} />
-      </div>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">communities</label>
+      </FormItem>
+      <FormItem label="communities">
         <Button onClick={() => appendCommunity({ type: 'twitter', value: '' })}>
           +
         </Button>
-      </div>
+      </FormItem>
       {communities.map((field, index) => (
         <Fragment key={field.id}>
           <Select {...register(`communities.${index}.type`)}>
@@ -211,8 +206,7 @@ export default function OrganizationForm(props: { organization: string }) {
           <br />
         </Fragment>
       ))}
-      <div className="form-control w-full max-w-xs">
-        <label className="label">workgroups</label>
+      <FormItem label="workgroups">
         <Button
           onClick={() =>
             appendWorkgroup({
@@ -230,7 +224,7 @@ export default function OrganizationForm(props: { organization: string }) {
         >
           +
         </Button>
-      </div>
+      </FormItem>
       {workgroups.map((field, index) => (
         <Fragment key={field.id}>
           <Controller

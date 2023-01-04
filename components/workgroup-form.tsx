@@ -4,6 +4,7 @@ import { Button, Input } from 'react-daisyui'
 import { Controller, useForm } from 'react-hook-form'
 import { Workgroup, workgroupSchema } from '../src/schemas'
 import AvatarInput from './avatar-input'
+import FormItem from './form-item'
 import JsonInput from './json-input'
 import NumericInput from './numeric-input'
 
@@ -22,8 +23,7 @@ export default function WorkgroupForm(props: {
   return (
     <div>
       <h2>Workgroup: {props.value.id}</h2>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">avatar</label>
+      <FormItem label="avatar">
         <Controller
           control={control}
           name="profile.avatar"
@@ -35,17 +35,14 @@ export default function WorkgroupForm(props: {
             />
           )}
         />
-      </div>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">name</label>
+      </FormItem>
+      <FormItem label="name">
         <Input {...register('profile.name')} />
-      </div>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">about</label>
+      </FormItem>
+      <FormItem label="about">
         <Input {...register('profile.about')} />
-      </div>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">proposer liberty</label>
+      </FormItem>
+      <FormItem label="proposer liberty">
         <Controller
           control={control}
           name="proposer_liberty"
@@ -53,9 +50,8 @@ export default function WorkgroupForm(props: {
             <JsonInput value={value} onChange={onChange} />
           )}
         />
-      </div>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">voting power</label>
+      </FormItem>
+      <FormItem label="voting power">
         <Controller
           control={control}
           name="voting_power"
@@ -63,9 +59,8 @@ export default function WorkgroupForm(props: {
             <JsonInput value={value} onChange={onChange} />
           )}
         />
-      </div>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">voting duration</label>
+      </FormItem>
+      <FormItem label="voting duration">
         <Controller
           control={control}
           name="rules.voting_duration"
@@ -73,9 +68,8 @@ export default function WorkgroupForm(props: {
             <NumericInput value={value} onChange={onChange} />
           )}
         />
-      </div>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">voting start delay</label>
+      </FormItem>
+      <FormItem label="voting start delay">
         <Controller
           control={control}
           name="rules.voting_start_delay"
@@ -83,11 +77,10 @@ export default function WorkgroupForm(props: {
             <NumericInput value={value} onChange={onChange} />
           )}
         />
-      </div>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">approval condition description</label>
+      </FormItem>
+      <FormItem label="approval condition description">
         <Input {...register('rules.approval_condition_description')} />
-      </div>
+      </FormItem>
       <Button
         disabled={!formState.isDirty || !formState.isValid}
         onClick={handleSubmit(props.onChange)}

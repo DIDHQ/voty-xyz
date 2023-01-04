@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import { Input, Select, Table, Textarea } from 'react-daisyui'
 import useSWR from 'swr'
 import { useAccount } from 'wagmi'
+import FormItem from '../components/form-item'
 import {
   checkProposerLiberty,
   requiredCoinTypesOfProposerLiberty,
@@ -149,8 +150,7 @@ export default function TestPage() {
           </Table.Row>
         </Table.Body>
       </Table>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">test DID: </label>
+      <FormItem label="test DID">
         <Input value={text} onChange={(e) => setText(e.target.value)} />
         <Select value={text} onChange={(e) => setText(e.target.value)}>
           <Select.Option />
@@ -162,7 +162,7 @@ export default function TestPage() {
             ))}
           </>
         </Select>
-      </div>
+      </FormItem>
     </>
   )
 }
