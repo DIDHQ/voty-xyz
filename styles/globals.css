@@ -1,4 +1,9 @@
 @import '~@rainbow-me/rainbowkit/styles.css';
+@import '@icon-park/react/styles/index.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 * {
   box-sizing: border-box;
