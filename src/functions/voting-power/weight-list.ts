@@ -6,7 +6,7 @@ export const weight_list: VotingPowerFunction<[[string, number][]]> = (
   const map = new Map(list)
 
   return {
-    required_coin_types: [],
+    requiredCoinTypes: [],
     execute: (did) => {
       return map.get(did) || 0
     },

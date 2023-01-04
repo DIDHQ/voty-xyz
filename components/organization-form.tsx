@@ -1,17 +1,21 @@
 import { createInstance } from 'dotbit'
-import { Fragment, useCallback, useEffect } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { nanoid } from 'nanoid'
 import Arweave from 'arweave'
 import type { SerializedUploader } from 'arweave/web/lib/transaction-uploader'
+import { useAccount, useNetwork, useSignMessage } from 'wagmi'
 import useArweaveFile from '../hooks/use-arweave-file'
 import useAsync from '../hooks/use-async'
 import { Organization, organizationSchema } from '../src/schemas'
 import AvatarInput from './avatar-input'
 import WorkgroupForm from './workgroup-form'
 import { fetchJson } from '../src/utils/fetcher'
+import { chainIdToCoinType } from '../src/constants'
+import { useCurrentSnapshot } from '../hooks/use-snapshot'
+import { resolveDid } from '../src/did'
 
 const dotbit = createInstance()
 
@@ -30,10 +34,17 @@ export default function OrganizationForm(props: { organization: string }) {
     },
   )
   const { data } = useArweaveFile<Organization>(hash)
-  const { control, register, handleSubmit, reset, formState } =
-    useForm<Organization>({
-      resolver: zodResolver(organizationSchema),
-    })
+  const {
+    control,
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    getValues,
+    formState,
+  } = useForm<Organization>({
+    resolver: zodResolver(organizationSchema),
+  })
   const {
     fields: communities,
     append: appendCommunity,
@@ -90,6 +101,62 @@ export default function OrganizationForm(props: { organization: string }) {
       }
       return serializedUploader.transaction.id as string
     }, []),
+  )
+  const { signMessageAsync } = useSignMessage()
+  const account = useAccount()
+  const network = useNetwork()
+  const coinType = useMemo(
+    () => (network.chain ? chainIdToCoinType[network.chain.id] : undefined),
+    [network.chain],
+  )
+  const { data: snapshot } = useCurrentSnapshot(coinType)
+  const { data: resolved } = useSWR(
+    coinType !== undefined && snapshot
+      ? ['resolve did', props.organization]
+      : null,
+    async () => {
+      return resolveDid(props.organization, {
+        [coinType!]: snapshot!,
+      })
+    },
+  )
+  const isAdmin = useMemo(
+    () =>
+      resolved?.coinType === coinType && resolved?.address === account.address,
+    [account.address, coinType, resolved?.address, resolved?.coinType],
+  )
+  const handleSign = useAsync(
+    useCallback(async () => {
+      if (!account.address || !snapshot || coinType === undefined) {
+        return
+      }
+      const { signature: _omit, ...rest } = getValues()
+      const sig = Buffer.from(
+        (await signMessageAsync({ message: JSON.stringify(rest) })).substring(
+          2,
+        ),
+        'hex',
+      ).toString('base64')
+      setValue(
+        'signature',
+        {
+          did: props.organization,
+          snapshot: snapshot.toString(),
+          coin_type: coinType,
+          address: account.address,
+          sig,
+        },
+        { shouldValidate: true },
+      )
+    }, [
+      account.address,
+      props.organization,
+      getValues,
+      coinType,
+      setValue,
+      signMessageAsync,
+      snapshot,
+    ]),
   )
 
   return (
@@ -170,7 +237,20 @@ export default function OrganizationForm(props: { organization: string }) {
         </Fragment>
       ))}
       <button
-        disabled={!formState.isValid || onSubmit.status === 'pending'}
+        disabled={
+          !isAdmin ||
+          !network.chain ||
+          !account.address ||
+          handleSign.status === 'pending'
+        }
+        onClick={handleSign.execute}
+      >
+        sign
+      </button>
+      <button
+        disabled={
+          !isAdmin || !formState.isValid || onSubmit.status === 'pending'
+        }
         onClick={handleSubmit(onSubmit.execute, console.error)}
       >
         submit

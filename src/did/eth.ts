@@ -7,11 +7,11 @@ const provider = new providers.StaticJsonRpcProvider(
   1,
 )
 
-export const resolve_eth: DidResolver<'eth'> = async (
+export const resolveEth: DidResolver<'eth'> = async (
   did,
   snapshots, // TODO: use snapshots
 ) => {
   const address = await provider.resolveName(did)
   invariant(address)
-  return { coin_type: 60, address }
+  return { coinType: 60, address }
 }
