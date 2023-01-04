@@ -37,7 +37,12 @@ export default function App({ Component, pageProps }: AppProps) {
   const { setTheme } = useTheme()
   const persistentTheme = useAtomValue(persistentThemeAtom)
   useEffect(() => {
-    const t = persistentTheme || (isDarkMode ? 'dark' : 'light')
+    const t =
+      persistentTheme === 'auto'
+        ? isDarkMode
+          ? 'dark'
+          : 'light'
+        : persistentTheme
     document.getElementsByTagName('html')[0].setAttribute('data-theme', t)
     setTheme(t)
   }, [isDarkMode, setTheme, persistentTheme])
