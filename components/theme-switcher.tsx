@@ -1,31 +1,41 @@
-import { useAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import { Dropdown, Button } from 'react-daisyui'
 import { Theme } from '@icon-park/react'
+import { capitalize } from 'lodash'
 
 import { persistentThemeAtom } from '../src/atoms'
 
 const DEFAULT_THEMES = ['light', 'dark', 'auto']
 
-function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1)
-}
-
 export default function ThemeSwitcher() {
-  const [persistentTheme, setPersistentTheme] = useAtom(persistentThemeAtom)
-  const handleChangeThemeGen = (theme: 'light' | 'dark' | 'auto') => () => {
-    setPersistentTheme(theme)
+  const setPersistentTheme = useSetAtom(persistentThemeAtom)
+
+  // To make sure clicking button will make the menu closed if the menu is open.
+  const checkAndCloseDropDown = (e: any) => {
+    let targetEl = e.currentTarget
+    if (targetEl && targetEl.matches(':focus')) {
+      setTimeout(function () {
+        targetEl.blur()
+      }, 0)
+    }
   }
 
   return (
     <Dropdown>
-      <Button variant="outline" shape="circle">
+      <Button
+        variant="outline"
+        shape="circle"
+        onMouseDown={checkAndCloseDropDown}
+      >
         <Theme />
       </Button>
       <Dropdown.Menu className="w-52">
         {DEFAULT_THEMES.map((theme) => (
           <Dropdown.Item
             key={theme}
-            onClick={handleChangeThemeGen(theme as 'light' | 'dark' | 'auto')}
+            onClick={() =>
+              setPersistentTheme(theme as 'light' | 'dark' | 'auto')
+            }
           >
             {capitalize(theme)}
           </Dropdown.Item>
