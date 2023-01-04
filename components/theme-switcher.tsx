@@ -13,13 +13,12 @@ export default function ThemeSwitcher() {
 
   // To make sure clicking button will make the menu closed if the menu is open.
   const handleCheckAndCloseDropDown = useCallback(
-    ({ currentTarget }: React.MouseEvent<HTMLButtonElement>) => {
-      if (!currentTarget || !currentTarget.matches(':focus')) {
-        return
-      }
-      const timer = setTimeout(() => currentTarget.blur(), 0)
-      return () => {
-        clearTimeout(timer)
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      let targetEl = e.currentTarget
+      if (targetEl && targetEl.matches(':focus')) {
+        setTimeout(function () {
+          targetEl.blur()
+        }, 0)
       }
     },
     [],
