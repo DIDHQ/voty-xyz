@@ -1,7 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 
+import { Delete } from '@icon-park/react'
 import Avatar from 'boring-avatars'
 import { ChangeEvent, forwardRef, useCallback, useRef } from 'react'
+import { Button } from 'react-daisyui'
 
 export default forwardRef<
   HTMLSpanElement,
@@ -9,7 +11,7 @@ export default forwardRef<
     size?: number
     name?: string
     value?: string
-    onChange?: (value: string) => void
+    onChange?: (value?: string) => void
     disabled?: boolean
   }
 >(function AvatarFileInput(props, ref) {
@@ -30,34 +32,46 @@ export default forwardRef<
   const size = props.size || 80
 
   return (
-    <span
-      ref={ref}
-      onClick={() => (props.disabled ? undefined : inputRef.current?.click())}
-      style={{ cursor: props.disabled ? 'default' : 'pointer', lineHeight: 0 }}
-    >
-      {props.value ? (
-        <img
-          src={props.value}
-          alt={props.name}
-          width={size}
-          height={size}
-          style={{
-            width: size,
-            height: size,
-            borderRadius: '50%',
-            objectFit: 'cover',
-          }}
+    <>
+      <span
+        ref={ref}
+        onClick={() => (props.disabled ? undefined : inputRef.current?.click())}
+        style={{
+          cursor: props.disabled ? 'default' : 'pointer',
+          lineHeight: 0,
+          width: size,
+          height: size,
+        }}
+      >
+        {props.value ? (
+          <img
+            src={props.value}
+            alt={props.name}
+            width={size}
+            height={size}
+            style={{
+              width: size,
+              height: size,
+              borderRadius: '50%',
+              objectFit: 'cover',
+            }}
+          />
+        ) : (
+          <Avatar size={size} name={props.name} variant="pixel" />
+        )}
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={handleChange}
         />
-      ) : (
-        <Avatar size={size} name={props.name} variant="pixel" />
+      </span>
+      {props.disabled ? null : (
+        <Button size="xs" shape="circle" onClick={() => onChange?.(undefined)}>
+          <Delete size={10} />
+        </Button>
       )}
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        style={{ display: 'none' }}
-        onChange={handleChange}
-      />
-    </span>
+    </>
   )
 })
