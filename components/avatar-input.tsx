@@ -6,6 +6,7 @@ import { ChangeEvent, forwardRef, useCallback, useRef } from 'react'
 export default forwardRef<
   HTMLSpanElement,
   {
+    size?: number
     name?: string
     value?: string
     onChange?: (value: string) => void
@@ -26,6 +27,7 @@ export default forwardRef<
     },
     [onChange],
   )
+  const size = props.size || 80
 
   return (
     <span
@@ -37,17 +39,17 @@ export default forwardRef<
         <img
           src={props.value}
           alt={props.name}
-          width={80}
-          height={80}
+          width={size}
+          height={size}
           style={{
-            width: 80,
-            height: 80,
+            width: size,
+            height: size,
             borderRadius: '50%',
             objectFit: 'cover',
           }}
         />
       ) : (
-        <Avatar size={80} name={props.name} variant="pixel" />
+        <Avatar size={size} name={props.name} variant="pixel" />
       )}
       <input
         ref={inputRef}

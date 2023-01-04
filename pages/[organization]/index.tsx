@@ -11,6 +11,7 @@ import {
   UserToUserTransmission,
   Info,
   SettingOne,
+  NetworkTree,
 } from '@icon-park/react'
 import AvatarInput from '../../components/avatar-input'
 import useArweaveFile from '../../hooks/use-arweave-file'
@@ -36,11 +37,32 @@ export default function OrganizationIndexPage() {
       <div className="menu bg-base-100 w-56 rounded-box">
         <Menu>
           <Menu.Item>
-            <Link href={`/${router.query.organization}`} className="active">
-              <ViewList />
-              Proposals
+            <Link
+              href={`/${router.query.organization}`}
+              className={router.query.workgroup ? undefined : 'active'}
+            >
+              <NetworkTree />
+              Workgroups
             </Link>
           </Menu.Item>
+          {organization?.workgroups?.map((workgroup) => (
+            <Menu.Item key={workgroup.id} className="ml-6">
+              <Link
+                href={`/${router.query.organization}?workgroup=${workgroup.id}`}
+                className={
+                  router.query.workgroup === workgroup.id ? 'active' : undefined
+                }
+              >
+                <AvatarInput
+                  size={24}
+                  name={workgroup.profile.name}
+                  value={workgroup.profile.avatar}
+                  disabled
+                />
+                {workgroup.profile.name}
+              </Link>
+            </Menu.Item>
+          ))}
           <Menu.Item>
             <Link href={`/${router.query.organization}/create`}>
               <HoldInterface />
