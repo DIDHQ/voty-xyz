@@ -18,6 +18,7 @@ import { chainIdToCoinType } from '../src/constants'
 import { useCurrentSnapshot } from '../hooks/use-snapshot'
 import { resolveDid } from '../src/did'
 import FormItem from './form-item'
+import { wrapJsonMessage } from '../src/signature'
 
 const dotbit = createInstance()
 
@@ -132,11 +133,13 @@ export default function OrganizationForm(props: { organization: string }) {
       if (!account.address || !snapshot || coinType === undefined) {
         return
       }
-      const { signature: _omit, ...rest } = getValues()
+      const { signature: _omit, ...data } = getValues()
       const sig = Buffer.from(
-        (await signMessageAsync({ message: JSON.stringify(rest) })).substring(
-          2,
-        ),
+        (
+          await signMessageAsync({
+            message: await wrapJsonMessage('editing organization', data),
+          })
+        ).substring(2),
         'hex',
       ).toString('base64')
       setValue(
@@ -253,6 +256,7 @@ export default function OrganizationForm(props: { organization: string }) {
         submit
       </Button>
       <br />
+      {handleSign.error ? <p>{handleSign.error.message}</p> : null}
       {onSubmit.error ? <p>{onSubmit.error.message}</p> : null}
       {onSubmit.value ? (
         <a href={`https://arweave.net/${onSubmit.value}`}>

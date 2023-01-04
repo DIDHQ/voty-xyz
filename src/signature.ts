@@ -1,3 +1,4 @@
+import arweave from 'arweave'
 import { verifyMessage } from 'ethers/lib/utils.js'
 import { coinTypeToChainId } from './constants'
 import { Signature } from './schemas'
@@ -15,4 +16,16 @@ export function verifySignature(
     verifyMessage(message, Buffer.from(signature.sig, 'base64')) ===
     signature.address
   )
+}
+
+export async function wrapJsonMessage(
+  action: 'editing organization',
+  json: object,
+): Promise<string> {
+  const textEncoder = new TextEncoder()
+  const data = textEncoder.encode(JSON.stringify(json))
+  const buffer = await arweave.crypto.hash(data, 'SHA-256')
+  return `You are signing to ${action} on Voty.\n\nhash: ${Buffer.from(
+    buffer,
+  ).toString('base64')}`
 }
