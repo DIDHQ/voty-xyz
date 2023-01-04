@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic'
 import { ReactNode } from 'react'
+import { Button } from 'react-daisyui'
 
 const ConnectButtonCustom = dynamic(
   () =>
@@ -14,14 +15,14 @@ export default function Layout(props: { children: ReactNode }) {
     <>
       <ConnectButtonCustom>
         {({ account, openConnectModal }) => (
-          <button onClick={openConnectModal}>
+          <Button onClick={openConnectModal}>
             {account
               ? `${account.address.substring(
                   0,
                   5,
                 )}...${account.address.substring(38)}`
               : 'Connect Wallet'}
-          </button>
+          </Button>
         )}
       </ConnectButtonCustom>
       <main>{props.children}</main>

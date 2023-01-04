@@ -1,5 +1,6 @@
 import { createInstance } from 'dotbit'
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
+import { Button, Input, Select } from 'react-daisyui'
+import { Fragment, useCallback, useEffect, useMemo } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,6 +17,7 @@ import { fetchJson } from '../src/utils/fetcher'
 import { chainIdToCoinType } from '../src/constants'
 import { useCurrentSnapshot } from '../hooks/use-snapshot'
 import { resolveDid } from '../src/did'
+import FormItem from './form-item'
 
 const dotbit = createInstance()
 
@@ -162,67 +164,67 @@ export default function OrganizationForm(props: { organization: string }) {
   return (
     <div>
       <h1>Organization: {props.organization}</h1>
-      <label>avatar</label>
-      <Controller
-        control={control}
-        name="profile.avatar"
-        render={({ field: { value, onChange } }) => (
-          <AvatarInput
-            name={props.organization}
-            value={value}
-            onChange={onChange}
-          />
-        )}
-      />
-      <br />
-      <label>name</label>
-      <input {...register('profile.name')} />
-      <br />
-      <label>about</label>
-      <input {...register('profile.about')} />
-      <br />
-      <label>website</label>
-      <input {...register('profile.website')} />
-      <br />
-      <label>term of service</label>
-      <input {...register('profile.tos')} />
-      <br />
-      <label>communities</label>
-      <button onClick={() => appendCommunity({ type: 'twitter', value: '' })}>
-        +
-      </button>
-      <br />
+      <FormItem label="avatar">
+        <Controller
+          control={control}
+          name="profile.avatar"
+          render={({ field: { value, onChange } }) => (
+            <AvatarInput
+              name={props.organization}
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
+      </FormItem>
+      <FormItem label="name">
+        <Input {...register('profile.name')} />
+      </FormItem>
+      <FormItem label="about">
+        <Input {...register('profile.about')} />
+      </FormItem>
+      <FormItem label="website">
+        <Input {...register('profile.website')} />
+      </FormItem>
+      <FormItem label="term of service<">
+        <Input {...register('profile.tos')} />
+      </FormItem>
+      <FormItem label="communities">
+        <Button onClick={() => appendCommunity({ type: 'twitter', value: '' })}>
+          +
+        </Button>
+      </FormItem>
       {communities.map((field, index) => (
         <Fragment key={field.id}>
-          <select {...register(`communities.${index}.type`)}>
-            <option value="twitter">twitter</option>
-            <option value="discord">discord</option>
-            <option value="github">github</option>
-          </select>
-          <input {...register(`communities.${index}.value`)} />
-          <button onClick={() => removeCommunity(index)}>-</button>
+          <Select {...register(`communities.${index}.type`)}>
+            <Select.Option value="twitter">twitter</Select.Option>
+            <Select.Option value="discord">discord</Select.Option>
+            <Select.Option value="github">github</Select.Option>
+          </Select>
+          <Input {...register(`communities.${index}.value`)} />
+          <Button onClick={() => removeCommunity(index)}>-</Button>
           <br />
         </Fragment>
       ))}
-      <label>workgroups</label>
-      <button
-        onClick={() =>
-          appendWorkgroup({
-            id: nanoid(),
-            profile: { name: '' },
-            proposer_liberty: { operator: 'or', operands: [] },
-            voting_power: { operator: 'sum', operands: [] },
-            rules: {
-              voting_duration: 0,
-              voting_start_delay: 0,
-              approval_condition_description: '',
-            },
-          })
-        }
-      >
-        +
-      </button>
-      <br />
+      <FormItem label="workgroups">
+        <Button
+          onClick={() =>
+            appendWorkgroup({
+              id: nanoid(),
+              profile: { name: '' },
+              proposer_liberty: { operator: 'or', operands: [] },
+              voting_power: { operator: 'sum', operands: [] },
+              rules: {
+                voting_duration: 0,
+                voting_start_delay: 0,
+                approval_condition_description: '',
+              },
+            })
+          }
+        >
+          +
+        </Button>
+      </FormItem>
       {workgroups.map((field, index) => (
         <Fragment key={field.id}>
           <Controller
@@ -232,29 +234,24 @@ export default function OrganizationForm(props: { organization: string }) {
               <WorkgroupForm value={value} onChange={onChange} />
             )}
           />
-          <button onClick={() => removeWorkgroup(index)}>-</button>
+          <Button onClick={() => removeWorkgroup(index)}>-</Button>
           <br />
         </Fragment>
       ))}
-      <button
-        disabled={
-          !isAdmin ||
-          !network.chain ||
-          !account.address ||
-          handleSign.status === 'pending'
-        }
+      <Button
+        disabled={!isAdmin || !network.chain || !account.address}
+        loading={handleSign.status === 'pending'}
         onClick={handleSign.execute}
       >
         sign
-      </button>
-      <button
-        disabled={
-          !isAdmin || !formState.isValid || onSubmit.status === 'pending'
-        }
+      </Button>
+      <Button
+        disabled={!isAdmin || !formState.isValid}
+        loading={onSubmit.status === 'pending'}
         onClick={handleSubmit(onSubmit.execute, console.error)}
       >
         submit
-      </button>
+      </Button>
       <br />
       {onSubmit.error ? <p>{onSubmit.error.message}</p> : null}
       {onSubmit.value ? (
