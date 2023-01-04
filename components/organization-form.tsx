@@ -189,7 +189,7 @@ export default function OrganizationForm(props: { organization: string }) {
       <FormItem label="website">
         <Input {...register('profile.website')} />
       </FormItem>
-      <FormItem label="term of service<">
+      <FormItem label="term of service">
         <Input {...register('profile.tos')} />
       </FormItem>
       <FormItem label="communities">
