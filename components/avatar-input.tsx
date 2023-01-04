@@ -6,9 +6,10 @@ import { ChangeEvent, forwardRef, useCallback, useRef } from 'react'
 export default forwardRef<
   HTMLSpanElement,
   {
-    name: string
+    name?: string
     value?: string
-    onChange(value: string): void
+    onChange?: (value: string) => void
+    disabled?: boolean
   }
 >(function AvatarFileInput(props, ref) {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -18,7 +19,7 @@ export default forwardRef<
       if (e.target.files?.[0]) {
         const reader = new FileReader()
         reader.onloadend = () => {
-          onChange(reader.result as string)
+          onChange?.(reader.result as string)
         }
         reader.readAsDataURL(e.target.files[0])
       }
@@ -29,8 +30,8 @@ export default forwardRef<
   return (
     <span
       ref={ref}
-      onClick={() => inputRef.current?.click()}
-      style={{ cursor: 'pointer', lineHeight: 0 }}
+      onClick={() => (props.disabled ? undefined : inputRef.current?.click())}
+      style={{ cursor: props.disabled ? 'default' : 'pointer', lineHeight: 0 }}
     >
       {props.value ? (
         <img
