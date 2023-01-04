@@ -3,6 +3,8 @@ import type { AppProps } from 'next/app'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { mainnet, polygon, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
+import { IconProvider, DEFAULT_ICON_CONFIGS } from '@icon-park/react'
+
 import Layout from '../components/layout'
 import '../styles/globals.css'
 
@@ -22,13 +24,18 @@ const wagmiClient = createClient({
   provider,
 })
 
+// We use 1.5rem for all SVG icons to ensure compatibility with daisyUI
+const IconConfig = { ...DEFAULT_ICON_CONFIGS, size: '1.5rem' }
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <IconProvider value={IconConfig}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </IconProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   )

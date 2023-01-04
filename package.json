@@ -13,9 +13,11 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^2.9.10",
+    "@icon-park/react": "^1.4.2",
     "@rainbow-me/rainbowkit": "^0.8.1",
     "arweave": "^1.11.8",
     "boring-avatars": "^1.7.0",
+    "clsx": "^1.2.1",
     "daisyui": "^2.46.1",
     "dotbit": "^0.4.14",
     "ethers": "^5.7.2",
