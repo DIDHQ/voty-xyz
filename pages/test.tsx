@@ -1,5 +1,6 @@
 import { createInstance } from 'dotbit'
 import { useMemo, useState } from 'react'
+import { Input, Select, Table, Textarea } from 'react-daisyui'
 import useSWR from 'swr'
 import { useAccount } from 'wagmi'
 import {
@@ -101,65 +102,67 @@ export default function TestPage() {
   return (
     <>
       <br />
-      <table border={1} style={{ borderCollapse: 'collapse' }}>
-        <thead>
-          <tr>
-            <th />
-            <th>Proposer Liberty</th>
-            <th>Voting Power</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>input data</td>
-            <td>
-              <textarea
+      <Table border={1} style={{ borderCollapse: 'collapse' }}>
+        <Table.Head>
+          <span />
+          <span>Proposer Liberty</span>
+          <span>Voting Power</span>
+        </Table.Head>
+        <Table.Body>
+          <Table.Row>
+            <span>input data</span>
+            <span>
+              <Textarea
                 value={proposerLiberty}
                 onChange={(e) => setProposerLiberty(e.target.value)}
                 style={{ height: 500, width: 400 }}
               />
-            </td>
-            <td>
-              <textarea
+            </span>
+            <span>
+              <Textarea
                 value={votingPower}
                 onChange={(e) => setVotingPower(e.target.value)}
                 style={{ height: 500, width: 400 }}
               />
-            </td>
-          </tr>
-          <tr>
-            <td>result</td>
-            <td>{checked === true ? '✅' : checked === false ? '❌' : null}</td>
-            <td>{calculated}</td>
-          </tr>
-          <tr>
-            <td>error</td>
-            <td>{checkedError?.message}</td>
-            <td>{calculatedError?.message}</td>
-          </tr>
-          <tr>
-            <td>loading</td>
-            <td>{isCheckedValidating ? 'loading' : 'idle'}</td>
-            <td>{isCalculatedValidating ? 'loading' : 'idle'}</td>
-          </tr>
-          <tr>
-            <td>required coin types</td>
-            <td>{JSON.stringify(coinTypesOfProposerLiberty)}</td>
-            <td>{JSON.stringify(coinTypesOfVotingPower)}</td>
-          </tr>
-        </tbody>
-      </table>
+            </span>
+          </Table.Row>
+          <Table.Row>
+            <span>result</span>
+            <span>
+              {checked === true ? '✅' : checked === false ? '❌' : null}
+            </span>
+            <span>{calculated}</span>
+          </Table.Row>
+          <Table.Row>
+            <span>error</span>
+            <span>{checkedError?.message}</span>
+            <span>{calculatedError?.message}</span>
+          </Table.Row>
+          <Table.Row>
+            <span>loading</span>
+            <span>{isCheckedValidating ? 'loading' : 'idle'}</span>
+            <span>{isCalculatedValidating ? 'loading' : 'idle'}</span>
+          </Table.Row>
+          <Table.Row>
+            <span>required coin types</span>
+            <span>{JSON.stringify(coinTypesOfProposerLiberty)}</span>
+            <span>{JSON.stringify(coinTypesOfVotingPower)}</span>
+          </Table.Row>
+        </Table.Body>
+      </Table>
       <br />
       <label>test DID: </label>
-      <input value={text} onChange={(e) => setText(e.target.value)} />
-      <select value={text} onChange={(e) => setText(e.target.value)}>
-        <option />
-        {accounts?.map((account) => (
-          <option key={account} value={account}>
-            {account}
-          </option>
-        ))}
-      </select>
+      <Input value={text} onChange={(e) => setText(e.target.value)} />
+      <Select value={text} onChange={(e) => setText(e.target.value)}>
+        <Select.Option />
+        <>
+          {accounts?.map((account) => (
+            <Select.Option key={account} value={account}>
+              {account}
+            </Select.Option>
+          ))}
+        </>
+      </Select>
     </>
   )
 }
