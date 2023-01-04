@@ -34,7 +34,7 @@ export default async function handler(
     coinType !== signature.coin_type ||
     address !== signature.address ||
     !verifySignature(
-      await wrapJsonMessage('editing organization', data),
+      await wrapJsonMessage('edit organization', data),
       signature,
     )
   ) {
