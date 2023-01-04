@@ -18,6 +18,10 @@ export function verifySignature(
   )
 }
 
+export function formatSignature(buffer: Uint8Array) {
+  return Buffer.from(buffer).toString('base64')
+}
+
 export async function wrapJsonMessage(
   action: 'edit organization',
   json: object,

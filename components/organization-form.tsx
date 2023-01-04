@@ -36,17 +36,10 @@ export default function OrganizationForm(props: { organization: string }) {
     },
   )
   const { data } = useArweaveFile<Organization>(hash)
-  const {
-    control,
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    getValues,
-    formState,
-  } = useForm<Organization>({
-    resolver: zodResolver(organizationSchema),
-  })
+  const { control, register, handleSubmit, reset, formState } =
+    useForm<Organization>({
+      resolver: zodResolver(organizationSchema),
+    })
   const {
     fields: communities,
     append: appendCommunity,
@@ -66,8 +59,8 @@ export default function OrganizationForm(props: { organization: string }) {
   useEffect(() => {
     reset(data)
   }, [data, reset])
-  const signMessage = useSignMessage()
   const connectedSignatureUnit = useConnectedSignatureUnit()
+  const signMessage = useSignMessage(connectedSignatureUnit?.coinType)
   const { data: snapshot } = useCurrentSnapshot(
     connectedSignatureUnit?.coinType,
   )
