@@ -112,6 +112,12 @@ export const organizationSchema = z.object({
     )
     .optional(),
   workgroups: z.array(workgroupSchema).optional(),
-  signature: signatureSchema,
 })
 export type Organization = z.infer<typeof organizationSchema>
+
+export const organizationWithSignatureSchema = organizationSchema.extend({
+  signature: signatureSchema,
+})
+export type OrganizationWithSignature = z.infer<
+  typeof organizationWithSignatureSchema
+>
