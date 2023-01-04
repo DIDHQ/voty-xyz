@@ -12,14 +12,17 @@ export default function ThemeSwitcher() {
   const setPersistentTheme = useSetAtom(persistentThemeAtom)
 
   // To make sure clicking button will make the menu closed if the menu is open.
-  const handleCheckAndCloseDropDown = useCallback((e: any) => {
-    let targetEl = e.currentTarget
-    if (targetEl && targetEl.matches(':focus')) {
-      setTimeout(function () {
-        targetEl.blur()
-      }, 0)
-    }
-  }, [])
+  const handleCheckAndCloseDropDown = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      let targetEl = e.currentTarget
+      if (targetEl && targetEl.matches(':focus')) {
+        setTimeout(function () {
+          targetEl.blur()
+        }, 0)
+      }
+    },
+    [],
+  )
 
   return (
     <Dropdown>
