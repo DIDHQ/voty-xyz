@@ -7,7 +7,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { nanoid } from 'nanoid'
 import Arweave from 'arweave'
 import type { SerializedUploader } from 'arweave/web/lib/transaction-uploader'
-import { useSignMessage } from 'wagmi'
 import useArweaveFile from '../hooks/use-arweave-file'
 import useAsync from '../hooks/use-async'
 import { Organization, organizationSchema } from '../src/schemas'
@@ -16,9 +15,9 @@ import WorkgroupForm from './workgroup-form'
 import { fetchJson } from '../src/utils/fetcher'
 import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import FormItem from './form-item'
-import { wrapJsonMessage } from '../src/signature'
 import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
 import useResolveDid from '../hooks/use-resolve-did'
+import useSignJson from '../hooks/use-sign-json'
 
 const dotbit = createInstance()
 
@@ -105,7 +104,7 @@ export default function OrganizationForm(props: { organization: string }) {
       return serializedUploader.transaction.id as string
     }, []),
   )
-  const { signMessageAsync } = useSignMessage()
+  const signJson = useSignJson()
   const connectedSignatureUnit = useConnectedSignatureUnit()
   const { data: snapshot } = useCurrentSnapshot(
     connectedSignatureUnit?.coinType,
@@ -133,14 +132,7 @@ export default function OrganizationForm(props: { organization: string }) {
         return
       }
       const { signature: _omit, ...data } = getValues()
-      const sig = Buffer.from(
-        (
-          await signMessageAsync({
-            message: await wrapJsonMessage('edit organization', data),
-          })
-        ).substring(2),
-        'hex',
-      ).toString('base64')
+      const sig = await signJson(data)
       setValue(
         'signature',
         {
@@ -156,7 +148,7 @@ export default function OrganizationForm(props: { organization: string }) {
       connectedSignatureUnit,
       snapshot,
       getValues,
-      signMessageAsync,
+      signJson,
       setValue,
       props.organization,
     ]),
