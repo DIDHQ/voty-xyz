@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useSetAtom } from 'jotai'
 import { Dropdown, Button } from 'react-daisyui'
 import { Theme } from '@icon-park/react'
-import { capitalize } from 'lodash'
+import { capitalize } from 'lodash-es'
 
 import { persistentThemeAtom } from '../src/atoms'
 
