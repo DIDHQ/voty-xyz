@@ -17,7 +17,7 @@ import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import FormItem from './form-item'
 import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
 import useResolveDid from '../hooks/use-resolve-did'
-import useSignJson from '../hooks/use-sign-json'
+import useSignMessage from '../hooks/use-sign-message'
 
 const dotbit = createInstance()
 
@@ -66,48 +66,67 @@ export default function OrganizationForm(props: { organization: string }) {
   useEffect(() => {
     reset(data)
   }, [data, reset])
-  const onSubmit = useAsync(
-    useCallback(async (organization: Organization) => {
-      // if (!window.ethereum) {
-      //   return
-      // }
-      const textEncoder = new TextEncoder()
-      const body = textEncoder.encode(JSON.stringify(organization))
-      const serializedUploader = await fetchJson<SerializedUploader>(
-        '/api/sign-organization',
-        {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body,
-        },
-      )
-      // const dotbit = createInstance({
-      //   network: BitNetwork.mainnet,
-      //   signer: new ProviderSigner(window.ethereum as any),
-      // })
-      // await window.ethereum.request({ method: 'eth_requestAccounts' })
-      // await dotbit.account(props.organization).updateRecords([
-      //   {
-      //     key: 'dweb.arweave',
-      //     value: json.transaction.id,
-      //     label: 'voty',
-      //     ttl: '',
-      //   },
-      // ])
-      const uploader = await arweave.transactions.getUploader(
-        serializedUploader,
-        body,
-      )
-      while (!uploader.isComplete) {
-        await uploader.uploadChunk()
-      }
-      return serializedUploader.transaction.id as string
-    }, []),
-  )
-  const signJson = useSignJson()
+  const signMessage = useSignMessage()
   const connectedSignatureUnit = useConnectedSignatureUnit()
   const { data: snapshot } = useCurrentSnapshot(
     connectedSignatureUnit?.coinType,
+  )
+  const onSubmit = useAsync(
+    useCallback(
+      async (organization: Organization) => {
+        // if (!window.ethereum) {
+        //   return
+        // }
+        if (!snapshot || !connectedSignatureUnit) {
+          return
+        }
+        const message = JSON.stringify(organization)
+        const sig = await signMessage(message)
+        const textEncoder = new TextEncoder()
+        const body = textEncoder.encode(
+          JSON.stringify({
+            ...organization,
+            signature: {
+              did: props.organization,
+              snapshot: snapshot.toString(),
+              coin_type: connectedSignatureUnit.coinType,
+              address: connectedSignatureUnit.address,
+              sig,
+            },
+          }),
+        )
+        const serializedUploader = await fetchJson<SerializedUploader>(
+          '/api/sign-organization',
+          {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body,
+          },
+        )
+        // const dotbit = createInstance({
+        //   network: BitNetwork.mainnet,
+        //   signer: new ProviderSigner(window.ethereum as any),
+        // })
+        // await window.ethereum.request({ method: 'eth_requestAccounts' })
+        // await dotbit.account(props.organization).updateRecords([
+        //   {
+        //     key: 'dweb.arweave',
+        //     value: json.transaction.id,
+        //     label: 'voty',
+        //     ttl: '',
+        //   },
+        // ])
+        const uploader = await arweave.transactions.getUploader(
+          serializedUploader,
+          body,
+        )
+        while (!uploader.isComplete) {
+          await uploader.uploadChunk()
+        }
+        return serializedUploader.transaction.id as string
+      },
+      [connectedSignatureUnit, props.organization, signMessage, snapshot],
+    ),
   )
   const { data: resolved } = useResolveDid(
     props.organization,
@@ -121,37 +140,6 @@ export default function OrganizationForm(props: { organization: string }) {
       resolved.coinType === connectedSignatureUnit.coinType &&
       resolved.address === connectedSignatureUnit.address,
     [resolved, connectedSignatureUnit],
-  )
-  const handleSign = useAsync(
-    useCallback(async () => {
-      if (
-        !connectedSignatureUnit?.address ||
-        connectedSignatureUnit.coinType === undefined ||
-        !snapshot
-      ) {
-        return
-      }
-      const { signature: _omit, ...data } = getValues()
-      const sig = await signJson(data)
-      setValue(
-        'signature',
-        {
-          did: props.organization,
-          snapshot: snapshot.toString(),
-          coin_type: connectedSignatureUnit.coinType,
-          address: connectedSignatureUnit.address,
-          sig,
-        },
-        { shouldValidate: true },
-      )
-    }, [
-      connectedSignatureUnit,
-      snapshot,
-      getValues,
-      signJson,
-      setValue,
-      props.organization,
-    ]),
   )
 
   return (
@@ -232,13 +220,6 @@ export default function OrganizationForm(props: { organization: string }) {
         </Fragment>
       ))}
       <Button
-        disabled={!isAdmin}
-        loading={handleSign.status === 'pending'}
-        onClick={handleSign.execute}
-      >
-        sign
-      </Button>
-      <Button
         disabled={!isAdmin || !formState.isValid}
         loading={onSubmit.status === 'pending'}
         onClick={handleSubmit(onSubmit.execute, console.error)}
@@ -246,7 +227,6 @@ export default function OrganizationForm(props: { organization: string }) {
         submit
       </Button>
       <br />
-      {handleSign.error ? <p>{handleSign.error.message}</p> : null}
       {onSubmit.error ? <p>{onSubmit.error.message}</p> : null}
       {onSubmit.value ? (
         <a href={`https://arweave.net/${onSubmit.value}`}>

@@ -1,7 +1,7 @@
 import Arweave from 'arweave'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { resolveDid } from '../../src/did'
-import { organizationSchema } from '../../src/schemas'
+import { organizationWithSignatureSchema } from '../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../src/signature'
 import { getCurrentSnapshot } from '../../src/snapshot'
 
@@ -18,7 +18,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   // verify schema
-  const parsed = organizationSchema.safeParse(req.body)
+  const parsed = organizationWithSignatureSchema.safeParse(req.body)
   if (!parsed.success) {
     res.status(400).send(`schema error: ${parsed.error.message}`)
     return
