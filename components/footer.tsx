@@ -1,4 +1,5 @@
 export default function Footer() {
+  const currentYear = new Date().getFullYear()
   return (
     <footer className="footer footer-center p-10 bg-base-200 text-base-content rounded">
       <div className="grid grid-flow-col gap-4">
@@ -7,7 +8,7 @@ export default function Footer() {
         <a className="link link-hover">Twitter</a>
       </div>
       <div>
-        <p>Copyright © 2023 - All right reserved by Voty.xyz</p>
+        <p>Copyright © {currentYear} - All right reserved by Voty.xyz</p>
       </div>
     </footer>
   )

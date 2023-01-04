@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useSetAtom } from 'jotai'
 import { Dropdown, Button } from 'react-daisyui'
 import { Theme } from '@icon-park/react'
@@ -11,21 +12,21 @@ export default function ThemeSwitcher() {
   const setPersistentTheme = useSetAtom(persistentThemeAtom)
 
   // To make sure clicking button will make the menu closed if the menu is open.
-  const checkAndCloseDropDown = (e: any) => {
+  const handleCheckAndCloseDropDown = useCallback((e: any) => {
     let targetEl = e.currentTarget
     if (targetEl && targetEl.matches(':focus')) {
       setTimeout(function () {
         targetEl.blur()
       }, 0)
     }
-  }
+  }, [])
 
   return (
     <Dropdown>
       <Button
         variant="outline"
         shape="circle"
-        onMouseDown={checkAndCloseDropDown}
+        onMouseDown={handleCheckAndCloseDropDown}
       >
         <Theme />
       </Button>
