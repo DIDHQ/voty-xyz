@@ -1,8 +1,6 @@
-import { createInstance } from 'dotbit'
 import { Button, Input, Select } from 'react-daisyui'
 import { Fragment, useCallback, useEffect, useMemo } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
-import useSWR from 'swr'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { nanoid } from 'nanoid'
 import Arweave from 'arweave'
@@ -19,8 +17,7 @@ import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignMessage from '../hooks/use-sign-message'
 import { wrapJsonMessage } from '../src/signature'
-
-const dotbit = createInstance()
+import useBitRecordValue from '../hooks/use-bit-record-value'
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -29,13 +26,7 @@ const arweave = Arweave.init({
 })
 
 export default function OrganizationForm(props: { organization: string }) {
-  const { data: hash } = useSWR(
-    props.organization ? ['organization', props.organization] : null,
-    async () => {
-      const records = await dotbit.records(props.organization!, 'dweb.arweave')
-      return records.find((record) => record.label === 'voty')?.value
-    },
-  )
+  const { data: hash } = useBitRecordValue(props.organization, 'voty')
   const { data } = useArweaveFile<Organization>(hash)
   const { control, register, handleSubmit, reset, formState } =
     useForm<Organization>({
