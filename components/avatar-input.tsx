@@ -8,7 +8,7 @@ import { Button } from 'react-daisyui'
 export default forwardRef<
   HTMLSpanElement,
   {
-    size?: number
+    size?: number | string
     name?: string
     value?: string
     onChange?: (value?: string) => void

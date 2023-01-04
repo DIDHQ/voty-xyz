@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from 'react-daisyui'
 import { Star } from '@icon-park/react'
-import Avatar from 'boring-avatars'
+import AvatarInput from './avatar-input'
 
 type OrgCardProps = {
   avatarUrl?: string
@@ -18,13 +18,9 @@ export default function OrgCard(props: OrgCardProps) {
   const { avatarUrl, name, did, members } = props
 
   return (
-    <div className="group transition card w-52 bg-base-100 shadow-xl bg-base-200 hover:-translate-y-1">
+    <div className="group transition card w-52 shadow-xl bg-base-200 hover:-translate-y-1">
       <figure className="px-5 pt-5">
-        {avatarUrl ? (
-          <img src={avatarUrl} alt={name} className="rounded-full" />
-        ) : (
-          <Avatar size={'10.5rem'} name={did} variant="pixel" />
-        )}
+        <AvatarInput name={did} value={avatarUrl} size={'10.5rem'} disabled />
       </figure>
       <div className="card-body items-center text-center p-4">
         <h1 className="card-title">{name}</h1>
