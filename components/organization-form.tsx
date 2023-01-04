@@ -163,36 +163,42 @@ export default function OrganizationForm(props: { organization: string }) {
   return (
     <div>
       <h1>Organization: {props.organization}</h1>
-      <label>avatar</label>
-      <Controller
-        control={control}
-        name="profile.avatar"
-        render={({ field: { value, onChange } }) => (
-          <AvatarInput
-            name={props.organization}
-            value={value}
-            onChange={onChange}
-          />
-        )}
-      />
-      <br />
-      <label>name</label>
-      <Input {...register('profile.name')} />
-      <br />
-      <label>about</label>
-      <Input {...register('profile.about')} />
-      <br />
-      <label>website</label>
-      <Input {...register('profile.website')} />
-      <br />
-      <label>term of service</label>
-      <Input {...register('profile.tos')} />
-      <br />
-      <label>communities</label>
-      <Button onClick={() => appendCommunity({ type: 'twitter', value: '' })}>
-        +
-      </Button>
-      <br />
+      <div className="form-control w-full max-w-xs">
+        <label className="label">avatar</label>
+        <Controller
+          control={control}
+          name="profile.avatar"
+          render={({ field: { value, onChange } }) => (
+            <AvatarInput
+              name={props.organization}
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
+      </div>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">name</label>
+        <Input {...register('profile.name')} />
+      </div>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">about</label>
+        <Input {...register('profile.about')} />
+      </div>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">website</label>
+        <Input {...register('profile.website')} />
+      </div>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">term of service</label>
+        <Input {...register('profile.tos')} />
+      </div>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">communities</label>
+        <Button onClick={() => appendCommunity({ type: 'twitter', value: '' })}>
+          +
+        </Button>
+      </div>
       {communities.map((field, index) => (
         <Fragment key={field.id}>
           <Select {...register(`communities.${index}.type`)}>
@@ -205,25 +211,26 @@ export default function OrganizationForm(props: { organization: string }) {
           <br />
         </Fragment>
       ))}
-      <label>workgroups</label>
-      <Button
-        onClick={() =>
-          appendWorkgroup({
-            id: nanoid(),
-            profile: { name: '' },
-            proposer_liberty: { operator: 'or', operands: [] },
-            voting_power: { operator: 'sum', operands: [] },
-            rules: {
-              voting_duration: 0,
-              voting_start_delay: 0,
-              approval_condition_description: '',
-            },
-          })
-        }
-      >
-        +
-      </Button>
-      <br />
+      <div className="form-control w-full max-w-xs">
+        <label className="label">workgroups</label>
+        <Button
+          onClick={() =>
+            appendWorkgroup({
+              id: nanoid(),
+              profile: { name: '' },
+              proposer_liberty: { operator: 'or', operands: [] },
+              voting_power: { operator: 'sum', operands: [] },
+              rules: {
+                voting_duration: 0,
+                voting_start_delay: 0,
+                approval_condition_description: '',
+              },
+            })
+          }
+        >
+          +
+        </Button>
+      </div>
       {workgroups.map((field, index) => (
         <Fragment key={field.id}>
           <Controller

@@ -101,7 +101,6 @@ export default function TestPage() {
 
   return (
     <>
-      <br />
       <Table border={1} style={{ borderCollapse: 'collapse' }}>
         <Table.Head>
           <span />
@@ -150,19 +149,20 @@ export default function TestPage() {
           </Table.Row>
         </Table.Body>
       </Table>
-      <br />
-      <label>test DID: </label>
-      <Input value={text} onChange={(e) => setText(e.target.value)} />
-      <Select value={text} onChange={(e) => setText(e.target.value)}>
-        <Select.Option />
-        <>
-          {accounts?.map((account) => (
-            <Select.Option key={account} value={account}>
-              {account}
-            </Select.Option>
-          ))}
-        </>
-      </Select>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">test DID: </label>
+        <Input value={text} onChange={(e) => setText(e.target.value)} />
+        <Select value={text} onChange={(e) => setText(e.target.value)}>
+          <Select.Option />
+          <>
+            {accounts?.map((account) => (
+              <Select.Option key={account} value={account}>
+                {account}
+              </Select.Option>
+            ))}
+          </>
+        </Select>
+      </div>
     </>
   )
 }

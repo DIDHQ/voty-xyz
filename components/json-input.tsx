@@ -29,7 +29,7 @@ export default function JsonInput<T>(props: {
         }}
         style={props.style}
       />
-      {error ? <label>{error.message}</label> : null}
+      {error ? <label className="label">{error.message}</label> : null}
     </>
   )
 }

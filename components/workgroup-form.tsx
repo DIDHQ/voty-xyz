@@ -22,64 +22,72 @@ export default function WorkgroupForm(props: {
   return (
     <div>
       <h2>Workgroup: {props.value.id}</h2>
-      <label>avatar</label>
-      <Controller
-        control={control}
-        name="profile.avatar"
-        render={({ field: { value, onChange } }) => (
-          <AvatarInput
-            name={props.value.id}
-            value={value}
-            onChange={onChange}
-          />
-        )}
-      />
-      <br />
-      <label>name</label>
-      <Input {...register('profile.name')} />
-      <br />
-      <label>about</label>
-      <Input {...register('profile.about')} />
-      <br />
-      <label>proposer liberty</label>
-      <Controller
-        control={control}
-        name="proposer_liberty"
-        render={({ field: { value, onChange } }) => (
-          <JsonInput value={value} onChange={onChange} />
-        )}
-      />
-      <br />
-      <label>voting power</label>
-      <Controller
-        control={control}
-        name="voting_power"
-        render={({ field: { value, onChange } }) => (
-          <JsonInput value={value} onChange={onChange} />
-        )}
-      />
-      <br />
-      <label>voting duration</label>
-      <Controller
-        control={control}
-        name="rules.voting_duration"
-        render={({ field: { value, onChange } }) => (
-          <NumericInput value={value} onChange={onChange} />
-        )}
-      />
-      <br />
-      <label>voting start delay</label>
-      <Controller
-        control={control}
-        name="rules.voting_start_delay"
-        render={({ field: { value, onChange } }) => (
-          <NumericInput value={value} onChange={onChange} />
-        )}
-      />
-      <br />
-      <label>approval condition description</label>
-      <Input {...register('rules.approval_condition_description')} />
-      <br />
+      <div className="form-control w-full max-w-xs">
+        <label className="label">avatar</label>
+        <Controller
+          control={control}
+          name="profile.avatar"
+          render={({ field: { value, onChange } }) => (
+            <AvatarInput
+              name={props.value.id}
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
+      </div>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">name</label>
+        <Input {...register('profile.name')} />
+      </div>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">about</label>
+        <Input {...register('profile.about')} />
+      </div>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">proposer liberty</label>
+        <Controller
+          control={control}
+          name="proposer_liberty"
+          render={({ field: { value, onChange } }) => (
+            <JsonInput value={value} onChange={onChange} />
+          )}
+        />
+      </div>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">voting power</label>
+        <Controller
+          control={control}
+          name="voting_power"
+          render={({ field: { value, onChange } }) => (
+            <JsonInput value={value} onChange={onChange} />
+          )}
+        />
+      </div>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">voting duration</label>
+        <Controller
+          control={control}
+          name="rules.voting_duration"
+          render={({ field: { value, onChange } }) => (
+            <NumericInput value={value} onChange={onChange} />
+          )}
+        />
+      </div>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">voting start delay</label>
+        <Controller
+          control={control}
+          name="rules.voting_start_delay"
+          render={({ field: { value, onChange } }) => (
+            <NumericInput value={value} onChange={onChange} />
+          )}
+        />
+      </div>
+      <div className="form-control w-full max-w-xs">
+        <label className="label">approval condition description</label>
+        <Input {...register('rules.approval_condition_description')} />
+      </div>
       <Button
         disabled={!formState.isDirty || !formState.isValid}
         onClick={handleSubmit(props.onChange)}
