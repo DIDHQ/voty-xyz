@@ -137,7 +137,7 @@ export default function OrganizationForm(props: { organization: string }) {
       const sig = Buffer.from(
         (
           await signMessageAsync({
-            message: await wrapJsonMessage('editing organization', data),
+            message: await wrapJsonMessage('edit organization', data),
           })
         ).substring(2),
         'hex',

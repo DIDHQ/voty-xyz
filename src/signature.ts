@@ -19,7 +19,7 @@ export function verifySignature(
 }
 
 export async function wrapJsonMessage(
-  action: 'editing organization',
+  action: 'edit organization',
   json: object,
 ): Promise<string> {
   const textEncoder = new TextEncoder()
