@@ -10,6 +10,8 @@ const ConnectButtonCustom = dynamic(
   { ssr: false },
 )
 
+const ThemeSwitcher = dynamic(() => import('./theme-switcher'), { ssr: false })
+
 export default function Layout(props: { children: ReactNode }) {
   return (
     <>
@@ -25,6 +27,7 @@ export default function Layout(props: { children: ReactNode }) {
           </Button>
         )}
       </ConnectButtonCustom>
+      <ThemeSwitcher />
       <main>{props.children}</main>
     </>
   )

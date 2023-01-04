@@ -7,9 +7,11 @@ import { IconProvider, DEFAULT_ICON_CONFIGS } from '@icon-park/react'
 import { useDarkMode } from 'usehooks-ts'
 import { useTheme } from 'react-daisyui'
 import { useEffect } from 'react'
+import { useAtomValue } from 'jotai'
 
 import Layout from '../components/layout'
 import '../styles/globals.css'
+import { persistentThemeAtom } from '../src/atoms'
 
 const { chains, provider } = configureChains(
   [mainnet, polygon, bsc],
@@ -31,11 +33,14 @@ const wagmiClient = createClient({
 const iconConfig = { ...DEFAULT_ICON_CONFIGS, size: '1.5rem' }
 
 export default function App({ Component, pageProps }: AppProps) {
-  const isDarkMode = useDarkMode()
+  const { isDarkMode } = useDarkMode()
   const { setTheme } = useTheme()
+  const persistentTheme = useAtomValue(persistentThemeAtom)
   useEffect(() => {
-    setTheme(isDarkMode ? 'dark' : 'light')
-  }, [isDarkMode, setTheme])
+    const t = persistentTheme || (isDarkMode ? 'dark' : 'light')
+    document.getElementsByTagName('html')[0].setAttribute('data-theme', t)
+    setTheme(t)
+  }, [isDarkMode, setTheme, persistentTheme])
 
   return (
     <WagmiConfig client={wagmiClient}>
