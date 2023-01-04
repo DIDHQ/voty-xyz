@@ -18,6 +18,7 @@ import FormItem from './form-item'
 import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignMessage from '../hooks/use-sign-message'
+import { wrapJsonMessage } from '../src/signature'
 
 const dotbit = createInstance()
 
@@ -73,8 +74,9 @@ export default function OrganizationForm(props: { organization: string }) {
         if (!snapshot || !connectedSignatureUnit) {
           return
         }
-        const message = JSON.stringify(organization)
-        const sig = await signMessage(message)
+        const sig = await signMessage(
+          await wrapJsonMessage('edit organization', organization),
+        )
         const textEncoder = new TextEncoder()
         const body = textEncoder.encode(
           JSON.stringify({
