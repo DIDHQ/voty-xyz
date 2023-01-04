@@ -19,46 +19,48 @@ import { Organization } from '../../src/schemas'
 
 export default function OrganizationIndexPage() {
   const router = useRouter()
-  const organization = router.query.organization as string | undefined
-  const { data: hash } = useBitRecordValue(organization, 'voty')
-  const { data } = useArweaveFile<Organization>(hash)
+  const { data: record } = useBitRecordValue(
+    router.query.organization as string | undefined,
+    'voty',
+  )
+  const { data: organization } = useArweaveFile<Organization>(record)
 
   return (
     <>
       <AvatarInput
-        name={data?.profile.name}
-        value={data?.profile.avatar}
+        name={organization?.profile.name}
+        value={organization?.profile.avatar}
         disabled
       />
-      <h1>{data?.profile.name}</h1>
+      <h1>{organization?.profile.name}</h1>
       <div className="menu bg-base-100 w-56 rounded-box">
         <Menu>
           <Menu.Item>
-            <Link href={`/${organization}`} className="active">
+            <Link href={`/${router.query.organization}`} className="active">
               <ViewList />
               Proposals
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link href={`/${organization}/create`}>
+            <Link href={`/${router.query.organization}/create`}>
               <HoldInterface />
               New proposal
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link href={`/delegate/${organization}`}>
+            <Link href={`/delegate/${router.query.organization}`}>
               <UserToUserTransmission />
               Delegate
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link href={`/${organization}/about`}>
+            <Link href={`/${router.query.organization}/about`}>
               <Info />
               About
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link href={`/${organization}/settings`}>
+            <Link href={`/${router.query.organization}/settings`}>
               <SettingOne />
               Settings
             </Link>
@@ -66,14 +68,14 @@ export default function OrganizationIndexPage() {
         </Menu>
       </div>
       <div>
-        {data?.profile.website ? (
+        {organization?.profile.website ? (
           <Button shape="circle">
-            <a href={data.profile.website}>
+            <a href={organization.profile.website}>
               <Earth />
             </a>
           </Button>
         ) : null}
-        {data?.communities?.map((community, index) => (
+        {organization?.communities?.map((community, index) => (
           <Button key={index} shape="circle">
             <a
               href={`${
