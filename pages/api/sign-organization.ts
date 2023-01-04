@@ -2,7 +2,7 @@ import Arweave from 'arweave'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { resolveDid } from '../../src/did'
 import { organizationSchema } from '../../src/schemas'
-import { verifySignature } from '../../src/signature'
+import { verifySignature, wrapJsonMessage } from '../../src/signature'
 import { getCurrentSnapshot } from '../../src/snapshot'
 
 const arweave = Arweave.init({
@@ -25,8 +25,7 @@ export default async function handler(
   }
 
   // verify signature
-  const { signature, ...rest } = parsed.data
-  const message = JSON.stringify(rest)
+  const { signature, ...data } = parsed.data
   const snapshot = BigInt(signature.snapshot)
   const { coinType, address } = await resolveDid(signature.did, {
     [signature.coin_type]: snapshot,
@@ -34,7 +33,10 @@ export default async function handler(
   if (
     coinType !== signature.coin_type ||
     address !== signature.address ||
-    !verifySignature(message, signature)
+    !verifySignature(
+      await wrapJsonMessage('editing organization', data),
+      signature,
+    )
   ) {
     res.status(400).send('invalid signature')
     return
