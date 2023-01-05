@@ -24,7 +24,7 @@ const arweave = Arweave.init({
 })
 
 export default function OrganizationForm(props: {
-  did?: string
+  did: string
   organization: Organization
 }) {
   const { control, register, handleSubmit, reset, formState } =
@@ -72,7 +72,7 @@ export default function OrganizationForm(props: {
           JSON.stringify({
             ...organization,
             signature: {
-              did: props.organization,
+              did: props.did,
               snapshot: snapshot.toString(),
               coin_type: connectedSignatureUnit.coinType,
               address: connectedSignatureUnit.address,
@@ -110,7 +110,7 @@ export default function OrganizationForm(props: {
         }
         return serializedUploader.transaction.id as string
       },
-      [connectedSignatureUnit, props.organization, signMessage, snapshot],
+      [connectedSignatureUnit, props.did, signMessage, snapshot],
     ),
   )
   const { data: resolved } = useResolveDid(

@@ -24,7 +24,7 @@ export default function OrganizationSettingsPage() {
         <Breadcrumbs.Item>{organization.profile.name}</Breadcrumbs.Item>
       </Breadcrumbs>
       <OrganizationForm
-        did={router.query.organization as string | undefined}
+        did={router.query.organization as string}
         organization={organization}
       />
     </>

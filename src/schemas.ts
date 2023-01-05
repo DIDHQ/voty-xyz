@@ -79,7 +79,7 @@ export type VotingPowerSets = {
 }
 
 export const workgroupSchema = z.object({
-  id: z.string(),
+  id: z.string().min(1),
   profile: z.object({
     avatar: z.string().optional(),
     name: z.string().min(1),
