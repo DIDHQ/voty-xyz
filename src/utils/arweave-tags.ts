@@ -1,4 +1,5 @@
 import { OrganizationWithSignature, ProposalWithSignature } from '../schemas'
+import { isOrganization, isProposal } from './data-type'
 
 const defaultTags = {
   'content-type': 'application/json',
@@ -11,7 +12,14 @@ export function getArweaveTags(
 ): {
   [key: string]: string
 } {
-  if ('type' in json) {
+  if (isOrganization(json)) {
+    return {
+      ...defaultTags,
+      'app-data-type': 'organization',
+      'app-parent-did': json.signature.did,
+    }
+  }
+  if (isProposal(json)) {
     return {
       ...defaultTags,
       'app-data-type': 'proposal',
@@ -19,9 +27,5 @@ export function getArweaveTags(
       'app-parent-workgroup': json.workgroup,
     }
   }
-  return {
-    ...defaultTags,
-    'app-data-type': 'organization',
-    'app-parent-did': json.signature.did,
-  }
+  throw new Error('cannot get arweave tags')
 }

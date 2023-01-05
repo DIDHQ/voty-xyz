@@ -7,6 +7,7 @@ import {
   ProposalWithSignature,
 } from '../src/schemas'
 import { getArweaveTags } from '../src/utils/arweave-tags'
+import { dataTypeOf } from '../src/utils/data-type'
 import { fetchJson } from '../src/utils/fetcher'
 
 const arweave = Arweave.init({
@@ -38,7 +39,7 @@ export default function useArweaveUpload(
       return transaction.id
     } catch {
       const serializedUploader = await fetchJson<SerializedUploader>(
-        'type' in json ? '/api/sign-proposal' : '/api/sign-organization',
+        `/api/${dataTypeOf(json)}`,
         {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
