@@ -10,14 +10,14 @@ const arweave = Arweave.init({
 })
 
 export default function useArweaveUpload(
-  signerPath: string,
+  path: '/api/sign-organization' | '/api/sign-proposal',
   body?: Uint8Array,
 ) {
   return useCallback(async () => {
     if (!body) {
       return null
     }
-    const serializedUploader = await fetchJson<SerializedUploader>(signerPath, {
+    const serializedUploader = await fetchJson<SerializedUploader>(path, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body,
@@ -30,5 +30,5 @@ export default function useArweaveUpload(
       await uploader.uploadChunk()
     }
     return serializedUploader.transaction.id as string
-  }, [body, signerPath])
+  }, [body, path])
 }
