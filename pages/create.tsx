@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useState, useMemo } from 'react'
-import { Button, Steps, Input } from 'react-daisyui'
-import Link from 'next/link'
+import { Button, Steps, Input, Link } from 'react-daisyui'
 
 import FormItem from '../components/form-item'
 import { useRouter } from 'next/router'
@@ -107,11 +106,7 @@ function ChooseAccount(props: {
       </Button>
       <div className="mt-10">
         I don&apos;t have an .bit account.{' '}
-        <Link
-          className="text-primary"
-          href="https://app.did.id/explorer"
-          target="_blank"
-        >
+        <Link className="text-primary" href="https://app.did.id/explorer">
           Register Now
         </Link>
       </div>
