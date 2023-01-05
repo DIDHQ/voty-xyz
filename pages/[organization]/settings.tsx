@@ -28,13 +28,13 @@ export default function OrganizationSettingsPage() {
         </Breadcrumbs.Item>
         <Breadcrumbs.Item>{organization.profile.name}</Breadcrumbs.Item>
       </Breadcrumbs>
-      Role:
+      <OrganizationForm did={did} organization={organization} />
+      Sign as DID:
       <DidSelect
         signatureUnit={connectedSignatureUnit}
         value={did}
         onChange={setDid}
       />
-      <OrganizationForm did={did} organization={organization} />
     </>
   ) : null
 }

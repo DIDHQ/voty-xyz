@@ -205,7 +205,9 @@ export default function OrganizationForm(props: {
         </Fragment>
       ))}
       <Button
-        disabled={!isAdmin || !formState.isValid}
+        disabled={
+          !isAdmin || !formState.isValid || props.did !== props.organization.id
+        }
         loading={onSubmit.status === 'pending'}
         onClick={handleSubmit(onSubmit.execute, console.error)}
       >
