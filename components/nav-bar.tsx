@@ -34,7 +34,11 @@ function NavBar(props: NavBarProps) {
           <Dropdown vertical="end">
             <Button color="ghost" className="avatar" shape="circle">
               <div className="w-10 rounded-full">
-                <img src="https://api.lorem.space/image/face?hash=33791" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://api.lorem.space/image/face?hash=33791"
+                  alt="avatar"
+                />
               </div>
             </Button>
             <Dropdown.Menu className="w-52">
