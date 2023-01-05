@@ -12,15 +12,16 @@ import {
 } from '@icon-park/react'
 
 import AvatarInput from '../../components/avatar-input'
-import useArweaveFile from '../../hooks/use-arweave-file'
+import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
-import { Organization } from '../../src/schemas'
+import { organizationWithSignatureSchema } from '../../src/schemas'
 import useRouterQuery from '../../components/use-router-query'
 
 export default function OrganizationIndexPage() {
   const [query] = useRouterQuery<['organization', 'workgroup']>()
   const { data: config } = useDidConfig(query.organization)
-  const { data: organization } = useArweaveFile<Organization>(
+  const { data: organization } = useArweaveData(
+    organizationWithSignatureSchema,
     config?.organization,
   )
 
