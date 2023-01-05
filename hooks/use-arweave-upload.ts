@@ -2,7 +2,11 @@ import Arweave from 'arweave'
 import { SerializedUploader } from 'arweave/web/lib/transaction-uploader'
 import { useCallback } from 'react'
 
-import { Organization, Proposal } from '../src/schemas'
+import {
+  OrganizationWithSignature,
+  ProposalWithSignature,
+} from '../src/schemas'
+import { getArweaveTags } from '../src/utils/arweave-tags'
 import { fetchJson } from '../src/utils/fetcher'
 
 const arweave = Arweave.init({
@@ -13,7 +17,7 @@ const arweave = Arweave.init({
 
 export default function useArweaveUpload(
   path: '/api/sign-organization' | '/api/sign-proposal',
-  json?: Organization | Proposal,
+  json?: OrganizationWithSignature | ProposalWithSignature,
 ) {
   return useCallback(async () => {
     if (!json) {
@@ -21,18 +25,32 @@ export default function useArweaveUpload(
     }
     const textEncoder = new TextEncoder()
     const body = textEncoder.encode(JSON.stringify(json))
-    const serializedUploader = await fetchJson<SerializedUploader>(path, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body,
-    })
-    const uploader = await arweave.transactions.getUploader(
-      serializedUploader,
-      body,
-    )
-    while (!uploader.isComplete) {
-      await uploader.uploadChunk()
+    try {
+      const transaction = await arweave.createTransaction({ data: body })
+      const tags = getArweaveTags(json)
+      Object.entries(tags).forEach(([key, value]) => {
+        transaction.addTag(key, value)
+      })
+      await arweave.transactions.sign(transaction, 'use_wallet')
+      const uploader = await arweave.transactions.getUploader(transaction)
+      while (!uploader.isComplete) {
+        await uploader.uploadChunk()
+      }
+      return transaction.id
+    } catch {
+      const serializedUploader = await fetchJson<SerializedUploader>(path, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body,
+      })
+      const uploader = await arweave.transactions.getUploader(
+        serializedUploader,
+        body,
+      )
+      while (!uploader.isComplete) {
+        await uploader.uploadChunk()
+      }
+      return serializedUploader.transaction.id as string
     }
-    return serializedUploader.transaction.id as string
   }, [json, path])
 }
