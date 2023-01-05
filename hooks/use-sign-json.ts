@@ -1,24 +1,25 @@
 import { useCallback } from 'react'
 
-import { wrapJsonMessage } from '../src/signature'
+import { Organization, Proposal } from '../src/schemas'
+import { SignatureAction, wrapJsonMessage } from '../src/signature'
 import { SignatureUnit } from '../src/types'
 import useCurrentSnapshot from './use-current-snapshot'
 import useSignMessage from './use-sign-message'
 
-export default function useSignJson<T extends object>(
+export default function useSignJson<T extends Organization | Proposal>(
   did: string,
+  action: SignatureAction,
   signatureUnit?: SignatureUnit,
 ) {
   const signMessage = useSignMessage(signatureUnit?.coinType)
   const { data: snapshot } = useCurrentSnapshot(signatureUnit?.coinType)
+
   return useCallback(
     async (json: T) => {
       if (!snapshot || !signatureUnit) {
         return
       }
-      const data = await signMessage(
-        await wrapJsonMessage('create proposal', json),
-      )
+      const data = await signMessage(await wrapJsonMessage(action, json))
       const textEncoder = new TextEncoder()
       return textEncoder.encode(
         JSON.stringify({
@@ -33,6 +34,6 @@ export default function useSignJson<T extends object>(
         }),
       )
     },
-    [signatureUnit, did, signMessage, snapshot],
+    [snapshot, signatureUnit, signMessage, action, did],
   )
 }

@@ -1,9 +1,15 @@
 import arweave from 'arweave'
 import { verifyMessage } from 'ethers/lib/utils.js'
+
 import { coinTypeToChainId } from './constants'
 import { Signature } from './schemas'
 
 const signatureEncoding = 'base64'
+
+export enum SignatureAction {
+  EDIT_ORGANIZATION = 'edit organization',
+  CREATE_PROPOSAL = 'create proposal',
+}
 
 export function verifySignature(
   message: string,
@@ -25,7 +31,7 @@ export function formatSignature(buffer: Uint8Array) {
 }
 
 export async function wrapJsonMessage(
-  action: 'edit organization' | 'create proposal',
+  action: SignatureAction,
   json: object,
 ): Promise<string> {
   const textEncoder = new TextEncoder()

@@ -17,6 +17,7 @@ import useDidConfig from '../../../../hooks/use-did-config'
 import useSignJson from '../../../../hooks/use-sign-json'
 import { requiredCoinTypesOfVotingPower } from '../../../../src/functions/voting-power'
 import { Organization, Proposal, proposalSchema } from '../../../../src/schemas'
+import { SignatureAction } from '../../../../src/signature'
 import { getCurrentSnapshot } from '../../../../src/snapshot'
 
 export default function CreateProposalPage() {
@@ -75,7 +76,9 @@ export default function CreateProposalPage() {
   const [typesCount, setTypesCount] = useState(0)
   const [did, setDid] = useState('')
   const connectedSignatureUnit = useConnectedSignatureUnit()
-  const handleSignJson = useAsync(useSignJson(did, connectedSignatureUnit))
+  const handleSignJson = useAsync(
+    useSignJson(did, SignatureAction.CREATE_PROPOSAL, connectedSignatureUnit),
+  )
   const handleArweaveUpload = useAsync(
     useArweaveUpload('/api/sign-proposal', handleSignJson.value),
   )

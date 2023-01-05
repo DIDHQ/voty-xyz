@@ -3,7 +3,11 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { resolveDid } from '../../src/did'
 import { proposalWithSignatureSchema } from '../../src/schemas'
-import { verifySignature, wrapJsonMessage } from '../../src/signature'
+import {
+  SignatureAction,
+  verifySignature,
+  wrapJsonMessage,
+} from '../../src/signature'
 import { getCurrentSnapshot } from '../../src/snapshot'
 import { getArweaveTags } from '../../src/utils/arweave-tags'
 
@@ -35,7 +39,10 @@ export default async function handler(
   if (
     coinType !== signature.coin_type ||
     address !== signature.address ||
-    !verifySignature(await wrapJsonMessage('create proposal', data), signature)
+    !verifySignature(
+      await wrapJsonMessage(SignatureAction.CREATE_PROPOSAL, data),
+      signature,
+    )
   ) {
     res.status(400).send('invalid signature')
     return
