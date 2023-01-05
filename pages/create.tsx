@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+
 import { useState, useMemo } from 'react'
 import { Button, Steps, Input } from 'react-daisyui'
 import Link from 'next/link'
@@ -6,7 +8,6 @@ import FormItem from '../components/form-item'
 import { useRouter } from 'next/router'
 import DidSelect from '../components/did-select'
 import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
-import GreenCheck from '../components/svgs/green-check'
 
 function useStep() {
   const router = useRouter()
@@ -176,7 +177,7 @@ function CreateSuccess(props: { value: string }) {
   return (
     <div className="flex justify-center flex-col items-center mt-32">
       <div className="w-20">
-        <GreenCheck />
+        <img src="/green-check.svg" alt="green-check" />
       </div>
       <h1 className="text-3xl md:text-4xl font-bold mb-3 mt-12 text-center">
         UnknownDAO is created successfully
