@@ -25,7 +25,7 @@ export function formatSignature(buffer: Uint8Array) {
 }
 
 export async function wrapJsonMessage(
-  action: 'edit organization',
+  action: 'edit organization' | 'create proposal',
   json: object,
 ): Promise<string> {
   const textEncoder = new TextEncoder()
