@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { Button, Steps, Input, Link } from 'react-daisyui'
+import NextLink from 'next/link'
 
 import FormItem from '../components/form-item'
 import { useRouter } from 'next/router'
@@ -177,15 +178,11 @@ function CreateSuccess(props: { value: string }) {
       <h1 className="text-3xl md:text-4xl font-bold mb-3 mt-12 text-center">
         UnknownDAO is created successfully
       </h1>
-      <Link
-        href={`/${props.value}`}
-        target="_self"
-        className="hover:no-underline"
-      >
+      <NextLink href={`/${props.value}`}>
         <Button color="primary" className="w-fit px-8 mt-16">
           Enter My Organization
         </Button>
-      </Link>
+      </NextLink>
     </div>
   )
 }
