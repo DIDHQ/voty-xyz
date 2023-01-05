@@ -1,26 +1,25 @@
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { Breadcrumbs } from 'react-daisyui'
+
 import AvatarInput from '../../../components/avatar-input'
+import useRouterQuery from '../../../components/use-router-query'
 import useArweaveFile from '../../../hooks/use-arweave-file'
 import useDidConfig from '../../../hooks/use-did-config'
 import { Organization } from '../../../src/schemas'
 
 export default function WorkgroupPage() {
-  const router = useRouter()
-  const { data: config } = useDidConfig(
-    router.query.organization as string | undefined,
-  )
+  const [query] = useRouterQuery<['organization', 'workgroup']>()
+  const { data: config } = useDidConfig(query.organization)
   const { data: organization } = useArweaveFile<Organization>(
     config?.organization,
   )
   const workgroup = useMemo(
     () =>
       organization?.workgroups?.find(
-        ({ profile }) => profile.name === router.query.workgroup,
+        ({ profile }) => profile.name === query.workgroup,
       ),
-    [organization?.workgroups, router.query.workgroup],
+    [organization?.workgroups, query.workgroup],
   )
 
   return (
@@ -31,7 +30,7 @@ export default function WorkgroupPage() {
         </Breadcrumbs.Item>
         {organization ? (
           <Breadcrumbs.Item>
-            <Link href={`/${router.query.organization}`}>
+            <Link href={`/${query.organization}`}>
               {organization.profile.name}
             </Link>
           </Breadcrumbs.Item>
