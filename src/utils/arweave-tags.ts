@@ -33,15 +33,13 @@ export function getArweaveTags(
 } {
   if (isOrganization(json)) {
     return {
-      ...defaultTags,
-      'app-data-type': 'organization',
+      ...getListArweaveTags(DataType.ORGANIZATION),
       'app-parent-did': json.signature.did,
     }
   }
   if (isProposal(json)) {
     return {
-      ...defaultTags,
-      'app-data-type': 'proposal',
+      ...getListArweaveTags(DataType.PROPOSAL),
       'app-parent-organization': json.organization,
       'app-parent-workgroup': json.workgroup,
     }
