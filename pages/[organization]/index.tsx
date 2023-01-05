@@ -1,12 +1,11 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Button, Menu } from 'react-daisyui'
+import { Breadcrumbs, Button, Menu } from 'react-daisyui'
 import {
   Earth,
   Twitter,
   RobotOne,
   GithubOne,
-  ViewList,
   HoldInterface,
   UserToUserTransmission,
   Info,
@@ -15,25 +14,32 @@ import {
 } from '@icon-park/react'
 import AvatarInput from '../../components/avatar-input'
 import useArweaveFile from '../../hooks/use-arweave-file'
-import useBitRecordValue from '../../hooks/use-bit-record-value'
+import useDidConfig from '../../hooks/use-did-config'
 import { Organization } from '../../src/schemas'
 
 export default function OrganizationIndexPage() {
   const router = useRouter()
-  const { data: record } = useBitRecordValue(
+  const { data: config } = useDidConfig(
     router.query.organization as string | undefined,
-    'voty',
   )
-  const { data: organization } = useArweaveFile<Organization>(record)
+  const { data: organization } = useArweaveFile<Organization>(
+    config?.organization,
+  )
 
-  return (
+  return organization ? (
     <>
+      <Breadcrumbs>
+        <Breadcrumbs.Item>
+          <Link href="/">Home</Link>
+        </Breadcrumbs.Item>
+        <Breadcrumbs.Item>{organization.profile.name}</Breadcrumbs.Item>
+      </Breadcrumbs>
       <AvatarInput
-        name={organization?.profile.name}
-        value={organization?.profile.avatar}
+        name={organization.profile.name}
+        value={organization.profile.avatar}
         disabled
       />
-      <h1>{organization?.profile.name}</h1>
+      <h1>{organization.profile.name}</h1>
       <div className="menu bg-base-100 w-56 rounded-box">
         <Menu>
           <Menu.Item>
@@ -45,13 +51,10 @@ export default function OrganizationIndexPage() {
               Workgroups
             </Link>
           </Menu.Item>
-          {organization?.workgroups?.map((workgroup) => (
+          {organization.workgroups?.map((workgroup) => (
             <Menu.Item key={workgroup.id} className="ml-6">
               <Link
-                href={`/${router.query.organization}?workgroup=${workgroup.id}`}
-                className={
-                  router.query.workgroup === workgroup.id ? 'active' : undefined
-                }
+                href={`/${router.query.organization}/workgroups/${workgroup.profile.name}`}
               >
                 <AvatarInput
                   size={24}
@@ -90,14 +93,14 @@ export default function OrganizationIndexPage() {
         </Menu>
       </div>
       <div>
-        {organization?.profile.website ? (
+        {organization.profile.website ? (
           <Button shape="circle">
             <a href={organization.profile.website}>
               <Earth />
             </a>
           </Button>
         ) : null}
-        {organization?.communities?.map((community, index) => (
+        {organization.communities?.map((community, index) => (
           <Button key={index} shape="circle">
             <a
               href={`${
@@ -120,5 +123,5 @@ export default function OrganizationIndexPage() {
         ))}
       </div>
     </>
-  )
+  ) : null
 }

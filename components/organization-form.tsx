@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { nanoid } from 'nanoid'
 import Arweave from 'arweave'
 import type { SerializedUploader } from 'arweave/web/lib/transaction-uploader'
-import useArweaveFile from '../hooks/use-arweave-file'
 import useAsync from '../hooks/use-async'
 import { Organization, organizationSchema } from '../src/schemas'
 import AvatarInput from './avatar-input'
@@ -17,7 +16,6 @@ import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignMessage from '../hooks/use-sign-message'
 import { wrapJsonMessage } from '../src/signature'
-import useBitRecordValue from '../hooks/use-bit-record-value'
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -25,9 +23,10 @@ const arweave = Arweave.init({
   protocol: 'https',
 })
 
-export default function OrganizationForm(props: { organization: string }) {
-  const { data: hash } = useBitRecordValue(props.organization, 'voty')
-  const { data } = useArweaveFile<Organization>(hash)
+export default function OrganizationForm(props: {
+  did: string
+  organization: Organization
+}) {
   const { control, register, handleSubmit, reset, formState } =
     useForm<Organization>({
       resolver: zodResolver(organizationSchema),
@@ -49,8 +48,8 @@ export default function OrganizationForm(props: { organization: string }) {
     name: 'workgroups',
   })
   useEffect(() => {
-    reset(data)
-  }, [data, reset])
+    reset(props.organization)
+  }, [props.organization, reset])
   const connectedSignatureUnit = useConnectedSignatureUnit()
   const signMessage = useSignMessage(connectedSignatureUnit?.coinType)
   const { data: snapshot } = useCurrentSnapshot(
@@ -73,7 +72,7 @@ export default function OrganizationForm(props: { organization: string }) {
           JSON.stringify({
             ...organization,
             signature: {
-              did: props.organization,
+              did: props.did,
               snapshot: snapshot.toString(),
               coin_type: connectedSignatureUnit.coinType,
               address: connectedSignatureUnit.address,
@@ -111,11 +110,11 @@ export default function OrganizationForm(props: { organization: string }) {
         }
         return serializedUploader.transaction.id as string
       },
-      [connectedSignatureUnit, props.organization, signMessage, snapshot],
+      [connectedSignatureUnit, props.did, signMessage, snapshot],
     ),
   )
   const { data: resolved } = useResolveDid(
-    props.organization,
+    props.did,
     connectedSignatureUnit?.coinType,
     snapshot,
   )
@@ -130,17 +129,13 @@ export default function OrganizationForm(props: { organization: string }) {
 
   return (
     <div>
-      <h1>Organization: {props.organization}</h1>
+      <h1>Organization: {props.did}</h1>
       <FormItem label="avatar">
         <Controller
           control={control}
           name="profile.avatar"
           render={({ field: { value, onChange } }) => (
-            <AvatarInput
-              name={props.organization}
-              value={value}
-              onChange={onChange}
-            />
+            <AvatarInput name={props.did} value={value} onChange={onChange} />
           )}
         />
       </FormItem>

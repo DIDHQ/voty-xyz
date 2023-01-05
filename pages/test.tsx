@@ -1,9 +1,9 @@
-import { createInstance } from 'dotbit'
 import { useMemo, useState } from 'react'
-import { Input, Select, Table, Textarea } from 'react-daisyui'
+import { Input, Table, Textarea } from 'react-daisyui'
 import useSWR from 'swr'
-import { useAccount } from 'wagmi'
+import DidSelect from '../components/did-select'
 import FormItem from '../components/form-item'
+import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
 import {
   checkProposerLiberty,
   requiredCoinTypesOfProposerLiberty,
@@ -50,7 +50,7 @@ const defaultVotingPower: VotingPowerSets = {
 }
 
 export default function TestPage() {
-  const [text, setText] = useState('regex.bit')
+  const [did, setDid] = useState('regex.bit')
   const [proposerLiberty, setProposerLiberty] = useState(
     JSON.stringify(defaultProposerLiberty, null, 2),
   )
@@ -62,8 +62,8 @@ export default function TestPage() {
     isValidating: isCheckedValidating,
     error: checkedError,
   } = useSWR(
-    proposerLiberty ? ['proposerLiberty', proposerLiberty, text] : null,
-    () => checkProposerLiberty(JSON.parse(proposerLiberty), text as DID, {}),
+    proposerLiberty ? ['proposerLiberty', proposerLiberty, did] : null,
+    () => checkProposerLiberty(JSON.parse(proposerLiberty), did as DID, {}),
     { revalidateOnFocus: false },
   )
   const {
@@ -71,8 +71,8 @@ export default function TestPage() {
     isValidating: isCalculatedValidating,
     error: calculatedError,
   } = useSWR(
-    votingPower ? ['votingPower', votingPower, text] : null,
-    () => calculateVotingPower(JSON.parse(votingPower), text as DID, {}),
+    votingPower ? ['votingPower', votingPower, did] : null,
+    () => calculateVotingPower(JSON.parse(votingPower), did as DID, {}),
     { revalidateOnFocus: false },
   )
   const coinTypesOfProposerLiberty = useMemo(() => {
@@ -89,16 +89,7 @@ export default function TestPage() {
       return []
     }
   }, [votingPower])
-  const account = useAccount()
-  const { data: accounts } = useSWR(
-    account.address ? ['account', account] : null,
-    async () => {
-      const dotbit = createInstance()
-      const accounts = await dotbit.accountsOfOwner({ key: account.address! })
-      return accounts.map(({ account }) => account)
-    },
-    { revalidateOnFocus: false },
-  )
+  const connectedSignatureUnit = useConnectedSignatureUnit()
 
   return (
     <>
@@ -151,17 +142,12 @@ export default function TestPage() {
         </Table.Body>
       </Table>
       <FormItem label="test DID">
-        <Input value={text} onChange={(e) => setText(e.target.value)} />
-        <Select value={text} onChange={(e) => setText(e.target.value)}>
-          <Select.Option />
-          <>
-            {accounts?.map((account) => (
-              <Select.Option key={account} value={account}>
-                {account}
-              </Select.Option>
-            ))}
-          </>
-        </Select>
+        <Input value={did} onChange={(e) => setDid(e.target.value)} />
+        <DidSelect
+          signatureUnit={connectedSignatureUnit}
+          value={did}
+          onChange={setDid}
+        />
       </FormItem>
     </>
   )
