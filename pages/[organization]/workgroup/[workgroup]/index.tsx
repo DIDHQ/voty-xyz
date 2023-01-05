@@ -57,7 +57,7 @@ export default function WorkgroupPage() {
             <Menu>
               <Menu.Item>
                 <Link
-                  href={`/${router.query.organization}/workgroups/${router.query.workgroup}/create`}
+                  href={`/${router.query.organization}/workgroup/${router.query.workgroup}/create`}
                 >
                   <HoldInterface />
                   New proposal
