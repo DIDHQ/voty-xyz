@@ -29,3 +29,8 @@ export const coinTypeToChainId: { [coinType: number]: number } = {
   [commonCoinTypes.MATIC]: commonChainIds.MATIC,
   [commonCoinTypes.BSC]: commonChainIds.BSC,
 }
+
+export enum DataType {
+  ORGANIZATION = 'organization',
+  PROPOSAL = 'proposal',
+}

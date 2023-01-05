@@ -3,11 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { resolveDid } from '../../src/did'
 import { organizationWithSignatureSchema } from '../../src/schemas'
-import {
-  SignatureTarget,
-  verifySignature,
-  wrapJsonMessage,
-} from '../../src/signature'
+import { DataType } from '../../src/constants'
+import { verifySignature, wrapJsonMessage } from '../../src/signature'
 import { getCurrentSnapshot } from '../../src/snapshot'
 import { getArweaveTags } from '../../src/utils/arweave-tags'
 
@@ -40,7 +37,7 @@ export default async function handler(
     coinType !== signature.coin_type ||
     address !== signature.address ||
     !verifySignature(
-      await wrapJsonMessage(SignatureTarget.ORGANIZATION, data),
+      await wrapJsonMessage(DataType.ORGANIZATION, data),
       signature,
     )
   ) {
