@@ -120,8 +120,8 @@ function ChooseAccount(props: {
 
 function BasicInfo(props: { onPrev: () => void; onNext: () => void }) {
   const { onPrev, onNext } = props
-  const [organizationName, setOrganizationName] = useState<string>('')
-  const [desc, setDesc] = useState<string>('')
+  const [organizationName, setOrganizationName] = useState('')
+  const [desc, setDesc] = useState('')
 
   return (
     <div className="flex flex-col justify-center items-center mt-20">
