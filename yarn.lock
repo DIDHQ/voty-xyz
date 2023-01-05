@@ -642,6 +642,41 @@
   resolved "https://registry.yarnpkg.com/@metamask/safe-event-emitter/-/safe-event-emitter-2.0.0.tgz#af577b477c683fad17c619a78208cede06f9605c"
   integrity sha512-/kSXhY692qiV1MXu6EeOZvg5nECLclxNXcKCxJ3cXQgYuRymRHpdx/t7JXfsK+JLjwA1e1c1/SBrlQYpusC29Q==
 
+"@nervosnetwork/ckb-sdk-core@^0.103.1":
+  version "0.103.1"
+  resolved "https://registry.yarnpkg.com/@nervosnetwork/ckb-sdk-core/-/ckb-sdk-core-0.103.1.tgz#136d616ec53af96d3b93dcbce593e6db484c802d"
+  integrity sha512-LeNwId3GaQILVpnY1zfNBY897XQJPODKeP6d7w6tww9anu0jSxrvXVxGMDTTn3Yz5mixzBgpFGo4SXRrH0eiaQ==
+  dependencies:
+    "@nervosnetwork/ckb-sdk-rpc" "0.103.1"
+    "@nervosnetwork/ckb-sdk-utils" "0.103.1"
+    "@nervosnetwork/ckb-types" "0.103.1"
+    tslib "2.3.1"
+
+"@nervosnetwork/ckb-sdk-rpc@0.103.1":
+  version "0.103.1"
+  resolved "https://registry.yarnpkg.com/@nervosnetwork/ckb-sdk-rpc/-/ckb-sdk-rpc-0.103.1.tgz#6c0d0bad8a05a9280ddc34adf973bf55e0725e06"
+  integrity sha512-n3V/5Be7PilyHXUcR6yAiwanMcuZNLfslu9A84OpfB22hlkwIv7OFG/JvFNack/cANPfChRAWB+VWiYGwSON/A==
+  dependencies:
+    "@nervosnetwork/ckb-sdk-utils" "0.103.1"
+    axios "0.21.4"
+    tslib "2.3.1"
+
+"@nervosnetwork/ckb-sdk-utils@0.103.1":
+  version "0.103.1"
+  resolved "https://registry.yarnpkg.com/@nervosnetwork/ckb-sdk-utils/-/ckb-sdk-utils-0.103.1.tgz#8356f88027a4054835fee0648617cc7020c8db1b"
+  integrity sha512-OzpFNKkOOqYWDHDjPf11uOfOf8EQOEstOBxVtyFjrGEx3B9FwsGxItlHYeuTfpFkHF2Ut+G9M3X71w8h/IApdQ==
+  dependencies:
+    "@nervosnetwork/ckb-types" "0.103.1"
+    bech32 "2.0.0"
+    elliptic "6.5.4"
+    jsbi "3.1.3"
+    tslib "2.3.1"
+
+"@nervosnetwork/ckb-types@0.103.1":
+  version "0.103.1"
+  resolved "https://registry.yarnpkg.com/@nervosnetwork/ckb-types/-/ckb-types-0.103.1.tgz#b5626ce905353e70136bfaccf9def0819b76ca27"
+  integrity sha512-gGRR1VvUS/KRq2ChhXHPiHpgyLYazPM2R8lK87shQI82Gp2/m6k1HVDeNR5XOYwQ3YmBbxHGQtQr/kMq7DUlZA==
+
 "@next/env@13.1.1":
   version "13.1.1"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-13.1.1.tgz#6ff26488dc7674ef2bfdd1ca28fe43eed1113bea"
@@ -1294,10 +1329,10 @@
     abitype "^0.1.8"
     eventemitter3 "^4.0.7"
 
-"@wagmi/core@0.8.8":
-  version "0.8.8"
-  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.8.8.tgz#441634ce2850a31af0c928952318e07a9de5f404"
-  integrity sha512-bmF1GlfaDh5m5WGNujWOAcNC2UIKJQFWgUmSmX6DJTX+v9WnlNx+v3oKbXR0XjaYlxsXcOq8rtpQ4Dza5Z/mtA==
+"@wagmi/core@0.8.10":
+  version "0.8.10"
+  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.8.10.tgz#0bbab849606ebbcd68ef883bc30509aa27840d7e"
+  integrity sha512-TbXaKfZX0GD3LkhGoIWPWaitmwucNPxm0riRYStRncoe9JqSYJ82P3vwLn7zO9f1mwqwnf0EOnmotycH/adTwQ==
   dependencies:
     "@wagmi/chains" "0.1.7"
     "@wagmi/connectors" "0.1.3"
@@ -1991,7 +2026,7 @@ axe-core@^4.4.3:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.6.1.tgz#79cccdee3e3ab61a8f42c458d4123a6768e6fbce"
   integrity sha512-lCZN5XRuOnpG4bpMq8v0khrWtUOn+i8lZSb6wHZH56ZfbIEv6XwJV84AAueh9/zi7qPVJ/E4yz6fmsiyOmXR4w==
 
-axios@^0.21.0:
+axios@0.21.4, axios@^0.21.0:
   version "0.21.4"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.4.tgz#c67b90dc0568e5c1cf2b0b858c43ba28e2eda575"
   integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
@@ -2062,7 +2097,7 @@ bech32@1.1.4:
   resolved "https://registry.yarnpkg.com/bech32/-/bech32-1.1.4.tgz#e38c9f37bf179b8eb16ae3a772b40c356d4832e9"
   integrity sha512-s0IrSOzLlbvX7yp4WBfPITzpAU8sqQcpsmwXDiKwrG4r491vwCO/XpejasRNl0piBMe/DvP4Tz0mIS/X1DPJBQ==
 
-bech32@^2.0.0:
+bech32@2.0.0, bech32@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/bech32/-/bech32-2.0.0.tgz#078d3686535075c8c79709f054b1b226a133b355"
   integrity sha512-LcknSilhIGatDAsY1ak2I8VtGaHNhgMSYVxFrGLXv+xLHytaKZKcaUJJUE7qmBr7h33o5YQwP55pMI0xmkpJwg==
@@ -4153,6 +4188,11 @@ js-yaml@^4.1.0:
   dependencies:
     argparse "^2.0.1"
 
+jsbi@3.1.3:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/jsbi/-/jsbi-3.1.3.tgz#f024b340032f7c7caaa6ca4b32b55e8d33f6e897"
+  integrity sha512-nBJqA0C6Qns+ZxurbEoIR56wyjiUszpNy70FHvxO5ervMoCbZVE3z3kxr5nKGhlxr/9MhKTSUBs7cAwwuf3g9w==
+
 jsdom@^20.0.0:
   version "20.0.3"
   resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-20.0.3.tgz#886a41ba1d4726f67a8858028c99489fed6ad4db"
@@ -5046,10 +5086,10 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
-react-hook-form@^7.41.3:
-  version "7.41.3"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.41.3.tgz#1b85e95e70cb743d41cd9230ea2df71359d00151"
-  integrity sha512-5QNTmqJtDb88WV5n41b6+AmcDMVyaJ3tccPgHAgS215w3jZ3bmJhDO27kNTr8u4YHNYXmS7p1/4/KachBAlUtw==
+react-hook-form@^7.41.5:
+  version "7.41.5"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.41.5.tgz#dcd0e7438c15044eadc99df6deb889da5858a03b"
+  integrity sha512-DAKjSJ7X9f16oQrP3TW2/eD9N6HOgrmIahP4LOdFphEWVfGZ2LulFd6f6AQ/YS/0cx/5oc4j8a1PXxuaurWp/Q==
 
 react-is@^16.13.1:
   version "16.13.1"
@@ -5728,6 +5768,11 @@ tslib@1.14.1, tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
+tslib@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
+  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
+
 tslib@^2.0.0, tslib@^2.1.0, tslib@^2.4.0:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.1.tgz#0d0bfbaac2880b91e22df0768e55be9753a5b17e"
@@ -5934,16 +5979,16 @@ w3c-xmlserializer@^4.0.0:
   dependencies:
     xml-name-validator "^4.0.0"
 
-wagmi@^0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.10.1.tgz#e7779af198c0dadfc8f4a87074c2d913f8b36de7"
-  integrity sha512-NqHcthrn39RkI1rZ95E9wtskyYm8UYd/dqpFycAqnYga19oCKElKLAabl4ijnx0X3Dd6eBEWBiwaGHYUyP9F8w==
+wagmi@^0.10.4:
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.10.4.tgz#792f1e5519f8a92755a686592b54651a57c6f765"
+  integrity sha512-ifJSnmkG+5S+MgelY5gKiZmDJdYe4/ObtzpnfngLTKxmmH+bdevfDD+dqJCgZKTUx9KFytSVpOAHSibctf1I3g==
   dependencies:
     "@coinbase/wallet-sdk" "^3.6.0"
     "@tanstack/query-sync-storage-persister" "^4.14.5"
     "@tanstack/react-query" "^4.14.5"
     "@tanstack/react-query-persist-client" "^4.14.5"
-    "@wagmi/core" "0.8.8"
+    "@wagmi/core" "0.8.10"
     "@walletconnect/ethereum-provider" "^1.8.0"
     abitype "^0.2.5"
     use-sync-external-store "^1.2.0"

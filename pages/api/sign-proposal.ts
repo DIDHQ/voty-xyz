@@ -1,7 +1,7 @@
 import Arweave from 'arweave'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { resolveDid } from '../../src/did'
-import { organizationWithSignatureSchema } from '../../src/schemas'
+import { proposalWithSignatureSchema } from '../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../src/signature'
 import { getCurrentSnapshot } from '../../src/snapshot'
 
@@ -18,7 +18,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   // verify schema
-  const parsed = organizationWithSignatureSchema.safeParse(req.body)
+  const parsed = proposalWithSignatureSchema.safeParse(req.body)
   if (!parsed.success) {
     res.status(400).send(`schema error: ${parsed.error.message}`)
     return
@@ -33,10 +33,7 @@ export default async function handler(
   if (
     coinType !== signature.coin_type ||
     address !== signature.address ||
-    !verifySignature(
-      await wrapJsonMessage('edit organization', data),
-      signature,
-    )
+    !verifySignature(await wrapJsonMessage('create proposal', data), signature)
   ) {
     res.status(400).send('invalid signature')
     return
@@ -60,8 +57,9 @@ export default async function handler(
   transaction.addTag('content-type', 'application/json')
   transaction.addTag('app-name', 'voty')
   transaction.addTag('app-version', '0.0.0')
-  transaction.addTag('app-data-type', 'organization')
-  transaction.addTag('app-parent-did', signature.did)
+  transaction.addTag('app-data-type', 'proposal')
+  transaction.addTag('app-parent-organization', parsed.data.organization)
+  transaction.addTag('app-parent-workgroup', parsed.data.workgroup)
   await arweave.transactions.sign(transaction, jwk)
   const uploader = await arweave.transactions.getUploader(transaction)
   res.status(200).json(uploader)

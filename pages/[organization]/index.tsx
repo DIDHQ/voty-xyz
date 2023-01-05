@@ -5,7 +5,6 @@ import {
   Twitter,
   RobotOne,
   GithubOne,
-  HoldInterface,
   UserToUserTransmission,
   Info,
   SettingOne,
@@ -53,7 +52,7 @@ export default function OrganizationIndexPage() {
           {organization.workgroups?.map((workgroup) => (
             <Menu.Item key={workgroup.id} className="ml-6">
               <Link
-                href={`/${query.organization}/workgroups/${workgroup.profile.name}`}
+                href={`/${query.organization}/workgroup/${workgroup.profile.name}`}
               >
                 <AvatarInput
                   size={24}
@@ -65,12 +64,6 @@ export default function OrganizationIndexPage() {
               </Link>
             </Menu.Item>
           ))}
-          <Menu.Item>
-            <Link href={`/${query.organization}/create`}>
-              <HoldInterface />
-              New proposal
-            </Link>
-          </Menu.Item>
           <Menu.Item>
             <Link href={`/delegate/${query.organization}`}>
               <UserToUserTransmission />
