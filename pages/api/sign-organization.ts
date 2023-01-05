@@ -1,9 +1,11 @@
 import Arweave from 'arweave'
 import type { NextApiRequest, NextApiResponse } from 'next'
+
 import { resolveDid } from '../../src/did'
 import { organizationWithSignatureSchema } from '../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../src/signature'
 import { getCurrentSnapshot } from '../../src/snapshot'
+import { getArweaveTags } from '../../src/utils/arweave-tags'
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -33,10 +35,7 @@ export default async function handler(
   if (
     coinType !== signature.coin_type ||
     address !== signature.address ||
-    !verifySignature(
-      await wrapJsonMessage('edit organization', data),
-      signature,
-    )
+    !verifySignature(await wrapJsonMessage(data), signature)
   ) {
     res.status(400).send('invalid signature')
     return
@@ -57,11 +56,10 @@ export default async function handler(
   const transaction = await arweave.createTransaction({
     data: JSON.stringify(parsed.data),
   })
-  transaction.addTag('content-type', 'application/json')
-  transaction.addTag('app-name', 'voty')
-  transaction.addTag('app-version', '0.0.0')
-  transaction.addTag('app-data-type', 'organization')
-  transaction.addTag('app-parent-did', signature.did)
+  const tags = getArweaveTags(parsed.data)
+  Object.entries(tags).forEach(([key, value]) => {
+    transaction.addTag(key, value)
+  })
   await arweave.transactions.sign(transaction, jwk)
   const uploader = await arweave.transactions.getUploader(transaction)
   res.status(200).json(uploader)

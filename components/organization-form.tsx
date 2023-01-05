@@ -19,10 +19,9 @@ export default function OrganizationForm(props: {
   did: string
   organization: Organization
 }) {
-  const { control, register, handleSubmit, reset, formState } =
-    useForm<Organization>({
-      resolver: zodResolver(organizationSchema),
-    })
+  const { control, register, handleSubmit, reset } = useForm<Organization>({
+    resolver: zodResolver(organizationSchema),
+  })
   const {
     fields: communities,
     append: appendCommunity,
@@ -49,9 +48,7 @@ export default function OrganizationForm(props: {
   const handleSignJson = useAsync(
     useSignJson(props.did, connectedSignatureUnit),
   )
-  const handleArweaveUpload = useAsync(
-    useArweaveUpload('/api/sign-organization', handleSignJson.value),
-  )
+  const handleArweaveUpload = useAsync(useArweaveUpload(handleSignJson.value))
   const { data: resolved } = useResolveDid(
     props.did,
     connectedSignatureUnit?.coinType,
