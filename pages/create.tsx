@@ -1,24 +1,50 @@
-import { useState, useCallback, CSSProperties } from 'react'
-import { Button, Steps, Select, Link, Input } from 'react-daisyui'
-import FormItem from '../components/form-item'
-import useSWR from 'swr'
-import { useAccount } from 'wagmi'
-import { createInstance } from 'dotbit'
-import { useRouter } from 'next/router'
+import { useState, CSSProperties, useMemo } from 'react'
+import { Button, Steps, Input } from 'react-daisyui'
 
-function useSteps() {
+import FormItem from '../components/form-item'
+import { useRouter } from 'next/router'
+import DidSelect from '../components/did-select'
+import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
+import Link from 'next/link'
+
+function useStep() {
   const router = useRouter()
-  return [
-    Number(router.query.steps || 0),
-    (steps: number) => {
-      router.query.steps = String(steps)
-      router.push(router)
-    },
-  ] as [number, (steps: number) => void]
+
+  return useMemo(
+    () =>
+      [
+        Number(router.query.steps || 0),
+        () => {
+          router.push(
+            {
+              query: {
+                ...router.query,
+                steps: String(Number(router.query.steps || 0) + 1),
+              },
+            },
+            undefined,
+            { shallow: true },
+          )
+        },
+        () => {
+          router.push(
+            {
+              query: {
+                ...router.query,
+                steps: String(Number(router.query.steps || 0) - 1),
+              },
+            },
+            undefined,
+            { shallow: true },
+          )
+        },
+      ] as [number, () => void, () => void],
+    [router],
+  )
 }
 
-function IntroPage(props: { onStarted: () => void }) {
-  const { onStarted } = props
+function IntroPage(props: { onNext(): void }) {
+  const { onNext } = props
 
   return (
     <div className="hero bg-base-200 h-[calc(100vh_-_6rem)]">
@@ -28,7 +54,7 @@ function IntroPage(props: { onStarted: () => void }) {
           <p className="py-6 mb-10 text-xl">
             Create your own organization now and start making decisions!
           </p>
-          <Button color="primary" onClick={onStarted}>
+          <Button color="primary" onClick={onNext}>
             Get Started
           </Button>
         </div>
@@ -37,84 +63,59 @@ function IntroPage(props: { onStarted: () => void }) {
   )
 }
 
-function CreateSteps(props: { steps: number }) {
-  const { steps } = props
+function CreateSteps(props: { value: number }) {
+  const { value } = props
   return (
     <Steps className="w-full mt-10 px-10">
-      <Steps.Step color={steps > 0 ? 'primary' : undefined}>
+      <Steps.Step color={value > 0 ? 'primary' : undefined}>
         Choose .bit Account
       </Steps.Step>
-      <Steps.Step color={steps > 1 ? 'primary' : undefined}>
+      <Steps.Step color={value > 1 ? 'primary' : undefined}>
         Basic Information
       </Steps.Step>
-      <Steps.Step color={steps > 2 ? 'primary' : undefined}>Done</Steps.Step>
+      <Steps.Step color={value > 2 ? 'primary' : undefined}>Done</Steps.Step>
     </Steps>
   )
 }
 
 function StepsPage() {
-  const [stepsQuery, setStepsQuery] = useSteps()
-  const [steps, setSteps] = useState(1)
-
-  const handlePrev = useCallback(() => {
-    setSteps(steps - 1)
-    setStepsQuery(steps - 1)
-  }, [steps, setStepsQuery])
-
-  const handleNext = useCallback(() => {
-    setSteps(steps + 1)
-    setStepsQuery(steps + 1)
-  }, [steps, setStepsQuery])
+  const [step, handleNext, handlePrev] = useStep()
+  const [did, setDid] = useState('')
 
   return (
     <>
-      <CreateSteps steps={steps} />
-      {steps === 1 && <ChooseAccount onNext={handleNext} />}
-      {steps === 2 && <BasicInfo onPrev={handlePrev} onNext={handleNext} />}
-      {steps === 3 && <CreateSuccess />}
+      <CreateSteps value={step} />
+      {step === 0 && <IntroPage onNext={handleNext} />}
+      {step === 1 && (
+        <ChooseAccount onNext={handleNext} value={did} onchange={setDid} />
+      )}
+      {step === 2 && <BasicInfo onPrev={handlePrev} onNext={handleNext} />}
+      {step === 3 && <CreateSuccess value={did} />}
     </>
   )
 }
 
-function ChooseAccount(props: { onNext: () => void }) {
+function ChooseAccount(props: {
+  value: string
+  onchange(value: string): void
+  onNext: () => void
+}) {
   const { onNext } = props
-  const [chosenAccount, setChosenAccount] = useState('')
-
-  const account = useAccount()
-  const { data: accounts } = useSWR(
-    account.address ? ['account', account] : null,
-    async () => {
-      const dotbit = createInstance()
-      const accounts = await dotbit.accountsOfOwner({ key: account.address! })
-      return accounts.map(({ account }) => account)
-    },
-    { revalidateOnFocus: false },
-  )
+  const connectedSignatureUnit = useConnectedSignatureUnit()
 
   return (
     <div className="flex flex-col justify-center items-center mt-20">
       <FormItem direction="horizontal" gap={3} label="Choose a .bit Account: ">
-        <Select
-          className="w-48"
-          value={chosenAccount}
-          onChange={(event) => setChosenAccount(event.target.value)}
-        >
-          <Select.Option value={''} disabled>
-            Choose
-          </Select.Option>
-          <>
-            {accounts?.map((account) => (
-              <Select.Option key={account} value={account}>
-                {account}
-              </Select.Option>
-            ))}
-          </>
-        </Select>
+        <DidSelect
+          signatureUnit={connectedSignatureUnit}
+          value={props.value}
+          onChange={props.onchange}
+        />
       </FormItem>
       <Button
         className="w-32 mt-10"
         color="primary"
-        disabled={!chosenAccount}
+        disabled={!props.value}
         onClick={onNext}
       >
         Next
@@ -151,7 +152,7 @@ function BasicInfo(props: { onPrev: () => void; onNext: () => void }) {
           />
         </FormItem>
         <FormItem
-          classNames="mt-10"
+          className="mt-10"
           direction="horizontal"
           gap={3}
           label="Description: "
@@ -187,7 +188,7 @@ function BasicInfo(props: { onPrev: () => void; onNext: () => void }) {
   )
 }
 
-function CreateSuccess() {
+function CreateSuccess(props: { value: string }) {
   return (
     <div className="flex justify-center flex-col items-center mt-32">
       <div className="w-20">
@@ -196,7 +197,11 @@ function CreateSuccess() {
       <h1 className="text-3xl md:text-4xl font-bold mb-3 mt-12 text-center">
         UnknownDAO is created successfully
       </h1>
-      <Link href="/ph0ng.bit" target="_self" className="hover:no-underline">
+      <Link
+        href={`/${props.value}`}
+        target="_self"
+        className="hover:no-underline"
+      >
         <Button color="primary" className="w-fit px-8 mt-16">
           Enter My Organization
         </Button>
@@ -228,10 +233,7 @@ function GreenCheck() {
 }
 
 export default function CreateOrganization() {
-  const [steps, setSteps] = useSteps()
-  const handleStarted = useCallback(() => {
-    setSteps(1)
-  }, [setSteps])
+  const [step, onNext] = useStep()
 
-  return steps === 0 ? <IntroPage onStarted={handleStarted} /> : <StepsPage />
+  return step === 0 ? <IntroPage onNext={onNext} /> : <StepsPage />
 }
