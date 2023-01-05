@@ -21,14 +21,14 @@ export default function WorkgroupPage() {
     [organization?.workgroups, router.query.workgroup],
   )
 
-  return (
+  return workgroup ? (
     <>
       <AvatarInput
-        name={workgroup?.profile.name}
-        value={workgroup?.profile.avatar}
+        name={workgroup.profile.name}
+        value={workgroup.profile.avatar}
         disabled
       />
-      <h1>{workgroup?.profile.name}</h1>
+      <h1>{workgroup.profile.name}</h1>
     </>
-  )
+  ) : null
 }

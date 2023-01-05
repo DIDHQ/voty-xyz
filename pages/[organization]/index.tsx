@@ -26,14 +26,14 @@ export default function OrganizationIndexPage() {
     config?.organization,
   )
 
-  return (
+  return organization ? (
     <>
       <AvatarInput
-        name={organization?.profile.name}
-        value={organization?.profile.avatar}
+        name={organization.profile.name}
+        value={organization.profile.avatar}
         disabled
       />
-      <h1>{organization?.profile.name}</h1>
+      <h1>{organization.profile.name}</h1>
       <div className="menu bg-base-100 w-56 rounded-box">
         <Menu>
           <Menu.Item>
@@ -45,7 +45,7 @@ export default function OrganizationIndexPage() {
               Workgroups
             </Link>
           </Menu.Item>
-          {organization?.workgroups?.map((workgroup) => (
+          {organization.workgroups?.map((workgroup) => (
             <Menu.Item key={workgroup.id} className="ml-6">
               <Link
                 href={`/${router.query.organization}/workgroups/${workgroup.profile.name}`}
@@ -87,14 +87,14 @@ export default function OrganizationIndexPage() {
         </Menu>
       </div>
       <div>
-        {organization?.profile.website ? (
+        {organization.profile.website ? (
           <Button shape="circle">
             <a href={organization.profile.website}>
               <Earth />
             </a>
           </Button>
         ) : null}
-        {organization?.communities?.map((community, index) => (
+        {organization.communities?.map((community, index) => (
           <Button key={index} shape="circle">
             <a
               href={`${
@@ -117,5 +117,5 @@ export default function OrganizationIndexPage() {
         ))}
       </div>
     </>
-  )
+  ) : null
 }
