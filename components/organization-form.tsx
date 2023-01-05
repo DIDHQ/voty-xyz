@@ -128,9 +128,9 @@ export default function OrganizationForm(props: {
   )
 
   return (
-    <div>
-      <h1>Organization: {props.did}</h1>
-      <FormItem label="avatar">
+    <div className="flex flex-col gap-5">
+      <h1 className="text-xl">Organization: {props.did}</h1>
+      <FormItem label="Avatar">
         <Controller
           control={control}
           name="profile.avatar"
@@ -139,36 +139,62 @@ export default function OrganizationForm(props: {
           )}
         />
       </FormItem>
-      <FormItem label="name">
-        <Input {...register('profile.name')} />
+      <FormItem
+        label="Name"
+        required
+        isError={Boolean(formState.errors.profile?.name)}
+        errorMessage={formState.errors.profile?.name?.message}
+      >
+        <Input
+          color={formState.errors.profile?.name ? 'error' : undefined}
+          maxLength={50}
+          {...register('profile.name', {
+            required: true,
+          })}
+        />
       </FormItem>
-      <FormItem label="about">
-        <Input {...register('profile.about')} />
+      <FormItem label="About">
+        <Input maxLength={120} {...register('profile.about')} />
       </FormItem>
-      <FormItem label="website">
+      <FormItem label="Website">
         <Input {...register('profile.website')} />
       </FormItem>
-      <FormItem label="term of service">
+      <FormItem label="Terms of service">
         <Input {...register('profile.tos')} />
       </FormItem>
-      <FormItem label="communities">
+      <FormItem className="flex w-full" label="Communities">
+        {communities.map((field, index) => (
+          <div className="flex gap-5 mb-3" key={field.id}>
+            <Select {...register(`communities.${index}.type`)}>
+              <Select.Option value="twitter">Twitter</Select.Option>
+              <Select.Option value="discord">Discord</Select.Option>
+              <Select.Option value="github">GitHub</Select.Option>
+            </Select>
+            <Input
+              className="grow"
+              {...register(`communities.${index}.value`)}
+            />
+            <Button onClick={() => removeCommunity(index)}>-</Button>
+          </div>
+        ))}
         <Button onClick={() => appendCommunity({ type: 'twitter', value: '' })}>
           +
         </Button>
       </FormItem>
-      {communities.map((field, index) => (
-        <Fragment key={field.id}>
-          <Select {...register(`communities.${index}.type`)}>
-            <Select.Option value="twitter">twitter</Select.Option>
-            <Select.Option value="discord">discord</Select.Option>
-            <Select.Option value="github">github</Select.Option>
-          </Select>
-          <Input {...register(`communities.${index}.value`)} />
-          <Button onClick={() => removeCommunity(index)}>-</Button>
-          <br />
-        </Fragment>
-      ))}
-      <FormItem label="workgroups">
+      <FormItem label="Workgroups">
+        {workgroups.map((field, index) => (
+          <Fragment key={field.id}>
+            <Controller
+              control={control}
+              name={`workgroups.${index}`}
+              render={({ field: { value, onChange } }) => (
+                <WorkgroupForm value={value} onChange={onChange} />
+              )}
+            />
+            <Button onClick={() => removeWorkgroup(index)}>-</Button>
+            <br />
+          </Fragment>
+        ))}
         <Button
           onClick={() =>
             appendWorkgroup({
@@ -187,25 +213,13 @@ export default function OrganizationForm(props: {
           +
         </Button>
       </FormItem>
-      {workgroups.map((field, index) => (
-        <Fragment key={field.id}>
-          <Controller
-            control={control}
-            name={`workgroups.${index}`}
-            render={({ field: { value, onChange } }) => (
-              <WorkgroupForm value={value} onChange={onChange} />
-            )}
-          />
-          <Button onClick={() => removeWorkgroup(index)}>-</Button>
-          <br />
-        </Fragment>
-      ))}
       <Button
+        color="primary"
         disabled={!isAdmin || !formState.isValid}
         loading={onSubmit.status === 'pending'}
         onClick={handleSubmit(onSubmit.execute, console.error)}
       >
-        submit
+        Submit
       </Button>
       <br />
       {onSubmit.error ? <p>{onSubmit.error.message}</p> : null}
