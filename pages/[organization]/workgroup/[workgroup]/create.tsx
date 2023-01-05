@@ -82,26 +82,6 @@ export default function CreateProposalPage() {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
-  useEffect(() => {
-    if (!workgroup) {
-      return
-    }
-    const timer = setInterval(() => {
-      setValue(
-        'start',
-        Math.ceil(Date.now() / 1000) + workgroup.rules.voting_start_delay,
-      )
-      setValue(
-        'end',
-        Math.ceil(Date.now() / 1000) +
-          workgroup.rules.voting_start_delay +
-          workgroup.rules.voting_duration,
-      )
-    }, 1000)
-    return () => {
-      clearInterval(timer)
-    }
-  }, [setValue, workgroup])
   const [typesCount, setTypesCount] = useState(0)
   const [did, setDid] = useState('')
   const connectedSignatureUnit = useConnectedSignatureUnit()

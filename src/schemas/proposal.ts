@@ -10,8 +10,6 @@ export const proposalSchema = z.object({
   discussion: z.string(),
   choices: z.array(z.string().min(1)).min(1),
   snapshots: z.record(z.string(), z.string()),
-  start: z.number(),
-  end: z.number(),
 })
 export type Proposal = z.infer<typeof proposalSchema>
 
