@@ -3,40 +3,27 @@
 import { useState, useMemo } from 'react'
 import { Button, Steps, Input, Link } from 'react-daisyui'
 import NextLink from 'next/link'
-import { useRouter } from 'next/router'
-import produce from 'immer'
 
 import FormItem from '../components/form-item'
 import DidSelect from '../components/did-select'
 import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
+import useRouterQuery from '../components/use-router-query'
 
 function useStep() {
-  const router = useRouter()
+  const [query, setQuery] = useRouterQuery<['step']>()
 
   return useMemo(
     () =>
       [
-        Number(router.query.step || 0),
+        Number(query.step || 0),
         () => {
-          router.push(
-            produce(router, (draft) => {
-              draft.query.step = String(Number(router.query.step || 0) + 1)
-            }),
-            undefined,
-            { shallow: true },
-          )
+          setQuery('step', String(Number(query.step || 0) + 1), true)
         },
         () => {
-          router.push(
-            produce(router, (draft) => {
-              draft.query.step = String(Number(router.query.step || 0) - 1)
-            }),
-            undefined,
-            { shallow: true },
-          )
+          setQuery('step', String(Number(query.step || 0) - 1), true)
         },
       ] as [number, () => void, () => void],
-    [router],
+    [query.step, setQuery],
   )
 }
 

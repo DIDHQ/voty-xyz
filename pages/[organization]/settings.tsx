@@ -1,21 +1,20 @@
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { Breadcrumbs } from 'react-daisyui'
+
 import OrganizationForm from '../../components/organization-form'
+import useRouterQuery from '../../components/use-router-query'
 import useArweaveFile from '../../hooks/use-arweave-file'
 import useDidConfig from '../../hooks/use-did-config'
 import { Organization } from '../../src/schemas'
 
 export default function OrganizationSettingsPage() {
-  const router = useRouter()
-  const { data: config } = useDidConfig(
-    router.query.organization as string | undefined,
-  )
+  const [query] = useRouterQuery<['organization']>()
+  const { data: config } = useDidConfig(query.organization)
   const { data: organization } = useArweaveFile<Organization>(
     config?.organization,
   )
 
-  return organization ? (
+  return organization && query.organization ? (
     <div className="flex justify-center mt-5">
       <div className="flex flex-col w-full md:w-[48rem] px-10">
         <Breadcrumbs>
@@ -29,7 +28,7 @@ export default function OrganizationSettingsPage() {
         </Breadcrumbs>
         <h1 className="text-3xl font-bold mb-8 mt-8">Settings</h1>
         <OrganizationForm
-          did={router.query.organization as string}
+          did={query.organization}
           organization={organization}
         />
       </div>
