@@ -1,8 +1,9 @@
 import arweave from 'arweave'
 import { verifyMessage } from 'ethers/lib/utils.js'
 
-import { coinTypeToChainId, DataType } from './constants'
+import { coinTypeToChainId } from './constants'
 import { Signature } from './schemas'
+import { dataTypeOf } from './utils/data-type'
 
 const signatureEncoding = 'base64'
 
@@ -25,14 +26,11 @@ export function formatSignature(buffer: Uint8Array) {
   return Buffer.from(buffer).toString(signatureEncoding)
 }
 
-export async function wrapJsonMessage(
-  type: DataType,
-  json: object,
-): Promise<string> {
+export async function wrapJsonMessage(json: object): Promise<string> {
   const textEncoder = new TextEncoder()
   const data = textEncoder.encode(JSON.stringify(json))
   const buffer = await arweave.crypto.hash(data, 'SHA-256')
-  return `You are signing to modify ${type} on Voty.\n\nhash: 0x${Buffer.from(
-    buffer,
-  ).toString('hex')}`
+  return `You are signing to modify ${dataTypeOf(
+    json,
+  )} on Voty.\n\nhash: 0x${Buffer.from(buffer).toString('hex')}`
 }

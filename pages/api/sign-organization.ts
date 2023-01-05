@@ -3,7 +3,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { resolveDid } from '../../src/did'
 import { organizationWithSignatureSchema } from '../../src/schemas'
-import { DataType } from '../../src/constants'
 import { verifySignature, wrapJsonMessage } from '../../src/signature'
 import { getCurrentSnapshot } from '../../src/snapshot'
 import { getArweaveTags } from '../../src/utils/arweave-tags'
@@ -36,10 +35,7 @@ export default async function handler(
   if (
     coinType !== signature.coin_type ||
     address !== signature.address ||
-    !verifySignature(
-      await wrapJsonMessage(DataType.ORGANIZATION, data),
-      signature,
-    )
+    !verifySignature(await wrapJsonMessage(data), signature)
   ) {
     res.status(400).send('invalid signature')
     return

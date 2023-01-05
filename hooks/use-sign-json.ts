@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 
-import { DataType } from '../src/constants'
 import { Organization, Proposal, Signature } from '../src/schemas'
 import { wrapJsonMessage } from '../src/signature'
 import { SignatureUnit } from '../src/types'
@@ -9,7 +8,6 @@ import useSignMessage from './use-sign-message'
 
 export default function useSignJson<T extends Organization | Proposal>(
   did: string,
-  type: DataType,
   signatureUnit?: SignatureUnit,
 ): (a: T) => Promise<(T & { signature: Signature }) | undefined> {
   const signMessage = useSignMessage(signatureUnit?.coinType)
@@ -20,7 +18,8 @@ export default function useSignJson<T extends Organization | Proposal>(
       if (!snapshot || !signatureUnit) {
         return
       }
-      const data = await signMessage(await wrapJsonMessage(type, json))
+      const message = await wrapJsonMessage(json)
+      const data = await signMessage(message)
       return {
         ...json,
         signature: {
@@ -32,6 +31,6 @@ export default function useSignJson<T extends Organization | Proposal>(
         },
       }
     },
-    [snapshot, signatureUnit, signMessage, type, did],
+    [snapshot, signatureUnit, signMessage, did],
   )
 }

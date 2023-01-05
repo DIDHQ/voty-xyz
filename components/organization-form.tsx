@@ -14,7 +14,6 @@ import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignJson from '../hooks/use-sign-json'
 import useArweaveUpload from '../hooks/use-arweave-upload'
-import { DataType } from '../src/constants'
 
 export default function OrganizationForm(props: {
   did: string
@@ -47,7 +46,7 @@ export default function OrganizationForm(props: {
     connectedSignatureUnit?.coinType,
   )
   const handleSignJson = useAsync(
-    useSignJson(props.did, DataType.ORGANIZATION, connectedSignatureUnit),
+    useSignJson(props.did, connectedSignatureUnit),
   )
   const handleArweaveUpload = useAsync(useArweaveUpload(handleSignJson.value))
   const { data: resolved } = useResolveDid(
