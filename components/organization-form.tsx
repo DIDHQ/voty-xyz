@@ -24,7 +24,7 @@ const arweave = Arweave.init({
 })
 
 export default function OrganizationForm(props: {
-  did?: string
+  did: string
   organization: Organization
 }) {
   const { control, register, handleSubmit, reset, formState } =
@@ -72,7 +72,7 @@ export default function OrganizationForm(props: {
           JSON.stringify({
             ...organization,
             signature: {
-              did: props.organization,
+              did: props.did,
               snapshot: snapshot.toString(),
               coin_type: connectedSignatureUnit.coinType,
               address: connectedSignatureUnit.address,
@@ -110,11 +110,11 @@ export default function OrganizationForm(props: {
         }
         return serializedUploader.transaction.id as string
       },
-      [connectedSignatureUnit, props.organization, signMessage, snapshot],
+      [connectedSignatureUnit, props.did, signMessage, snapshot],
     ),
   )
   const { data: resolved } = useResolveDid(
-    props.did,
+    props.organization.id,
     connectedSignatureUnit?.coinType,
     snapshot,
   )
@@ -129,13 +129,17 @@ export default function OrganizationForm(props: {
 
   return (
     <div>
-      <h1>Organization: {props.did}</h1>
+      <h1>Organization: {props.organization.id}</h1>
       <FormItem label="avatar">
         <Controller
           control={control}
           name="profile.avatar"
           render={({ field: { value, onChange } }) => (
-            <AvatarInput name={props.did} value={value} onChange={onChange} />
+            <AvatarInput
+              name={props.organization.id}
+              value={value}
+              onChange={onChange}
+            />
           )}
         />
       </FormItem>

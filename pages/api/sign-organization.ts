@@ -24,6 +24,12 @@ export default async function handler(
     return
   }
 
+  // verify ownership
+  if (parsed.data.id !== parsed.data.signature.did) {
+    res.status(401).send('no permission')
+    return
+  }
+
   // verify signature
   const { signature, ...data } = parsed.data
   const snapshot = BigInt(signature.snapshot)

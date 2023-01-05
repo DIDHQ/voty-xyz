@@ -1,8 +1,11 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 import { Breadcrumbs } from 'react-daisyui'
+import DidSelect from '../../components/did-select'
 import OrganizationForm from '../../components/organization-form'
 import useArweaveFile from '../../hooks/use-arweave-file'
+import useConnectedSignatureUnit from '../../hooks/use-connected-signature-unit'
 import useDidConfig from '../../hooks/use-did-config'
 import { Organization } from '../../src/schemas'
 
@@ -14,6 +17,8 @@ export default function OrganizationSettingsPage() {
   const { data: organization } = useArweaveFile<Organization>(
     config?.organization,
   )
+  const connectedSignatureUnit = useConnectedSignatureUnit()
+  const [did, setDid] = useState('')
 
   return organization ? (
     <>
@@ -23,10 +28,13 @@ export default function OrganizationSettingsPage() {
         </Breadcrumbs.Item>
         <Breadcrumbs.Item>{organization.profile.name}</Breadcrumbs.Item>
       </Breadcrumbs>
-      <OrganizationForm
-        did={router.query.organization as string | undefined}
-        organization={organization}
+      Role:
+      <DidSelect
+        signatureUnit={connectedSignatureUnit}
+        value={did}
+        onChange={setDid}
       />
+      <OrganizationForm did={did} organization={organization} />
     </>
   ) : null
 }
