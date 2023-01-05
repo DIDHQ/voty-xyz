@@ -1,10 +1,12 @@
 import { z } from 'zod'
 import { signatureSchema } from './signature'
 
+export const proposalTypes = ['single', 'multiple', 'weighted', 'ranked']
+
 export const proposalSchema = z.object({
   organization: z.string().min(1),
   workgroup: z.string().min(1),
-  type: z.enum(['single', 'multiple', 'weighted', 'ranked']),
+  type: z.enum(proposalTypes as [string, ...string[]]),
   title: z.string().min(1),
   body: z.string(),
   discussion: z.string(),
