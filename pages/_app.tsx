@@ -8,6 +8,7 @@ import { useDarkMode } from 'usehooks-ts'
 import { useTheme } from 'react-daisyui'
 import { useEffect } from 'react'
 import { useAtomValue } from 'jotai'
+import Head from 'next/head'
 
 import Layout from '../components/layout'
 import '../styles/globals.css'
@@ -47,15 +48,25 @@ export default function App({ Component, pageProps }: AppProps) {
     setTheme(theme)
   }, [isDarkMode, setTheme, persistentTheme])
 
+  // To resolve responsiveness in mobile
+  // Why we should put <Head> in this component: https://nextjs.org/docs/messages/no-document-viewport-meta
   return (
-    <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
-        <IconProvider value={iconConfig}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </IconProvider>
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+      </Head>
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider chains={chains}>
+          <IconProvider value={iconConfig}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </IconProvider>
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </>
   )
 }
