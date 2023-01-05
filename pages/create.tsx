@@ -190,12 +190,19 @@ export default function CreateOrganizationPage() {
   return (
     <>
       <CreateSteps value={step} />
-      {step === 0 && <IntroPage onNext={handleNext} />}
-      {step === 1 && (
-        <ChooseAccount onNext={handleNext} value={did} onchange={setDid} />
-      )}
-      {step === 2 && <BasicInfo onPrev={handlePrev} onNext={handleNext} />}
-      {step === 3 && <CreateSuccess value={did} />}
+      {
+        [
+          <IntroPage key="0" onNext={handleNext} />,
+          <ChooseAccount
+            key="1"
+            onNext={handleNext}
+            value={did}
+            onchange={setDid}
+          />,
+          <BasicInfo key="2" onPrev={handlePrev} onNext={handleNext} />,
+          <CreateSuccess key="3" value={did} />,
+        ][step]
+      }
     </>
   )
 }
