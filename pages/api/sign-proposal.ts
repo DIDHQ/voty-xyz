@@ -49,6 +49,8 @@ export default async function handler(
     return
   }
 
+  // TODO: extra verifies
+
   const transaction = await arweave.createTransaction({
     data: JSON.stringify(parsed.data),
   })
