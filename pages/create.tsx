@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import { Button, Steps, Input, Link } from 'react-daisyui'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
+import produce from 'immer'
 
 import FormItem from '../components/form-item'
 import DidSelect from '../components/did-select'
@@ -15,27 +16,21 @@ function useStep() {
   return useMemo(
     () =>
       [
-        Number(router.query.steps || 0),
+        Number(router.query.step || 0),
         () => {
           router.push(
-            {
-              query: {
-                ...router.query,
-                steps: String(Number(router.query.steps || 0) + 1),
-              },
-            },
+            produce(router, (draft) => {
+              draft.query.step = String(Number(router.query.step || 0) + 1)
+            }),
             undefined,
             { shallow: true },
           )
         },
         () => {
           router.push(
-            {
-              query: {
-                ...router.query,
-                steps: String(Number(router.query.steps || 0) - 1),
-              },
-            },
+            produce(router, (draft) => {
+              draft.query.step = String(Number(router.query.step || 0) - 1)
+            }),
             undefined,
             { shallow: true },
           )
