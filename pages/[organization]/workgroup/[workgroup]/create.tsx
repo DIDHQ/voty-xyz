@@ -1,9 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Add } from '@icon-park/react'
-import Arweave from 'arweave'
-import { SerializedUploader } from 'arweave/web/lib/transaction-uploader'
 import pMap from 'p-map'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button, Input, Select, Textarea } from 'react-daisyui'
 import { useForm } from 'react-hook-form'
 import useSWR from 'swr'
@@ -12,22 +10,14 @@ import DidSelect from '../../../../components/did-select'
 import FormItem from '../../../../components/form-item'
 import useRouterQuery from '../../../../components/use-router-query'
 import useArweaveFile from '../../../../hooks/use-arweave-file'
+import useArweaveUpload from '../../../../hooks/use-arweave-upload'
 import useAsync from '../../../../hooks/use-async'
 import useConnectedSignatureUnit from '../../../../hooks/use-connected-signature-unit'
-import useCurrentSnapshot from '../../../../hooks/use-current-snapshot'
 import useDidConfig from '../../../../hooks/use-did-config'
-import useSignMessage from '../../../../hooks/use-sign-message'
+import useSignJson from '../../../../hooks/use-sign-json'
 import { requiredCoinTypesOfVotingPower } from '../../../../src/functions/voting-power'
 import { Organization, Proposal, proposalSchema } from '../../../../src/schemas'
-import { wrapJsonMessage } from '../../../../src/signature'
 import { getCurrentSnapshot } from '../../../../src/snapshot'
-import { fetchJson } from '../../../../src/utils/fetcher'
-
-const arweave = Arweave.init({
-  host: 'arweave.net',
-  port: 443,
-  protocol: 'https',
-})
 
 export default function CreateProposalPage() {
   const { register, setValue, handleSubmit } = useForm<Proposal>({
@@ -85,67 +75,9 @@ export default function CreateProposalPage() {
   const [typesCount, setTypesCount] = useState(0)
   const [did, setDid] = useState('')
   const connectedSignatureUnit = useConnectedSignatureUnit()
-  const signMessage = useSignMessage(connectedSignatureUnit?.coinType)
-  const { data: snapshot } = useCurrentSnapshot(
-    connectedSignatureUnit?.coinType,
-  )
-  const onSubmit = useAsync(
-    useCallback(
-      async (proposal: Proposal) => {
-        // if (!window.ethereum) {
-        //   return
-        // }
-        if (!snapshot || !connectedSignatureUnit) {
-          return
-        }
-        const data = await signMessage(
-          await wrapJsonMessage('create proposal', proposal),
-        )
-        const textEncoder = new TextEncoder()
-        const body = textEncoder.encode(
-          JSON.stringify({
-            ...proposal,
-            signature: {
-              did,
-              snapshot: snapshot.toString(),
-              coin_type: connectedSignatureUnit.coinType,
-              address: connectedSignatureUnit.address,
-              data,
-            },
-          }),
-        )
-        const serializedUploader = await fetchJson<SerializedUploader>(
-          '/api/sign-proposal',
-          {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body,
-          },
-        )
-        // const dotbit = createInstance({
-        //   network: BitNetwork.mainnet,
-        //   signer: new ProviderSigner(window.ethereum as any),
-        // })
-        // await window.ethereum.request({ method: 'eth_requestAccounts' })
-        // await dotbit.account(props.organization).updateRecords([
-        //   {
-        //     key: 'dweb.arweave',
-        //     value: json.transaction.id,
-        //     label: 'voty',
-        //     ttl: '',
-        //   },
-        // ])
-        const uploader = await arweave.transactions.getUploader(
-          serializedUploader,
-          body,
-        )
-        while (!uploader.isComplete) {
-          await uploader.uploadChunk()
-        }
-        return serializedUploader.transaction.id as string
-      },
-      [connectedSignatureUnit, did, signMessage, snapshot],
-    ),
+  const handleSignJson = useAsync(useSignJson(did, connectedSignatureUnit))
+  const handleArweaveUpload = useAsync(
+    useArweaveUpload('/api/sign-proposal', handleSignJson.value),
   )
 
   return (
@@ -181,8 +113,29 @@ export default function CreateProposalPage() {
         value={did}
         onChange={setDid}
       />
-      <Button onClick={handleSubmit(onSubmit.execute, console.error)}>
-        Submit
+      {handleSignJson.error ? <p>{handleSignJson.error.message}</p> : null}
+      {handleArweaveUpload.error ? (
+        <p>{handleArweaveUpload.error.message}</p>
+      ) : null}
+      {handleArweaveUpload.value ? (
+        <a href={`https://arweave.net/${handleArweaveUpload.value}`}>
+          ar://{handleArweaveUpload.value}
+        </a>
+      ) : null}
+      <br />
+      <Button
+        disabled={!did}
+        onClick={handleSubmit(handleSignJson.execute, console.error)}
+        loading={handleSignJson.status === 'pending'}
+      >
+        Sign
+      </Button>
+      <Button
+        disabled={!handleSignJson.value}
+        onClick={handleArweaveUpload.execute}
+        loading={handleArweaveUpload.status === 'pending'}
+      >
+        Upload
       </Button>
     </>
   )
