@@ -23,23 +23,22 @@ function NavBar(props: NavBarProps) {
         </div>
         <div className="flex-none gap-3">
           <ThemeSwitcher />
-          <Button color="primary">Create an Org</Button>
+          <Button color="primary">Create an Organization</Button>
           <ConnectButtonCustom>
             {({ account, openConnectModal }) => (
               <Button color="primary" onClick={openConnectModal}>
-                {account
-                  ? `${account.address.substring(
-                      0,
-                      5,
-                    )}...${account.address.substring(38)}`
-                  : 'Connect Wallet'}
+                {account ? `${account.displayName}` : 'Connect Wallet'}
               </Button>
             )}
           </ConnectButtonCustom>
           <Dropdown vertical="end">
             <Button color="ghost" className="avatar" shape="circle">
               <div className="w-10 rounded-full">
-                <img src="https://api.lorem.space/image/face?hash=33791" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://api.lorem.space/image/face?hash=33791"
+                  alt="avatar"
+                />
               </div>
             </Button>
             <Dropdown.Menu className="w-52">
