@@ -8,12 +8,7 @@ import FormItem from '../../../../components/form-item'
 import useRouterQuery from '../../../../components/use-router-query'
 import useArweaveFile from '../../../../hooks/use-arweave-file'
 import useDidConfig from '../../../../hooks/use-did-config'
-import {
-  Organization,
-  Proposal,
-  proposalSchema,
-  proposalTypes,
-} from '../../../../src/schemas'
+import { Organization, Proposal, proposalSchema } from '../../../../src/schemas'
 
 export default function CreateProposalPage() {
   const { register, setValue } = useForm<Proposal>({
@@ -54,7 +49,7 @@ export default function CreateProposalPage() {
       </FormItem>
       <FormItem label="type">
         <Select {...register('type')}>
-          {proposalTypes.map((proposalType) => (
+          {proposalSchema.shape.type.options.map((proposalType) => (
             <Select.Option key={proposalType} value={proposalType}>
               {proposalType}
             </Select.Option>
