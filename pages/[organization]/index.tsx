@@ -6,7 +6,6 @@ import {
   Twitter,
   RobotOne,
   GithubOne,
-  ViewList,
   HoldInterface,
   UserToUserTransmission,
   Info,
@@ -48,10 +47,7 @@ export default function OrganizationIndexPage() {
           {organization?.workgroups?.map((workgroup) => (
             <Menu.Item key={workgroup.id} className="ml-6">
               <Link
-                href={`/${router.query.organization}?workgroup=${workgroup.id}`}
-                className={
-                  router.query.workgroup === workgroup.id ? 'active' : undefined
-                }
+                href={`/${router.query.organization}/workgroups/${workgroup.profile.name}`}
               >
                 <AvatarInput
                   size={24}
