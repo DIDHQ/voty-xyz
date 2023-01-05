@@ -52,7 +52,7 @@ export default function OrganizationIndexPage() {
           {organization.workgroups?.map((workgroup) => (
             <Menu.Item key={workgroup.id} className="ml-6">
               <Link
-                href={`/${query.organization}/workgroups/${workgroup.profile.name}`}
+                href={`/${query.organization}/workgroup/${workgroup.profile.name}`}
               >
                 <AvatarInput
                   size={24}
