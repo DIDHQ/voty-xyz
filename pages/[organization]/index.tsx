@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Button, Menu } from 'react-daisyui'
+import { Breadcrumbs, Button, Menu } from 'react-daisyui'
 import {
   Earth,
   Twitter,
@@ -28,6 +28,12 @@ export default function OrganizationIndexPage() {
 
   return organization ? (
     <>
+      <Breadcrumbs>
+        <Breadcrumbs.Item>
+          <Link href="/">Home</Link>
+        </Breadcrumbs.Item>
+        <Breadcrumbs.Item>{organization.profile.name}</Breadcrumbs.Item>
+      </Breadcrumbs>
       <AvatarInput
         name={organization.profile.name}
         value={organization.profile.avatar}

@@ -1,5 +1,7 @@
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
+import { Breadcrumbs } from 'react-daisyui'
 import AvatarInput from '../../../components/avatar-input'
 import useArweaveFile from '../../../hooks/use-arweave-file'
 import useDidConfig from '../../../hooks/use-did-config'
@@ -21,14 +23,37 @@ export default function WorkgroupPage() {
     [organization?.workgroups, router.query.workgroup],
   )
 
-  return workgroup ? (
+  return (
     <>
-      <AvatarInput
-        name={workgroup.profile.name}
-        value={workgroup.profile.avatar}
-        disabled
-      />
-      <h1>{workgroup.profile.name}</h1>
+      <Breadcrumbs>
+        <Breadcrumbs.Item>
+          <Link href="/">Home</Link>
+        </Breadcrumbs.Item>
+        {organization ? (
+          <Breadcrumbs.Item>
+            <Link href={`/${router.query.organization}`}>
+              {organization.profile.name}
+            </Link>
+          </Breadcrumbs.Item>
+        ) : (
+          <></>
+        )}
+        {workgroup ? (
+          <Breadcrumbs.Item>{workgroup.profile.name}</Breadcrumbs.Item>
+        ) : (
+          <></>
+        )}
+      </Breadcrumbs>
+      {workgroup ? (
+        <>
+          <AvatarInput
+            name={workgroup.profile.name}
+            value={workgroup.profile.avatar}
+            disabled
+          />
+          <h1>{workgroup.profile.name}</h1>
+        </>
+      ) : null}
     </>
-  ) : null
+  )
 }
