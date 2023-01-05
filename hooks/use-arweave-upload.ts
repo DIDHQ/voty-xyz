@@ -1,6 +1,8 @@
 import Arweave from 'arweave'
 import { SerializedUploader } from 'arweave/web/lib/transaction-uploader'
 import { useCallback } from 'react'
+
+import { Organization, Proposal } from '../src/schemas'
 import { fetchJson } from '../src/utils/fetcher'
 
 const arweave = Arweave.init({
@@ -11,12 +13,14 @@ const arweave = Arweave.init({
 
 export default function useArweaveUpload(
   path: '/api/sign-organization' | '/api/sign-proposal',
-  body?: Uint8Array,
+  json?: Organization | Proposal,
 ) {
   return useCallback(async () => {
-    if (!body) {
-      return null
+    if (!json) {
+      return
     }
+    const textEncoder = new TextEncoder()
+    const body = textEncoder.encode(JSON.stringify(json))
     const serializedUploader = await fetchJson<SerializedUploader>(path, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -30,5 +34,5 @@ export default function useArweaveUpload(
       await uploader.uploadChunk()
     }
     return serializedUploader.transaction.id as string
-  }, [body, path])
+  }, [json, path])
 }
