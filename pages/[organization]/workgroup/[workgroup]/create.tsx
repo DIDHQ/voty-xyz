@@ -16,7 +16,7 @@ import { Organization, Proposal, proposalSchema } from '../../../../src/schemas'
 import { getCurrentSnapshot } from '../../../../src/snapshot'
 
 export default function CreateProposalPage() {
-  const { register, setValue } = useForm<Proposal>({
+  const { register, setValue, handleSubmit } = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
   })
   const [query] = useRouterQuery<['organization', 'workgroup']>()
@@ -49,7 +49,7 @@ export default function CreateProposalPage() {
       : null,
     () => requiredCoinTypesOfVotingPower(workgroup!.voting_power!),
   )
-  const { data: snapshots, error } = useSWR(
+  const { data: snapshots } = useSWR(
     ['snapshots', coinTypesOfVotingPower],
     async () => {
       const snapshots = await pMap(
@@ -74,16 +74,16 @@ export default function CreateProposalPage() {
 
   return (
     <>
-      <FormItem label="title">
+      <FormItem label="Title">
         <Input {...register('title')} />
       </FormItem>
-      <FormItem label="body">
+      <FormItem label="Body">
         <Textarea {...register('body')} />
       </FormItem>
-      <FormItem label="discussion">
+      <FormItem label="Discussion">
         <Input {...register('discussion')} />
       </FormItem>
-      <FormItem label="type">
+      <FormItem label="Type">
         <Select {...register('type')}>
           {proposalSchema.shape.type.options.map((proposalType) => (
             <Select.Option key={proposalType} value={proposalType}>
@@ -92,7 +92,7 @@ export default function CreateProposalPage() {
           ))}
         </Select>
       </FormItem>
-      <FormItem label="choices">
+      <FormItem label="Choices">
         {Array.from({ length: typesCount })?.map((_, index) => (
           <Input key={index} {...register(`choices.${index}`)} />
         ))}
@@ -100,6 +100,7 @@ export default function CreateProposalPage() {
           <Add />
         </Button>
       </FormItem>
+      <Button onClick={handleSubmit(console.log, console.error)}>Submit</Button>
     </>
   )
 }

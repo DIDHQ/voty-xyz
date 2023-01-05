@@ -8,7 +8,7 @@ export const proposalSchema = z.object({
   title: z.string().min(1),
   body: z.string(),
   discussion: z.string(),
-  choices: z.array(z.string().min(1)),
+  choices: z.array(z.string().min(1)).min(1),
   snapshots: z.map(z.number(), z.string()),
   start: z.number(),
   end: z.number(),
