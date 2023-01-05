@@ -1,14 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Add } from '@icon-park/react'
-import { useEffect, useState } from 'react'
+import { unzip } from 'lodash-es'
+import pMap from 'p-map'
+import { useEffect, useMemo, useState } from 'react'
 import { Button, Input, Select, Textarea } from 'react-daisyui'
 import { useForm } from 'react-hook-form'
+import useSWR from 'swr'
 
 import FormItem from '../../../../components/form-item'
 import useRouterQuery from '../../../../components/use-router-query'
 import useArweaveFile from '../../../../hooks/use-arweave-file'
 import useDidConfig from '../../../../hooks/use-did-config'
+import { requiredCoinTypesOfVotingPower } from '../../../../src/functions/voting-power'
 import { Organization, Proposal, proposalSchema } from '../../../../src/schemas'
+import { getCurrentSnapshot } from '../../../../src/snapshot'
 
 export default function CreateProposalPage() {
   const { register, setValue } = useForm<Proposal>({
@@ -19,6 +24,13 @@ export default function CreateProposalPage() {
   const { data: organization } = useArweaveFile<Organization>(
     config?.organization,
   )
+  const workgroup = useMemo(
+    () =>
+      organization?.workgroups?.find(
+        ({ profile }) => profile.name === query.workgroup,
+      ),
+    [organization?.workgroups, query.workgroup],
+  )
   useEffect(() => {
     if (!config?.organization) {
       return
@@ -26,14 +38,38 @@ export default function CreateProposalPage() {
     setValue('organization', config?.organization)
   }, [config?.organization, setValue])
   useEffect(() => {
-    const workgroup = organization?.workgroups?.find(
-      ({ profile }) => profile.name === query.workgroup,
-    )
     if (!workgroup) {
       return
     }
     setValue('workgroup', workgroup.id)
-  }, [organization?.workgroups, query.workgroup, setValue])
+  }, [query.workgroup, setValue, workgroup])
+  const { data: coinTypesOfVotingPower } = useSWR(
+    workgroup?.voting_power
+      ? ['requiredCoinTypesOfVotingPower', workgroup.voting_power]
+      : null,
+    () => requiredCoinTypesOfVotingPower(workgroup!.voting_power!),
+  )
+  const { data: snapshots, error } = useSWR(
+    ['snapshots', coinTypesOfVotingPower],
+    async () => {
+      const snapshots = await pMap(
+        coinTypesOfVotingPower!,
+        getCurrentSnapshot,
+        { concurrency: 5 },
+      )
+      return new Map<number, string>(
+        unzip([
+          coinTypesOfVotingPower!,
+          snapshots.map((snapshot) => snapshot.toString()),
+        ] as unknown[][]) as [number, string][],
+      )
+    },
+  )
+  useEffect(() => {
+    if (snapshots) {
+      setValue('snapshots', snapshots)
+    }
+  }, [setValue, snapshots])
   const [typesCount, setTypesCount] = useState(0)
 
   return (

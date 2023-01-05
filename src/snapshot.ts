@@ -1,8 +1,14 @@
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
+import CKB from '@nervosnetwork/ckb-sdk-core'
 import invariant from 'tiny-invariant'
-import { chainIdToRpc, coinTypeToChainId } from './constants'
+import { chainIdToRpc, coinTypeToChainId, commonCoinTypes } from './constants'
 
-export async function getCurrentSnapshot(coinType: number) {
+export async function getCurrentSnapshot(coinType: number): Promise<bigint> {
+  if (coinType === commonCoinTypes.CKB) {
+    const ckb = new CKB('https://mainnet.ckb.dev/')
+    const blockNumber = await ckb.rpc.getTipBlockNumber()
+    return BigInt(blockNumber)
+  }
   const chainId = coinTypeToChainId[coinType]
   invariant(
     chainId !== undefined,
