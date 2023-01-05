@@ -23,7 +23,7 @@ function NavBar(props: NavBarProps) {
         </div>
         <div className="flex-none gap-3">
           <ThemeSwitcher />
-          <Button color="primary">Create an Org</Button>
+          <Button color="primary">Create an Organization</Button>
           <ConnectButtonCustom>
             {({ account, openConnectModal }) => (
               <Button color="primary" onClick={openConnectModal}>

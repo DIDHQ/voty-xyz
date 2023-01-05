@@ -3,14 +3,14 @@ import { Button } from 'react-daisyui'
 import { Star } from '@icon-park/react'
 import AvatarInput from './avatar-input'
 
-type OrgCardProps = {
+type OrganizationCardProps = {
   avatarUrl?: string
   did: string
   name: string
   members: number
 }
 
-export default function OrgCard(props: OrgCardProps) {
+export default function OrganizationCard(props: OrganizationCardProps) {
   const [isFavorite, setFavorite] = useState(false)
   const toggleFavorite = () => {
     setFavorite(!isFavorite)
