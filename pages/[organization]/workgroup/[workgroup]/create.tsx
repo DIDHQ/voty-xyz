@@ -118,7 +118,7 @@ export default function CreateProposalPage() {
         if (!snapshot || !connectedSignatureUnit) {
           return
         }
-        const hex = await signMessage(
+        const data = await signMessage(
           await wrapJsonMessage('create proposal', proposal),
         )
         const textEncoder = new TextEncoder()
@@ -130,7 +130,7 @@ export default function CreateProposalPage() {
               snapshot: snapshot.toString(),
               coin_type: connectedSignatureUnit.coinType,
               address: connectedSignatureUnit.address,
-              hex,
+              data,
             },
           }),
         )

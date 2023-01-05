@@ -7,7 +7,7 @@ const signatureEncoding = 'base64'
 
 export function verifySignature(
   message: string,
-  signature: Pick<Signature, 'coin_type' | 'address' | 'hex'>,
+  signature: Pick<Signature, 'coin_type' | 'address' | 'data'>,
 ): boolean {
   if (coinTypeToChainId[signature.coin_type] === undefined) {
     throw new Error(
@@ -15,7 +15,7 @@ export function verifySignature(
     )
   }
   return (
-    verifyMessage(message, Buffer.from(signature.hex, signatureEncoding)) ===
+    verifyMessage(message, Buffer.from(signature.data, signatureEncoding)) ===
     signature.address
   )
 }
