@@ -5,7 +5,7 @@ import { SignatureUnit } from '../src/types'
 export default function useDids(signatureUnit?: SignatureUnit) {
   return useSWR(
     signatureUnit
-      ? ['accounts', signatureUnit.address, signatureUnit.coinType]
+      ? ['dids', signatureUnit.address, signatureUnit.coinType]
       : null,
     async () => {
       const dotbit = createInstance()
