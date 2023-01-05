@@ -2,10 +2,10 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { Breadcrumbs } from 'react-daisyui'
-import AvatarInput from '../../../components/avatar-input'
-import useArweaveFile from '../../../hooks/use-arweave-file'
-import useDidConfig from '../../../hooks/use-did-config'
-import { Organization } from '../../../src/schemas'
+import AvatarInput from '../../../../components/avatar-input'
+import useArweaveFile from '../../../../hooks/use-arweave-file'
+import useDidConfig from '../../../../hooks/use-did-config'
+import { Organization } from '../../../../src/schemas'
 
 export default function WorkgroupPage() {
   const router = useRouter()
