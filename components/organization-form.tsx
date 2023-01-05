@@ -65,7 +65,7 @@ export default function OrganizationForm(props: { organization: string }) {
         if (!snapshot || !connectedSignatureUnit) {
           return
         }
-        const sig = await signMessage(
+        const hex = await signMessage(
           await wrapJsonMessage('edit organization', organization),
         )
         const textEncoder = new TextEncoder()
@@ -77,7 +77,7 @@ export default function OrganizationForm(props: { organization: string }) {
               snapshot: snapshot.toString(),
               coin_type: connectedSignatureUnit.coinType,
               address: connectedSignatureUnit.address,
-              sig,
+              hex,
             },
           }),
         )
