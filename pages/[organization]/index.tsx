@@ -6,7 +6,6 @@ import {
   Twitter,
   RobotOne,
   GithubOne,
-  HoldInterface,
   UserToUserTransmission,
   Info,
   SettingOne,
@@ -66,12 +65,6 @@ export default function OrganizationIndexPage() {
               </Link>
             </Menu.Item>
           ))}
-          <Menu.Item>
-            <Link href={`/${router.query.organization}/create`}>
-              <HoldInterface />
-              New proposal
-            </Link>
-          </Menu.Item>
           <Menu.Item>
             <Link href={`/delegate/${router.query.organization}`}>
               <UserToUserTransmission />

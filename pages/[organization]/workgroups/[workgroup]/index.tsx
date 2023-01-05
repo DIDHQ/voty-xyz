@@ -1,7 +1,8 @@
+import { HoldInterface } from '@icon-park/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
-import { Breadcrumbs } from 'react-daisyui'
+import { Breadcrumbs, Menu } from 'react-daisyui'
 import AvatarInput from '../../../../components/avatar-input'
 import useArweaveFile from '../../../../hooks/use-arweave-file'
 import useDidConfig from '../../../../hooks/use-did-config'
@@ -52,6 +53,18 @@ export default function WorkgroupPage() {
             disabled
           />
           <h1>{workgroup.profile.name}</h1>
+          <div className="menu bg-base-100 w-56 rounded-box">
+            <Menu>
+              <Menu.Item>
+                <Link
+                  href={`/${router.query.organization}/workgroups/${router.query.workgroup}/create`}
+                >
+                  <HoldInterface />
+                  New proposal
+                </Link>
+              </Menu.Item>
+            </Menu>
+          </div>
         </>
       ) : null}
     </>
