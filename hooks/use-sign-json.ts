@@ -9,7 +9,7 @@ import useSignMessage from './use-sign-message'
 export default function useSignJson<T extends Organization | Proposal>(
   did: string,
   signatureUnit?: SignatureUnit,
-): (a: T) => Promise<(T & { signature: Signature }) | undefined> {
+): (json: T) => Promise<(T & { signature: Signature }) | undefined> {
   const signMessage = useSignMessage(signatureUnit?.coinType)
   const { data: snapshot } = useCurrentSnapshot(signatureUnit?.coinType)
 
