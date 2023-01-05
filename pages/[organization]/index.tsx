@@ -17,7 +17,8 @@ import useDidConfig from '../../hooks/use-did-config'
 import { organizationWithSignatureSchema } from '../../src/schemas'
 import useRouterQuery from '../../components/use-router-query'
 import useArweaveList from '../../hooks/use-arweave-list'
-import { getArweaveTags } from '../../src/utils/arweave-tags'
+import { DataType } from '../../src/constants'
+import { getListArweaveTags } from '../../src/utils/arweave-tags'
 
 export default function OrganizationIndexPage() {
   const [query] = useRouterQuery<['organization', 'workgroup']>()
@@ -26,10 +27,10 @@ export default function OrganizationIndexPage() {
     organizationWithSignatureSchema,
     config?.organization,
   )
-  const { data: list } = useArweaveList(
-    organization ? getArweaveTags(organization) : undefined,
+  const { data: proposals } = useArweaveList(
+    getListArweaveTags(DataType.PROPOSAL),
   )
-  console.log(list)
+  console.log(proposals)
 
   return organization ? (
     <>
