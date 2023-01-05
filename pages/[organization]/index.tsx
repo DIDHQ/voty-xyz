@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { Breadcrumbs, Button, Menu } from 'react-daisyui'
 import {
   Earth,
@@ -12,16 +11,16 @@ import {
   SettingOne,
   NetworkTree,
 } from '@icon-park/react'
+
 import AvatarInput from '../../components/avatar-input'
 import useArweaveFile from '../../hooks/use-arweave-file'
 import useDidConfig from '../../hooks/use-did-config'
 import { Organization } from '../../src/schemas'
+import useRouterQuery from '../../components/use-router-query'
 
 export default function OrganizationIndexPage() {
-  const router = useRouter()
-  const { data: config } = useDidConfig(
-    router.query.organization as string | undefined,
-  )
+  const [query] = useRouterQuery<['organization', 'workgroup']>()
+  const { data: config } = useDidConfig(query.organization)
   const { data: organization } = useArweaveFile<Organization>(
     config?.organization,
   )
@@ -44,8 +43,8 @@ export default function OrganizationIndexPage() {
         <Menu>
           <Menu.Item>
             <Link
-              href={`/${router.query.organization}`}
-              className={router.query.workgroup ? undefined : 'active'}
+              href={`/${query.organization}`}
+              className={query.workgroup ? undefined : 'active'}
             >
               <NetworkTree />
               Workgroups
@@ -54,7 +53,7 @@ export default function OrganizationIndexPage() {
           {organization.workgroups?.map((workgroup) => (
             <Menu.Item key={workgroup.id} className="ml-6">
               <Link
-                href={`/${router.query.organization}/workgroups/${workgroup.profile.name}`}
+                href={`/${query.organization}/workgroups/${workgroup.profile.name}`}
               >
                 <AvatarInput
                   size={24}
@@ -67,25 +66,25 @@ export default function OrganizationIndexPage() {
             </Menu.Item>
           ))}
           <Menu.Item>
-            <Link href={`/${router.query.organization}/create`}>
+            <Link href={`/${query.organization}/create`}>
               <HoldInterface />
               New proposal
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link href={`/delegate/${router.query.organization}`}>
+            <Link href={`/delegate/${query.organization}`}>
               <UserToUserTransmission />
               Delegate
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link href={`/${router.query.organization}/about`}>
+            <Link href={`/${query.organization}/about`}>
               <Info />
               About
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link href={`/${router.query.organization}/settings`}>
+            <Link href={`/${query.organization}/settings`}>
               <SettingOne />
               Settings
             </Link>
