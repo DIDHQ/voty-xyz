@@ -19,11 +19,11 @@ import { Organization } from '../../src/schemas'
 
 export default function OrganizationIndexPage() {
   const router = useRouter()
-  const { data: record } = useDidConfig(
+  const { data: config } = useDidConfig(
     router.query.organization as string | undefined,
   )
   const { data: organization } = useArweaveFile<Organization>(
-    record?.organization,
+    config?.organization,
   )
 
   return (
