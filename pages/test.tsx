@@ -1,8 +1,7 @@
-import { createInstance } from 'dotbit'
 import { useMemo, useState } from 'react'
-import { Input, Select, Table, Textarea } from 'react-daisyui'
+import { Input, Table, Textarea } from 'react-daisyui'
 import useSWR from 'swr'
-import { useAccount } from 'wagmi'
+import DidSelect from '../components/did-select'
 import FormItem from '../components/form-item'
 import {
   checkProposerLiberty,
@@ -89,16 +88,6 @@ export default function TestPage() {
       return []
     }
   }, [votingPower])
-  const account = useAccount()
-  const { data: accounts } = useSWR(
-    account.address ? ['account', account] : null,
-    async () => {
-      const dotbit = createInstance()
-      const accounts = await dotbit.accountsOfOwner({ key: account.address! })
-      return accounts.map(({ account }) => account)
-    },
-    { revalidateOnFocus: false },
-  )
 
   return (
     <>
@@ -152,16 +141,7 @@ export default function TestPage() {
       </Table>
       <FormItem label="test DID">
         <Input value={text} onChange={(e) => setText(e.target.value)} />
-        <Select value={text} onChange={(e) => setText(e.target.value)}>
-          <Select.Option />
-          <>
-            {accounts?.map((account) => (
-              <Select.Option key={account} value={account}>
-                {account}
-              </Select.Option>
-            ))}
-          </>
-        </Select>
+        <DidSelect value={text} onChange={setText} />
       </FormItem>
     </>
   )
