@@ -6,9 +6,9 @@ export default function FormItem(props: {
   children: ReactNode
   direction?: 'horizontal' | 'vertical'
   gap?: number
-  classNames?: string
+  className?: string
 }) {
-  const { classNames } = props
+  const { className } = props
   const cls = clsx({
     'form-control flex': true,
     'flex-row': props.direction === 'horizontal',
@@ -16,7 +16,7 @@ export default function FormItem(props: {
   })
 
   return (
-    <div className={clsx(cls, classNames)}>
+    <div className={clsx(cls, className)}>
       <label className="label whitespace-nowrap">{props.label}</label>
       {props.children}
     </div>
