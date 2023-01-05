@@ -14,16 +14,17 @@ import {
 } from '@icon-park/react'
 import AvatarInput from '../../components/avatar-input'
 import useArweaveFile from '../../hooks/use-arweave-file'
-import useBitRecordValue from '../../hooks/use-bit-record-value'
+import useDidConfig from '../../hooks/use-did-config'
 import { Organization } from '../../src/schemas'
 
 export default function OrganizationIndexPage() {
   const router = useRouter()
-  const { data: record } = useBitRecordValue(
+  const { data: record } = useDidConfig(
     router.query.organization as string | undefined,
-    'voty',
   )
-  const { data: organization } = useArweaveFile<Organization>(record)
+  const { data: organization } = useArweaveFile<Organization>(
+    record?.organization,
+  )
 
   return (
     <>

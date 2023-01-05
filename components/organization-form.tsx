@@ -17,7 +17,7 @@ import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignMessage from '../hooks/use-sign-message'
 import { wrapJsonMessage } from '../src/signature'
-import useBitRecordValue from '../hooks/use-bit-record-value'
+import useDidConfig from '../hooks/use-did-config'
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -26,7 +26,7 @@ const arweave = Arweave.init({
 })
 
 export default function OrganizationForm(props: { organization: string }) {
-  const { data: hash } = useBitRecordValue(props.organization, 'voty')
+  const { data: hash } = useDidConfig(props.organization, 'voty')
   const { data } = useArweaveFile<Organization>(hash)
   const { control, register, handleSubmit, reset, formState } =
     useForm<Organization>({
