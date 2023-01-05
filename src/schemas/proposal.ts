@@ -9,7 +9,7 @@ export const proposalSchema = z.object({
   body: z.string(),
   discussion: z.string(),
   choices: z.array(z.string().min(1)).min(1),
-  snapshots: z.map(z.number(), z.string()),
+  snapshots: z.record(z.string(), z.string()),
   start: z.number(),
   end: z.number(),
 })

@@ -1,19 +1,33 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Add } from '@icon-park/react'
-import { unzip } from 'lodash-es'
+import Arweave from 'arweave'
+import { SerializedUploader } from 'arweave/web/lib/transaction-uploader'
 import pMap from 'p-map'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Input, Select, Textarea } from 'react-daisyui'
 import { useForm } from 'react-hook-form'
 import useSWR from 'swr'
 
+import DidSelect from '../../../../components/did-select'
 import FormItem from '../../../../components/form-item'
 import useRouterQuery from '../../../../components/use-router-query'
 import useArweaveFile from '../../../../hooks/use-arweave-file'
+import useAsync from '../../../../hooks/use-async'
+import useConnectedSignatureUnit from '../../../../hooks/use-connected-signature-unit'
+import useCurrentSnapshot from '../../../../hooks/use-current-snapshot'
 import useDidConfig from '../../../../hooks/use-did-config'
+import useSignMessage from '../../../../hooks/use-sign-message'
 import { requiredCoinTypesOfVotingPower } from '../../../../src/functions/voting-power'
 import { Organization, Proposal, proposalSchema } from '../../../../src/schemas'
+import { wrapJsonMessage } from '../../../../src/signature'
 import { getCurrentSnapshot } from '../../../../src/snapshot'
+import { fetchJson } from '../../../../src/utils/fetcher'
+
+const arweave = Arweave.init({
+  host: 'arweave.net',
+  port: 443,
+  protocol: 'https',
+})
 
 export default function CreateProposalPage() {
   const { register, setValue, handleSubmit } = useForm<Proposal>({
@@ -57,12 +71,10 @@ export default function CreateProposalPage() {
         getCurrentSnapshot,
         { concurrency: 5 },
       )
-      return new Map<number, string>(
-        unzip([
-          coinTypesOfVotingPower!,
-          snapshots.map((snapshot) => snapshot.toString()),
-        ] as unknown[][]) as [number, string][],
-      )
+      return snapshots.reduce((obj, snapshot, index) => {
+        obj[coinTypesOfVotingPower![index]] = snapshot.toString()
+        return obj
+      }, {} as { [coinType: string]: string })
     },
   )
   useEffect(() => {
@@ -91,6 +103,70 @@ export default function CreateProposalPage() {
     }
   }, [setValue, workgroup])
   const [typesCount, setTypesCount] = useState(0)
+  const [did, setDid] = useState('')
+  const connectedSignatureUnit = useConnectedSignatureUnit()
+  const signMessage = useSignMessage(connectedSignatureUnit?.coinType)
+  const { data: snapshot } = useCurrentSnapshot(
+    connectedSignatureUnit?.coinType,
+  )
+  const onSubmit = useAsync(
+    useCallback(
+      async (proposal: Proposal) => {
+        // if (!window.ethereum) {
+        //   return
+        // }
+        if (!snapshot || !connectedSignatureUnit) {
+          return
+        }
+        const hex = await signMessage(
+          await wrapJsonMessage('create proposal', proposal),
+        )
+        const textEncoder = new TextEncoder()
+        const body = textEncoder.encode(
+          JSON.stringify({
+            ...proposal,
+            signature: {
+              did,
+              snapshot: snapshot.toString(),
+              coin_type: connectedSignatureUnit.coinType,
+              address: connectedSignatureUnit.address,
+              hex,
+            },
+          }),
+        )
+        const serializedUploader = await fetchJson<SerializedUploader>(
+          '/api/sign-proposal',
+          {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body,
+          },
+        )
+        // const dotbit = createInstance({
+        //   network: BitNetwork.mainnet,
+        //   signer: new ProviderSigner(window.ethereum as any),
+        // })
+        // await window.ethereum.request({ method: 'eth_requestAccounts' })
+        // await dotbit.account(props.organization).updateRecords([
+        //   {
+        //     key: 'dweb.arweave',
+        //     value: json.transaction.id,
+        //     label: 'voty',
+        //     ttl: '',
+        //   },
+        // ])
+        const uploader = await arweave.transactions.getUploader(
+          serializedUploader,
+          body,
+        )
+        while (!uploader.isComplete) {
+          await uploader.uploadChunk()
+        }
+        return serializedUploader.transaction.id as string
+      },
+      [connectedSignatureUnit, did, signMessage, snapshot],
+    ),
+  )
 
   return (
     <>
@@ -120,7 +196,14 @@ export default function CreateProposalPage() {
           <Add />
         </Button>
       </FormItem>
-      <Button onClick={handleSubmit(console.log, console.error)}>Submit</Button>
+      <DidSelect
+        signatureUnit={connectedSignatureUnit}
+        value={did}
+        onChange={setDid}
+      />
+      <Button onClick={handleSubmit(onSubmit.execute, console.error)}>
+        Submit
+      </Button>
     </>
   )
 }
