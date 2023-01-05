@@ -3,9 +3,9 @@
 import { useState, useMemo } from 'react'
 import { Button, Steps, Input, Link } from 'react-daisyui'
 import NextLink from 'next/link'
+import { useRouter } from 'next/router'
 
 import FormItem from '../components/form-item'
-import { useRouter } from 'next/router'
 import DidSelect from '../components/did-select'
 import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
 
