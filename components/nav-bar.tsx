@@ -27,12 +27,7 @@ function NavBar(props: NavBarProps) {
           <ConnectButtonCustom>
             {({ account, openConnectModal }) => (
               <Button color="primary" onClick={openConnectModal}>
-                {account
-                  ? `${account.address.substring(
-                      0,
-                      5,
-                    )}...${account.address.substring(38)}`
-                  : 'Connect Wallet'}
+                {account ? `${account.displayName}` : 'Connect Wallet'}
               </Button>
             )}
           </ConnectButtonCustom>
