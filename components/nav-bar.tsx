@@ -1,4 +1,5 @@
-import { Navbar, Dropdown, Button, Link } from 'react-daisyui'
+import { Navbar, Dropdown, Button } from 'react-daisyui'
+import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import ThemeSwitcher from './theme-switcher'
 
@@ -17,7 +18,7 @@ function NavBar(props: NavBarProps) {
     <div className="flex w-full component-preview p-4 items-center justify-center gap-2 font-sans">
       <Navbar className="bg-base-200 shadow-xl rounded-box">
         <div className="flex-1">
-          <Link href="/" target="_self" className="hover:no-underline">
+          <Link href="/">
             <Button className="text-xl normal-case" color="ghost">
               VotyXYZ
             </Button>
@@ -25,11 +26,7 @@ function NavBar(props: NavBarProps) {
         </div>
         <div className="flex-none gap-3">
           <ThemeSwitcher />
-          <Link
-            href="/create-organization"
-            target="_self"
-            className="hover:no-underline"
-          >
+          <Link href="/create">
             <Button color="primary">Create an Organization</Button>
           </Link>
           <ConnectButtonCustom>

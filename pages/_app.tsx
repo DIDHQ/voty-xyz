@@ -48,8 +48,6 @@ export default function App({ Component, pageProps }: AppProps) {
     setTheme(theme)
   }, [isDarkMode, setTheme, persistentTheme])
 
-  // To resolve responsiveness in mobile
-  // Why we should put <Head> in this component: https://nextjs.org/docs/messages/no-document-viewport-meta
   return (
     <>
       <Head>

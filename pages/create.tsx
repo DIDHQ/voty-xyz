@@ -4,6 +4,18 @@ import FormItem from '../components/form-item'
 import useSWR from 'swr'
 import { useAccount } from 'wagmi'
 import { createInstance } from 'dotbit'
+import { useRouter } from 'next/router'
+
+function useSteps() {
+  const router = useRouter()
+  return [
+    Number(router.query.steps || 0),
+    (steps: number) => {
+      router.query.steps = String(steps)
+      router.push(router)
+    },
+  ] as [number, (steps: number) => void]
+}
 
 function IntroPage(props: { onStarted: () => void }) {
   const { onStarted } = props
@@ -11,9 +23,9 @@ function IntroPage(props: { onStarted: () => void }) {
   return (
     <div className="hero bg-base-200 h-[calc(100vh_-_6rem)]">
       <div className="hero-content text-center">
-        <div className="max-w-lg">
+        <div className="max-w-xl">
           <h1 className="text-5xl font-bold mb-3">Create an Organization</h1>
-          <p className="py-6 mb-3">
+          <p className="py-6 mb-10 text-xl">
             Create your own organization now and start making decisions!
           </p>
           <Button color="primary" onClick={onStarted}>
@@ -41,9 +53,18 @@ function CreateSteps(props: { steps: number }) {
 }
 
 function StepsPage(props: any) {
+  const [stepsQuery, setStepsQuery] = useSteps()
   const [steps, setSteps] = useState(1)
-  const handlePrev = useCallback(() => setSteps(steps - 1), [steps])
-  const handleNext = useCallback(() => setSteps(steps + 1), [steps])
+
+  const handlePrev = useCallback(() => {
+    setSteps(steps - 1)
+    setStepsQuery(steps - 1)
+  }, [steps, setStepsQuery])
+
+  const handleNext = useCallback(() => {
+    setSteps(steps + 1)
+    setStepsQuery(steps + 1)
+  }, [steps, setStepsQuery])
 
   return (
     <>
@@ -57,7 +78,7 @@ function StepsPage(props: any) {
 
 function ChooseAccount(props: { onNext: () => void }) {
   const { onNext } = props
-  const [chosenAccount, setChosenAccount] = useState<string>('')
+  const [chosenAccount, setChosenAccount] = useState('')
 
   const account = useAccount()
   const { data: accounts } = useSWR(
@@ -175,7 +196,7 @@ function CreateSuccess() {
       <h1 className="text-3xl md:text-4xl font-bold mb-3 mt-12 text-center">
         UnknownDAO is created successfully
       </h1>
-      <Link href="/organization" target="_self" className="hover:no-underline">
+      <Link href="/ph0ng.bit" target="_self" className="hover:no-underline">
         <Button color="primary" className="w-fit px-8 mt-16">
           Enter My Organization
         </Button>
@@ -207,11 +228,10 @@ function GreenCheck() {
 }
 
 export default function CreateOrganization() {
-  const [started, setStarted] = useState(false)
+  const [steps, setSteps] = useSteps()
+  const handleStarted = useCallback(() => {
+    setSteps(1)
+  }, [setSteps])
 
-  return started ? (
-    <StepsPage />
-  ) : (
-    <IntroPage onStarted={() => setStarted(true)} />
-  )
+  return steps === 0 ? <IntroPage onStarted={handleStarted} /> : <StepsPage />
 }
