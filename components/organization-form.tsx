@@ -26,8 +26,8 @@ const arweave = Arweave.init({
 })
 
 export default function OrganizationForm(props: { organization: string }) {
-  const { data: hash } = useDidConfig(props.organization, 'voty')
-  const { data } = useArweaveFile<Organization>(hash)
+  const { data: config } = useDidConfig(props.organization)
+  const { data } = useArweaveFile<Organization>(config?.organization)
   const { control, register, handleSubmit, reset, formState } =
     useForm<Organization>({
       resolver: zodResolver(organizationSchema),
