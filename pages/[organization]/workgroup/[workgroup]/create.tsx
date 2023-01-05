@@ -79,9 +79,7 @@ export default function CreateProposalPage() {
   const handleSignJson = useAsync(
     useSignJson(did, SignatureAction.CREATE_PROPOSAL, connectedSignatureUnit),
   )
-  const handleArweaveUpload = useAsync(
-    useArweaveUpload('/api/sign-proposal', handleSignJson.value),
-  )
+  const handleArweaveUpload = useAsync(useArweaveUpload(handleSignJson.value))
 
   return (
     <>
