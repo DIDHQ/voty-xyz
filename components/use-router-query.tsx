@@ -2,7 +2,7 @@ import produce from 'immer'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
-export default function useRouterQuery<S extends string[]>() {
+export default function useRouterQuery<S extends string[] = []>() {
   const router = useRouter()
   return useMemo(
     () =>

@@ -9,7 +9,7 @@ import useDidConfig from '../../../hooks/use-did-config'
 import { Organization } from '../../../src/schemas'
 
 export default function WorkgroupPage() {
-  const [query] = useRouterQuery()
+  const [query] = useRouterQuery<['organization', 'workgroup']>()
   const { data: config } = useDidConfig(query.organization)
   const { data: organization } = useArweaveFile<Organization>(
     config?.organization,
