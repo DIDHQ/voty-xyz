@@ -114,6 +114,7 @@ function BasicInfo(props: { onPrev: () => void; onNext: () => void }) {
   const { onPrev, onNext } = props
   const [organizationName, setOrganizationName] = useState('')
   const [desc, setDesc] = useState('')
+  // TODO: useForm
 
   return (
     <div className="flex flex-col justify-center items-center mt-20">
