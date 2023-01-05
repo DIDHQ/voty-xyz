@@ -172,7 +172,7 @@ function CreateSuccess(props: { value: string }) {
   return (
     <div className="flex justify-center flex-col items-center mt-32">
       <div className="w-20">
-        <img src="/green-check.svg" alt="green-check" />
+        <img src="/images/green-check.svg" alt="green-check" />
       </div>
       <h1 className="text-3xl md:text-4xl font-bold mb-3 mt-12 text-center">
         UnknownDAO is created successfully
