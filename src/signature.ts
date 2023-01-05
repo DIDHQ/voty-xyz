@@ -6,9 +6,9 @@ import { Signature } from './schemas'
 
 const signatureEncoding = 'base64'
 
-export enum SignatureAction {
-  EDIT_ORGANIZATION = 'edit organization',
-  CREATE_PROPOSAL = 'create proposal',
+export enum SignatureTarget {
+  ORGANIZATION = 'organization',
+  PROPOSAL = 'proposal',
 }
 
 export function verifySignature(
@@ -31,13 +31,13 @@ export function formatSignature(buffer: Uint8Array) {
 }
 
 export async function wrapJsonMessage(
-  action: SignatureAction,
+  target: SignatureTarget,
   json: object,
 ): Promise<string> {
   const textEncoder = new TextEncoder()
   const data = textEncoder.encode(JSON.stringify(json))
   const buffer = await arweave.crypto.hash(data, 'SHA-256')
-  return `You are signing to ${action} on Voty.\n\nhash: 0x${Buffer.from(
+  return `You are signing to modify ${target} on Voty.\n\nhash: 0x${Buffer.from(
     buffer,
   ).toString('hex')}`
 }

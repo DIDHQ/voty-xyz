@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { resolveDid } from '../../src/did'
 import { organizationWithSignatureSchema } from '../../src/schemas'
 import {
-  SignatureAction,
+  SignatureTarget,
   verifySignature,
   wrapJsonMessage,
 } from '../../src/signature'
@@ -40,7 +40,7 @@ export default async function handler(
     coinType !== signature.coin_type ||
     address !== signature.address ||
     !verifySignature(
-      await wrapJsonMessage(SignatureAction.EDIT_ORGANIZATION, data),
+      await wrapJsonMessage(SignatureTarget.ORGANIZATION, data),
       signature,
     )
   ) {

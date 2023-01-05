@@ -14,7 +14,7 @@ import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignJson from '../hooks/use-sign-json'
 import useArweaveUpload from '../hooks/use-arweave-upload'
-import { SignatureAction } from '../src/signature'
+import { SignatureTarget } from '../src/signature'
 
 export default function OrganizationForm(props: {
   did: string
@@ -49,7 +49,7 @@ export default function OrganizationForm(props: {
   const handleSignJson = useAsync(
     useSignJson(
       props.did,
-      SignatureAction.EDIT_ORGANIZATION,
+      SignatureTarget.ORGANIZATION,
       connectedSignatureUnit,
     ),
   )
