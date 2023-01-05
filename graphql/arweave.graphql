@@ -1,0 +1,38 @@
+query listTransactions(
+  $after: String
+  $first: Int = 100
+  $block: BlockFilter
+  $tags: [TagFilter!]
+  $sort: SortOrder
+) {
+  transactions(
+    after: $after
+    first: $first
+    block: $block
+    tags: $tags
+    sort: $sort
+  ) {
+    pageInfo {
+      hasNextPage
+    }
+    edges {
+      cursor
+      node {
+        id
+        block {
+          height
+          id
+          timestamp
+        }
+        tags {
+          name
+          value
+        }
+        data {
+          size
+          type
+        }
+      }
+    }
+  }
+}
