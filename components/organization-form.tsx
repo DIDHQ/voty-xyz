@@ -114,7 +114,7 @@ export default function OrganizationForm(props: {
     ),
   )
   const { data: resolved } = useResolveDid(
-    props.organization.id,
+    props.did,
     connectedSignatureUnit?.coinType,
     snapshot,
   )
@@ -129,17 +129,13 @@ export default function OrganizationForm(props: {
 
   return (
     <div>
-      <h1>Organization: {props.organization.id}</h1>
+      <h1>Organization: {props.did}</h1>
       <FormItem label="avatar">
         <Controller
           control={control}
           name="profile.avatar"
           render={({ field: { value, onChange } }) => (
-            <AvatarInput
-              name={props.organization.id}
-              value={value}
-              onChange={onChange}
-            />
+            <AvatarInput name={props.did} value={value} onChange={onChange} />
           )}
         />
       </FormItem>
@@ -205,9 +201,7 @@ export default function OrganizationForm(props: {
         </Fragment>
       ))}
       <Button
-        disabled={
-          !isAdmin || !formState.isValid || props.did !== props.organization.id
-        }
+        disabled={!isAdmin || !formState.isValid}
         loading={onSubmit.status === 'pending'}
         onClick={handleSubmit(onSubmit.execute, console.error)}
       >

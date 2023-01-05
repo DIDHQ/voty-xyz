@@ -96,7 +96,6 @@ export const workgroupSchema = z.object({
 export type Workgroup = z.infer<typeof workgroupSchema>
 
 export const organizationSchema = z.object({
-  id: z.string().min(1),
   profile: z.object({
     avatar: z.string().optional(),
     name: z.string().min(1),
