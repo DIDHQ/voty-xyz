@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, CSSProperties } from 'react'
 import { Button, Steps, Select, Link, Input } from 'react-daisyui'
 import FormItem from '../components/form-item'
 import useSWR from 'swr'
@@ -52,7 +52,7 @@ function CreateSteps(props: { steps: number }) {
   )
 }
 
-function StepsPage(props: any) {
+function StepsPage() {
   const [stepsQuery, setStepsQuery] = useSteps()
   const [steps, setSteps] = useState(1)
 
@@ -213,7 +213,7 @@ function GreenCheck() {
       style={
         {
           enableBackground: 'new 0 0 117.72 117.72',
-        } as any
+        } as CSSProperties
       }
       xmlSpace="preserve"
     >
