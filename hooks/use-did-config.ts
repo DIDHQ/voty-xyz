@@ -5,7 +5,7 @@ import { didSuffixIs } from '../src/did'
 const dotbit = createInstance()
 
 export default function useDidConfig(did: string | undefined) {
-  return useSWR<{ organization?: string; delegate?: string }>(
+  return useSWR<{ organization?: string; delegation?: string }>(
     did ? ['didConfig', did] : null,
     async () => {
       if (didSuffixIs(did!, 'bit')) {
@@ -14,8 +14,9 @@ export default function useDidConfig(did: string | undefined) {
           organization: records.find(
             (record) => record.label === 'voty organization',
           )?.value,
-          delegate: records.find((record) => record.label === 'voty delegate')
-            ?.value,
+          delegation: records.find(
+            (record) => record.label === 'voty delegation',
+          )?.value,
         }
       }
       throw new Error(`unsupported did: ${did}`)
