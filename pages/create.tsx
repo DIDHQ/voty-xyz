@@ -62,7 +62,7 @@ function IntroPage(props: { onNext(): void }) {
 
 function CreateSteps(props: { value: number }) {
   const { value } = props
-  return (
+  return value > 0 ? (
     <Steps className="w-full mt-10 px-10">
       <Steps.Step color={value > 0 ? 'primary' : undefined}>
         Choose .bit Account
@@ -72,7 +72,7 @@ function CreateSteps(props: { value: number }) {
       </Steps.Step>
       <Steps.Step color={value > 2 ? 'primary' : undefined}>Done</Steps.Step>
     </Steps>
-  )
+  ) : null
 }
 
 function ChooseAccount(props: {
