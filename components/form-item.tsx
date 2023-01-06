@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import clsx from 'clsx'
 
 export default function FormItem(props: {
-  label: string
+  label?: string
   children: ReactNode
   direction?: 'horizontal' | 'vertical'
   gap?: number
@@ -18,7 +18,9 @@ export default function FormItem(props: {
 
   return (
     <div className={clsx(cls, className)}>
-      <label className="label whitespace-nowrap block">{props.label}</label>
+      {props.label ? (
+        <label className="label whitespace-nowrap block">{props.label}</label>
+      ) : null}
       {props.children}
       {props.error ? <p className="mt-2 text-error">{props.error}</p> : null}
     </div>

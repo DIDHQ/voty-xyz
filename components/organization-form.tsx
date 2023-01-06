@@ -100,11 +100,7 @@ export default function OrganizationForm(props: {
       >
         <Input {...register('profile.tos')} />
       </FormItem>
-      <FormItem
-        className="flex w-full"
-        label="Communities"
-        error={formState.errors.communities?.message}
-      >
+      <FormItem className="flex w-full" label="Communities">
         {communities.map((field, index) => (
           <div className="flex gap-5 mb-3" key={field.id}>
             <Select {...register(`communities.${index}.type`)}>
@@ -112,10 +108,13 @@ export default function OrganizationForm(props: {
               <Select.Option value="discord">Discord</Select.Option>
               <Select.Option value="github">GitHub</Select.Option>
             </Select>
-            <Input
+            <FormItem
+              key={field.id}
+              error={formState.errors.communities?.[index]?.value?.message}
               className="grow"
-              {...register(`communities.${index}.value`)}
-            />
+            >
+              <Input {...register(`communities.${index}.value`)} />
+            </FormItem>
             <Button onClick={() => removeCommunity(index)}>-</Button>
           </div>
         ))}
