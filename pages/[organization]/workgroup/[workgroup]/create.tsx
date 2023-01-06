@@ -8,15 +8,19 @@ import useSWR from 'swr'
 
 import DidSelect from '../../../../components/did-select'
 import FormItem from '../../../../components/form-item'
-import useRouterQuery from '../../../../components/use-router-query'
-import useArweaveFile from '../../../../hooks/use-arweave-file'
+import useRouterQuery from '../../../../hooks/use-router-query'
+import useArweaveData from '../../../../hooks/use-arweave-data'
 import useArweaveUpload from '../../../../hooks/use-arweave-upload'
 import useAsync from '../../../../hooks/use-async'
-import useConnectedSignatureUnit from '../../../../hooks/use-connected-signature-unit'
 import useDidConfig from '../../../../hooks/use-did-config'
 import useSignJson from '../../../../hooks/use-sign-json'
+import useWallet from '../../../../hooks/use-wallet'
 import { requiredCoinTypesOfVotingPower } from '../../../../src/functions/voting-power'
-import { Organization, Proposal, proposalSchema } from '../../../../src/schemas'
+import {
+  organizationWithSignatureSchema,
+  Proposal,
+  proposalSchema,
+} from '../../../../src/schemas'
 import { getCurrentSnapshot } from '../../../../src/snapshot'
 
 export default function CreateProposalPage() {
@@ -25,7 +29,8 @@ export default function CreateProposalPage() {
   })
   const [query] = useRouterQuery<['organization', 'workgroup']>()
   const { data: config } = useDidConfig(query.organization)
-  const { data: organization } = useArweaveFile<Organization>(
+  const { data: organization } = useArweaveData(
+    organizationWithSignatureSchema,
     config?.organization,
   )
   const workgroup = useMemo(
@@ -74,8 +79,8 @@ export default function CreateProposalPage() {
   }, [setValue, snapshots])
   const [typesCount, setTypesCount] = useState(0)
   const [did, setDid] = useState('')
-  const connectedSignatureUnit = useConnectedSignatureUnit()
-  const handleSignJson = useAsync(useSignJson(did, connectedSignatureUnit))
+  const { account } = useWallet()
+  const handleSignJson = useAsync(useSignJson(did))
   const handleArweaveUpload = useAsync(useArweaveUpload(handleSignJson.value))
 
   return (
@@ -106,11 +111,7 @@ export default function CreateProposalPage() {
           <Add />
         </Button>
       </FormItem>
-      <DidSelect
-        signatureUnit={connectedSignatureUnit}
-        value={did}
-        onChange={setDid}
-      />
+      <DidSelect account={account} value={did} onChange={setDid} />
       {handleSignJson.error ? <p>{handleSignJson.error.message}</p> : null}
       {handleArweaveUpload.error ? (
         <p>{handleArweaveUpload.error.message}</p>

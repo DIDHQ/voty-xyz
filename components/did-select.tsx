@@ -1,13 +1,14 @@
 import { Select } from 'react-daisyui'
+
 import useDids from '../hooks/use-dids'
-import { SignatureUnit } from '../src/types'
+import { Account } from '../src/types'
 
 export default function DidSelect(props: {
-  signatureUnit?: SignatureUnit
+  account?: Account
   value: string
   onChange(value: string): void
 }) {
-  const { data: dids } = useDids(props.signatureUnit)
+  const { data: dids } = useDids(props.account)
 
   return (
     <Select
