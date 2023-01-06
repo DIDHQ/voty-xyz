@@ -6,7 +6,7 @@ import NextLink from 'next/link'
 
 import FormItem from '../components/form-item'
 import DidSelect from '../components/did-select'
-import useRouterQuery from '../components/use-router-query'
+import useRouterQuery from '../hooks/use-router-query'
 import useWallet from '../hooks/use-wallet'
 
 function useStep() {

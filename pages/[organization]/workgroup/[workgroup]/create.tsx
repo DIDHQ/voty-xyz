@@ -8,7 +8,7 @@ import useSWR from 'swr'
 
 import DidSelect from '../../../../components/did-select'
 import FormItem from '../../../../components/form-item'
-import useRouterQuery from '../../../../components/use-router-query'
+import useRouterQuery from '../../../../hooks/use-router-query'
 import useArweaveData from '../../../../hooks/use-arweave-data'
 import useArweaveUpload from '../../../../hooks/use-arweave-upload'
 import useAsync from '../../../../hooks/use-async'

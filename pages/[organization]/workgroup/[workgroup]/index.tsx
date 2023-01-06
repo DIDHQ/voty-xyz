@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { Breadcrumbs, Menu } from 'react-daisyui'
 
 import AvatarInput from '../../../../components/avatar-input'
-import useRouterQuery from '../../../../components/use-router-query'
+import useRouterQuery from '../../../../hooks/use-router-query'
 import useArweaveData from '../../../../hooks/use-arweave-data'
 import useDidConfig from '../../../../hooks/use-did-config'
 import { organizationWithSignatureSchema } from '../../../../src/schemas'
