@@ -65,6 +65,7 @@ function ChoiceListItem(props: {
     >
       <InputGroup>
         <Button
+          animation={false}
           className={clsx({
             'cursor-grab': true,
             'cursor-not-allowed': disabled,
