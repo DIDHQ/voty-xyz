@@ -1,14 +1,5 @@
 import { z } from 'zod'
 
-export const signatureSchema = z.object({
-  did: z.string().min(1),
-  snapshot: z.string().min(1),
-  coin_type: z.number(),
-  address: z.string().min(1),
-  hex: z.string().min(1),
-})
-export type Signature = z.infer<typeof signatureSchema>
-
 export const proposerLibertyUnitSchema = z.object({
   function: z.string(),
   arguments: z.array(z.unknown()),
@@ -94,30 +85,3 @@ export const workgroupSchema = z.object({
   }),
 })
 export type Workgroup = z.infer<typeof workgroupSchema>
-
-export const organizationSchema = z.object({
-  profile: z.object({
-    avatar: z.string().optional(),
-    name: z.string().min(1),
-    about: z.string().optional(),
-    website: z.string().optional(),
-    tos: z.string().optional(),
-  }),
-  communities: z
-    .array(
-      z.object({
-        type: z.enum(['twitter', 'discord', 'github']),
-        value: z.string().min(1),
-      }),
-    )
-    .optional(),
-  workgroups: z.array(workgroupSchema).optional(),
-})
-export type Organization = z.infer<typeof organizationSchema>
-
-export const organizationWithSignatureSchema = organizationSchema.extend({
-  signature: signatureSchema,
-})
-export type OrganizationWithSignature = z.infer<
-  typeof organizationWithSignatureSchema
->
