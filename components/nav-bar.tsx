@@ -1,9 +1,8 @@
 import { Navbar, Dropdown, Button } from 'react-daisyui'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { Logout, User, UserToUserTransmission } from '@icon-park/react'
+import { Logout, Setting } from '@icon-park/react'
 
-import ThemeSwitcher from './theme-switcher'
 import AvatarInput from './avatar-input'
 
 const ConnectButtonCustom = dynamic(
@@ -19,41 +18,44 @@ export default function NavBar() {
     <Navbar className="shadow-md px-4">
       <div className="flex-1">
         <Link href="/">
-          <Button className="text-xl normal-case" color="ghost">
+          <Button className="text-xl normal-case no-underline" variant="link">
             Voty
           </Button>
         </Link>
       </div>
       <div className="flex-none gap-2">
-        <ThemeSwitcher />
         <ConnectButtonCustom>
-          {({ account, openConnectModal }) => (
+          {({ account, openConnectModal, openAccountModal }) => (
             <>
               <Dropdown vertical="end">
                 <Button
-                  color="ghost"
+                  color={account ? 'ghost' : 'primary'}
                   startIcon={
-                    <AvatarInput
-                      size={32}
-                      name={account?.displayName}
-                      value={account?.ensAvatar}
-                      disabled
-                    />
+                    account ? (
+                      <AvatarInput
+                        size={32}
+                        name={account.displayName}
+                        value={account.ensAvatar}
+                        disabled
+                      />
+                    ) : null
                   }
-                  onClick={openConnectModal}
+                  onClick={account ? undefined : openConnectModal}
                 >
                   {account ? `${account.displayName}` : 'Connect Wallet'}
                 </Button>
                 <Dropdown.Menu className="w-52">
-                  <Dropdown.Item>
+                  <Link href="/settings">
+                    <Dropdown.Item>
+                      <Setting />
+                      Settings
+                    </Dropdown.Item>
+                  </Link>
+                  {/* <Dropdown.Item>
                     <User />
                     View Profile
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    <UserToUserTransmission />
-                    Delegate
-                  </Dropdown.Item>
-                  <Dropdown.Item>
+                  </Dropdown.Item> */}
+                  <Dropdown.Item onClick={openAccountModal}>
                     <Logout />
                     Log out
                   </Dropdown.Item>
