@@ -20,7 +20,7 @@ export default function IndexPage() {
       ) : null}
       <Footer />
       <ChoiceList
-        // readOnly
+        // disabled
         onChoicesChange={handleChoicesChange}
         defaultChoices={[
           'I have a dream',

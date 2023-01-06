@@ -13,14 +13,14 @@ type ChoiceListItemProps = {
   id: string
   value: string
   index: number
-  readOnly?: boolean
+  disabled?: boolean
   onChange: (id: string, text: string) => void
   onDelete?: (id: string) => void
   onAdd?: () => void
 }
 
 function ChoiceListItem(props: ChoiceListItemProps) {
-  const { id, value, index, readOnly, onChange, onDelete, onAdd } = props
+  const { id, value, index, disabled, onChange, onDelete, onAdd } = props
 
   const {
     attributes,
@@ -30,7 +30,7 @@ function ChoiceListItem(props: ChoiceListItemProps) {
     setActivatorNodeRef,
     transform,
     transition,
-  } = useSortable({ id, disabled: readOnly })
+  } = useSortable({ id, disabled })
 
   const style: CSSProperties = useMemo(
     () => ({
@@ -43,7 +43,7 @@ function ChoiceListItem(props: ChoiceListItemProps) {
 
   const dragBtnCls = clsx({
     'absolute left-1 top-1/4': true,
-    'cursor-not-allowed': readOnly,
+    'cursor-not-allowed': disabled,
   })
 
   const handleChange = useCallback(
@@ -80,7 +80,7 @@ function ChoiceListItem(props: ChoiceListItemProps) {
           value={value}
           onChange={handleChange}
           placeholder={index > 0 ? '(Optional)' : undefined}
-          disabled={readOnly}
+          disabled={disabled}
         />
         <button
           className={dragBtnCls}
@@ -94,12 +94,12 @@ function ChoiceListItem(props: ChoiceListItemProps) {
           Choice {index + 1}
         </span>
       </div>
-      {!readOnly && onDelete && (
+      {!disabled && onDelete && (
         <Button className="ml-3" onClick={handleDelete}>
           -
         </Button>
       )}
-      {!readOnly && onAdd && (
+      {!disabled && onAdd && (
         <Button className="ml-3" onClick={handleAdd}>
           +
         </Button>
@@ -109,13 +109,13 @@ function ChoiceListItem(props: ChoiceListItemProps) {
 }
 
 export type ChoiceListProps = {
-  readOnly?: boolean
+  disabled?: boolean
   defaultChoices?: Array<string>
   onChoicesChange: (choices: Array<string>) => void
 }
 
 export default function ChoiceList(props: ChoiceListProps) {
-  const { defaultChoices = [''], onChoicesChange, readOnly } = props
+  const { defaultChoices = [''], onChoicesChange, disabled } = props
 
   const choiceData = useMemo(
     () =>
@@ -187,7 +187,7 @@ export default function ChoiceList(props: ChoiceListProps) {
             value={choice.text}
             onChange={handleChange}
             index={index}
-            readOnly={readOnly}
+            disabled={disabled}
             onDelete={index < choices.length - 1 ? handleDelete : undefined}
             onAdd={index === choices.length - 1 ? handleAdd : undefined}
           />
