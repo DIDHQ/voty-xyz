@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { DndContext, DragEndEvent, UniqueIdentifier } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Input, Button } from 'react-daisyui'
+import { Input, Button, InputGroup } from 'react-daisyui'
 import { Drag, Minus, Plus } from '@icon-park/react'
 import clsx from 'clsx'
 import produce from 'immer'
@@ -56,33 +56,34 @@ function ChoiceListItem(props: {
   return (
     <div
       ref={setNodeRef}
-      className="flex"
+      className="flex my-4"
       style={{
         opacity: isDragging ? 0.4 : undefined,
         transform: CSS.Translate.toString(transform),
         transition,
       }}
     >
-      <div className="relative mb-3 w-96">
-        <Input
-          className="pl-6 w-full placeholder:opacity-50"
-          disabled={disabled}
-          value={text}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-        <button
+      <InputGroup>
+        <Button
           className={clsx({
-            'absolute left-1 top-1/4': true,
+            'cursor-grab': true,
             'cursor-not-allowed': disabled,
+            'active:cursor-grabbing': true,
           })}
           {...attributes}
           {...listeners}
           ref={setActivatorNodeRef}
         >
-          <Drag />
-        </button>
-      </div>
+          <Drag className="p-0 bg-transparent" />
+        </Button>
+        <Input
+          className="pl-8 w-full placeholder:opacity-50"
+          disabled={disabled}
+          value={text}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </InputGroup>
       {onDelete && (
         <Button
           disabled={disabled}
