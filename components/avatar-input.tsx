@@ -34,6 +34,7 @@ export default function AvatarFileInput(props: {
         onClick={() => (props.disabled ? undefined : inputRef.current?.click())}
         style={{
           cursor: props.disabled ? 'default' : 'pointer',
+          pointerEvents: props.disabled ? 'none' : 'unset',
           lineHeight: 0,
           width: props.size,
           height: props.size,
