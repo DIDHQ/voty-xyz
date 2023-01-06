@@ -1,11 +1,15 @@
 import Link from 'next/link'
 import { Button } from 'react-daisyui'
 
+import ChoiceList from '../components/choice-list'
 import Footer from '../components/footer'
 import useWallet from '../hooks/use-wallet'
 
 export default function IndexPage() {
   const { account } = useWallet()
+  const handleChoicesChange = (choices: string[]) => {
+    console.log('handleChoiceChange', choices)
+  }
 
   return (
     <>
@@ -15,6 +19,18 @@ export default function IndexPage() {
         </Link>
       ) : null}
       <Footer />
+      <ChoiceList
+        // readOnly
+        onChoicesChange={handleChoicesChange}
+        maxLength={32}
+        defaultChoices={[
+          'I have a dream',
+          'Doraemon',
+          'Beautiful DND',
+          'Hello guys',
+          'Doraemon',
+        ]}
+      />
     </>
   )
 }
