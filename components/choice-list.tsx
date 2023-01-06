@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useCallback } from 'react'
-import type { CSSProperties } from 'react'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -9,7 +8,7 @@ import { Drag } from '@icon-park/react'
 import clsx from 'clsx'
 import produce from 'immer'
 
-type ChoiceListItemProps = {
+function ChoiceListItem(props: {
   id: string
   value: string
   index: number
@@ -17,9 +16,7 @@ type ChoiceListItemProps = {
   onChange: (id: string, text: string) => void
   onDelete?: (id: string) => void
   onAdd?: () => void
-}
-
-function ChoiceListItem(props: ChoiceListItemProps) {
+}) {
   const { id, value, index, disabled, onChange, onDelete, onAdd } = props
 
   const {
@@ -32,20 +29,6 @@ function ChoiceListItem(props: ChoiceListItemProps) {
     transition,
   } = useSortable({ id, disabled })
 
-  const style: CSSProperties = useMemo(
-    () => ({
-      opacity: isDragging ? 0.4 : undefined,
-      transform: CSS.Translate.toString(transform),
-      transition,
-    }),
-    [isDragging, transform, transition],
-  )
-
-  const dragBtnCls = clsx({
-    'absolute left-1 top-1/4': true,
-    'cursor-not-allowed': disabled,
-  })
-
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       onChange(id, e.target.value)
@@ -53,27 +36,24 @@ function ChoiceListItem(props: ChoiceListItemProps) {
     [id, onChange],
   )
 
-  const handleDelete = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      onDelete && onDelete(id)
-    },
-    [id, onDelete],
-  )
+  const handleDelete = useCallback(() => {
+    onDelete && onDelete(id)
+  }, [id, onDelete])
 
-  const handleAdd = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      onAdd && onAdd()
-    },
-    [onAdd],
-  )
+  const handleAdd = useCallback(() => {
+    onAdd && onAdd()
+  }, [onAdd])
 
   return (
     <div className="flex">
       <div
         className="relative mb-3 w-96"
         ref={setNodeRef}
-        style={style}
-        key={id}
+        style={{
+          opacity: isDragging ? 0.4 : undefined,
+          transform: CSS.Translate.toString(transform),
+          transition,
+        }}
       >
         <Input
           className="pl-24 pr-16 w-full placeholder:opacity-50"
@@ -83,7 +63,10 @@ function ChoiceListItem(props: ChoiceListItemProps) {
           disabled={disabled}
         />
         <button
-          className={dragBtnCls}
+          className={clsx({
+            'absolute left-1 top-1/4': true,
+            'cursor-not-allowed': disabled,
+          })}
           {...attributes}
           {...listeners}
           ref={setActivatorNodeRef}
@@ -108,13 +91,11 @@ function ChoiceListItem(props: ChoiceListItemProps) {
   )
 }
 
-export type ChoiceListProps = {
+export default function ChoiceList(props: {
   disabled?: boolean
   defaultChoices?: Array<string>
   onChoicesChange: (choices: Array<string>) => void
-}
-
-export default function ChoiceList(props: ChoiceListProps) {
+}) {
   const { defaultChoices = [''], onChoicesChange, disabled } = props
 
   const choiceData = useMemo(
