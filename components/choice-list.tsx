@@ -4,7 +4,7 @@ import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { nanoid } from 'nanoid'
 import { Input, Button } from 'react-daisyui'
-import { Drag } from '@icon-park/react'
+import { Drag, Minus, Plus } from '@icon-park/react'
 import clsx from 'clsx'
 import produce from 'immer'
 
@@ -29,7 +29,20 @@ function ChoiceListItem(props: {
     transition,
   } = useSortable({ id, disabled })
 
+  const [text, setText] = useState('')
+
+  useEffect(() => {
+    setText(value)
+  }, [value])
+
   const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setText(e.target.value)
+    },
+    [setText],
+  )
+
+  const handleBlur = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       onChange(id, e.target.value)
     },
@@ -45,20 +58,21 @@ function ChoiceListItem(props: {
   }, [onAdd])
 
   return (
-    <div className="flex">
-      <div
-        className="relative mb-3 w-96"
-        ref={setNodeRef}
-        style={{
-          opacity: isDragging ? 0.4 : undefined,
-          transform: CSS.Translate.toString(transform),
-          transition,
-        }}
-      >
+    <div
+      ref={setNodeRef}
+      className="flex"
+      style={{
+        opacity: isDragging ? 0.4 : undefined,
+        transform: CSS.Translate.toString(transform),
+        transition,
+      }}
+    >
+      <div className="relative mb-3 w-96">
         <Input
-          className="pl-24 pr-16 w-full placeholder:opacity-50"
-          value={value}
+          className="pl-16 pr-4 w-full placeholder:opacity-50"
+          value={text}
           onChange={handleChange}
+          onBlur={handleBlur}
           placeholder={index > 0 ? '(Optional)' : undefined}
           disabled={disabled}
         />
@@ -71,20 +85,31 @@ function ChoiceListItem(props: {
           {...listeners}
           ref={setActivatorNodeRef}
         >
-          <Drag size="1rem" />
+          <Drag />
         </button>
         <span className="opacity-50 absolute left-6 top-1/4 pointer-events-none">
-          Choice {index + 1}
+          # {index + 1}
         </span>
       </div>
       {!disabled && onDelete && (
-        <Button className="ml-3" onClick={handleDelete}>
-          -
+        <Button
+          shape="circle"
+          color="ghost"
+          variant="outline"
+          className="ml-3"
+          onClick={handleDelete}
+        >
+          <Minus />
         </Button>
       )}
       {!disabled && onAdd && (
-        <Button className="ml-3" onClick={handleAdd}>
-          +
+        <Button
+          shape="circle"
+          color="success"
+          className="ml-3"
+          onClick={handleAdd}
+        >
+          <Plus />
         </Button>
       )}
     </div>

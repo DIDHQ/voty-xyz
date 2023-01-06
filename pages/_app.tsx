@@ -30,9 +30,6 @@ const wagmiClient = createClient({
   provider,
 })
 
-// We use 1.5rem for all SVG icons to ensure compatibility with daisyUI
-const iconConfig = { ...DEFAULT_ICON_CONFIGS, size: '1.5rem' }
-
 export default function App({ Component, pageProps }: AppProps) {
   const { isDarkMode } = useDarkMode()
   const { setTheme } = useTheme()
@@ -58,7 +55,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
-          <IconProvider value={iconConfig}>
+          <IconProvider value={DEFAULT_ICON_CONFIGS}>
             <Layout>
               <Component {...pageProps} />
             </Layout>
