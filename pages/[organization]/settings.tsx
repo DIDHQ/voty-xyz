@@ -3,14 +3,15 @@ import { Breadcrumbs } from 'react-daisyui'
 
 import OrganizationForm from '../../components/organization-form'
 import useRouterQuery from '../../components/use-router-query'
-import useArweaveFile from '../../hooks/use-arweave-file'
+import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
-import { Organization } from '../../src/schemas'
+import { organizationWithSignatureSchema } from '../../src/schemas'
 
 export default function OrganizationSettingsPage() {
   const [query] = useRouterQuery<['organization']>()
   const { data: config } = useDidConfig(query.organization)
-  const { data: organization } = useArweaveFile<Organization>(
+  const { data: organization } = useArweaveData(
+    organizationWithSignatureSchema,
     config?.organization,
   )
 
