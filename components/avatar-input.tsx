@@ -2,19 +2,17 @@
 
 import { Delete } from '@icon-park/react'
 import Avatar from 'boring-avatars'
-import { ChangeEvent, forwardRef, useCallback, useRef } from 'react'
+import { ChangeEvent, useCallback, useRef } from 'react'
 import { Button } from 'react-daisyui'
 
-export default forwardRef<
-  HTMLSpanElement,
-  {
-    size?: number | string
-    name?: string
-    value?: string
-    onChange?: (value?: string) => void
-    disabled?: boolean
-  }
->(function AvatarFileInput(props, ref) {
+export default function AvatarFileInput(props: {
+  size: number | string
+  name?: string
+  value?: string
+  variant?: 'marble' | 'beam' | 'pixel' | 'sunset' | 'ring' | 'bauhaus'
+  onChange?: (value?: string) => void
+  disabled?: boolean
+}) {
   const inputRef = useRef<HTMLInputElement>(null)
   const { onChange } = props
   const handleChange = useCallback(
@@ -29,35 +27,31 @@ export default forwardRef<
     },
     [onChange],
   )
-  const size = props.size || 80
 
   return (
     <>
       <span
-        ref={ref}
         onClick={() => (props.disabled ? undefined : inputRef.current?.click())}
         style={{
           cursor: props.disabled ? 'default' : 'pointer',
           lineHeight: 0,
-          width: size,
-          height: size,
+          width: props.size,
+          height: props.size,
         }}
       >
         {props.value ? (
           <img
             src={props.value}
             alt={props.name}
-            width={size}
-            height={size}
             style={{
-              width: size,
-              height: size,
+              width: props.size,
+              height: props.size,
               borderRadius: '50%',
               objectFit: 'cover',
             }}
           />
         ) : (
-          <Avatar size={size} name={props.name} variant="pixel" />
+          <Avatar size={props.size} name={props.name} variant={props.variant} />
         )}
         <input
           ref={inputRef}
@@ -74,4 +68,4 @@ export default forwardRef<
       )}
     </>
   )
-})
+}

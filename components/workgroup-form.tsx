@@ -32,6 +32,7 @@ export default function WorkgroupForm(props: {
           name="profile.avatar"
           render={({ field: { value, onChange } }) => (
             <AvatarInput
+              size={80}
               name={props.value.id}
               value={value}
               onChange={onChange}

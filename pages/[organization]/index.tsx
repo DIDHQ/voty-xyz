@@ -34,6 +34,7 @@ export default function OrganizationIndexPage() {
         <Breadcrumbs.Item>{organization.profile.name}</Breadcrumbs.Item>
       </Breadcrumbs>
       <AvatarInput
+        size={80}
         name={organization.profile.name}
         value={organization.profile.avatar}
         disabled

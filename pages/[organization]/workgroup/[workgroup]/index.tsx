@@ -48,6 +48,7 @@ export default function WorkgroupPage() {
       {workgroup ? (
         <>
           <AvatarInput
+            size={80}
             name={workgroup.profile.name}
             value={workgroup.profile.avatar}
             disabled
