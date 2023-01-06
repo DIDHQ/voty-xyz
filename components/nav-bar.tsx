@@ -2,6 +2,7 @@ import { Navbar, Dropdown, Button } from 'react-daisyui'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Logout, Setting } from '@icon-park/react'
+import { useRouter } from 'next/router'
 
 import AvatarInput from './avatar-input'
 import useWallet from '../hooks/use-wallet'
@@ -16,6 +17,7 @@ const ConnectButtonCustom = dynamic(
 
 export default function NavBar() {
   const { disconnect } = useWallet()
+  const router = useRouter()
 
   return (
     <Navbar className="shadow-md px-4">
@@ -48,12 +50,14 @@ export default function NavBar() {
                   {account ? `${account.displayName}` : 'Connect Wallet'}
                 </Button>
                 <Dropdown.Menu className="w-52">
-                  <Link href="/settings">
-                    <Dropdown.Item>
-                      <Setting />
-                      Settings
-                    </Dropdown.Item>
-                  </Link>
+                  <Dropdown.Item
+                    onClick={() => {
+                      router.push('/settings')
+                    }}
+                  >
+                    <Setting />
+                    Settings
+                  </Dropdown.Item>
                   {/* <Dropdown.Item>
                     <User />
                     View Profile
