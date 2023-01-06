@@ -24,7 +24,7 @@ import {
 import { getCurrentSnapshot } from '../../../../src/snapshot'
 
 export default function CreateProposalPage() {
-  const { register, setValue, handleSubmit } = useForm<Proposal>({
+  const { register, setValue, handleSubmit, formState } = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
   })
   const [query] = useRouterQuery<['organization', 'workgroup']>()
@@ -85,16 +85,16 @@ export default function CreateProposalPage() {
 
   return (
     <>
-      <FormItem label="Title">
+      <FormItem label="Title" error={formState.errors.title?.message}>
         <Input {...register('title')} />
       </FormItem>
-      <FormItem label="Body">
+      <FormItem label="Body" error={formState.errors.body?.message}>
         <Textarea {...register('body')} />
       </FormItem>
-      <FormItem label="Discussion">
+      <FormItem label="Discussion" error={formState.errors.discussion?.message}>
         <Input {...register('discussion')} />
       </FormItem>
-      <FormItem label="Type">
+      <FormItem label="Type" error={formState.errors.type?.message}>
         <Select {...register('type')}>
           {proposalSchema.shape.type.options.map((proposalType) => (
             <Select.Option key={proposalType} value={proposalType}>
@@ -103,7 +103,7 @@ export default function CreateProposalPage() {
           ))}
         </Select>
       </FormItem>
-      <FormItem label="Choices">
+      <FormItem label="Choices" error={formState.errors.choices?.message}>
         {Array.from({ length: typesCount })?.map((_, index) => (
           <Input key={index} {...register(`choices.${index}`)} />
         ))}
