@@ -10,14 +10,14 @@ import produce from 'immer'
 
 function ChoiceListItem(props: {
   id: string
-  value: string
   index: number
   disabled?: boolean
+  value: string
   onChange: (id: string, text: string) => void
   onDelete?: (id: string) => void
   onAdd?: () => void
 }) {
-  const { id, value, index, disabled, onChange, onDelete, onAdd } = props
+  const { id, index, disabled, value, onChange, onDelete, onAdd } = props
 
   const {
     attributes,
@@ -109,51 +109,43 @@ export default function ChoiceList(props: {
     )
   }, [props.value])
 
-  const handleChangeChoices = useCallback(
-    (type: 'add' | 'delete' | 'modify', id?: string, text?: string) => {
-      const newChoices = produce(value, (draft) => {
-        if (type === 'add') {
-          draft.push({ id: nanoid(), text: '' })
-          return
-        }
-        const targetIndex = draft.findIndex((choice) => choice.id === id)
-        if (type === 'delete') {
-          draft.splice(targetIndex, 1)
-        } else {
-          draft[targetIndex].text = text || ''
-        }
-      })
-      setValue(newChoices)
-      onChange(newChoices.map((newChoice) => newChoice.text))
-    },
-    [value, onChange],
-  )
-
   const handleChange = useCallback(
     (id: string, text: string) => {
-      handleChangeChoices('modify', id, text)
+      onChange(
+        produce(value, (draft) => {
+          const targetIndex = draft.findIndex((choice) => choice.id === id)
+          draft[targetIndex].text = text || ''
+        }).map(({ text }) => text),
+      )
     },
-    [handleChangeChoices],
+    [onChange, value],
   )
 
   const handleDelete = useCallback(
     (id: string) => {
-      handleChangeChoices('delete', id)
+      onChange(
+        produce(value, (draft) => {
+          const targetIndex = draft.findIndex((choice) => choice.id === id)
+          draft.splice(targetIndex, 1)
+        }).map(({ text }) => text),
+      )
     },
-    [handleChangeChoices],
+    [onChange, value],
   )
 
   const handleAdd = useCallback(() => {
-    handleChangeChoices('add')
-  }, [handleChangeChoices])
+    onChange(
+      produce(value, (draft) => {
+        draft.push({ id: nanoid(), text: '' })
+      }).map(({ text }) => text),
+    )
+  }, [onChange, value])
 
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {
       const activeIndex = value.findIndex((choice) => choice.id === active.id)
       const overIndex = value.findIndex((choice) => choice.id === over?.id)
-      const newChoices = arrayMove(value, activeIndex, overIndex)
-      setValue(newChoices)
-      onChange(newChoices.map((newChoice) => newChoice.text))
+      onChange(arrayMove(value, activeIndex, overIndex).map(({ text }) => text))
     },
     [onChange, value],
   )
@@ -165,10 +157,10 @@ export default function ChoiceList(props: {
           <ChoiceListItem
             key={choice.id}
             id={choice.id}
-            value={choice.text}
-            onChange={handleChange}
             index={index}
             disabled={props.disabled}
+            value={choice.text}
+            onChange={handleChange}
             onDelete={index < value.length - 1 ? handleDelete : undefined}
             onAdd={index === value.length - 1 ? handleAdd : undefined}
           />
