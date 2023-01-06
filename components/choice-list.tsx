@@ -1,19 +1,18 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { DndContext, DragEndEvent } from '@dnd-kit/core'
+import { DndContext, DragEndEvent, UniqueIdentifier } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { nanoid } from 'nanoid'
 import { Input, Button } from 'react-daisyui'
 import { Drag, Minus, Plus } from '@icon-park/react'
 import clsx from 'clsx'
 import produce from 'immer'
 
 function ChoiceListItem(props: {
-  id: string
+  id: UniqueIdentifier
   disabled?: boolean
   value: string
-  onChange: (id: string, text: string) => void
-  onDelete?: (id: string) => void
+  onChange: (id: UniqueIdentifier, text: string) => void
+  onDelete?: (id: UniqueIdentifier) => void
   onAdd?: () => void
 }) {
   const { id, disabled, value, onChange, onDelete, onAdd } = props
@@ -41,12 +40,9 @@ function ChoiceListItem(props: {
     [setText],
   )
 
-  const handleBlur = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(id, e.target.value)
-    },
-    [id, onChange],
-  )
+  const handleBlur = useCallback(() => {
+    onChange(id, text)
+  }, [id, onChange, text])
 
   const handleDelete = useCallback(() => {
     onDelete?.(id)
@@ -96,7 +92,7 @@ function ChoiceListItem(props: {
       )}
       {onAdd && (
         <Button
-          disabled={disabled || !value}
+          disabled={disabled}
           shape="circle"
           color="success"
           className="ml-3"
@@ -116,26 +112,28 @@ export default function ChoiceList(props: {
 }) {
   const { onChange } = props
 
-  const [value, setValue] = useState<{ id: string; text: string }[]>([])
+  const [value, setValue] = useState<{ id: UniqueIdentifier; text: string }[]>(
+    [],
+  )
 
   useEffect(() => {
     setValue(
-      props.value.map((choice) => ({
-        id: nanoid(),
+      props.value.map((choice, index) => ({
+        id: choice + index,
         text: choice,
       })),
     )
   }, [props.value])
 
   const handleChange = useCallback(
-    (id: string, text: string) => {
+    (id: UniqueIdentifier, text: string) => {
       onChange(value.map((choice) => (choice.id === id ? text : choice.text)))
     },
     [onChange, value],
   )
 
   const handleDelete = useCallback(
-    (id: string) => {
+    (id: UniqueIdentifier) => {
       onChange(
         produce(value, (draft) => {
           const targetIndex = draft.findIndex((choice) => choice.id === id)
