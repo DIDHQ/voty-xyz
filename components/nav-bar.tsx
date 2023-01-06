@@ -1,7 +1,9 @@
 import { Navbar, Dropdown, Button } from 'react-daisyui'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+
 import ThemeSwitcher from './theme-switcher'
+import AvatarInput from './avatar-input'
 
 type NavBarProps = {}
 
@@ -20,7 +22,7 @@ function NavBar(props: NavBarProps) {
         <div className="flex-1">
           <Link href="/">
             <Button className="text-xl normal-case" color="ghost">
-              VotyXYZ
+              Voty
             </Button>
           </Link>
         </div>
@@ -31,32 +33,35 @@ function NavBar(props: NavBarProps) {
           </Link>
           <ConnectButtonCustom>
             {({ account, openConnectModal }) => (
-              <Button color="primary" onClick={openConnectModal}>
-                {account ? `${account.displayName}` : 'Connect Wallet'}
-              </Button>
+              <>
+                <Dropdown vertical="end">
+                  <Button
+                    startIcon={
+                      <AvatarInput
+                        size={32}
+                        name={account?.displayName}
+                        value={account?.ensAvatar}
+                        disabled
+                      />
+                    }
+                    onClick={openConnectModal}
+                  >
+                    {account ? `${account.displayName}` : 'Connect Wallet'}
+                  </Button>
+                  <Dropdown.Menu className="w-52">
+                    <li>
+                      <a className="justify-between">
+                        Profile
+                        <span className="badge">New</span>
+                      </a>
+                    </li>
+                    <Dropdown.Item>Settings</Dropdown.Item>
+                    <Dropdown.Item>Logout</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </>
             )}
           </ConnectButtonCustom>
-          <Dropdown vertical="end">
-            <Button color="ghost" className="avatar" shape="circle">
-              <div className="w-10 rounded-full">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://api.lorem.space/image/face?hash=33791"
-                  alt="avatar"
-                />
-              </div>
-            </Button>
-            <Dropdown.Menu className="w-52">
-              <li>
-                <a className="justify-between">
-                  Profile
-                  <span className="badge">New</span>
-                </a>
-              </li>
-              <Dropdown.Item>Settings</Dropdown.Item>
-              <Dropdown.Item>Logout</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
         </div>
       </Navbar>
     </div>
