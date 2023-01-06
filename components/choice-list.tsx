@@ -1,28 +1,21 @@
-import React, { useMemo, useState, useCallback } from 'react'
-import type { CSSProperties } from 'react'
-import { DndContext, DragEndEvent } from '@dnd-kit/core'
+import React, { useState, useCallback, useEffect } from 'react'
+import { DndContext, DragEndEvent, UniqueIdentifier } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { nanoid } from 'nanoid'
-import { Input, Button } from 'react-daisyui'
-import { Drag } from '@icon-park/react'
+import { Input, Button, InputGroup } from 'react-daisyui'
+import { Drag, Minus, Plus } from '@icon-park/react'
 import clsx from 'clsx'
 import produce from 'immer'
 
-type ChoiceListItemProps = {
-  id: string
+function ChoiceListItem(props: {
+  id: UniqueIdentifier
+  disabled?: boolean
   value: string
-  index: number
-  maxLength?: number
-  readOnly?: boolean
-  onChange: (id: string, text: string) => void
-  onDelete?: (id: string) => void
+  onChange: (id: UniqueIdentifier, text: string) => void
+  onDelete?: (id: UniqueIdentifier) => void
   onAdd?: () => void
-}
-
-function ChoiceListItem(props: ChoiceListItemProps) {
-  const { id, value, index, maxLength, readOnly, onChange, onDelete, onAdd } =
-    props
+}) {
+  const { id, disabled, value, onChange, onDelete, onAdd } = props
 
   const {
     attributes,
@@ -32,174 +25,157 @@ function ChoiceListItem(props: ChoiceListItemProps) {
     setActivatorNodeRef,
     transform,
     transition,
-  } = useSortable({ id, disabled: readOnly })
+  } = useSortable({ id, disabled })
 
-  const style: CSSProperties = useMemo(
-    () => ({
-      opacity: isDragging ? 0.4 : undefined,
-      transform: CSS.Translate.toString(transform),
-      transition,
-    }),
-    [isDragging, transform, transition],
-  )
+  const [text, setText] = useState('')
 
-  const dragBtnCls = clsx({
-    'absolute left-1 top-1/4': true,
-    'cursor-not-allowed': readOnly,
-  })
+  useEffect(() => {
+    setText(value)
+  }, [value])
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(id, e.target.value)
+      setText(e.target.value)
     },
-    [id, onChange],
+    [setText],
   )
 
-  const handleDelete = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      onDelete && onDelete(id)
-    },
-    [id, onDelete],
-  )
+  const handleBlur = useCallback(() => {
+    onChange(id, text)
+  }, [id, onChange, text])
 
-  const handleAdd = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      onAdd && onAdd()
-    },
-    [onAdd],
-  )
+  const handleDelete = useCallback(() => {
+    onDelete?.(id)
+  }, [id, onDelete])
+
+  const handleAdd = useCallback(() => {
+    handleBlur()
+    onAdd?.()
+  }, [handleBlur, onAdd])
 
   return (
-    <div className="flex">
-      <div
-        className="relative mb-3 w-96"
-        ref={setNodeRef}
-        style={style}
-        key={id}
-      >
-        <Input
-          className="pl-24 pr-16 w-full placeholder:opacity-50"
-          value={value}
-          onChange={handleChange}
-          maxLength={maxLength}
-          placeholder={index > 0 ? '(Optional)' : undefined}
-          disabled={readOnly}
-        />
-        <button
-          className={dragBtnCls}
+    <div
+      ref={setNodeRef}
+      className="flex my-4"
+      style={{
+        opacity: isDragging ? 0.4 : undefined,
+        transform: CSS.Translate.toString(transform),
+        transition,
+      }}
+    >
+      <InputGroup>
+        <Button
+          animation={false}
+          className={clsx({
+            'cursor-grab': true,
+            'cursor-not-allowed': disabled,
+            'active:cursor-grabbing': true,
+          })}
           {...attributes}
           {...listeners}
           ref={setActivatorNodeRef}
         >
-          <Drag size="1rem" />
-        </button>
-        <span className="opacity-50 absolute left-6 top-1/4 pointer-events-none">
-          Choice {index + 1}
-        </span>
-        {maxLength && (
-          <span className="opacity-50 absolute right-5 top-1/4 pointer-events-none">
-            {value.length}/{maxLength}
-          </span>
-        )}
-      </div>
-      {!readOnly && onDelete && (
-        <Button className="ml-3" onClick={handleDelete}>
-          -
+          <Drag className="p-0 bg-transparent" />
+        </Button>
+        <Input
+          className="w-full placeholder:opacity-50"
+          disabled={disabled}
+          value={text}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </InputGroup>
+      {onDelete && (
+        <Button
+          disabled={disabled}
+          shape="circle"
+          color="ghost"
+          variant="outline"
+          className="ml-3"
+          onClick={handleDelete}
+        >
+          <Minus />
         </Button>
       )}
-      {!readOnly && onAdd && (
-        <Button className="ml-3" onClick={handleAdd}>
-          +
+      {onAdd && (
+        <Button
+          disabled={disabled}
+          shape="circle"
+          color="success"
+          className="ml-3"
+          onClick={handleAdd}
+        >
+          <Plus />
         </Button>
       )}
     </div>
   )
 }
 
-export type ChoiceListProps = {
-  readOnly?: boolean
-  defaultChoices?: Array<string>
-  onChoicesChange: (choices: Array<string>) => void
-  maxLength?: number
-}
+export default function ChoiceList(props: {
+  disabled?: boolean
+  value: string[]
+  onChange: (choices: string[]) => void
+}) {
+  const { onChange } = props
 
-export default function ChoiceList(props: ChoiceListProps) {
-  const { defaultChoices = [''], maxLength, onChoicesChange, readOnly } = props
+  const [value, setValue] = useState<{ id: UniqueIdentifier; text: string }[]>(
+    [],
+  )
 
-  const choiceData = useMemo(
-    () =>
-      defaultChoices.map((choice) => ({
-        id: nanoid(),
+  useEffect(() => {
+    setValue(
+      props.value.map((choice, index) => ({
+        id: choice + index,
         text: choice,
       })),
-    [defaultChoices],
-  )
-
-  const [choices, setChoices] = useState(choiceData)
-
-  const changeChoices = useCallback(
-    (type: 'add' | 'delete' | 'modify', id?: string, text?: string) => {
-      const newChoices = produce(choices, (draft) => {
-        if (type === 'add') {
-          draft.push({ id: nanoid(), text: '' })
-          return
-        }
-        const targetIndex = draft.findIndex((choice) => choice.id === id)
-        if (type === 'delete') {
-          draft.splice(targetIndex, 1)
-        } else {
-          draft[targetIndex].text = text || ''
-        }
-      })
-      setChoices(newChoices)
-      onChoicesChange(newChoices.map((newChoice) => newChoice.text))
-    },
-    [choices, onChoicesChange],
-  )
+    )
+  }, [props.value])
 
   const handleChange = useCallback(
-    (id: string, text: string) => {
-      changeChoices('modify', id, text)
+    (id: UniqueIdentifier, text: string) => {
+      onChange(value.map((choice) => (choice.id === id ? text : choice.text)))
     },
-    [changeChoices],
+    [onChange, value],
   )
 
   const handleDelete = useCallback(
-    (id: string) => {
-      changeChoices('delete', id)
+    (id: UniqueIdentifier) => {
+      onChange(
+        produce(value, (draft) => {
+          const targetIndex = draft.findIndex((choice) => choice.id === id)
+          draft.splice(targetIndex, 1)
+        }).map(({ text }) => text),
+      )
     },
-    [changeChoices],
+    [onChange, value],
   )
 
   const handleAdd = useCallback(() => {
-    changeChoices('add')
-  }, [changeChoices])
+    onChange([...value.map(({ text }) => text), ''])
+  }, [onChange, value])
 
   const handleDragEnd = useCallback(
-    (dragEndProps: DragEndEvent) => {
-      const { active, over } = dragEndProps
-      const activeIndex = choices.findIndex((choice) => choice.id === active.id)
-      const overIndex = choices.findIndex((choice) => choice.id === over?.id)
-      const newChoices = arrayMove(choices, activeIndex, overIndex)
-      setChoices(newChoices)
+    ({ active, over }: DragEndEvent) => {
+      const activeIndex = value.findIndex((choice) => choice.id === active.id)
+      const overIndex = value.findIndex((choice) => choice.id === over?.id)
+      onChange(arrayMove(value, activeIndex, overIndex).map(({ text }) => text))
     },
-    [choices],
+    [onChange, value],
   )
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <SortableContext items={choices}>
-        {choices.map((choice, index) => (
+      <SortableContext items={value}>
+        {value.map((choice, index) => (
           <ChoiceListItem
             key={choice.id}
             id={choice.id}
+            disabled={props.disabled}
             value={choice.text}
             onChange={handleChange}
-            index={index}
-            maxLength={maxLength}
-            readOnly={readOnly}
-            onDelete={index < choices.length - 1 ? handleDelete : undefined}
-            onAdd={index === choices.length - 1 ? handleAdd : undefined}
+            onDelete={index < value.length - 1 ? handleDelete : undefined}
+            onAdd={index === value.length - 1 ? handleAdd : undefined}
           />
         ))}
       </SortableContext>
