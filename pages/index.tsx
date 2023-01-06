@@ -1,14 +1,24 @@
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import ChoiceList from '../components/choice-list'
+import { Button } from 'react-daisyui'
+
+import Footer from '../components/footer'
+
+const ChoiceList = dynamic(() => import('../components/choice-list'), {
+  ssr: false,
+})
 
 export default function IndexPage() {
   const handleChoicesChange = (choices: string[]) => {
     console.log('handleChoiceChange', choices)
   }
+
   return (
     <>
-      <Link href="/test">test</Link>
-      <br />
+      <Link href="/create">
+        <Button color="primary">Create an Organization</Button>
+      </Link>
+      <Footer />
       <ChoiceList
         // readOnly
         onChoicesChange={handleChoicesChange}
@@ -21,7 +31,6 @@ export default function IndexPage() {
           'Doraemon',
         ]}
       />
-      <Link href="/ph0ng.bit/settings">settings</Link>
     </>
   )
 }

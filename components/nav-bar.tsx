@@ -1,9 +1,11 @@
 import { Navbar, Dropdown, Button } from 'react-daisyui'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import ThemeSwitcher from './theme-switcher'
+import { Logout, Setting } from '@icon-park/react'
+import { useRouter } from 'next/router'
 
-type NavBarProps = {}
+import AvatarInput from './avatar-input'
+import useWallet from '../hooks/use-wallet'
 
 const ConnectButtonCustom = dynamic(
   () =>
@@ -13,54 +15,63 @@ const ConnectButtonCustom = dynamic(
   { ssr: false },
 )
 
-function NavBar(props: NavBarProps) {
+export default function NavBar() {
+  const { disconnect } = useWallet()
+  const router = useRouter()
+
   return (
-    <div className="flex w-full component-preview p-4 items-center justify-center gap-2 font-sans">
-      <Navbar className="bg-base-200 shadow-xl rounded-box">
-        <div className="flex-1">
-          <Link href="/">
-            <Button className="text-xl normal-case" color="ghost">
-              VotyXYZ
-            </Button>
-          </Link>
-        </div>
-        <div className="flex-none gap-3">
-          <ThemeSwitcher />
-          <Link href="/create">
-            <Button color="primary">Create an Organization</Button>
-          </Link>
-          <ConnectButtonCustom>
-            {({ account, openConnectModal }) => (
-              <Button color="primary" onClick={openConnectModal}>
-                {account ? `${account.displayName}` : 'Connect Wallet'}
-              </Button>
-            )}
-          </ConnectButtonCustom>
-          <Dropdown vertical="end">
-            <Button color="ghost" className="avatar" shape="circle">
-              <div className="w-10 rounded-full">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://api.lorem.space/image/face?hash=33791"
-                  alt="avatar"
-                />
-              </div>
-            </Button>
-            <Dropdown.Menu className="w-52">
-              <li>
-                <a className="justify-between">
-                  Profile
-                  <span className="badge">New</span>
-                </a>
-              </li>
-              <Dropdown.Item>Settings</Dropdown.Item>
-              <Dropdown.Item>Logout</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-      </Navbar>
-    </div>
+    <Navbar className="shadow-md px-4">
+      <div className="flex-1">
+        <Link href="/">
+          <Button className="text-xl normal-case no-underline" variant="link">
+            Voty
+          </Button>
+        </Link>
+      </div>
+      <div className="flex-none gap-2">
+        <ConnectButtonCustom>
+          {({ account, openConnectModal }) => (
+            <>
+              <Dropdown vertical="end">
+                <Button
+                  color={account ? 'ghost' : 'primary'}
+                  startIcon={
+                    account ? (
+                      <AvatarInput
+                        size={32}
+                        name={account.displayName}
+                        value={account.ensAvatar}
+                        disabled
+                      />
+                    ) : null
+                  }
+                  onClick={account ? undefined : openConnectModal}
+                >
+                  {account ? `${account.displayName}` : 'Connect Wallet'}
+                </Button>
+                <Dropdown.Menu className="w-52">
+                  <Dropdown.Item
+                    onClick={() => {
+                      router.push('/settings')
+                    }}
+                  >
+                    <Setting />
+                    Settings
+                  </Dropdown.Item>
+                  {/* <Dropdown.Item>
+                    <User />
+                    View Profile
+                  </Dropdown.Item> */}
+                  <Dropdown.Item onClick={() => disconnect()}>
+                    <Logout />
+                    Log out
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </>
+          )}
+        </ConnectButtonCustom>
+      </div>
+    </Navbar>
   )
 }
-
-export default NavBar
