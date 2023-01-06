@@ -10,14 +10,13 @@ import produce from 'immer'
 
 function ChoiceListItem(props: {
   id: string
-  index: number
   disabled?: boolean
   value: string
   onChange: (id: string, text: string) => void
   onDelete?: (id: string) => void
   onAdd?: () => void
 }) {
-  const { id, index, disabled, value, onChange, onDelete, onAdd } = props
+  const { id, disabled, value, onChange, onDelete, onAdd } = props
 
   const {
     attributes,
@@ -50,12 +49,8 @@ function ChoiceListItem(props: {
   )
 
   const handleDelete = useCallback(() => {
-    onDelete && onDelete(id)
+    onDelete?.(id)
   }, [id, onDelete])
-
-  const handleAdd = useCallback(() => {
-    onAdd && onAdd()
-  }, [onAdd])
 
   return (
     <div
@@ -69,12 +64,11 @@ function ChoiceListItem(props: {
     >
       <div className="relative mb-3 w-96">
         <Input
-          className="pl-16 pr-4 w-full placeholder:opacity-50"
+          className="pl-6 w-full placeholder:opacity-50"
+          disabled={disabled}
           value={text}
           onChange={handleChange}
           onBlur={handleBlur}
-          placeholder={index > 0 ? '(Optional)' : undefined}
-          disabled={disabled}
         />
         <button
           className={clsx({
@@ -87,12 +81,10 @@ function ChoiceListItem(props: {
         >
           <Drag />
         </button>
-        <span className="opacity-50 absolute left-6 top-1/4 pointer-events-none">
-          # {index + 1}
-        </span>
       </div>
-      {!disabled && onDelete && (
+      {onDelete && (
         <Button
+          disabled={disabled}
           shape="circle"
           color="ghost"
           variant="outline"
@@ -102,12 +94,13 @@ function ChoiceListItem(props: {
           <Minus />
         </Button>
       )}
-      {!disabled && onAdd && (
+      {onAdd && (
         <Button
+          disabled={disabled || !value}
           shape="circle"
           color="success"
           className="ml-3"
-          onClick={handleAdd}
+          onClick={onAdd}
         >
           <Plus />
         </Button>
@@ -136,12 +129,7 @@ export default function ChoiceList(props: {
 
   const handleChange = useCallback(
     (id: string, text: string) => {
-      onChange(
-        produce(value, (draft) => {
-          const targetIndex = draft.findIndex((choice) => choice.id === id)
-          draft[targetIndex].text = text || ''
-        }).map(({ text }) => text),
-      )
+      onChange(value.map((choice) => (choice.id === id ? text : choice.text)))
     },
     [onChange, value],
   )
@@ -159,11 +147,7 @@ export default function ChoiceList(props: {
   )
 
   const handleAdd = useCallback(() => {
-    onChange(
-      produce(value, (draft) => {
-        draft.push({ id: nanoid(), text: '' })
-      }).map(({ text }) => text),
-    )
+    onChange([...value.map(({ text }) => text), ''])
   }, [onChange, value])
 
   const handleDragEnd = useCallback(
@@ -182,7 +166,6 @@ export default function ChoiceList(props: {
           <ChoiceListItem
             key={choice.id}
             id={choice.id}
-            index={index}
             disabled={props.disabled}
             value={choice.text}
             onChange={handleChange}
