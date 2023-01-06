@@ -31,21 +31,28 @@ export default forwardRef<
   )
   const size = props.size || 80
 
-  const handleEdit = (
-    e: React.MouseEvent<HTMLButtonElement | HTMLSpanElement>,
-  ) => {
-    e.stopPropagation()
-    inputRef.current?.click()
-  }
+  const handleEdit = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement | HTMLSpanElement>) => {
+      e.stopPropagation()
+      inputRef.current?.click()
+    },
+    [],
+  )
 
-  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    onChange?.(undefined)
-  }
+  const handleDelete = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      onChange?.(undefined)
+    },
+    [onChange],
+  )
 
-  const handleClickAvatar = (e: React.MouseEvent<HTMLSpanElement>) => {
-    props.disabled ? undefined : handleEdit(e)
-  }
+  const handleClickAvatar = useCallback(
+    (e: React.MouseEvent<HTMLSpanElement>) => {
+      props.disabled ? undefined : handleEdit(e)
+    },
+    [handleEdit, props.disabled],
+  )
 
   return (
     <>
@@ -60,16 +67,13 @@ export default forwardRef<
           height: size,
         }}
       >
-        {/* <span className="text-primary-content rounded-full transition-color hidden absolute left-0 top-0 justify-center items-center w-full h-full transition-all ease-out group-hover:flex group-hover:bg-neutral group-hover:opacity-70">
+        <span className="z-10	text-primary-content rounded-full absolute left-0 top-0 justify-center items-center w-full h-full transition-all ease-out flex opacity-0 group-hover:bg-neutral group-hover:opacity-70">
           Edit
-        </span> */}
+        </span>
         {props.value ? (
           <img
-            className="transition-opacity ease-out hover:opacity-70"
             src={props.value}
             alt={props.name}
-            // width={size}
-            // height={size}
             style={{
               width: size,
               height: size,
@@ -79,11 +83,10 @@ export default forwardRef<
           />
         ) : (
           <div
-            className="transition-opacity ease-out hover:opacity-70 h-full rounded-full"
-            style={{ borderRadius: '50%' }}
+            className="h-full rounded-full"
+            style={{ clipPath: 'circle(50%)' }}
           >
             <Avatar size={size} name={props.name} variant="pixel" />
-            {/* <div className="w-full h-full bg-neutral rounded-full"></div> */}
           </div>
         )}
         <input
@@ -95,7 +98,7 @@ export default forwardRef<
         />
         {props.disabled ? null : (
           <Button
-            className="absolute right-0 bottom-0 hover:brightness-200"
+            className="absolute right-0 bottom-0 hover:brightness-200 z-20"
             size="xs"
             shape="circle"
             onClick={props.value ? handleDelete : handleEdit}
