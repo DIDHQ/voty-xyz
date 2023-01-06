@@ -6,8 +6,8 @@ import NextLink from 'next/link'
 
 import FormItem from '../components/form-item'
 import DidSelect from '../components/did-select'
-import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
 import useRouterQuery from '../components/use-router-query'
+import useWallet from '../hooks/use-wallet'
 
 function useStep() {
   const [query, setQuery] = useRouterQuery<['step']>()
@@ -68,13 +68,13 @@ function ChooseAccount(props: {
   onNext: () => void
 }) {
   const { onNext } = props
-  const connectedSignatureUnit = useConnectedSignatureUnit()
+  const { account } = useWallet()
 
   return (
     <div className="flex flex-col justify-center items-center mt-20">
       <FormItem direction="horizontal" gap={3} label="Choose a .bit Account: ">
         <DidSelect
-          signatureUnit={connectedSignatureUnit}
+          account={account}
           value={props.value}
           onChange={props.onchange}
         />

@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react'
 import { Input, Table, Textarea } from 'react-daisyui'
 import useSWR from 'swr'
+
 import DidSelect from '../components/did-select'
 import FormItem from '../components/form-item'
-import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
+import useWallet from '../hooks/use-wallet'
 import {
   checkProposerLiberty,
   requiredCoinTypesOfProposerLiberty,
@@ -89,7 +90,7 @@ export default function TestPage() {
       return []
     }
   }, [votingPower])
-  const connectedSignatureUnit = useConnectedSignatureUnit()
+  const { account } = useWallet()
 
   return (
     <>
@@ -143,11 +144,7 @@ export default function TestPage() {
       </Table>
       <FormItem label="test DID">
         <Input value={did} onChange={(e) => setDid(e.target.value)} />
-        <DidSelect
-          signatureUnit={connectedSignatureUnit}
-          value={did}
-          onChange={setDid}
-        />
+        <DidSelect account={account} value={did} onChange={setDid} />
       </FormItem>
     </>
   )

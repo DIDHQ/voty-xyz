@@ -2,9 +2,9 @@ import { Navbar, Dropdown, Button } from 'react-daisyui'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Logout, Setting } from '@icon-park/react'
-import { useDisconnect } from 'wagmi'
 
 import AvatarInput from './avatar-input'
+import useWallet from '../hooks/use-wallet'
 
 const ConnectButtonCustom = dynamic(
   () =>
@@ -15,7 +15,7 @@ const ConnectButtonCustom = dynamic(
 )
 
 export default function NavBar() {
-  const { disconnect } = useDisconnect()
+  const { disconnect } = useWallet()
 
   return (
     <Navbar className="shadow-md px-4">

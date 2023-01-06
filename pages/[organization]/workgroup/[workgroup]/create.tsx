@@ -12,9 +12,9 @@ import useRouterQuery from '../../../../components/use-router-query'
 import useArweaveData from '../../../../hooks/use-arweave-data'
 import useArweaveUpload from '../../../../hooks/use-arweave-upload'
 import useAsync from '../../../../hooks/use-async'
-import useConnectedSignatureUnit from '../../../../hooks/use-connected-signature-unit'
 import useDidConfig from '../../../../hooks/use-did-config'
 import useSignJson from '../../../../hooks/use-sign-json'
+import useWallet from '../../../../hooks/use-wallet'
 import { requiredCoinTypesOfVotingPower } from '../../../../src/functions/voting-power'
 import {
   organizationWithSignatureSchema,
@@ -79,8 +79,8 @@ export default function CreateProposalPage() {
   }, [setValue, snapshots])
   const [typesCount, setTypesCount] = useState(0)
   const [did, setDid] = useState('')
-  const connectedSignatureUnit = useConnectedSignatureUnit()
-  const handleSignJson = useAsync(useSignJson(did, connectedSignatureUnit))
+  const { account } = useWallet()
+  const handleSignJson = useAsync(useSignJson(did))
   const handleArweaveUpload = useAsync(useArweaveUpload(handleSignJson.value))
 
   return (
@@ -111,11 +111,7 @@ export default function CreateProposalPage() {
           <Add />
         </Button>
       </FormItem>
-      <DidSelect
-        signatureUnit={connectedSignatureUnit}
-        value={did}
-        onChange={setDid}
-      />
+      <DidSelect account={account} value={did} onChange={setDid} />
       {handleSignJson.error ? <p>{handleSignJson.error.message}</p> : null}
       {handleArweaveUpload.error ? (
         <p>{handleArweaveUpload.error.message}</p>

@@ -2,14 +2,14 @@ import Link from 'next/link'
 import { Button } from 'react-daisyui'
 
 import Footer from '../components/footer'
-import useConnectedSignatureUnit from '../hooks/use-connected-signature-unit'
+import useWallet from '../hooks/use-wallet'
 
 export default function IndexPage() {
-  const connectedSignatureUnit = useConnectedSignatureUnit()
+  const { account } = useWallet()
 
   return (
     <>
-      {connectedSignatureUnit ? (
+      {account ? (
         <Link href="/create">
           <Button color="primary">Create an Organization</Button>
         </Link>
