@@ -109,7 +109,6 @@ export default function OrganizationForm(props: {
               <Select.Option value="github">GitHub</Select.Option>
             </Select>
             <FormItem
-              key={field.id}
               error={formState.errors.communities?.[index]?.value?.message}
               className="grow"
             >
@@ -154,19 +153,6 @@ export default function OrganizationForm(props: {
           +
         </Button>
       </FormItem>
-      {workgroups.map((field, index) => (
-        <Fragment key={field.id}>
-          <Controller
-            control={control}
-            name={`workgroups.${index}`}
-            render={({ field: { value, onChange } }) => (
-              <WorkgroupForm value={value} onChange={onChange} />
-            )}
-          />
-          <Button onClick={() => removeWorkgroup(index)}>-</Button>
-          <br />
-        </Fragment>
-      ))}
       {handleSignJson.error ? <p>{handleSignJson.error.message}</p> : null}
       {handleArweaveUpload.error ? (
         <p>{handleArweaveUpload.error.message}</p>
@@ -189,7 +175,7 @@ export default function OrganizationForm(props: {
         loading={handleArweaveUpload.status === 'pending'}
         onClick={handleArweaveUpload.execute}
       >
-        Sign
+        Submit
       </Button>
     </div>
   )
