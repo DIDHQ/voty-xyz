@@ -44,18 +44,11 @@ export default function AvatarFileInput(props: {
     [onChange],
   )
 
-  const handleClickAvatar = useCallback(
-    (e: React.MouseEvent<HTMLSpanElement>) => {
-      props.disabled ? undefined : handleEdit(e)
-    },
-    [handleEdit, props.disabled],
-  )
-
   return (
     <>
       <span
         className="relative group block rounded-full"
-        onClick={handleClickAvatar}
+        onClick={props.disabled ? undefined : handleEdit}
         style={{
           cursor: props.disabled ? 'default' : 'pointer',
           pointerEvents: props.disabled ? 'none' : 'unset',
@@ -64,7 +57,7 @@ export default function AvatarFileInput(props: {
           height: props.size,
         }}
       >
-        <span className="z-10	text-primary-content rounded-full absolute left-0 top-0 justify-center items-center w-full h-full transition-all ease-out flex opacity-0 group-hover:bg-neutral group-hover:opacity-70">
+        <span className="text-primary-content z-10 rounded-full absolute left-0 top-0 justify-center items-center w-full h-full transition-all ease-out flex opacity-0 group-hover:bg-neutral group-hover:opacity-70">
           Edit
         </span>
         {props.value ? (
