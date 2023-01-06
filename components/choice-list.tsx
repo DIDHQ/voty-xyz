@@ -13,7 +13,6 @@ type ChoiceListItemProps = {
   id: string
   value: string
   index: number
-  maxLength?: number
   readOnly?: boolean
   onChange: (id: string, text: string) => void
   onDelete?: (id: string) => void
@@ -21,8 +20,7 @@ type ChoiceListItemProps = {
 }
 
 function ChoiceListItem(props: ChoiceListItemProps) {
-  const { id, value, index, maxLength, readOnly, onChange, onDelete, onAdd } =
-    props
+  const { id, value, index, readOnly, onChange, onDelete, onAdd } = props
 
   const {
     attributes,
@@ -81,7 +79,6 @@ function ChoiceListItem(props: ChoiceListItemProps) {
           className="pl-24 pr-16 w-full placeholder:opacity-50"
           value={value}
           onChange={handleChange}
-          maxLength={maxLength}
           placeholder={index > 0 ? '(Optional)' : undefined}
           disabled={readOnly}
         />
@@ -96,11 +93,6 @@ function ChoiceListItem(props: ChoiceListItemProps) {
         <span className="opacity-50 absolute left-6 top-1/4 pointer-events-none">
           Choice {index + 1}
         </span>
-        {maxLength && (
-          <span className="opacity-50 absolute right-5 top-1/4 pointer-events-none">
-            {value.length}/{maxLength}
-          </span>
-        )}
       </div>
       {!readOnly && onDelete && (
         <Button className="ml-3" onClick={handleDelete}>
@@ -120,11 +112,10 @@ export type ChoiceListProps = {
   readOnly?: boolean
   defaultChoices?: Array<string>
   onChoicesChange: (choices: Array<string>) => void
-  maxLength?: number
 }
 
 export default function ChoiceList(props: ChoiceListProps) {
-  const { defaultChoices = [''], maxLength, onChoicesChange, readOnly } = props
+  const { defaultChoices = [''], onChoicesChange, readOnly } = props
 
   const choiceData = useMemo(
     () =>
@@ -196,7 +187,6 @@ export default function ChoiceList(props: ChoiceListProps) {
             value={choice.text}
             onChange={handleChange}
             index={index}
-            maxLength={maxLength}
             readOnly={readOnly}
             onDelete={index < choices.length - 1 ? handleDelete : undefined}
             onAdd={index === choices.length - 1 ? handleAdd : undefined}

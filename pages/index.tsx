@@ -22,7 +22,6 @@ export default function IndexPage() {
       <ChoiceList
         // readOnly
         onChoicesChange={handleChoicesChange}
-        maxLength={32}
         defaultChoices={[
           'I have a dream',
           'Doraemon',
