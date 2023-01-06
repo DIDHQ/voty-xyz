@@ -93,18 +93,18 @@ function ChoiceListItem(props: {
 
 export default function ChoiceList(props: {
   disabled?: boolean
-  defaultChoices?: Array<string>
-  onChoicesChange: (choices: Array<string>) => void
+  value: string[]
+  onChange: (choices: string[]) => void
 }) {
-  const { defaultChoices = [''], onChoicesChange, disabled } = props
+  const { value, onChange, disabled } = props
 
   const choiceData = useMemo(
     () =>
-      defaultChoices.map((choice) => ({
+      value.map((choice) => ({
         id: nanoid(),
         text: choice,
       })),
-    [defaultChoices],
+    [value],
   )
 
   const [choices, setChoices] = useState(choiceData)
@@ -124,9 +124,9 @@ export default function ChoiceList(props: {
         }
       })
       setChoices(newChoices)
-      onChoicesChange(newChoices.map((newChoice) => newChoice.text))
+      onChange(newChoices.map((newChoice) => newChoice.text))
     },
-    [choices, onChoicesChange],
+    [choices, onChange],
   )
 
   const handleChange = useCallback(
