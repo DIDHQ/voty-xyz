@@ -77,7 +77,7 @@ function ChoiceListItem(props: {
           <Drag className="p-0 bg-transparent" />
         </Button>
         <Input
-          className="pl-8 w-full placeholder:opacity-50"
+          className="w-full placeholder:opacity-50"
           disabled={disabled}
           value={text}
           onChange={handleChange}
