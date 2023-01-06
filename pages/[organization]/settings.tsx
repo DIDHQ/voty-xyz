@@ -15,14 +15,23 @@ export default function OrganizationSettingsPage() {
   )
 
   return organization && query.organization ? (
-    <>
-      <Breadcrumbs>
-        <Breadcrumbs.Item>
-          <Link href="/">Home</Link>
-        </Breadcrumbs.Item>
-        <Breadcrumbs.Item>{organization.profile.name}</Breadcrumbs.Item>
-      </Breadcrumbs>
-      <OrganizationForm did={query.organization} organization={organization} />
-    </>
+    <div className="flex justify-center mt-5">
+      <div className="flex flex-col w-full md:w-[48rem] px-10">
+        <Breadcrumbs>
+          <Breadcrumbs.Item>
+            <Link href="/">Home</Link>
+          </Breadcrumbs.Item>
+          <Breadcrumbs.Item>
+            <Link href={`/ph0ng.bit`}>{organization.profile.name}</Link>
+          </Breadcrumbs.Item>
+          <Breadcrumbs.Item>Settings</Breadcrumbs.Item>
+        </Breadcrumbs>
+        <h1 className="text-3xl font-bold mb-8 mt-8">Settings</h1>
+        <OrganizationForm
+          did={query.organization}
+          organization={organization}
+        />
+      </div>
+    </div>
   ) : null
 }
