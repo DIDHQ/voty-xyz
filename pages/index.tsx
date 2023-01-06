@@ -23,6 +23,7 @@ export default function IndexPage() {
           <Button color="primary">Create an Organization</Button>
         </Link>
       ) : null}
+      {choices.join(', ')}
       <ChoiceList disabled={false} value={choices} onChange={setChoices} />
       <Footer />
     </>

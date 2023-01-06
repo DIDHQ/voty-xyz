@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -96,22 +96,22 @@ export default function ChoiceList(props: {
   value: string[]
   onChange: (choices: string[]) => void
 }) {
-  const { value, onChange, disabled } = props
+  const { onChange } = props
 
-  const choiceData = useMemo(
-    () =>
-      value.map((choice) => ({
+  const [value, setValue] = useState<{ id: string; text: string }[]>([])
+
+  useEffect(() => {
+    setValue(
+      props.value.map((choice) => ({
         id: nanoid(),
         text: choice,
       })),
-    [value],
-  )
+    )
+  }, [props.value])
 
-  const [choices, setChoices] = useState(choiceData)
-
-  const changeChoices = useCallback(
+  const handleChangeChoices = useCallback(
     (type: 'add' | 'delete' | 'modify', id?: string, text?: string) => {
-      const newChoices = produce(choices, (draft) => {
+      const newChoices = produce(value, (draft) => {
         if (type === 'add') {
           draft.push({ id: nanoid(), text: '' })
           return
@@ -123,54 +123,54 @@ export default function ChoiceList(props: {
           draft[targetIndex].text = text || ''
         }
       })
-      setChoices(newChoices)
+      setValue(newChoices)
       onChange(newChoices.map((newChoice) => newChoice.text))
     },
-    [choices, onChange],
+    [value, onChange],
   )
 
   const handleChange = useCallback(
     (id: string, text: string) => {
-      changeChoices('modify', id, text)
+      handleChangeChoices('modify', id, text)
     },
-    [changeChoices],
+    [handleChangeChoices],
   )
 
   const handleDelete = useCallback(
     (id: string) => {
-      changeChoices('delete', id)
+      handleChangeChoices('delete', id)
     },
-    [changeChoices],
+    [handleChangeChoices],
   )
 
   const handleAdd = useCallback(() => {
-    changeChoices('add')
-  }, [changeChoices])
+    handleChangeChoices('add')
+  }, [handleChangeChoices])
 
   const handleDragEnd = useCallback(
-    (dragEndProps: DragEndEvent) => {
-      const { active, over } = dragEndProps
-      const activeIndex = choices.findIndex((choice) => choice.id === active.id)
-      const overIndex = choices.findIndex((choice) => choice.id === over?.id)
-      const newChoices = arrayMove(choices, activeIndex, overIndex)
-      setChoices(newChoices)
+    ({ active, over }: DragEndEvent) => {
+      const activeIndex = value.findIndex((choice) => choice.id === active.id)
+      const overIndex = value.findIndex((choice) => choice.id === over?.id)
+      const newChoices = arrayMove(value, activeIndex, overIndex)
+      setValue(newChoices)
+      onChange(newChoices.map((newChoice) => newChoice.text))
     },
-    [choices],
+    [onChange, value],
   )
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <SortableContext items={choices}>
-        {choices.map((choice, index) => (
+      <SortableContext items={value}>
+        {value.map((choice, index) => (
           <ChoiceListItem
             key={choice.id}
             id={choice.id}
             value={choice.text}
             onChange={handleChange}
             index={index}
-            disabled={disabled}
-            onDelete={index < choices.length - 1 ? handleDelete : undefined}
-            onAdd={index === choices.length - 1 ? handleAdd : undefined}
+            disabled={props.disabled}
+            onDelete={index < value.length - 1 ? handleDelete : undefined}
+            onAdd={index === value.length - 1 ? handleAdd : undefined}
           />
         ))}
       </SortableContext>
