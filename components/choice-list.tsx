@@ -48,6 +48,11 @@ function ChoiceListItem(props: {
     onDelete?.(id)
   }, [id, onDelete])
 
+  const handleAdd = useCallback(() => {
+    handleBlur()
+    onAdd?.()
+  }, [handleBlur, onAdd])
+
   return (
     <div
       ref={setNodeRef}
@@ -96,7 +101,7 @@ function ChoiceListItem(props: {
           shape="circle"
           color="success"
           className="ml-3"
-          onClick={onAdd}
+          onClick={handleAdd}
         >
           <Plus />
         </Button>
