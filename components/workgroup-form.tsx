@@ -23,7 +23,10 @@ export default function WorkgroupForm(props: {
   return (
     <div>
       <h2>Workgroup: {props.value.id}</h2>
-      <FormItem label="avatar">
+      <FormItem
+        label="avatar"
+        error={formState.errors.profile?.avatar?.message}
+      >
         <Controller
           control={control}
           name="profile.avatar"
@@ -36,13 +39,16 @@ export default function WorkgroupForm(props: {
           )}
         />
       </FormItem>
-      <FormItem label="name">
+      <FormItem label="name" error={formState.errors.profile?.name?.message}>
         <Input {...register('profile.name')} />
       </FormItem>
-      <FormItem label="about">
+      <FormItem label="about" error={formState.errors.profile?.about?.message}>
         <Input {...register('profile.about')} />
       </FormItem>
-      <FormItem label="proposer liberty">
+      <FormItem
+        label="proposer liberty"
+        error={formState.errors.proposer_liberty?.message}
+      >
         <Controller
           control={control}
           name="proposer_liberty"
@@ -51,7 +57,10 @@ export default function WorkgroupForm(props: {
           )}
         />
       </FormItem>
-      <FormItem label="voting power">
+      <FormItem
+        label="voting power"
+        error={formState.errors.voting_power?.message}
+      >
         <Controller
           control={control}
           name="voting_power"
@@ -60,7 +69,10 @@ export default function WorkgroupForm(props: {
           )}
         />
       </FormItem>
-      <FormItem label="voting duration">
+      <FormItem
+        label="voting duration"
+        error={formState.errors.rules?.voting_duration?.message}
+      >
         <Controller
           control={control}
           name="rules.voting_duration"
@@ -69,7 +81,10 @@ export default function WorkgroupForm(props: {
           )}
         />
       </FormItem>
-      <FormItem label="voting start delay">
+      <FormItem
+        label="voting start delay"
+        error={formState.errors.rules?.voting_start_delay?.message}
+      >
         <Controller
           control={control}
           name="rules.voting_start_delay"
@@ -78,7 +93,10 @@ export default function WorkgroupForm(props: {
           )}
         />
       </FormItem>
-      <FormItem label="approval condition description">
+      <FormItem
+        label="approval condition description"
+        error={formState.errors.rules?.approval_condition_description?.message}
+      >
         <Input {...register('rules.approval_condition_description')} />
       </FormItem>
       <Button

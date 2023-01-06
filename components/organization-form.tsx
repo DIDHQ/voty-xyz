@@ -19,9 +19,10 @@ export default function OrganizationForm(props: {
   did: string
   organization: Organization
 }) {
-  const { control, register, handleSubmit, reset } = useForm<Organization>({
-    resolver: zodResolver(organizationSchema),
-  })
+  const { control, register, handleSubmit, reset, formState } =
+    useForm<Organization>({
+      resolver: zodResolver(organizationSchema),
+    })
   const {
     fields: communities,
     append: appendCommunity,
@@ -66,7 +67,10 @@ export default function OrganizationForm(props: {
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-xl">Organization: {props.did}</h1>
-      <FormItem label="Avatar">
+      <FormItem
+        label="Avatar"
+        error={formState.errors.profile?.avatar?.message}
+      >
         <Controller
           control={control}
           name="profile.avatar"
@@ -75,12 +79,7 @@ export default function OrganizationForm(props: {
           )}
         />
       </FormItem>
-      <FormItem
-        label="Name"
-        required
-        isError={Boolean(formState.errors.profile?.name)}
-        errorMessage={formState.errors.profile?.name?.message}
-      >
+      <FormItem label="Name" error={formState.errors.profile?.name?.message}>
         <Input
           color={formState.errors.profile?.name ? 'error' : undefined}
           maxLength={50}
@@ -89,16 +88,26 @@ export default function OrganizationForm(props: {
           })}
         />
       </FormItem>
-      <FormItem label="About">
+      <FormItem label="About" error={formState.errors.profile?.about?.message}>
         <Input maxLength={120} {...register('profile.about')} />
       </FormItem>
-      <FormItem label="Website">
+      <FormItem
+        label="Website"
+        error={formState.errors.profile?.website?.message}
+      >
         <Input {...register('profile.website')} />
       </FormItem>
-      <FormItem label="Terms of service">
+      <FormItem
+        label="Terms of service"
+        error={formState.errors.profile?.tos?.message}
+      >
         <Input {...register('profile.tos')} />
       </FormItem>
-      <FormItem className="flex w-full" label="Communities">
+      <FormItem
+        className="flex w-full"
+        label="Communities"
+        error={formState.errors.communities?.message}
+      >
         {communities.map((field, index) => (
           <div className="flex gap-5 mb-3" key={field.id}>
             <Select {...register(`communities.${index}.type`)}>
@@ -117,7 +126,7 @@ export default function OrganizationForm(props: {
           +
         </Button>
       </FormItem>
-      <FormItem label="Workgroups">
+      <FormItem label="Workgroups" error={formState.errors.workgroups?.message}>
         {workgroups.map((field, index) => (
           <Fragment key={field.id}>
             <Controller
