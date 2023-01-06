@@ -82,14 +82,11 @@ export default function OrganizationForm(props: {
       <FormItem label="Name" error={formState.errors.profile?.name?.message}>
         <Input
           color={formState.errors.profile?.name ? 'error' : undefined}
-          maxLength={50}
-          {...register('profile.name', {
-            required: true,
-          })}
+          {...register('profile.name')}
         />
       </FormItem>
       <FormItem label="About" error={formState.errors.profile?.about?.message}>
-        <Input maxLength={120} {...register('profile.about')} />
+        <Input {...register('profile.about')} />
       </FormItem>
       <FormItem
         label="Website"
