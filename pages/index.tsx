@@ -1,23 +1,23 @@
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Button } from 'react-daisyui'
 
-import ChoiceList from '../components/choice-list'
 import Footer from '../components/footer'
-import useWallet from '../hooks/use-wallet'
+
+const ChoiceList = dynamic(() => import('../components/choice-list'), {
+  ssr: false,
+})
 
 export default function IndexPage() {
-  const { account } = useWallet()
   const handleChoicesChange = (choices: string[]) => {
     console.log('handleChoiceChange', choices)
   }
 
   return (
     <>
-      {account ? (
-        <Link href="/create">
-          <Button color="primary">Create an Organization</Button>
-        </Link>
-      ) : null}
+      <Link href="/create">
+        <Button color="primary">Create an Organization</Button>
+      </Link>
       <Footer />
       <ChoiceList
         // readOnly
