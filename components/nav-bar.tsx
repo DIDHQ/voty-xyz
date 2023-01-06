@@ -2,6 +2,7 @@ import { Navbar, Dropdown, Button } from 'react-daisyui'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Logout, Setting } from '@icon-park/react'
+import { useDisconnect } from 'wagmi'
 
 import AvatarInput from './avatar-input'
 
@@ -14,6 +15,8 @@ const ConnectButtonCustom = dynamic(
 )
 
 export default function NavBar() {
+  const { disconnect } = useDisconnect()
+
   return (
     <Navbar className="shadow-md px-4">
       <div className="flex-1">
@@ -25,7 +28,7 @@ export default function NavBar() {
       </div>
       <div className="flex-none gap-2">
         <ConnectButtonCustom>
-          {({ account, openConnectModal, openAccountModal }) => (
+          {({ account, openConnectModal }) => (
             <>
               <Dropdown vertical="end">
                 <Button
@@ -55,7 +58,7 @@ export default function NavBar() {
                     <User />
                     View Profile
                   </Dropdown.Item> */}
-                  <Dropdown.Item onClick={openAccountModal}>
+                  <Dropdown.Item onClick={() => disconnect()}>
                     <Logout />
                     Log out
                   </Dropdown.Item>
