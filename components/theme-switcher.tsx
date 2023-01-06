@@ -27,11 +27,11 @@ export default function ThemeSwitcher() {
   return (
     <Dropdown>
       <Button
-        variant="outline"
-        shape="circle"
+        startIcon={<Theme />}
+        color="ghost"
         onMouseDown={handleCheckAndCloseDropDown}
       >
-        <Theme />
+        Theme
       </Button>
       <Dropdown.Menu className="w-52">
         {DEFAULT_THEMES.map((theme) => (

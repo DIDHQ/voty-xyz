@@ -1,13 +1,14 @@
 import Link from 'next/link'
+import { Button } from 'react-daisyui'
 
 import Footer from '../components/footer'
 
 export default function IndexPage() {
   return (
     <>
-      <Link href="/test">test</Link>
-      <br />
-      <Link href="/ph0ng.bit/settings">settings</Link>
+      <Link href="/create">
+        <Button color="primary">Create an Organization</Button>
+      </Link>
       <Footer />
     </>
   )
