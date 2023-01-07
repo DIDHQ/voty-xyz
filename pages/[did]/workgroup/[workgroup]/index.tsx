@@ -11,7 +11,7 @@ import {
   organizationWithSignatureSchema,
   Proposal,
 } from '../../../../src/schemas'
-import useList from '../../../../hooks/use-list'
+import { useList } from '../../../../hooks/use-api'
 import { DataType } from '../../../../src/constants'
 
 export default function WorkgroupPage() {

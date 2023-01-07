@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import { DataType } from '../src/constants'
 import { fetchJson } from '../src/utils/fetcher'
 
-export default function useList<T>(
+export function useList<T>(
   type: DataType | 'workgroup',
   where: [string, string | undefined][] = [],
 ) {

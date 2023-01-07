@@ -16,7 +16,7 @@ import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
 import { organizationWithSignatureSchema, Proposal } from '../../src/schemas'
 import useRouterQuery from '../../hooks/use-router-query'
-import useList from '../../hooks/use-list'
+import { useList } from '../../hooks/use-api'
 import { DataType } from '../../src/constants'
 
 export default function OrganizationIndexPage() {

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Button } from 'react-daisyui'
 
 import Footer from '../components/footer'
-import useList from '../hooks/use-list'
+import { useList } from '../hooks/use-api'
 import { DataType } from '../src/constants'
 import { Organization } from '../src/schemas'
 
