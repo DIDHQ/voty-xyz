@@ -8,7 +8,7 @@ const defaultTags = {
   'app-version': '0.0.0',
 }
 
-export function getListArweaveTags(type: DataType): {
+export function arweaveTagsOfDataType(type: DataType): {
   [key: string]: string
 } {
   if (type === DataType.ORGANIZATION) {
@@ -23,7 +23,7 @@ export function getListArweaveTags(type: DataType): {
       'app-data-type': 'proposal',
     }
   }
-  throw new Error('cannot get arweave tags')
+  throw new Error('cannot get arweave tags of data type')
 }
 
 export function getArweaveTags(
@@ -33,15 +33,15 @@ export function getArweaveTags(
 } {
   if (isOrganization(json)) {
     return {
-      ...getListArweaveTags(DataType.ORGANIZATION),
-      'app-parent-did': json.signature.did,
+      ...arweaveTagsOfDataType(DataType.ORGANIZATION),
+      'app-current-did': json.signature.did,
     }
   }
   if (isProposal(json)) {
     return {
-      ...getListArweaveTags(DataType.PROPOSAL),
-      'app-parent-organization': json.organization,
-      'app-parent-workgroup': json.workgroup,
+      ...arweaveTagsOfDataType(DataType.PROPOSAL),
+      'app-current-organization': json.organization,
+      'app-current-workgroup': json.workgroup,
     }
   }
   throw new Error('cannot get arweave tags')
