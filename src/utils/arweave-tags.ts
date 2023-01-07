@@ -15,6 +15,7 @@ export const defaultArweaveTags = {
 export function getArweaveTags(
   json: OrganizationWithSignature | ProposalWithSignature | VoteWithSignature,
   organization: string,
+  workgroup?: string,
 ): { [key: string]: string } {
   if (isOrganization(json)) {
     return {
@@ -31,12 +32,12 @@ export function getArweaveTags(
       'app-index-workgroup': json.workgroup,
     }
   }
-  if (isVote(json)) {
+  if (isVote(json) && workgroup) {
     return {
       ...defaultArweaveTags,
       'app-index-type': DataType.VOTE,
       'app-index-organization': organization,
-      'app-index-workgroup': json.workgroup,
+      'app-index-workgroup': workgroup,
       'app-index-proposal': json.proposal,
     }
   }

@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { resolveDid } from '../../src/did'
 import {
   organizationWithSignatureSchema,
+  proposalWithSignatureSchema,
   voteWithSignatureSchema,
 } from '../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../src/signature'
@@ -54,9 +55,22 @@ export default async function handler(
     return
   }
 
+  const proposal = proposalWithSignatureSchema.safeParse(
+    JSON.parse(
+      (await arweave.transactions.getData(data.proposal, {
+        decode: true,
+        string: true,
+      })) as string,
+    ),
+  )
+  if (!proposal.success) {
+    res.status(400).send(`proposal schema error: ${proposal.error.message}`)
+    return
+  }
+
   const organization = organizationWithSignatureSchema.safeParse(
     JSON.parse(
-      (await arweave.transactions.getData(data.organization, {
+      (await arweave.transactions.getData(proposal.data.organization, {
         decode: true,
         string: true,
       })) as string,
@@ -74,7 +88,11 @@ export default async function handler(
   const transaction = await arweave.createTransaction({
     data: JSON.stringify(vote.data),
   })
-  const tags = getArweaveTags(vote.data, organization.data.signature.did)
+  const tags = getArweaveTags(
+    vote.data,
+    organization.data.signature.did,
+    proposal.data.workgroup,
+  )
   Object.entries(tags).forEach(([key, value]) => {
     transaction.addTag(key, value)
   })
