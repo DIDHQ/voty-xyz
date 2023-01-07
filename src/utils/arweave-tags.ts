@@ -18,14 +18,14 @@ export function getArweaveTags(
   if (isOrganization(json)) {
     return {
       ...defaultArweaveTags,
-      'app-index-type': DataType.ORGANIZATION,
+      'app-data-type': DataType.ORGANIZATION,
       'app-index-did': json.did,
     }
   }
   if (isProposal(json)) {
     return {
       ...defaultArweaveTags,
-      'app-index-type': DataType.PROPOSAL,
+      'app-data-type': DataType.PROPOSAL,
       'app-index-did': json.did,
       'app-index-organization': json.organization,
       'app-index-workgroup': json.workgroup,
@@ -34,7 +34,7 @@ export function getArweaveTags(
   if (isVote(json)) {
     return {
       ...defaultArweaveTags,
-      'app-index-type': DataType.VOTE,
+      'app-data-type': DataType.VOTE,
       'app-index-did': json.did,
       'app-index-organization': json.organization,
       'app-index-workgroup': json.workgroup,
