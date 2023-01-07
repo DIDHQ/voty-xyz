@@ -111,7 +111,7 @@ export default function CreateProposalPage() {
         render={({ field: { value, onChange } }) => (
           <ChoiceList
             disabled={false}
-            value={value || []}
+            value={value || ['']}
             onChange={onChange}
           />
         )}
