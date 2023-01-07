@@ -3,7 +3,7 @@ import { Add } from '@icon-park/react'
 import pMap from 'p-map'
 import { useEffect, useMemo, useState } from 'react'
 import { Button, Input, Select, Textarea } from 'react-daisyui'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 
 import DidSelect from '../../../../components/did-select'
@@ -22,11 +22,13 @@ import {
   proposalSchema,
 } from '../../../../src/schemas'
 import { getCurrentSnapshot } from '../../../../src/snapshot'
+import ChoiceList from '../../../../components/choice-list'
 
 export default function CreateProposalPage() {
-  const { register, setValue, handleSubmit, formState } = useForm<Proposal>({
-    resolver: zodResolver(proposalSchema),
-  })
+  const { register, setValue, handleSubmit, control, formState } =
+    useForm<Proposal>({
+      resolver: zodResolver(proposalSchema),
+    })
   const [query] = useRouterQuery<['organization', 'workgroup']>()
   const { data: config } = useDidConfig(query.organization)
   const { data: organization } = useArweaveData(
@@ -103,6 +105,17 @@ export default function CreateProposalPage() {
           ))}
         </Select>
       </FormItem>
+      <Controller
+        control={control}
+        name="choices"
+        render={({ field: { value, onChange } }) => (
+          <ChoiceList
+            disabled={false}
+            value={value || []}
+            onChange={onChange}
+          />
+        )}
+      />
       <FormItem label="Choices" error={formState.errors.choices?.message}>
         {Array.from({ length: typesCount })?.map((_, index) => (
           <Input key={index} {...register(`choices.${index}`)} />
