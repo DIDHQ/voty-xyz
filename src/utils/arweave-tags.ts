@@ -1,5 +1,13 @@
+import Arweave from 'arweave'
+
 import { OrganizationWithSignature, ProposalWithSignature } from '../schemas'
 import { isOrganization, isProposal } from './data-type'
+
+const arweave = Arweave.init({
+  host: 'arweave.net',
+  port: 443,
+  protocol: 'https',
+})
 
 const defaultTags = {
   'content-type': 'application/json',
@@ -7,24 +15,27 @@ const defaultTags = {
   'app-version': '0.0.0',
 }
 
-export function getArweaveTags(
+export async function getArweaveTags(
   json: OrganizationWithSignature | ProposalWithSignature,
-): {
-  [key: string]: string
-} {
+): Promise<{ [key: string]: string }> {
   if (isOrganization(json)) {
     return {
       ...defaultTags,
-      'app-data-type': 'organization',
-      'app-current-did': json.signature.did,
+      'app-index-type': 'organization',
+      'app-index-did': json.signature.did,
     }
   }
   if (isProposal(json)) {
+    const data = await arweave.transactions.getData(json.organization, {
+      decode: true,
+      string: true,
+    })
+    const organization = JSON.parse(data as string)
     return {
       ...defaultTags,
-      'app-data-type': 'proposal',
-      'app-current-organization': json.signature.did,
-      'app-current-workgroup': json.workgroup,
+      'app-index-type': 'proposal',
+      'app-index-organization': organization.signature.did,
+      'app-index-workgroup': json.workgroup,
     }
   }
   throw new Error('cannot get arweave tags')
