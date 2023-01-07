@@ -79,6 +79,12 @@ export default function CreateProposalPage() {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
+  useEffect(() => {
+    if (query.did) {
+      setValue('did', query.did)
+    }
+  }, [query.did, setValue])
+
   const [typesCount, setTypesCount] = useState(0)
   const [did, setDid] = useState('')
   const { account } = useWallet()
