@@ -19,8 +19,8 @@ export default async function handler(
     res.json({
       data: organizations.map(({ data, ...organization }) => ({
         ...organization,
-        data: organizationWithSignatureSchema.safeParse(
-          textDecoder.decode(data),
+        ...organizationWithSignatureSchema.safeParse(
+          JSON.parse(textDecoder.decode(data)),
         ),
       })),
     })
@@ -32,7 +32,9 @@ export default async function handler(
     res.json({
       data: proposals.map(({ data, ...proposal }) => ({
         ...proposal,
-        data: proposalWithSignatureSchema.safeParse(textDecoder.decode(data)),
+        ...proposalWithSignatureSchema.safeParse(
+          JSON.parse(textDecoder.decode(data)),
+        ),
       })),
     })
   } else if (type === DataType.VOTE) {
@@ -40,7 +42,9 @@ export default async function handler(
     res.json({
       data: votes.map(({ data, ...vote }) => ({
         ...vote,
-        data: voteWithSignatureSchema.safeParse(textDecoder.decode(data)),
+        ...voteWithSignatureSchema.safeParse(
+          JSON.parse(textDecoder.decode(data)),
+        ),
       })),
     })
   }
