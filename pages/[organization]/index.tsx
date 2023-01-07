@@ -16,9 +16,6 @@ import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
 import { organizationWithSignatureSchema } from '../../src/schemas'
 import useRouterQuery from '../../hooks/use-router-query'
-import useArweaveList from '../../hooks/use-arweave-list'
-import { DataType } from '../../src/constants'
-import { arweaveTagsOfDataType } from '../../src/utils/arweave-tags'
 
 export default function OrganizationIndexPage() {
   const [query] = useRouterQuery<['organization']>()
@@ -27,10 +24,6 @@ export default function OrganizationIndexPage() {
     organizationWithSignatureSchema,
     config?.organization,
   )
-  const { data: proposals } = useArweaveList(
-    arweaveTagsOfDataType(DataType.PROPOSAL),
-  )
-  console.log(proposals)
 
   return organization ? (
     <>
