@@ -9,7 +9,7 @@ const arweave = Arweave.init({
   protocol: 'https',
 })
 
-const defaultTags = {
+export const defaultArweaveTags = {
   'content-type': 'application/json',
   'app-name': 'voty',
   'app-version': '0.0.0',
@@ -20,7 +20,7 @@ export async function getArweaveTags(
 ): Promise<{ [key: string]: string }> {
   if (isOrganization(json)) {
     return {
-      ...defaultTags,
+      ...defaultArweaveTags,
       'app-index-type': 'organization',
       'app-index-did': json.signature.did,
     }
@@ -32,7 +32,7 @@ export async function getArweaveTags(
     })
     const organization = JSON.parse(data as string)
     return {
-      ...defaultTags,
+      ...defaultArweaveTags,
       'app-index-type': 'proposal',
       'app-index-organization': organization.signature.did,
       'app-index-workgroup': json.workgroup,
