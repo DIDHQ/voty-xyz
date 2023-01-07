@@ -26,7 +26,7 @@ export default function useArweaveUpload(
     const textEncoder = new TextEncoder()
     const body = textEncoder.encode(JSON.stringify(json))
     const serializedUploader = await fetchJson<SerializedUploader>(
-      `/api/${dataTypeOf(json)}`,
+      `/api/sign/${dataTypeOf(json)}`,
       {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
