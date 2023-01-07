@@ -1,6 +1,5 @@
 import Arweave from 'arweave'
 import useSWR from 'swr'
-import { ZodSchema } from 'zod'
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -8,15 +7,15 @@ const arweave = Arweave.init({
   protocol: 'https',
 })
 
-export default function useArweaveData<T>(schema: ZodSchema<T>, hash?: string) {
+export default function useArweaveFile<T>(hash?: string) {
   return useSWR(
-    hash ? ['arweaveData', hash] : null,
+    hash ? ['file', hash] : null,
     async () => {
       const data = await arweave.transactions.getData(hash!, {
         decode: true,
         string: true,
       })
-      return schema.parse(JSON.parse(data as string))
+      return JSON.parse(data as string) as T
     },
     { revalidateOnFocus: false },
   )

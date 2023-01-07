@@ -4,15 +4,14 @@ import { useMemo } from 'react'
 import { Breadcrumbs, Menu } from 'react-daisyui'
 import AvatarInput from '../../../../components/avatar-input'
 import useRouterQuery from '../../../../components/use-router-query'
-import useArweaveData from '../../../../hooks/use-arweave-data'
+import useArweaveFile from '../../../../hooks/use-arweave-file'
 import useDidConfig from '../../../../hooks/use-did-config'
-import { organizationWithSignatureSchema } from '../../../../src/schemas'
+import { Organization } from '../../../../src/schemas'
 
 export default function WorkgroupPage() {
   const [query] = useRouterQuery<['organization', 'workgroup']>()
   const { data: config } = useDidConfig(query.organization)
-  const { data: organization } = useArweaveData(
-    organizationWithSignatureSchema,
+  const { data: organization } = useArweaveFile<Organization>(
     config?.organization,
   )
   const workgroup = useMemo(

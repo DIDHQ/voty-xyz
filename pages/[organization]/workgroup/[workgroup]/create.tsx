@@ -9,18 +9,14 @@ import useSWR from 'swr'
 import DidSelect from '../../../../components/did-select'
 import FormItem from '../../../../components/form-item'
 import useRouterQuery from '../../../../components/use-router-query'
-import useArweaveData from '../../../../hooks/use-arweave-data'
+import useArweaveFile from '../../../../hooks/use-arweave-file'
 import useArweaveUpload from '../../../../hooks/use-arweave-upload'
 import useAsync from '../../../../hooks/use-async'
 import useConnectedSignatureUnit from '../../../../hooks/use-connected-signature-unit'
 import useDidConfig from '../../../../hooks/use-did-config'
 import useSignJson from '../../../../hooks/use-sign-json'
 import { requiredCoinTypesOfVotingPower } from '../../../../src/functions/voting-power'
-import {
-  organizationWithSignatureSchema,
-  Proposal,
-  proposalSchema,
-} from '../../../../src/schemas'
+import { Organization, Proposal, proposalSchema } from '../../../../src/schemas'
 import { getCurrentSnapshot } from '../../../../src/snapshot'
 
 export default function CreateProposalPage() {
@@ -29,8 +25,7 @@ export default function CreateProposalPage() {
   })
   const [query] = useRouterQuery<['organization', 'workgroup']>()
   const { data: config } = useDidConfig(query.organization)
-  const { data: organization } = useArweaveData(
-    organizationWithSignatureSchema,
+  const { data: organization } = useArweaveFile<Organization>(
     config?.organization,
   )
   const workgroup = useMemo(

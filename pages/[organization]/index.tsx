@@ -12,9 +12,9 @@ import {
 } from '@icon-park/react'
 
 import AvatarInput from '../../components/avatar-input'
-import useArweaveData from '../../hooks/use-arweave-data'
+import useArweaveFile from '../../hooks/use-arweave-file'
 import useDidConfig from '../../hooks/use-did-config'
-import { organizationWithSignatureSchema } from '../../src/schemas'
+import { Organization } from '../../src/schemas'
 import useRouterQuery from '../../components/use-router-query'
 import useArweaveList from '../../hooks/use-arweave-list'
 import { DataType } from '../../src/constants'
@@ -23,8 +23,7 @@ import { getListArweaveTags } from '../../src/utils/arweave-tags'
 export default function OrganizationIndexPage() {
   const [query] = useRouterQuery<['organization', 'workgroup']>()
   const { data: config } = useDidConfig(query.organization)
-  const { data: organization } = useArweaveData(
-    organizationWithSignatureSchema,
+  const { data: organization } = useArweaveFile<Organization>(
     config?.organization,
   )
   const { data: proposals } = useArweaveList(
