@@ -23,7 +23,6 @@ model Workgroup {
   id           String
   did          String
   organization String
-  data         Bytes
 
   @@id([id, organization])
   @@index([did])

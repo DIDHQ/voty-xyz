@@ -86,11 +86,9 @@ export default async function handler(
           id: workgroup.id,
           did: organization.did,
           organization: transaction.id,
-          data: Buffer.from(textEncoder.encode(JSON.stringify(workgroup))),
         },
         update: {
           did: organization.did,
-          data: Buffer.from(textEncoder.encode(JSON.stringify(workgroup))),
         },
       }),
     ) || []),
