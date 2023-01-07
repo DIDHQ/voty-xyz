@@ -74,7 +74,7 @@ export default async function handler(
   const transaction = await arweave.createTransaction({
     data: JSON.stringify(proposal.data),
   })
-  const tags = getArweaveTags(proposal.data, organization.data.signature.did)
+  const tags = getArweaveTags(proposal.data)
   Object.entries(tags).forEach(([key, value]) => {
     transaction.addTag(key, value)
   })
