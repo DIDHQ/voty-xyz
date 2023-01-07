@@ -2,20 +2,18 @@ import { useCallback } from 'react'
 
 import { Organization, Proposal, Signature } from '../src/schemas'
 import { wrapJsonMessage } from '../src/signature'
-import { SignatureUnit } from '../src/types'
 import useCurrentSnapshot from './use-current-snapshot'
-import useSignMessage from './use-sign-message'
+import useWallet from './use-wallet'
 
 export default function useSignJson<T extends Organization | Proposal>(
   did: string,
-  signatureUnit?: SignatureUnit,
 ): (json: T) => Promise<(T & { signature: Signature }) | undefined> {
-  const signMessage = useSignMessage(signatureUnit?.coinType)
-  const { data: snapshot } = useCurrentSnapshot(signatureUnit?.coinType)
+  const { account, signMessage } = useWallet()
+  const { data: snapshot } = useCurrentSnapshot(account?.coinType)
 
   return useCallback(
     async (json: T) => {
-      if (!snapshot || !signatureUnit) {
+      if (!snapshot || !account) {
         return
       }
       const message = await wrapJsonMessage(json)
@@ -25,12 +23,12 @@ export default function useSignJson<T extends Organization | Proposal>(
         signature: {
           did,
           snapshot: snapshot.toString(),
-          coin_type: signatureUnit.coinType,
-          address: signatureUnit.address,
+          coin_type: account.coinType,
+          address: account.address,
           data,
         },
       }
     },
-    [snapshot, signatureUnit, signMessage, did],
+    [snapshot, account, signMessage, did],
   )
 }

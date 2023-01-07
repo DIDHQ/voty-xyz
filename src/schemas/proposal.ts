@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import { signatureSchema } from './signature'
 
 export const proposalSchema = z.object({

@@ -1,17 +1,16 @@
 import { CoinType, createInstance } from 'dotbit'
 import useSWR from 'swr'
-import { SignatureUnit } from '../src/types'
 
-export default function useDids(signatureUnit?: SignatureUnit) {
+import { Account } from '../src/types'
+
+export default function useDids(account?: Account) {
   return useSWR(
-    signatureUnit
-      ? ['dids', signatureUnit.address, signatureUnit.coinType]
-      : null,
+    account ? ['dids', account.address, account.coinType] : null,
     async () => {
       const dotbit = createInstance()
       const accounts = await dotbit.accountsOfOwner({
-        key: signatureUnit!.address,
-        coin_type: signatureUnit!.coinType.toString() as CoinType,
+        key: account!.address,
+        coin_type: account!.coinType.toString() as CoinType,
       })
       return accounts.map(({ account }) => account)
     },
