@@ -14,7 +14,7 @@ export const defaultArweaveTags = {
 
 export function getArweaveTags(
   json: OrganizationWithSignature | ProposalWithSignature | VoteWithSignature,
-): { [key: string]: string } {
+) {
   if (isOrganization(json)) {
     return {
       ...defaultArweaveTags,

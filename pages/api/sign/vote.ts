@@ -1,6 +1,7 @@
 import Arweave from 'arweave'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
 import {
   organizationWithSignatureSchema,
@@ -19,19 +20,21 @@ const arweave = Arweave.init({
 
 const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
 
+const textEncoder = new TextEncoder()
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
   // verify schema
-  const vote = voteWithSignatureSchema.safeParse(req.body)
-  if (!vote.success) {
-    res.status(400).send(`schema error: ${vote.error.message}`)
+  const voteWithSignature = voteWithSignatureSchema.safeParse(req.body)
+  if (!voteWithSignature.success) {
+    res.status(400).send(`schema error: ${voteWithSignature.error.message}`)
     return
   }
 
   // verify signature
-  const { signature, ...data } = vote.data
+  const { signature, ...vote } = voteWithSignature.data
   const snapshot = BigInt(signature.snapshot)
   const { coinType, address } = await resolveDid(signature.did, {
     [signature.coin_type]: snapshot,
@@ -39,7 +42,7 @@ export default async function handler(
   if (
     coinType !== signature.coin_type ||
     address !== signature.address ||
-    !verifySignature(await wrapJsonMessage(data), signature)
+    !verifySignature(await wrapJsonMessage(vote), signature)
   ) {
     res.status(400).send('invalid signature')
     return
@@ -57,7 +60,7 @@ export default async function handler(
 
   const proposal = proposalWithSignatureSchema.safeParse(
     JSON.parse(
-      (await arweave.transactions.getData(data.proposal, {
+      (await arweave.transactions.getData(vote.proposal, {
         decode: true,
         string: true,
       })) as string,
@@ -85,14 +88,35 @@ export default async function handler(
 
   // TODO: extra verifies
 
-  const transaction = await arweave.createTransaction({
-    data: JSON.stringify(vote.data),
-  })
-  const tags = getArweaveTags(vote.data)
+  const data = Buffer.from(
+    textEncoder.encode(JSON.stringify(voteWithSignature.data)),
+  )
+  const transaction = await arweave.createTransaction({ data })
+  const tags = getArweaveTags(voteWithSignature.data)
   Object.entries(tags).forEach(([key, value]) => {
     transaction.addTag(key, value)
   })
   await arweave.transactions.sign(transaction, jwk)
   const uploader = await arweave.transactions.getUploader(transaction)
+
+  await database.vote.upsert({
+    where: { id: transaction.id },
+    create: {
+      id: transaction.id,
+      did: vote.did,
+      organization: vote.organization,
+      workgroup: vote.workgroup,
+      proposal: vote.proposal,
+      data,
+    },
+    update: {
+      did: vote.did,
+      organization: vote.organization,
+      workgroup: vote.workgroup,
+      proposal: vote.proposal,
+      data,
+    },
+  })
+
   res.status(200).json(uploader)
 }

@@ -7,9 +7,12 @@ import AvatarInput from '../../../../components/avatar-input'
 import useRouterQuery from '../../../../hooks/use-router-query'
 import useArweaveData from '../../../../hooks/use-arweave-data'
 import useDidConfig from '../../../../hooks/use-did-config'
-import { organizationWithSignatureSchema } from '../../../../src/schemas'
-import useArweaveList from '../../../../hooks/use-arweave-list'
-import { defaultArweaveTags } from '../../../../src/utils/arweave-tags'
+import {
+  organizationWithSignatureSchema,
+  Proposal,
+} from '../../../../src/schemas'
+import { useList } from '../../../../hooks/use-api'
+import { DataType } from '../../../../src/constants'
 
 export default function WorkgroupPage() {
   const [query] = useRouterQuery<['did', 'workgroup']>()
@@ -25,12 +28,10 @@ export default function WorkgroupPage() {
       ),
     [organization?.workgroups, query.workgroup],
   )
-  const { data: proposals } = useArweaveList({
-    ...defaultArweaveTags,
-    'app-index-type': 'proposal',
-    'app-index-organization': query.did,
-    'app-index-workgroup': workgroup?.id,
-  })
+  const { data: proposals } = useList<Proposal>(DataType.PROPOSAL, [
+    ['did', query.did],
+    ['workgroup', query.workgroup],
+  ])
 
   return (
     <>
@@ -76,8 +77,10 @@ export default function WorkgroupPage() {
       ) : null}
       <ul>
         {proposals?.map((proposal) => (
-          <li key={proposal}>
-            <Link href={`/${query.did}/proposal/${proposal}`}>{proposal}</Link>
+          <li key={proposal.id}>
+            <Link href={`/${query.did}/proposal/${proposal.id}`}>
+              {proposal.title}
+            </Link>
           </li>
         ))}
       </ul>

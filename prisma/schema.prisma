@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id   String
+  did  String
+  data Bytes
+
+  @@id([id])
+  @@index([did])
+}
+
+model Workgroup {
+  id           String
+  did          String
+  organization String
+
+  @@id([id, organization])
+  @@index([did])
+  @@index([organization])
+}
+
+model Proposal {
+  id           String
+  did          String
+  organization String
+  workgroup    String
+  data         Bytes
+
+  @@id([id])
+  @@index([did])
+  @@index([organization])
+  @@index([workgroup])
+}
+
+model Vote {
+  id           String
+  did          String
+  organization String
+  workgroup    String
+  proposal     String
+  data         Bytes
+
+  @@id([id])
+  @@index([did])
+  @@index([organization])
+  @@index([workgroup])
+  @@index([proposal])
+}

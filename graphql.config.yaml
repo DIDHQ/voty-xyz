@@ -1,9 +1,0 @@
-overwrite: true
-schema: 'https://arweave.dev/graphql'
-documents: 'graphql/*.graphql'
-generates:
-  src/generated/graphql.ts:
-    plugins:
-      - 'typescript'
-      - 'typescript-operations'
-      - 'typescript-graphql-request'

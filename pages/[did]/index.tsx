@@ -14,10 +14,10 @@ import {
 import AvatarInput from '../../components/avatar-input'
 import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
-import { organizationWithSignatureSchema } from '../../src/schemas'
+import { organizationWithSignatureSchema, Proposal } from '../../src/schemas'
 import useRouterQuery from '../../hooks/use-router-query'
-import useArweaveList from '../../hooks/use-arweave-list'
-import { defaultArweaveTags } from '../../src/utils/arweave-tags'
+import { useList } from '../../hooks/use-api'
+import { DataType } from '../../src/constants'
 
 export default function OrganizationIndexPage() {
   const [query] = useRouterQuery<['did']>()
@@ -26,11 +26,9 @@ export default function OrganizationIndexPage() {
     organizationWithSignatureSchema,
     config?.organization,
   )
-  const { data: proposals } = useArweaveList({
-    ...defaultArweaveTags,
-    'app-index-type': 'proposal',
-    'app-index-organization': query.did,
-  })
+  const { data: proposals } = useList<Proposal>(DataType.PROPOSAL, [
+    ['did', query.did],
+  ])
 
   return organization ? (
     <>
@@ -120,8 +118,10 @@ export default function OrganizationIndexPage() {
       </div>
       <ul>
         {proposals?.map((proposal) => (
-          <li key={proposal}>
-            <Link href={`/${query.did}/proposal/${proposal}`}>{proposal}</Link>
+          <li key={proposal.id}>
+            <Link href={`/${query.did}/proposal/${proposal.id}`}>
+              {proposal.title}
+            </Link>
           </li>
         ))}
       </ul>
