@@ -89,13 +89,13 @@ export default async function handler(
     where: { id: transaction.id },
     create: {
       id: transaction.id,
-      did: tags['app-index-did'],
+      did: proposal.did,
       organization: proposal.organization,
       workgroup: proposal.workgroup,
       data,
     },
     update: {
-      did: tags['app-index-did'],
+      did: proposal.did,
       organization: proposal.organization,
       workgroup: proposal.workgroup,
       data,
