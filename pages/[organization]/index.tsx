@@ -21,7 +21,7 @@ import { DataType } from '../../src/constants'
 import { arweaveTagsOfDataType } from '../../src/utils/arweave-tags'
 
 export default function OrganizationIndexPage() {
-  const [query] = useRouterQuery<['organization', 'workgroup']>()
+  const [query] = useRouterQuery<['organization']>()
   const { data: config } = useDidConfig(query.organization)
   const { data: organization } = useArweaveData(
     organizationWithSignatureSchema,
@@ -50,10 +50,7 @@ export default function OrganizationIndexPage() {
       <div className="menu bg-base-100 w-56 rounded-box">
         <Menu>
           <Menu.Item>
-            <Link
-              href={`/${query.organization}`}
-              className={query.workgroup ? undefined : 'active'}
-            >
+            <Link href={`/${query.organization}`} className="active">
               <NetworkTree />
               Workgroups
             </Link>
