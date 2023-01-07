@@ -8,6 +8,8 @@ import useRouterQuery from '../../../../hooks/use-router-query'
 import useArweaveData from '../../../../hooks/use-arweave-data'
 import useDidConfig from '../../../../hooks/use-did-config'
 import { organizationWithSignatureSchema } from '../../../../src/schemas'
+import useArweaveList from '../../../../hooks/use-arweave-list'
+import { defaultArweaveTags } from '../../../../src/utils/arweave-tags'
 
 export default function WorkgroupPage() {
   const [query] = useRouterQuery<['organization', 'workgroup']>()
@@ -23,6 +25,12 @@ export default function WorkgroupPage() {
       ),
     [organization?.workgroups, query.workgroup],
   )
+  const { data: proposals } = useArweaveList({
+    ...defaultArweaveTags,
+    'app-index-type': 'proposal',
+    'app-index-organization': query.organization,
+    'app-index-workgroup': workgroup?.id,
+  })
 
   return (
     <>
@@ -68,6 +76,15 @@ export default function WorkgroupPage() {
           </div>
         </>
       ) : null}
+      <ul>
+        {proposals?.map((proposal) => (
+          <li key={proposal}>
+            <Link href={`/${query.organization}/proposal/${proposal}`}>
+              {proposal}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </>
   )
 }

@@ -27,7 +27,7 @@ export default function useArweaveUpload(
     const body = textEncoder.encode(JSON.stringify(json))
     try {
       const transaction = await arweave.createTransaction({ data: body })
-      const tags = getArweaveTags(json)
+      const tags = await getArweaveTags(json)
       Object.entries(tags).forEach(([key, value]) => {
         transaction.addTag(key, value)
       })

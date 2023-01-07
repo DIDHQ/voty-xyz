@@ -16,14 +16,21 @@ import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
 import { organizationWithSignatureSchema } from '../../src/schemas'
 import useRouterQuery from '../../hooks/use-router-query'
+import useArweaveList from '../../hooks/use-arweave-list'
+import { defaultArweaveTags } from '../../src/utils/arweave-tags'
 
 export default function OrganizationIndexPage() {
-  const [query] = useRouterQuery<['organization', 'workgroup']>()
+  const [query] = useRouterQuery<['organization']>()
   const { data: config } = useDidConfig(query.organization)
   const { data: organization } = useArweaveData(
     organizationWithSignatureSchema,
     config?.organization,
   )
+  const { data: proposals } = useArweaveList({
+    ...defaultArweaveTags,
+    'app-index-type': 'proposal',
+    'app-index-organization': query.organization,
+  })
 
   return organization ? (
     <>
@@ -43,10 +50,7 @@ export default function OrganizationIndexPage() {
       <div className="menu bg-base-100 w-56 rounded-box">
         <Menu>
           <Menu.Item>
-            <Link
-              href={`/${query.organization}`}
-              className={query.workgroup ? undefined : 'active'}
-            >
+            <Link href={`/${query.organization}`} className="active">
               <NetworkTree />
               Workgroups
             </Link>
@@ -116,6 +120,15 @@ export default function OrganizationIndexPage() {
           </Button>
         ))}
       </div>
+      <ul>
+        {proposals?.map((proposal) => (
+          <li key={proposal}>
+            <Link href={`/${query.organization}/proposal/${proposal}`}>
+              {proposal}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </>
   ) : null
 }
