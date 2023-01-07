@@ -29,8 +29,8 @@ export default function CreateProposalPage() {
     useForm<Proposal>({
       resolver: zodResolver(proposalSchema),
     })
-  const [query] = useRouterQuery<['organization', 'workgroup']>()
-  const { data: config } = useDidConfig(query.organization)
+  const [query] = useRouterQuery<['did', 'workgroup']>()
+  const { data: config } = useDidConfig(query.did)
   const { data: organization } = useArweaveData(
     organizationWithSignatureSchema,
     config?.organization,
