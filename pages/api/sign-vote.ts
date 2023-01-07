@@ -2,7 +2,10 @@ import Arweave from 'arweave'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { resolveDid } from '../../src/did'
-import { organizationWithSignatureSchema } from '../../src/schemas'
+import {
+  organizationWithSignatureSchema,
+  voteWithSignatureSchema,
+} from '../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../src/signature'
 import { getCurrentSnapshot } from '../../src/snapshot'
 import { getArweaveTags } from '../../src/utils/arweave-tags'
@@ -20,14 +23,14 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   // verify schema
-  const organization = organizationWithSignatureSchema.safeParse(req.body)
-  if (!organization.success) {
-    res.status(400).send(`schema error: ${organization.error.message}`)
+  const vote = voteWithSignatureSchema.safeParse(req.body)
+  if (!vote.success) {
+    res.status(400).send(`schema error: ${vote.error.message}`)
     return
   }
 
   // verify signature
-  const { signature, ...data } = organization.data
+  const { signature, ...data } = vote.data
   const snapshot = BigInt(signature.snapshot)
   const { coinType, address } = await resolveDid(signature.did, {
     [signature.coin_type]: snapshot,
@@ -51,15 +54,27 @@ export default async function handler(
     return
   }
 
+  const organization = organizationWithSignatureSchema.safeParse(
+    JSON.parse(
+      (await arweave.transactions.getData(data.organization, {
+        decode: true,
+        string: true,
+      })) as string,
+    ),
+  )
+  if (!organization.success) {
+    res
+      .status(400)
+      .send(`organization schema error: ${organization.error.message}`)
+    return
+  }
+
   // TODO: extra verifies
 
   const transaction = await arweave.createTransaction({
-    data: JSON.stringify(organization.data),
+    data: JSON.stringify(vote.data),
   })
-  const tags = getArweaveTags(
-    organization.data,
-    organization.data.signature.did,
-  )
+  const tags = getArweaveTags(vote.data, organization.data.signature.did)
   Object.entries(tags).forEach(([key, value]) => {
     transaction.addTag(key, value)
   })

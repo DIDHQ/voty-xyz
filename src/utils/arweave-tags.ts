@@ -1,13 +1,10 @@
-import Arweave from 'arweave'
-
-import { OrganizationWithSignature, ProposalWithSignature } from '../schemas'
-import { isOrganization, isProposal } from './data-type'
-
-const arweave = Arweave.init({
-  host: 'arweave.net',
-  port: 443,
-  protocol: 'https',
-})
+import { DataType } from '../constants'
+import {
+  OrganizationWithSignature,
+  ProposalWithSignature,
+  VoteWithSignature,
+} from '../schemas'
+import { isOrganization, isProposal, isVote } from './data-type'
 
 export const defaultArweaveTags = {
   'content-type': 'application/json',
@@ -15,27 +12,32 @@ export const defaultArweaveTags = {
   'app-version': '0.0.0',
 }
 
-export async function getArweaveTags(
-  json: OrganizationWithSignature | ProposalWithSignature,
-): Promise<{ [key: string]: string }> {
+export function getArweaveTags(
+  json: OrganizationWithSignature | ProposalWithSignature | VoteWithSignature,
+  organization: string,
+): { [key: string]: string } {
   if (isOrganization(json)) {
     return {
       ...defaultArweaveTags,
-      'app-index-type': 'organization',
-      'app-index-did': json.signature.did,
+      'app-index-type': DataType.ORGANIZATION,
+      'app-index-organization': organization,
     }
   }
   if (isProposal(json)) {
-    const data = await arweave.transactions.getData(json.organization, {
-      decode: true,
-      string: true,
-    })
-    const organization = JSON.parse(data as string)
     return {
       ...defaultArweaveTags,
-      'app-index-type': 'proposal',
-      'app-index-organization': organization.signature.did,
+      'app-index-type': DataType.PROPOSAL,
+      'app-index-organization': organization,
       'app-index-workgroup': json.workgroup,
+    }
+  }
+  if (isVote(json)) {
+    return {
+      ...defaultArweaveTags,
+      'app-index-type': DataType.VOTE,
+      'app-index-organization': organization,
+      'app-index-workgroup': json.workgroup,
+      'app-index-proposal': json.proposal,
     }
   }
   throw new Error('cannot get arweave tags')
