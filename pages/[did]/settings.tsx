@@ -8,14 +8,14 @@ import useDidConfig from '../../hooks/use-did-config'
 import { organizationWithSignatureSchema } from '../../src/schemas'
 
 export default function OrganizationSettingsPage() {
-  const [query] = useRouterQuery<['organization']>()
-  const { data: config } = useDidConfig(query.organization)
+  const [query] = useRouterQuery<['did']>()
+  const { data: config } = useDidConfig(query.did)
   const { data: organization } = useArweaveData(
     organizationWithSignatureSchema,
     config?.organization,
   )
 
-  return organization && query.organization ? (
+  return organization && query.did ? (
     <div className="flex justify-center mt-5">
       <div className="flex flex-col w-full md:w-[48rem] px-10">
         <Breadcrumbs>
@@ -28,10 +28,7 @@ export default function OrganizationSettingsPage() {
           <Breadcrumbs.Item>Settings</Breadcrumbs.Item>
         </Breadcrumbs>
         <h1 className="text-3xl font-bold mb-8 mt-8">Settings</h1>
-        <OrganizationForm
-          did={query.organization}
-          organization={organization}
-        />
+        <OrganizationForm did={query.did} organization={organization} />
       </div>
     </div>
   ) : null

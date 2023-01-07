@@ -19,7 +19,7 @@ export default function OrganizationForm(props: {
   did: string
   organization: Organization
 }) {
-  const { control, register, handleSubmit, reset, formState } =
+  const { control, register, handleSubmit, reset, formState, setValue } =
     useForm<Organization>({
       resolver: zodResolver(organizationSchema),
     })
@@ -59,6 +59,9 @@ export default function OrganizationForm(props: {
       resolved.address === account.address,
     [resolved, account],
   )
+  useEffect(() => {
+    setValue('did', props.did)
+  }, [props.did, setValue])
 
   return (
     <div className="flex flex-col gap-5">

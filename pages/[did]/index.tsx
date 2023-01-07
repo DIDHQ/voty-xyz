@@ -20,8 +20,8 @@ import useArweaveList from '../../hooks/use-arweave-list'
 import { defaultArweaveTags } from '../../src/utils/arweave-tags'
 
 export default function OrganizationIndexPage() {
-  const [query] = useRouterQuery<['organization']>()
-  const { data: config } = useDidConfig(query.organization)
+  const [query] = useRouterQuery<['did']>()
+  const { data: config } = useDidConfig(query.did)
   const { data: organization } = useArweaveData(
     organizationWithSignatureSchema,
     config?.organization,
@@ -29,7 +29,7 @@ export default function OrganizationIndexPage() {
   const { data: proposals } = useArweaveList({
     ...defaultArweaveTags,
     'app-index-type': 'proposal',
-    'app-index-organization': query.organization,
+    'app-index-organization': query.did,
   })
 
   return organization ? (
@@ -50,16 +50,14 @@ export default function OrganizationIndexPage() {
       <div className="menu bg-base-100 w-56 rounded-box">
         <Menu>
           <Menu.Item>
-            <Link href={`/${query.organization}`} className="active">
+            <Link href={`/${query.did}`} className="active">
               <NetworkTree />
               Workgroups
             </Link>
           </Menu.Item>
           {organization.workgroups?.map((workgroup) => (
             <Menu.Item key={workgroup.id} className="ml-6">
-              <Link
-                href={`/${query.organization}/workgroup/${workgroup.profile.name}`}
-              >
+              <Link href={`/${query.did}/workgroup/${workgroup.profile.name}`}>
                 <AvatarInput
                   size={24}
                   name={workgroup.profile.name}
@@ -71,19 +69,19 @@ export default function OrganizationIndexPage() {
             </Menu.Item>
           ))}
           <Menu.Item>
-            <Link href={`/delegate/${query.organization}`}>
+            <Link href={`/delegate/${query.did}`}>
               <UserToUserTransmission />
               Delegate
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link href={`/${query.organization}/about`}>
+            <Link href={`/${query.did}/about`}>
               <Info />
               About
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link href={`/${query.organization}/settings`}>
+            <Link href={`/${query.did}/settings`}>
               <SettingOne />
               Settings
             </Link>
@@ -123,9 +121,7 @@ export default function OrganizationIndexPage() {
       <ul>
         {proposals?.map((proposal) => (
           <li key={proposal}>
-            <Link href={`/${query.organization}/proposal/${proposal}`}>
-              {proposal}
-            </Link>
+            <Link href={`/${query.did}/proposal/${proposal}`}>{proposal}</Link>
           </li>
         ))}
       </ul>

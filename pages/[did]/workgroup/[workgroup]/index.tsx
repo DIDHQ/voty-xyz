@@ -12,8 +12,8 @@ import useArweaveList from '../../../../hooks/use-arweave-list'
 import { defaultArweaveTags } from '../../../../src/utils/arweave-tags'
 
 export default function WorkgroupPage() {
-  const [query] = useRouterQuery<['organization', 'workgroup']>()
-  const { data: config } = useDidConfig(query.organization)
+  const [query] = useRouterQuery<['did', 'workgroup']>()
+  const { data: config } = useDidConfig(query.did)
   const { data: organization } = useArweaveData(
     organizationWithSignatureSchema,
     config?.organization,
@@ -28,7 +28,7 @@ export default function WorkgroupPage() {
   const { data: proposals } = useArweaveList({
     ...defaultArweaveTags,
     'app-index-type': 'proposal',
-    'app-index-organization': query.organization,
+    'app-index-organization': query.did,
     'app-index-workgroup': workgroup?.id,
   })
 
@@ -40,9 +40,7 @@ export default function WorkgroupPage() {
         </Breadcrumbs.Item>
         {organization ? (
           <Breadcrumbs.Item>
-            <Link href={`/${query.organization}`}>
-              {organization.profile.name}
-            </Link>
+            <Link href={`/${query.did}`}>{organization.profile.name}</Link>
           </Breadcrumbs.Item>
         ) : (
           <></>
@@ -66,7 +64,7 @@ export default function WorkgroupPage() {
             <Menu>
               <Menu.Item>
                 <Link
-                  href={`/${query.organization}/workgroup/${query.workgroup}/create`}
+                  href={`/${query.did}/workgroup/${query.workgroup}/create`}
                 >
                   <HoldInterface />
                   New proposal
@@ -79,9 +77,7 @@ export default function WorkgroupPage() {
       <ul>
         {proposals?.map((proposal) => (
           <li key={proposal}>
-            <Link href={`/${query.organization}/proposal/${proposal}`}>
-              {proposal}
-            </Link>
+            <Link href={`/${query.did}/proposal/${proposal}`}>{proposal}</Link>
           </li>
         ))}
       </ul>

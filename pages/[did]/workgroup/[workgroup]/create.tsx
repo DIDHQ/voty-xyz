@@ -29,8 +29,8 @@ export default function CreateProposalPage() {
     useForm<Proposal>({
       resolver: zodResolver(proposalSchema),
     })
-  const [query] = useRouterQuery<['organization', 'workgroup']>()
-  const { data: config } = useDidConfig(query.organization)
+  const [query] = useRouterQuery<['did', 'workgroup']>()
+  const { data: config } = useDidConfig(query.did)
   const { data: organization } = useArweaveData(
     organizationWithSignatureSchema,
     config?.organization,
@@ -79,6 +79,12 @@ export default function CreateProposalPage() {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
+  useEffect(() => {
+    if (query.did) {
+      setValue('did', query.did)
+    }
+  }, [query.did, setValue])
+
   const [typesCount, setTypesCount] = useState(0)
   const [did, setDid] = useState('')
   const { account } = useWallet()

@@ -1,11 +1,11 @@
 import Arweave from 'arweave'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { resolveDid } from '../../src/did'
-import { organizationWithSignatureSchema } from '../../src/schemas'
-import { verifySignature, wrapJsonMessage } from '../../src/signature'
-import { getCurrentSnapshot } from '../../src/snapshot'
-import { getArweaveTags } from '../../src/utils/arweave-tags'
+import { resolveDid } from '../../../src/did'
+import { organizationWithSignatureSchema } from '../../../src/schemas'
+import { verifySignature, wrapJsonMessage } from '../../../src/signature'
+import { getCurrentSnapshot } from '../../../src/snapshot'
+import { getArweaveTags } from '../../../src/utils/arweave-tags'
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -20,14 +20,14 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   // verify schema
-  const parsed = organizationWithSignatureSchema.safeParse(req.body)
-  if (!parsed.success) {
-    res.status(400).send(`schema error: ${parsed.error.message}`)
+  const organization = organizationWithSignatureSchema.safeParse(req.body)
+  if (!organization.success) {
+    res.status(400).send(`schema error: ${organization.error.message}`)
     return
   }
 
   // verify signature
-  const { signature, ...data } = parsed.data
+  const { signature, ...data } = organization.data
   const snapshot = BigInt(signature.snapshot)
   const { coinType, address } = await resolveDid(signature.did, {
     [signature.coin_type]: snapshot,
@@ -54,9 +54,9 @@ export default async function handler(
   // TODO: extra verifies
 
   const transaction = await arweave.createTransaction({
-    data: JSON.stringify(parsed.data),
+    data: JSON.stringify(organization.data),
   })
-  const tags = await getArweaveTags(parsed.data)
+  const tags = getArweaveTags(organization.data)
   Object.entries(tags).forEach(([key, value]) => {
     transaction.addTag(key, value)
   })
