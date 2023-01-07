@@ -9,9 +9,8 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "typechain": "typechain --target=ethers-v5 abis/*",
-    "graphql": "graphql-codegen --config graphql.config.yaml && prettier --config .prettierrc.json --write src/generated/*",
     "prisma": "prisma generate",
-    "postinstall": "yarn run typechain && yarn run graphql && yarn run prisma"
+    "postinstall": "yarn run typechain && yarn run prisma"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.0.7",
@@ -27,8 +26,6 @@
     "daisyui": "^2.46.1",
     "dotbit": "^0.4.14",
     "ethers": "^5.7.2",
-    "graphql": "^16.6.0",
-    "graphql-request": "^5.1.0",
     "immer": "^9.0.17",
     "jotai": "^1.12.1",
     "lodash-es": "^4.17.21",
@@ -43,11 +40,6 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.16.3",
-    "@graphql-codegen/introspection": "^2.2.3",
-    "@graphql-codegen/typescript": "^2.8.7",
-    "@graphql-codegen/typescript-graphql-request": "^4.5.8",
-    "@graphql-codegen/typescript-operations": "^2.5.12",
     "@typechain/ethers-v5": "^10.2.0",
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^18.11.18",
