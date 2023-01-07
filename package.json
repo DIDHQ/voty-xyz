@@ -10,7 +10,8 @@
     "format": "prettier --write .",
     "typechain": "typechain --target=ethers-v5 abis/*",
     "graphql": "graphql-codegen --config graphql.config.yaml && prettier --config .prettierrc.json --write src/generated/*",
-    "postinstall": "yarn run typechain && yarn run graphql"
+    "prisma": "prisma generate",
+    "postinstall": "yarn run typechain && yarn run graphql && yarn run prisma"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.0.7",
@@ -18,6 +19,7 @@
     "@hookform/resolvers": "^2.9.10",
     "@icon-park/react": "^1.4.2",
     "@nervosnetwork/ckb-sdk-core": "^0.103.1",
+    "@prisma/client": "^4.8.1",
     "@rainbow-me/rainbowkit": "^0.8.1",
     "arweave": "^1.11.8",
     "boring-avatars": "^1.7.0",
@@ -57,6 +59,7 @@
     "next": "^13.1.1",
     "postcss": "^8.4.20",
     "prettier": "^2.8.1",
+    "prisma": "^4.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.2.4",
