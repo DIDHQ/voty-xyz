@@ -21,6 +21,7 @@ import {
 import useRouterQuery from '../../hooks/use-router-query'
 import { useList } from '../../hooks/use-api'
 import { DataType } from '../../src/constants'
+import ArweaveLink from '../../components/arweave-link'
 
 export default function OrganizationIndexPage() {
   const [query] = useRouterQuery<['did']>()
@@ -48,6 +49,7 @@ export default function OrganizationIndexPage() {
         value={organization.profile.avatar}
         disabled
       />
+      {config?.organization ? <ArweaveLink id={config.organization} /> : null}
       <h1>{organization.profile.name}</h1>
       <div className="menu bg-base-100 w-56 rounded-box">
         <Menu>

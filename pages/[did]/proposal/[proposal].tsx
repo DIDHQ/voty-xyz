@@ -3,6 +3,7 @@ import { ReactNode, useEffect, useId, useMemo, useState } from 'react'
 import { Button } from 'react-daisyui'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
+import ArweaveLink from '../../../components/arweave-link'
 
 import DidSelect from '../../../components/did-select'
 import FormItem from '../../../components/form-item'
@@ -77,8 +78,9 @@ export default function ProposalPage() {
     }
   }, [resetField, setValue, votingPower])
 
-  return proposal ? (
+  return query.proposal && proposal ? (
     <>
+      <ArweaveLink id={query.proposal} />
       <h1>title: {proposal.title}</h1>
       <p>body: {proposal.body}</p>
       <FormItem label="Choice">
@@ -128,7 +130,8 @@ export default function ProposalPage() {
       <ul>
         {votes?.map((vote, index) => (
           <li key={vote.id + index}>
-            {vote.signature.did}: {vote.choice.toString()}
+            {vote.signature.did}: {vote.choice.toString()}{' '}
+            <ArweaveLink id={vote.id} />
           </li>
         ))}
       </ul>
