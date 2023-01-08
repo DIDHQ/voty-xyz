@@ -24,9 +24,6 @@ export default async function handler(
         ),
       })),
     })
-  } else if (type === 'workgroup') {
-    const data = await database.workgroup.findMany({ where })
-    res.json({ data })
   } else if (type === DataType.PROPOSAL) {
     const proposals = await database.proposal.findMany({ where })
     res.json({

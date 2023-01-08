@@ -4,7 +4,7 @@ import { DataType } from '../src/constants'
 import { fetchJson } from '../src/utils/fetcher'
 
 export function useList<T>(
-  type: DataType | 'workgroup',
+  type: DataType,
   where: [string, string | undefined][] = [],
 ) {
   return useSWR(['list', type], async () => {

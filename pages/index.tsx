@@ -3,10 +3,12 @@ import { Button } from 'react-daisyui'
 
 import { useList } from '../hooks/use-api'
 import { DataType } from '../src/constants'
-import { Organization } from '../src/schemas'
+import { OrganizationWithSignature } from '../src/schemas'
 
 export default function IndexPage() {
-  const { data: organizations } = useList<Organization>(DataType.ORGANIZATION)
+  const { data: organizations } = useList<OrganizationWithSignature>(
+    DataType.ORGANIZATION,
+  )
 
   return (
     <>

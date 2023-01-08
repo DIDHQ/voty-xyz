@@ -4,16 +4,19 @@ import { Button } from 'react-daisyui'
 import { Controller, useForm } from 'react-hook-form'
 
 import DidSelect from '../../../components/did-select'
+import { useList } from '../../../hooks/use-api'
 import useArweaveData from '../../../hooks/use-arweave-data'
 import useArweaveUpload from '../../../hooks/use-arweave-upload'
 import useAsync from '../../../hooks/use-async'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
+import { DataType } from '../../../src/constants'
 import {
   proposalWithSignatureSchema,
   Vote,
   voteSchema,
+  VoteWithSignature,
 } from '../../../src/schemas'
 
 export default function ProposalPage() {
@@ -37,6 +40,9 @@ export default function ProposalPage() {
       setValue('proposal', query.proposal)
     }
   }, [proposal, query.proposal, setValue])
+  const { data: votes } = useList<VoteWithSignature>(DataType.VOTE, [
+    ['proposal', query.proposal],
+  ])
 
   return proposal ? (
     <>
@@ -82,6 +88,13 @@ export default function ProposalPage() {
       >
         Upload
       </Button>
+      <ul>
+        {votes?.map((vote, index) => (
+          <li key={vote.id + index}>
+            {vote.signature.did}: {vote.choice.toString()}
+          </li>
+        ))}
+      </ul>
     </>
   ) : null
 }
