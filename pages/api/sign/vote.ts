@@ -126,17 +126,9 @@ export default async function handler(
   await arweave.transactions.sign(transaction, jwk)
   const uploader = await arweave.transactions.getUploader(transaction)
 
-  await database.vote.upsert({
-    where: { id: transaction.id },
-    create: {
+  await database.vote.create({
+    data: {
       id: transaction.id,
-      did: vote.did,
-      organization: vote.organization,
-      workgroup: vote.workgroup,
-      proposal: vote.proposal,
-      data,
-    },
-    update: {
       did: vote.did,
       organization: vote.organization,
       workgroup: vote.workgroup,
