@@ -59,7 +59,7 @@ export default async function handler(
     return
   }
 
-  const organization = organizationWithSignatureSchema.safeParse(
+  const organizationWithSignature = organizationWithSignatureSchema.safeParse(
     JSON.parse(
       (await arweave.transactions.getData(proposal.organization, {
         decode: true,
@@ -67,14 +67,16 @@ export default async function handler(
       })) as string,
     ),
   )
-  if (!organization.success) {
+  if (!organizationWithSignature.success) {
     res
       .status(400)
-      .send(`organization schema error: ${organization.error.message}`)
+      .send(
+        `organization schema error: ${organizationWithSignature.error.message}`,
+      )
     return
   }
 
-  const workgroup = organization.data.workgroups?.find(
+  const workgroup = organizationWithSignature.data.workgroups?.find(
     ({ id }) => id === proposal.workgroup,
   )
   if (!workgroup) {

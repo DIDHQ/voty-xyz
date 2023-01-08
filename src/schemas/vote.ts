@@ -8,6 +8,7 @@ export const voteSchema = z.object({
   workgroup: z.string().min(1),
   proposal: z.string().min(1),
   choice: z.union([z.number(), z.array(z.number())]),
+  power: z.number(),
 })
 export type Vote = z.infer<typeof voteSchema>
 
