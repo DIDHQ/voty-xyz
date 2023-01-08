@@ -32,7 +32,7 @@ export default function WorkgroupPage() {
     DataType.PROPOSAL,
     [
       ['did', query.did],
-      ['workgroup', query.workgroup],
+      ['workgroup', workgroup?.id],
     ],
   )
 

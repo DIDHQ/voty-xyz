@@ -85,11 +85,11 @@ export default async function handler(
   }
 
   if (
-    !checkProposerLiberty(
+    !(await checkProposerLiberty(
       workgroup.proposer_liberty,
       proposalWithSignature.data.signature.did as DID,
       mapSnapshots(proposalWithSignature.data.snapshots),
-    )
+    ))
   ) {
     res.status(400).send('does not have proposer liberty')
     return
