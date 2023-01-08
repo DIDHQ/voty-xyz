@@ -34,7 +34,7 @@ export default function NavBar() {
       </Link>
       <ConnectButtonCustom>
         {({ account, openConnectModal }) => (
-          <button onClick={account ? () => disconnect() : openConnectModal}>
+          <button onClick={account ? disconnect : openConnectModal}>
             {account ? `${account.displayName}` : 'Connect Wallet'}
           </button>
         )}
