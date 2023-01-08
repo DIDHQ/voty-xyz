@@ -3,12 +3,14 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
+import { checkProposerLiberty } from '../../../src/functions/proposer-liberty'
 import {
   organizationWithSignatureSchema,
   proposalWithSignatureSchema,
 } from '../../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../../src/signature'
-import { getCurrentSnapshot } from '../../../src/snapshot'
+import { mapSnapshots, getCurrentSnapshot } from '../../../src/snapshot'
+import { DID } from '../../../src/types'
 import { getArweaveTags } from '../../../src/utils/arweave-tags'
 
 const arweave = Arweave.init({
@@ -57,7 +59,7 @@ export default async function handler(
     return
   }
 
-  const organization = organizationWithSignatureSchema.safeParse(
+  const organizationWithSignature = organizationWithSignatureSchema.safeParse(
     JSON.parse(
       (await arweave.transactions.getData(proposal.organization, {
         decode: true,
@@ -65,10 +67,31 @@ export default async function handler(
       })) as string,
     ),
   )
-  if (!organization.success) {
+  if (!organizationWithSignature.success) {
     res
       .status(400)
-      .send(`organization schema error: ${organization.error.message}`)
+      .send(
+        `organization schema error: ${organizationWithSignature.error.message}`,
+      )
+    return
+  }
+
+  const workgroup = organizationWithSignature.data.workgroups?.find(
+    ({ id }) => id === proposal.workgroup,
+  )
+  if (!workgroup) {
+    res.status(400).send('workgroup not found')
+    return
+  }
+
+  if (
+    !(await checkProposerLiberty(
+      workgroup.proposer_liberty,
+      proposalWithSignature.data.signature.did as DID,
+      mapSnapshots(proposalWithSignature.data.snapshots),
+    ))
+  ) {
+    res.status(400).send('does not have proposer liberty')
     return
   }
 

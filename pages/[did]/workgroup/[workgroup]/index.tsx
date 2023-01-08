@@ -9,7 +9,7 @@ import useArweaveData from '../../../../hooks/use-arweave-data'
 import useDidConfig from '../../../../hooks/use-did-config'
 import {
   organizationWithSignatureSchema,
-  Proposal,
+  ProposalWithSignature,
 } from '../../../../src/schemas'
 import { useList } from '../../../../hooks/use-api'
 import { DataType } from '../../../../src/constants'
@@ -28,10 +28,13 @@ export default function WorkgroupPage() {
       ),
     [organization?.workgroups, query.workgroup],
   )
-  const { data: proposals } = useList<Proposal>(DataType.PROPOSAL, [
-    ['did', query.did],
-    ['workgroup', query.workgroup],
-  ])
+  const { data: proposals } = useList<ProposalWithSignature>(
+    DataType.PROPOSAL,
+    [
+      ['did', query.did],
+      ['workgroup', workgroup?.id],
+    ],
+  )
 
   return (
     <>

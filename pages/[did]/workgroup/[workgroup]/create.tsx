@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Add } from '@icon-park/react'
 import pMap from 'p-map'
 import { useEffect, useMemo, useState } from 'react'
 import { Button, Input, Select, Textarea } from 'react-daisyui'
@@ -85,7 +84,6 @@ export default function CreateProposalPage() {
     }
   }, [query.did, setValue])
 
-  const [typesCount, setTypesCount] = useState(0)
   const [did, setDid] = useState('')
   const { account } = useWallet()
   const handleSignJson = useAsync(useSignJson(did))
@@ -111,24 +109,18 @@ export default function CreateProposalPage() {
           ))}
         </Select>
       </FormItem>
-      <Controller
-        control={control}
-        name="choices"
-        render={({ field: { value, onChange } }) => (
-          <ChoiceList
-            disabled={false}
-            value={value || ['']}
-            onChange={onChange}
-          />
-        )}
-      />
       <FormItem label="Choices" error={formState.errors.choices?.message}>
-        {Array.from({ length: typesCount })?.map((_, index) => (
-          <Input key={index} {...register(`choices.${index}`)} />
-        ))}
-        <Button onClick={() => setTypesCount((old) => old + 1)}>
-          <Add />
-        </Button>
+        <Controller
+          control={control}
+          name="choices"
+          render={({ field: { value, onChange } }) => (
+            <ChoiceList
+              disabled={false}
+              value={value || ['']}
+              onChange={onChange}
+            />
+          )}
+        />
       </FormItem>
       <DidSelect account={account} value={did} onChange={setDid} />
       {handleSignJson.error ? <p>{handleSignJson.error.message}</p> : null}

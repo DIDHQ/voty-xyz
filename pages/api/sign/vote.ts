@@ -3,13 +3,15 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
+import { calculateVotingPower } from '../../../src/functions/voting-power'
 import {
   organizationWithSignatureSchema,
   proposalWithSignatureSchema,
   voteWithSignatureSchema,
 } from '../../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../../src/signature'
-import { getCurrentSnapshot } from '../../../src/snapshot'
+import { getCurrentSnapshot, mapSnapshots } from '../../../src/snapshot'
+import { DID } from '../../../src/types'
 import { getArweaveTags } from '../../../src/utils/arweave-tags'
 
 const arweave = Arweave.init({
@@ -58,7 +60,7 @@ export default async function handler(
     return
   }
 
-  const proposal = proposalWithSignatureSchema.safeParse(
+  const proposalWithSignature = proposalWithSignatureSchema.safeParse(
     JSON.parse(
       (await arweave.transactions.getData(vote.proposal, {
         decode: true,
@@ -66,23 +68,48 @@ export default async function handler(
       })) as string,
     ),
   )
-  if (!proposal.success) {
-    res.status(400).send(`proposal schema error: ${proposal.error.message}`)
+  if (!proposalWithSignature.success) {
+    res
+      .status(400)
+      .send(`proposal schema error: ${proposalWithSignature.error.message}`)
     return
   }
 
-  const organization = organizationWithSignatureSchema.safeParse(
+  const organizationWithSignature = organizationWithSignatureSchema.safeParse(
     JSON.parse(
-      (await arweave.transactions.getData(proposal.data.organization, {
-        decode: true,
-        string: true,
-      })) as string,
+      (await arweave.transactions.getData(
+        proposalWithSignature.data.organization,
+        {
+          decode: true,
+          string: true,
+        },
+      )) as string,
     ),
   )
-  if (!organization.success) {
+  if (!organizationWithSignature.success) {
     res
       .status(400)
-      .send(`organization schema error: ${organization.error.message}`)
+      .send(
+        `organization schema error: ${organizationWithSignature.error.message}`,
+      )
+    return
+  }
+
+  const workgroup = organizationWithSignature.data.workgroups?.find(
+    ({ id }) => id === proposalWithSignature.data.workgroup,
+  )
+  if (!workgroup) {
+    res.status(400).send('workgroup not found')
+    return
+  }
+
+  const votingPower = await calculateVotingPower(
+    workgroup.voting_power,
+    voteWithSignature.data.signature.did as DID,
+    mapSnapshots(proposalWithSignature.data.snapshots),
+  )
+  if (votingPower !== vote.power) {
+    res.status(400).send('does not have proposer liberty')
     return
   }
 
@@ -99,17 +126,9 @@ export default async function handler(
   await arweave.transactions.sign(transaction, jwk)
   const uploader = await arweave.transactions.getUploader(transaction)
 
-  await database.vote.upsert({
-    where: { id: transaction.id },
-    create: {
+  await database.vote.create({
+    data: {
       id: transaction.id,
-      did: vote.did,
-      organization: vote.organization,
-      workgroup: vote.workgroup,
-      proposal: vote.proposal,
-      data,
-    },
-    update: {
       did: vote.did,
       organization: vote.organization,
       workgroup: vote.workgroup,
