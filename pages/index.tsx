@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Button } from 'react-daisyui'
 
 import { useList } from '../hooks/use-api'
 import { DataType } from '../src/constants'
@@ -13,7 +12,7 @@ export default function IndexPage() {
   return (
     <>
       <Link href="/create">
-        <Button color="primary">Create an Organization</Button>
+        <button>Create an Organization</button>
       </Link>
       <ul>
         {organizations?.map((organization) => (

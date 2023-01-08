@@ -1,5 +1,4 @@
 import { ChangeEvent, useCallback, useMemo } from 'react'
-import { Input } from 'react-daisyui'
 
 export default function NumericInput(props: {
   value: number
@@ -18,5 +17,5 @@ export default function NumericInput(props: {
     [onChange],
   )
 
-  return <Input type="number" value={value} onChange={handleChange} />
+  return <input type="number" value={value} onChange={handleChange} />
 }

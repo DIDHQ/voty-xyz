@@ -3,7 +3,6 @@
 import { Delete, Edit } from '@icon-park/react'
 import Avatar from 'boring-avatars'
 import React, { ChangeEvent, useCallback, useRef } from 'react'
-import { Button } from 'react-daisyui'
 
 export default function AvatarFileInput(props: {
   size: number | string
@@ -91,14 +90,12 @@ export default function AvatarFileInput(props: {
           onChange={handleChange}
         />
         {props.disabled ? null : (
-          <Button
+          <button
             className="absolute right-0 bottom-0 hover:brightness-200 z-20"
-            size="xs"
-            shape="circle"
             onClick={props.value ? handleDelete : handleEdit}
           >
             {props.value ? <Delete size={10} /> : <Edit size={10} />}
-          </Button>
+          </button>
         )}
       </span>
     </>

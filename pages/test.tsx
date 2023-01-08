@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import { Input, Table, Textarea } from 'react-daisyui'
 import useSWR from 'swr'
 
 import DidSelect from '../components/did-select'
@@ -94,56 +93,56 @@ export default function TestPage() {
 
   return (
     <>
-      <Table border={1} style={{ borderCollapse: 'collapse' }}>
-        <Table.Head>
-          <span />
-          <span>Proposer Liberty</span>
-          <span>Voting Power</span>
-        </Table.Head>
-        <Table.Body>
-          <Table.Row>
-            <span>input data</span>
-            <span>
-              <Textarea
+      <table border={1} style={{ borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th />
+            <th>Proposer Liberty</th>
+            <th>Voting Power</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>input data</td>
+            <td>
+              <textarea
                 value={proposerLiberty}
                 onChange={(e) => setProposerLiberty(e.target.value)}
                 style={{ height: 500, width: 400 }}
               />
-            </span>
-            <span>
-              <Textarea
+            </td>
+            <td>
+              <textarea
                 value={votingPower}
                 onChange={(e) => setVotingPower(e.target.value)}
                 style={{ height: 500, width: 400 }}
               />
-            </span>
-          </Table.Row>
-          <Table.Row>
-            <span>result</span>
-            <span>
-              {checked === true ? '✅' : checked === false ? '❌' : null}
-            </span>
-            <span>{calculated}</span>
-          </Table.Row>
-          <Table.Row>
-            <span>error</span>
-            <span>{checkedError?.message}</span>
-            <span>{calculatedError?.message}</span>
-          </Table.Row>
-          <Table.Row>
-            <span>loading</span>
-            <span>{isCheckedValidating ? 'loading' : 'idle'}</span>
-            <span>{isCalculatedValidating ? 'loading' : 'idle'}</span>
-          </Table.Row>
-          <Table.Row>
-            <span>required coin types</span>
-            <span>{JSON.stringify(coinTypesOfProposerLiberty)}</span>
-            <span>{JSON.stringify(coinTypesOfVotingPower)}</span>
-          </Table.Row>
-        </Table.Body>
-      </Table>
+            </td>
+          </tr>
+          <tr>
+            <td>result</td>
+            <td>{checked === true ? '✅' : checked === false ? '❌' : null}</td>
+            <td>{calculated}</td>
+          </tr>
+          <tr>
+            <td>error</td>
+            <td>{checkedError?.message}</td>
+            <td>{calculatedError?.message}</td>
+          </tr>
+          <tr>
+            <td>loading</td>
+            <td>{isCheckedValidating ? 'loading' : 'idle'}</td>
+            <td>{isCalculatedValidating ? 'loading' : 'idle'}</td>
+          </tr>
+          <tr>
+            <td>required coin types</td>
+            <td>{JSON.stringify(coinTypesOfProposerLiberty)}</td>
+            <td>{JSON.stringify(coinTypesOfVotingPower)}</td>
+          </tr>
+        </tbody>
+      </table>
       <FormItem label="test DID">
-        <Input value={did} onChange={(e) => setDid(e.target.value)} />
+        <input value={did} onChange={(e) => setDid(e.target.value)} />
         <DidSelect account={account} value={did} onChange={setDid} />
       </FormItem>
     </>

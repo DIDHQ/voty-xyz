@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
-import { Button, Input } from 'react-daisyui'
 import { Controller, useForm } from 'react-hook-form'
 
 import { Workgroup, workgroupSchema } from '../src/schemas'
@@ -42,10 +41,10 @@ export default function WorkgroupForm(props: {
         />
       </FormItem>
       <FormItem label="name" error={formState.errors.profile?.name?.message}>
-        <Input {...register('profile.name')} />
+        <input {...register('profile.name')} />
       </FormItem>
       <FormItem label="about" error={formState.errors.profile?.about?.message}>
-        <Input {...register('profile.about')} />
+        <input {...register('profile.about')} />
       </FormItem>
       <FormItem
         label="proposer liberty"
@@ -99,14 +98,14 @@ export default function WorkgroupForm(props: {
         label="approval condition description"
         error={formState.errors.rules?.approval_condition_description?.message}
       >
-        <Input {...register('rules.approval_condition_description')} />
+        <input {...register('rules.approval_condition_description')} />
       </FormItem>
-      <Button
+      <button
         disabled={!formState.isDirty || !formState.isValid}
         onClick={handleSubmit(props.onChange)}
       >
         ok
-      </Button>
+      </button>
     </div>
   )
 }

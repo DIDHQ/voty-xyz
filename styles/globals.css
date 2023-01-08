@@ -8,10 +8,3 @@
 * {
   box-sizing: border-box;
 }
-
-/** daisyUI uses uppercase for text on all buttons by default, we prefer overriding that */
-@layer components {
-  .btn {
-    text-transform: none;
-  }
-}

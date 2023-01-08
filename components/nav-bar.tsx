@@ -1,4 +1,3 @@
-import { Navbar, Dropdown, Button } from 'react-daisyui'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Logout, Setting } from '@icon-park/react'
@@ -20,58 +19,46 @@ export default function NavBar() {
   const router = useRouter()
 
   return (
-    <Navbar className="shadow-md px-4">
+    <div className="shadow-md px-4">
       <div className="flex-1">
-        <Link href="/">
-          <Button className="text-xl normal-case no-underline" variant="link">
-            Voty
-          </Button>
-        </Link>
+        <Link href="/">Voty</Link>
       </div>
       <div className="flex-none gap-2">
         <ConnectButtonCustom>
           {({ account, openConnectModal }) => (
             <>
-              <Dropdown vertical="end">
-                <Button
-                  color={account ? 'ghost' : 'primary'}
-                  startIcon={
-                    account ? (
-                      <AvatarInput
-                        size={32}
-                        name={account.displayName}
-                        value={account.ensAvatar}
-                        disabled
-                      />
-                    ) : null
-                  }
-                  onClick={account ? undefined : openConnectModal}
-                >
+              <div>
+                {account ? (
+                  <AvatarInput
+                    size={32}
+                    name={account.displayName}
+                    value={account.ensAvatar}
+                    disabled
+                  />
+                ) : null}
+                <button onClick={account ? undefined : openConnectModal}>
                   {account ? `${account.displayName}` : 'Connect Wallet'}
-                </Button>
-                <Dropdown.Menu className="w-52">
-                  <Dropdown.Item
+                </button>
+
+                <ul className="w-52">
+                  <li
                     onClick={() => {
                       router.push('/settings')
                     }}
                   >
                     <Setting />
                     Settings
-                  </Dropdown.Item>
-                  {/* <Dropdown.Item>
-                    <User />
-                    View Profile
-                  </Dropdown.Item> */}
-                  <Dropdown.Item onClick={() => disconnect()}>
+                  </li>
+                  <li onClick={() => disconnect()}>
                     <Logout />
                     Log out
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                  </li>
+                </ul>
+              </div>
             </>
           )}
         </ConnectButtonCustom>
       </div>
-    </Navbar>
+    </div>
   )
 }

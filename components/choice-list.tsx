@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { DndContext, DragEndEvent, UniqueIdentifier } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Input, Button, InputGroup } from 'react-daisyui'
 import { Drag, Minus, Plus } from '@icon-park/react'
 import clsx from 'clsx'
 import produce from 'immer'
@@ -63,9 +62,8 @@ function ChoiceListItem(props: {
         transition,
       }}
     >
-      <InputGroup>
-        <Button
-          animation={false}
+      <div>
+        <button
           className={clsx({
             'cursor-grab': true,
             'cursor-not-allowed': disabled,
@@ -76,37 +74,24 @@ function ChoiceListItem(props: {
           ref={setActivatorNodeRef}
         >
           <Drag className="p-0 bg-transparent" />
-        </Button>
-        <Input
+        </button>
+        <input
           className="w-full placeholder:opacity-50"
           disabled={disabled}
           value={text}
           onChange={handleChange}
           onBlur={handleBlur}
         />
-      </InputGroup>
+      </div>
       {onDelete && (
-        <Button
-          disabled={disabled}
-          shape="circle"
-          color="ghost"
-          variant="outline"
-          className="ml-3"
-          onClick={handleDelete}
-        >
+        <button disabled={disabled} className="ml-3" onClick={handleDelete}>
           <Minus />
-        </Button>
+        </button>
       )}
       {onAdd && (
-        <Button
-          disabled={disabled}
-          shape="circle"
-          color="success"
-          className="ml-3"
-          onClick={handleAdd}
-        >
+        <button disabled={disabled} className="ml-3" onClick={handleAdd}>
           <Plus />
-        </Button>
+        </button>
       )}
     </div>
   )

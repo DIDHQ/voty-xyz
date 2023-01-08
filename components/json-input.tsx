@@ -1,5 +1,4 @@
 import { CSSProperties, useEffect, useState } from 'react'
-import { Textarea } from 'react-daisyui'
 
 export default function JsonInput<T>(props: {
   value: T
@@ -14,7 +13,7 @@ export default function JsonInput<T>(props: {
 
   return (
     <>
-      <Textarea
+      <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         onBlur={() => {
