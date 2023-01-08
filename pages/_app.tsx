@@ -5,9 +5,11 @@ import { mainnet, polygon, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import { IconProvider, DEFAULT_ICON_CONFIGS } from '@icon-park/react'
 import Head from 'next/head'
+import { injectGlobal } from '@emotion/css'
+import '@icon-park/react/styles/index.css'
+import 'boltcss/bolt.css'
 
 import Layout from '../components/layout'
-import '../styles/globals.css'
 
 const { chains, provider } = configureChains(
   [mainnet, polygon, bsc],
@@ -24,6 +26,18 @@ const wagmiClient = createClient({
   connectors,
   provider,
 })
+
+injectGlobal`
+* {
+  box-sizing: border-box;
+}
+
+body {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+`
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
