@@ -18,7 +18,9 @@ export default function IndexPage() {
       <ul>
         {organizations?.map((organization) => (
           <li key={organization.did}>
-            <Link href={`/${organization.did}`}>{organization.did}</Link>
+            <Link href={`/${organization.did}`}>
+              {organization.profile.name}
+            </Link>
           </li>
         ))}
       </ul>
