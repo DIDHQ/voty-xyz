@@ -8,12 +8,13 @@ import { Organization, organizationSchema } from '../src/schemas'
 import AvatarInput from './avatar-input'
 import WorkgroupForm from './workgroup-form'
 import useCurrentSnapshot from '../hooks/use-current-snapshot'
-import FormItem from './form-item'
+import FormItem from './basic/form-item'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignJson from '../hooks/use-sign-json'
 import useArweaveUpload from '../hooks/use-arweave-upload'
 import useWallet from '../hooks/use-wallet'
-import InputWithValidationError from './basic/input-with-validation-error'
+import TextInput from './basic/text-input'
+import Textarea from './basic/textarea'
 
 export default function OrganizationForm(props: {
   did: string
@@ -83,30 +84,36 @@ export default function OrganizationForm(props: {
           )}
         />
       </FormItem>
-      <InputWithValidationError
-        type="text"
-        label="Name"
-        error={formState.errors.profile?.name?.message}
-        {...register('profile.name')}
-      />
-      <InputWithValidationError
-        type="text"
-        label="About"
-        error={formState.errors.profile?.about?.message}
-        {...register('profile.about')}
-      />
-      <InputWithValidationError
-        type="text"
+      <FormItem label="Name" error={formState.errors.profile?.name?.message}>
+        <TextInput
+          error={!!formState.errors.profile?.name?.message}
+          {...register('profile.name')}
+        />
+      </FormItem>
+      <FormItem label="About" error={formState.errors.profile?.about?.message}>
+        <Textarea
+          error={!!formState.errors.profile?.about?.message}
+          {...register('profile.about')}
+        />
+      </FormItem>
+      <FormItem
         label="Website"
         error={formState.errors.profile?.website?.message}
-        {...register('profile.website')}
-      />
-      <InputWithValidationError
-        type="text"
+      >
+        <TextInput
+          error={!!formState.errors.profile?.website?.message}
+          {...register('profile.website')}
+        />
+      </FormItem>
+      <FormItem
         label="Terms of service"
         error={formState.errors.profile?.tos?.message}
-        {...register('profile.tos')}
-      />
+      >
+        <TextInput
+          error={!!formState.errors.profile?.tos?.message}
+          {...register('profile.tos')}
+        />
+      </FormItem>
       <FormItem className="flex w-full" label="Communities">
         {communities.map((field, index) => (
           <div className="flex gap-5 mb-3" key={field.id}>

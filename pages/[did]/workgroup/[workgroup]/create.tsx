@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 
 import DidSelect from '../../../../components/did-select'
-import FormItem from '../../../../components/form-item'
+import FormItem from '../../../../components/basic/form-item'
 import useRouterQuery from '../../../../hooks/use-router-query'
 import useArweaveData from '../../../../hooks/use-arweave-data'
 import useArweaveUpload from '../../../../hooks/use-arweave-upload'

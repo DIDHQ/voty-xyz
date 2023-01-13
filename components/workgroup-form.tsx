@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { Workgroup, workgroupSchema } from '../src/schemas'
 import AvatarInput from './avatar-input'
-import FormItem from './form-item'
+import FormItem from './basic/form-item'
 import JsonInput from './json-input'
 import NumericInput from './numeric-input'
 

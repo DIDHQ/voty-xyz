@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 
-import FormItem from '../components/form-item'
+import FormItem from '../components/basic/form-item'
 import DidSelect from '../components/did-select'
 import useRouterQuery from '../hooks/use-router-query'
 import useWallet from '../hooks/use-wallet'

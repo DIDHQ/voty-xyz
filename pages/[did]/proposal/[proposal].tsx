@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import ArweaveLink from '../../../components/arweave-link'
 
 import DidSelect from '../../../components/did-select'
-import FormItem from '../../../components/form-item'
+import FormItem from '../../../components/basic/form-item'
 import { useList } from '../../../hooks/use-api'
 import useArweaveData from '../../../hooks/use-arweave-data'
 import useArweaveUpload from '../../../hooks/use-arweave-upload'

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import useSWR from 'swr'
 
 import DidSelect from '../components/did-select'
-import FormItem from '../components/form-item'
+import FormItem from '../components/basic/form-item'
 import useWallet from '../hooks/use-wallet'
 import {
   checkProposerLiberty,
