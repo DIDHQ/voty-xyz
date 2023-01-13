@@ -93,23 +93,20 @@ export default function OrganizationForm(props: {
         type="text"
         label="About"
         error={formState.errors.profile?.about?.message}
-      >
-        <input {...register('profile.about')} />
-      </InputWithValidationError>
+        {...register('profile.about')}
+      />
       <InputWithValidationError
         type="text"
         label="Website"
         error={formState.errors.profile?.website?.message}
-      >
-        <input {...register('profile.website')} />
-      </InputWithValidationError>
+        {...register('profile.website')}
+      />
       <InputWithValidationError
         type="text"
         label="Terms of service"
         error={formState.errors.profile?.tos?.message}
-      >
-        <input {...register('profile.tos')} />
-      </InputWithValidationError>
+        {...register('profile.tos')}
+      />
       <FormItem className="flex w-full" label="Communities">
         {communities.map((field, index) => (
           <div className="flex gap-5 mb-3" key={field.id}>
