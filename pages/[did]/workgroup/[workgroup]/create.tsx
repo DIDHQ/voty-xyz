@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import pMap from 'p-map'
 import { useEffect, useMemo, useState } from 'react'
-import { Button, Input, Select, Textarea } from 'react-daisyui'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 
@@ -92,22 +91,22 @@ export default function CreateProposalPage() {
   return (
     <>
       <FormItem label="Title" error={formState.errors.title?.message}>
-        <Input {...register('title')} />
+        <input {...register('title')} />
       </FormItem>
       <FormItem label="Body" error={formState.errors.body?.message}>
-        <Textarea {...register('body')} />
+        <textarea {...register('body')} />
       </FormItem>
       <FormItem label="Discussion" error={formState.errors.discussion?.message}>
-        <Input {...register('discussion')} />
+        <input {...register('discussion')} />
       </FormItem>
       <FormItem label="Type" error={formState.errors.type?.message}>
-        <Select {...register('type')}>
+        <select {...register('type')}>
           {proposalSchema.shape.type.options.map((proposalType) => (
-            <Select.Option key={proposalType} value={proposalType}>
+            <option key={proposalType} value={proposalType}>
               {proposalType}
-            </Select.Option>
+            </option>
           ))}
-        </Select>
+        </select>
       </FormItem>
       <FormItem label="Choices" error={formState.errors.choices?.message}>
         <Controller
@@ -133,20 +132,20 @@ export default function CreateProposalPage() {
         </a>
       ) : null}
       <br />
-      <Button
+      <button
         disabled={!did}
         onClick={handleSubmit(handleSignJson.execute, console.error)}
-        loading={handleSignJson.status === 'pending'}
+        // loading={handleSignJson.status === 'pending'}
       >
         Sign
-      </Button>
-      <Button
+      </button>
+      <button
         disabled={!handleSignJson.value}
         onClick={handleArweaveUpload.execute}
-        loading={handleArweaveUpload.status === 'pending'}
+        // loading={handleArweaveUpload.status === 'pending'}
       >
         Upload
-      </Button>
+      </button>
     </>
   )
 }

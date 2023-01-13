@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Breadcrumbs, Button, Menu } from 'react-daisyui'
 import {
   Earth,
   Twitter,
@@ -37,12 +36,6 @@ export default function OrganizationIndexPage() {
 
   return organization ? (
     <>
-      <Breadcrumbs>
-        <Breadcrumbs.Item>
-          <Link href="/">Home</Link>
-        </Breadcrumbs.Item>
-        <Breadcrumbs.Item>{organization.profile.name}</Breadcrumbs.Item>
-      </Breadcrumbs>
       <AvatarInput
         size={80}
         name={organization.profile.name}
@@ -52,15 +45,15 @@ export default function OrganizationIndexPage() {
       {config?.organization ? <ArweaveLink id={config.organization} /> : null}
       <h1>{organization.profile.name}</h1>
       <div className="menu bg-base-100 w-56 rounded-box">
-        <Menu>
-          <Menu.Item>
+        <ul>
+          <li>
             <Link href={`/${query.did}`} className="active">
               <NetworkTree />
               Workgroups
             </Link>
-          </Menu.Item>
+          </li>
           {organization.workgroups?.map((workgroup) => (
-            <Menu.Item key={workgroup.id} className="ml-6">
+            <li key={workgroup.id} className="ml-6">
               <Link href={`/${query.did}/workgroup/${workgroup.profile.name}`}>
                 <AvatarInput
                   size={24}
@@ -70,38 +63,38 @@ export default function OrganizationIndexPage() {
                 />
                 {workgroup.profile.name}
               </Link>
-            </Menu.Item>
+            </li>
           ))}
-          <Menu.Item>
+          <li>
             <Link href={`/delegate/${query.did}`}>
               <UserToUserTransmission />
               Delegate
             </Link>
-          </Menu.Item>
-          <Menu.Item>
+          </li>
+          <li>
             <Link href={`/${query.did}/about`}>
               <Info />
               About
             </Link>
-          </Menu.Item>
-          <Menu.Item>
+          </li>
+          <li>
             <Link href={`/${query.did}/settings`}>
               <SettingOne />
               Settings
             </Link>
-          </Menu.Item>
-        </Menu>
+          </li>
+        </ul>
       </div>
       <div>
         {organization.profile.website ? (
-          <Button shape="circle">
+          <button>
             <a href={organization.profile.website}>
               <Earth />
             </a>
-          </Button>
+          </button>
         ) : null}
         {organization.communities?.map((community, index) => (
-          <Button key={index} shape="circle">
+          <button key={index}>
             <a
               href={`${
                 {
@@ -119,7 +112,7 @@ export default function OrganizationIndexPage() {
                 }[community.type]
               }
             </a>
-          </Button>
+          </button>
         ))}
       </div>
       <ul>

@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ReactNode, useEffect, useId, useMemo, useState } from 'react'
-import { Button } from 'react-daisyui'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import ArweaveLink from '../../../components/arweave-link'
@@ -113,20 +112,20 @@ export default function ProposalPage() {
         {votingPower === undefined ? '-' : votingPower}
       </FormItem>
       <DidSelect account={account} value={did} onChange={setDid} />
-      <Button
+      <button
         disabled={!did}
         onClick={handleSubmit(handleSignJson.execute, console.error)}
-        loading={handleSignJson.status === 'pending'}
+        // loading={handleSignJson.status === 'pending'}
       >
         Sign
-      </Button>
-      <Button
+      </button>
+      <button
         disabled={!handleSignJson.value}
         onClick={handleArweaveUpload.execute}
-        loading={handleArweaveUpload.status === 'pending'}
+        // loading={handleArweaveUpload.status === 'pending'}
       >
         Upload
-      </Button>
+      </button>
       <ul>
         {votes?.map((vote, index) => (
           <li key={vote.id + index}>

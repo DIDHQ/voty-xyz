@@ -1,7 +1,6 @@
 import { HoldInterface } from '@icon-park/react'
 import Link from 'next/link'
 import { useMemo } from 'react'
-import { Breadcrumbs, Menu } from 'react-daisyui'
 
 import AvatarInput from '../../../../components/avatar-input'
 import useRouterQuery from '../../../../hooks/use-router-query'
@@ -38,23 +37,6 @@ export default function WorkgroupPage() {
 
   return (
     <>
-      <Breadcrumbs>
-        <Breadcrumbs.Item>
-          <Link href="/">Home</Link>
-        </Breadcrumbs.Item>
-        {organization ? (
-          <Breadcrumbs.Item>
-            <Link href={`/${query.did}`}>{organization.profile.name}</Link>
-          </Breadcrumbs.Item>
-        ) : (
-          <></>
-        )}
-        {workgroup ? (
-          <Breadcrumbs.Item>{workgroup.profile.name}</Breadcrumbs.Item>
-        ) : (
-          <></>
-        )}
-      </Breadcrumbs>
       {workgroup ? (
         <>
           <AvatarInput
@@ -65,16 +47,16 @@ export default function WorkgroupPage() {
           />
           <h1>{workgroup.profile.name}</h1>
           <div className="menu bg-base-100 w-56 rounded-box">
-            <Menu>
-              <Menu.Item>
+            <ul>
+              <li>
                 <Link
                   href={`/${query.did}/workgroup/${query.workgroup}/create`}
                 >
                   <HoldInterface />
                   New proposal
                 </Link>
-              </Menu.Item>
-            </Menu>
+              </li>
+            </ul>
           </div>
         </>
       ) : null}

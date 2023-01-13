@@ -1,4 +1,3 @@
-import { Button, Input, Select } from 'react-daisyui'
 import { Fragment, useEffect, useMemo } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -6,7 +5,7 @@ import { nanoid } from 'nanoid'
 
 import useAsync from '../hooks/use-async'
 import { Organization, organizationSchema } from '../src/schemas'
-import AvatarInput from './avatar-input'
+import Avatarinput from './avatar-input'
 import WorkgroupForm from './workgroup-form'
 import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import FormItem from './form-item'
@@ -74,7 +73,7 @@ export default function OrganizationForm(props: {
           control={control}
           name="profile.avatar"
           render={({ field: { value, onChange } }) => (
-            <AvatarInput
+            <Avatarinput
               size={80}
               name={props.did}
               value={value}
@@ -84,46 +83,43 @@ export default function OrganizationForm(props: {
         />
       </FormItem>
       <FormItem label="Name" error={formState.errors.profile?.name?.message}>
-        <Input
-          color={formState.errors.profile?.name ? 'error' : undefined}
-          {...register('profile.name')}
-        />
+        <input {...register('profile.name')} />
       </FormItem>
       <FormItem label="About" error={formState.errors.profile?.about?.message}>
-        <Input {...register('profile.about')} />
+        <input {...register('profile.about')} />
       </FormItem>
       <FormItem
         label="Website"
         error={formState.errors.profile?.website?.message}
       >
-        <Input {...register('profile.website')} />
+        <input {...register('profile.website')} />
       </FormItem>
       <FormItem
         label="Terms of service"
         error={formState.errors.profile?.tos?.message}
       >
-        <Input {...register('profile.tos')} />
+        <input {...register('profile.tos')} />
       </FormItem>
       <FormItem className="flex w-full" label="Communities">
         {communities.map((field, index) => (
           <div className="flex gap-5 mb-3" key={field.id}>
-            <Select {...register(`communities.${index}.type`)}>
-              <Select.Option value="twitter">Twitter</Select.Option>
-              <Select.Option value="discord">Discord</Select.Option>
-              <Select.Option value="github">GitHub</Select.Option>
-            </Select>
+            <select {...register(`communities.${index}.type`)}>
+              <option value="twitter">Twitter</option>
+              <option value="discord">Discord</option>
+              <option value="github">GitHub</option>
+            </select>
             <FormItem
               error={formState.errors.communities?.[index]?.value?.message}
               className="grow"
             >
-              <Input {...register(`communities.${index}.value`)} />
+              <input {...register(`communities.${index}.value`)} />
             </FormItem>
-            <Button onClick={() => removeCommunity(index)}>-</Button>
+            <button onClick={() => removeCommunity(index)}>-</button>
           </div>
         ))}
-        <Button onClick={() => appendCommunity({ type: 'twitter', value: '' })}>
+        <button onClick={() => appendCommunity({ type: 'twitter', value: '' })}>
           +
-        </Button>
+        </button>
       </FormItem>
       <FormItem label="Workgroups" error={formState.errors.workgroups?.message}>
         {workgroups.map((field, index) => (
@@ -135,11 +131,11 @@ export default function OrganizationForm(props: {
                 <WorkgroupForm value={value} onChange={onChange} />
               )}
             />
-            <Button onClick={() => removeWorkgroup(index)}>-</Button>
+            <button onClick={() => removeWorkgroup(index)}>-</button>
             <br />
           </Fragment>
         ))}
-        <Button
+        <button
           onClick={() =>
             appendWorkgroup({
               id: nanoid(),
@@ -155,7 +151,7 @@ export default function OrganizationForm(props: {
           }
         >
           +
-        </Button>
+        </button>
       </FormItem>
       {handleSignJson.error ? <p>{handleSignJson.error.message}</p> : null}
       {handleArweaveUpload.error ? (
@@ -167,20 +163,20 @@ export default function OrganizationForm(props: {
         </a>
       ) : null}
       <br />
-      <Button
+      <button
         disabled={!isAdmin}
-        loading={handleSignJson.status === 'pending'}
+        // loading={handleSignJson.status === 'pending'}
         onClick={handleSubmit(handleSignJson.execute, console.error)}
       >
         Sign
-      </Button>
-      <Button
+      </button>
+      <button
         disabled={!isAdmin || !handleSignJson.value}
-        loading={handleArweaveUpload.status === 'pending'}
+        // loading={handleArweaveUpload.status === 'pending'}
         onClick={handleArweaveUpload.execute}
       >
         Submit
-      </Button>
+      </button>
     </div>
   )
 }

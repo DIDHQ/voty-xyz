@@ -47,8 +47,8 @@ export default function useWallet() {
         }
         throw new Error(`sign message unsupported coin type: ${coinType}`)
       },
-      connect,
-      disconnect,
+      connect: () => connect(),
+      disconnect: () => disconnect(),
     }),
     [account.address, coinType, connect, disconnect, signMessageAsync],
   )

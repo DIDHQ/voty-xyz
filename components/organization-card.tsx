@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Button } from 'react-daisyui'
 import { Star } from '@icon-park/react'
 import AvatarInput from './avatar-input'
 
@@ -26,9 +25,7 @@ export default function OrganizationCard(props: OrganizationCardProps) {
         <h1 className="card-title">{name}</h1>
         <p>{members} Members</p>
         <div className="card-actions mt-2">
-          <Button color="primary" size="md">
-            Enter
-          </Button>
+          <button>Enter</button>
         </div>
         <Star
           className="absolute right-4 bottom-4 cursor-pointer invisible group-hover:visible"

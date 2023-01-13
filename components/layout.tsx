@@ -1,9 +1,7 @@
-import dynamic from 'next/dynamic'
 import { ReactNode } from 'react'
 
 import Footer from './footer'
-
-const NavBar = dynamic(() => import('../components/nav-bar'), { ssr: false })
+import NavBar from './nav-bar'
 
 export default function Layout(props: { children: ReactNode }) {
   return (
