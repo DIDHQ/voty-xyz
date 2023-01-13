@@ -1,10 +1,11 @@
 import clsx from 'clsx'
-import { HTMLAttributes, ReactNode } from 'react'
+import { HTMLAttributes } from 'react'
 
 export default function PrimaryButton(
-  props: { children: ReactNode } & HTMLAttributes<HTMLButtonElement>,
+  props: HTMLAttributes<HTMLButtonElement>,
 ) {
   const { children, className, ...restProps } = props
+
   return (
     <button
       {...restProps}

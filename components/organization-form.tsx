@@ -13,6 +13,7 @@ import useResolveDid from '../hooks/use-resolve-did'
 import useSignJson from '../hooks/use-sign-json'
 import useArweaveUpload from '../hooks/use-arweave-upload'
 import useWallet from '../hooks/use-wallet'
+import InputWithValidationError from './basic/input-with-validation-error'
 
 export default function OrganizationForm(props: {
   did: string
@@ -82,24 +83,33 @@ export default function OrganizationForm(props: {
           )}
         />
       </FormItem>
-      <FormItem label="Name" error={formState.errors.profile?.name?.message}>
-        <input {...register('profile.name')} />
-      </FormItem>
-      <FormItem label="About" error={formState.errors.profile?.about?.message}>
+      <InputWithValidationError
+        type="text"
+        label="Name"
+        error={formState.errors.profile?.name?.message}
+        {...register('profile.name')}
+      />
+      <InputWithValidationError
+        type="text"
+        label="About"
+        error={formState.errors.profile?.about?.message}
+      >
         <input {...register('profile.about')} />
-      </FormItem>
-      <FormItem
+      </InputWithValidationError>
+      <InputWithValidationError
+        type="text"
         label="Website"
         error={formState.errors.profile?.website?.message}
       >
         <input {...register('profile.website')} />
-      </FormItem>
-      <FormItem
+      </InputWithValidationError>
+      <InputWithValidationError
+        type="text"
         label="Terms of service"
         error={formState.errors.profile?.tos?.message}
       >
         <input {...register('profile.tos')} />
-      </FormItem>
+      </InputWithValidationError>
       <FormItem className="flex w-full" label="Communities">
         {communities.map((field, index) => (
           <div className="flex gap-5 mb-3" key={field.id}>
