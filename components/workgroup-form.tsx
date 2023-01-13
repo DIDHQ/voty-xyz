@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { Workgroup, workgroupSchema } from '../src/schemas'
-import AvatarInput from './avatar-input'
 import FormItem from './basic/form-item'
 import JsonInput from './json-input'
 import NumericInput from './numeric-input'
@@ -23,23 +22,6 @@ export default function WorkgroupForm(props: {
   return (
     <div>
       <h2>Workgroup: {props.value.id}</h2>
-      <FormItem
-        label="avatar"
-        error={formState.errors.profile?.avatar?.message}
-      >
-        <Controller
-          control={control}
-          name="profile.avatar"
-          render={({ field: { value, onChange } }) => (
-            <AvatarInput
-              size={80}
-              name={props.value.id}
-              value={value}
-              onChange={onChange}
-            />
-          )}
-        />
-      </FormItem>
       <FormItem label="name" error={formState.errors.profile?.name?.message}>
         <input {...register('profile.name')} />
       </FormItem>
