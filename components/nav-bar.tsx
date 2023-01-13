@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { css } from '@emotion/css'
 import '@rainbow-me/rainbowkit/styles.css'
 
 import useWallet from '../hooks/use-wallet'
@@ -17,19 +16,8 @@ export default function NavBar() {
   const { disconnect } = useWallet()
 
   return (
-    <div
-      className={css`
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      `}
-    >
-      <Link
-        href="/"
-        className={css`
-          text-decoration: none;
-        `}
-      >
+    <div>
+      <Link href="/">
         <h1>Voty</h1>
       </Link>
       <ConnectButtonCustom>

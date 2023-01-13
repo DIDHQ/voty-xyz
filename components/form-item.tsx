@@ -1,5 +1,5 @@
-import { ReactNode } from 'react'
 import clsx from 'clsx'
+import { ReactNode } from 'react'
 
 export default function FormItem(props: {
   label?: string
@@ -10,14 +10,17 @@ export default function FormItem(props: {
   error?: string
 }) {
   const { className } = props
-  const cls = clsx({
-    'form-control flex': true,
-    'flex-row': props.direction === 'horizontal',
-    [`gap-${props.gap}`]: props.gap,
-  })
 
   return (
-    <div className={clsx(cls, className)}>
+    <div
+      className={clsx(
+        clsx({
+          'form-control flex': true,
+          'flex-row': props.direction === 'horizontal',
+        }),
+        className,
+      )}
+    >
       {props.label ? (
         <label className="label whitespace-nowrap block">{props.label}</label>
       ) : null}
