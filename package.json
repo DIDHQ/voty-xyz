@@ -15,8 +15,6 @@
   "dependencies": {
     "@dnd-kit/core": "^6.0.7",
     "@dnd-kit/sortable": "^7.0.2",
-    "@emotion/css": "^11.10.5",
-    "@emotion/server": "^11.10.0",
     "@hookform/resolvers": "^2.9.10",
     "@icon-park/react": "^1.4.2",
     "@nervosnetwork/ckb-sdk-core": "^0.103.1",
@@ -24,6 +22,7 @@
     "@rainbow-me/rainbowkit": "^0.8.1",
     "arweave": "^1.12.2",
     "boring-avatars": "^1.7.0",
+    "clsx": "^1.2.1",
     "dotbit": "^0.4.14",
     "ethers": "^5.7.2",
     "immer": "^9.0.17",

@@ -4,7 +4,7 @@ import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Drag, Minus, Plus } from '@icon-park/react'
 import produce from 'immer'
-import { cx } from '@emotion/css'
+import cx from 'clsx'
 
 function ChoiceListItem(props: {
   id: UniqueIdentifier
