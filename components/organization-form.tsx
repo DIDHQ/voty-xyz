@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid'
 
 import useAsync from '../hooks/use-async'
 import { Organization, organizationSchema } from '../src/schemas'
-import Avatarinput from './avatar-input'
+import AvatarInput from './avatar-input'
 import WorkgroupForm from './workgroup-form'
 import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import FormItem from './form-item'
@@ -74,7 +74,7 @@ export default function OrganizationForm(props: {
           control={control}
           name="profile.avatar"
           render={({ field: { value, onChange } }) => (
-            <Avatarinput
+            <AvatarInput
               size={80}
               name={props.did}
               value={value}
