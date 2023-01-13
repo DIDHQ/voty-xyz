@@ -7,7 +7,6 @@ import { IconProvider, DEFAULT_ICON_CONFIGS } from '@icon-park/react'
 import Head from 'next/head'
 import { injectGlobal } from '@emotion/css'
 import '@icon-park/react/styles/index.css'
-import 'boltcss/bolt.css'
 
 import Layout from '../components/layout'
 
