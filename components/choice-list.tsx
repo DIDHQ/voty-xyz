@@ -15,7 +15,6 @@ function ChoiceListItem(props: {
   onAdd?: () => void
 }) {
   const { id, disabled, value, onChange, onDelete, onAdd } = props
-
   const {
     attributes,
     isDragging,
@@ -25,28 +24,22 @@ function ChoiceListItem(props: {
     transform,
     transition,
   } = useSortable({ id, disabled })
-
   const [text, setText] = useState('')
-
   useEffect(() => {
     setText(value)
   }, [value])
-
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setText(e.target.value)
     },
     [setText],
   )
-
   const handleBlur = useCallback(() => {
     onChange(id, text)
   }, [id, onChange, text])
-
   const handleDelete = useCallback(() => {
     onDelete?.(id)
   }, [id, onDelete])
-
   const handleAdd = useCallback(() => {
     handleBlur()
     onAdd?.()
@@ -103,11 +96,9 @@ export default function ChoiceList(props: {
   onChange: (choices: string[]) => void
 }) {
   const { onChange } = props
-
   const [value, setValue] = useState<{ id: UniqueIdentifier; text: string }[]>(
     [],
   )
-
   useEffect(() => {
     setValue(
       props.value.map((choice, index) => ({
@@ -116,14 +107,12 @@ export default function ChoiceList(props: {
       })),
     )
   }, [props.value])
-
   const handleChange = useCallback(
     (id: UniqueIdentifier, text: string) => {
       onChange(value.map((choice) => (choice.id === id ? text : choice.text)))
     },
     [onChange, value],
   )
-
   const handleDelete = useCallback(
     (id: UniqueIdentifier) => {
       onChange(
@@ -135,11 +124,9 @@ export default function ChoiceList(props: {
     },
     [onChange, value],
   )
-
   const handleAdd = useCallback(() => {
     onChange([...value.map(({ text }) => text), ''])
   }, [onChange, value])
-
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {
       const activeIndex = value.findIndex((choice) => choice.id === active.id)

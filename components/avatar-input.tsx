@@ -26,7 +26,6 @@ export default function AvatarFileInput(props: {
     },
     [onChange],
   )
-
   const handleEdit = useCallback(
     (e: React.MouseEvent<HTMLButtonElement | HTMLSpanElement>) => {
       e.stopPropagation()
@@ -34,7 +33,6 @@ export default function AvatarFileInput(props: {
     },
     [],
   )
-
   const handleDelete = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
