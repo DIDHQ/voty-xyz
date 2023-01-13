@@ -3,8 +3,8 @@ import { DndContext, DragEndEvent, UniqueIdentifier } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Drag, Minus, Plus } from '@icon-park/react'
-import clsx from 'clsx'
 import produce from 'immer'
+import { cx } from '@emotion/css'
 
 function ChoiceListItem(props: {
   id: UniqueIdentifier
@@ -64,7 +64,7 @@ function ChoiceListItem(props: {
     >
       <div>
         <button
-          className={clsx({
+          className={cx({
             'cursor-grab': true,
             'cursor-not-allowed': disabled,
             'active:cursor-grabbing': true,

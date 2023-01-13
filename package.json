@@ -24,7 +24,6 @@
     "@rainbow-me/rainbowkit": "^0.8.1",
     "arweave": "^1.12.2",
     "boring-avatars": "^1.7.0",
-    "clsx": "^1.2.1",
     "dotbit": "^0.4.14",
     "ethers": "^5.7.2",
     "immer": "^9.0.17",
