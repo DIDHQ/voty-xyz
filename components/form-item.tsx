@@ -1,4 +1,4 @@
-import cx from 'clsx'
+import clsx from 'clsx'
 import { ReactNode } from 'react'
 
 export default function FormItem(props: {
@@ -13,8 +13,8 @@ export default function FormItem(props: {
 
   return (
     <div
-      className={cx(
-        cx({
+      className={clsx(
+        clsx({
           'form-control flex': true,
           'flex-row': props.direction === 'horizontal',
         }),

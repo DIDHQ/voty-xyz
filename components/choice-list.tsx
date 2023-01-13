@@ -4,7 +4,7 @@ import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Drag, Minus, Plus } from '@icon-park/react'
 import produce from 'immer'
-import cx from 'clsx'
+import clsx from 'clsx'
 
 function ChoiceListItem(props: {
   id: UniqueIdentifier
@@ -64,7 +64,7 @@ function ChoiceListItem(props: {
     >
       <div>
         <button
-          className={cx({
+          className={clsx({
             'cursor-grab': true,
             'cursor-not-allowed': disabled,
             'active:cursor-grabbing': true,

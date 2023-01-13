@@ -1,5 +1,6 @@
 import Link from 'next/link'
 
+import PrimaryButton from '../components/basic/primary-button'
 import { useList } from '../hooks/use-api'
 import { DataType } from '../src/constants'
 import { OrganizationWithSignature } from '../src/schemas'
@@ -12,9 +13,7 @@ export default function IndexPage() {
   return (
     <>
       <Link href="/create">
-        <button className="inline-flex items-center rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-          Create an Organization
-        </button>
+        <PrimaryButton>Create an Organization</PrimaryButton>
       </Link>
       <ul>
         {organizations?.map((organization) => (
