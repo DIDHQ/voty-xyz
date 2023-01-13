@@ -1,17 +1,15 @@
 import clsx from 'clsx'
-import { InputHTMLAttributes, useId } from 'react'
+import { forwardRef, InputHTMLAttributes, useId } from 'react'
 
-export default function InputWithValidationError(
-  props: {
-    label: string
-    error?: string
-  } & InputHTMLAttributes<HTMLInputElement>,
-) {
+export default forwardRef<
+  HTMLDivElement,
+  { label: string; error?: string } & InputHTMLAttributes<HTMLInputElement>
+>(function InputWithValidationError(props, ref) {
   const id = useId()
   const { children, className, ...restProps } = props
 
   return (
-    <div>
+    <div ref={ref}>
       <label htmlFor={id} className="block text-sm font-medium text-gray-700">
         {props.label}
       </label>
@@ -35,4 +33,4 @@ export default function InputWithValidationError(
       ) : null}
     </div>
   )
-}
+})
