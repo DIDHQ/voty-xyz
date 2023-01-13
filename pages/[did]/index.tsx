@@ -10,7 +10,7 @@ import {
   NetworkTree,
 } from '@icon-park/react'
 
-import AvatarInput from '../../components/avatar-input'
+import Avatar from '../../components/basic/avatar'
 import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
 import {
@@ -36,11 +36,10 @@ export default function OrganizationIndexPage() {
 
   return organization ? (
     <>
-      <AvatarInput
-        size={80}
+      <Avatar
+        size={24}
         name={organization.profile.name}
         value={organization.profile.avatar}
-        disabled
       />
       {config?.organization ? <ArweaveLink id={config.organization} /> : null}
       <h1>{organization.profile.name}</h1>
@@ -55,12 +54,6 @@ export default function OrganizationIndexPage() {
           {organization.workgroups?.map((workgroup) => (
             <li key={workgroup.id} className="ml-6">
               <Link href={`/${query.did}/workgroup/${workgroup.profile.name}`}>
-                <AvatarInput
-                  size={24}
-                  name={workgroup.profile.name}
-                  value={workgroup.profile.avatar}
-                  disabled
-                />
                 {workgroup.profile.name}
               </Link>
             </li>
