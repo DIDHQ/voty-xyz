@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 
-import FormItem from '../components/form-item'
+import FormItem from '../components/basic/form-item'
 import DidSelect from '../components/did-select'
 import useRouterQuery from '../hooks/use-router-query'
 import useWallet from '../hooks/use-wallet'
@@ -65,7 +65,7 @@ function ChooseAccount(props: {
 
   return (
     <div className="flex flex-col justify-center items-center mt-20">
-      <FormItem direction="horizontal" gap={3} label="Choose a .bit Account: ">
+      <FormItem label="Choose a .bit Account: ">
         <DidSelect
           account={account}
           value={props.value}
@@ -94,7 +94,7 @@ function BasicInfo(props: { onPrev: () => void; onNext: () => void }) {
   return (
     <div className="flex flex-col justify-center items-center mt-20">
       <div className="flex flex-col items-end">
-        <FormItem direction="horizontal" gap={3} label="Organization Name: ">
+        <FormItem label="Organization Name: ">
           <input
             className="w-96"
             placeholder={"What's the name of your organization?"}
@@ -102,12 +102,7 @@ function BasicInfo(props: { onPrev: () => void; onNext: () => void }) {
             onChange={(e) => setOrganizationName(e.target.value)}
           />
         </FormItem>
-        <FormItem
-          className="mt-10"
-          direction="horizontal"
-          gap={3}
-          label="Description: "
-        >
+        <FormItem className="mt-10" label="Description: ">
           <input
             className="w-96"
             placeholder={'What is the mission of your organization?'}

@@ -16,13 +16,13 @@ const arweave = Arweave.init({
   protocol: 'https',
 })
 
-export default function useArweaveUpload(
-  json?: OrganizationWithSignature | ProposalWithSignature | VoteWithSignature,
-) {
-  return useCallback(async () => {
-    if (!json) {
-      return
-    }
+export default function useArweaveUpload<
+  T extends
+    | OrganizationWithSignature
+    | ProposalWithSignature
+    | VoteWithSignature,
+>() {
+  return useCallback(async (json: T) => {
     const textEncoder = new TextEncoder()
     const body = textEncoder.encode(JSON.stringify(json))
     const serializedUploader = await fetchJson<SerializedUploader>(
@@ -41,5 +41,5 @@ export default function useArweaveUpload(
       await uploader.uploadChunk()
     }
     return serializedUploader.transaction.id as string
-  }, [json])
+  }, [])
 }

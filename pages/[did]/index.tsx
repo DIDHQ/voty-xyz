@@ -1,16 +1,6 @@
 import Link from 'next/link'
-import {
-  Earth,
-  Twitter,
-  RobotOne,
-  GithubOne,
-  UserToUserTransmission,
-  Info,
-  SettingOne,
-  NetworkTree,
-} from '@icon-park/react'
 
-import AvatarInput from '../../components/avatar-input'
+import Avatar from '../../components/basic/avatar'
 import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
 import {
@@ -20,7 +10,13 @@ import {
 import useRouterQuery from '../../hooks/use-router-query'
 import { useList } from '../../hooks/use-api'
 import { DataType } from '../../src/constants'
-import ArweaveLink from '../../components/arweave-link'
+import Button from '../../components/basic/button'
+
+const stats = [
+  { label: 'Workgroups', value: 2 },
+  { label: 'Proposals', value: 4 },
+  { label: 'Followers', value: 12 },
+]
 
 export default function OrganizationIndexPage() {
   const [query] = useRouterQuery<['did']>()
@@ -35,95 +31,48 @@ export default function OrganizationIndexPage() {
   )
 
   return organization ? (
-    <>
-      <AvatarInput
-        size={80}
-        name={organization.profile.name}
-        value={organization.profile.avatar}
-        disabled
-      />
-      {config?.organization ? <ArweaveLink id={config.organization} /> : null}
-      <h1>{organization.profile.name}</h1>
-      <div className="menu bg-base-100 w-56 rounded-box">
-        <ul>
-          <li>
-            <Link href={`/${query.did}`} className="active">
-              <NetworkTree />
-              Workgroups
+    <div className="overflow-hidden rounded-lg bg-white shadow m-8">
+      <div className="bg-white p-6">
+        <div className="sm:flex sm:items-center sm:justify-between">
+          <div className="sm:flex sm:space-x-5">
+            <div className="flex-shrink-0">
+              <Avatar
+                size={20}
+                name={organization.did}
+                value={organization.profile.avatar}
+                className="mx-auto"
+              />
+            </div>
+            <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
+              <p className="text-sm font-medium text-gray-600">
+                {organization.did}
+              </p>
+              <p className="text-xl font-bold text-gray-900 sm:text-2xl">
+                {organization.profile.name}
+              </p>
+              <p className="text-sm font-medium text-gray-600">
+                {organization.profile.about}
+              </p>
+            </div>
+          </div>
+          <div className="mt-5 flex justify-center sm:mt-0">
+            <Link href={`/${organization.did}/settings`}>
+              <Button>Settings</Button>
             </Link>
-          </li>
-          {organization.workgroups?.map((workgroup) => (
-            <li key={workgroup.id} className="ml-6">
-              <Link href={`/${query.did}/workgroup/${workgroup.profile.name}`}>
-                <AvatarInput
-                  size={24}
-                  name={workgroup.profile.name}
-                  value={workgroup.profile.avatar}
-                  disabled
-                />
-                {workgroup.profile.name}
-              </Link>
-            </li>
-          ))}
-          <li>
-            <Link href={`/delegate/${query.did}`}>
-              <UserToUserTransmission />
-              Delegate
-            </Link>
-          </li>
-          <li>
-            <Link href={`/${query.did}/about`}>
-              <Info />
-              About
-            </Link>
-          </li>
-          <li>
-            <Link href={`/${query.did}/settings`}>
-              <SettingOne />
-              Settings
-            </Link>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
-      <div>
-        {organization.profile.website ? (
-          <button>
-            <a href={organization.profile.website}>
-              <Earth />
-            </a>
-          </button>
-        ) : null}
-        {organization.communities?.map((community, index) => (
-          <button key={index}>
-            <a
-              href={`${
-                {
-                  twitter: 'https://twitter.com',
-                  discord: 'https://discord.gg',
-                  github: 'https://github.com',
-                }[community.type]
-              }/${community.value}`}
-            >
-              {
-                {
-                  twitter: <Twitter />,
-                  discord: <RobotOne />,
-                  github: <GithubOne />,
-                }[community.type]
-              }
-            </a>
-          </button>
+      <div className="grid grid-cols-1 divide-y divide-gray-200 border-t border-gray-200 bg-gray-50 sm:grid-cols-3 sm:divide-y-0 sm:divide-x">
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="px-6 py-5 text-center text-sm font-medium"
+          >
+            <span className="text-gray-900">{stat.value}</span>{' '}
+            <span className="text-gray-600">{stat.label}</span>
+          </div>
         ))}
       </div>
-      <ul>
-        {proposals?.map((proposal) => (
-          <li key={proposal.id}>
-            <Link href={`/${query.did}/proposal/${proposal.id}`}>
-              {proposal.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </>
+    </div>
   ) : null
 }

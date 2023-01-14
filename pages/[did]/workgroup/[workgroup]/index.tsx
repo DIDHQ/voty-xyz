@@ -2,7 +2,6 @@ import { HoldInterface } from '@icon-park/react'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
-import AvatarInput from '../../../../components/avatar-input'
 import useRouterQuery from '../../../../hooks/use-router-query'
 import useArweaveData from '../../../../hooks/use-arweave-data'
 import useDidConfig from '../../../../hooks/use-did-config'
@@ -39,12 +38,6 @@ export default function WorkgroupPage() {
     <>
       {workgroup ? (
         <>
-          <AvatarInput
-            size={80}
-            name={workgroup.profile.name}
-            value={workgroup.profile.avatar}
-            disabled
-          />
           <h1>{workgroup.profile.name}</h1>
           <div className="menu bg-base-100 w-56 rounded-box">
             <ul>

@@ -3,8 +3,7 @@ import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { Workgroup, workgroupSchema } from '../src/schemas'
-import AvatarInput from './avatar-input'
-import FormItem from './form-item'
+import FormItem from './basic/form-item'
 import JsonInput from './json-input'
 import NumericInput from './numeric-input'
 
@@ -12,10 +11,15 @@ export default function WorkgroupForm(props: {
   value: Workgroup
   onChange(value: Workgroup): void
 }) {
-  const { control, register, handleSubmit, reset, formState } =
-    useForm<Workgroup>({
-      resolver: zodResolver(workgroupSchema),
-    })
+  const {
+    control,
+    register,
+    handleSubmit: onSubmit,
+    reset,
+    formState,
+  } = useForm<Workgroup>({
+    resolver: zodResolver(workgroupSchema),
+  })
   useEffect(() => {
     reset(props.value)
   }, [props.value, reset])
@@ -23,23 +27,6 @@ export default function WorkgroupForm(props: {
   return (
     <div>
       <h2>Workgroup: {props.value.id}</h2>
-      <FormItem
-        label="avatar"
-        error={formState.errors.profile?.avatar?.message}
-      >
-        <Controller
-          control={control}
-          name="profile.avatar"
-          render={({ field: { value, onChange } }) => (
-            <AvatarInput
-              size={80}
-              name={props.value.id}
-              value={value}
-              onChange={onChange}
-            />
-          )}
-        />
-      </FormItem>
       <FormItem label="name" error={formState.errors.profile?.name?.message}>
         <input {...register('profile.name')} />
       </FormItem>
@@ -102,7 +89,7 @@ export default function WorkgroupForm(props: {
       </FormItem>
       <button
         disabled={!formState.isDirty || !formState.isValid}
-        onClick={handleSubmit(props.onChange)}
+        onClick={onSubmit(props.onChange)}
       >
         ok
       </button>
