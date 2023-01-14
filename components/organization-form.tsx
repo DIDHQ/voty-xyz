@@ -17,7 +17,7 @@ import Button from './basic/button'
 
 export default function OrganizationForm(props: {
   did: string
-  organization: Organization
+  organization?: Organization
 }) {
   const {
     control,
@@ -67,7 +67,7 @@ export default function OrganizationForm(props: {
 
   return (
     <div className="space-y-8 divide-y divide-gray-200">
-      <div>
+      <div className="pt-8">
         <div>
           <h3 className="text-lg font-medium leading-6 text-gray-900">
             Profile

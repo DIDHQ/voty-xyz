@@ -1,5 +1,6 @@
 import useDids from '../hooks/use-dids'
 import { Account } from '../src/types'
+import Select from './basic/select'
 
 export default function DidSelect(props: {
   account?: Account
@@ -8,17 +9,5 @@ export default function DidSelect(props: {
 }) {
   const { data: dids } = useDids(props.account)
 
-  return (
-    <select
-      value={props.value}
-      onChange={(e) => props.onChange(e.target.value)}
-    >
-      <option />
-      {dids?.map((did) => (
-        <option key={did} value={did}>
-          {did}
-        </option>
-      ))}
-    </select>
-  )
+  return <Select options={dids} value={props.value} onChange={props.onChange} />
 }
