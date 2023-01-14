@@ -7,7 +7,7 @@ import clsx from 'clsx'
 import '@rainbow-me/rainbowkit/styles.css'
 
 import Avatar from './basic/avatar'
-import PrimaryButton from './basic/primary-button'
+import Button from './basic/button'
 
 const ConnectButtonCustom = dynamic(
   () =>
@@ -101,9 +101,9 @@ export default function NavBar() {
                           </Transition>
                         </Menu>
                       ) : (
-                        <PrimaryButton onClick={openConnectModal}>
+                        <Button primary onClick={openConnectModal}>
                           Connect Wallet
-                        </PrimaryButton>
+                        </Button>
                       )
                     }
                   </ConnectButtonCustom>
@@ -176,12 +176,12 @@ export default function NavBar() {
                         </div>
                       </>
                     ) : (
-                      <PrimaryButton
+                      <Button
                         onClick={openConnectModal}
                         className="block mx-auto"
                       >
                         Connect Wallet
-                      </PrimaryButton>
+                      </Button>
                     )
                   }
                 </ConnectButtonCustom>

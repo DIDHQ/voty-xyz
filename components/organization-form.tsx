@@ -13,7 +13,7 @@ import useArweaveUpload from '../hooks/use-arweave-upload'
 import useWallet from '../hooks/use-wallet'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
-import PrimaryButton from './basic/primary-button'
+import Button from './basic/button'
 
 export default function OrganizationForm(props: {
   did: string
@@ -164,13 +164,14 @@ export default function OrganizationForm(props: {
       </div>
       <div className="pt-5">
         <div className="flex justify-end">
-          <PrimaryButton
+          <Button
+            primary
             disabled={!isAdmin}
             loading={handleSubmit.status === 'pending'}
             onClick={onSubmit(handleSubmit.execute)}
           >
             Submit
-          </PrimaryButton>
+          </Button>
         </div>
       </div>
     </div>

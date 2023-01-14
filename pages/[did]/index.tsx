@@ -10,7 +10,7 @@ import {
 import useRouterQuery from '../../hooks/use-router-query'
 import { useList } from '../../hooks/use-api'
 import { DataType } from '../../src/constants'
-import PrimaryButton from '../../components/basic/primary-button'
+import Button from '../../components/basic/button'
 
 const stats = [
   { label: 'Workgroups', value: 2 },
@@ -44,6 +44,9 @@ export default function OrganizationIndexPage() {
               />
             </div>
             <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
+              <p className="text-sm font-medium text-gray-600">
+                {organization.did}
+              </p>
               <p className="text-xl font-bold text-gray-900 sm:text-2xl">
                 {organization.profile.name}
               </p>
@@ -54,7 +57,7 @@ export default function OrganizationIndexPage() {
           </div>
           <div className="mt-5 flex justify-center sm:mt-0">
             <Link href={`/${organization.did}/settings`}>
-              <PrimaryButton>Settings</PrimaryButton>
+              <Button>Settings</Button>
             </Link>
           </div>
         </div>

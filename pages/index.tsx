@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import PrimaryButton from '../components/basic/primary-button'
+import Button from '../components/basic/button'
 import { useList } from '../hooks/use-api'
 import { DataType } from '../src/constants'
 import { OrganizationWithSignature } from '../src/schemas'
@@ -13,7 +13,7 @@ export default function IndexPage() {
   return (
     <>
       <Link href="/create">
-        <PrimaryButton>Create an Organization</PrimaryButton>
+        <Button primary>Create an Organization</Button>
       </Link>
       <ul>
         {organizations?.map((organization) => (

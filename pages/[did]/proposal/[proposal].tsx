@@ -31,7 +31,7 @@ import {
 } from '../../../src/schemas'
 import { mapSnapshots } from '../../../src/snapshot'
 import { DID } from '../../../src/types'
-import PrimaryButton from '../../../components/basic/primary-button'
+import Button from '../../../components/basic/button'
 
 export default function ProposalPage() {
   const [query] = useRouterQuery<['proposal']>()
@@ -137,12 +137,13 @@ export default function ProposalPage() {
         {votingPower === undefined ? '-' : votingPower}
       </FormItem>
       <DidSelect account={account} value={did} onChange={setDid} />
-      <PrimaryButton
+      <Button
+        primary
         onClick={onSubmit(handleSubmit.execute)}
         loading={handleSubmit.status === 'pending'}
       >
-        Upload
-      </PrimaryButton>
+        Submit
+      </Button>
       <ul>
         {votes?.map((vote, index) => (
           <li key={vote.id + index}>

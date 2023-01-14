@@ -21,7 +21,7 @@ import {
 } from '../../../../src/schemas'
 import { getCurrentSnapshot } from '../../../../src/snapshot'
 import ChoiceList from '../../../../components/choice-list'
-import PrimaryButton from '../../../../components/basic/primary-button'
+import Button from '../../../../components/basic/button'
 
 export default function CreateProposalPage() {
   const {
@@ -140,13 +140,14 @@ export default function CreateProposalPage() {
         />
       </FormItem>
       <DidSelect account={account} value={did} onChange={setDid} />
-      <PrimaryButton
+      <Button
+        primary
         disabled={!did}
         onClick={onSubmit(handleSubmit.execute)}
         loading={handleSubmit.status === 'pending'}
       >
-        Sign
-      </PrimaryButton>
+        Submit
+      </Button>
     </>
   )
 }
