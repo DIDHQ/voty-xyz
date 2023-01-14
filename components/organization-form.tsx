@@ -1,12 +1,10 @@
-import { Fragment, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { nanoid } from 'nanoid'
 
 import useAsync from '../hooks/use-async'
 import { Organization, organizationSchema } from '../src/schemas'
 import AvatarInput from './basic/avatar-input'
-import WorkgroupForm from './workgroup-form'
 import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import FormItem from './basic/form-item'
 import useResolveDid from '../hooks/use-resolve-did'
@@ -31,14 +29,6 @@ export default function OrganizationForm(props: {
   } = useFieldArray({
     control,
     name: 'communities',
-  })
-  const {
-    fields: workgroups,
-    append: appendWorkgroup,
-    remove: removeWorkgroup,
-  } = useFieldArray({
-    control,
-    name: 'workgroups',
   })
   useEffect(() => {
     reset(props.organization)
@@ -129,38 +119,6 @@ export default function OrganizationForm(props: {
           </div>
         ))}
         <button onClick={() => appendCommunity({ type: 'twitter', value: '' })}>
-          +
-        </button>
-      </FormItem>
-      <FormItem label="Workgroups" error={formState.errors.workgroups?.message}>
-        {workgroups.map((field, index) => (
-          <Fragment key={field.id}>
-            <Controller
-              control={control}
-              name={`workgroups.${index}`}
-              render={({ field: { value, onChange } }) => (
-                <WorkgroupForm value={value} onChange={onChange} />
-              )}
-            />
-            <button onClick={() => removeWorkgroup(index)}>-</button>
-            <br />
-          </Fragment>
-        ))}
-        <button
-          onClick={() =>
-            appendWorkgroup({
-              id: nanoid(),
-              profile: { name: '' },
-              proposer_liberty: { operator: 'or', operands: [] },
-              voting_power: { operator: 'sum', operands: [] },
-              rules: {
-                voting_duration: 0,
-                voting_start_delay: 0,
-                approval_condition_description: '',
-              },
-            })
-          }
-        >
           +
         </button>
       </FormItem>
