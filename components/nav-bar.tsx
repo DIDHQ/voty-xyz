@@ -21,7 +21,7 @@ const navigation = [{ name: 'Organizations', href: '/', current: true }]
 
 const userNavigation = [
   { name: 'Settings', href: '/' },
-  { name: 'Disconnect', href: '/' },
+  { name: 'Disconnect', href: '/disconnect' },
 ]
 
 export default function NavBar() {
