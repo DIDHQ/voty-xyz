@@ -11,7 +11,7 @@ export default function Avatar(props: {
     <img
       src={props.value}
       alt={props.name}
-      className={`w-${props.size} h-${props.size} object-cover`}
+      className={`w-${props.size} h-${props.size} object-cover rounded-full`}
     />
   ) : (
     <BoringAvatar size={props.size * 4} name={props.name} />
