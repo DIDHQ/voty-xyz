@@ -22,7 +22,7 @@ export default function CreateOrganizationPage() {
     <div className="p-8">
       <FormItem
         label="DID"
-        description="select one DID as your organization entry"
+        description="select an DID as your organization entry"
       >
         <DidSelect account={account} value={did} onChange={setDid} />
       </FormItem>
