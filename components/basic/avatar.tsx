@@ -14,6 +14,8 @@ export default function Avatar(props: {
       className={`w-${props.size} h-${props.size} object-cover rounded-full`}
     />
   ) : (
-    <BoringAvatar size={props.size * 4} name={props.name} />
+    <div className="rounded-full overflow-hidden">
+      <BoringAvatar size={props.size * 4} name={props.name} />
+    </div>
   )
 }
