@@ -111,17 +111,19 @@ export default function OrganizationForm(props: {
       </FormItem>
       <FormItem className="flex w-full" label="Communities">
         {communities.map((field, index) => (
-          <div className="flex gap-5 mb-3" key={field.id}>
-            <select {...register(`communities.${index}.type`)}>
+          <div key={field.id} className="flex gap-4 mb-4">
+            <select
+              {...register(`communities.${index}.type`)}
+              className="mt-1 block w-32 rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+            >
               <option value="twitter">Twitter</option>
               <option value="discord">Discord</option>
               <option value="github">GitHub</option>
             </select>
             <FormItem
               error={formState.errors.communities?.[index]?.value?.message}
-              className="grow"
             >
-              <input {...register(`communities.${index}.value`)} />
+              <TextInput {...register(`communities.${index}.value`)} />
             </FormItem>
             <button onClick={() => removeCommunity(index)}>-</button>
           </div>
