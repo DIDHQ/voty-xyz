@@ -14,8 +14,8 @@ import Button from '../../components/basic/button'
 
 const stats = [
   { label: 'Workgroups', value: 2 },
-  { label: 'Members', value: 12 },
   { label: 'Proposals', value: 4 },
+  { label: 'Followers', value: 12 },
 ]
 
 export default function OrganizationIndexPage() {
