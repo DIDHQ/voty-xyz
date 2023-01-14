@@ -1,5 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ReactNode, useEffect, useId, useMemo, useState } from 'react'
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import ArweaveLink from '../../../components/arweave-link'
@@ -24,6 +31,7 @@ import {
 } from '../../../src/schemas'
 import { mapSnapshots } from '../../../src/snapshot'
 import { DID } from '../../../src/types'
+import PrimaryButton from '../../../components/basic/primary-button'
 
 export default function ProposalPage() {
   const [query] = useRouterQuery<['proposal']>()
@@ -42,11 +50,28 @@ export default function ProposalPage() {
   )
   const [did, setDid] = useState('')
   const { account } = useWallet()
-  const { setValue, resetField, control, handleSubmit } = useForm<Vote>({
+  const {
+    setValue,
+    resetField,
+    control,
+    handleSubmit: onSubmit,
+  } = useForm<Vote>({
     resolver: zodResolver(voteSchema),
   })
-  const handleSignJson = useAsync(useSignJson(did))
-  const handleArweaveUpload = useAsync(useArweaveUpload(handleSignJson.value))
+  const handleSignJson = useSignJson(did)
+  const handleArweaveUpload = useArweaveUpload()
+  const handleSubmit = useAsync(
+    useCallback(
+      async (json: Vote) => {
+        const signed = await handleSignJson(json)
+        if (!signed) {
+          throw new Error('signature failed')
+        }
+        await handleArweaveUpload(signed)
+      },
+      [handleArweaveUpload, handleSignJson],
+    ),
+  )
   useEffect(() => {
     if (proposal && query.proposal) {
       setValue('did', proposal.did)
@@ -112,20 +137,12 @@ export default function ProposalPage() {
         {votingPower === undefined ? '-' : votingPower}
       </FormItem>
       <DidSelect account={account} value={did} onChange={setDid} />
-      <button
-        disabled={!did}
-        onClick={handleSubmit(handleSignJson.execute, console.error)}
-        // loading={handleSignJson.status === 'pending'}
-      >
-        Sign
-      </button>
-      <button
-        disabled={!handleSignJson.value}
-        onClick={handleArweaveUpload.execute}
-        // loading={handleArweaveUpload.status === 'pending'}
+      <PrimaryButton
+        onClick={onSubmit(handleSubmit.execute)}
+        loading={handleSubmit.status === 'pending'}
       >
         Upload
-      </button>
+      </PrimaryButton>
       <ul>
         {votes?.map((vote, index) => (
           <li key={vote.id + index}>

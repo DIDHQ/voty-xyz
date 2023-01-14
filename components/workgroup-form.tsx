@@ -11,10 +11,15 @@ export default function WorkgroupForm(props: {
   value: Workgroup
   onChange(value: Workgroup): void
 }) {
-  const { control, register, handleSubmit, reset, formState } =
-    useForm<Workgroup>({
-      resolver: zodResolver(workgroupSchema),
-    })
+  const {
+    control,
+    register,
+    handleSubmit: onSubmit,
+    reset,
+    formState,
+  } = useForm<Workgroup>({
+    resolver: zodResolver(workgroupSchema),
+  })
   useEffect(() => {
     reset(props.value)
   }, [props.value, reset])
@@ -84,7 +89,7 @@ export default function WorkgroupForm(props: {
       </FormItem>
       <button
         disabled={!formState.isDirty || !formState.isValid}
-        onClick={handleSubmit(props.onChange)}
+        onClick={onSubmit(props.onChange)}
       >
         ok
       </button>

@@ -11,13 +11,12 @@ export const organizationSchema = z.object({
     website: z.string().optional(),
     tos: z.string().optional(),
   }),
-  communities: z
-    .array(
-      z.object({
-        type: z.enum(['twitter', 'discord', 'github']),
-        value: z.string().min(1),
-      }),
-    )
+  social: z
+    .object({
+      twitter: z.string(),
+      discord: z.string(),
+      github: z.string(),
+    })
     .optional(),
   workgroups: z.array(workgroupSchema).optional(),
 })

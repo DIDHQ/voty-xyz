@@ -86,27 +86,27 @@ export default function OrganizationIndexPage() {
             </a>
           </button>
         ) : null}
-        {organization.communities?.map((community, index) => (
-          <button key={index}>
-            <a
-              href={`${
-                {
-                  twitter: 'https://twitter.com',
-                  discord: 'https://discord.gg',
-                  github: 'https://github.com',
-                }[community.type]
-              }/${community.value}`}
-            >
-              {
-                {
-                  twitter: <Twitter />,
-                  discord: <RobotOne />,
-                  github: <GithubOne />,
-                }[community.type]
-              }
+        {organization.social?.twitter ? (
+          <button>
+            <a href={`https://twitter.com/${organization.social.twitter}`}>
+              <Twitter />
             </a>
           </button>
-        ))}
+        ) : null}
+        {organization.social?.discord ? (
+          <button>
+            <a href={`https://discord.gg/${organization.social.discord}`}>
+              <RobotOne />
+            </a>
+          </button>
+        ) : null}
+        {organization.social?.github ? (
+          <button>
+            <a href={`https://github.com/${organization.social.github}`}>
+              <GithubOne />
+            </a>
+          </button>
+        ) : null}
       </div>
       <ul>
         {proposals?.map((proposal) => (

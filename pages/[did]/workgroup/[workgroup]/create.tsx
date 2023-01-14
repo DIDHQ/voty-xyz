@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import pMap from 'p-map'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 
@@ -21,12 +21,18 @@ import {
 } from '../../../../src/schemas'
 import { getCurrentSnapshot } from '../../../../src/snapshot'
 import ChoiceList from '../../../../components/choice-list'
+import PrimaryButton from '../../../../components/basic/primary-button'
 
 export default function CreateProposalPage() {
-  const { register, setValue, handleSubmit, control, formState } =
-    useForm<Proposal>({
-      resolver: zodResolver(proposalSchema),
-    })
+  const {
+    register,
+    setValue,
+    handleSubmit: onSubmit,
+    control,
+    formState,
+  } = useForm<Proposal>({
+    resolver: zodResolver(proposalSchema),
+  })
   const [query] = useRouterQuery<['did', 'workgroup']>()
   const { data: config } = useDidConfig(query.did)
   const { data: organization } = useArweaveData(
@@ -85,8 +91,20 @@ export default function CreateProposalPage() {
 
   const [did, setDid] = useState('')
   const { account } = useWallet()
-  const handleSignJson = useAsync(useSignJson(did))
-  const handleArweaveUpload = useAsync(useArweaveUpload(handleSignJson.value))
+  const handleSignJson = useSignJson(did)
+  const handleArweaveUpload = useArweaveUpload()
+  const handleSubmit = useAsync(
+    useCallback(
+      async (json: Proposal) => {
+        const signed = await handleSignJson(json)
+        if (!signed) {
+          throw new Error('signature failed')
+        }
+        await handleArweaveUpload(signed)
+      },
+      [handleArweaveUpload, handleSignJson],
+    ),
+  )
 
   return (
     <>
@@ -122,30 +140,13 @@ export default function CreateProposalPage() {
         />
       </FormItem>
       <DidSelect account={account} value={did} onChange={setDid} />
-      {handleSignJson.error ? <p>{handleSignJson.error.message}</p> : null}
-      {handleArweaveUpload.error ? (
-        <p>{handleArweaveUpload.error.message}</p>
-      ) : null}
-      {handleArweaveUpload.value ? (
-        <a href={`https://arweave.net/${handleArweaveUpload.value}`}>
-          ar://{handleArweaveUpload.value}
-        </a>
-      ) : null}
-      <br />
-      <button
+      <PrimaryButton
         disabled={!did}
-        onClick={handleSubmit(handleSignJson.execute, console.error)}
-        // loading={handleSignJson.status === 'pending'}
+        onClick={onSubmit(handleSubmit.execute)}
+        loading={handleSubmit.status === 'pending'}
       >
         Sign
-      </button>
-      <button
-        disabled={!handleSignJson.value}
-        onClick={handleArweaveUpload.execute}
-        // loading={handleArweaveUpload.status === 'pending'}
-      >
-        Upload
-      </button>
+      </PrimaryButton>
     </>
   )
 }

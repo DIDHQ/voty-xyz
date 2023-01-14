@@ -1,4 +1,5 @@
 import useSWR from 'swr'
+
 import { resolveDid } from '../src/did'
 
 export default function useResolveDid(

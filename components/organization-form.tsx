@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from 'react'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useCallback, useEffect, useMemo } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import useAsync from '../hooks/use-async'
@@ -13,30 +13,29 @@ import useArweaveUpload from '../hooks/use-arweave-upload'
 import useWallet from '../hooks/use-wallet'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
+import PrimaryButton from './basic/primary-button'
 
 export default function OrganizationForm(props: {
   did: string
   organization: Organization
 }) {
-  const { control, register, handleSubmit, reset, formState, setValue } =
-    useForm<Organization>({
-      resolver: zodResolver(organizationSchema),
-    })
   const {
-    fields: communities,
-    append: appendCommunity,
-    remove: removeCommunity,
-  } = useFieldArray({
     control,
-    name: 'communities',
+    register,
+    handleSubmit: onSubmit,
+    reset,
+    formState,
+    setValue,
+  } = useForm<Organization>({
+    resolver: zodResolver(organizationSchema),
   })
   useEffect(() => {
     reset(props.organization)
   }, [props.organization, reset])
   const { account } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
-  const handleSignJson = useAsync(useSignJson(props.did))
-  const handleArweaveUpload = useAsync(useArweaveUpload(handleSignJson.value))
+  const handleSignJson = useSignJson(props.did)
+  const handleArweaveUpload = useArweaveUpload()
   const { data: resolved } = useResolveDid(
     props.did,
     account?.coinType,
@@ -53,99 +52,127 @@ export default function OrganizationForm(props: {
   useEffect(() => {
     setValue('did', props.did)
   }, [props.did, setValue])
+  const handleSubmit = useAsync(
+    useCallback(
+      async (json: Organization) => {
+        const signed = await handleSignJson(json)
+        if (!signed) {
+          throw new Error('signature failed')
+        }
+        await handleArweaveUpload(signed)
+      },
+      [handleArweaveUpload, handleSignJson],
+    ),
+  )
 
   return (
-    <div className="flex flex-col gap-5">
-      <h1 className="text-xl">Organization: {props.did}</h1>
-      <FormItem
-        label="Avatar"
-        error={formState.errors.profile?.avatar?.message}
-      >
-        <Controller
-          control={control}
-          name="profile.avatar"
-          render={({ field: { value, onChange } }) => (
-            <AvatarInput name={props.did} value={value} onChange={onChange} />
-          )}
-        />
-      </FormItem>
-      <FormItem label="Name" error={formState.errors.profile?.name?.message}>
-        <TextInput
-          error={!!formState.errors.profile?.name?.message}
-          {...register('profile.name')}
-        />
-      </FormItem>
-      <FormItem label="About" error={formState.errors.profile?.about?.message}>
-        <Textarea
-          error={!!formState.errors.profile?.about?.message}
-          {...register('profile.about')}
-        />
-      </FormItem>
-      <FormItem
-        label="Website"
-        error={formState.errors.profile?.website?.message}
-      >
-        <TextInput
-          error={!!formState.errors.profile?.website?.message}
-          {...register('profile.website')}
-        />
-      </FormItem>
-      <FormItem
-        label="Terms of service"
-        error={formState.errors.profile?.tos?.message}
-      >
-        <TextInput
-          error={!!formState.errors.profile?.tos?.message}
-          {...register('profile.tos')}
-        />
-      </FormItem>
-      <FormItem className="flex w-full" label="Communities">
-        {communities.map((field, index) => (
-          <div key={field.id} className="flex gap-4 mb-4">
-            <select
-              {...register(`communities.${index}.type`)}
-              className="mt-1 block w-32 rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-            >
-              <option value="twitter">Twitter</option>
-              <option value="discord">Discord</option>
-              <option value="github">GitHub</option>
-            </select>
+    <div className="space-y-8 divide-y divide-gray-200">
+      <div>
+        <div>
+          <h3 className="text-lg font-medium leading-6 text-gray-900">
+            Profile
+          </h3>
+        </div>
+        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <div className="sm:col-span-6">
             <FormItem
-              error={formState.errors.communities?.[index]?.value?.message}
+              label="Name"
+              error={formState.errors.profile?.name?.message}
             >
-              <TextInput {...register(`communities.${index}.value`)} />
+              <TextInput
+                error={!!formState.errors.profile?.name?.message}
+                {...register('profile.name')}
+              />
             </FormItem>
-            <button onClick={() => removeCommunity(index)}>-</button>
           </div>
-        ))}
-        <button onClick={() => appendCommunity({ type: 'twitter', value: '' })}>
-          +
-        </button>
-      </FormItem>
-      {handleSignJson.error ? <p>{handleSignJson.error.message}</p> : null}
-      {handleArweaveUpload.error ? (
-        <p>{handleArweaveUpload.error.message}</p>
-      ) : null}
-      {handleArweaveUpload.value ? (
-        <a href={`https://arweave.net/${handleArweaveUpload.value}`}>
-          ar://{handleArweaveUpload.value}
-        </a>
-      ) : null}
-      <br />
-      <button
-        disabled={!isAdmin}
-        // loading={handleSignJson.status === 'pending'}
-        onClick={handleSubmit(handleSignJson.execute, console.error)}
-      >
-        Sign
-      </button>
-      <button
-        disabled={!isAdmin || !handleSignJson.value}
-        // loading={handleArweaveUpload.status === 'pending'}
-        onClick={handleArweaveUpload.execute}
-      >
-        Submit
-      </button>
+          <div className="sm:col-span-6">
+            <FormItem
+              label="About"
+              error={formState.errors.profile?.about?.message}
+            >
+              <Textarea
+                error={!!formState.errors.profile?.about?.message}
+                {...register('profile.about')}
+              />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-6">
+            <FormItem
+              label="Avatar"
+              error={formState.errors.profile?.avatar?.message}
+            >
+              <Controller
+                control={control}
+                name="profile.avatar"
+                render={({ field: { value, onChange } }) => (
+                  <AvatarInput
+                    name={props.did}
+                    value={value}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-6">
+            <FormItem
+              label="Website"
+              error={formState.errors.profile?.website?.message}
+            >
+              <TextInput
+                error={!!formState.errors.profile?.website?.message}
+                {...register('profile.website')}
+              />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-6">
+            <FormItem
+              label="Terms of service"
+              error={formState.errors.profile?.tos?.message}
+            >
+              <TextInput
+                error={!!formState.errors.profile?.tos?.message}
+                {...register('profile.tos')}
+              />
+            </FormItem>
+          </div>
+        </div>
+      </div>
+      <div className="pt-8">
+        <div>
+          <h3 className="text-lg font-medium leading-6 text-gray-900">
+            Social Accounts
+          </h3>
+        </div>
+        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+            <FormItem label="Twitter">
+              <TextInput {...register('social.twitter')} />
+            </FormItem>
+          </div>
+          <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+            <FormItem label="Discord">
+              <TextInput {...register('social.discord')} />
+            </FormItem>
+          </div>
+          <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+            <FormItem label="GitHub">
+              <TextInput {...register('social.github')} />
+            </FormItem>
+          </div>
+        </div>
+      </div>
+      <div className="pt-5">
+        <div className="flex justify-end">
+          <PrimaryButton
+            disabled={!isAdmin}
+            loading={handleSubmit.status === 'pending'}
+            onClick={onSubmit(handleSubmit.execute)}
+          >
+            Submit
+          </PrimaryButton>
+        </div>
+      </div>
     </div>
   )
 }

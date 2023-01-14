@@ -16,7 +16,7 @@ export default forwardRef<
         'block w-full rounded-md shadow-sm sm:text-sm',
         error
           ? 'border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500'
-          : 'max-w-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500',
+          : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500',
         className,
       )}
     />
