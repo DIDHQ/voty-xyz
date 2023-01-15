@@ -153,7 +153,7 @@ export default function OrganizationIndexPage() {
             ))}
           </ul>
           <div className="mx-8 mt-4">
-            <Button onClick={handleCreateWorkgroup}>Create Workgroup</Button>
+            <Button onClick={handleCreateWorkgroup}>New Workgroup</Button>
           </div>
         </div>
       </aside>
@@ -169,11 +169,16 @@ export default function OrganizationIndexPage() {
             {workgroup?.profile.name || 'Proposals'}
           </h3>
           {workgroup ? (
-            <div className="mt-3 sm:mt-0 sm:ml-4">
+            <div className="flex space-x-4 mt-3 sm:mt-0 sm:ml-4">
               <Link
                 href={`/${organization.did}/settings?workgroup=${workgroup.id}`}
               >
                 <Button>Workgroup Settings</Button>
+              </Link>
+              <Link
+                href={`/${organization.did}/proposal/create?workgroup=${workgroup.id}`}
+              >
+                <Button primary>New Proposal</Button>
               </Link>
             </div>
           ) : (

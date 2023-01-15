@@ -4,24 +4,26 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 
-import DidSelect from '../../../../components/did-select'
-import FormItem from '../../../../components/basic/form-item'
-import useRouterQuery from '../../../../hooks/use-router-query'
-import useArweaveData from '../../../../hooks/use-arweave-data'
-import useArweaveUpload from '../../../../hooks/use-arweave-upload'
-import useAsync from '../../../../hooks/use-async'
-import useDidConfig from '../../../../hooks/use-did-config'
-import useSignJson from '../../../../hooks/use-sign-json'
-import useWallet from '../../../../hooks/use-wallet'
-import { requiredCoinTypesOfVotingPower } from '../../../../src/functions/voting-power'
+import DidSelect from '../../../components/did-select'
+import FormItem from '../../../components/basic/form-item'
+import useRouterQuery from '../../../hooks/use-router-query'
+import useArweaveData from '../../../hooks/use-arweave-data'
+import useArweaveUpload from '../../../hooks/use-arweave-upload'
+import useAsync from '../../../hooks/use-async'
+import useDidConfig from '../../../hooks/use-did-config'
+import useSignJson from '../../../hooks/use-sign-json'
+import useWallet from '../../../hooks/use-wallet'
+import { requiredCoinTypesOfVotingPower } from '../../../src/functions/voting-power'
 import {
   organizationWithSignatureSchema,
   Proposal,
   proposalSchema,
-} from '../../../../src/schemas'
-import { getCurrentSnapshot } from '../../../../src/snapshot'
-import ChoiceList from '../../../../components/choice-list'
-import Button from '../../../../components/basic/button'
+} from '../../../src/schemas'
+import { getCurrentSnapshot } from '../../../src/snapshot'
+import ChoiceList from '../../../components/choice-list'
+import Button from '../../../components/basic/button'
+import TextInput from '../../../components/basic/text-input'
+import Textarea from '../../../components/basic/textarea'
 
 export default function CreateProposalPage() {
   const {
@@ -109,13 +111,13 @@ export default function CreateProposalPage() {
   return (
     <>
       <FormItem label="Title" error={formState.errors.title?.message}>
-        <input {...register('title')} />
+        <TextInput {...register('title')} />
       </FormItem>
       <FormItem label="Body" error={formState.errors.body?.message}>
-        <textarea {...register('body')} />
+        <Textarea {...register('body')} />
       </FormItem>
       <FormItem label="Discussion" error={formState.errors.discussion?.message}>
-        <input {...register('discussion')} />
+        <TextInput {...register('discussion')} />
       </FormItem>
       <FormItem label="Type" error={formState.errors.type?.message}>
         <select {...register('type')}>
