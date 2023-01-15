@@ -13,7 +13,7 @@ export default function Avatar(props: {
       alt={props.name}
       width={props.size * 4}
       height={props.size * 4}
-      style={{ maxWidth: 'unset', height: 'unset' }}
+      style={{ maxWidth: 'inherit', height: 'inherit' }}
       className={clsx('object-cover rounded-full', props.className)}
     />
   ) : (
