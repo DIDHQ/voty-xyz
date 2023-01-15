@@ -1,9 +1,9 @@
-import { LinkTwo } from '@icon-park/react'
+import { LinkIcon } from '@heroicons/react/20/solid'
 
 export default function ArweaveLink(props: { id: string }) {
   return (
     <a href={`https://arweave.net/${props.id}`}>
-      <LinkTwo />
+      <LinkIcon />
     </a>
   )
 }

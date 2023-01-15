@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import '@icon-park/react/styles/index.css';
-
 * {
   box-sizing: border-box;
 }

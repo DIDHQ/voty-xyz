@@ -20,11 +20,11 @@ import {
   proposalSchema,
 } from '../../../src/schemas'
 import { getCurrentSnapshot } from '../../../src/snapshot'
-import ChoiceList from '../../../components/choice-list'
 import Button from '../../../components/basic/button'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
 import Select from '../../../components/basic/select'
+import JsonInput from '../../../components/json-input'
 
 export default function CreateProposalPage() {
   const {
@@ -161,11 +161,7 @@ export default function CreateProposalPage() {
                   control={control}
                   name="choices"
                   render={({ field: { value, onChange } }) => (
-                    <ChoiceList
-                      disabled={false}
-                      value={value || ['']}
-                      onChange={onChange}
-                    />
+                    <JsonInput value={value || []} onChange={onChange} />
                   )}
                 />
               </FormItem>
