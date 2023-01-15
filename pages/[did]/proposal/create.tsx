@@ -179,7 +179,7 @@ export default function CreateProposalPage() {
             <Button
               primary
               disabled={!did}
-              onClick={onSubmit(handleSubmit.execute)}
+              onClick={onSubmit(handleSubmit.execute, console.error)}
               loading={handleSubmit.status === 'pending'}
             >
               Submit

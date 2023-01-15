@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { uniq, without } from 'lodash-es'
 import useSWR from 'swr'
 
 import DidSelect from '../../../components/did-select'
@@ -74,7 +75,7 @@ export default function ProposalPage() {
   const { data: votes } = useList<VoteWithSignature>(DataType.VOTE, [
     ['proposal', query.proposal],
   ])
-  const { data: votingPower } = useSWR(
+  const { data: votingPower, isValidating } = useSWR(
     workgroup && did && proposal
       ? ['votingPower', workgroup, did, proposal]
       : null,
@@ -122,10 +123,12 @@ export default function ProposalPage() {
               <dt className="text-sm font-medium text-gray-500">End Time</dt>
               <dd className="mt-1 text-sm text-gray-900">-</dd>
             </div>
-            <div className="sm:col-span-2">
-              <dt className="text-sm font-medium text-gray-500">About</dt>
-              <dd className="mt-1 text-sm text-gray-900">{proposal.body}</dd>
-            </div>
+            {proposal.body ? (
+              <div className="sm:col-span-2">
+                <dt className="text-sm font-medium text-gray-500">About</dt>
+                <dd className="mt-1 text-sm text-gray-900">{proposal.body}</dd>
+              </div>
+            ) : null}
             <div className="sm:col-span-2">
               <dt className="text-sm font-medium text-gray-500">Choices</dt>
               <dd className="mt-1 text-sm text-gray-900">
@@ -143,18 +146,39 @@ export default function ProposalPage() {
                             key={choice + index}
                             className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
                             onClick={() => {
-                              onChange(index)
+                              if (proposal.type === 'single') {
+                                onChange(index)
+                              } else {
+                                onChange(
+                                  ((value as number[]) || []).includes(index)
+                                    ? without((value as number[]) || [], index)
+                                    : uniq([
+                                        ...((value as number[]) || []),
+                                        index,
+                                      ]),
+                                )
+                              }
                             }}
                           >
                             <span className="ml-2 w-0 flex-1 truncate">
                               {choice}
                             </span>
                             <div className="ml-4 flex-shrink-0">
-                              <input
-                                type="radio"
-                                checked={index === value}
-                                className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                              />
+                              {proposal.type === 'single' ? (
+                                <input
+                                  type="radio"
+                                  defaultChecked={index === value}
+                                  className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                />
+                              ) : (
+                                <input
+                                  type="checkbox"
+                                  defaultChecked={(value as number[])?.includes(
+                                    index,
+                                  )}
+                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                />
+                              )}
                             </div>
                           </li>
                         ))}
@@ -167,7 +191,7 @@ export default function ProposalPage() {
           </dl>
         </div>
       </div>
-      <div className="pt-5">
+      <div className="py-5">
         <div className="flex justify-end">
           <DidSelect
             account={account}
@@ -177,13 +201,32 @@ export default function ProposalPage() {
           />
           <Button
             primary
-            onClick={onSubmit(handleSubmit.execute)}
+            onClick={onSubmit(handleSubmit.execute, console.error)}
+            disabled={!votingPower || isValidating}
             loading={handleSubmit.status === 'pending'}
           >
             Vote {votingPower}
           </Button>
         </div>
       </div>
+      <ul
+        role="list"
+        className="divide-y divide-gray-200 rounded-md border border-gray-200"
+      >
+        {votes?.map((vote) => (
+          <li
+            key={vote.id}
+            className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
+          >
+            <span className="ml-2 w-0 flex-1 truncate">{vote.did}</span>
+            {typeof vote.choice === 'number'
+              ? proposal.choices[vote.choice]
+              : vote.choice
+                  .map((choice) => proposal.choices[choice])
+                  .join(', ')}
+          </li>
+        ))}
+      </ul>
     </div>
   ) : null
 }

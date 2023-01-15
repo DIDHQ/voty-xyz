@@ -226,7 +226,7 @@ export default function WorkgroupForm(props: {
             primary
             disabled={!isAdmin}
             loading={handleSubmit.status === 'pending'}
-            onClick={onSubmit(handleSubmit.execute)}
+            onClick={onSubmit(handleSubmit.execute, console.error)}
           >
             {isNew ? 'Create' : 'Submit'}
           </Button>

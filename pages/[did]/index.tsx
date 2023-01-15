@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import { useCallback, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { nanoid } from 'nanoid'
+import { DocumentCheckIcon, GlobeAltIcon } from '@heroicons/react/24/outline'
 
 import Avatar from '../../components/basic/avatar'
 import useArweaveData from '../../hooks/use-arweave-data'
@@ -62,6 +63,22 @@ export default function OrganizationIndexPage() {
             </div>
           </div>
           <div className="flex space-x-4 mx-8 my-4">
+            {organization.profile.website ? (
+              <a
+                href={organization.profile.website}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <GlobeAltIcon className="w-6 h-6" />
+              </a>
+            ) : null}
+            {organization.profile.tos ? (
+              <a
+                href={organization.profile.tos}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <DocumentCheckIcon className="w-6 h-6" />
+              </a>
+            ) : null}
             {organization.social?.twitter ? (
               <a
                 href={`https://twitter.com/${organization.social.twitter}`}
@@ -145,11 +162,6 @@ export default function OrganizationIndexPage() {
                     {workgroup.time}
                   </time> */}
                 </div>
-                <div className="mt-1">
-                  <p className="text-sm text-gray-600 line-clamp-2">
-                    {workgroup.profile.about}
-                  </p>
-                </div>
               </li>
             ))}
           </ul>
@@ -162,12 +174,26 @@ export default function OrganizationIndexPage() {
         <h1 id="primary-heading" className="sr-only">
           Proposals
         </h1>
-        <div className="p-5 bg-white border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            {workgroup?.profile.name || 'Proposals'}
-          </h3>
+        <div
+          className={clsx(
+            'p-5 bg-white border-b border-gray-200 pb-5 sm:flex sm:justify-between',
+            workgroup ? 'sm:items-start' : 'sm:items-center',
+          )}
+        >
+          <div>
+            <h3 className="text-lg font-medium leading-6 text-gray-900">
+              {workgroup?.profile.name || 'Proposals'}
+            </h3>
+            {workgroup ? (
+              <div className="mt-1">
+                <p className="text-sm text-gray-600 line-clamp-2">
+                  {workgroup?.profile.about}
+                </p>
+              </div>
+            ) : null}
+          </div>
           {workgroup ? (
-            <div className="flex space-x-4 mt-3 sm:mt-0 sm:ml-4">
+            <div className="flex flex-shrink-0 space-x-4 mt-3 sm:mt-0 sm:ml-4">
               <Link
                 href={`/${organization.did}/settings?workgroup=${workgroup.id}`}
               >
