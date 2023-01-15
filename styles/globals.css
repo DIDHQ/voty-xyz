@@ -7,3 +7,8 @@
 * {
   box-sizing: border-box;
 }
+
+div#__next,
+div#__next > div[data-rk] {
+  height: 100%;
+}
