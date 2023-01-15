@@ -3,9 +3,15 @@ import {
   useAccount,
   useConnect,
   useDisconnect,
+  useEnsAvatar,
+  useEnsName,
   useNetwork,
   useSignMessage,
 } from 'wagmi'
+import useSWR from 'swr'
+import { KeyInfo } from 'dotbit/lib/fetchers/BitIndexer.type'
+import { createInstance } from 'dotbit'
+import { BitPluginAvatar } from '@dotbit/plugin-avatar'
 
 import { chainIdToCoinType, coinTypeToChainId } from '../src/constants'
 import { formatSignature } from '../src/signature'
@@ -23,6 +29,25 @@ export default function useWallet() {
     connector: account.connector,
   })
   const { disconnect } = useDisconnect()
+  const { data, error } = useSWR(
+    coinType !== undefined && account.address
+      ? ['reverse', coinType, account.address, network.chain?.id]
+      : null,
+    async () => {
+      const dotbit = createInstance()
+      dotbit.installPlugin(new BitPluginAvatar())
+      const bit = await dotbit.reverse({
+        coin_type: coinType!.toString(),
+        key: account.address,
+      } as KeyInfo)
+      return {
+        avatar: (await bit.avatar())?.url,
+        name: bit.account,
+      }
+    },
+  )
+  const { data: ensAvatar } = useEnsAvatar(account)
+  const { data: ensName } = useEnsName(account)
 
   return useMemo(
     () => ({
@@ -33,6 +58,8 @@ export default function useWallet() {
               address: account.address,
             }
           : undefined,
+      avatar: data?.avatar || ensAvatar || undefined,
+      name: data?.name || ensName || undefined,
       signMessage: async (message: string | Uint8Array) => {
         if (coinType && coinTypeToChainId[coinType]) {
           const signature = Buffer.from(
@@ -50,6 +77,16 @@ export default function useWallet() {
       connect: () => connect(),
       disconnect: () => disconnect(),
     }),
-    [account.address, coinType, connect, disconnect, signMessageAsync],
+    [
+      coinType,
+      account.address,
+      data?.avatar,
+      data?.name,
+      ensAvatar,
+      ensName,
+      signMessageAsync,
+      connect,
+      disconnect,
+    ],
   )
 }
