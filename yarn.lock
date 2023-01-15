@@ -155,6 +155,17 @@
   dependencies:
     tslib "^2.0.0"
 
+"@dotbit/plugin-avatar@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@dotbit/plugin-avatar/-/plugin-avatar-0.0.1.tgz#fc727ea9ad8613bea31a3260a99ce3a93212474c"
+  integrity sha512-rocme9a3FdcwtkUBsz2N3RB8QEBNnOosArM7lq8aw+kuaXAqKJGva+vASqpqz2TylENwrVsAeMdrp8UPEcC1eA==
+  dependencies:
+    "@ethersproject/bignumber" "^5.7.0"
+    "@ethersproject/bytes" "^5.7.0"
+    "@ethersproject/strings" "^5.7.0"
+    "@ethersproject/web" "^5.7.1"
+    ethers "^5.6.9"
+
 "@emotion/hash@^0.8.0":
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@emotion/hash/-/hash-0.8.0.tgz#bbbff68978fefdbe68ccb533bc8cbe1d1afb5413"
@@ -526,7 +537,7 @@
     "@ethersproject/transactions" "^5.7.0"
     "@ethersproject/wordlists" "^5.7.0"
 
-"@ethersproject/web@5.7.1", "@ethersproject/web@^5.7.0":
+"@ethersproject/web@5.7.1", "@ethersproject/web@^5.7.0", "@ethersproject/web@^5.7.1":
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/@ethersproject/web/-/web-5.7.1.tgz#de1f285b373149bee5928f4eb7bcb87ee5fbb4ae"
   integrity sha512-Gueu8lSvyjBWL4cYsWsjh6MtMwM0+H4HvqFPZfB6dV8ctbP9zFAO73VG1cMWae0FLPCtz0peKPpZY8/ugJJX2w==
