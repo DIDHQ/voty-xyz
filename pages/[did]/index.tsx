@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { useMemo } from 'react'
 
 import Avatar from '../../components/basic/avatar'
 import useArweaveData from '../../hooks/use-arweave-data'
@@ -12,7 +11,7 @@ import useRouterQuery from '../../hooks/use-router-query'
 import { useList } from '../../hooks/use-api'
 import { DataType } from '../../src/constants'
 import Button from '../../components/basic/button'
-import Tabs from '../../components/basic/tabs'
+import { DiscordIcon, GitHubIcon, TwitterIcon } from '../../components/icons'
 
 export default function OrganizationIndexPage() {
   const [query] = useRouterQuery<['did']>()
@@ -25,55 +24,68 @@ export default function OrganizationIndexPage() {
     DataType.PROPOSAL,
     [['did', query.did]],
   )
-  const tabs = useMemo(
-    () => [
-      { name: 'All Proposals', href: `/${query.did}`, current: true },
-      ...(organization?.workgroups?.map((workgroup) => ({
-        name: workgroup.profile.name,
-        href: `/${query.did}/workgroup/${workgroup.id}`,
-        current: false,
-      })) || []),
-    ],
-    [organization?.workgroups, query.did],
-  )
 
   return organization ? (
-    <div className="p-8">
-      <div className="md:flex md:items-center md:justify-between md:space-x-5">
-        <div className="flex items-start space-x-5">
-          <div className="flex-shrink-0">
-            <div className="relative">
-              <Avatar
-                size={16}
-                name={organization.did}
-                value={organization.profile.avatar}
-              />
-              <span
-                className="absolute inset-0 rounded-full shadow-inner"
-                aria-hidden="true"
-              />
+    <main className="flex flex-1 overflow-hidden">
+      <aside className="hidden lg:order-first lg:block lg:flex-shrink-0">
+        <div className="relative flex h-full w-96 flex-col overflow-y-auto border-r border-gray-200 bg-white">
+          <div className="m-8 mb-0 flex items-start">
+            <Avatar
+              size={16}
+              name={organization.did}
+              value={organization.profile.avatar}
+            />
+            <div className="ml-4">
+              <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">
+                {organization.profile.name}
+              </h3>
+              <p className="text-sm text-gray-500">
+                {organization.profile.about}
+              </p>
             </div>
           </div>
-          {/*
-        Use vertical padding to simulate center alignment when both lines of text are one line,
-        but preserve the same layout if the text wraps without making the image jump around.
-      */}
-          <div className="pt-1.5">
-            <h1 className="text-2xl font-bold text-gray-900">
-              {organization.profile.name}
-            </h1>
-            <p className="text-sm font-medium text-gray-500">
-              {organization.profile.about}
-            </p>
+          <div className="flex space-x-4 mx-8 my-4">
+            {organization.social?.twitter ? (
+              <a
+                href={`https://twitter.com/${organization.social.twitter}`}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <TwitterIcon className="w-6 h-6" />
+              </a>
+            ) : null}
+            {organization.social?.discord ? (
+              <a
+                href={`https://discord.com/invite/${organization.social.discord}`}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <DiscordIcon className="w-6 h-6" />
+              </a>
+            ) : null}
+            {organization.social?.github ? (
+              <a
+                href={`https://github.com/${organization.social.github}`}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <GitHubIcon className="w-6 h-6" />
+              </a>
+            ) : null}
+          </div>
+          <div className="flex space-x-4 mx-8">
+            <Link href={`/${organization.did}/settings`}>
+              <Button>Settings</Button>
+            </Link>
           </div>
         </div>
-        <div className="justify-stretch mt-6 flex flex-col-reverse space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
-          <Link href={`/${organization.did}/settings`}>
-            <Button>Settings</Button>
-          </Link>
-        </div>
-      </div>
-      <Tabs tabs={tabs} className="mt-8" />
-    </div>
+      </aside>
+      <section
+        aria-labelledby="primary-heading"
+        className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto lg:order-last"
+      >
+        <h1 id="primary-heading" className="sr-only">
+          Account
+        </h1>
+        {null}
+      </section>
+    </main>
   ) : null
 }
