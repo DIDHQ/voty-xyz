@@ -1,13 +1,16 @@
 import Link from 'next/link'
 
 import Button from '../components/basic/button'
+import useWallet from '../hooks/use-wallet'
 
 export default function IndexPage() {
-  return (
+  const { account } = useWallet()
+
+  return account ? (
     <div className="p-8">
       <Link href="/create">
-        <Button primary>Create an Organization</Button>
+        <Button primary>New Organization</Button>
       </Link>
     </div>
-  )
+  ) : null
 }
