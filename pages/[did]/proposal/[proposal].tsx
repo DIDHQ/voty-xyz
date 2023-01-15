@@ -149,10 +149,13 @@ export default function ProposalPage() {
                               if (proposal.type === 'single') {
                                 onChange(index)
                               } else {
-                                onChange((old: number[]) =>
-                                  (old || []).includes(index)
-                                    ? without(old || [], index)
-                                    : uniq([...(old || []), index]),
+                                onChange(
+                                  ((value as number[]) || []).includes(index)
+                                    ? without((value as number[]) || [], index)
+                                    : uniq([
+                                        ...((value as number[]) || []),
+                                        index,
+                                      ]),
                                 )
                               }
                             }}
@@ -164,13 +167,15 @@ export default function ProposalPage() {
                               {proposal.type === 'single' ? (
                                 <input
                                   type="radio"
-                                  checked={index === value}
+                                  defaultChecked={index === value}
                                   className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                               ) : (
                                 <input
                                   type="checkbox"
-                                  checked={(value as number[])?.includes(index)}
+                                  defaultChecked={(value as number[])?.includes(
+                                    index,
+                                  )}
                                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                               )}
@@ -196,7 +201,7 @@ export default function ProposalPage() {
           />
           <Button
             primary
-            onClick={onSubmit(handleSubmit.execute)}
+            onClick={onSubmit(handleSubmit.execute, console.error)}
             disabled={!votingPower || isValidating}
             loading={handleSubmit.status === 'pending'}
           >
