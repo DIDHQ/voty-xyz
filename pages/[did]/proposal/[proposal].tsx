@@ -1,17 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useId,
-  useMemo,
-  useState,
-} from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 
 import DidSelect from '../../../components/did-select'
-import FormItem from '../../../components/basic/form-item'
 import { useList } from '../../../hooks/use-api'
 import useArweaveData from '../../../hooks/use-arweave-data'
 import useArweaveUpload from '../../../hooks/use-arweave-upload'
@@ -102,75 +94,96 @@ export default function ProposalPage() {
   }, [resetField, setValue, votingPower])
 
   return query.proposal && proposal ? (
-    <>
-      <h1>title: {proposal.title}</h1>
-      <p>body: {proposal.body}</p>
-      <FormItem label="Choice">
-        {proposal.type === 'single' ? (
-          <Controller
-            control={control}
-            name="choice"
-            render={({ field: { value, onChange } }) => (
-              <>
-                {proposal.choices.map((choice, index) => (
-                  <Radio
-                    key={choice + index}
+    <div className="p-8">
+      <div className="overflow-hidden bg-white shadow sm:rounded-lg">
+        <div className="px-4 py-5 sm:px-6">
+          <h3 className="text-lg font-medium leading-6 text-gray-900">
+            {proposal.title}
+          </h3>
+          <p className="mt-1 max-w-2xl text-sm text-gray-500">{proposal.did}</p>
+        </div>
+        <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+          <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-500">Type</dt>
+              <dd className="mt-1 text-sm text-gray-900">{proposal.type}</dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-500">Author</dt>
+              <dd className="mt-1 text-sm text-gray-900">
+                {proposal.signature.did}
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-500">Start Time</dt>
+              <dd className="mt-1 text-sm text-gray-900">-</dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-500">End Time</dt>
+              <dd className="mt-1 text-sm text-gray-900">-</dd>
+            </div>
+            <div className="sm:col-span-2">
+              <dt className="text-sm font-medium text-gray-500">About</dt>
+              <dd className="mt-1 text-sm text-gray-900">{proposal.body}</dd>
+            </div>
+            <div className="sm:col-span-2">
+              <dt className="text-sm font-medium text-gray-500">Choices</dt>
+              <dd className="mt-1 text-sm text-gray-900">
+                <ul
+                  role="list"
+                  className="divide-y divide-gray-200 rounded-md border border-gray-200"
+                >
+                  <Controller
+                    control={control}
                     name="choice"
-                    value={index === value}
-                    onChange={(e) => {
-                      if (e) {
-                        onChange(index)
-                      }
-                    }}
-                  >
-                    {choice}
-                  </Radio>
-                ))}
-              </>
-            )}
+                    render={({ field: { value, onChange } }) => (
+                      <>
+                        {proposal.choices.map((choice, index) => (
+                          <li
+                            key={choice + index}
+                            className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
+                            onClick={() => {
+                              onChange(index)
+                            }}
+                          >
+                            <span className="ml-2 w-0 flex-1 truncate">
+                              {choice}
+                            </span>
+                            <div className="ml-4 flex-shrink-0">
+                              <input
+                                type="radio"
+                                checked={index === value}
+                                className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                              />
+                            </div>
+                          </li>
+                        ))}
+                      </>
+                    )}
+                  />
+                </ul>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+      <div className="pt-5">
+        <div className="flex justify-end">
+          <DidSelect
+            account={account}
+            value={did}
+            onChange={setDid}
+            className="w-48 mr-4"
           />
-        ) : null}
-      </FormItem>
-      <FormItem label="Power">
-        {votingPower === undefined ? '-' : votingPower}
-      </FormItem>
-      <DidSelect account={account} value={did} onChange={setDid} />
-      <Button
-        primary
-        onClick={onSubmit(handleSubmit.execute)}
-        loading={handleSubmit.status === 'pending'}
-      >
-        Submit
-      </Button>
-      <ul>
-        {votes?.map((vote, index) => (
-          <li key={vote.id + index}>
-            {vote.signature.did}: {vote.choice.toString()}{' '}
-          </li>
-        ))}
-      </ul>
-    </>
+          <Button
+            primary
+            onClick={onSubmit(handleSubmit.execute)}
+            loading={handleSubmit.status === 'pending'}
+          >
+            Vote {votingPower}
+          </Button>
+        </div>
+      </div>
+    </div>
   ) : null
-}
-
-function Radio(props: {
-  name: string
-  children: ReactNode
-  value: boolean
-  onChange(value: boolean): void
-}) {
-  const id = useId()
-
-  return (
-    <>
-      <input
-        type="radio"
-        id={id}
-        name={props.name}
-        checked={props.value}
-        onChange={(e) => props.onChange(e.target.checked)}
-      />
-      <label htmlFor={id}>{props.children}</label>
-    </>
-  )
 }
