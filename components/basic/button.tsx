@@ -15,7 +15,7 @@ export default function Button(
       {...restProps}
       disabled={loading || disabled}
       className={clsx(
-        'items-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500',
+        'flex items-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500',
         primary
           ? 'bg-indigo-600 hover:bg-indigo-700 border-transparent text-white'
           : 'bg-white hover:bg-gray-50 border-gray-300 shadow-sm',
@@ -40,7 +40,7 @@ export default function Button(
             cy="12"
             r="10"
             stroke="currentColor"
-            stroke-width="4"
+            strokeWidth="4"
           />
           <path
             className="opacity-75"
