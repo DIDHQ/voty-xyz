@@ -168,7 +168,7 @@ export default function OrganizationForm(props: {
             primary
             disabled={!isAdmin}
             loading={handleSubmit.status === 'pending'}
-            onClick={onSubmit(handleSubmit.execute)}
+            onClick={onSubmit(handleSubmit.execute, console.error)}
           >
             {props.organization ? 'Submit' : 'Create'}
           </Button>
