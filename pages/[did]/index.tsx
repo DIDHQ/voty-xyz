@@ -13,6 +13,7 @@ import { useList } from '../../hooks/use-api'
 import { DataType } from '../../src/constants'
 import Button from '../../components/basic/button'
 import { DiscordIcon, GitHubIcon, TwitterIcon } from '../../components/icons'
+import ProposalListItem from '../../components/proposal-list-item'
 
 export default function OrganizationIndexPage() {
   const [query] = useRouterQuery<['did', 'workgroup']>()
@@ -23,7 +24,10 @@ export default function OrganizationIndexPage() {
   )
   const { data: proposals } = useList<ProposalWithSignature>(
     DataType.PROPOSAL,
-    [['did', query.did]],
+    [
+      ['did', query.did],
+      ['workgroup', query.workgroup],
+    ],
   )
 
   return organization ? (
@@ -143,9 +147,15 @@ export default function OrganizationIndexPage() {
         className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto lg:order-last"
       >
         <h1 id="primary-heading" className="sr-only">
-          Account
+          Proposals
         </h1>
-        {null}
+        <ul role="list" className="divide-y divide-gray-200">
+          {proposals?.map((proposal) => (
+            <li key={proposal.id}>
+              <ProposalListItem value={proposal} />
+            </li>
+          ))}
+        </ul>
       </section>
     </main>
   ) : null
