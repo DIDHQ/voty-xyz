@@ -12,9 +12,9 @@ export default function OrganizationSettingsPage() {
     config?.organization,
   )
 
-  return organization && query.did ? (
-    <div className="flex justify-center mt-5">
-      <div className="flex flex-col w-full md:w-[48rem] px-10">
+  return query.did ? (
+    <div className="flex justify-center mb-8">
+      <div className="flex flex-col w-full px-8">
         <OrganizationForm did={query.did} organization={organization} />
       </div>
     </div>

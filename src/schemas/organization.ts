@@ -6,7 +6,7 @@ export const organizationSchema = z.object({
   did: z.string().min(1),
   profile: z.object({
     avatar: z.string().optional(),
-    name: z.string().min(1),
+    name: z.string().min(4),
     about: z.string().optional(),
     website: z.string().optional(),
     tos: z.string().optional(),

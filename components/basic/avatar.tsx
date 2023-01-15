@@ -13,10 +13,9 @@ export default function Avatar(props: {
     <img
       src={props.value}
       alt={props.name}
-      className={clsx(
-        `w-${props.size} h-${props.size} object-cover rounded-full`,
-        props.className,
-      )}
+      width={props.size * 4}
+      height={props.size * 4}
+      className={clsx('object-cover rounded-full', props.className)}
     />
   ) : (
     <div className={clsx('rounded-full overflow-hidden', props.className)}>
