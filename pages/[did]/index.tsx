@@ -174,7 +174,12 @@ export default function OrganizationIndexPage() {
         <h1 id="primary-heading" className="sr-only">
           Proposals
         </h1>
-        <div className="p-5 bg-white border-b border-gray-200 pb-5 sm:flex sm:items-start sm:justify-between">
+        <div
+          className={clsx(
+            'p-5 bg-white border-b border-gray-200 pb-5 sm:flex sm:justify-between',
+            workgroup ? 'sm:items-start' : 'sm:items-center',
+          )}
+        >
           <div>
             <h3 className="text-lg font-medium leading-6 text-gray-900">
               {workgroup?.profile.name || 'Proposals'}
