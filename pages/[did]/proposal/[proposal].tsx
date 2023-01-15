@@ -191,7 +191,7 @@ export default function ProposalPage() {
           </dl>
         </div>
       </div>
-      <div className="pt-5">
+      <div className="py-5">
         <div className="flex justify-end">
           <DidSelect
             account={account}
@@ -209,6 +209,24 @@ export default function ProposalPage() {
           </Button>
         </div>
       </div>
+      <ul
+        role="list"
+        className="divide-y divide-gray-200 rounded-md border border-gray-200"
+      >
+        {votes?.map((vote) => (
+          <li
+            key={vote.id}
+            className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
+          >
+            <span className="ml-2 w-0 flex-1 truncate">{vote.did}</span>
+            {typeof vote.choice === 'number'
+              ? proposal.choices[vote.choice]
+              : vote.choice
+                  .map((choice) => proposal.choices[choice])
+                  .join(', ')}
+          </li>
+        ))}
+      </ul>
     </div>
   ) : null
 }
