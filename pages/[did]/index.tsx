@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import clsx from 'clsx'
 
 import Avatar from '../../components/basic/avatar'
 import useArweaveData from '../../hooks/use-arweave-data'
@@ -14,7 +15,7 @@ import Button from '../../components/basic/button'
 import { DiscordIcon, GitHubIcon, TwitterIcon } from '../../components/icons'
 
 export default function OrganizationIndexPage() {
-  const [query] = useRouterQuery<['did']>()
+  const [query] = useRouterQuery<['did', 'workgroup']>()
   const { data: config } = useDidConfig(query.did)
   const { data: organization } = useArweaveData(
     organizationWithSignatureSchema,
@@ -75,6 +76,66 @@ export default function OrganizationIndexPage() {
               <Button>Settings</Button>
             </Link>
           </div>
+          <ul role="list" className="mt-4 divide-y divide-gray-200">
+            <li
+              className={clsx(
+                'relative py-5 px-8 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
+                !query.workgroup
+                  ? 'bg-gray-100 hover:bg-gray-200'
+                  : 'bg-white hover:bg-gray-50',
+              )}
+            >
+              <div className="flex justify-between space-x-3">
+                <div className="min-w-0 flex-1">
+                  <Link
+                    href={`/${organization.did}`}
+                    className="block focus:outline-none"
+                  >
+                    <span className="absolute inset-0" aria-hidden="true" />
+                    <p className="truncate text-sm font-medium text-gray-900">
+                      All Proposals
+                    </p>
+                  </Link>
+                </div>
+              </div>
+            </li>
+            {organization.workgroups?.map((workgroup) => (
+              <li
+                key={workgroup.id}
+                className={clsx(
+                  'relative py-5 px-8 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
+                  workgroup.id === query.workgroup
+                    ? 'bg-gray-100 hover:bg-gray-200'
+                    : 'bg-white hover:bg-gray-50',
+                )}
+              >
+                <div className="flex justify-between space-x-3">
+                  <div className="min-w-0 flex-1">
+                    <Link
+                      href={`/${organization.did}?workgroup=${workgroup.id}`}
+                      className="block focus:outline-none"
+                    >
+                      <span className="absolute inset-0" aria-hidden="true" />
+                      <p className="truncate text-sm font-medium text-gray-900">
+                        {workgroup.profile.name}
+                      </p>
+                    </Link>
+                  </div>
+                  {/* <time
+                    dateTime={workgroup.datetime}
+                    className="flex-shrink-0 whitespace-nowrap text-sm text-gray-500"
+                  >
+                    {workgroup.time}
+                  </time> */}
+                </div>
+                <div className="mt-1">
+                  <p className="text-sm text-gray-600 line-clamp-2">
+                    {workgroup.profile.about}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </aside>
       <section
