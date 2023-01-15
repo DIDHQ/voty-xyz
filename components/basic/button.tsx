@@ -19,11 +19,7 @@ export default function Button(
         primary
           ? 'bg-indigo-600 hover:bg-indigo-700 border-transparent text-white'
           : 'bg-white hover:bg-gray-50 border-gray-300 shadow-sm',
-        disabled
-          ? 'cursor-not-allowed bg-gray-400 hover:bg-gray-400'
-          : loading
-          ? 'cursor-wait'
-          : 'cursor-pointer',
+        disabled ? 'bg-gray-400 hover:bg-gray-400' : undefined,
         className,
       )}
     >
