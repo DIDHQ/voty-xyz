@@ -1,5 +1,7 @@
 import { ChangeEvent, useCallback, useMemo } from 'react'
 
+import TextInput from './basic/text-input'
+
 export default function NumericInput(props: {
   value: number
   onChange(value: number): void
@@ -17,5 +19,5 @@ export default function NumericInput(props: {
     [onChange],
   )
 
-  return <input type="number" value={value} onChange={handleChange} />
+  return <TextInput type="number" value={value} onChange={handleChange} />
 }

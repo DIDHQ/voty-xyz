@@ -1,15 +1,24 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useCallback, useEffect, useMemo } from 'react'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
 
-import { Workgroup, workgroupSchema } from '../src/schemas'
+import useArweaveUpload from '../hooks/use-arweave-upload'
+import useAsync from '../hooks/use-async'
+import useCurrentSnapshot from '../hooks/use-current-snapshot'
+import useResolveDid from '../hooks/use-resolve-did'
+import useSignJson from '../hooks/use-sign-json'
+import useWallet from '../hooks/use-wallet'
+import { Organization, organizationSchema } from '../src/schemas'
+import Button from './basic/button'
 import FormItem from './basic/form-item'
+import TextInput from './basic/text-input'
+import Textarea from './basic/textarea'
 import JsonInput from './json-input'
 import NumericInput from './numeric-input'
 
 export default function WorkgroupForm(props: {
-  value: Workgroup
-  onChange(value: Workgroup): void
+  organization: Organization
+  workgroup: string
 }) {
   const {
     control,
@@ -17,82 +26,212 @@ export default function WorkgroupForm(props: {
     handleSubmit: onSubmit,
     reset,
     formState,
-  } = useForm<Workgroup>({
-    resolver: zodResolver(workgroupSchema),
+  } = useForm<Organization>({
+    resolver: zodResolver(organizationSchema),
+  })
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'workgroups',
+    keyName: '_id',
   })
   useEffect(() => {
-    reset(props.value)
-  }, [props.value, reset])
+    reset(props.organization)
+  }, [props.organization, reset])
+  const index = useMemo(
+    () => fields.findIndex(({ id }) => id === props.workgroup),
+    [fields, props.workgroup],
+  )
+  const { account } = useWallet()
+  const { data: snapshot } = useCurrentSnapshot(account?.coinType)
+  const handleSignJson = useSignJson(props.organization.did)
+  const handleArweaveUpload = useArweaveUpload()
+  const { data: resolved } = useResolveDid(
+    props.organization.did,
+    account?.coinType,
+    snapshot,
+  )
+  const isAdmin = useMemo(
+    () =>
+      resolved &&
+      account &&
+      resolved.coinType === account.coinType &&
+      resolved.address === account.address,
+    [resolved, account],
+  )
+  const handleSubmit = useAsync(
+    useCallback(
+      async (json: Organization) => {
+        const signed = await handleSignJson(json)
+        if (!signed) {
+          throw new Error('signature failed')
+        }
+        await handleArweaveUpload(signed)
+      },
+      [handleArweaveUpload, handleSignJson],
+    ),
+  )
+  const isNew = useMemo(
+    () =>
+      !props.organization.workgroups?.find(({ id }) => id === props.workgroup),
+    [props.organization.workgroups, props.workgroup],
+  )
+  useEffect(() => {
+    if (isNew) {
+      append(
+        {
+          id: props.workgroup,
+          profile: { name: '' },
+          proposer_liberty: {
+            operator: 'or',
+            operands: [],
+          },
+          voting_power: {
+            operator: 'sum',
+            operands: [],
+          },
+          rules: {
+            voting_duration: 0,
+            voting_start_delay: 0,
+            approval_condition_description: '',
+          },
+        },
+        { shouldFocus: false },
+      )
+    }
+  }, [append, isNew, props.workgroup])
 
-  return (
-    <div>
-      <h2>Workgroup: {props.value.id}</h2>
-      <FormItem label="name" error={formState.errors.profile?.name?.message}>
-        <input {...register('profile.name')} />
-      </FormItem>
-      <FormItem label="about" error={formState.errors.profile?.about?.message}>
-        <input {...register('profile.about')} />
-      </FormItem>
-      <FormItem
-        label="proposer liberty"
-        error={formState.errors.proposer_liberty?.message}
-      >
-        <Controller
-          control={control}
-          name="proposer_liberty"
-          render={({ field: { value, onChange } }) => (
-            <JsonInput value={value} onChange={onChange} />
+  return index < 0 ? null : (
+    <div className="space-y-8 divide-y divide-gray-200">
+      <div className="pt-8">
+        <div>
+          <h3 className="text-lg font-medium leading-6 text-gray-900">
+            Workgroup
+          </h3>
+        </div>
+        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <div className="sm:col-span-6">
+            <FormItem
+              label="name"
+              error={formState.errors.profile?.name?.message}
+            >
+              <TextInput {...register(`workgroups.${index}.profile.name`)} />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-6">
+            <FormItem
+              label="about"
+              error={formState.errors.profile?.about?.message}
+            >
+              <Textarea {...register(`workgroups.${index}.profile.about`)} />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-6">
+            <FormItem
+              label="Proposer Liberty"
+              error={
+                formState.errors.workgroups?.[index]?.proposer_liberty?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`workgroups.${index}.proposer_liberty`}
+                render={({ field: { value, onChange } }) => (
+                  <JsonInput value={value} onChange={onChange} />
+                )}
+              />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-6">
+            <FormItem
+              label="Voting Power"
+              error={
+                formState.errors?.workgroups?.[index]?.voting_power?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`workgroups.${index}.voting_power`}
+                render={({ field: { value, onChange } }) => (
+                  <JsonInput value={value} onChange={onChange} />
+                )}
+              />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-6">
+            <FormItem
+              label="Voting Duration"
+              error={
+                formState.errors?.workgroups?.[index]?.rules?.voting_duration
+                  ?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`workgroups.${index}.rules.voting_duration`}
+                render={({ field: { value, onChange } }) => (
+                  <NumericInput value={value} onChange={onChange} />
+                )}
+              />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-6">
+            <FormItem
+              label="Voting Start Delay"
+              error={
+                formState.errors?.workgroups?.[index]?.rules?.voting_start_delay
+                  ?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`workgroups.${index}.rules.voting_start_delay`}
+                render={({ field: { value, onChange } }) => (
+                  <NumericInput value={value} onChange={onChange} />
+                )}
+              />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-6">
+            <FormItem
+              label="Approval Condition Description"
+              error={
+                formState.errors?.workgroups?.[index]?.rules
+                  ?.approval_condition_description?.message
+              }
+            >
+              <TextInput
+                {...register(
+                  `workgroups.${index}.rules.approval_condition_description`,
+                )}
+              />
+            </FormItem>
+          </div>
+        </div>
+      </div>
+      <div className="pt-5">
+        <div className="flex justify-between">
+          {isNew ? (
+            <div />
+          ) : (
+            <Button
+              onClick={() => {
+                remove(index)
+                onSubmit(console.log, console.error)()
+              }}
+            >
+              Delete
+            </Button>
           )}
-        />
-      </FormItem>
-      <FormItem
-        label="voting power"
-        error={formState.errors.voting_power?.message}
-      >
-        <Controller
-          control={control}
-          name="voting_power"
-          render={({ field: { value, onChange } }) => (
-            <JsonInput value={value} onChange={onChange} />
-          )}
-        />
-      </FormItem>
-      <FormItem
-        label="voting duration"
-        error={formState.errors.rules?.voting_duration?.message}
-      >
-        <Controller
-          control={control}
-          name="rules.voting_duration"
-          render={({ field: { value, onChange } }) => (
-            <NumericInput value={value} onChange={onChange} />
-          )}
-        />
-      </FormItem>
-      <FormItem
-        label="voting start delay"
-        error={formState.errors.rules?.voting_start_delay?.message}
-      >
-        <Controller
-          control={control}
-          name="rules.voting_start_delay"
-          render={({ field: { value, onChange } }) => (
-            <NumericInput value={value} onChange={onChange} />
-          )}
-        />
-      </FormItem>
-      <FormItem
-        label="approval condition description"
-        error={formState.errors.rules?.approval_condition_description?.message}
-      >
-        <input {...register('rules.approval_condition_description')} />
-      </FormItem>
-      <button
-        disabled={!formState.isDirty || !formState.isValid}
-        onClick={onSubmit(props.onChange)}
-      >
-        ok
-      </button>
+          <Button
+            primary
+            disabled={!isAdmin}
+            loading={handleSubmit.status === 'pending'}
+            onClick={onSubmit(handleSubmit.execute)}
+          >
+            {isNew ? 'Create' : 'Submit'}
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }

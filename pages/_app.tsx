@@ -3,11 +3,10 @@ import type { AppProps } from 'next/app'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { mainnet, polygon, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
-import { IconProvider, DEFAULT_ICON_CONFIGS } from '@icon-park/react'
 import Head from 'next/head'
-import '../styles/globals.css'
 
 import Layout from '../components/layout'
+import '../styles/globals.css'
 
 const { chains, provider } = configureChains(
   [mainnet, polygon, bsc],
@@ -36,11 +35,9 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
-          <IconProvider value={DEFAULT_ICON_CONFIGS}>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </IconProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </RainbowKitProvider>
       </WagmiConfig>
     </>

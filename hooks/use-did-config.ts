@@ -1,5 +1,6 @@
 import { createInstance } from 'dotbit'
 import useSWR from 'swr'
+
 import { didSuffixIs } from '../src/did'
 
 const dotbit = createInstance()

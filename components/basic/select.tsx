@@ -7,12 +7,13 @@ export default function Select(props: {
   options?: string[]
   value: string
   onChange(value: string): void
+  className?: string
 }) {
   return (
     <Listbox value={props.value} onChange={props.onChange}>
       {({ open }) => (
         <>
-          <div className="relative">
+          <div className={clsx('relative', props.className)}>
             <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
               <span className="block truncate min-h-[20px]">{props.value}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
