@@ -14,19 +14,17 @@ export default function OrganizationSettingsPage() {
   )
 
   return query.did ? (
-    <div className="flex justify-center mb-8">
-      <div className="flex flex-col w-full px-8">
-        {query.workgroup ? (
-          organization ? (
-            <WorkgroupForm
-              organization={organization}
-              workgroup={query.workgroup}
-            />
-          ) : null
-        ) : (
-          <OrganizationForm did={query.did} organization={organization} />
-        )}
-      </div>
+    <div className="flex flex-col w-full px-8">
+      {query.workgroup ? (
+        organization ? (
+          <WorkgroupForm
+            organization={organization}
+            workgroup={query.workgroup}
+          />
+        ) : null
+      ) : (
+        <OrganizationForm did={query.did} organization={organization} />
+      )}
     </div>
   ) : null
 }
