@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
 import BoringAvatar from 'boring-avatars'
 import clsx from 'clsx'
 

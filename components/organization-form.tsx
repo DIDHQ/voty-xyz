@@ -170,7 +170,7 @@ export default function OrganizationForm(props: {
             loading={handleSubmit.status === 'pending'}
             onClick={onSubmit(handleSubmit.execute)}
           >
-            Submit
+            {props.organization ? 'Submit' : 'Create'}
           </Button>
         </div>
       </div>

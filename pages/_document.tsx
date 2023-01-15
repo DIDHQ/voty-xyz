@@ -7,7 +7,7 @@ export default function Document() {
         <base target="_blank" />
         <meta name="referrer" content="no-referrer" />
       </Head>
-      <body className="h-full">
+      <body className="h-full overflow-hidden">
         <Main />
         <NextScript />
       </body>
