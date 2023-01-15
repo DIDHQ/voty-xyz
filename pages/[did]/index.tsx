@@ -145,11 +145,6 @@ export default function OrganizationIndexPage() {
                     {workgroup.time}
                   </time> */}
                 </div>
-                <div className="mt-1">
-                  <p className="text-sm text-gray-600 line-clamp-2">
-                    {workgroup.profile.about}
-                  </p>
-                </div>
               </li>
             ))}
           </ul>
@@ -162,12 +157,21 @@ export default function OrganizationIndexPage() {
         <h1 id="primary-heading" className="sr-only">
           Proposals
         </h1>
-        <div className="p-5 bg-white border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            {workgroup?.profile.name || 'Proposals'}
-          </h3>
+        <div className="p-5 bg-white border-b border-gray-200 pb-5 sm:flex sm:items-start sm:justify-between">
+          <div>
+            <h3 className="text-lg font-medium leading-6 text-gray-900">
+              {workgroup?.profile.name || 'Proposals'}
+            </h3>
+            {workgroup ? (
+              <div className="mt-1">
+                <p className="text-sm text-gray-600 line-clamp-2">
+                  {workgroup?.profile.about}
+                </p>
+              </div>
+            ) : null}
+          </div>
           {workgroup ? (
-            <div className="flex space-x-4 mt-3 sm:mt-0 sm:ml-4">
+            <div className="flex flex-shrink-0 space-x-4 mt-3 sm:mt-0 sm:ml-4">
               <Link
                 href={`/${organization.did}/settings?workgroup=${workgroup.id}`}
               >
