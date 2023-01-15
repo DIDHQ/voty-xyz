@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import clsx from 'clsx'
+import { useMemo } from 'react'
 
 import Avatar from '../../components/basic/avatar'
 import useArweaveData from '../../hooks/use-arweave-data'
@@ -14,6 +15,7 @@ import { DataType } from '../../src/constants'
 import Button from '../../components/basic/button'
 import { DiscordIcon, GitHubIcon, TwitterIcon } from '../../components/icons'
 import ProposalListItem from '../../components/proposal-list-item'
+import TextInput from '../../components/basic/text-input'
 
 export default function OrganizationIndexPage() {
   const [query] = useRouterQuery<['did', 'workgroup']>()
@@ -21,6 +23,10 @@ export default function OrganizationIndexPage() {
   const { data: organization } = useArweaveData(
     organizationWithSignatureSchema,
     config?.organization,
+  )
+  const workgroup = useMemo(
+    () => organization?.workgroups?.find(({ id }) => id === query.workgroup),
+    [organization?.workgroups, query.workgroup],
   )
   const { data: proposals } = useList<ProposalWithSignature>(
     DataType.PROPOSAL,
@@ -77,7 +83,7 @@ export default function OrganizationIndexPage() {
           </div>
           <div className="flex space-x-4 mx-8">
             <Link href={`/${organization.did}/settings`}>
-              <Button>Settings</Button>
+              <Button>Organization Settings</Button>
             </Link>
           </div>
           <ul role="list" className="mt-4 divide-y divide-gray-200">
@@ -97,7 +103,7 @@ export default function OrganizationIndexPage() {
                   >
                     <span className="absolute inset-0" aria-hidden="true" />
                     <p className="truncate text-sm font-medium text-gray-900">
-                      All Proposals
+                      Proposals
                     </p>
                   </Link>
                 </div>
@@ -149,6 +155,22 @@ export default function OrganizationIndexPage() {
         <h1 id="primary-heading" className="sr-only">
           Proposals
         </h1>
+        <div className="p-5 bg-white border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
+          <h3 className="text-lg font-medium leading-6 text-gray-900">
+            {workgroup?.profile.name || 'Proposals'}
+          </h3>
+          {workgroup ? (
+            <div className="mt-3 sm:mt-0 sm:ml-4">
+              <Link
+                href={`/${organization.did}/settings?workgroup=${workgroup.id}`}
+              >
+                <Button>Workgroup Settings</Button>
+              </Link>
+            </div>
+          ) : (
+            <TextInput placeholder="Search" className="w-48" />
+          )}
+        </div>
         <ul role="list" className="divide-y divide-gray-200">
           {proposals?.map((proposal) => (
             <li key={proposal.id}>
