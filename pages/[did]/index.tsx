@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import clsx from 'clsx'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
+import { useRouter } from 'next/router'
+import { nanoid } from 'nanoid'
 
 import Avatar from '../../components/basic/avatar'
 import useArweaveData from '../../hooks/use-arweave-data'
@@ -35,6 +37,10 @@ export default function OrganizationIndexPage() {
       ['workgroup', query.workgroup],
     ],
   )
+  const router = useRouter()
+  const handleCreateWorkgroup = useCallback(() => {
+    router.push(`/${query.did}/settings?workgroup=${nanoid()}`)
+  }, [query.did, router])
 
   return organization ? (
     <main className="flex flex-1 overflow-hidden">
@@ -147,7 +153,7 @@ export default function OrganizationIndexPage() {
             ))}
           </ul>
           <div className="mx-8 mt-4">
-            <Button>Create Workgroup</Button>
+            <Button onClick={handleCreateWorkgroup}>Create Workgroup</Button>
           </div>
         </div>
       </aside>
