@@ -74,7 +74,7 @@ export default function ProposalPage() {
   const { data: votes } = useList<VoteWithSignature>(DataType.VOTE, [
     ['proposal', query.proposal],
   ])
-  const { data: votingPower } = useSWR(
+  const { data: votingPower, isValidating } = useSWR(
     workgroup && did && proposal
       ? ['votingPower', workgroup, did, proposal]
       : null,
@@ -178,6 +178,7 @@ export default function ProposalPage() {
           <Button
             primary
             onClick={onSubmit(handleSubmit.execute)}
+            disabled={!votingPower || isValidating}
             loading={handleSubmit.status === 'pending'}
           >
             Vote {votingPower}
