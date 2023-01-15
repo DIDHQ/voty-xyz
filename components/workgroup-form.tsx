@@ -1,98 +1,105 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import { Workgroup, workgroupSchema } from '../src/schemas'
+import { Organization, organizationSchema } from '../src/schemas'
 import FormItem from './basic/form-item'
+import TextInput from './basic/text-input'
 import JsonInput from './json-input'
 import NumericInput from './numeric-input'
 
 export default function WorkgroupForm(props: {
-  value: Workgroup
-  onChange(value: Workgroup): void
+  organization?: Organization
+  workgroup: string
 }) {
-  const {
-    control,
-    register,
-    handleSubmit: onSubmit,
-    reset,
-    formState,
-  } = useForm<Workgroup>({
-    resolver: zodResolver(workgroupSchema),
+  const { control, register, reset, formState } = useForm<Organization>({
+    resolver: zodResolver(organizationSchema),
   })
   useEffect(() => {
-    reset(props.value)
-  }, [props.value, reset])
+    reset(props.organization)
+  }, [props.organization, reset])
+  const index = useMemo(
+    () =>
+      props.organization?.workgroups?.findIndex(
+        ({ id }) => id === props.workgroup,
+      ),
+    [props.organization?.workgroups, props.workgroup],
+  )
 
-  return (
+  return index !== undefined ? (
     <div>
-      <h2>Workgroup: {props.value.id}</h2>
       <FormItem label="name" error={formState.errors.profile?.name?.message}>
-        <input {...register('profile.name')} />
+        <TextInput {...register('profile.name')} />
       </FormItem>
       <FormItem label="about" error={formState.errors.profile?.about?.message}>
-        <input {...register('profile.about')} />
+        <TextInput {...register('profile.about')} />
       </FormItem>
       <FormItem
-        label="proposer liberty"
-        error={formState.errors.proposer_liberty?.message}
+        label="Proposer Liberty"
+        error={formState.errors.workgroups?.[index]?.proposer_liberty?.message}
       >
         <Controller
           control={control}
-          name="proposer_liberty"
+          name={`workgroups.${index}.proposer_liberty`}
           render={({ field: { value, onChange } }) => (
             <JsonInput value={value} onChange={onChange} />
           )}
         />
       </FormItem>
       <FormItem
-        label="voting power"
-        error={formState.errors.voting_power?.message}
+        label="Voting Power"
+        error={formState.errors?.workgroups?.[index]?.voting_power?.message}
       >
         <Controller
           control={control}
-          name="voting_power"
+          name={`workgroups.${index}.voting_power`}
           render={({ field: { value, onChange } }) => (
             <JsonInput value={value} onChange={onChange} />
           )}
         />
       </FormItem>
       <FormItem
-        label="voting duration"
-        error={formState.errors.rules?.voting_duration?.message}
+        label="Voting Duration"
+        error={
+          formState.errors?.workgroups?.[index]?.rules?.voting_duration?.message
+        }
       >
         <Controller
           control={control}
-          name="rules.voting_duration"
+          name={`workgroups.${index}.rules.voting_duration`}
           render={({ field: { value, onChange } }) => (
             <NumericInput value={value} onChange={onChange} />
           )}
         />
       </FormItem>
       <FormItem
-        label="voting start delay"
-        error={formState.errors.rules?.voting_start_delay?.message}
+        label="Voting Start Delay"
+        error={
+          formState.errors?.workgroups?.[index]?.rules?.voting_start_delay
+            ?.message
+        }
       >
         <Controller
           control={control}
-          name="rules.voting_start_delay"
+          name={`workgroups.${index}.rules.voting_start_delay`}
           render={({ field: { value, onChange } }) => (
             <NumericInput value={value} onChange={onChange} />
           )}
         />
       </FormItem>
       <FormItem
-        label="approval condition description"
-        error={formState.errors.rules?.approval_condition_description?.message}
+        label="Approval Condition Description"
+        error={
+          formState.errors?.workgroups?.[index]?.rules
+            ?.approval_condition_description?.message
+        }
       >
-        <input {...register('rules.approval_condition_description')} />
+        <TextInput
+          {...register(
+            `workgroups.${index}.rules.approval_condition_description`,
+          )}
+        />
       </FormItem>
-      <button
-        disabled={!formState.isDirty || !formState.isValid}
-        onClick={onSubmit(props.onChange)}
-      >
-        ok
-      </button>
     </div>
-  )
+  ) : null
 }

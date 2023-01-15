@@ -146,6 +146,9 @@ export default function OrganizationIndexPage() {
               </li>
             ))}
           </ul>
+          <div className="mx-8 mt-4">
+            <Button>Create Workgroup</Button>
+          </div>
         </div>
       </aside>
       <section

@@ -1,5 +1,7 @@
 import { CSSProperties, useEffect, useState } from 'react'
 
+import Textarea from './basic/textarea'
+
 export default function JsonInput<T>(props: {
   value: T
   onChange(value: T): void
@@ -13,7 +15,7 @@ export default function JsonInput<T>(props: {
 
   return (
     <>
-      <textarea
+      <Textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         onBlur={() => {
