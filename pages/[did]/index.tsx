@@ -89,8 +89,9 @@ export default function OrganizationIndexPage() {
           </div>
           <div className="flex space-x-4 mx-8">
             <Link href={`/${organization.did}/settings`}>
-              <Button>Organization Settings</Button>
+              <Button>Settings</Button>
             </Link>
+            <Button onClick={handleCreateWorkgroup}>New Workgroup</Button>
           </div>
           <ul role="list" className="mt-4 divide-y divide-gray-200">
             <li
@@ -152,9 +153,6 @@ export default function OrganizationIndexPage() {
               </li>
             ))}
           </ul>
-          <div className="mx-8 mt-4">
-            <Button onClick={handleCreateWorkgroup}>New Workgroup</Button>
-          </div>
         </div>
       </aside>
       <section
@@ -173,7 +171,7 @@ export default function OrganizationIndexPage() {
               <Link
                 href={`/${organization.did}/settings?workgroup=${workgroup.id}`}
               >
-                <Button>Workgroup Settings</Button>
+                <Button>Settings</Button>
               </Link>
               <Link
                 href={`/${organization.did}/proposal/create?workgroup=${workgroup.id}`}
