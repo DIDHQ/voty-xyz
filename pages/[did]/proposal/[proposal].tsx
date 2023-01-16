@@ -167,15 +167,15 @@ export default function ProposalPage() {
                               {proposal.type === 'single' ? (
                                 <input
                                   type="radio"
-                                  defaultChecked={index === value}
+                                  checked={index === value}
+                                  onClick={() => null}
                                   className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                               ) : (
                                 <input
                                   type="checkbox"
-                                  defaultChecked={(value as number[])?.includes(
-                                    index,
-                                  )}
+                                  checked={(value as number[])?.includes(index)}
+                                  onClick={() => null}
                                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                               )}
