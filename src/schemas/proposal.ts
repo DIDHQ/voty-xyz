@@ -14,7 +14,7 @@ export const proposalSchema = z.object({
       message: 'options are not unique',
     }),
   snapshots: z.record(z.string(), z.string()),
-  extend: z
+  extension: z
     .object({
       body: z.string().optional(),
     })

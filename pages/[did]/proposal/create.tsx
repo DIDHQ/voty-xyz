@@ -43,7 +43,8 @@ export default function CreateProposalPage() {
     config?.community,
   )
   const group = useMemo(
-    () => community?.groups?.find(({ extend: { id } }) => id === query.group),
+    () =>
+      community?.groups?.find(({ extension: { id } }) => id === query.group),
     [community?.groups, query.group],
   )
   useEffect(() => {
@@ -56,7 +57,7 @@ export default function CreateProposalPage() {
     if (!group) {
       return
     }
-    setValue('group', group.extend.id)
+    setValue('group', group.extension.id)
   }, [setValue, group])
   const { data: coinTypesOfVotingPower } = useSWR(
     group?.voting_power
@@ -118,9 +119,9 @@ export default function CreateProposalPage() {
             <div className="sm:col-span-6">
               <FormItem
                 label="Body"
-                error={formState.errors.extend?.body?.message}
+                error={formState.errors.extension?.body?.message}
               >
-                <Textarea {...register('extend.body')} />
+                <Textarea {...register('extension.body')} />
               </FormItem>
             </div>
             <div className="sm:col-span-6">

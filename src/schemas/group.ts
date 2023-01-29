@@ -66,7 +66,7 @@ export const groupSchema = z.object({
     voting: z.number(),
     adding_option: z.number(),
   }),
-  extend: z.object({
+  extension: z.object({
     id: z.string().min(1),
     about: z.string().optional(),
   }),

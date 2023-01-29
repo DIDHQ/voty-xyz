@@ -81,22 +81,22 @@ export default function CommunityForm(props: {
           <div className="sm:col-span-6">
             <FormItem
               label="About"
-              error={formState.errors.extend?.about?.message}
+              error={formState.errors.extension?.about?.message}
             >
               <Textarea
-                error={!!formState.errors.extend?.about?.message}
-                {...register('extend.about')}
+                error={!!formState.errors.extension?.about?.message}
+                {...register('extension.about')}
               />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
             <FormItem
               label="Avatar"
-              error={formState.errors.extend?.avatar?.message}
+              error={formState.errors.extension?.avatar?.message}
             >
               <Controller
                 control={control}
-                name="extend.avatar"
+                name="extension.avatar"
                 render={({ field: { value, onChange } }) => (
                   <AvatarInput
                     name={props.did}
@@ -110,11 +110,11 @@ export default function CommunityForm(props: {
           <div className="sm:col-span-6">
             <FormItem
               label="Website"
-              error={formState.errors.extend?.website?.message}
+              error={formState.errors.extension?.website?.message}
             >
               <TextInput
-                error={!!formState.errors.extend?.website?.message}
-                {...register('extend.website')}
+                error={!!formState.errors.extension?.website?.message}
+                {...register('extension.website')}
               />
             </FormItem>
           </div>
@@ -129,17 +129,17 @@ export default function CommunityForm(props: {
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="Twitter">
-              <TextInput {...register('extend.twitter')} />
+              <TextInput {...register('extension.twitter')} />
             </FormItem>
           </div>
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="Discord">
-              <TextInput {...register('extend.discord')} />
+              <TextInput {...register('extension.discord')} />
             </FormItem>
           </div>
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="GitHub">
-              <TextInput {...register('extend.github')} />
+              <TextInput {...register('extension.github')} />
             </FormItem>
           </div>
         </div>

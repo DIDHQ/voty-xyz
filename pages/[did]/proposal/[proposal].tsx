@@ -37,7 +37,9 @@ export default function ProposalPage() {
   )
   const group = useMemo(
     () =>
-      community?.groups?.find(({ extend: { id } }) => id === proposal?.group),
+      community?.groups?.find(
+        ({ extension: { id } }) => id === proposal?.group,
+      ),
     [community?.groups, proposal?.group],
   )
   const [did, setDid] = useState('')
@@ -122,11 +124,11 @@ export default function ProposalPage() {
               <dt className="text-sm font-medium text-gray-500">End Time</dt>
               <dd className="mt-1 text-sm text-gray-900">-</dd>
             </div>
-            {proposal.extend?.body ? (
+            {proposal.extension?.body ? (
               <div className="sm:col-span-2">
                 <dt className="text-sm font-medium text-gray-500">Body</dt>
                 <dd className="mt-1 text-sm text-gray-900">
-                  {proposal.extend.body}
+                  {proposal.extension.body}
                 </dd>
               </div>
             ) : null}

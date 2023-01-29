@@ -12,7 +12,7 @@ export const communitySchema = z.object({
         new Set(groups?.map(({ name }) => name)).size === groups?.length,
       { message: 'groups name are not unique' },
     ),
-  extend: z
+  extension: z
     .object({
       avatar: z.string().optional(),
       about: z.string().optional(),

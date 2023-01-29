@@ -29,7 +29,8 @@ export default function CommunityIndexPage() {
     config?.community,
   )
   const group = useMemo(
-    () => community?.groups?.find(({ extend: { id } }) => id === query.group),
+    () =>
+      community?.groups?.find(({ extension: { id } }) => id === query.group),
     [community?.groups, query.group],
   )
   const { data: proposals } = useList<Authorized<Proposal>>(DataType.PROPOSAL, [
@@ -41,7 +42,7 @@ export default function CommunityIndexPage() {
     router.push(`/${query.did}/settings?group=${nanoid()}`)
   }, [query.did, router])
 
-  return community?.extend ? (
+  return community?.extension ? (
     <main className="flex flex-1 overflow-hidden">
       <aside className="hidden lg:order-first lg:block lg:flex-shrink-0">
         <div className="relative flex h-full w-96 flex-col overflow-y-auto border-r border-gray-200 bg-white">
@@ -49,43 +50,45 @@ export default function CommunityIndexPage() {
             <Avatar
               size={16}
               name={query.did}
-              value={community.extend.avatar}
+              value={community.extension.avatar}
             />
             <div className="ml-4">
               <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">
                 {community.name}
               </h3>
-              <p className="text-sm text-gray-500">{community.extend.about}</p>
+              <p className="text-sm text-gray-500">
+                {community.extension.about}
+              </p>
             </div>
           </div>
           <div className="flex space-x-4 mx-8 my-4">
-            {community.extend.website ? (
+            {community.extension.website ? (
               <a
-                href={community.extend.website}
+                href={community.extension.website}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <GlobeAltIcon className="w-6 h-6" />
               </a>
             ) : null}
-            {community.extend?.twitter ? (
+            {community.extension?.twitter ? (
               <a
-                href={`https://twitter.com/${community.extend.twitter}`}
+                href={`https://twitter.com/${community.extension.twitter}`}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <TwitterIcon className="w-6 h-6" />
               </a>
             ) : null}
-            {community.extend?.discord ? (
+            {community.extension?.discord ? (
               <a
-                href={`https://discord.com/invite/${community.extend.discord}`}
+                href={`https://discord.com/invite/${community.extension.discord}`}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <DiscordIcon className="w-6 h-6" />
               </a>
             ) : null}
-            {community.extend?.github ? (
+            {community.extension?.github ? (
               <a
-                href={`https://github.com/${community.extend.github}`}
+                href={`https://github.com/${community.extension.github}`}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <GitHubIcon className="w-6 h-6" />
@@ -123,10 +126,10 @@ export default function CommunityIndexPage() {
             </li>
             {community.groups?.map((group) => (
               <li
-                key={group.extend.id}
+                key={group.extension.id}
                 className={clsx(
                   'relative py-5 px-8 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
-                  group.extend.id === query.group
+                  group.extension.id === query.group
                     ? 'bg-gray-100 hover:bg-gray-200'
                     : 'bg-white hover:bg-gray-50',
                 )}
@@ -134,7 +137,7 @@ export default function CommunityIndexPage() {
                 <div className="flex justify-between space-x-3">
                   <div className="min-w-0 flex-1">
                     <Link
-                      href={`/${query.did}?group=${group.extend.id}`}
+                      href={`/${query.did}?group=${group.extension.id}`}
                       className="block focus:outline-none"
                     >
                       <span className="absolute inset-0" aria-hidden="true" />
@@ -175,18 +178,18 @@ export default function CommunityIndexPage() {
             {group ? (
               <div className="mt-1">
                 <p className="text-sm text-gray-600 line-clamp-2">
-                  {group?.extend?.about}
+                  {group?.extension?.about}
                 </p>
               </div>
             ) : null}
           </div>
           {group ? (
             <div className="flex flex-shrink-0 space-x-4 mt-3 sm:mt-0 sm:ml-4">
-              <Link href={`/${query.did}/settings?group=${group.extend.id}`}>
+              <Link href={`/${query.did}/settings?group=${group.extension.id}`}>
                 <Button>Settings</Button>
               </Link>
               <Link
-                href={`/${query.did}/proposal/create?group=${group.extend.id}`}
+                href={`/${query.did}/proposal/create?group=${group.extension.id}`}
               >
                 <Button primary>New Proposal</Button>
               </Link>

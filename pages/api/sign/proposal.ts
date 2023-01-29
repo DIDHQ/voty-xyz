@@ -75,7 +75,7 @@ export default async function handler(
   }
 
   const group = communityWithAuthor.data.groups?.find(
-    ({ extend: { id } }) => id === proposal.group,
+    ({ extension: { id } }) => id === proposal.group,
   )
   if (!group) {
     res.status(400).send('group not found')

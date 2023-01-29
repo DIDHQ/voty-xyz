@@ -39,7 +39,7 @@ export default function GroupForm(props: {
     reset(props.community)
   }, [props.community, reset])
   const index = useMemo(
-    () => fields.findIndex(({ extend: { id } }) => id === props.group),
+    () => fields.findIndex(({ extension: { id } }) => id === props.group),
     [fields, props.group],
   )
   const { account } = useWallet()
@@ -73,7 +73,9 @@ export default function GroupForm(props: {
   )
   const isNew = useMemo(
     () =>
-      !props.community.groups?.find(({ extend: { id } }) => id === props.group),
+      !props.community.groups?.find(
+        ({ extension: { id } }) => id === props.group,
+      ),
     [props.community.groups, props.group],
   )
   useEffect(() => {
@@ -94,7 +96,7 @@ export default function GroupForm(props: {
             voting: 86400,
             adding_option: 86400,
           },
-          extend: {
+          extension: {
             id: props.group,
           },
         },
@@ -121,9 +123,11 @@ export default function GroupForm(props: {
           <div className="sm:col-span-6">
             <FormItem
               label="About"
-              error={formState.errors.groups?.[index]?.extend?.about?.message}
+              error={
+                formState.errors.groups?.[index]?.extension?.about?.message
+              }
             >
-              <Textarea {...register(`groups.${index}.extend.about`)} />
+              <Textarea {...register(`groups.${index}.extension.about`)} />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
