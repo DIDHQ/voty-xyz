@@ -138,12 +138,12 @@ export default function CreateProposalPage() {
             </div>
             <div className="sm:col-span-6">
               <FormItem
-                label="Choices"
-                error={formState.errors.choices?.message}
+                label="Options"
+                error={formState.errors.options?.message}
               >
                 <Controller
                   control={control}
-                  name="choices"
+                  name="options"
                   render={({ field: { value, onChange } }) => (
                     <JsonInput value={value || []} onChange={onChange} />
                   )}

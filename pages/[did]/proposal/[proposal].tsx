@@ -126,7 +126,7 @@ export default function ProposalPage() {
               </div>
             ) : null}
             <div className="sm:col-span-2">
-              <dt className="text-sm font-medium text-gray-500">Choices</dt>
+              <dt className="text-sm font-medium text-gray-500">Options</dt>
               <dd className="mt-1 text-sm text-gray-900">
                 <ul
                   role="list"
@@ -137,7 +137,7 @@ export default function ProposalPage() {
                     name="choice"
                     render={({ field: { value, onChange } }) => (
                       <>
-                        {proposal.choices.map((choice, index) => (
+                        {proposal.options.map((choice, index) => (
                           <li
                             key={choice + index}
                             className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
@@ -216,9 +216,9 @@ export default function ProposalPage() {
           >
             <span className="ml-2 w-0 flex-1 truncate">{vote.author.did}</span>
             {typeof vote.choice === 'number'
-              ? proposal.choices[vote.choice]
+              ? proposal.options[vote.choice]
               : vote.choice
-                  .map((choice) => proposal.choices[choice])
+                  .map((choice) => proposal.options[choice])
                   .join(', ')}
           </li>
         ))}

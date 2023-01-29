@@ -8,7 +8,7 @@ export const proposalSchema = z.object({
   title: z.string().min(1),
   type: z.enum(['single', 'multiple', 'weighted']),
   body: z.string(),
-  choices: z.array(z.string().min(1)).min(1),
+  options: z.array(z.string().min(1)).min(1),
   snapshots: z.record(z.string(), z.string()),
 })
 export type Proposal = z.infer<typeof proposalSchema>
