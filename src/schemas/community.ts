@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { signatureSchema } from './signature'
+import { authorSchema } from './author'
 import { groupSchema } from './group'
 
 export const communitySchema = z.object({
@@ -23,7 +23,7 @@ export const communitySchema = z.object({
 export type Community = z.infer<typeof communitySchema>
 
 export const communityWithSignatureSchema = communitySchema.extend({
-  signature: signatureSchema,
+  author: authorSchema,
 })
 export type CommunityWithSignature = z.infer<
   typeof communityWithSignatureSchema

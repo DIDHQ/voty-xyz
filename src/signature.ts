@@ -2,23 +2,23 @@ import arweave from 'arweave'
 import { verifyMessage } from 'ethers/lib/utils.js'
 
 import { coinTypeToChainId } from './constants'
-import { Signature } from './schemas'
+import { Author } from './schemas'
 import { dataTypeOf } from './utils/data-type'
 
 const signatureEncoding = 'base64'
 
 export function verifySignature(
   message: string,
-  signature: Pick<Signature, 'coin_type' | 'address' | 'data'>,
+  author: Pick<Author, 'coin_type' | 'address' | 'signature'>,
 ): boolean {
-  if (coinTypeToChainId[signature.coin_type] === undefined) {
+  if (coinTypeToChainId[author.coin_type] === undefined) {
     throw new Error(
-      `unsupported verify signature coin type: ${signature.coin_type}`,
+      `unsupported verify signature coin type: ${author.coin_type}`,
     )
   }
   return (
-    verifyMessage(message, Buffer.from(signature.data, signatureEncoding)) ===
-    signature.address
+    verifyMessage(message, Buffer.from(author.signature, signatureEncoding)) ===
+    author.address
   )
 }
 

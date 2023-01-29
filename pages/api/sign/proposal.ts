@@ -34,18 +34,18 @@ export default async function handler(
     return
   }
 
-  // verify signature
-  const { signature, ...proposal } = proposalWithSignature.data
-  const snapshot = BigInt(signature.snapshot)
-  const { coinType, address } = await resolveDid(signature.did, {
-    [signature.coin_type]: snapshot,
+  // verify author
+  const { author, ...proposal } = proposalWithSignature.data
+  const snapshot = BigInt(author.snapshot)
+  const { coinType, address } = await resolveDid(author.did, {
+    [author.coin_type]: snapshot,
   })
   if (
-    coinType !== signature.coin_type ||
-    address !== signature.address ||
-    !verifySignature(await wrapJsonMessage(proposal), signature)
+    coinType !== author.coin_type ||
+    address !== author.address ||
+    !verifySignature(await wrapJsonMessage(proposal), author)
   ) {
-    res.status(400).send('invalid signature')
+    res.status(400).send('invalid author')
     return
   }
 
@@ -85,7 +85,7 @@ export default async function handler(
   if (
     !(await checkProposerLiberty(
       group.proposer_liberty,
-      proposalWithSignature.data.signature.did as DID,
+      proposalWithSignature.data.author.did as DID,
       mapSnapshots(proposalWithSignature.data.snapshots),
     ))
   ) {

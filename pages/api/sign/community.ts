@@ -33,18 +33,18 @@ export default async function handler(
     return
   }
 
-  // verify signature
-  const { signature, ...community } = communityWithSignature.data
-  const snapshot = BigInt(signature.snapshot)
-  const { coinType, address } = await resolveDid(signature.did, {
-    [signature.coin_type]: snapshot,
+  // verify author
+  const { author, ...community } = communityWithSignature.data
+  const snapshot = BigInt(author.snapshot)
+  const { coinType, address } = await resolveDid(author.did, {
+    [author.coin_type]: snapshot,
   })
   if (
-    coinType !== signature.coin_type ||
-    address !== signature.address ||
-    !verifySignature(await wrapJsonMessage(community), signature)
+    coinType !== author.coin_type ||
+    address !== author.address ||
+    !verifySignature(await wrapJsonMessage(community), author)
   ) {
-    res.status(400).send('invalid signature')
+    res.status(400).send('invalid author')
     return
   }
 

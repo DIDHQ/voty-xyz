@@ -35,18 +35,18 @@ export default async function handler(
     return
   }
 
-  // verify signature
-  const { signature, ...vote } = voteWithSignature.data
-  const snapshot = BigInt(signature.snapshot)
-  const { coinType, address } = await resolveDid(signature.did, {
-    [signature.coin_type]: snapshot,
+  // verify author
+  const { author, ...vote } = voteWithSignature.data
+  const snapshot = BigInt(author.snapshot)
+  const { coinType, address } = await resolveDid(author.did, {
+    [author.coin_type]: snapshot,
   })
   if (
-    coinType !== signature.coin_type ||
-    address !== signature.address ||
-    !verifySignature(await wrapJsonMessage(vote), signature)
+    coinType !== author.coin_type ||
+    address !== author.address ||
+    !verifySignature(await wrapJsonMessage(vote), author)
   ) {
-    res.status(400).send('invalid signature')
+    res.status(400).send('invalid author')
     return
   }
 
@@ -103,7 +103,7 @@ export default async function handler(
 
   const votingPower = await calculateVotingPower(
     group.voting_power,
-    voteWithSignature.data.signature.did as DID,
+    voteWithSignature.data.author.did as DID,
     mapSnapshots(proposalWithSignature.data.snapshots),
   )
   if (votingPower !== vote.power) {

@@ -1,5 +1,5 @@
 export * from './community'
 export * from './proposal'
-export * from './signature'
+export * from './author'
 export * from './vote'
 export * from './group'

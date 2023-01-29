@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { signatureSchema } from './signature'
+import { authorSchema } from './author'
 
 export const proposalSchema = z.object({
   did: z.string().min(1),
@@ -17,6 +17,6 @@ export const proposalSchema = z.object({
 export type Proposal = z.infer<typeof proposalSchema>
 
 export const proposalWithSignatureSchema = proposalSchema.extend({
-  signature: signatureSchema,
+  author: authorSchema,
 })
 export type ProposalWithSignature = z.infer<typeof proposalWithSignatureSchema>
