@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
-import { communityWithSignatureSchema } from '../../../src/schemas'
+import { communityWithAuthorSchema } from '../../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../../src/signature'
 import { getCurrentSnapshot } from '../../../src/snapshot'
 import { getArweaveTags } from '../../../src/utils/arweave-tags'
@@ -23,18 +23,14 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   // verify schema
-  const communityWithSignature = communityWithSignatureSchema.safeParse(
-    req.body,
-  )
-  if (!communityWithSignature.success) {
-    res
-      .status(400)
-      .send(`schema error: ${communityWithSignature.error.message}`)
+  const communityWithAuthor = communityWithAuthorSchema.safeParse(req.body)
+  if (!communityWithAuthor.success) {
+    res.status(400).send(`schema error: ${communityWithAuthor.error.message}`)
     return
   }
 
   // verify author
-  const { author, ...community } = communityWithSignature.data
+  const { author, ...community } = communityWithAuthor.data
   const snapshot = BigInt(author.snapshot)
   const { coinType, address } = await resolveDid(author.did, {
     [author.coin_type]: snapshot,
@@ -61,10 +57,10 @@ export default async function handler(
   // TODO: extra verifies
 
   const data = Buffer.from(
-    textEncoder.encode(JSON.stringify(communityWithSignature.data)),
+    textEncoder.encode(JSON.stringify(communityWithAuthor.data)),
   )
   const transaction = await arweave.createTransaction({ data })
-  const tags = getArweaveTags(communityWithSignature.data)
+  const tags = getArweaveTags(communityWithAuthor.data)
   Object.entries(tags).forEach(([key, value]) => {
     transaction.addTag(key, value)
   })

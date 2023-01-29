@@ -16,7 +16,6 @@ export const proposalSchema = z.object({
 })
 export type Proposal = z.infer<typeof proposalSchema>
 
-export const proposalWithSignatureSchema = proposalSchema.extend({
+export const proposalWithAuthorSchema = proposalSchema.extend({
   author: authorSchema,
 })
-export type ProposalWithSignature = z.infer<typeof proposalWithSignatureSchema>

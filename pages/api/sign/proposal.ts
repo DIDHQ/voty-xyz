@@ -5,8 +5,8 @@ import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
 import { checkProposerLiberty } from '../../../src/functions/proposer-liberty'
 import {
-  communityWithSignatureSchema,
-  proposalWithSignatureSchema,
+  communityWithAuthorSchema,
+  proposalWithAuthorSchema,
 } from '../../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../../src/signature'
 import { mapSnapshots, getCurrentSnapshot } from '../../../src/snapshot'
@@ -28,14 +28,14 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   // verify schema
-  const proposalWithSignature = proposalWithSignatureSchema.safeParse(req.body)
-  if (!proposalWithSignature.success) {
-    res.status(400).send(`schema error: ${proposalWithSignature.error.message}`)
+  const proposalWithAuthor = proposalWithAuthorSchema.safeParse(req.body)
+  if (!proposalWithAuthor.success) {
+    res.status(400).send(`schema error: ${proposalWithAuthor.error.message}`)
     return
   }
 
   // verify author
-  const { author, ...proposal } = proposalWithSignature.data
+  const { author, ...proposal } = proposalWithAuthor.data
   const snapshot = BigInt(author.snapshot)
   const { coinType, address } = await resolveDid(author.did, {
     [author.coin_type]: snapshot,
@@ -59,7 +59,7 @@ export default async function handler(
     return
   }
 
-  const communityWithSignature = communityWithSignatureSchema.safeParse(
+  const communityWithAuthor = communityWithAuthorSchema.safeParse(
     JSON.parse(
       (await arweave.transactions.getData(proposal.community, {
         decode: true,
@@ -67,14 +67,14 @@ export default async function handler(
       })) as string,
     ),
   )
-  if (!communityWithSignature.success) {
+  if (!communityWithAuthor.success) {
     res
       .status(400)
-      .send(`community schema error: ${communityWithSignature.error.message}`)
+      .send(`community schema error: ${communityWithAuthor.error.message}`)
     return
   }
 
-  const group = communityWithSignature.data.groups?.find(
+  const group = communityWithAuthor.data.groups?.find(
     ({ id }) => id === proposal.group,
   )
   if (!group) {
@@ -85,8 +85,8 @@ export default async function handler(
   if (
     !(await checkProposerLiberty(
       group.proposer_liberty,
-      proposalWithSignature.data.author.did as DID,
-      mapSnapshots(proposalWithSignature.data.snapshots),
+      proposalWithAuthor.data.author.did as DID,
+      mapSnapshots(proposalWithAuthor.data.snapshots),
     ))
   ) {
     res.status(400).send('does not have proposer liberty')
@@ -96,10 +96,10 @@ export default async function handler(
   // TODO: extra verifies
 
   const data = Buffer.from(
-    textEncoder.encode(JSON.stringify(proposalWithSignature.data)),
+    textEncoder.encode(JSON.stringify(proposalWithAuthor.data)),
   )
   const transaction = await arweave.createTransaction({ data })
-  const tags = getArweaveTags(proposalWithSignature.data)
+  const tags = getArweaveTags(proposalWithAuthor.data)
   Object.entries(tags).forEach(([key, value]) => {
     transaction.addTag(key, value)
   })

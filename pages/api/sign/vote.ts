@@ -5,9 +5,9 @@ import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
 import { calculateVotingPower } from '../../../src/functions/voting-power'
 import {
-  communityWithSignatureSchema,
-  proposalWithSignatureSchema,
-  voteWithSignatureSchema,
+  communityWithAuthorSchema,
+  proposalWithAuthorSchema,
+  voteWithAuthorSchema,
 } from '../../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../../src/signature'
 import { getCurrentSnapshot, mapSnapshots } from '../../../src/snapshot'
@@ -29,14 +29,14 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   // verify schema
-  const voteWithSignature = voteWithSignatureSchema.safeParse(req.body)
-  if (!voteWithSignature.success) {
-    res.status(400).send(`schema error: ${voteWithSignature.error.message}`)
+  const voteWithAuthor = voteWithAuthorSchema.safeParse(req.body)
+  if (!voteWithAuthor.success) {
+    res.status(400).send(`schema error: ${voteWithAuthor.error.message}`)
     return
   }
 
   // verify author
-  const { author, ...vote } = voteWithSignature.data
+  const { author, ...vote } = voteWithAuthor.data
   const snapshot = BigInt(author.snapshot)
   const { coinType, address } = await resolveDid(author.did, {
     [author.coin_type]: snapshot,
@@ -60,7 +60,7 @@ export default async function handler(
     return
   }
 
-  const proposalWithSignature = proposalWithSignatureSchema.safeParse(
+  const proposalWithAuthor = proposalWithAuthorSchema.safeParse(
     JSON.parse(
       (await arweave.transactions.getData(vote.proposal, {
         decode: true,
@@ -68,33 +68,30 @@ export default async function handler(
       })) as string,
     ),
   )
-  if (!proposalWithSignature.success) {
+  if (!proposalWithAuthor.success) {
     res
       .status(400)
-      .send(`proposal schema error: ${proposalWithSignature.error.message}`)
+      .send(`proposal schema error: ${proposalWithAuthor.error.message}`)
     return
   }
 
-  const communityWithSignature = communityWithSignatureSchema.safeParse(
+  const communityWithAuthor = communityWithAuthorSchema.safeParse(
     JSON.parse(
-      (await arweave.transactions.getData(
-        proposalWithSignature.data.community,
-        {
-          decode: true,
-          string: true,
-        },
-      )) as string,
+      (await arweave.transactions.getData(proposalWithAuthor.data.community, {
+        decode: true,
+        string: true,
+      })) as string,
     ),
   )
-  if (!communityWithSignature.success) {
+  if (!communityWithAuthor.success) {
     res
       .status(400)
-      .send(`community schema error: ${communityWithSignature.error.message}`)
+      .send(`community schema error: ${communityWithAuthor.error.message}`)
     return
   }
 
-  const group = communityWithSignature.data.groups?.find(
-    ({ id }) => id === proposalWithSignature.data.group,
+  const group = communityWithAuthor.data.groups?.find(
+    ({ id }) => id === proposalWithAuthor.data.group,
   )
   if (!group) {
     res.status(400).send('group not found')
@@ -103,8 +100,8 @@ export default async function handler(
 
   const votingPower = await calculateVotingPower(
     group.voting_power,
-    voteWithSignature.data.author.did as DID,
-    mapSnapshots(proposalWithSignature.data.snapshots),
+    voteWithAuthor.data.author.did as DID,
+    mapSnapshots(proposalWithAuthor.data.snapshots),
   )
   if (votingPower !== vote.power) {
     res.status(400).send('does not have proposer liberty')
@@ -114,10 +111,10 @@ export default async function handler(
   // TODO: extra verifies
 
   const data = Buffer.from(
-    textEncoder.encode(JSON.stringify(voteWithSignature.data)),
+    textEncoder.encode(JSON.stringify(voteWithAuthor.data)),
   )
   const transaction = await arweave.createTransaction({ data })
-  const tags = getArweaveTags(voteWithSignature.data)
+  const tags = getArweaveTags(voteWithAuthor.data)
   Object.entries(tags).forEach(([key, value]) => {
     transaction.addTag(key, value)
   })

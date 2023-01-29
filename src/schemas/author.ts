@@ -9,6 +9,6 @@ export const authorSchema = z.object({
 })
 export type Author = z.infer<typeof authorSchema>
 
-export type Authorized<T extends Document> = T & {
+export type Authorized<T extends object> = T & {
   author: Author
 }

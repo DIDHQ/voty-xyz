@@ -22,9 +22,6 @@ export const communitySchema = z.object({
 })
 export type Community = z.infer<typeof communitySchema>
 
-export const communityWithSignatureSchema = communitySchema.extend({
+export const communityWithAuthorSchema = communitySchema.extend({
   author: authorSchema,
 })
-export type CommunityWithSignature = z.infer<
-  typeof communityWithSignatureSchema
->

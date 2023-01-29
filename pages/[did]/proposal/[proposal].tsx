@@ -15,11 +15,11 @@ import useWallet from '../../../hooks/use-wallet'
 import { DataType } from '../../../src/constants'
 import { calculateVotingPower } from '../../../src/functions/voting-power'
 import {
-  communityWithSignatureSchema,
-  proposalWithSignatureSchema,
+  Authorized,
+  communityWithAuthorSchema,
+  proposalWithAuthorSchema,
   Vote,
   voteSchema,
-  VoteWithSignature,
 } from '../../../src/schemas'
 import { mapSnapshots } from '../../../src/snapshot'
 import { DID } from '../../../src/types'
@@ -28,11 +28,11 @@ import Button from '../../../components/basic/button'
 export default function ProposalPage() {
   const [query] = useRouterQuery<['proposal']>()
   const { data: proposal } = useArweaveData(
-    proposalWithSignatureSchema,
+    proposalWithAuthorSchema,
     query.proposal,
   )
   const { data: community } = useArweaveData(
-    communityWithSignatureSchema,
+    communityWithAuthorSchema,
     proposal?.community,
   )
   const group = useMemo(
@@ -71,7 +71,7 @@ export default function ProposalPage() {
       setValue('proposal', query.proposal)
     }
   }, [proposal, query.proposal, setValue])
-  const { data: votes } = useList<VoteWithSignature>(DataType.VOTE, [
+  const { data: votes } = useList<Authorized<Vote>>(DataType.VOTE, [
     ['proposal', query.proposal],
   ])
   const { data: votingPower, isValidating } = useSWR(

@@ -12,7 +12,6 @@ export const voteSchema = z.object({
 })
 export type Vote = z.infer<typeof voteSchema>
 
-export const voteWithSignatureSchema = voteSchema.extend({
+export const voteWithAuthorSchema = voteSchema.extend({
   author: authorSchema,
 })
-export type VoteWithSignature = z.infer<typeof voteWithSignatureSchema>

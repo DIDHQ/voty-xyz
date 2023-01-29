@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
 
-import { Community, Proposal, Author, Vote } from '../src/schemas'
+import { Community, Proposal, Vote, Authorized } from '../src/schemas'
 import { wrapJsonMessage } from '../src/signature'
 import useCurrentSnapshot from './use-current-snapshot'
 import useWallet from './use-wallet'
 
 export default function useSignJson<T extends Community | Proposal | Vote>(
   did: string,
-): (json: T) => Promise<(T & { author: Author }) | undefined> {
+): (json: T) => Promise<Authorized<T> | undefined> {
   const { account, signMessage } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
 

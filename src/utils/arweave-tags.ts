@@ -1,9 +1,5 @@
 import { DataType } from '../constants'
-import {
-  CommunityWithSignature,
-  ProposalWithSignature,
-  VoteWithSignature,
-} from '../schemas'
+import { Authorized, Community, Proposal, Vote } from '../schemas'
 import { isCommunity, isProposal, isVote } from './data-type'
 
 export const defaultArweaveTags = {
@@ -12,9 +8,7 @@ export const defaultArweaveTags = {
   'app-version': '0.0.0',
 }
 
-export function getArweaveTags(
-  json: CommunityWithSignature | ProposalWithSignature | VoteWithSignature,
-) {
+export function getArweaveTags(json: Authorized<Community | Proposal | Vote>) {
   if (isCommunity(json)) {
     return {
       ...defaultArweaveTags,

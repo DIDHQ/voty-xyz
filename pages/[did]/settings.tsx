@@ -3,13 +3,13 @@ import useRouterQuery from '../../hooks/use-router-query'
 import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
 import GroupForm from '../../components/group-form'
-import { communityWithSignatureSchema } from '../../src/schemas'
+import { communityWithAuthorSchema } from '../../src/schemas'
 
 export default function CommunitySettingsPage() {
   const [query] = useRouterQuery<['did', 'group']>()
   const { data: config } = useDidConfig(query.did)
   const { data: community } = useArweaveData(
-    communityWithSignatureSchema,
+    communityWithAuthorSchema,
     config?.community,
   )
 

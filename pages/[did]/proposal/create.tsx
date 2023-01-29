@@ -15,7 +15,7 @@ import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
 import { requiredCoinTypesOfVotingPower } from '../../../src/functions/voting-power'
 import {
-  communityWithSignatureSchema,
+  communityWithAuthorSchema,
   Proposal,
   proposalSchema,
 } from '../../../src/schemas'
@@ -39,7 +39,7 @@ export default function CreateProposalPage() {
   const [query] = useRouterQuery<['did', 'group']>()
   const { data: config } = useDidConfig(query.did)
   const { data: community } = useArweaveData(
-    communityWithSignatureSchema,
+    communityWithAuthorSchema,
     config?.community,
   )
   const group = useMemo(

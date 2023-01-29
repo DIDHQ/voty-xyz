@@ -9,8 +9,9 @@ import Avatar from '../../components/basic/avatar'
 import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
 import {
-  communityWithSignatureSchema,
-  ProposalWithSignature,
+  Authorized,
+  communityWithAuthorSchema,
+  Proposal,
 } from '../../src/schemas'
 import useRouterQuery from '../../hooks/use-router-query'
 import { useList } from '../../hooks/use-api'
@@ -24,20 +25,17 @@ export default function CommunityIndexPage() {
   const [query] = useRouterQuery<['did', 'group']>()
   const { data: config } = useDidConfig(query.did)
   const { data: community } = useArweaveData(
-    communityWithSignatureSchema,
+    communityWithAuthorSchema,
     config?.community,
   )
   const group = useMemo(
     () => community?.groups?.find(({ id }) => id === query.group),
     [community?.groups, query.group],
   )
-  const { data: proposals } = useList<ProposalWithSignature>(
-    DataType.PROPOSAL,
-    [
-      ['did', query.did],
-      ['group', query.group],
-    ],
-  )
+  const { data: proposals } = useList<Authorized<Proposal>>(DataType.PROPOSAL, [
+    ['did', query.did],
+    ['group', query.group],
+  ])
   const router = useRouter()
   const handleCreateGroup = useCallback(() => {
     router.push(`/${query.did}/settings?group=${nanoid()}`)

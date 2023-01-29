@@ -5,10 +5,10 @@ import {
 } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 
-import { ProposalWithSignature } from '../src/schemas'
+import { Authorized, Proposal } from '../src/schemas'
 
 export default function ProposalListItem(props: {
-  value: ProposalWithSignature & { id: string }
+  value: Authorized<Proposal> & { id: string }
 }) {
   return (
     <Link
