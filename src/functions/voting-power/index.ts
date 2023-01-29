@@ -1,6 +1,6 @@
 import { max, sum, uniq } from 'lodash-es'
 import pMap from 'p-map'
-import { VotingPowerSets, VotingPowerUnit } from '../../schemas'
+import { NumberSets, NumberUnit } from '../../schemas'
 import { DID, Snapshots } from '../../types'
 import { VotingPowerFunction } from '../types'
 import { erc20_balance } from './erc20-balance'
@@ -14,7 +14,7 @@ export const calculateVotingPowerFunctions: {
 }
 
 export async function calculateVotingPower(
-  data: VotingPowerSets | VotingPowerUnit,
+  data: NumberSets | NumberUnit,
   did: DID,
   snapshots: Snapshots,
 ): Promise<number> {
@@ -39,7 +39,7 @@ export async function calculateVotingPower(
 }
 
 export function requiredCoinTypesOfVotingPower(
-  data: VotingPowerSets | VotingPowerUnit,
+  data: NumberSets | NumberUnit,
 ): number[] {
   if ('operator' in data) {
     return uniq(

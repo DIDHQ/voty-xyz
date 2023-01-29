@@ -80,8 +80,8 @@ export default function GroupForm(props: {
       append(
         {
           id: props.group,
-          profile: { name: '' },
-          proposer_liberty: {
+          name: '',
+          proposal_rights: {
             operator: 'or',
             operands: [],
           },
@@ -89,10 +89,10 @@ export default function GroupForm(props: {
             operator: 'sum',
             operands: [],
           },
-          rules: {
-            voting_duration: 0,
-            voting_start_delay: 0,
-            approval_condition_description: '',
+          timing: {
+            publicity: 3600,
+            voting: 86400,
+            adding_option: 86400,
           },
         },
         { shouldFocus: false },
@@ -109,30 +109,28 @@ export default function GroupForm(props: {
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
             <FormItem
-              label="name"
-              error={formState.errors.profile?.name?.message}
+              label="Name"
+              error={formState.errors.groups?.[index]?.name?.message}
             >
-              <TextInput {...register(`groups.${index}.profile.name`)} />
+              <TextInput {...register(`groups.${index}.name`)} />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
             <FormItem
-              label="about"
-              error={formState.errors.profile?.about?.message}
+              label="About"
+              error={formState.errors.groups?.[index]?.extend?.about?.message}
             >
-              <Textarea {...register(`groups.${index}.profile.about`)} />
+              <Textarea {...register(`groups.${index}.extend.about`)} />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
             <FormItem
-              label="Proposer Liberty"
-              error={
-                formState.errors.groups?.[index]?.proposer_liberty?.message
-              }
+              label="Proposal rights"
+              error={formState.errors.groups?.[index]?.proposal_rights?.message}
             >
               <Controller
                 control={control}
-                name={`groups.${index}.proposer_liberty`}
+                name={`groups.${index}.proposal_rights`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
@@ -141,7 +139,7 @@ export default function GroupForm(props: {
           </div>
           <div className="sm:col-span-6">
             <FormItem
-              label="Voting Power"
+              label="Voting power"
               error={formState.errors?.groups?.[index]?.voting_power?.message}
             >
               <Controller
@@ -155,49 +153,63 @@ export default function GroupForm(props: {
           </div>
           <div className="sm:col-span-6">
             <FormItem
-              label="Voting Duration"
+              label="Add option rights"
               error={
-                formState.errors?.groups?.[index]?.rules?.voting_duration
-                  ?.message
+                formState.errors.groups?.[index]?.add_option_rights?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${index}.rules.voting_duration`}
+                name={`groups.${index}.add_option_rights`}
+                render={({ field: { value, onChange } }) => (
+                  <JsonInput value={value} onChange={onChange} />
+                )}
+              />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-2">
+            <FormItem
+              label="Publicity"
+              error={
+                formState.errors?.groups?.[index]?.timing?.publicity?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`groups.${index}.timing.publicity`}
                 render={({ field: { value, onChange } }) => (
                   <NumericInput value={value} onChange={onChange} />
                 )}
               />
             </FormItem>
           </div>
-          <div className="sm:col-span-6">
+          <div className="sm:col-span-2">
             <FormItem
-              label="Voting Start Delay"
-              error={
-                formState.errors?.groups?.[index]?.rules?.voting_start_delay
-                  ?.message
-              }
+              label="Voting"
+              error={formState.errors?.groups?.[index]?.timing?.voting?.message}
             >
               <Controller
                 control={control}
-                name={`groups.${index}.rules.voting_start_delay`}
+                name={`groups.${index}.timing.voting`}
                 render={({ field: { value, onChange } }) => (
                   <NumericInput value={value} onChange={onChange} />
                 )}
               />
             </FormItem>
           </div>
-          <div className="sm:col-span-6">
+          <div className="sm:col-span-2">
             <FormItem
-              label="Approval Condition Description"
+              label="Adding option"
               error={
-                formState.errors?.groups?.[index]?.rules
-                  ?.approval_condition_description?.message
+                formState.errors?.groups?.[index]?.timing?.adding_option
+                  ?.message
               }
             >
-              <TextInput
-                {...register(
-                  `groups.${index}.rules.approval_condition_description`,
+              <Controller
+                control={control}
+                name={`groups.${index}.timing.adding_option`}
+                render={({ field: { value, onChange } }) => (
+                  <NumericInput value={value} onChange={onChange} />
                 )}
               />
             </FormItem>

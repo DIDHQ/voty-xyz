@@ -43,8 +43,7 @@ export default function CreateProposalPage() {
     config?.community,
   )
   const group = useMemo(
-    () =>
-      community?.groups?.find(({ profile }) => profile.name === query.group),
+    () => community?.groups?.find(({ name }) => name === query.group),
     [community?.groups, query.group],
   )
   useEffect(() => {

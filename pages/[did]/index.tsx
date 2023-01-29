@@ -147,7 +147,7 @@ export default function CommunityIndexPage() {
                     >
                       <span className="absolute inset-0" aria-hidden="true" />
                       <p className="truncate text-sm font-medium text-gray-900">
-                        {group.profile.name}
+                        {group.name}
                       </p>
                     </Link>
                   </div>
@@ -178,12 +178,12 @@ export default function CommunityIndexPage() {
         >
           <div>
             <h3 className="text-lg font-medium leading-6 text-gray-900">
-              {group?.profile.name || 'Proposals'}
+              {group?.name || 'Proposals'}
             </h3>
             {group ? (
               <div className="mt-1">
                 <p className="text-sm text-gray-600 line-clamp-2">
-                  {group?.profile.about}
+                  {group?.extend?.about}
                 </p>
               </div>
             ) : null}

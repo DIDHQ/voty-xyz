@@ -84,7 +84,7 @@ export default async function handler(
 
   if (
     !(await checkProposerLiberty(
-      group.proposer_liberty,
+      group.proposal_rights,
       proposalWithAuthor.data.author.did as DID,
       mapSnapshots(proposalWithAuthor.data.snapshots),
     ))

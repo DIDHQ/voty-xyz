@@ -1,6 +1,6 @@
 import { uniq } from 'lodash-es'
 import pMap from 'p-map'
-import { ProposerLibertySets, ProposerLibertyUnit } from '../../schemas'
+import { ProposerLibertySets, BooleanUnit } from '../../schemas'
 import { ProposerLibertyFunction } from '../types'
 import { sub_did } from './sub-did'
 import { exact_did } from './exact-did'
@@ -14,7 +14,7 @@ export const checkProposerLibertyFunctions: {
 }
 
 export async function checkProposerLiberty(
-  data: ProposerLibertySets | ProposerLibertyUnit,
+  data: ProposerLibertySets | BooleanUnit,
   did: DID,
   snapshots: Snapshots,
 ): Promise<boolean> {
@@ -39,7 +39,7 @@ export async function checkProposerLiberty(
 }
 
 export function requiredCoinTypesOfProposerLiberty(
-  data: ProposerLibertySets | ProposerLibertyUnit,
+  data: ProposerLibertySets | BooleanUnit,
 ): number[] {
   if ('operator' in data) {
     return uniq(

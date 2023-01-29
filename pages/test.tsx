@@ -12,7 +12,7 @@ import {
   calculateVotingPower,
   requiredCoinTypesOfVotingPower,
 } from '../src/functions/voting-power'
-import { ProposerLibertySets, VotingPowerSets } from '../src/schemas'
+import { ProposerLibertySets, NumberSets } from '../src/schemas'
 import { DID } from '../src/types'
 
 const defaultProposerLiberty: ProposerLibertySets = {
@@ -29,7 +29,7 @@ const defaultProposerLiberty: ProposerLibertySets = {
   ],
 }
 
-const defaultVotingPower: VotingPowerSets = {
+const defaultVotingPower: NumberSets = {
   operator: 'sum',
   operands: [
     {
