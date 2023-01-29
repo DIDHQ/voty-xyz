@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { useCallback, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { nanoid } from 'nanoid'
-import { DocumentCheckIcon, GlobeAltIcon } from '@heroicons/react/24/outline'
+import { GlobeAltIcon } from '@heroicons/react/24/outline'
 
 import Avatar from '../../components/basic/avatar'
 import useArweaveData from '../../hooks/use-arweave-data'
@@ -41,7 +41,7 @@ export default function CommunityIndexPage() {
     router.push(`/${query.did}/settings?group=${nanoid()}`)
   }, [query.did, router])
 
-  return community ? (
+  return community?.extend ? (
     <main className="flex flex-1 overflow-hidden">
       <aside className="hidden lg:order-first lg:block lg:flex-shrink-0">
         <div className="relative flex h-full w-96 flex-col overflow-y-auto border-r border-gray-200 bg-white">
@@ -49,51 +49,43 @@ export default function CommunityIndexPage() {
             <Avatar
               size={16}
               name={query.did}
-              value={community.profile.avatar}
+              value={community.extend.avatar}
             />
             <div className="ml-4">
               <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">
-                {community.profile.name}
+                {community.name}
               </h3>
-              <p className="text-sm text-gray-500">{community.profile.about}</p>
+              <p className="text-sm text-gray-500">{community.extend.about}</p>
             </div>
           </div>
           <div className="flex space-x-4 mx-8 my-4">
-            {community.profile.website ? (
+            {community.extend.website ? (
               <a
-                href={community.profile.website}
+                href={community.extend.website}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <GlobeAltIcon className="w-6 h-6" />
               </a>
             ) : null}
-            {community.profile.tos ? (
+            {community.extend?.twitter ? (
               <a
-                href={community.profile.tos}
-                className="text-gray-400 hover:text-gray-500"
-              >
-                <DocumentCheckIcon className="w-6 h-6" />
-              </a>
-            ) : null}
-            {community.social?.twitter ? (
-              <a
-                href={`https://twitter.com/${community.social.twitter}`}
+                href={`https://twitter.com/${community.extend.twitter}`}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <TwitterIcon className="w-6 h-6" />
               </a>
             ) : null}
-            {community.social?.discord ? (
+            {community.extend?.discord ? (
               <a
-                href={`https://discord.com/invite/${community.social.discord}`}
+                href={`https://discord.com/invite/${community.extend.discord}`}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <DiscordIcon className="w-6 h-6" />
               </a>
             ) : null}
-            {community.social?.github ? (
+            {community.extend?.github ? (
               <a
-                href={`https://github.com/${community.social.github}`}
+                href={`https://github.com/${community.extend.github}`}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <GitHubIcon className="w-6 h-6" />

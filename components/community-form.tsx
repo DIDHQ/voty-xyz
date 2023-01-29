@@ -25,7 +25,6 @@ export default function CommunityForm(props: {
     handleSubmit: onSubmit,
     reset,
     formState,
-    setValue,
   } = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
@@ -72,35 +71,32 @@ export default function CommunityForm(props: {
         </div>
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
-            <FormItem
-              label="Name"
-              error={formState.errors.profile?.name?.message}
-            >
+            <FormItem label="Name" error={formState.errors.name?.message}>
               <TextInput
-                error={!!formState.errors.profile?.name?.message}
-                {...register('profile.name')}
+                error={!!formState.errors.name?.message}
+                {...register('name')}
               />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
             <FormItem
               label="About"
-              error={formState.errors.profile?.about?.message}
+              error={formState.errors.extend?.about?.message}
             >
               <Textarea
-                error={!!formState.errors.profile?.about?.message}
-                {...register('profile.about')}
+                error={!!formState.errors.extend?.about?.message}
+                {...register('extend.about')}
               />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
             <FormItem
               label="Avatar"
-              error={formState.errors.profile?.avatar?.message}
+              error={formState.errors.extend?.avatar?.message}
             >
               <Controller
                 control={control}
-                name="profile.avatar"
+                name="extend.avatar"
                 render={({ field: { value, onChange } }) => (
                   <AvatarInput
                     name={props.did}
@@ -114,22 +110,11 @@ export default function CommunityForm(props: {
           <div className="sm:col-span-6">
             <FormItem
               label="Website"
-              error={formState.errors.profile?.website?.message}
+              error={formState.errors.extend?.website?.message}
             >
               <TextInput
-                error={!!formState.errors.profile?.website?.message}
-                {...register('profile.website')}
-              />
-            </FormItem>
-          </div>
-          <div className="sm:col-span-6">
-            <FormItem
-              label="Terms of service"
-              error={formState.errors.profile?.tos?.message}
-            >
-              <TextInput
-                error={!!formState.errors.profile?.tos?.message}
-                {...register('profile.tos')}
+                error={!!formState.errors.extend?.website?.message}
+                {...register('extend.website')}
               />
             </FormItem>
           </div>
@@ -144,17 +129,17 @@ export default function CommunityForm(props: {
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="Twitter">
-              <TextInput {...register('social.twitter')} />
+              <TextInput {...register('extend.twitter')} />
             </FormItem>
           </div>
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="Discord">
-              <TextInput {...register('social.discord')} />
+              <TextInput {...register('extend.discord')} />
             </FormItem>
           </div>
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="GitHub">
-              <TextInput {...register('social.github')} />
+              <TextInput {...register('extend.github')} />
             </FormItem>
           </div>
         </div>
