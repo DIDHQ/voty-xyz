@@ -13,7 +13,7 @@ import useAsync from '../../../hooks/use-async'
 import useDidConfig from '../../../hooks/use-did-config'
 import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
-import { requiredCoinTypesOfVotingPower } from '../../../src/functions/voting-power'
+import { requiredCoinTypesOfVotingPower } from '../../../src/functions/number'
 import {
   communityWithAuthorSchema,
   Proposal,

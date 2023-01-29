@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
-import { checkProposerLiberty } from '../../../src/functions/proposer-liberty'
+import { checkProposerLiberty } from '../../../src/functions/boolean'
 import {
   communityWithAuthorSchema,
   proposalWithAuthorSchema,

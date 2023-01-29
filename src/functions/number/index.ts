@@ -1,16 +1,17 @@
 import { max, sum, uniq } from 'lodash-es'
 import pMap from 'p-map'
+
 import { NumberSets, NumberUnit } from '../../schemas'
 import { DID, Snapshots } from '../../types'
-import { VotingPowerFunction } from '../types'
+import { NumberFunction } from '../types'
+import { static_power } from './static-power'
 import { erc20_balance } from './erc20-balance'
-import { weight_list } from './weight-list'
 
 export const calculateVotingPowerFunctions: {
-  [name: string]: VotingPowerFunction<any[]>
+  [name: string]: NumberFunction<any[]>
 } = {
+  static_power,
   erc20_balance,
-  weight_list,
 }
 
 export async function calculateVotingPower(

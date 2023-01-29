@@ -13,7 +13,7 @@ import useRouterQuery from '../../../hooks/use-router-query'
 import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
 import { DataType } from '../../../src/constants'
-import { calculateVotingPower } from '../../../src/functions/voting-power'
+import { calculateVotingPower } from '../../../src/functions/number'
 import {
   Authorized,
   communityWithAuthorSchema,

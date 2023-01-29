@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
-import { calculateVotingPower } from '../../../src/functions/voting-power'
+import { calculateVotingPower } from '../../../src/functions/number'
 import {
   communityWithAuthorSchema,
   proposalWithAuthorSchema,

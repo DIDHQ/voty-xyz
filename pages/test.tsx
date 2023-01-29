@@ -7,11 +7,11 @@ import useWallet from '../hooks/use-wallet'
 import {
   checkProposerLiberty,
   requiredCoinTypesOfProposerLiberty,
-} from '../src/functions/proposer-liberty'
+} from '../src/functions/boolean'
 import {
   calculateVotingPower,
   requiredCoinTypesOfVotingPower,
-} from '../src/functions/voting-power'
+} from '../src/functions/number'
 import { ProposerLibertySets, NumberSets } from '../src/schemas'
 import { DID } from '../src/types'
 

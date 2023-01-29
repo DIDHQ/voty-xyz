@@ -1,16 +1,19 @@
 import { uniq } from 'lodash-es'
 import pMap from 'p-map'
+
 import { ProposerLibertySets, BooleanUnit } from '../../schemas'
-import { ProposerLibertyFunction } from '../types'
-import { sub_did } from './sub-did'
-import { exact_did } from './exact-did'
+import { BooleanFunction } from '../types'
+import { is_sub_did_of } from './is-sub-did-of'
+import { is_did } from './is-did'
+import { owns_erc721 } from './owns-erc721'
 import { DID, Snapshots } from '../../types'
 
 export const checkProposerLibertyFunctions: {
-  [name: string]: ProposerLibertyFunction<any[]>
+  [name: string]: BooleanFunction<any[]>
 } = {
-  sub_did,
-  exact_did,
+  is_did,
+  is_sub_did_of,
+  owns_erc721,
 }
 
 export async function checkProposerLiberty(
