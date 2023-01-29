@@ -76,10 +76,10 @@ export default async function handler(
     ...(community.groups?.map((group) =>
       database.group.upsert({
         where: {
-          id_community: { id: group.id, community: transaction.id },
+          id_community: { id: group.extend.id, community: transaction.id },
         },
         create: {
-          id: group.id,
+          id: group.extend.id,
           did: author.did,
           community: transaction.id,
         },

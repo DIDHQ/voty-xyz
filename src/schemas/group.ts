@@ -57,7 +57,6 @@ export type NumberSets = {
 }
 
 export const groupSchema = z.object({
-  id: z.string().min(1),
   name: z.string().min(1),
   proposal_rights: booleanSetsSchema,
   voting_power: numberSetsSchema,
@@ -67,10 +66,9 @@ export const groupSchema = z.object({
     voting: z.number(),
     adding_option: z.number(),
   }),
-  extend: z
-    .object({
-      about: z.string().optional(),
-    })
-    .optional(),
+  extend: z.object({
+    id: z.string().min(1),
+    about: z.string().optional(),
+  }),
 })
 export type Group = z.infer<typeof groupSchema>

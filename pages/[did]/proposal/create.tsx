@@ -43,7 +43,7 @@ export default function CreateProposalPage() {
     config?.community,
   )
   const group = useMemo(
-    () => community?.groups?.find(({ name }) => name === query.group),
+    () => community?.groups?.find(({ extend: { id } }) => id === query.group),
     [community?.groups, query.group],
   )
   useEffect(() => {
@@ -56,8 +56,8 @@ export default function CreateProposalPage() {
     if (!group) {
       return
     }
-    setValue('group', group.id)
-  }, [query.group, setValue, group])
+    setValue('group', group.extend.id)
+  }, [setValue, group])
   const { data: coinTypesOfVotingPower } = useSWR(
     group?.voting_power
       ? ['requiredCoinTypesOfVotingPower', group.voting_power]

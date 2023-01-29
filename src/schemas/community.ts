@@ -4,7 +4,14 @@ import { groupSchema } from './group'
 
 export const communitySchema = z.object({
   name: z.string().min(1),
-  groups: z.array(groupSchema).optional(),
+  groups: z
+    .array(groupSchema)
+    .optional()
+    .refine(
+      (groups) =>
+        new Set(groups?.map(({ name }) => name)).size === groups?.length,
+      { message: 'groups name are not unique' },
+    ),
   extend: z
     .object({
       avatar: z.string().optional(),

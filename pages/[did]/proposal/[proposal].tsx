@@ -36,7 +36,8 @@ export default function ProposalPage() {
     proposal?.community,
   )
   const group = useMemo(
-    () => community?.groups?.find(({ id }) => id === proposal?.group),
+    () =>
+      community?.groups?.find(({ extend: { id } }) => id === proposal?.group),
     [community?.groups, proposal?.group],
   )
   const [did, setDid] = useState('')
