@@ -117,8 +117,11 @@ export default function CreateProposalPage() {
               </FormItem>
             </div>
             <div className="sm:col-span-6">
-              <FormItem label="Body" error={formState.errors.body?.message}>
-                <Textarea {...register('body')} />
+              <FormItem
+                label="Body"
+                error={formState.errors.extend?.body?.message}
+              >
+                <Textarea {...register('extend.body')} />
               </FormItem>
             </div>
             <div className="sm:col-span-6">

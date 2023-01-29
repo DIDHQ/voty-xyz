@@ -121,10 +121,12 @@ export default function ProposalPage() {
               <dt className="text-sm font-medium text-gray-500">End Time</dt>
               <dd className="mt-1 text-sm text-gray-900">-</dd>
             </div>
-            {proposal.body ? (
+            {proposal.extend?.body ? (
               <div className="sm:col-span-2">
-                <dt className="text-sm font-medium text-gray-500">About</dt>
-                <dd className="mt-1 text-sm text-gray-900">{proposal.body}</dd>
+                <dt className="text-sm font-medium text-gray-500">Body</dt>
+                <dd className="mt-1 text-sm text-gray-900">
+                  {proposal.extend.body}
+                </dd>
               </div>
             ) : null}
             <div className="sm:col-span-2">
