@@ -139,21 +139,21 @@ export default function ProposalPage() {
                     name="choice"
                     render={({ field: { value, onChange } }) => (
                       <>
-                        {proposal.options.map((choice, index) => (
+                        {proposal.options.map((choice) => (
                           <li
-                            key={choice + index}
+                            key={choice}
                             className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
                             onClick={() => {
                               if (proposal.voting_type === 'single') {
-                                onChange(index)
+                                onChange(JSON.stringify(choice))
                               } else {
+                                const old = JSON.parse(value) as string[]
                                 onChange(
-                                  ((value as number[]) || []).includes(index)
-                                    ? without((value as number[]) || [], index)
-                                    : uniq([
-                                        ...((value as number[]) || []),
-                                        index,
-                                      ]),
+                                  JSON.stringify(
+                                    old.includes(choice)
+                                      ? without(old, choice)
+                                      : uniq([...old, choice]),
+                                  ),
                                 )
                               }
                             }}
@@ -165,14 +165,16 @@ export default function ProposalPage() {
                               {proposal.voting_type === 'single' ? (
                                 <input
                                   type="radio"
-                                  checked={index === value}
+                                  checked={choice === value}
                                   onClick={() => null}
                                   className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                               ) : (
                                 <input
                                   type="checkbox"
-                                  checked={(value as number[])?.includes(index)}
+                                  checked={(
+                                    JSON.parse(choice) as string[]
+                                  ).includes(choice)}
                                   onClick={() => null}
                                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
@@ -217,11 +219,7 @@ export default function ProposalPage() {
             className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
           >
             <span className="ml-2 w-0 flex-1 truncate">{vote.author.did}</span>
-            {typeof vote.choice === 'number'
-              ? proposal.options[vote.choice]
-              : vote.choice
-                  .map((choice) => proposal.options[choice])
-                  .join(', ')}
+            {vote.choice}
           </li>
         ))}
       </ul>
