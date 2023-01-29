@@ -7,7 +7,7 @@ import useDidConfig from '../hooks/use-did-config'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 
-export default function CreateOrganizationPage() {
+export default function CreateCommunityPage() {
   const { account } = useWallet()
   const { data: dids } = useDids(account)
   const [did, setDid] = useState('')
@@ -18,10 +18,7 @@ export default function CreateOrganizationPage() {
 
   return (
     <div className="p-8">
-      <FormItem
-        label="DID"
-        description="select an DID as your organization entry"
-      >
+      <FormItem label="DID" description="select an DID as your community entry">
         <DidSelect account={account} value={did} onChange={setDid} />
       </FormItem>
       {dids?.length === 0 ? (
@@ -31,17 +28,17 @@ export default function CreateOrganizationPage() {
           action={{ text: 'Register', href: 'https://app.did.id/explorer' }}
           className="mt-6"
         />
-      ) : config?.organization ? (
+      ) : config?.community ? (
         <Alert
           type="warning"
-          text={`${did} already bounded to an organization`}
+          text={`${did} already bounded to an community`}
           action={{ text: 'View', href: `/${did}` }}
           className="mt-6"
         />
       ) : (
         <Alert
           type="success"
-          text={`${did} is able to create an organization`}
+          text={`${did} is able to create an community`}
           action={{ text: 'Create', href: `/${did}/settings` }}
           className="mt-6"
         />

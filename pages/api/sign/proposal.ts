@@ -3,10 +3,10 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
-import { checkProposerLiberty } from '../../../src/functions/proposer-liberty'
+import { checkBoolean } from '../../../src/functions/boolean'
 import {
-  organizationWithSignatureSchema,
-  proposalWithSignatureSchema,
+  communityWithAuthorSchema,
+  proposalWithAuthorSchema,
 } from '../../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../../src/signature'
 import { mapSnapshots, getCurrentSnapshot } from '../../../src/snapshot'
@@ -28,24 +28,24 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   // verify schema
-  const proposalWithSignature = proposalWithSignatureSchema.safeParse(req.body)
-  if (!proposalWithSignature.success) {
-    res.status(400).send(`schema error: ${proposalWithSignature.error.message}`)
+  const proposalWithAuthor = proposalWithAuthorSchema.safeParse(req.body)
+  if (!proposalWithAuthor.success) {
+    res.status(400).send(`schema error: ${proposalWithAuthor.error.message}`)
     return
   }
 
-  // verify signature
-  const { signature, ...proposal } = proposalWithSignature.data
-  const snapshot = BigInt(signature.snapshot)
-  const { coinType, address } = await resolveDid(signature.did, {
-    [signature.coin_type]: snapshot,
+  // verify author
+  const { author, ...proposal } = proposalWithAuthor.data
+  const snapshot = BigInt(author.snapshot)
+  const { coinType, address } = await resolveDid(author.did, {
+    [author.coin_type]: snapshot,
   })
   if (
-    coinType !== signature.coin_type ||
-    address !== signature.address ||
-    !verifySignature(await wrapJsonMessage(proposal), signature)
+    coinType !== author.coin_type ||
+    address !== author.address ||
+    !verifySignature(await wrapJsonMessage(proposal), author)
   ) {
-    res.status(400).send('invalid signature')
+    res.status(400).send('invalid author')
     return
   }
 
@@ -59,49 +59,47 @@ export default async function handler(
     return
   }
 
-  const organizationWithSignature = organizationWithSignatureSchema.safeParse(
+  const communityWithAuthor = communityWithAuthorSchema.safeParse(
     JSON.parse(
-      (await arweave.transactions.getData(proposal.organization, {
+      (await arweave.transactions.getData(proposal.community, {
         decode: true,
         string: true,
       })) as string,
     ),
   )
-  if (!organizationWithSignature.success) {
+  if (!communityWithAuthor.success) {
     res
       .status(400)
-      .send(
-        `organization schema error: ${organizationWithSignature.error.message}`,
-      )
+      .send(`community schema error: ${communityWithAuthor.error.message}`)
     return
   }
 
-  const workgroup = organizationWithSignature.data.workgroups?.find(
-    ({ id }) => id === proposal.workgroup,
+  const group = communityWithAuthor.data.groups?.find(
+    ({ extension: { id } }) => id === proposal.group,
   )
-  if (!workgroup) {
-    res.status(400).send('workgroup not found')
+  if (!group) {
+    res.status(400).send('group not found')
     return
   }
 
   if (
-    !(await checkProposerLiberty(
-      workgroup.proposer_liberty,
-      proposalWithSignature.data.signature.did as DID,
-      mapSnapshots(proposalWithSignature.data.snapshots),
+    !(await checkBoolean(
+      group.proposal_rights,
+      proposalWithAuthor.data.author.did as DID,
+      mapSnapshots(proposalWithAuthor.data.snapshots),
     ))
   ) {
-    res.status(400).send('does not have proposer liberty')
+    res.status(400).send('does not have proposal rights')
     return
   }
 
   // TODO: extra verifies
 
   const data = Buffer.from(
-    textEncoder.encode(JSON.stringify(proposalWithSignature.data)),
+    textEncoder.encode(JSON.stringify(proposalWithAuthor.data)),
   )
   const transaction = await arweave.createTransaction({ data })
-  const tags = getArweaveTags(proposalWithSignature.data)
+  const tags = getArweaveTags(proposalWithAuthor.data)
   Object.entries(tags).forEach(([key, value]) => {
     transaction.addTag(key, value)
   })
@@ -112,15 +110,15 @@ export default async function handler(
     where: { id: transaction.id },
     create: {
       id: transaction.id,
-      did: proposal.did,
-      organization: proposal.organization,
-      workgroup: proposal.workgroup,
+      did: communityWithAuthor.data.author.did,
+      community: proposal.community,
+      group: proposal.group,
       data,
     },
     update: {
-      did: proposal.did,
-      organization: proposal.organization,
-      workgroup: proposal.workgroup,
+      did: communityWithAuthor.data.author.did,
+      community: proposal.community,
+      group: proposal.group,
       data,
     },
   })

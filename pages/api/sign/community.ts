@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
-import { organizationWithSignatureSchema } from '../../../src/schemas'
+import { communityWithAuthorSchema } from '../../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../../src/signature'
 import { getCurrentSnapshot } from '../../../src/snapshot'
 import { getArweaveTags } from '../../../src/utils/arweave-tags'
@@ -23,28 +23,24 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   // verify schema
-  const organizationWithSignature = organizationWithSignatureSchema.safeParse(
-    req.body,
-  )
-  if (!organizationWithSignature.success) {
-    res
-      .status(400)
-      .send(`schema error: ${organizationWithSignature.error.message}`)
+  const communityWithAuthor = communityWithAuthorSchema.safeParse(req.body)
+  if (!communityWithAuthor.success) {
+    res.status(400).send(`schema error: ${communityWithAuthor.error.message}`)
     return
   }
 
-  // verify signature
-  const { signature, ...organization } = organizationWithSignature.data
-  const snapshot = BigInt(signature.snapshot)
-  const { coinType, address } = await resolveDid(signature.did, {
-    [signature.coin_type]: snapshot,
+  // verify author
+  const { author, ...community } = communityWithAuthor.data
+  const snapshot = BigInt(author.snapshot)
+  const { coinType, address } = await resolveDid(author.did, {
+    [author.coin_type]: snapshot,
   })
   if (
-    coinType !== signature.coin_type ||
-    address !== signature.address ||
-    !verifySignature(await wrapJsonMessage(organization), signature)
+    coinType !== author.coin_type ||
+    address !== author.address ||
+    !verifySignature(await wrapJsonMessage(community), author)
   ) {
-    res.status(400).send('invalid signature')
+    res.status(400).send('invalid author')
     return
   }
 
@@ -61,10 +57,10 @@ export default async function handler(
   // TODO: extra verifies
 
   const data = Buffer.from(
-    textEncoder.encode(JSON.stringify(organizationWithSignature.data)),
+    textEncoder.encode(JSON.stringify(communityWithAuthor.data)),
   )
   const transaction = await arweave.createTransaction({ data })
-  const tags = getArweaveTags(organizationWithSignature.data)
+  const tags = getArweaveTags(communityWithAuthor.data)
   Object.entries(tags).forEach(([key, value]) => {
     transaction.addTag(key, value)
   })
@@ -72,23 +68,23 @@ export default async function handler(
   const uploader = await arweave.transactions.getUploader(transaction)
 
   await database.$transaction([
-    database.organization.upsert({
+    database.community.upsert({
       where: { id: transaction.id },
-      create: { id: transaction.id, did: organization.did, data },
-      update: { did: organization.did, data },
+      create: { id: transaction.id, did: author.did, data },
+      update: { did: author.did, data },
     }),
-    ...(organization.workgroups?.map((workgroup) =>
-      database.workgroup.upsert({
+    ...(community.groups?.map((group) =>
+      database.group.upsert({
         where: {
-          id_organization: { id: workgroup.id, organization: transaction.id },
+          id_community: { id: group.extension.id, community: transaction.id },
         },
         create: {
-          id: workgroup.id,
-          did: organization.did,
-          organization: transaction.id,
+          id: group.extension.id,
+          did: author.did,
+          community: transaction.id,
         },
         update: {
-          did: organization.did,
+          did: author.did,
         },
       }),
     ) || []),

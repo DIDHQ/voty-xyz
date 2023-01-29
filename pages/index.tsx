@@ -9,7 +9,7 @@ export default function IndexPage() {
   return account ? (
     <div className="p-8">
       <Link href="/create">
-        <Button primary>New Organization</Button>
+        <Button primary>New Community</Button>
       </Link>
     </div>
   ) : null

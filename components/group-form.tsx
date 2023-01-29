@@ -8,7 +8,7 @@ import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignJson from '../hooks/use-sign-json'
 import useWallet from '../hooks/use-wallet'
-import { Organization, organizationSchema } from '../src/schemas'
+import { Community, communitySchema } from '../src/schemas'
 import Button from './basic/button'
 import FormItem from './basic/form-item'
 import TextInput from './basic/text-input'
@@ -16,9 +16,10 @@ import Textarea from './basic/textarea'
 import JsonInput from './json-input'
 import NumericInput from './numeric-input'
 
-export default function WorkgroupForm(props: {
-  organization: Organization
-  workgroup: string
+export default function GroupForm(props: {
+  did: string
+  community: Community
+  group: string
 }) {
   const {
     control,
@@ -26,27 +27,27 @@ export default function WorkgroupForm(props: {
     handleSubmit: onSubmit,
     reset,
     formState,
-  } = useForm<Organization>({
-    resolver: zodResolver(organizationSchema),
+  } = useForm<Community>({
+    resolver: zodResolver(communitySchema),
   })
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'workgroups',
+    name: 'groups',
     keyName: '_id',
   })
   useEffect(() => {
-    reset(props.organization)
-  }, [props.organization, reset])
+    reset(props.community)
+  }, [props.community, reset])
   const index = useMemo(
-    () => fields.findIndex(({ id }) => id === props.workgroup),
-    [fields, props.workgroup],
+    () => fields.findIndex(({ extension: { id } }) => id === props.group),
+    [fields, props.group],
   )
   const { account } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
-  const handleSignJson = useSignJson(props.organization.did)
+  const handleSignJson = useSignJson(props.did)
   const handleArweaveUpload = useArweaveUpload()
   const { data: resolved } = useResolveDid(
-    props.organization.did,
+    props.did,
     account?.coinType,
     snapshot,
   )
@@ -60,7 +61,7 @@ export default function WorkgroupForm(props: {
   )
   const handleSubmit = useAsync(
     useCallback(
-      async (json: Organization) => {
+      async (json: Community) => {
         const signed = await handleSignJson(json)
         if (!signed) {
           throw new Error('signature failed')
@@ -72,16 +73,17 @@ export default function WorkgroupForm(props: {
   )
   const isNew = useMemo(
     () =>
-      !props.organization.workgroups?.find(({ id }) => id === props.workgroup),
-    [props.organization.workgroups, props.workgroup],
+      !props.community.groups?.find(
+        ({ extension: { id } }) => id === props.group,
+      ),
+    [props.community.groups, props.group],
   )
   useEffect(() => {
     if (isNew) {
       append(
         {
-          id: props.workgroup,
-          profile: { name: '' },
-          proposer_liberty: {
+          name: '',
+          proposal_rights: {
             operator: 'or',
             operands: [],
           },
@@ -89,52 +91,53 @@ export default function WorkgroupForm(props: {
             operator: 'sum',
             operands: [],
           },
-          rules: {
-            voting_duration: 0,
-            voting_start_delay: 0,
-            approval_condition_description: '',
+          timing: {
+            publicity: 3600,
+            voting: 86400,
+            adding_option: 86400,
+          },
+          extension: {
+            id: props.group,
           },
         },
         { shouldFocus: false },
       )
     }
-  }, [append, isNew, props.workgroup])
+  }, [append, isNew, props.group])
 
   return index < 0 ? null : (
     <div className="space-y-8 divide-y divide-gray-200">
       <div className="pt-8">
         <div>
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Workgroup
-          </h3>
+          <h3 className="text-lg font-medium leading-6 text-gray-900">Group</h3>
         </div>
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
             <FormItem
-              label="name"
-              error={formState.errors.profile?.name?.message}
+              label="Name"
+              error={formState.errors.groups?.[index]?.name?.message}
             >
-              <TextInput {...register(`workgroups.${index}.profile.name`)} />
+              <TextInput {...register(`groups.${index}.name`)} />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
             <FormItem
-              label="about"
-              error={formState.errors.profile?.about?.message}
-            >
-              <Textarea {...register(`workgroups.${index}.profile.about`)} />
-            </FormItem>
-          </div>
-          <div className="sm:col-span-6">
-            <FormItem
-              label="Proposer Liberty"
+              label="About"
               error={
-                formState.errors.workgroups?.[index]?.proposer_liberty?.message
+                formState.errors.groups?.[index]?.extension?.about?.message
               }
+            >
+              <Textarea {...register(`groups.${index}.extension.about`)} />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-6">
+            <FormItem
+              label="Proposal rights"
+              error={formState.errors.groups?.[index]?.proposal_rights?.message}
             >
               <Controller
                 control={control}
-                name={`workgroups.${index}.proposer_liberty`}
+                name={`groups.${index}.proposal_rights`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
@@ -143,14 +146,12 @@ export default function WorkgroupForm(props: {
           </div>
           <div className="sm:col-span-6">
             <FormItem
-              label="Voting Power"
-              error={
-                formState.errors?.workgroups?.[index]?.voting_power?.message
-              }
+              label="Voting power"
+              error={formState.errors?.groups?.[index]?.voting_power?.message}
             >
               <Controller
                 control={control}
-                name={`workgroups.${index}.voting_power`}
+                name={`groups.${index}.voting_power`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
@@ -159,49 +160,63 @@ export default function WorkgroupForm(props: {
           </div>
           <div className="sm:col-span-6">
             <FormItem
-              label="Voting Duration"
+              label="Add option rights"
               error={
-                formState.errors?.workgroups?.[index]?.rules?.voting_duration
-                  ?.message
+                formState.errors.groups?.[index]?.add_option_rights?.message
               }
             >
               <Controller
                 control={control}
-                name={`workgroups.${index}.rules.voting_duration`}
+                name={`groups.${index}.add_option_rights`}
+                render={({ field: { value, onChange } }) => (
+                  <JsonInput value={value} onChange={onChange} />
+                )}
+              />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-2">
+            <FormItem
+              label="Publicity"
+              error={
+                formState.errors?.groups?.[index]?.timing?.publicity?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`groups.${index}.timing.publicity`}
                 render={({ field: { value, onChange } }) => (
                   <NumericInput value={value} onChange={onChange} />
                 )}
               />
             </FormItem>
           </div>
-          <div className="sm:col-span-6">
+          <div className="sm:col-span-2">
             <FormItem
-              label="Voting Start Delay"
-              error={
-                formState.errors?.workgroups?.[index]?.rules?.voting_start_delay
-                  ?.message
-              }
+              label="Voting"
+              error={formState.errors?.groups?.[index]?.timing?.voting?.message}
             >
               <Controller
                 control={control}
-                name={`workgroups.${index}.rules.voting_start_delay`}
+                name={`groups.${index}.timing.voting`}
                 render={({ field: { value, onChange } }) => (
                   <NumericInput value={value} onChange={onChange} />
                 )}
               />
             </FormItem>
           </div>
-          <div className="sm:col-span-6">
+          <div className="sm:col-span-2">
             <FormItem
-              label="Approval Condition Description"
+              label="Adding option"
               error={
-                formState.errors?.workgroups?.[index]?.rules
-                  ?.approval_condition_description?.message
+                formState.errors?.groups?.[index]?.timing?.adding_option
+                  ?.message
               }
             >
-              <TextInput
-                {...register(
-                  `workgroups.${index}.rules.approval_condition_description`,
+              <Controller
+                control={control}
+                name={`groups.${index}.timing.adding_option`}
+                render={({ field: { value, onChange } }) => (
+                  <NumericInput value={value} onChange={onChange} />
                 )}
               />
             </FormItem>

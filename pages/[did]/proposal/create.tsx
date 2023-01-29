@@ -13,9 +13,9 @@ import useAsync from '../../../hooks/use-async'
 import useDidConfig from '../../../hooks/use-did-config'
 import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
-import { requiredCoinTypesOfVotingPower } from '../../../src/functions/voting-power'
+import { requiredCoinTypesOfNumberSets } from '../../../src/functions/number'
 import {
-  organizationWithSignatureSchema,
+  communityWithAuthorSchema,
   Proposal,
   proposalSchema,
 } from '../../../src/schemas'
@@ -36,47 +36,43 @@ export default function CreateProposalPage() {
   } = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
   })
-  const [query] = useRouterQuery<['did', 'workgroup']>()
+  const [query] = useRouterQuery<['did', 'group']>()
   const { data: config } = useDidConfig(query.did)
-  const { data: organization } = useArweaveData(
-    organizationWithSignatureSchema,
-    config?.organization,
+  const { data: community } = useArweaveData(
+    communityWithAuthorSchema,
+    config?.community,
   )
-  const workgroup = useMemo(
+  const group = useMemo(
     () =>
-      organization?.workgroups?.find(
-        ({ profile }) => profile.name === query.workgroup,
-      ),
-    [organization?.workgroups, query.workgroup],
+      community?.groups?.find(({ extension: { id } }) => id === query.group),
+    [community?.groups, query.group],
   )
   useEffect(() => {
-    if (!config?.organization) {
+    if (!config?.community) {
       return
     }
-    setValue('organization', config?.organization)
-  }, [config?.organization, setValue])
+    setValue('community', config?.community)
+  }, [config?.community, setValue])
   useEffect(() => {
-    if (!workgroup) {
+    if (!group) {
       return
     }
-    setValue('workgroup', workgroup.id)
-  }, [query.workgroup, setValue, workgroup])
-  const { data: coinTypesOfVotingPower } = useSWR(
-    workgroup?.voting_power
-      ? ['requiredCoinTypesOfVotingPower', workgroup.voting_power]
+    setValue('group', group.extension.id)
+  }, [setValue, group])
+  const { data: coinTypesOfNumberSets } = useSWR(
+    group?.voting_power
+      ? ['requiredCoinTypesOfNumberSets', group.voting_power]
       : null,
-    () => requiredCoinTypesOfVotingPower(workgroup!.voting_power!),
+    () => requiredCoinTypesOfNumberSets(group!.voting_power!),
   )
   const { data: snapshots } = useSWR(
-    ['snapshots', coinTypesOfVotingPower],
+    ['snapshots', coinTypesOfNumberSets],
     async () => {
-      const snapshots = await pMap(
-        coinTypesOfVotingPower!,
-        getCurrentSnapshot,
-        { concurrency: 5 },
-      )
+      const snapshots = await pMap(coinTypesOfNumberSets!, getCurrentSnapshot, {
+        concurrency: 5,
+      })
       return snapshots.reduce((obj, snapshot, index) => {
-        obj[coinTypesOfVotingPower![index]] = snapshot.toString()
+        obj[coinTypesOfNumberSets![index]] = snapshot.toString()
         return obj
       }, {} as { [coinType: string]: string })
     },
@@ -86,12 +82,6 @@ export default function CreateProposalPage() {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
-  useEffect(() => {
-    if (query.did) {
-      setValue('did', query.did)
-    }
-  }, [query.did, setValue])
-
   const [did, setDid] = useState('')
   const { account } = useWallet()
   const handleSignJson = useSignJson(did)
@@ -125,26 +115,24 @@ export default function CreateProposalPage() {
               </FormItem>
             </div>
             <div className="sm:col-span-6">
-              <FormItem label="Body" error={formState.errors.body?.message}>
-                <Textarea {...register('body')} />
+              <FormItem
+                label="Body"
+                error={formState.errors.extension?.body?.message}
+              >
+                <Textarea {...register('extension.body')} />
               </FormItem>
             </div>
             <div className="sm:col-span-6">
               <FormItem
-                label="Discussion"
-                error={formState.errors.discussion?.message}
+                label="Type"
+                error={formState.errors.voting_type?.message}
               >
-                <TextInput {...register('discussion')} />
-              </FormItem>
-            </div>
-            <div className="sm:col-span-6">
-              <FormItem label="Type" error={formState.errors.type?.message}>
                 <Controller
                   control={control}
-                  name="type"
+                  name="voting_type"
                   render={({ field: { value, onChange } }) => (
                     <Select
-                      options={proposalSchema.shape.type.options}
+                      options={proposalSchema.shape.voting_type.options}
                       value={value}
                       onChange={onChange}
                     />
@@ -154,12 +142,12 @@ export default function CreateProposalPage() {
             </div>
             <div className="sm:col-span-6">
               <FormItem
-                label="Choices"
-                error={formState.errors.choices?.message}
+                label="Options"
+                error={formState.errors.options?.message}
               >
                 <Controller
                   control={control}
-                  name="choices"
+                  name="options"
                   render={({ field: { value, onChange } }) => (
                     <JsonInput value={value || []} onChange={onChange} />
                   )}

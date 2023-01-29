@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import useAsync from '../hooks/use-async'
-import { Organization, organizationSchema } from '../src/schemas'
+import { Community, communitySchema } from '../src/schemas'
 import AvatarInput from './basic/avatar-input'
 import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import FormItem from './basic/form-item'
@@ -15,9 +15,9 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import Button from './basic/button'
 
-export default function OrganizationForm(props: {
+export default function CommunityForm(props: {
   did: string
-  organization?: Organization
+  community?: Community
 }) {
   const {
     control,
@@ -25,13 +25,12 @@ export default function OrganizationForm(props: {
     handleSubmit: onSubmit,
     reset,
     formState,
-    setValue,
-  } = useForm<Organization>({
-    resolver: zodResolver(organizationSchema),
+  } = useForm<Community>({
+    resolver: zodResolver(communitySchema),
   })
   useEffect(() => {
-    reset(props.organization)
-  }, [props.organization, reset])
+    reset(props.community)
+  }, [props.community, reset])
   const { account } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
   const handleSignJson = useSignJson(props.did)
@@ -49,12 +48,9 @@ export default function OrganizationForm(props: {
       resolved.address === account.address,
     [resolved, account],
   )
-  useEffect(() => {
-    setValue('did', props.did)
-  }, [props.did, setValue])
   const handleSubmit = useAsync(
     useCallback(
-      async (json: Organization) => {
+      async (json: Community) => {
         const signed = await handleSignJson(json)
         if (!signed) {
           throw new Error('signature failed')
@@ -75,35 +71,32 @@ export default function OrganizationForm(props: {
         </div>
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
-            <FormItem
-              label="Name"
-              error={formState.errors.profile?.name?.message}
-            >
+            <FormItem label="Name" error={formState.errors.name?.message}>
               <TextInput
-                error={!!formState.errors.profile?.name?.message}
-                {...register('profile.name')}
+                error={!!formState.errors.name?.message}
+                {...register('name')}
               />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
             <FormItem
               label="About"
-              error={formState.errors.profile?.about?.message}
+              error={formState.errors.extension?.about?.message}
             >
               <Textarea
-                error={!!formState.errors.profile?.about?.message}
-                {...register('profile.about')}
+                error={!!formState.errors.extension?.about?.message}
+                {...register('extension.about')}
               />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
             <FormItem
               label="Avatar"
-              error={formState.errors.profile?.avatar?.message}
+              error={formState.errors.extension?.avatar?.message}
             >
               <Controller
                 control={control}
-                name="profile.avatar"
+                name="extension.avatar"
                 render={({ field: { value, onChange } }) => (
                   <AvatarInput
                     name={props.did}
@@ -117,22 +110,11 @@ export default function OrganizationForm(props: {
           <div className="sm:col-span-6">
             <FormItem
               label="Website"
-              error={formState.errors.profile?.website?.message}
+              error={formState.errors.extension?.website?.message}
             >
               <TextInput
-                error={!!formState.errors.profile?.website?.message}
-                {...register('profile.website')}
-              />
-            </FormItem>
-          </div>
-          <div className="sm:col-span-6">
-            <FormItem
-              label="Terms of service"
-              error={formState.errors.profile?.tos?.message}
-            >
-              <TextInput
-                error={!!formState.errors.profile?.tos?.message}
-                {...register('profile.tos')}
+                error={!!formState.errors.extension?.website?.message}
+                {...register('extension.website')}
               />
             </FormItem>
           </div>
@@ -147,17 +129,17 @@ export default function OrganizationForm(props: {
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="Twitter">
-              <TextInput {...register('social.twitter')} />
+              <TextInput {...register('extension.twitter')} />
             </FormItem>
           </div>
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="Discord">
-              <TextInput {...register('social.discord')} />
+              <TextInput {...register('extension.discord')} />
             </FormItem>
           </div>
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="GitHub">
-              <TextInput {...register('social.github')} />
+              <TextInput {...register('extension.github')} />
             </FormItem>
           </div>
         </div>
@@ -170,7 +152,7 @@ export default function OrganizationForm(props: {
             loading={handleSubmit.status === 'pending'}
             onClick={onSubmit(handleSubmit.execute, console.error)}
           >
-            {props.organization ? 'Submit' : 'Create'}
+            {props.community ? 'Submit' : 'Create'}
           </Button>
         </div>
       </div>

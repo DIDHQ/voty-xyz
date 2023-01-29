@@ -13,13 +13,13 @@ import useRouterQuery from '../../../hooks/use-router-query'
 import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
 import { DataType } from '../../../src/constants'
-import { calculateVotingPower } from '../../../src/functions/voting-power'
+import { calculateNumber } from '../../../src/functions/number'
 import {
-  organizationWithSignatureSchema,
-  proposalWithSignatureSchema,
+  Authorized,
+  communityWithAuthorSchema,
+  proposalWithAuthorSchema,
   Vote,
   voteSchema,
-  VoteWithSignature,
 } from '../../../src/schemas'
 import { mapSnapshots } from '../../../src/snapshot'
 import { DID } from '../../../src/types'
@@ -28,17 +28,19 @@ import Button from '../../../components/basic/button'
 export default function ProposalPage() {
   const [query] = useRouterQuery<['proposal']>()
   const { data: proposal } = useArweaveData(
-    proposalWithSignatureSchema,
+    proposalWithAuthorSchema,
     query.proposal,
   )
-  const { data: organization } = useArweaveData(
-    organizationWithSignatureSchema,
-    proposal?.organization,
+  const { data: community } = useArweaveData(
+    communityWithAuthorSchema,
+    proposal?.community,
   )
-  const workgroup = useMemo(
+  const group = useMemo(
     () =>
-      organization?.workgroups?.find(({ id }) => id === proposal?.workgroup),
-    [organization?.workgroups, proposal?.workgroup],
+      community?.groups?.find(
+        ({ extension: { id } }) => id === proposal?.group,
+      ),
+    [community?.groups, proposal?.group],
   )
   const [did, setDid] = useState('')
   const { account } = useWallet()
@@ -65,23 +67,18 @@ export default function ProposalPage() {
     ),
   )
   useEffect(() => {
-    if (proposal && query.proposal) {
-      setValue('did', proposal.did)
-      setValue('organization', proposal.organization)
-      setValue('workgroup', proposal.workgroup)
+    if (query.proposal) {
       setValue('proposal', query.proposal)
     }
-  }, [proposal, query.proposal, setValue])
-  const { data: votes } = useList<VoteWithSignature>(DataType.VOTE, [
+  }, [query.proposal, setValue])
+  const { data: votes } = useList<Authorized<Vote>>(DataType.VOTE, [
     ['proposal', query.proposal],
   ])
   const { data: votingPower, isValidating } = useSWR(
-    workgroup && did && proposal
-      ? ['votingPower', workgroup, did, proposal]
-      : null,
+    group && did && proposal ? ['votingPower', group, did, proposal] : null,
     () =>
-      calculateVotingPower(
-        workgroup!.voting_power,
+      calculateNumber(
+        group!.voting_power,
         did! as DID,
         mapSnapshots(proposal!.snapshots),
       ),
@@ -101,18 +98,22 @@ export default function ProposalPage() {
           <h3 className="text-lg font-medium leading-6 text-gray-900">
             {proposal.title}
           </h3>
-          <p className="mt-1 max-w-2xl text-sm text-gray-500">{proposal.did}</p>
+          <p className="mt-1 max-w-2xl text-sm text-gray-500">
+            {proposal.author.did}
+          </p>
         </div>
         <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
           <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
             <div className="sm:col-span-1">
               <dt className="text-sm font-medium text-gray-500">Type</dt>
-              <dd className="mt-1 text-sm text-gray-900">{proposal.type}</dd>
+              <dd className="mt-1 text-sm text-gray-900">
+                {proposal.voting_type}
+              </dd>
             </div>
             <div className="sm:col-span-1">
               <dt className="text-sm font-medium text-gray-500">Author</dt>
               <dd className="mt-1 text-sm text-gray-900">
-                {proposal.signature.did}
+                {proposal.author.did}
               </dd>
             </div>
             <div className="sm:col-span-1">
@@ -123,14 +124,16 @@ export default function ProposalPage() {
               <dt className="text-sm font-medium text-gray-500">End Time</dt>
               <dd className="mt-1 text-sm text-gray-900">-</dd>
             </div>
-            {proposal.body ? (
+            {proposal.extension?.body ? (
               <div className="sm:col-span-2">
-                <dt className="text-sm font-medium text-gray-500">About</dt>
-                <dd className="mt-1 text-sm text-gray-900">{proposal.body}</dd>
+                <dt className="text-sm font-medium text-gray-500">Body</dt>
+                <dd className="mt-1 text-sm text-gray-900">
+                  {proposal.extension.body}
+                </dd>
               </div>
             ) : null}
             <div className="sm:col-span-2">
-              <dt className="text-sm font-medium text-gray-500">Choices</dt>
+              <dt className="text-sm font-medium text-gray-500">Options</dt>
               <dd className="mt-1 text-sm text-gray-900">
                 <ul
                   role="list"
@@ -141,21 +144,21 @@ export default function ProposalPage() {
                     name="choice"
                     render={({ field: { value, onChange } }) => (
                       <>
-                        {proposal.choices.map((choice, index) => (
+                        {proposal.options.map((choice) => (
                           <li
-                            key={choice + index}
+                            key={choice}
                             className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
                             onClick={() => {
-                              if (proposal.type === 'single') {
-                                onChange(index)
+                              if (proposal.voting_type === 'single') {
+                                onChange(JSON.stringify(choice))
                               } else {
+                                const old = JSON.parse(value) as string[]
                                 onChange(
-                                  ((value as number[]) || []).includes(index)
-                                    ? without((value as number[]) || [], index)
-                                    : uniq([
-                                        ...((value as number[]) || []),
-                                        index,
-                                      ]),
+                                  JSON.stringify(
+                                    old.includes(choice)
+                                      ? without(old, choice)
+                                      : uniq([...old, choice]),
+                                  ),
                                 )
                               }
                             }}
@@ -164,17 +167,19 @@ export default function ProposalPage() {
                               {choice}
                             </span>
                             <div className="ml-4 flex-shrink-0">
-                              {proposal.type === 'single' ? (
+                              {proposal.voting_type === 'single' ? (
                                 <input
                                   type="radio"
-                                  checked={index === value}
+                                  checked={choice === value}
                                   onClick={() => null}
                                   className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                               ) : (
                                 <input
                                   type="checkbox"
-                                  checked={(value as number[])?.includes(index)}
+                                  checked={(
+                                    JSON.parse(choice) as string[]
+                                  ).includes(choice)}
                                   onClick={() => null}
                                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
@@ -218,12 +223,8 @@ export default function ProposalPage() {
             key={vote.id}
             className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
           >
-            <span className="ml-2 w-0 flex-1 truncate">{vote.did}</span>
-            {typeof vote.choice === 'number'
-              ? proposal.choices[vote.choice]
-              : vote.choice
-                  .map((choice) => proposal.choices[choice])
-                  .join(', ')}
+            <span className="ml-2 w-0 flex-1 truncate">{vote.author.did}</span>
+            {vote.choice}
           </li>
         ))}
       </ul>

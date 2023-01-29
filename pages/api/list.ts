@@ -2,9 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { DataType } from '../../src/constants'
 import { database } from '../../src/database'
 import {
-  organizationWithSignatureSchema,
-  proposalWithSignatureSchema,
-  voteWithSignatureSchema,
+  communityWithAuthorSchema,
+  proposalWithAuthorSchema,
+  voteWithAuthorSchema,
 } from '../../src/schemas'
 
 const textDecoder = new TextDecoder()
@@ -14,12 +14,12 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const { type, ...where } = req.query
-  if (type === DataType.ORGANIZATION) {
-    const organizations = await database.organization.findMany({ where })
+  if (type === DataType.COMMUNITY) {
+    const communities = await database.community.findMany({ where })
     res.json({
-      data: organizations.map(({ data, ...organization }) => ({
-        ...organization,
-        ...organizationWithSignatureSchema.safeParse(
+      data: communities.map(({ data, ...community }) => ({
+        ...community,
+        ...communityWithAuthorSchema.safeParse(
           JSON.parse(textDecoder.decode(data)),
         ),
       })),
@@ -29,7 +29,7 @@ export default async function handler(
     res.json({
       data: proposals.map(({ data, ...proposal }) => ({
         ...proposal,
-        ...proposalWithSignatureSchema.safeParse(
+        ...proposalWithAuthorSchema.safeParse(
           JSON.parse(textDecoder.decode(data)),
         ),
       })),
@@ -39,9 +39,7 @@ export default async function handler(
     res.json({
       data: votes.map(({ data, ...vote }) => ({
         ...vote,
-        ...voteWithSignatureSchema.safeParse(
-          JSON.parse(textDecoder.decode(data)),
-        ),
+        ...voteWithAuthorSchema.safeParse(JSON.parse(textDecoder.decode(data))),
       })),
     })
   }

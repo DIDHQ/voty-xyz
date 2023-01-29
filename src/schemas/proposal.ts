@@ -1,22 +1,27 @@
 import { z } from 'zod'
 
-import { signatureSchema } from './signature'
+import { authorSchema } from './author'
 
 export const proposalSchema = z.object({
-  did: z.string().min(1),
-  organization: z.string().min(1),
-  workgroup: z.string().min(1),
-  // type: z.enum(['single', 'multiple', 'weighted', 'ranked']),
-  type: z.enum(['single', 'multiple']),
+  community: z.string().min(1),
+  group: z.string().min(1),
   title: z.string().min(1),
-  body: z.string(),
-  discussion: z.string(),
-  choices: z.array(z.string().min(1)).min(1),
+  voting_type: z.enum(['single', 'multiple', 'weighted']),
+  options: z
+    .array(z.string().min(1))
+    .min(1)
+    .refine((options) => new Set(options).size === options.length, {
+      message: 'options are not unique',
+    }),
   snapshots: z.record(z.string(), z.string()),
+  extension: z
+    .object({
+      body: z.string().optional(),
+    })
+    .optional(),
 })
 export type Proposal = z.infer<typeof proposalSchema>
 
-export const proposalWithSignatureSchema = proposalSchema.extend({
-  signature: signatureSchema,
+export const proposalWithAuthorSchema = proposalSchema.extend({
+  author: authorSchema,
 })
-export type ProposalWithSignature = z.infer<typeof proposalWithSignatureSchema>

@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Organization {
+model Community {
   id   String
   did  String
   data Bytes
@@ -19,38 +19,38 @@ model Organization {
   @@index([did])
 }
 
-model Workgroup {
-  id           String
-  did          String
-  organization String
+model Group {
+  id        String
+  did       String
+  community String
 
-  @@id([id, organization])
+  @@id([id, community])
   @@index([did])
-  @@index([organization])
+  @@index([community])
 }
 
 model Proposal {
-  id           String
-  did          String
-  organization String
-  workgroup    String
-  data         Bytes
+  id        String
+  did       String
+  community String
+  group     String
+  data      Bytes
 
   @@id([id])
   @@index([did])
-  @@index([organization, workgroup])
+  @@index([community, group])
 }
 
 model Vote {
-  id           String
-  did          String
-  organization String
-  workgroup    String
-  proposal     String
-  data         Bytes
+  id        String
+  did       String
+  community String
+  group     String
+  proposal  String
+  data      Bytes
 
   @@id([id])
   @@unique([did, proposal])
-  @@index([organization, workgroup])
+  @@index([community, group])
   @@index([proposal])
 }
