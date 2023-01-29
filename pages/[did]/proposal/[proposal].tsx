@@ -13,7 +13,7 @@ import useRouterQuery from '../../../hooks/use-router-query'
 import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
 import { DataType } from '../../../src/constants'
-import { calculateVotingPower } from '../../../src/functions/number'
+import { calculateNumber } from '../../../src/functions/number'
 import {
   Authorized,
   communityWithAuthorSchema,
@@ -77,7 +77,7 @@ export default function ProposalPage() {
   const { data: votingPower, isValidating } = useSWR(
     group && did && proposal ? ['votingPower', group, did, proposal] : null,
     () =>
-      calculateVotingPower(
+      calculateNumber(
         group!.voting_power,
         did! as DID,
         mapSnapshots(proposal!.snapshots),

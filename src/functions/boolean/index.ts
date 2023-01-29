@@ -1,14 +1,14 @@
 import { uniq } from 'lodash-es'
 import pMap from 'p-map'
 
-import { ProposerLibertySets, BooleanUnit } from '../../schemas'
+import { BooleanSets, BooleanUnit } from '../../schemas'
 import { BooleanFunction } from '../types'
 import { is_sub_did_of } from './is-sub-did-of'
 import { is_did } from './is-did'
 import { owns_erc721 } from './owns-erc721'
 import { DID, Snapshots } from '../../types'
 
-export const checkProposerLibertyFunctions: {
+export const checkBooleanFunctions: {
   [name: string]: BooleanFunction<any[]>
 } = {
   is_did,
@@ -16,15 +16,15 @@ export const checkProposerLibertyFunctions: {
   owns_erc721,
 }
 
-export async function checkProposerLiberty(
-  data: ProposerLibertySets | BooleanUnit,
+export async function checkBoolean(
+  data: BooleanSets | BooleanUnit,
   did: DID,
   snapshots: Snapshots,
 ): Promise<boolean> {
   if ('operator' in data) {
     const results = await pMap(
       data.operands,
-      (operand) => checkProposerLiberty(operand, did, snapshots),
+      (operand) => checkBoolean(operand, did, snapshots),
       { concurrency: 5 },
     )
     if (data.operator === 'and') {
@@ -36,21 +36,22 @@ export async function checkProposerLiberty(
     }
     throw new Error(`unsupported operator: ${data.operator}`)
   }
-  return checkProposerLibertyFunctions[data.function](
-    ...data.arguments,
-  ).execute(did, snapshots)
+  return checkBooleanFunctions[data.function](...data.arguments).execute(
+    did,
+    snapshots,
+  )
 }
 
-export function requiredCoinTypesOfProposerLiberty(
-  data: ProposerLibertySets | BooleanUnit,
+export function requiredCoinTypesOfBooleanSets(
+  data: BooleanSets | BooleanUnit,
 ): number[] {
   if ('operator' in data) {
     return uniq(
       Array.from(data.operands).flatMap((operand) =>
-        requiredCoinTypesOfProposerLiberty(operand),
+        requiredCoinTypesOfBooleanSets(operand),
       ),
     )
   }
-  return checkProposerLibertyFunctions[data.function](...data.arguments)
+  return checkBooleanFunctions[data.function](...data.arguments)
     .requiredCoinTypes
 }

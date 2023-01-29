@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
-import { checkProposerLiberty } from '../../../src/functions/boolean'
+import { checkBoolean } from '../../../src/functions/boolean'
 import {
   communityWithAuthorSchema,
   proposalWithAuthorSchema,
@@ -83,13 +83,13 @@ export default async function handler(
   }
 
   if (
-    !(await checkProposerLiberty(
+    !(await checkBoolean(
       group.proposal_rights,
       proposalWithAuthor.data.author.did as DID,
       mapSnapshots(proposalWithAuthor.data.snapshots),
     ))
   ) {
-    res.status(400).send('does not have proposer liberty')
+    res.status(400).send('does not have proposal rights')
     return
   }
 

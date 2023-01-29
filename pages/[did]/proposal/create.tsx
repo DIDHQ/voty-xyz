@@ -13,7 +13,7 @@ import useAsync from '../../../hooks/use-async'
 import useDidConfig from '../../../hooks/use-did-config'
 import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
-import { requiredCoinTypesOfVotingPower } from '../../../src/functions/number'
+import { requiredCoinTypesOfNumberSets } from '../../../src/functions/number'
 import {
   communityWithAuthorSchema,
   Proposal,
@@ -59,22 +59,20 @@ export default function CreateProposalPage() {
     }
     setValue('group', group.extension.id)
   }, [setValue, group])
-  const { data: coinTypesOfVotingPower } = useSWR(
+  const { data: coinTypesOfNumberSets } = useSWR(
     group?.voting_power
-      ? ['requiredCoinTypesOfVotingPower', group.voting_power]
+      ? ['requiredCoinTypesOfNumberSets', group.voting_power]
       : null,
-    () => requiredCoinTypesOfVotingPower(group!.voting_power!),
+    () => requiredCoinTypesOfNumberSets(group!.voting_power!),
   )
   const { data: snapshots } = useSWR(
-    ['snapshots', coinTypesOfVotingPower],
+    ['snapshots', coinTypesOfNumberSets],
     async () => {
-      const snapshots = await pMap(
-        coinTypesOfVotingPower!,
-        getCurrentSnapshot,
-        { concurrency: 5 },
-      )
+      const snapshots = await pMap(coinTypesOfNumberSets!, getCurrentSnapshot, {
+        concurrency: 5,
+      })
       return snapshots.reduce((obj, snapshot, index) => {
-        obj[coinTypesOfVotingPower![index]] = snapshot.toString()
+        obj[coinTypesOfNumberSets![index]] = snapshot.toString()
         return obj
       }, {} as { [coinType: string]: string })
     },

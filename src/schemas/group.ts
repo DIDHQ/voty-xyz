@@ -6,7 +6,7 @@ export const booleanUnitSchema = z.object({
 })
 export type BooleanUnit = z.infer<typeof booleanUnitSchema>
 
-export const booleanSetsSchema: z.ZodType<ProposerLibertySets> = z.lazy(() =>
+export const booleanSetsSchema: z.ZodType<BooleanSets> = z.lazy(() =>
   z.union([
     z.object({
       operator: z.enum(['and', 'or']),
@@ -21,10 +21,8 @@ export const booleanSetsSchema: z.ZodType<ProposerLibertySets> = z.lazy(() =>
   ]),
 )
 // https://github.com/react-hook-form/react-hook-form/issues/4055
-type BooleanArray = Iterable<
-  Omit<BooleanUnit, ''> | Omit<ProposerLibertySets, ''>
->
-export type ProposerLibertySets = {
+type BooleanArray = Iterable<Omit<BooleanUnit, ''> | Omit<BooleanSets, ''>>
+export type BooleanSets = {
   operator: 'and' | 'or' | 'not'
   operands: BooleanArray
 }

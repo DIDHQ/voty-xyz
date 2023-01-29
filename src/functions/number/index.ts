@@ -7,14 +7,14 @@ import { NumberFunction } from '../types'
 import { static_power } from './static-power'
 import { erc20_balance } from './erc20-balance'
 
-export const calculateVotingPowerFunctions: {
+export const calculateNumberFunctions: {
   [name: string]: NumberFunction<any[]>
 } = {
   static_power,
   erc20_balance,
 }
 
-export async function calculateVotingPower(
+export async function calculateNumber(
   data: NumberSets | NumberUnit,
   did: DID,
   snapshots: Snapshots,
@@ -22,7 +22,7 @@ export async function calculateVotingPower(
   if ('operator' in data) {
     const results = await pMap(
       data.operands,
-      (operand) => calculateVotingPower(operand, did, snapshots),
+      (operand) => calculateNumber(operand, did, snapshots),
       { concurrency: 5 },
     )
     if (data.operator === 'max') {
@@ -34,21 +34,22 @@ export async function calculateVotingPower(
     }
     throw new Error(`unsupported operator: ${data.operator}`)
   }
-  return calculateVotingPowerFunctions[data.function](
-    ...data.arguments,
-  ).execute(did, snapshots)
+  return calculateNumberFunctions[data.function](...data.arguments).execute(
+    did,
+    snapshots,
+  )
 }
 
-export function requiredCoinTypesOfVotingPower(
+export function requiredCoinTypesOfNumberSets(
   data: NumberSets | NumberUnit,
 ): number[] {
   if ('operator' in data) {
     return uniq(
       Array.from(data.operands).flatMap((operand) =>
-        requiredCoinTypesOfVotingPower(operand),
+        requiredCoinTypesOfNumberSets(operand),
       ),
     )
   }
-  return calculateVotingPowerFunctions[data.function](...data.arguments)
+  return calculateNumberFunctions[data.function](...data.arguments)
     .requiredCoinTypes
 }

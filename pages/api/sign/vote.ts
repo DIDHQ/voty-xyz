@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
-import { calculateVotingPower } from '../../../src/functions/number'
+import { calculateNumber } from '../../../src/functions/number'
 import {
   communityWithAuthorSchema,
   proposalWithAuthorSchema,
@@ -98,13 +98,13 @@ export default async function handler(
     return
   }
 
-  const votingPower = await calculateVotingPower(
+  const votingPower = await calculateNumber(
     group.voting_power,
     voteWithAuthor.data.author.did as DID,
     mapSnapshots(proposalWithAuthor.data.snapshots),
   )
   if (votingPower !== vote.power) {
-    res.status(400).send('does not have proposer liberty')
+    res.status(400).send('voting power not match')
     return
   }
 
