@@ -103,7 +103,9 @@ export default function ProposalPage() {
           <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
             <div className="sm:col-span-1">
               <dt className="text-sm font-medium text-gray-500">Type</dt>
-              <dd className="mt-1 text-sm text-gray-900">{proposal.type}</dd>
+              <dd className="mt-1 text-sm text-gray-900">
+                {proposal.voting_type}
+              </dd>
             </div>
             <div className="sm:col-span-1">
               <dt className="text-sm font-medium text-gray-500">Author</dt>
@@ -142,7 +144,7 @@ export default function ProposalPage() {
                             key={choice + index}
                             className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
                             onClick={() => {
-                              if (proposal.type === 'single') {
+                              if (proposal.voting_type === 'single') {
                                 onChange(index)
                               } else {
                                 onChange(
@@ -160,7 +162,7 @@ export default function ProposalPage() {
                               {choice}
                             </span>
                             <div className="ml-4 flex-shrink-0">
-                              {proposal.type === 'single' ? (
+                              {proposal.voting_type === 'single' ? (
                                 <input
                                   type="radio"
                                   checked={index === value}

@@ -26,7 +26,7 @@ export default function ProposalListItem(props: {
           </div>
           <div className="ml-2 flex flex-shrink-0">
             <p className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-              {props.value.type}
+              {props.value.voting_type}
             </p>
           </div>
         </div>

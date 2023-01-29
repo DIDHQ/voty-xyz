@@ -122,13 +122,16 @@ export default function CreateProposalPage() {
               </FormItem>
             </div>
             <div className="sm:col-span-6">
-              <FormItem label="Type" error={formState.errors.type?.message}>
+              <FormItem
+                label="Type"
+                error={formState.errors.voting_type?.message}
+              >
                 <Controller
                   control={control}
-                  name="type"
+                  name="voting_type"
                   render={({ field: { value, onChange } }) => (
                     <Select
-                      options={proposalSchema.shape.type.options}
+                      options={proposalSchema.shape.voting_type.options}
                       value={value}
                       onChange={onChange}
                     />
