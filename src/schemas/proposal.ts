@@ -9,7 +9,6 @@ export const proposalSchema = z.object({
   voting_type: z.enum(['single', 'multiple', 'weighted']),
   options: z
     .array(z.string().min(1))
-    .min(1)
     .refine((options) => new Set(options).size === options.length, {
       message: 'options are not unique',
     }),

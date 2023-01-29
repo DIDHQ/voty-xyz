@@ -11,8 +11,10 @@ datasource db {
 }
 
 model Community {
-  id   String
-  did  String
+  id String
+
+  did String
+
   data Bytes
 
   @@id([id])
@@ -20,21 +22,23 @@ model Community {
 }
 
 model Group {
-  id        String
+  id String
+
   did       String
   community String
 
-  @@id([id, community])
+  @@id([community, id])
   @@index([did])
-  @@index([community])
 }
 
 model Proposal {
-  id        String
+  id String
+
   did       String
   community String
   group     String
-  data      Bytes
+
+  data Bytes
 
   @@id([id])
   @@index([did])
@@ -42,15 +46,16 @@ model Proposal {
 }
 
 model Vote {
-  id        String
+  id String
+
   did       String
   community String
   group     String
   proposal  String
-  data      Bytes
+
+  data Bytes
 
   @@id([id])
-  @@unique([did, proposal])
+  @@unique([proposal])
   @@index([community, group])
-  @@index([proposal])
 }
