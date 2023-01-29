@@ -93,16 +93,16 @@ export default async function handler(
     return
   }
 
-  const workgroup = communityWithSignature.data.workgroups?.find(
-    ({ id }) => id === proposalWithSignature.data.workgroup,
+  const group = communityWithSignature.data.groups?.find(
+    ({ id }) => id === proposalWithSignature.data.group,
   )
-  if (!workgroup) {
-    res.status(400).send('workgroup not found')
+  if (!group) {
+    res.status(400).send('group not found')
     return
   }
 
   const votingPower = await calculateVotingPower(
-    workgroup.voting_power,
+    group.voting_power,
     voteWithSignature.data.signature.did as DID,
     mapSnapshots(proposalWithSignature.data.snapshots),
   )
@@ -129,7 +129,7 @@ export default async function handler(
       id: transaction.id,
       did: vote.did,
       community: vote.community,
-      workgroup: vote.workgroup,
+      group: vote.group,
       proposal: vote.proposal,
       data,
     },

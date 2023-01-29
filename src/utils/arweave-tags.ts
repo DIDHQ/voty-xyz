@@ -28,7 +28,7 @@ export function getArweaveTags(
       'app-data-type': DataType.PROPOSAL,
       'app-index-did': json.did,
       'app-index-community': json.community,
-      'app-index-workgroup': json.workgroup,
+      'app-index-group': json.group,
     }
   }
   if (isVote(json)) {
@@ -37,7 +37,7 @@ export function getArweaveTags(
       'app-data-type': DataType.VOTE,
       'app-index-did': json.did,
       'app-index-community': json.community,
-      'app-index-workgroup': json.workgroup,
+      'app-index-group': json.group,
       'app-index-proposal': json.proposal,
     }
   }

@@ -5,7 +5,7 @@ import { signatureSchema } from './signature'
 export const proposalSchema = z.object({
   did: z.string().min(1),
   community: z.string().min(1),
-  workgroup: z.string().min(1),
+  group: z.string().min(1),
   // type: z.enum(['single', 'multiple', 'weighted', 'ranked']),
   type: z.enum(['single', 'multiple']),
   title: z.string().min(1),

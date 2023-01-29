@@ -69,7 +69,7 @@ export type VotingPowerSets = {
   operands: VotingPowerArray
 }
 
-export const workgroupSchema = z.object({
+export const groupSchema = z.object({
   id: z.string().min(1),
   profile: z.object({
     name: z.string().min(1),
@@ -83,4 +83,4 @@ export const workgroupSchema = z.object({
     approval_condition_description: z.string(),
   }),
 })
-export type Workgroup = z.infer<typeof workgroupSchema>
+export type Group = z.infer<typeof groupSchema>

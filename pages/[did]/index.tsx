@@ -21,26 +21,26 @@ import ProposalListItem from '../../components/proposal-list-item'
 import TextInput from '../../components/basic/text-input'
 
 export default function CommunityIndexPage() {
-  const [query] = useRouterQuery<['did', 'workgroup']>()
+  const [query] = useRouterQuery<['did', 'group']>()
   const { data: config } = useDidConfig(query.did)
   const { data: community } = useArweaveData(
     communityWithSignatureSchema,
     config?.community,
   )
-  const workgroup = useMemo(
-    () => community?.workgroups?.find(({ id }) => id === query.workgroup),
-    [community?.workgroups, query.workgroup],
+  const group = useMemo(
+    () => community?.groups?.find(({ id }) => id === query.group),
+    [community?.groups, query.group],
   )
   const { data: proposals } = useList<ProposalWithSignature>(
     DataType.PROPOSAL,
     [
       ['did', query.did],
-      ['workgroup', query.workgroup],
+      ['group', query.group],
     ],
   )
   const router = useRouter()
-  const handleCreateWorkgroup = useCallback(() => {
-    router.push(`/${query.did}/settings?workgroup=${nanoid()}`)
+  const handleCreateGroup = useCallback(() => {
+    router.push(`/${query.did}/settings?group=${nanoid()}`)
   }, [query.did, router])
 
   return community ? (
@@ -106,13 +106,13 @@ export default function CommunityIndexPage() {
             <Link href={`/${community.did}/settings`}>
               <Button>Settings</Button>
             </Link>
-            <Button onClick={handleCreateWorkgroup}>New Workgroup</Button>
+            <Button onClick={handleCreateGroup}>New Group</Button>
           </div>
           <ul role="list" className="mt-4 divide-y divide-gray-200">
             <li
               className={clsx(
                 'relative py-5 px-8 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
-                !query.workgroup
+                !query.group
                   ? 'bg-gray-100 hover:bg-gray-200'
                   : 'bg-white hover:bg-gray-50',
               )}
@@ -131,12 +131,12 @@ export default function CommunityIndexPage() {
                 </div>
               </div>
             </li>
-            {community.workgroups?.map((workgroup) => (
+            {community.groups?.map((group) => (
               <li
-                key={workgroup.id}
+                key={group.id}
                 className={clsx(
                   'relative py-5 px-8 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
-                  workgroup.id === query.workgroup
+                  group.id === query.group
                     ? 'bg-gray-100 hover:bg-gray-200'
                     : 'bg-white hover:bg-gray-50',
                 )}
@@ -144,20 +144,20 @@ export default function CommunityIndexPage() {
                 <div className="flex justify-between space-x-3">
                   <div className="min-w-0 flex-1">
                     <Link
-                      href={`/${community.did}?workgroup=${workgroup.id}`}
+                      href={`/${community.did}?group=${group.id}`}
                       className="block focus:outline-none"
                     >
                       <span className="absolute inset-0" aria-hidden="true" />
                       <p className="truncate text-sm font-medium text-gray-900">
-                        {workgroup.profile.name}
+                        {group.profile.name}
                       </p>
                     </Link>
                   </div>
                   {/* <time
-                    dateTime={workgroup.datetime}
+                    dateTime={group.datetime}
                     className="flex-shrink-0 whitespace-nowrap text-sm text-gray-500"
                   >
-                    {workgroup.time}
+                    {group.time}
                   </time> */}
                 </div>
               </li>
@@ -175,30 +175,28 @@ export default function CommunityIndexPage() {
         <div
           className={clsx(
             'p-5 bg-white border-b border-gray-200 pb-5 sm:flex sm:justify-between',
-            workgroup ? 'sm:items-start' : 'sm:items-center',
+            group ? 'sm:items-start' : 'sm:items-center',
           )}
         >
           <div>
             <h3 className="text-lg font-medium leading-6 text-gray-900">
-              {workgroup?.profile.name || 'Proposals'}
+              {group?.profile.name || 'Proposals'}
             </h3>
-            {workgroup ? (
+            {group ? (
               <div className="mt-1">
                 <p className="text-sm text-gray-600 line-clamp-2">
-                  {workgroup?.profile.about}
+                  {group?.profile.about}
                 </p>
               </div>
             ) : null}
           </div>
-          {workgroup ? (
+          {group ? (
             <div className="flex flex-shrink-0 space-x-4 mt-3 sm:mt-0 sm:ml-4">
-              <Link
-                href={`/${community.did}/settings?workgroup=${workgroup.id}`}
-              >
+              <Link href={`/${community.did}/settings?group=${group.id}`}>
                 <Button>Settings</Button>
               </Link>
               <Link
-                href={`/${community.did}/proposal/create?workgroup=${workgroup.id}`}
+                href={`/${community.did}/proposal/create?group=${group.id}`}
               >
                 <Button primary>New Proposal</Button>
               </Link>

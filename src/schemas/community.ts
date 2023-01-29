@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { signatureSchema } from './signature'
-import { workgroupSchema } from './workgroup'
+import { groupSchema } from './group'
 
 export const communitySchema = z.object({
   did: z.string().min(1),
@@ -18,7 +18,7 @@ export const communitySchema = z.object({
       github: z.string(),
     })
     .optional(),
-  workgroups: z.array(workgroupSchema).optional(),
+  groups: z.array(groupSchema).optional(),
 })
 export type Community = z.infer<typeof communitySchema>
 

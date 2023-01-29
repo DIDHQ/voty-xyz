@@ -77,13 +77,13 @@ export default async function handler(
       create: { id: transaction.id, did: community.did, data },
       update: { did: community.did, data },
     }),
-    ...(community.workgroups?.map((workgroup) =>
-      database.workgroup.upsert({
+    ...(community.groups?.map((group) =>
+      database.group.upsert({
         where: {
-          id_community: { id: workgroup.id, community: transaction.id },
+          id_community: { id: group.id, community: transaction.id },
         },
         create: {
-          id: workgroup.id,
+          id: group.id,
           did: community.did,
           community: transaction.id,
         },

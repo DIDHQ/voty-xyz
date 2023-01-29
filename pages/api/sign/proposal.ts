@@ -74,17 +74,17 @@ export default async function handler(
     return
   }
 
-  const workgroup = communityWithSignature.data.workgroups?.find(
-    ({ id }) => id === proposal.workgroup,
+  const group = communityWithSignature.data.groups?.find(
+    ({ id }) => id === proposal.group,
   )
-  if (!workgroup) {
-    res.status(400).send('workgroup not found')
+  if (!group) {
+    res.status(400).send('group not found')
     return
   }
 
   if (
     !(await checkProposerLiberty(
-      workgroup.proposer_liberty,
+      group.proposer_liberty,
       proposalWithSignature.data.signature.did as DID,
       mapSnapshots(proposalWithSignature.data.snapshots),
     ))
@@ -112,13 +112,13 @@ export default async function handler(
       id: transaction.id,
       did: proposal.did,
       community: proposal.community,
-      workgroup: proposal.workgroup,
+      group: proposal.group,
       data,
     },
     update: {
       did: proposal.did,
       community: proposal.community,
-      workgroup: proposal.workgroup,
+      group: proposal.group,
       data,
     },
   })

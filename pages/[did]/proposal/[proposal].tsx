@@ -35,9 +35,9 @@ export default function ProposalPage() {
     communityWithSignatureSchema,
     proposal?.community,
   )
-  const workgroup = useMemo(
-    () => community?.workgroups?.find(({ id }) => id === proposal?.workgroup),
-    [community?.workgroups, proposal?.workgroup],
+  const group = useMemo(
+    () => community?.groups?.find(({ id }) => id === proposal?.group),
+    [community?.groups, proposal?.group],
   )
   const [did, setDid] = useState('')
   const { account } = useWallet()
@@ -67,7 +67,7 @@ export default function ProposalPage() {
     if (proposal && query.proposal) {
       setValue('did', proposal.did)
       setValue('community', proposal.community)
-      setValue('workgroup', proposal.workgroup)
+      setValue('group', proposal.group)
       setValue('proposal', query.proposal)
     }
   }, [proposal, query.proposal, setValue])
@@ -75,12 +75,10 @@ export default function ProposalPage() {
     ['proposal', query.proposal],
   ])
   const { data: votingPower, isValidating } = useSWR(
-    workgroup && did && proposal
-      ? ['votingPower', workgroup, did, proposal]
-      : null,
+    group && did && proposal ? ['votingPower', group, did, proposal] : null,
     () =>
       calculateVotingPower(
-        workgroup!.voting_power,
+        group!.voting_power,
         did! as DID,
         mapSnapshots(proposal!.snapshots),
       ),

@@ -36,18 +36,16 @@ export default function CreateProposalPage() {
   } = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
   })
-  const [query] = useRouterQuery<['did', 'workgroup']>()
+  const [query] = useRouterQuery<['did', 'group']>()
   const { data: config } = useDidConfig(query.did)
   const { data: community } = useArweaveData(
     communityWithSignatureSchema,
     config?.community,
   )
-  const workgroup = useMemo(
+  const group = useMemo(
     () =>
-      community?.workgroups?.find(
-        ({ profile }) => profile.name === query.workgroup,
-      ),
-    [community?.workgroups, query.workgroup],
+      community?.groups?.find(({ profile }) => profile.name === query.group),
+    [community?.groups, query.group],
   )
   useEffect(() => {
     if (!config?.community) {
@@ -56,16 +54,16 @@ export default function CreateProposalPage() {
     setValue('community', config?.community)
   }, [config?.community, setValue])
   useEffect(() => {
-    if (!workgroup) {
+    if (!group) {
       return
     }
-    setValue('workgroup', workgroup.id)
-  }, [query.workgroup, setValue, workgroup])
+    setValue('group', group.id)
+  }, [query.group, setValue, group])
   const { data: coinTypesOfVotingPower } = useSWR(
-    workgroup?.voting_power
-      ? ['requiredCoinTypesOfVotingPower', workgroup.voting_power]
+    group?.voting_power
+      ? ['requiredCoinTypesOfVotingPower', group.voting_power]
       : null,
-    () => requiredCoinTypesOfVotingPower(workgroup!.voting_power!),
+    () => requiredCoinTypesOfVotingPower(group!.voting_power!),
   )
   const { data: snapshots } = useSWR(
     ['snapshots', coinTypesOfVotingPower],

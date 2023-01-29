@@ -19,7 +19,7 @@ model Community {
   @@index([did])
 }
 
-model Workgroup {
+model Group {
   id        String
   did       String
   community String
@@ -33,24 +33,24 @@ model Proposal {
   id        String
   did       String
   community String
-  workgroup String
+  group     String
   data      Bytes
 
   @@id([id])
   @@index([did])
-  @@index([community, workgroup])
+  @@index([community, group])
 }
 
 model Vote {
   id        String
   did       String
   community String
-  workgroup String
+  group     String
   proposal  String
   data      Bytes
 
   @@id([id])
   @@unique([did, proposal])
-  @@index([community, workgroup])
+  @@index([community, group])
   @@index([proposal])
 }
