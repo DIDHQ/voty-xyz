@@ -17,7 +17,11 @@ export default function CommunitySettingsPage() {
     <div className="flex flex-col w-full px-8">
       {query.group ? (
         community ? (
-          <GroupForm community={community} group={query.group} />
+          <GroupForm
+            did={query.did}
+            community={community}
+            group={query.group}
+          />
         ) : null
       ) : (
         <CommunityForm did={query.did} community={community} />

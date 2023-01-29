@@ -13,14 +13,12 @@ export function getArweaveTags(json: Authorized<Community | Proposal | Vote>) {
     return {
       ...defaultArweaveTags,
       'app-data-type': DataType.COMMUNITY,
-      'app-index-did': json.did,
     }
   }
   if (isProposal(json)) {
     return {
       ...defaultArweaveTags,
       'app-data-type': DataType.PROPOSAL,
-      'app-index-did': json.did,
       'app-index-community': json.community,
       'app-index-group': json.group,
     }
@@ -29,9 +27,6 @@ export function getArweaveTags(json: Authorized<Community | Proposal | Vote>) {
     return {
       ...defaultArweaveTags,
       'app-data-type': DataType.VOTE,
-      'app-index-did': json.did,
-      'app-index-community': json.community,
-      'app-index-group': json.group,
       'app-index-proposal': json.proposal,
     }
   }

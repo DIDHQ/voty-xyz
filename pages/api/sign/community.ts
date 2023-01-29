@@ -70,8 +70,8 @@ export default async function handler(
   await database.$transaction([
     database.community.upsert({
       where: { id: transaction.id },
-      create: { id: transaction.id, did: community.did, data },
-      update: { did: community.did, data },
+      create: { id: transaction.id, did: author.did, data },
+      update: { did: author.did, data },
     }),
     ...(community.groups?.map((group) =>
       database.group.upsert({
@@ -80,11 +80,11 @@ export default async function handler(
         },
         create: {
           id: group.id,
-          did: community.did,
+          did: author.did,
           community: transaction.id,
         },
         update: {
-          did: community.did,
+          did: author.did,
         },
       }),
     ) || []),

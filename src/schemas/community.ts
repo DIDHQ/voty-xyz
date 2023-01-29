@@ -3,7 +3,6 @@ import { authorSchema } from './author'
 import { groupSchema } from './group'
 
 export const communitySchema = z.object({
-  did: z.string().min(1),
   profile: z.object({
     avatar: z.string().optional(),
     name: z.string().min(4),

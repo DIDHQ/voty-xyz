@@ -48,7 +48,7 @@ export default function CommunityIndexPage() {
           <div className="m-8 mb-0 flex items-start">
             <Avatar
               size={16}
-              name={community.did}
+              name={query.did}
               value={community.profile.avatar}
             />
             <div className="ml-4">
@@ -101,7 +101,7 @@ export default function CommunityIndexPage() {
             ) : null}
           </div>
           <div className="flex space-x-4 mx-8">
-            <Link href={`/${community.did}/settings`}>
+            <Link href={`/${query.did}/settings`}>
               <Button>Settings</Button>
             </Link>
             <Button onClick={handleCreateGroup}>New Group</Button>
@@ -118,7 +118,7 @@ export default function CommunityIndexPage() {
               <div className="flex justify-between space-x-3">
                 <div className="min-w-0 flex-1">
                   <Link
-                    href={`/${community.did}`}
+                    href={`/${query.did}`}
                     className="block focus:outline-none"
                   >
                     <span className="absolute inset-0" aria-hidden="true" />
@@ -142,7 +142,7 @@ export default function CommunityIndexPage() {
                 <div className="flex justify-between space-x-3">
                   <div className="min-w-0 flex-1">
                     <Link
-                      href={`/${community.did}?group=${group.id}`}
+                      href={`/${query.did}?group=${group.id}`}
                       className="block focus:outline-none"
                     >
                       <span className="absolute inset-0" aria-hidden="true" />
@@ -190,12 +190,10 @@ export default function CommunityIndexPage() {
           </div>
           {group ? (
             <div className="flex flex-shrink-0 space-x-4 mt-3 sm:mt-0 sm:ml-4">
-              <Link href={`/${community.did}/settings?group=${group.id}`}>
+              <Link href={`/${query.did}/settings?group=${group.id}`}>
                 <Button>Settings</Button>
               </Link>
-              <Link
-                href={`/${community.did}/proposal/create?group=${group.id}`}
-              >
+              <Link href={`/${query.did}/proposal/create?group=${group.id}`}>
                 <Button primary>New Proposal</Button>
               </Link>
             </div>
@@ -206,7 +204,9 @@ export default function CommunityIndexPage() {
         <ul role="list" className="divide-y divide-gray-200">
           {proposals?.map((proposal) => (
             <li key={proposal.id}>
-              <ProposalListItem value={proposal} />
+              {query.did ? (
+                <ProposalListItem did={query.did} value={proposal} />
+              ) : null}
             </li>
           ))}
         </ul>

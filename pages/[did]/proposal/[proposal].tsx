@@ -64,13 +64,10 @@ export default function ProposalPage() {
     ),
   )
   useEffect(() => {
-    if (proposal && query.proposal) {
-      setValue('did', proposal.did)
-      setValue('community', proposal.community)
-      setValue('group', proposal.group)
+    if (query.proposal) {
       setValue('proposal', query.proposal)
     }
-  }, [proposal, query.proposal, setValue])
+  }, [query.proposal, setValue])
   const { data: votes } = useList<Authorized<Vote>>(DataType.VOTE, [
     ['proposal', query.proposal],
   ])
@@ -98,7 +95,9 @@ export default function ProposalPage() {
           <h3 className="text-lg font-medium leading-6 text-gray-900">
             {proposal.title}
           </h3>
-          <p className="mt-1 max-w-2xl text-sm text-gray-500">{proposal.did}</p>
+          <p className="mt-1 max-w-2xl text-sm text-gray-500">
+            {proposal.author.did}
+          </p>
         </div>
         <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
           <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
@@ -215,7 +214,7 @@ export default function ProposalPage() {
             key={vote.id}
             className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
           >
-            <span className="ml-2 w-0 flex-1 truncate">{vote.did}</span>
+            <span className="ml-2 w-0 flex-1 truncate">{vote.author.did}</span>
             {typeof vote.choice === 'number'
               ? proposal.choices[vote.choice]
               : vote.choice

@@ -84,12 +84,6 @@ export default function CreateProposalPage() {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
-  useEffect(() => {
-    if (query.did) {
-      setValue('did', query.did)
-    }
-  }, [query.did, setValue])
-
   const [did, setDid] = useState('')
   const { account } = useWallet()
   const handleSignJson = useSignJson(did)
@@ -125,14 +119,6 @@ export default function CreateProposalPage() {
             <div className="sm:col-span-6">
               <FormItem label="Body" error={formState.errors.body?.message}>
                 <Textarea {...register('body')} />
-              </FormItem>
-            </div>
-            <div className="sm:col-span-6">
-              <FormItem
-                label="Discussion"
-                error={formState.errors.discussion?.message}
-              >
-                <TextInput {...register('discussion')} />
               </FormItem>
             </div>
             <div className="sm:col-span-6">

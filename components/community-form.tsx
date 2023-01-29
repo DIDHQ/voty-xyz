@@ -49,9 +49,6 @@ export default function CommunityForm(props: {
       resolved.address === account.address,
     [resolved, account],
   )
-  useEffect(() => {
-    setValue('did', props.did)
-  }, [props.did, setValue])
   const handleSubmit = useAsync(
     useCallback(
       async (json: Community) => {
