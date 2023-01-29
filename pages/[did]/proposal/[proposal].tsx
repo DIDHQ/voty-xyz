@@ -15,7 +15,7 @@ import useWallet from '../../../hooks/use-wallet'
 import { DataType } from '../../../src/constants'
 import { calculateVotingPower } from '../../../src/functions/voting-power'
 import {
-  organizationWithSignatureSchema,
+  communityWithSignatureSchema,
   proposalWithSignatureSchema,
   Vote,
   voteSchema,
@@ -31,14 +31,13 @@ export default function ProposalPage() {
     proposalWithSignatureSchema,
     query.proposal,
   )
-  const { data: organization } = useArweaveData(
-    organizationWithSignatureSchema,
-    proposal?.organization,
+  const { data: community } = useArweaveData(
+    communityWithSignatureSchema,
+    proposal?.community,
   )
   const workgroup = useMemo(
-    () =>
-      organization?.workgroups?.find(({ id }) => id === proposal?.workgroup),
-    [organization?.workgroups, proposal?.workgroup],
+    () => community?.workgroups?.find(({ id }) => id === proposal?.workgroup),
+    [community?.workgroups, proposal?.workgroup],
   )
   const [did, setDid] = useState('')
   const { account } = useWallet()
@@ -67,7 +66,7 @@ export default function ProposalPage() {
   useEffect(() => {
     if (proposal && query.proposal) {
       setValue('did', proposal.did)
-      setValue('organization', proposal.organization)
+      setValue('community', proposal.community)
       setValue('workgroup', proposal.workgroup)
       setValue('proposal', query.proposal)
     }

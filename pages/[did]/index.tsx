@@ -9,7 +9,7 @@ import Avatar from '../../components/basic/avatar'
 import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
 import {
-  organizationWithSignatureSchema,
+  communityWithSignatureSchema,
   ProposalWithSignature,
 } from '../../src/schemas'
 import useRouterQuery from '../../hooks/use-router-query'
@@ -20,16 +20,16 @@ import { DiscordIcon, GitHubIcon, TwitterIcon } from '../../components/icons'
 import ProposalListItem from '../../components/proposal-list-item'
 import TextInput from '../../components/basic/text-input'
 
-export default function OrganizationIndexPage() {
+export default function CommunityIndexPage() {
   const [query] = useRouterQuery<['did', 'workgroup']>()
   const { data: config } = useDidConfig(query.did)
-  const { data: organization } = useArweaveData(
-    organizationWithSignatureSchema,
-    config?.organization,
+  const { data: community } = useArweaveData(
+    communityWithSignatureSchema,
+    config?.community,
   )
   const workgroup = useMemo(
-    () => organization?.workgroups?.find(({ id }) => id === query.workgroup),
-    [organization?.workgroups, query.workgroup],
+    () => community?.workgroups?.find(({ id }) => id === query.workgroup),
+    [community?.workgroups, query.workgroup],
   )
   const { data: proposals } = useList<ProposalWithSignature>(
     DataType.PROPOSAL,
@@ -43,61 +43,59 @@ export default function OrganizationIndexPage() {
     router.push(`/${query.did}/settings?workgroup=${nanoid()}`)
   }, [query.did, router])
 
-  return organization ? (
+  return community ? (
     <main className="flex flex-1 overflow-hidden">
       <aside className="hidden lg:order-first lg:block lg:flex-shrink-0">
         <div className="relative flex h-full w-96 flex-col overflow-y-auto border-r border-gray-200 bg-white">
           <div className="m-8 mb-0 flex items-start">
             <Avatar
               size={16}
-              name={organization.did}
-              value={organization.profile.avatar}
+              name={community.did}
+              value={community.profile.avatar}
             />
             <div className="ml-4">
               <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">
-                {organization.profile.name}
+                {community.profile.name}
               </h3>
-              <p className="text-sm text-gray-500">
-                {organization.profile.about}
-              </p>
+              <p className="text-sm text-gray-500">{community.profile.about}</p>
             </div>
           </div>
           <div className="flex space-x-4 mx-8 my-4">
-            {organization.profile.website ? (
+            {community.profile.website ? (
               <a
-                href={organization.profile.website}
+                href={community.profile.website}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <GlobeAltIcon className="w-6 h-6" />
               </a>
             ) : null}
-            {organization.profile.tos ? (
+            {community.profile.tos ? (
               <a
-                href={organization.profile.tos}
+                href={community.profile.tos}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <DocumentCheckIcon className="w-6 h-6" />
               </a>
             ) : null}
-            {organization.social?.twitter ? (
+            {community.social?.twitter ? (
               <a
-                href={`https://twitter.com/${organization.social.twitter}`}
+                href={`https://twitter.com/${community.social.twitter}`}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <TwitterIcon className="w-6 h-6" />
               </a>
             ) : null}
-            {organization.social?.discord ? (
+            {community.social?.discord ? (
               <a
-                href={`https://discord.com/invite/${organization.social.discord}`}
+                href={`https://discord.com/invite/${community.social.discord}`}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <DiscordIcon className="w-6 h-6" />
               </a>
             ) : null}
-            {organization.social?.github ? (
+            {community.social?.github ? (
               <a
-                href={`https://github.com/${organization.social.github}`}
+                href={`https://github.com/${community.social.github}`}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <GitHubIcon className="w-6 h-6" />
@@ -105,7 +103,7 @@ export default function OrganizationIndexPage() {
             ) : null}
           </div>
           <div className="flex space-x-4 mx-8">
-            <Link href={`/${organization.did}/settings`}>
+            <Link href={`/${community.did}/settings`}>
               <Button>Settings</Button>
             </Link>
             <Button onClick={handleCreateWorkgroup}>New Workgroup</Button>
@@ -122,7 +120,7 @@ export default function OrganizationIndexPage() {
               <div className="flex justify-between space-x-3">
                 <div className="min-w-0 flex-1">
                   <Link
-                    href={`/${organization.did}`}
+                    href={`/${community.did}`}
                     className="block focus:outline-none"
                   >
                     <span className="absolute inset-0" aria-hidden="true" />
@@ -133,7 +131,7 @@ export default function OrganizationIndexPage() {
                 </div>
               </div>
             </li>
-            {organization.workgroups?.map((workgroup) => (
+            {community.workgroups?.map((workgroup) => (
               <li
                 key={workgroup.id}
                 className={clsx(
@@ -146,7 +144,7 @@ export default function OrganizationIndexPage() {
                 <div className="flex justify-between space-x-3">
                   <div className="min-w-0 flex-1">
                     <Link
-                      href={`/${organization.did}?workgroup=${workgroup.id}`}
+                      href={`/${community.did}?workgroup=${workgroup.id}`}
                       className="block focus:outline-none"
                     >
                       <span className="absolute inset-0" aria-hidden="true" />
@@ -195,12 +193,12 @@ export default function OrganizationIndexPage() {
           {workgroup ? (
             <div className="flex flex-shrink-0 space-x-4 mt-3 sm:mt-0 sm:ml-4">
               <Link
-                href={`/${organization.did}/settings?workgroup=${workgroup.id}`}
+                href={`/${community.did}/settings?workgroup=${workgroup.id}`}
               >
                 <Button>Settings</Button>
               </Link>
               <Link
-                href={`/${organization.did}/proposal/create?workgroup=${workgroup.id}`}
+                href={`/${community.did}/proposal/create?workgroup=${workgroup.id}`}
               >
                 <Button primary>New Proposal</Button>
               </Link>

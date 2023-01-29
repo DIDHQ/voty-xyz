@@ -8,7 +8,7 @@ import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignJson from '../hooks/use-sign-json'
 import useWallet from '../hooks/use-wallet'
-import { Organization, organizationSchema } from '../src/schemas'
+import { Community, communitySchema } from '../src/schemas'
 import Button from './basic/button'
 import FormItem from './basic/form-item'
 import TextInput from './basic/text-input'
@@ -17,7 +17,7 @@ import JsonInput from './json-input'
 import NumericInput from './numeric-input'
 
 export default function WorkgroupForm(props: {
-  organization: Organization
+  community: Community
   workgroup: string
 }) {
   const {
@@ -26,8 +26,8 @@ export default function WorkgroupForm(props: {
     handleSubmit: onSubmit,
     reset,
     formState,
-  } = useForm<Organization>({
-    resolver: zodResolver(organizationSchema),
+  } = useForm<Community>({
+    resolver: zodResolver(communitySchema),
   })
   const { fields, append, remove } = useFieldArray({
     control,
@@ -35,18 +35,18 @@ export default function WorkgroupForm(props: {
     keyName: '_id',
   })
   useEffect(() => {
-    reset(props.organization)
-  }, [props.organization, reset])
+    reset(props.community)
+  }, [props.community, reset])
   const index = useMemo(
     () => fields.findIndex(({ id }) => id === props.workgroup),
     [fields, props.workgroup],
   )
   const { account } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
-  const handleSignJson = useSignJson(props.organization.did)
+  const handleSignJson = useSignJson(props.community.did)
   const handleArweaveUpload = useArweaveUpload()
   const { data: resolved } = useResolveDid(
-    props.organization.did,
+    props.community.did,
     account?.coinType,
     snapshot,
   )
@@ -60,7 +60,7 @@ export default function WorkgroupForm(props: {
   )
   const handleSubmit = useAsync(
     useCallback(
-      async (json: Organization) => {
+      async (json: Community) => {
         const signed = await handleSignJson(json)
         if (!signed) {
           throw new Error('signature failed')
@@ -71,9 +71,8 @@ export default function WorkgroupForm(props: {
     ),
   )
   const isNew = useMemo(
-    () =>
-      !props.organization.workgroups?.find(({ id }) => id === props.workgroup),
-    [props.organization.workgroups, props.workgroup],
+    () => !props.community.workgroups?.find(({ id }) => id === props.workgroup),
+    [props.community.workgroups, props.workgroup],
   )
   useEffect(() => {
     if (isNew) {

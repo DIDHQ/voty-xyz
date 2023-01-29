@@ -5,7 +5,7 @@ import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
 import { calculateVotingPower } from '../../../src/functions/voting-power'
 import {
-  organizationWithSignatureSchema,
+  communityWithSignatureSchema,
   proposalWithSignatureSchema,
   voteWithSignatureSchema,
 } from '../../../src/schemas'
@@ -75,10 +75,10 @@ export default async function handler(
     return
   }
 
-  const organizationWithSignature = organizationWithSignatureSchema.safeParse(
+  const communityWithSignature = communityWithSignatureSchema.safeParse(
     JSON.parse(
       (await arweave.transactions.getData(
-        proposalWithSignature.data.organization,
+        proposalWithSignature.data.community,
         {
           decode: true,
           string: true,
@@ -86,16 +86,14 @@ export default async function handler(
       )) as string,
     ),
   )
-  if (!organizationWithSignature.success) {
+  if (!communityWithSignature.success) {
     res
       .status(400)
-      .send(
-        `organization schema error: ${organizationWithSignature.error.message}`,
-      )
+      .send(`community schema error: ${communityWithSignature.error.message}`)
     return
   }
 
-  const workgroup = organizationWithSignature.data.workgroups?.find(
+  const workgroup = communityWithSignature.data.workgroups?.find(
     ({ id }) => id === proposalWithSignature.data.workgroup,
   )
   if (!workgroup) {
@@ -130,7 +128,7 @@ export default async function handler(
     data: {
       id: transaction.id,
       did: vote.did,
-      organization: vote.organization,
+      community: vote.community,
       workgroup: vote.workgroup,
       proposal: vote.proposal,
       data,

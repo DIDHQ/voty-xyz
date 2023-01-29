@@ -3,7 +3,7 @@ import type { SerializedUploader } from 'arweave/web/lib/transaction-uploader'
 import { useCallback } from 'react'
 
 import {
-  OrganizationWithSignature,
+  CommunityWithSignature,
   ProposalWithSignature,
   VoteWithSignature,
 } from '../src/schemas'
@@ -17,10 +17,7 @@ const arweave = Arweave.init({
 })
 
 export default function useArweaveUpload<
-  T extends
-    | OrganizationWithSignature
-    | ProposalWithSignature
-    | VoteWithSignature,
+  T extends CommunityWithSignature | ProposalWithSignature | VoteWithSignature,
 >() {
   return useCallback(async (json: T) => {
     const textEncoder = new TextEncoder()

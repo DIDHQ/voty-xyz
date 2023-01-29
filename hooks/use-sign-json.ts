@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
 
-import { Organization, Proposal, Signature, Vote } from '../src/schemas'
+import { Community, Proposal, Signature, Vote } from '../src/schemas'
 import { wrapJsonMessage } from '../src/signature'
 import useCurrentSnapshot from './use-current-snapshot'
 import useWallet from './use-wallet'
 
-export default function useSignJson<T extends Organization | Proposal | Vote>(
+export default function useSignJson<T extends Community | Proposal | Vote>(
   did: string,
 ): (json: T) => Promise<(T & { signature: Signature }) | undefined> {
   const { account, signMessage } = useWallet()

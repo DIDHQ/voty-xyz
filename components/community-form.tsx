@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import useAsync from '../hooks/use-async'
-import { Organization, organizationSchema } from '../src/schemas'
+import { Community, communitySchema } from '../src/schemas'
 import AvatarInput from './basic/avatar-input'
 import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import FormItem from './basic/form-item'
@@ -15,9 +15,9 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import Button from './basic/button'
 
-export default function OrganizationForm(props: {
+export default function CommunityForm(props: {
   did: string
-  organization?: Organization
+  community?: Community
 }) {
   const {
     control,
@@ -26,12 +26,12 @@ export default function OrganizationForm(props: {
     reset,
     formState,
     setValue,
-  } = useForm<Organization>({
-    resolver: zodResolver(organizationSchema),
+  } = useForm<Community>({
+    resolver: zodResolver(communitySchema),
   })
   useEffect(() => {
-    reset(props.organization)
-  }, [props.organization, reset])
+    reset(props.community)
+  }, [props.community, reset])
   const { account } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
   const handleSignJson = useSignJson(props.did)
@@ -54,7 +54,7 @@ export default function OrganizationForm(props: {
   }, [props.did, setValue])
   const handleSubmit = useAsync(
     useCallback(
-      async (json: Organization) => {
+      async (json: Community) => {
         const signed = await handleSignJson(json)
         if (!signed) {
           throw new Error('signature failed')
@@ -170,7 +170,7 @@ export default function OrganizationForm(props: {
             loading={handleSubmit.status === 'pending'}
             onClick={onSubmit(handleSubmit.execute, console.error)}
           >
-            {props.organization ? 'Submit' : 'Create'}
+            {props.community ? 'Submit' : 'Create'}
           </Button>
         </div>
       </div>

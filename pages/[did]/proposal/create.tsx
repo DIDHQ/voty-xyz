@@ -15,7 +15,7 @@ import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
 import { requiredCoinTypesOfVotingPower } from '../../../src/functions/voting-power'
 import {
-  organizationWithSignatureSchema,
+  communityWithSignatureSchema,
   Proposal,
   proposalSchema,
 } from '../../../src/schemas'
@@ -38,23 +38,23 @@ export default function CreateProposalPage() {
   })
   const [query] = useRouterQuery<['did', 'workgroup']>()
   const { data: config } = useDidConfig(query.did)
-  const { data: organization } = useArweaveData(
-    organizationWithSignatureSchema,
-    config?.organization,
+  const { data: community } = useArweaveData(
+    communityWithSignatureSchema,
+    config?.community,
   )
   const workgroup = useMemo(
     () =>
-      organization?.workgroups?.find(
+      community?.workgroups?.find(
         ({ profile }) => profile.name === query.workgroup,
       ),
-    [organization?.workgroups, query.workgroup],
+    [community?.workgroups, query.workgroup],
   )
   useEffect(() => {
-    if (!config?.organization) {
+    if (!config?.community) {
       return
     }
-    setValue('organization', config?.organization)
-  }, [config?.organization, setValue])
+    setValue('community', config?.community)
+  }, [config?.community, setValue])
   useEffect(() => {
     if (!workgroup) {
       return

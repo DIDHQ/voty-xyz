@@ -1,7 +1,7 @@
 import { DataType } from '../constants'
-import { Organization, Proposal, Vote } from '../schemas'
+import { Community, Proposal, Vote } from '../schemas'
 
-export function isOrganization(json: object): json is Organization {
+export function isCommunity(json: object): json is Community {
   return 'profile' in json && !('type' in json)
 }
 
@@ -14,8 +14,8 @@ export function isVote(json: object): json is Vote {
 }
 
 export function dataTypeOf(json: object): DataType {
-  if (isOrganization(json)) {
-    return DataType.ORGANIZATION
+  if (isCommunity(json)) {
+    return DataType.COMMUNITY
   }
   if (isProposal(json)) {
     return DataType.PROPOSAL

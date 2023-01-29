@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { signatureSchema } from './signature'
 import { workgroupSchema } from './workgroup'
 
-export const organizationSchema = z.object({
+export const communitySchema = z.object({
   did: z.string().min(1),
   profile: z.object({
     avatar: z.string().optional(),
@@ -20,11 +20,11 @@ export const organizationSchema = z.object({
     .optional(),
   workgroups: z.array(workgroupSchema).optional(),
 })
-export type Organization = z.infer<typeof organizationSchema>
+export type Community = z.infer<typeof communitySchema>
 
-export const organizationWithSignatureSchema = organizationSchema.extend({
+export const communityWithSignatureSchema = communitySchema.extend({
   signature: signatureSchema,
 })
-export type OrganizationWithSignature = z.infer<
-  typeof organizationWithSignatureSchema
+export type CommunityWithSignature = z.infer<
+  typeof communityWithSignatureSchema
 >

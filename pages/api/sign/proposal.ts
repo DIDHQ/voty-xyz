@@ -5,7 +5,7 @@ import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
 import { checkProposerLiberty } from '../../../src/functions/proposer-liberty'
 import {
-  organizationWithSignatureSchema,
+  communityWithSignatureSchema,
   proposalWithSignatureSchema,
 } from '../../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../../src/signature'
@@ -59,24 +59,22 @@ export default async function handler(
     return
   }
 
-  const organizationWithSignature = organizationWithSignatureSchema.safeParse(
+  const communityWithSignature = communityWithSignatureSchema.safeParse(
     JSON.parse(
-      (await arweave.transactions.getData(proposal.organization, {
+      (await arweave.transactions.getData(proposal.community, {
         decode: true,
         string: true,
       })) as string,
     ),
   )
-  if (!organizationWithSignature.success) {
+  if (!communityWithSignature.success) {
     res
       .status(400)
-      .send(
-        `organization schema error: ${organizationWithSignature.error.message}`,
-      )
+      .send(`community schema error: ${communityWithSignature.error.message}`)
     return
   }
 
-  const workgroup = organizationWithSignature.data.workgroups?.find(
+  const workgroup = communityWithSignature.data.workgroups?.find(
     ({ id }) => id === proposal.workgroup,
   )
   if (!workgroup) {
@@ -113,13 +111,13 @@ export default async function handler(
     create: {
       id: transaction.id,
       did: proposal.did,
-      organization: proposal.organization,
+      community: proposal.community,
       workgroup: proposal.workgroup,
       data,
     },
     update: {
       did: proposal.did,
-      organization: proposal.organization,
+      community: proposal.community,
       workgroup: proposal.workgroup,
       data,
     },

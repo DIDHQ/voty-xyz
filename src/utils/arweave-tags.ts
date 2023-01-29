@@ -1,10 +1,10 @@
 import { DataType } from '../constants'
 import {
-  OrganizationWithSignature,
+  CommunityWithSignature,
   ProposalWithSignature,
   VoteWithSignature,
 } from '../schemas'
-import { isOrganization, isProposal, isVote } from './data-type'
+import { isCommunity, isProposal, isVote } from './data-type'
 
 export const defaultArweaveTags = {
   'content-type': 'application/json',
@@ -13,12 +13,12 @@ export const defaultArweaveTags = {
 }
 
 export function getArweaveTags(
-  json: OrganizationWithSignature | ProposalWithSignature | VoteWithSignature,
+  json: CommunityWithSignature | ProposalWithSignature | VoteWithSignature,
 ) {
-  if (isOrganization(json)) {
+  if (isCommunity(json)) {
     return {
       ...defaultArweaveTags,
-      'app-data-type': DataType.ORGANIZATION,
+      'app-data-type': DataType.COMMUNITY,
       'app-index-did': json.did,
     }
   }
@@ -27,7 +27,7 @@ export function getArweaveTags(
       ...defaultArweaveTags,
       'app-data-type': DataType.PROPOSAL,
       'app-index-did': json.did,
-      'app-index-organization': json.organization,
+      'app-index-community': json.community,
       'app-index-workgroup': json.workgroup,
     }
   }
@@ -36,7 +36,7 @@ export function getArweaveTags(
       ...defaultArweaveTags,
       'app-data-type': DataType.VOTE,
       'app-index-did': json.did,
-      'app-index-organization': json.organization,
+      'app-index-community': json.community,
       'app-index-workgroup': json.workgroup,
       'app-index-proposal': json.proposal,
     }

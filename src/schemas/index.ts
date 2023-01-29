@@ -1,4 +1,4 @@
-export * from './organization'
+export * from './community'
 export * from './proposal'
 export * from './signature'
 export * from './vote'
