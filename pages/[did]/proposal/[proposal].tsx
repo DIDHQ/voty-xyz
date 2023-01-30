@@ -155,7 +155,7 @@ export default function ProposalPage() {
                               {proposal.voting_type === 'single' ? (
                                 <input
                                   type="radio"
-                                  checked={choice === value}
+                                  checked={JSON.stringify(choice) === value}
                                   onClick={() => null}
                                   className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
@@ -208,8 +208,9 @@ export default function ProposalPage() {
             key={vote.id}
             className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
           >
-            <span className="ml-2 w-0 flex-1 truncate">{vote.author.did}</span>
-            {vote.choice}
+            <span className="ml-2 truncate">{vote.author.did}</span>
+            <span>{vote.choice}</span>
+            <span>{vote.power}</span>
           </li>
         ))}
       </ul>

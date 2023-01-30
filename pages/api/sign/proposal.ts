@@ -55,10 +55,13 @@ export default async function handler(
 
   const communityWithAuthor = communityWithAuthorSchema.safeParse(
     JSON.parse(
-      (await arweave.transactions.getData(proposal.community, {
-        decode: true,
-        string: true,
-      })) as string,
+      (await arweave.transactions.getData(
+        proposal.community.replace(/^ar:\/\//, ''),
+        {
+          decode: true,
+          string: true,
+        },
+      )) as string,
     ),
   )
   if (!communityWithAuthor.success) {

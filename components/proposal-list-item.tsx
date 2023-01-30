@@ -13,7 +13,7 @@ export default function ProposalListItem(props: {
 }) {
   return (
     <Link
-      href={`/${props.did}/proposal/${props.value.id}`}
+      href={`/${props.did}/proposal/${encodeURIComponent(props.value.id)}`}
       className="block hover:bg-gray-100"
     >
       <div className="px-4 py-4 sm:px-6">

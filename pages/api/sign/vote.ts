@@ -56,10 +56,13 @@ export default async function handler(
 
   const proposalWithAuthor = proposalWithAuthorSchema.safeParse(
     JSON.parse(
-      (await arweave.transactions.getData(vote.proposal, {
-        decode: true,
-        string: true,
-      })) as string,
+      (await arweave.transactions.getData(
+        vote.proposal.replace(/^ar:\/\//, ''),
+        {
+          decode: true,
+          string: true,
+        },
+      )) as string,
     ),
   )
   if (!proposalWithAuthor.success) {
@@ -71,10 +74,13 @@ export default async function handler(
 
   const communityWithAuthor = communityWithAuthorSchema.safeParse(
     JSON.parse(
-      (await arweave.transactions.getData(proposalWithAuthor.data.community, {
-        decode: true,
-        string: true,
-      })) as string,
+      (await arweave.transactions.getData(
+        proposalWithAuthor.data.community.replace(/^ar:\/\//, ''),
+        {
+          decode: true,
+          string: true,
+        },
+      )) as string,
     ),
   )
   if (!communityWithAuthor.success) {

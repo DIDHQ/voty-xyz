@@ -117,7 +117,7 @@ export default function CreateProposalPage() {
             </div>
             <div className="sm:col-span-6">
               <FormItem
-                label="Type"
+                label="Voting type"
                 error={formState.errors.voting_type?.message}
               >
                 <Controller
