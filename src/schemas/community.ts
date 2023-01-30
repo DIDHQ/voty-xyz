@@ -9,6 +9,7 @@ export const communitySchema = z.object({
     .optional()
     .refine(
       (groups) =>
+        !groups?.length ||
         new Set(groups?.map(({ name }) => name)).size === groups?.length,
       { message: 'groups name are not unique' },
     ),

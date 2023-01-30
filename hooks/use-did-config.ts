@@ -3,20 +3,15 @@ import useSWR from 'swr'
 
 import { didSuffixIs } from '../src/did'
 
-const dotbit = createInstance()
-
 export default function useDidConfig(did: string | undefined) {
   return useSWR<{ community?: string; delegation?: string }>(
     did ? ['didConfig', did] : null,
     async () => {
       if (didSuffixIs(did!, 'bit')) {
-        const records = await dotbit.records(did!, 'dweb.arweave')
+        const dotbit = createInstance()
+        const records = await dotbit.records(did!, 'custom_key.voty_community')
         return {
-          community: records.find((record) => record.label === 'voty community')
-            ?.value,
-          delegation: records.find(
-            (record) => record.label === 'voty delegation',
-          )?.value,
+          community: records[0]?.value,
         }
       }
       throw new Error(`unsupported did: ${did}`)
