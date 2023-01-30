@@ -64,5 +64,9 @@ export default async function handler(
       }
       break
     }
+    default: {
+      res.status(404).send(null)
+      break
+    }
   }
 }
