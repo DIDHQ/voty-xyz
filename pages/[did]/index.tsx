@@ -8,14 +8,9 @@ import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import Avatar from '../../components/basic/avatar'
 import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
-import {
-  Authorized,
-  communityWithAuthorSchema,
-  Proposal,
-} from '../../src/schemas'
+import { communityWithAuthorSchema } from '../../src/schemas'
 import useRouterQuery from '../../hooks/use-router-query'
-import { useList } from '../../hooks/use-api'
-import { DataType } from '../../src/constants'
+import { useListProposals } from '../../hooks/use-api'
 import Button from '../../components/basic/button'
 import { DiscordIcon, GitHubIcon, TwitterIcon } from '../../components/icons'
 import ProposalListItem from '../../components/proposal-list-item'
@@ -33,10 +28,8 @@ export default function CommunityIndexPage() {
       community?.groups?.find(({ extension: { id } }) => id === query.group),
     [community?.groups, query.group],
   )
-  const { data: proposals } = useList<Authorized<Proposal>>(DataType.PROPOSAL, [
-    ['did', query.did],
-    ['group', query.group],
-  ])
+  const { data } = useListProposals(query.did, query.group)
+  const proposals = useMemo(() => data?.flatMap(({ data }) => data), [data])
   const router = useRouter()
   const handleCreateGroup = useCallback(() => {
     router.push(`/${query.did}/settings?group=${nanoid()}`)

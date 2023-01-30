@@ -68,10 +68,23 @@ export default async function handler(
   const uploader = await arweave.transactions.getUploader(transaction)
 
   await database.$transaction([
+    database.entry.upsert({
+      where: { id: author.did },
+      create: {
+        id: author.did,
+        community: transaction.id,
+        stars: 0,
+        ts: new Date(),
+      },
+      update: {
+        community: transaction.id,
+        ts: new Date(),
+      },
+    }),
     database.community.upsert({
       where: { id: transaction.id },
-      create: { id: transaction.id, did: author.did, data },
-      update: { did: author.did, data },
+      create: { id: transaction.id, entry: author.did, data },
+      update: { entry: author.did, data },
     }),
     ...(community.groups?.map((group) =>
       database.group.upsert({
@@ -80,11 +93,11 @@ export default async function handler(
         },
         create: {
           id: group.extension.id,
-          did: author.did,
+          entry: author.did,
           community: transaction.id,
         },
         update: {
-          did: author.did,
+          entry: author.did,
         },
       }),
     ) || []),

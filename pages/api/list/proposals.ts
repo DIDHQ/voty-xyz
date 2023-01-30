@@ -1,0 +1,42 @@
+import { last } from 'lodash-es'
+import { NextApiRequest, NextApiResponse } from 'next'
+
+import { database } from '../../../src/database'
+import { proposalWithAuthorSchema } from '../../../src/schemas'
+
+const textDecoder = new TextDecoder()
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  const query = req.query as {
+    entry: string
+    group?: string
+    next?: string
+  }
+  const proposals = await database.proposal.findMany({
+    cursor: query.next ? { id: query.next } : undefined,
+    where: query.group
+      ? { entry: query.entry, group: query.group }
+      : { entry: query.entry },
+    take: 50,
+  })
+  res.json({
+    data: proposals
+      .map(({ id, data }) => {
+        try {
+          return {
+            id,
+            ...proposalWithAuthorSchema.parse(
+              JSON.parse(textDecoder.decode(data)),
+            ),
+          }
+        } catch {
+          return
+        }
+      })
+      .filter((proposal) => proposal),
+    next: last(proposals)?.id,
+  })
+}

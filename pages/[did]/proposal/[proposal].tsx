@@ -5,17 +5,15 @@ import { uniq, without } from 'lodash-es'
 import useSWR from 'swr'
 
 import DidSelect from '../../../components/did-select'
-import { useList } from '../../../hooks/use-api'
+import { useListVotes } from '../../../hooks/use-api'
 import useArweaveData from '../../../hooks/use-arweave-data'
 import useArweaveUpload from '../../../hooks/use-arweave-upload'
 import useAsync from '../../../hooks/use-async'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
-import { DataType } from '../../../src/constants'
 import { calculateNumber } from '../../../src/functions/number'
 import {
-  Authorized,
   communityWithAuthorSchema,
   proposalWithAuthorSchema,
   Vote,
@@ -71,9 +69,8 @@ export default function ProposalPage() {
       setValue('proposal', query.proposal)
     }
   }, [query.proposal, setValue])
-  const { data: votes } = useList<Authorized<Vote>>(DataType.VOTE, [
-    ['proposal', query.proposal],
-  ])
+  const { data } = useListVotes(query.proposal)
+  const votes = useMemo(() => data?.flatMap(({ data }) => data), [data])
   const { data: votingPower, isValidating } = useSWR(
     group && did && proposal ? ['votingPower', group, did, proposal] : null,
     () =>

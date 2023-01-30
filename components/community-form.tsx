@@ -16,7 +16,7 @@ import Textarea from './basic/textarea'
 import Button from './basic/button'
 
 export default function CommunityForm(props: {
-  did: string
+  entry: string
   community?: Community
 }) {
   const {
@@ -33,10 +33,10 @@ export default function CommunityForm(props: {
   }, [props.community, reset])
   const { account } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
-  const handleSignJson = useSignJson(props.did)
+  const handleSignJson = useSignJson(props.entry)
   const handleArweaveUpload = useArweaveUpload()
   const { data: resolved } = useResolveDid(
-    props.did,
+    props.entry,
     account?.coinType,
     snapshot,
   )
@@ -99,7 +99,7 @@ export default function CommunityForm(props: {
                 name="extension.avatar"
                 render={({ field: { value, onChange } }) => (
                   <AvatarInput
-                    name={props.did}
+                    name={props.entry}
                     value={value}
                     onChange={onChange}
                   />

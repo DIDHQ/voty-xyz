@@ -18,13 +18,13 @@ export default function CommunitySettingsPage() {
       {query.group ? (
         community ? (
           <GroupForm
-            did={query.did}
+            entry={query.did}
             community={community}
             group={query.group}
           />
         ) : null
       ) : (
-        <CommunityForm did={query.did} community={community} />
+        <CommunityForm entry={query.did} community={community} />
       )}
     </div>
   ) : null

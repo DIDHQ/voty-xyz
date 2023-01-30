@@ -110,13 +110,13 @@ export default async function handler(
     where: { id: transaction.id },
     create: {
       id: transaction.id,
-      did: communityWithAuthor.data.author.did,
+      entry: communityWithAuthor.data.author.did,
       community: proposal.community,
       group: proposal.group,
       data,
     },
     update: {
-      did: communityWithAuthor.data.author.did,
+      entry: communityWithAuthor.data.author.did,
       community: proposal.community,
       group: proposal.group,
       data,
