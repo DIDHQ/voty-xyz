@@ -18,6 +18,7 @@ export default async function handler(
     cursor: query.next ? { id: query.next } : undefined,
     where: { proposal: query.proposal },
     take: 50,
+    orderBy: { ts: 'desc' },
   })
   res.json({
     data: votes

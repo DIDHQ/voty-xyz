@@ -60,34 +60,25 @@ export default async function handler(
   })
   await arweave.transactions.sign(transaction, jwk)
   const uploader = await arweave.transactions.getUploader(transaction)
-  const id = `ar://${transaction.id}`
 
+  const id = `ar://${transaction.id}`
+  const ts = new Date()
   await database.$transaction([
     database.entry.upsert({
       where: { id: author.did },
       create: {
         id: author.did,
         community: id,
-        stars: 0,
-        ts: new Date(),
+        ts,
       },
       update: {
         community: id,
-        ts: new Date(),
+        ts,
       },
     }),
     database.community.create({
-      data: { id, entry: author.did, data },
+      data: { id, ts, entry: author.did, data },
     }),
-    ...(community.groups?.map((group) =>
-      database.group.create({
-        data: {
-          id: group.extension.id,
-          entry: author.did,
-          community: id,
-        },
-      }),
-    ) || []),
   ])
 
   res.status(200).json(uploader)

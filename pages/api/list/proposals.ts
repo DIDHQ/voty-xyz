@@ -21,6 +21,7 @@ export default async function handler(
       ? { entry: query.entry, group: query.group }
       : { entry: query.entry },
     take: 50,
+    orderBy: { ts: 'desc' },
   })
   res.json({
     data: proposals

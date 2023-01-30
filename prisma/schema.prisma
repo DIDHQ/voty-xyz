@@ -12,16 +12,16 @@ datasource db {
 
 model Entry {
   id String
+  ts DateTime
 
   community String
-  stars     Int
-  ts        DateTime
 
   @@id([id])
 }
 
 model Community {
   id    String
+  ts    DateTime
   entry String
 
   data Bytes
@@ -30,17 +30,9 @@ model Community {
   @@index([entry])
 }
 
-model Group {
-  community String
-  id        String
-  entry     String
-
-  @@id([community, id])
-  @@index([entry])
-}
-
 model Proposal {
   id     String
+  ts     DateTime
   entry  String
   author String
 
@@ -57,6 +49,7 @@ model Proposal {
 
 model Vote {
   id     String
+  ts     DateTime
   author String
 
   community String
