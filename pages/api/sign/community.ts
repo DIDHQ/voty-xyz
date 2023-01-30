@@ -68,6 +68,19 @@ export default async function handler(
   const uploader = await arweave.transactions.getUploader(transaction)
 
   await database.$transaction([
+    database.dID.upsert({
+      where: { did: author.did },
+      create: {
+        did: author.did,
+        community: transaction.id,
+        stars: 0,
+        ts: new Date(),
+      },
+      update: {
+        community: transaction.id,
+        ts: new Date(),
+      },
+    }),
     database.community.upsert({
       where: { id: transaction.id },
       create: { id: transaction.id, did: author.did, data },
