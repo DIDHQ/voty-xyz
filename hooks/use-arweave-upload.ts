@@ -33,6 +33,6 @@ export default function useArweaveUpload<
     while (!uploader.isComplete) {
       await uploader.uploadChunk()
     }
-    return serializedUploader.transaction.id as string
+    return `ar://${serializedUploader.transaction.id}`
   }, [])
 }

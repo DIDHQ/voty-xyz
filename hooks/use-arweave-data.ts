@@ -8,14 +8,17 @@ const arweave = Arweave.init({
   protocol: 'https',
 })
 
-export default function useArweaveData<T>(schema: ZodSchema<T>, hash?: string) {
+export default function useArweaveData<T>(schema: ZodSchema<T>, id?: string) {
   return useSWR(
-    hash ? ['arweaveData', hash] : null,
+    id ? ['arweaveData', id] : null,
     async () => {
-      const data = await arweave.transactions.getData(hash!, {
-        decode: true,
-        string: true,
-      })
+      const data = await arweave.transactions.getData(
+        id!.replace(/^ar:\/\//, ''),
+        {
+          decode: true,
+          string: true,
+        },
+      )
       return schema.parse(JSON.parse(data as string))
     },
     { revalidateOnFocus: false },

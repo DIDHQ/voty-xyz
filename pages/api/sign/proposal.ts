@@ -105,11 +105,12 @@ export default async function handler(
   })
   await arweave.transactions.sign(transaction, jwk)
   const uploader = await arweave.transactions.getUploader(transaction)
+  const id = `ar://${transaction.id}`
 
   await database.proposal.upsert({
-    where: { id: transaction.id },
+    where: { id },
     create: {
-      id: transaction.id,
+      id,
       entry: communityWithAuthor.data.author.did,
       community: proposal.community,
       group: proposal.group,
