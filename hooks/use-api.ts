@@ -1,6 +1,8 @@
 import useSWR from 'swr'
+import useSWRInfinite from 'swr/infinite'
 
 import { DataType } from '../src/constants'
+import { Authorized, Community } from '../src/schemas'
 import { fetchJson } from '../src/utils/fetcher'
 
 export function useList<T>(
@@ -18,4 +20,13 @@ export function useList<T>(
     )
     return data.map((item) => ({ ...item.data, id: item.id }))
   })
+}
+
+export function useListCommunities() {
+  return useSWRInfinite<{ data: Authorized<Community>[]; next?: string }>(
+    (_pageIndex, previousPageData) => [previousPageData?.next],
+    (next) => {
+      return fetchJson(`/api/list/communities?next=${next || ''}`)
+    },
+  )
 }

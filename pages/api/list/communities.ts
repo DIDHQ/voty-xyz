@@ -8,7 +8,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const entries = await database.entry.findMany({
-    cursor: { id: req.query.next as string | undefined },
+    cursor: { id: (req.query.next as string | undefined) || undefined },
     take: 50,
     orderBy: { stars: 'desc' },
   })
