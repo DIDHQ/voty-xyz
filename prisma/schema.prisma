@@ -10,6 +10,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model DID {
+  did String
+
+  community String
+
+  @@id([did])
+}
+
 model Community {
   id String
 
@@ -22,10 +30,10 @@ model Community {
 }
 
 model Group {
-  id String
-
-  did       String
   community String
+  id        String
+
+  did String
 
   @@id([community, id])
   @@index([did])
