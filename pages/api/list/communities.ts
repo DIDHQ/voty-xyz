@@ -11,7 +11,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const entries = await database.entry.findMany({
-    cursor: { id: (req.query.next as string | undefined) || undefined },
+    cursor: req.query.next ? { id: req.query.next as string } : undefined,
     take: 50,
     orderBy: { stars: 'desc' },
   })
@@ -23,13 +23,19 @@ export default async function handler(
   )
   res.json({
     data: entries
-      .filter(({ community }) => communities[community])
-      .map(({ community }) => ({
-        id: communities[community].id,
-        ...communityWithAuthorSchema.parse(
-          textDecoder.decode(communities[community].data),
-        ),
-      })),
+      .map(({ community }) => {
+        try {
+          return {
+            id: communities[community].id,
+            ...communityWithAuthorSchema.parse(
+              JSON.parse(textDecoder.decode(communities[community].data)),
+            ),
+          }
+        } catch {
+          return
+        }
+      })
+      .filter((community) => community),
     next: last(entries)?.id,
   })
 }
