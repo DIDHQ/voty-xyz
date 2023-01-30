@@ -23,7 +23,10 @@ export function useList<T>(
 }
 
 export function useListCommunities() {
-  return useSWRInfinite<{ data: Authorized<Community>[]; next?: string }>(
+  return useSWRInfinite<{
+    data: (Authorized<Community> & { id: string })[]
+    next?: string
+  }>(
     (_pageIndex, previousPageData) => [previousPageData?.next],
     (next) => {
       return fetchJson(`/api/list/communities?next=${next || ''}`)

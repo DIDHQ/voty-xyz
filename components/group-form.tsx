@@ -17,7 +17,7 @@ import JsonInput from './json-input'
 import NumericInput from './numeric-input'
 
 export default function GroupForm(props: {
-  did: string
+  entry: string
   community: Community
   group: string
 }) {
@@ -44,10 +44,10 @@ export default function GroupForm(props: {
   )
   const { account } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
-  const handleSignJson = useSignJson(props.did)
+  const handleSignJson = useSignJson(props.entry)
   const handleArweaveUpload = useArweaveUpload()
   const { data: resolved } = useResolveDid(
-    props.did,
+    props.entry,
     account?.coinType,
     snapshot,
   )
