@@ -76,23 +76,15 @@ export default async function handler(
         ts: new Date(),
       },
     }),
-    database.community.upsert({
-      where: { id },
-      create: { id, entry: author.did, data },
-      update: { entry: author.did, data },
+    database.community.create({
+      data: { id, entry: author.did, data },
     }),
     ...(community.groups?.map((group) =>
-      database.group.upsert({
-        where: {
-          community_id: { community: id, id: group.extension.id },
-        },
-        create: {
+      database.group.create({
+        data: {
           id: group.extension.id,
           entry: author.did,
           community: id,
-        },
-        update: {
-          entry: author.did,
         },
       }),
     ) || []),

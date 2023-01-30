@@ -40,8 +40,9 @@ model Group {
 }
 
 model Proposal {
-  id    String
-  entry String
+  id     String
+  entry  String
+  author String
 
   community String
   group     String
@@ -51,10 +52,12 @@ model Proposal {
   @@id([id])
   @@index([entry, group])
   @@index([community, group])
+  @@index([author])
 }
 
 model Vote {
-  id String
+  id     String
+  author String
 
   community String
   group     String
@@ -63,5 +66,6 @@ model Vote {
   data Bytes
 
   @@id([id])
-  @@index([proposal])
+  @@unique([proposal, author])
+  @@index([author])
 }
