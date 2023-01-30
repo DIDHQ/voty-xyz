@@ -41,7 +41,6 @@ model Proposal {
   data Bytes
 
   @@id([id])
-  @@index([did])
   @@index([community, group])
 }
 
@@ -56,6 +55,5 @@ model Vote {
   data Bytes
 
   @@id([id])
-  @@unique([proposal])
-  @@index([community, group])
+  @@index([proposal])
 }
