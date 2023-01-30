@@ -5,34 +5,22 @@ import { uniq, without } from 'lodash-es'
 import useSWR from 'swr'
 
 import DidSelect from '../../../components/did-select'
-import { useListVotes } from '../../../hooks/use-api'
-import useArweaveData from '../../../hooks/use-arweave-data'
+import { useCommunity, useListVotes, useProposal } from '../../../hooks/use-api'
 import useArweaveUpload from '../../../hooks/use-arweave-upload'
 import useAsync from '../../../hooks/use-async'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
 import { calculateNumber } from '../../../src/functions/number'
-import {
-  communityWithAuthorSchema,
-  proposalWithAuthorSchema,
-  Vote,
-  voteSchema,
-} from '../../../src/schemas'
+import { Vote, voteSchema } from '../../../src/schemas'
 import { mapSnapshots } from '../../../src/snapshot'
 import { DID } from '../../../src/types'
 import Button from '../../../components/basic/button'
 
 export default function ProposalPage() {
   const [query] = useRouterQuery<['proposal']>()
-  const { data: proposal } = useArweaveData(
-    proposalWithAuthorSchema,
-    query.proposal,
-  )
-  const { data: community } = useArweaveData(
-    communityWithAuthorSchema,
-    proposal?.community,
-  )
+  const { data: proposal } = useProposal(query.proposal)
+  const { data: community } = useCommunity(proposal?.community)
   const group = useMemo(
     () =>
       community?.groups?.find(

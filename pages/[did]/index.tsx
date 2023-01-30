@@ -6,11 +6,9 @@ import { nanoid } from 'nanoid'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
 
 import Avatar from '../../components/basic/avatar'
-import useArweaveData from '../../hooks/use-arweave-data'
 import useDidConfig from '../../hooks/use-did-config'
-import { communityWithAuthorSchema } from '../../src/schemas'
 import useRouterQuery from '../../hooks/use-router-query'
-import { useListProposals } from '../../hooks/use-api'
+import { useCommunity, useListProposals } from '../../hooks/use-api'
 import Button from '../../components/basic/button'
 import { DiscordIcon, GitHubIcon, TwitterIcon } from '../../components/icons'
 import ProposalListItem from '../../components/proposal-list-item'
@@ -19,10 +17,7 @@ import TextInput from '../../components/basic/text-input'
 export default function CommunityIndexPage() {
   const [query] = useRouterQuery<['did', 'group']>()
   const { data: config } = useDidConfig(query.did)
-  const { data: community } = useArweaveData(
-    communityWithAuthorSchema,
-    config?.community,
-  )
+  const { data: community } = useCommunity(config?.community)
   const group = useMemo(
     () =>
       community?.groups?.find(({ extension: { id } }) => id === query.group),
