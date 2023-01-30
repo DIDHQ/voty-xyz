@@ -16,7 +16,7 @@ export default async function handler(
   const entries = await database.entry.findMany({
     cursor: query.next ? { id: query.next } : undefined,
     take: 50,
-    orderBy: { stars: 'desc' },
+    orderBy: { ts: 'desc' },
   })
   const communities = keyBy(
     await database.community.findMany({

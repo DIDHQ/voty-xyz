@@ -7,24 +7,20 @@ import useSWR from 'swr'
 import DidSelect from '../../../components/did-select'
 import FormItem from '../../../components/basic/form-item'
 import useRouterQuery from '../../../hooks/use-router-query'
-import useArweaveData from '../../../hooks/use-arweave-data'
 import useArweaveUpload from '../../../hooks/use-arweave-upload'
 import useAsync from '../../../hooks/use-async'
 import useDidConfig from '../../../hooks/use-did-config'
 import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
 import { requiredCoinTypesOfNumberSets } from '../../../src/functions/number'
-import {
-  communityWithAuthorSchema,
-  Proposal,
-  proposalSchema,
-} from '../../../src/schemas'
+import { Proposal, proposalSchema } from '../../../src/schemas'
 import { getCurrentSnapshot } from '../../../src/snapshot'
 import Button from '../../../components/basic/button'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
 import Select from '../../../components/basic/select'
 import JsonInput from '../../../components/json-input'
+import { useCommunity } from '../../../hooks/use-api'
 
 export default function CreateProposalPage() {
   const {
@@ -38,10 +34,7 @@ export default function CreateProposalPage() {
   })
   const [query] = useRouterQuery<['did', 'group']>()
   const { data: config } = useDidConfig(query.did)
-  const { data: community } = useArweaveData(
-    communityWithAuthorSchema,
-    config?.community,
-  )
+  const { data: community } = useCommunity(config?.community)
   const group = useMemo(
     () =>
       community?.groups?.find(({ extension: { id } }) => id === query.group),
@@ -124,7 +117,7 @@ export default function CreateProposalPage() {
             </div>
             <div className="sm:col-span-6">
               <FormItem
-                label="Type"
+                label="Voting type"
                 error={formState.errors.voting_type?.message}
               >
                 <Controller

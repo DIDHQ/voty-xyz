@@ -11,3 +11,8 @@ export type Account = {
   coinType: number
   address: string
 }
+
+export type Status = {
+  timestamp?: number
+  // revoked?: number
+}

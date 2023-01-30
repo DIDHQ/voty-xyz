@@ -55,10 +55,13 @@ export default async function handler(
 
   const communityWithAuthor = communityWithAuthorSchema.safeParse(
     JSON.parse(
-      (await arweave.transactions.getData(proposal.community, {
-        decode: true,
-        string: true,
-      })) as string,
+      (await arweave.transactions.getData(
+        proposal.community.replace(/^ar:\/\//, ''),
+        {
+          decode: true,
+          string: true,
+        },
+      )) as string,
     ),
   )
   if (!communityWithAuthor.success) {
@@ -99,18 +102,14 @@ export default async function handler(
   })
   await arweave.transactions.sign(transaction, jwk)
   const uploader = await arweave.transactions.getUploader(transaction)
-  const id = `ar://${transaction.id}`
 
-  await database.proposal.upsert({
-    where: { id },
-    create: {
+  const id = `ar://${transaction.id}`
+  const ts = new Date()
+  await database.proposal.create({
+    data: {
       id,
-      entry: communityWithAuthor.data.author.did,
-      community: proposal.community,
-      group: proposal.group,
-      data,
-    },
-    update: {
+      ts,
+      author: proposalWithAuthor.data.author.did,
       entry: communityWithAuthor.data.author.did,
       community: proposal.community,
       group: proposal.group,
