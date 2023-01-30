@@ -1,12 +1,7 @@
-import Arweave from 'arweave'
 import useSWR from 'swr'
 import { ZodSchema } from 'zod'
 
-const arweave = Arweave.init({
-  host: 'arweave.net',
-  port: 443,
-  protocol: 'https',
-})
+import { arweave } from '../src/arweave'
 
 export default function useArweaveData<T>(schema: ZodSchema<T>, id?: string) {
   return useSWR(

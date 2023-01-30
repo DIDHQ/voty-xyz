@@ -1,18 +1,12 @@
-import Arweave from 'arweave'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import { arweave } from '../../../src/arweave'
 import { database } from '../../../src/database'
 import { resolveDid } from '../../../src/did'
 import { communityWithAuthorSchema } from '../../../src/schemas'
 import { verifySignature, wrapJsonMessage } from '../../../src/signature'
 import { getCurrentSnapshot } from '../../../src/snapshot'
 import { getArweaveTags } from '../../../src/utils/arweave-tags'
-
-const arweave = Arweave.init({
-  host: 'arweave.net',
-  port: 443,
-  protocol: 'https',
-})
 
 const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
 

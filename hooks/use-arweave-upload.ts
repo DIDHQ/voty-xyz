@@ -1,16 +1,10 @@
-import Arweave from 'arweave'
 import type { SerializedUploader } from 'arweave/web/lib/transaction-uploader'
 import { useCallback } from 'react'
 
 import { Authorized, Community, Proposal, Vote } from '../src/schemas'
 import { dataTypeOf } from '../src/utils/data-type'
 import { fetchJson } from '../src/utils/fetcher'
-
-const arweave = Arweave.init({
-  host: 'arweave.net',
-  port: 443,
-  protocol: 'https',
-})
+import { arweave } from '../src/arweave'
 
 export default function useArweaveUpload<
   T extends Authorized<Community | Proposal | Vote>,
