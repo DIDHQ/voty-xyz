@@ -7,19 +7,19 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const dids = await database.dID.findMany({
-    cursor: { did: req.query.did as string | undefined },
+  const entries = await database.entry.findMany({
+    cursor: { id: req.query.next as string | undefined },
     take: 50,
     orderBy: { stars: 'desc' },
   })
   const communities = keyBy(
     await database.community.findMany({
-      where: { id: { in: dids.map(({ community }) => community) } },
+      where: { id: { in: entries.map(({ community }) => community) } },
     }),
-    ({ did }) => did,
+    ({ id }) => id,
   )
   res.json({
-    data: dids.map(({ did }) => communities[did]),
-    next: last(dids)?.did,
+    data: entries.map(({ community }) => communities[community]),
+    next: last(entries)?.id,
   })
 }

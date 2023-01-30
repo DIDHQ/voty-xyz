@@ -10,55 +10,55 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model DID {
-  did String
+model Entry {
+  id String
 
   community String
   stars     Int
 
   ts DateTime
 
-  @@id([did])
+  @@id([id])
 }
 
 model Community {
   id String
 
-  did String
+  entry String
 
   data Bytes
 
   @@id([id])
-  @@index([did])
+  @@index([entry])
 }
 
 model Group {
   community String
   id        String
 
-  did String
+  entry String
 
   @@id([community, id])
-  @@index([did])
+  @@index([entry])
 }
 
 model Proposal {
   id String
 
-  did       String
+  entry     String
   community String
   group     String
 
   data Bytes
 
   @@id([id])
+  @@index([entry, group])
   @@index([community, group])
 }
 
 model Vote {
   id String
 
-  did       String
   community String
   group     String
   proposal  String

@@ -124,7 +124,6 @@ export default async function handler(
   await database.vote.create({
     data: {
       id: transaction.id,
-      did: communityWithAuthor.data.author.did,
       community: proposalWithAuthor.data.community,
       group: proposalWithAuthor.data.group,
       proposal: vote.proposal,
