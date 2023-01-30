@@ -2,7 +2,7 @@ import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
 
 import { DataType } from '../src/constants'
-import { Authorized, Community } from '../src/schemas'
+import { Authorized, Community, Proposal } from '../src/schemas'
 import { fetchJson } from '../src/utils/fetcher'
 
 export function useList<T>(
@@ -28,8 +28,25 @@ export function useListCommunities() {
     next?: string
   }>(
     (_pageIndex, previousPageData) => [previousPageData?.next],
-    (next) => {
+    ([next]) => {
       return fetchJson(`/api/list/communities?next=${next || ''}`)
+    },
+  )
+}
+
+export function useListProposals(entry?: string, group?: string) {
+  return useSWRInfinite<{
+    data: (Authorized<Proposal> & { id: string })[]
+    next?: string
+  }>(
+    (_pageIndex, previousPageData) =>
+      entry ? [entry, group, previousPageData?.next] : null,
+    ([entry, group, next]) => {
+      return fetchJson(
+        `/api/list/proposals?entry=${entry}&group=${group || ''}&next=${
+          next || ''
+        }`,
+      )
     },
   )
 }

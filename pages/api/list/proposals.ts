@@ -1,8 +1,8 @@
-import { keyBy, last } from 'lodash-es'
+import { last } from 'lodash-es'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { database } from '../../../src/database'
-import { communityWithAuthorSchema } from '../../../src/schemas'
+import { proposalWithAuthorSchema } from '../../../src/schemas'
 
 const textDecoder = new TextDecoder()
 
@@ -11,28 +11,24 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const query = req.query as {
+    entry: string
+    group?: string
     next?: string
   }
-  const entries = await database.entry.findMany({
+  const proposals = await database.proposal.findMany({
     cursor: query.next ? { id: query.next } : undefined,
+    where: query.group
+      ? { entry: query.entry, group: query.group }
+      : { entry: query.entry },
     take: 50,
-    orderBy: { stars: 'desc' },
   })
-  const communities = keyBy(
-    await database.community.findMany({
-      where: { id: { in: entries.map(({ community }) => community) } },
-    }),
-    ({ id }) => id,
-  )
   res.json({
-    data: entries
-      .map(({ community }) => communities[community])
-      .filter((community) => community)
+    data: proposals
       .map(({ id, data }) => {
         try {
           return {
             id,
-            ...communityWithAuthorSchema.parse(
+            ...proposalWithAuthorSchema.parse(
               JSON.parse(textDecoder.decode(data)),
             ),
           }
@@ -40,7 +36,7 @@ export default async function handler(
           return
         }
       })
-      .filter((community) => community),
-    next: last(entries)?.id,
+      .filter((proposal) => proposal),
+    next: last(proposals)?.id,
   })
 }
