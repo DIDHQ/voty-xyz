@@ -6,6 +6,13 @@ export const arweave = Arweave.init({
   protocol: 'https',
 })
 
+export async function getArweaveStatus(uri: string) {
+  if (!uri.startsWith('ar://')) {
+    throw new Error('uri not supported')
+  }
+  return arweave.transactions.getStatus(uri.replace(/^ar:\/\//, ''))
+}
+
 export async function getArweaveData(uri: string) {
   if (!uri.startsWith('ar://')) {
     throw new Error('uri not supported')
