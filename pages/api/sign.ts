@@ -1,11 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { getArweaveData } from '../../src/arweave'
+import { arweave, idToURI } from '../../src/arweave'
 import { database } from '../../src/database'
+import { getArweaveTags } from '../../src/utils/arweave-tags'
 import { isCommunity, isProposal, isVote } from '../../src/utils/data-type'
 import verifyCommunity from '../../src/verifiers/verify-community'
 import verifyProposal from '../../src/verifiers/verify-proposal'
 import verifyVote from '../../src/verifiers/verify-vote'
+
+const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
 
 const textEncoder = new TextEncoder()
 
@@ -13,24 +16,22 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const uri = req.body.uri
-
-  if (typeof uri !== 'string') {
-    res.status(400).send('uri is required')
-    return
-  }
+  const json = req.body
 
   try {
-    const json = await getArweaveData(uri)
-    if (!json) {
-      throw new Error('uri not found')
-    }
-
+    const data = Buffer.from(textEncoder.encode(JSON.stringify(json)))
+    const transaction = await arweave.createTransaction({ data })
+    const tags = getArweaveTags(json)
+    Object.entries(tags).forEach(([key, value]) => {
+      transaction.addTag(key, value)
+    })
+    await arweave.transactions.sign(transaction, jwk)
+    const uploader = await arweave.transactions.getUploader(transaction)
+    const uri = idToURI(transaction.id)
     const ts = new Date()
 
     if (isCommunity(json)) {
       const { community } = await verifyCommunity(json)
-      const data = Buffer.from(textEncoder.encode(JSON.stringify(community)))
       await database.$transaction([
         database.entry.upsert({
           where: { did: community.author.did },
@@ -50,10 +51,9 @@ export default async function handler(
       ])
     } else if (isProposal(json)) {
       const { proposal, community } = await verifyProposal(json)
-      const data = Buffer.from(textEncoder.encode(JSON.stringify(proposal)))
       await database.proposal.create({
         data: {
-          uri,
+          uri: idToURI(transaction.id),
           ts,
           author: proposal.author.did,
           entry: community.author.did,
@@ -64,10 +64,9 @@ export default async function handler(
       })
     } else if (isVote(json)) {
       const { vote, proposal } = await verifyVote(json)
-      const data = Buffer.from(textEncoder.encode(JSON.stringify(vote)))
       await database.vote.create({
         data: {
-          uri,
+          uri: idToURI(transaction.id),
           ts,
           author: vote.author.did,
           community: proposal.community,
@@ -77,10 +76,10 @@ export default async function handler(
         },
       })
     } else {
-      throw new Error('import type not supported')
+      throw new Error('sign type not supported')
     }
 
-    res.status(200).send(null)
+    res.status(200).json(uploader)
   } catch (err) {
     if (err instanceof Error) {
       res.status(500).send(err.message)
