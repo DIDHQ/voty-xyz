@@ -16,7 +16,7 @@ export default async function handler(
     next?: string
   }
   const proposals = await database.proposal.findMany({
-    cursor: query.next ? { id: query.next } : undefined,
+    cursor: query.next ? { uri: query.next } : undefined,
     where: query.group
       ? { entry: query.entry, group: query.group }
       : { entry: query.entry },
@@ -25,10 +25,10 @@ export default async function handler(
   })
   res.json({
     data: proposals
-      .map(({ id, data }) => {
+      .map(({ uri, data }) => {
         try {
           return {
-            id,
+            uri,
             ...proposalWithAuthorSchema.parse(
               JSON.parse(textDecoder.decode(data)),
             ),
@@ -38,6 +38,6 @@ export default async function handler(
         }
       })
       .filter((proposal) => proposal),
-    next: last(proposals)?.id,
+    next: last(proposals)?.uri,
   })
 }

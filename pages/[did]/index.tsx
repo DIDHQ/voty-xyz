@@ -188,7 +188,7 @@ export default function CommunityIndexPage() {
         </div>
         <ul role="list" className="divide-y divide-gray-200">
           {proposals?.map((proposal) => (
-            <li key={proposal.id}>
+            <li key={proposal.uri}>
               {query.did ? (
                 <ProposalListItem did={query.did} value={proposal} />
               ) : null}

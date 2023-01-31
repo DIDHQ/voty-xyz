@@ -5,3 +5,26 @@ export const arweave = Arweave.init({
   port: 443,
   protocol: 'https',
 })
+
+export async function getArweaveStatus(uri: string) {
+  if (!uri.startsWith('ar://')) {
+    throw new Error('uri not supported')
+  }
+  return arweave.transactions.getStatus(uri.replace(/^ar:\/\//, ''))
+}
+
+export async function getArweaveData(uri: string) {
+  if (!uri.startsWith('ar://')) {
+    throw new Error('uri not supported')
+  }
+  const id = uri.replace(/^ar:\/\//, '')
+  const data = await arweave.transactions.getData(id, {
+    decode: true,
+    string: true,
+  })
+  return JSON.parse(data as string)
+}
+
+export function idToURI(id: string) {
+  return `ar://${id}`
+}

@@ -1,4 +1,4 @@
-import { arweave } from '../arweave'
+import { getArweaveData } from '../arweave'
 import { calculateNumber } from '../functions/number'
 import { Authorized, Proposal, Vote, voteWithAuthorSchema } from '../schemas'
 import { mapSnapshots } from '../snapshot'
@@ -17,15 +17,7 @@ export default async function verifyVote(
   await verifyAuthor(vote.data)
 
   const { proposal, community } = await verifyProposal(
-    JSON.parse(
-      (await arweave.transactions.getData(
-        vote.data.proposal.replace(/^ar:\/\//, ''),
-        {
-          decode: true,
-          string: true,
-        },
-      )) as string,
-    ),
+    getArweaveData(vote.data.proposal),
   )
 
   const group = community.groups?.find(

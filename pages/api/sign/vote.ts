@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { arweave } from '../../../src/arweave'
+import { arweave, idToURI } from '../../../src/arweave'
 import { database } from '../../../src/database'
 import { getArweaveTags } from '../../../src/utils/arweave-tags'
 import verifyVote from '../../../src/verifiers/verify-vote'
@@ -25,11 +25,10 @@ export default async function handler(
     await arweave.transactions.sign(transaction, jwk)
     const uploader = await arweave.transactions.getUploader(transaction)
 
-    const id = `ar://${transaction.id}`
     const ts = new Date()
     await database.vote.create({
       data: {
-        id,
+        uri: idToURI(transaction.id),
         ts,
         author: vote.author.did,
         community: proposal.community,

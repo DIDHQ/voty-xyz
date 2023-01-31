@@ -11,27 +11,27 @@ datasource db {
 }
 
 model Entry {
-  id String
-  ts DateTime
+  did String
+  ts  DateTime
 
   community String
 
-  @@id([id])
+  @@id([did])
 }
 
 model Community {
-  id    String
+  uri   String
   ts    DateTime
   entry String
 
   data Bytes
 
-  @@id([id])
+  @@id([uri])
   @@index([entry])
 }
 
 model Proposal {
-  id     String
+  uri    String
   ts     DateTime
   entry  String
   author String
@@ -41,14 +41,14 @@ model Proposal {
 
   data Bytes
 
-  @@id([id])
+  @@id([uri])
   @@index([entry, group])
   @@index([community, group])
   @@index([author])
 }
 
 model Vote {
-  id     String
+  uri    String
   ts     DateTime
   author String
 
@@ -58,7 +58,7 @@ model Vote {
 
   data Bytes
 
-  @@id([id])
+  @@id([uri])
   @@unique([proposal, author])
   @@index([author])
 }

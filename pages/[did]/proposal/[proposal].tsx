@@ -205,7 +205,7 @@ export default function ProposalPage() {
       >
         {votes?.map((vote) => (
           <li
-            key={vote.id}
+            key={vote.uri}
             className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
           >
             <span className="ml-2 truncate">{vote.author.did}</span>

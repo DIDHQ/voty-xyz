@@ -1,4 +1,4 @@
-import { arweave } from '../arweave'
+import { getArweaveData } from '../arweave'
 import { checkBoolean } from '../functions/boolean'
 import {
   Authorized,
@@ -23,15 +23,7 @@ export default async function verifyProposal(json: object): Promise<{
   await verifyAuthor(proposal.data)
 
   const { community } = await verifyCommunity(
-    JSON.parse(
-      (await arweave.transactions.getData(
-        proposal.data.community.replace(/^ar:\/\//, ''),
-        {
-          decode: true,
-          string: true,
-        },
-      )) as string,
-    ),
+    getArweaveData(proposal.data.community),
   )
 
   const group = community.groups?.find(
