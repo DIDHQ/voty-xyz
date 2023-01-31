@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
 
@@ -30,6 +31,36 @@ export function useVote(uri?: string) {
     )
     return data
   })
+}
+
+export function useImportCommunity(uri: string) {
+  return useCallback(async () => {
+    await fetchJson('/api/import/community', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ uri }),
+    })
+  }, [uri])
+}
+
+export function useImportProposal(uri: string) {
+  return useCallback(async () => {
+    await fetchJson('/api/import/proposal', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ uri }),
+    })
+  }, [uri])
+}
+
+export function useImportVote(uri: string) {
+  return useCallback(async () => {
+    await fetchJson('/api/import/vote', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ uri }),
+    })
+  }, [uri])
 }
 
 export function useListCommunities() {
