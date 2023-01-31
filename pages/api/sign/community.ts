@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { arweave } from '../../../src/arweave'
+import { arweave, idToURI } from '../../../src/arweave'
 import { database } from '../../../src/database'
 import { getArweaveTags } from '../../../src/utils/arweave-tags'
 import verifyCommunity from '../../../src/verifiers/verify-community'
@@ -25,7 +25,7 @@ export default async function handler(
     await arweave.transactions.sign(transaction, jwk)
     const uploader = await arweave.transactions.getUploader(transaction)
 
-    const uri = `ar://${transaction.id}`
+    const uri = idToURI(transaction.id)
     const ts = new Date()
     await database.$transaction([
       database.entry.upsert({

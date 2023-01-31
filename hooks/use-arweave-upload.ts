@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import { Authorized, Community, Proposal, Vote } from '../src/schemas'
 import { dataTypeOf } from '../src/utils/data-type'
 import { fetchJson } from '../src/utils/fetcher'
-import { arweave } from '../src/arweave'
+import { arweave, idToURI } from '../src/arweave'
 
 export default function useArweaveUpload<
   T extends Authorized<Community | Proposal | Vote>,
@@ -27,6 +27,6 @@ export default function useArweaveUpload<
     while (!uploader.isComplete) {
       await uploader.uploadChunk()
     }
-    return `ar://${serializedUploader.transaction.id}`
+    return idToURI(serializedUploader.transaction.id)
   }, [])
 }

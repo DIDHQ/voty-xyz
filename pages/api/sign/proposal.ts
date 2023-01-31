@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { arweave } from '../../../src/arweave'
+import { arweave, idToURI } from '../../../src/arweave'
 import { database } from '../../../src/database'
 import { getArweaveTags } from '../../../src/utils/arweave-tags'
 import verifyProposal from '../../../src/verifiers/verify-proposal'
@@ -28,7 +28,7 @@ export default async function handler(
     const ts = new Date()
     await database.proposal.create({
       data: {
-        uri: `ar://${transaction.id}`,
+        uri: idToURI(transaction.id),
         ts,
         author: proposal.author.did,
         entry: community.author.did,

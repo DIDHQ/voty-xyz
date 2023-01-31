@@ -24,3 +24,7 @@ export async function getArweaveData(uri: string) {
   })
   return JSON.parse(data as string)
 }
+
+export function idToURI(id: string) {
+  return `ar://${id}`
+}
