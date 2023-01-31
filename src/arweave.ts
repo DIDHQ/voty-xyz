@@ -6,14 +6,23 @@ export const arweave = Arweave.init({
   protocol: 'https',
 })
 
-export async function getArweaveStatus(uri: string) {
+export async function getArweaveTimestamp(
+  uri: string,
+): Promise<number | undefined> {
   if (!uri.startsWith('ar://')) {
     throw new Error('uri not supported')
   }
-  return arweave.transactions.getStatus(uri.replace(/^ar:\/\//, ''))
+  const status = await arweave.transactions.getStatus(
+    uri.replace(/^ar:\/\//, ''),
+  )
+  if (status.confirmed?.block_indep_hash) {
+    const block = await arweave.blocks.get(status.confirmed.block_indep_hash)
+    return block.timestamp
+  }
+  return undefined
 }
 
-export async function getArweaveData(uri: string) {
+export async function getArweaveData(uri: string): Promise<object | undefined> {
   if (!uri.startsWith('ar://')) {
     throw new Error('uri not supported')
   }
@@ -22,7 +31,7 @@ export async function getArweaveData(uri: string) {
     decode: true,
     string: true,
   })
-  return JSON.parse(data as string)
+  return typeof data === 'string' && data ? JSON.parse(data) : undefined
 }
 
 export function idToURI(id: string) {

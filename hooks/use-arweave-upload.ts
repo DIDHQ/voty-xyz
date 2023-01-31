@@ -2,7 +2,6 @@ import type { SerializedUploader } from 'arweave/web/lib/transaction-uploader'
 import { useCallback } from 'react'
 
 import { Authorized, Community, Proposal, Vote } from '../src/schemas'
-import { dataTypeOf } from '../src/utils/data-type'
 import { fetchJson } from '../src/utils/fetcher'
 import { arweave, idToURI } from '../src/arweave'
 
@@ -13,7 +12,7 @@ export default function useArweaveUpload<
     const textEncoder = new TextEncoder()
     const body = textEncoder.encode(JSON.stringify(json))
     const serializedUploader = await fetchJson<SerializedUploader>(
-      `/api/sign/${dataTypeOf(json)}`,
+      '/api/sign',
       {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
