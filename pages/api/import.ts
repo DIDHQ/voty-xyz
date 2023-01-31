@@ -44,15 +44,18 @@ export default async function handler(
             ts,
           },
         }),
-        database.community.create({
-          data: { uri, ts, entry: community.author.did, data },
+        database.community.upsert({
+          where: { uri },
+          create: { uri, ts, entry: community.author.did, data },
+          update: {},
         }),
       ])
     } else if (isProposal(json)) {
       const { proposal, community } = await verifyProposal(json)
       const data = Buffer.from(textEncoder.encode(JSON.stringify(proposal)))
-      await database.proposal.create({
-        data: {
+      await database.proposal.upsert({
+        where: { uri },
+        create: {
           uri,
           ts,
           author: proposal.author.did,
@@ -61,12 +64,14 @@ export default async function handler(
           group: proposal.group,
           data,
         },
+        update: {},
       })
     } else if (isVote(json)) {
       const { vote, proposal } = await verifyVote(json)
       const data = Buffer.from(textEncoder.encode(JSON.stringify(vote)))
-      await database.vote.create({
-        data: {
+      await database.vote.upsert({
+        where: { uri },
+        create: {
           uri,
           ts,
           author: vote.author.did,
@@ -75,6 +80,7 @@ export default async function handler(
           proposal: vote.proposal,
           data,
         },
+        update: {},
       })
     } else {
       throw new Error('import type not supported')
