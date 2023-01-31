@@ -9,11 +9,11 @@ import { Authorized, Proposal } from '../src/schemas'
 
 export default function ProposalListItem(props: {
   did: string
-  value: Authorized<Proposal> & { id: string }
+  value: Authorized<Proposal> & { uri: string }
 }) {
   return (
     <Link
-      href={`/${props.did}/proposal/${encodeURIComponent(props.value.id)}`}
+      href={`/${props.did}/proposal/${encodeURIComponent(props.value.uri)}`}
       className="block hover:bg-gray-100"
     >
       <div className="px-4 py-4 sm:px-6">

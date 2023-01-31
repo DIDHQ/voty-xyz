@@ -5,28 +5,28 @@ import { DataType } from '../src/constants'
 import { Authorized, Community, Proposal, Vote } from '../src/schemas'
 import { fetchJson } from '../src/utils/fetcher'
 
-export function useCommunity(id?: string) {
-  return useSWR(id ? ['community', id] : null, async () => {
+export function useCommunity(uri?: string) {
+  return useSWR(uri ? ['community', uri] : null, async () => {
     const { data } = await fetchJson<{ data: Authorized<Community> }>(
-      `/api/retrieve?type=${DataType.COMMUNITY}&id=${id}`,
+      `/api/retrieve?type=${DataType.COMMUNITY}&uri=${uri}`,
     )
     return data
   })
 }
 
-export function useProposal(id?: string) {
-  return useSWR(id ? ['proposal', id] : null, async () => {
+export function useProposal(uri?: string) {
+  return useSWR(uri ? ['proposal', uri] : null, async () => {
     const { data } = await fetchJson<{ data: Authorized<Proposal> }>(
-      `/api/retrieve?type=${DataType.PROPOSAL}&id=${id}`,
+      `/api/retrieve?type=${DataType.PROPOSAL}&uri=${uri}`,
     )
     return data
   })
 }
 
-export function useVote(id?: string) {
-  return useSWR(id ? ['vote', id] : null, async () => {
+export function useVote(uri?: string) {
+  return useSWR(uri ? ['vote', uri] : null, async () => {
     const { data } = await fetchJson<{ data: Authorized<Vote> }>(
-      `/api/retrieve?type=${DataType.VOTE}&id=${id}`,
+      `/api/retrieve?type=${DataType.VOTE}&uri=${uri}`,
     )
     return data
   })
@@ -34,7 +34,7 @@ export function useVote(id?: string) {
 
 export function useListCommunities() {
   return useSWRInfinite<{
-    data: (Authorized<Community> & { id: string })[]
+    data: (Authorized<Community> & { uri: string })[]
     next?: string
   }>(
     (_pageIndex, previousPageData) => [previousPageData?.next],
@@ -46,7 +46,7 @@ export function useListCommunities() {
 
 export function useListProposals(entry?: string, group?: string) {
   return useSWRInfinite<{
-    data: (Authorized<Proposal> & { id: string })[]
+    data: (Authorized<Proposal> & { uri: string })[]
     next?: string
   }>(
     (_pageIndex, previousPageData) =>
@@ -63,7 +63,7 @@ export function useListProposals(entry?: string, group?: string) {
 
 export function useListVotes(proposal?: string) {
   return useSWRInfinite<{
-    data: (Authorized<Vote> & { id: string })[]
+    data: (Authorized<Vote> & { uri: string })[]
     next?: string
   }>(
     (_pageIndex, previousPageData) =>

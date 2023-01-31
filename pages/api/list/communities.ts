@@ -14,24 +14,24 @@ export default async function handler(
     next?: string
   }
   const entries = await database.entry.findMany({
-    cursor: query.next ? { id: query.next } : undefined,
+    cursor: query.next ? { did: query.next } : undefined,
     take: 50,
     orderBy: { ts: 'desc' },
   })
   const communities = keyBy(
     await database.community.findMany({
-      where: { id: { in: entries.map(({ community }) => community) } },
+      where: { uri: { in: entries.map(({ community }) => community) } },
     }),
-    ({ id }) => id,
+    ({ uri }) => uri,
   )
   res.json({
     data: entries
       .map(({ community }) => communities[community])
       .filter((community) => community)
-      .map(({ id, data }) => {
+      .map(({ uri, data }) => {
         try {
           return {
-            id,
+            uri,
             ...communityWithAuthorSchema.parse(
               JSON.parse(textDecoder.decode(data)),
             ),
@@ -41,6 +41,6 @@ export default async function handler(
         }
       })
       .filter((community) => community),
-    next: last(entries)?.id,
+    next: last(entries)?.did,
   })
 }

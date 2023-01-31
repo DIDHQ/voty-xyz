@@ -25,11 +25,10 @@ export default async function handler(
     await arweave.transactions.sign(transaction, jwk)
     const uploader = await arweave.transactions.getUploader(transaction)
 
-    const id = `ar://${transaction.id}`
     const ts = new Date()
     await database.vote.create({
       data: {
-        id,
+        uri: `ar://${transaction.id}`,
         ts,
         author: vote.author.did,
         community: proposal.community,

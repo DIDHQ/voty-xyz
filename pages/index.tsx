@@ -17,7 +17,7 @@ export default function IndexPage() {
       </Link>
       <ul>
         {communities?.map((community) => (
-          <Link key={community.id} href={`/${community.author.did}`}>
+          <Link key={community.uri} href={`/${community.author.did}`}>
             <li>{community.name}</li>
           </Link>
         ))}
