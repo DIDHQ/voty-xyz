@@ -20,7 +20,8 @@ import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
 import Select from '../../../components/basic/select'
 import JsonInput from '../../../components/json-input'
-import { useCommunity } from '../../../hooks/use-api'
+import { useRetrieve } from '../../../hooks/use-api'
+import { DataType } from '../../../src/constants'
 
 export default function CreateProposalPage() {
   const {
@@ -34,7 +35,7 @@ export default function CreateProposalPage() {
   })
   const [query] = useRouterQuery<['did', 'group']>()
   const { data: config } = useDidConfig(query.did)
-  const { data: community } = useCommunity(config?.community)
+  const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const group = useMemo(
     () =>
       community?.groups?.find(({ extension: { id } }) => id === query.group),

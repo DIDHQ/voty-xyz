@@ -5,7 +5,7 @@ import { uniq, without } from 'lodash-es'
 import useSWR from 'swr'
 
 import DidSelect from '../../../components/did-select'
-import { useCommunity, useListVotes, useProposal } from '../../../hooks/use-api'
+import { useListVotes, useRetrieve } from '../../../hooks/use-api'
 import useArweaveUpload from '../../../hooks/use-arweave-upload'
 import useAsync from '../../../hooks/use-async'
 import useRouterQuery from '../../../hooks/use-router-query'
@@ -16,11 +16,21 @@ import { Vote, voteSchema } from '../../../src/schemas'
 import { mapSnapshots } from '../../../src/snapshot'
 import { DID } from '../../../src/types'
 import Button from '../../../components/basic/button'
+import { DataType } from '../../../src/constants'
+import useArweaveData from '../../../hooks/use-arweave-data'
+import Alert from '../../../components/basic/alert'
 
 export default function ProposalPage() {
   const [query] = useRouterQuery<['proposal']>()
-  const { data: proposal } = useProposal(query.proposal)
-  const { data: community } = useCommunity(proposal?.community)
+  const { data: arweaveData } = useArweaveData(
+    DataType.PROPOSAL,
+    query.proposal,
+  )
+  const { data: proposal } = useRetrieve(DataType.PROPOSAL, query.proposal)
+  const { data: community } = useRetrieve(
+    DataType.COMMUNITY,
+    proposal?.community,
+  )
   const group = useMemo(
     () =>
       community?.groups?.find(
@@ -215,5 +225,12 @@ export default function ProposalPage() {
         ))}
       </ul>
     </div>
+  ) : arweaveData ? (
+    <Alert
+      type="info"
+      text="This proposal exists on the blockchain, but not imported into Voty."
+      action={{ text: 'Import', href: '#' }}
+      className="m-4"
+    />
   ) : null
 }

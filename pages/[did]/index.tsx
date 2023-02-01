@@ -8,16 +8,23 @@ import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import Avatar from '../../components/basic/avatar'
 import useDidConfig from '../../hooks/use-did-config'
 import useRouterQuery from '../../hooks/use-router-query'
-import { useCommunity, useListProposals } from '../../hooks/use-api'
+import { useRetrieve, useListProposals } from '../../hooks/use-api'
 import Button from '../../components/basic/button'
 import { DiscordIcon, GitHubIcon, TwitterIcon } from '../../components/icons'
 import ProposalListItem from '../../components/proposal-list-item'
 import TextInput from '../../components/basic/text-input'
+import { DataType } from '../../src/constants'
+import useArweaveData from '../../hooks/use-arweave-data'
+import Alert from '../../components/basic/alert'
 
 export default function CommunityIndexPage() {
   const [query] = useRouterQuery<['did', 'group']>()
   const { data: config } = useDidConfig(query.did)
-  const { data: community } = useCommunity(config?.community)
+  const { data: arweaveData } = useArweaveData(
+    DataType.PROPOSAL,
+    config?.community,
+  )
+  const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const group = useMemo(
     () =>
       community?.groups?.find(({ extension: { id } }) => id === query.group),
@@ -197,5 +204,12 @@ export default function CommunityIndexPage() {
         </ul>
       </section>
     </main>
+  ) : arweaveData ? (
+    <Alert
+      type="info"
+      text="This community exists on the blockchain, but not imported into Voty."
+      action={{ text: 'Import', href: '#' }}
+      className="m-4"
+    />
   ) : null
 }
