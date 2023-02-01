@@ -26,11 +26,11 @@ export default async function handler(
       throw new Error('uri not found')
     }
 
+    const data = Buffer.from(textEncoder.encode(JSON.stringify(json)))
     const ts = new Date()
 
     if (isCommunity(json)) {
       const { community } = await verifyCommunity(json)
-      const data = Buffer.from(textEncoder.encode(JSON.stringify(community)))
       await database.$transaction([
         database.entry.upsert({
           where: { did: community.author.did },
@@ -52,7 +52,6 @@ export default async function handler(
       ])
     } else if (isProposal(json)) {
       const { proposal, community } = await verifyProposal(json)
-      const data = Buffer.from(textEncoder.encode(JSON.stringify(proposal)))
       await database.proposal.upsert({
         where: { uri },
         create: {
@@ -68,7 +67,6 @@ export default async function handler(
       })
     } else if (isVote(json)) {
       const { vote, proposal } = await verifyVote(json)
-      const data = Buffer.from(textEncoder.encode(JSON.stringify(vote)))
       await database.vote.upsert({
         where: { uri },
         create: {
