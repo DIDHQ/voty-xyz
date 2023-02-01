@@ -84,7 +84,7 @@ export default async function handler(
       throw new Error('import type not supported')
     }
 
-    res.status(200).send(null)
+    res.status(200).send({ data: json })
   } catch (err) {
     if (err instanceof Error) {
       res.status(500).send(err.message)

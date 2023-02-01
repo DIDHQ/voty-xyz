@@ -4,14 +4,29 @@ import useSWRInfinite from 'swr/infinite'
 
 import { DataType } from '../src/constants'
 import { Authorized, Community, Proposal, Vote } from '../src/schemas'
-import { fetchJson } from '../src/utils/fetcher'
+import { FetchError, fetchJson } from '../src/utils/fetcher'
 
 export function useCommunity(uri?: string) {
   return useSWR(uri ? ['community', uri] : null, async () => {
-    const { data } = await fetchJson<{ data: Authorized<Community> }>(
-      `/api/retrieve?type=${DataType.COMMUNITY}&uri=${uri}`,
-    )
-    return data
+    try {
+      const { data } = await fetchJson<{ data: Authorized<Community> }>(
+        `/api/retrieve?type=${DataType.COMMUNITY}&uri=${uri}`,
+      )
+      return data
+    } catch (err) {
+      if (err instanceof FetchError && err.status === 404) {
+        const { data } = await fetchJson<{ data: Authorized<Community> }>(
+          '/api/import',
+          {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ uri }),
+          },
+        )
+        return data
+      }
+      throw err
+    }
   })
 }
 

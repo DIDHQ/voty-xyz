@@ -24,7 +24,7 @@ export default function CreateCommunityPage() {
       {dids?.length === 0 ? (
         <Alert
           type="info"
-          text={`Do not have a DID? Register one!`}
+          text="Do not have a DID? Register now!"
           action={{ text: 'Register', href: 'https://app.did.id/explorer' }}
           className="mt-6"
         />

@@ -6,5 +6,14 @@ export async function fetchJson<T>(
   if (response.ok) {
     return response.json() as T
   }
-  throw new Error(await response.text())
+  throw new FetchError(response.status, await response.text())
+}
+
+export class FetchError extends Error {
+  status: number
+
+  constructor(status: number, message?: string, options?: ErrorOptions) {
+    super(message, options)
+    this.status = status
+  }
 }
