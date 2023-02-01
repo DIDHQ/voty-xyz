@@ -32,19 +32,49 @@ export function useCommunity(uri?: string) {
 
 export function useProposal(uri?: string) {
   return useSWR(uri ? ['proposal', uri] : null, async () => {
-    const { data } = await fetchJson<{ data: Authorized<Proposal> }>(
-      `/api/retrieve?type=${DataType.PROPOSAL}&uri=${uri}`,
-    )
-    return data
+    try {
+      const { data } = await fetchJson<{ data: Authorized<Proposal> }>(
+        `/api/retrieve?type=${DataType.PROPOSAL}&uri=${uri}`,
+      )
+      return data
+    } catch (err) {
+      if (err instanceof FetchError && err.status === 404) {
+        const { data } = await fetchJson<{ data: Authorized<Proposal> }>(
+          '/api/import',
+          {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ uri }),
+          },
+        )
+        return data
+      }
+      throw err
+    }
   })
 }
 
 export function useVote(uri?: string) {
   return useSWR(uri ? ['vote', uri] : null, async () => {
-    const { data } = await fetchJson<{ data: Authorized<Vote> }>(
-      `/api/retrieve?type=${DataType.VOTE}&uri=${uri}`,
-    )
-    return data
+    try {
+      const { data } = await fetchJson<{ data: Authorized<Vote> }>(
+        `/api/retrieve?type=${DataType.VOTE}&uri=${uri}`,
+      )
+      return data
+    } catch (err) {
+      if (err instanceof FetchError && err.status === 404) {
+        const { data } = await fetchJson<{ data: Authorized<Vote> }>(
+          '/api/import',
+          {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ uri }),
+          },
+        )
+        return data
+      }
+      throw err
+    }
   })
 }
 
