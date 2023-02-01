@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 import Alert from '../components/basic/alert'
@@ -8,6 +9,7 @@ import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 
 export default function CreateCommunityPage() {
+  const router = useRouter()
   const { account } = useWallet()
   const { data: dids } = useDids(account)
   const [did, setDid] = useState('')
@@ -25,21 +27,30 @@ export default function CreateCommunityPage() {
         <Alert
           type="info"
           text="Do not have a DID? Register now!"
-          action={{ text: 'Register', href: 'https://app.did.id/explorer' }}
+          action="Register"
+          onClick={() => {
+            window.location.href = 'https://app.did.id/explorer'
+          }}
           className="mt-6"
         />
       ) : config?.community ? (
         <Alert
           type="warning"
           text={`${did} already bounded to an community`}
-          action={{ text: 'View', href: `/${did}` }}
+          action="View"
+          onClick={() => {
+            router.push(`/${did}`)
+          }}
           className="mt-6"
         />
       ) : (
         <Alert
           type="success"
           text={`${did} is able to create an community`}
-          action={{ text: 'Create', href: `/${did}/settings` }}
+          action="Create"
+          onClick={() => {
+            router.push(`/${did}/settings`)
+          }}
           className="mt-6"
         />
       )}

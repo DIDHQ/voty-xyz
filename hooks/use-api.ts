@@ -23,8 +23,11 @@ export function useRetrieve<T extends DataType>(type: T, uri?: string) {
   })
 }
 
-export function useImport(uri: string) {
+export function useImport(uri?: string) {
   return useCallback(async () => {
+    if (!uri) {
+      return
+    }
     await fetchJson('/api/import', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },

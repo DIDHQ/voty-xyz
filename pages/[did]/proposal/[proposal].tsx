@@ -5,7 +5,7 @@ import { uniq, without } from 'lodash-es'
 import useSWR from 'swr'
 
 import DidSelect from '../../../components/did-select'
-import { useListVotes, useRetrieve } from '../../../hooks/use-api'
+import { useImport, useListVotes, useRetrieve } from '../../../hooks/use-api'
 import useArweaveUpload from '../../../hooks/use-arweave-upload'
 import useAsync from '../../../hooks/use-async'
 import useRouterQuery from '../../../hooks/use-router-query'
@@ -26,6 +26,7 @@ export default function ProposalPage() {
     DataType.PROPOSAL,
     query.proposal,
   )
+  const handleImport = useAsync(useImport(query.proposal))
   const { data: proposal } = useRetrieve(DataType.PROPOSAL, query.proposal)
   const { data: community } = useRetrieve(
     DataType.COMMUNITY,
@@ -229,7 +230,8 @@ export default function ProposalPage() {
     <Alert
       type="info"
       text="This proposal exists on the blockchain, but not imported into Voty."
-      action={{ text: 'Import', href: '#' }}
+      action="Import"
+      onClick={handleImport.execute}
       className="m-4"
     />
   ) : null

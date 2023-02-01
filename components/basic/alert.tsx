@@ -5,13 +5,13 @@ import {
   XCircleIcon,
 } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
-import Link from 'next/link'
 import { useMemo } from 'react'
 
 export default function Alert(props: {
   type: 'info' | 'success' | 'warning' | 'error'
   text: string
-  action?: { text: string; href: string }
+  action?: string
+  onClick?: () => void
   className?: string
 }) {
   const Icon = useMemo(
@@ -62,38 +62,26 @@ export default function Alert(props: {
             {props.text}
           </p>
           {props.action ? (
-            <p className="mt-3 text-sm md:mt-0 md:ml-6">
-              {props.action.href.startsWith('/') ? (
-                <Link
-                  href={props.action.href}
-                  className={clsx('whitespace-nowrap font-medium', {
-                    'text-blue-700 hover:text-blue-600': props.type === 'info',
-                    'text-green-700 hover:text-green-600':
-                      props.type === 'success',
-                    'text-yellow-700 hover:text-yellow-600':
-                      props.type === 'warning',
-                    'text-red-700 hover:text-red-600': props.type === 'error',
-                  })}
-                >
-                  {props.action.text}
-                  <span aria-hidden="true"> &rarr;</span>
-                </Link>
-              ) : (
-                <a
-                  href={props.action.href}
-                  className={clsx('whitespace-nowrap font-medium', {
-                    'text-blue-700 hover:text-blue-600': props.type === 'info',
-                    'text-green-700 hover:text-green-600':
-                      props.type === 'success',
-                    'text-yellow-700 hover:text-yellow-600':
-                      props.type === 'warning',
-                    'text-red-700 hover:text-red-600': props.type === 'error',
-                  })}
-                >
-                  {props.action.text}
-                  <span aria-hidden="true"> &rarr;</span>
-                </a>
+            <p
+              className={clsx(
+                props.onClick ? 'cursor-pointer' : undefined,
+                'mt-3 text-sm md:mt-0 md:ml-6',
               )}
+              onClick={props.onClick}
+            >
+              <span
+                className={clsx('whitespace-nowrap font-medium', {
+                  'text-blue-700 hover:text-blue-600': props.type === 'info',
+                  'text-green-700 hover:text-green-600':
+                    props.type === 'success',
+                  'text-yellow-700 hover:text-yellow-600':
+                    props.type === 'warning',
+                  'text-red-700 hover:text-red-600': props.type === 'error',
+                })}
+              >
+                {props.action}
+                <span aria-hidden="true"> &rarr;</span>
+              </span>
             </p>
           ) : null}
         </div>

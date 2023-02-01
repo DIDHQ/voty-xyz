@@ -8,7 +8,7 @@ import { GlobeAltIcon } from '@heroicons/react/24/outline'
 import Avatar from '../../components/basic/avatar'
 import useDidConfig from '../../hooks/use-did-config'
 import useRouterQuery from '../../hooks/use-router-query'
-import { useRetrieve, useListProposals } from '../../hooks/use-api'
+import { useRetrieve, useListProposals, useImport } from '../../hooks/use-api'
 import Button from '../../components/basic/button'
 import { DiscordIcon, GitHubIcon, TwitterIcon } from '../../components/icons'
 import ProposalListItem from '../../components/proposal-list-item'
@@ -16,6 +16,7 @@ import TextInput from '../../components/basic/text-input'
 import { DataType } from '../../src/constants'
 import useArweaveData from '../../hooks/use-arweave-data'
 import Alert from '../../components/basic/alert'
+import useAsync from '../../hooks/use-async'
 
 export default function CommunityIndexPage() {
   const [query] = useRouterQuery<['did', 'group']>()
@@ -24,6 +25,7 @@ export default function CommunityIndexPage() {
     DataType.PROPOSAL,
     config?.community,
   )
+  const handleImport = useAsync(useImport(config?.community))
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const group = useMemo(
     () =>
@@ -208,7 +210,8 @@ export default function CommunityIndexPage() {
     <Alert
       type="info"
       text="This community exists on the blockchain, but not imported into Voty."
-      action={{ text: 'Import', href: '#' }}
+      action="Import"
+      onClick={handleImport.execute}
       className="m-4"
     />
   ) : null
