@@ -1,7 +1,7 @@
 export default function NotFoundPage() {
   return (
-    <main className="mx-auto flex w-full max-w-7xl flex-grow flex-col px-6 lg:px-8">
-      <div className="my-auto flex-shrink-0 py-16 sm:py-32">
+    <main className="mx-auto flex w-full max-w-7xl grow flex-col px-6 lg:px-8">
+      <div className="my-auto shrink-0 py-16 sm:py-32">
         <p className="text-base font-semibold text-indigo-600">404</p>
         <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
           Page not found

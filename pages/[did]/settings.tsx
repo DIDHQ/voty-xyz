@@ -11,7 +11,7 @@ export default function CommunitySettingsPage() {
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
 
   return query.did ? (
-    <div className="flex flex-col w-full px-8">
+    <div className="flex w-full flex-col px-8">
       {query.group ? (
         community ? (
           <GroupForm

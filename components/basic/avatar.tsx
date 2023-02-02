@@ -14,10 +14,10 @@ export default function Avatar(props: {
       width={props.size * 4}
       height={props.size * 4}
       style={{ width: props.size * 4, height: props.size * 4 }}
-      className={clsx('object-cover rounded-full', props.className)}
+      className={clsx('rounded-full object-cover', props.className)}
     />
   ) : (
-    <div className={clsx('rounded-full overflow-hidden', props.className)}>
+    <div className={clsx('overflow-hidden rounded-full', props.className)}>
       <BoringAvatar size={props.size * 4} name={props.name} />
     </div>
   )

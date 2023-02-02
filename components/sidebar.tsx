@@ -45,7 +45,7 @@ export default function Sidebar(props: { children: ReactNode }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-600 bg-opacity-75" />
+            <div className="fixed inset-0 bg-gray-600/75" />
           </Transition.Child>
           <div className="fixed inset-0 z-40 flex">
             <Transition.Child
@@ -82,7 +82,7 @@ export default function Sidebar(props: { children: ReactNode }) {
                   </div>
                 </Transition.Child>
                 <div className="pt-5 pb-4">
-                  <div className="flex flex-shrink-0 items-center px-4">
+                  <div className="flex shrink-0 items-center px-4">
                     <img
                       className="h-8 w-auto"
                       src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
@@ -107,14 +107,11 @@ export default function Sidebar(props: { children: ReactNode }) {
                     </div>
                   </nav>
                 </div>
-                <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
+                <div className="flex shrink-0 border-t border-gray-200 p-4">
                   <ConnectButtonCustom>
                     {({ openConnectModal }) =>
                       account ? (
-                        <Link
-                          href="/settings"
-                          className="group block flex-shrink-0"
-                        >
+                        <Link href="/settings" className="group block shrink-0">
                           <div className="flex items-center">
                             <div>
                               <Avatar
@@ -144,14 +141,14 @@ export default function Sidebar(props: { children: ReactNode }) {
                 </div>
               </Dialog.Panel>
             </Transition.Child>
-            <div className="w-14 flex-shrink-0" aria-hidden="true">
+            <div className="w-14 shrink-0" aria-hidden="true">
               {/* Force sidebar to shrink to fit close icon */}
             </div>
           </div>
         </Dialog>
       </Transition.Root>
       {/* Static sidebar for desktop */}
-      <div className="hidden lg:flex lg:flex-shrink-0">
+      <div className="hidden lg:flex lg:shrink-0">
         <div className="flex w-20 flex-col">
           <div className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-gray-800">
             <div className="flex-1">
@@ -177,7 +174,7 @@ export default function Sidebar(props: { children: ReactNode }) {
                       item.current
                         ? 'bg-gray-900 text-white'
                         : 'text-gray-400 hover:bg-gray-700',
-                      'flex-shrink-0 inline-flex items-center justify-center h-14 w-14 rounded-lg',
+                      'inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-lg',
                     )}
                   >
                     <item.icon className="h-6 w-6" aria-hidden="true" />
@@ -186,15 +183,11 @@ export default function Sidebar(props: { children: ReactNode }) {
                 ))}
               </nav>
             </div>
-            <div className="flex flex-shrink-0 pb-5">
+            <div className="flex shrink-0 pb-5">
               <ConnectButtonCustom>
                 {({ openConnectModal }) =>
                   account ? (
-                    <Link
-                      href="/settings"
-                      className="w-full flex-shrink-0"
-                      shallow
-                    >
+                    <Link href="/settings" className="w-full shrink-0" shallow>
                       <Avatar
                         size={10}
                         name={name}
@@ -254,7 +247,7 @@ export default function Sidebar(props: { children: ReactNode }) {
             </h1>
             {props.children[0]}
           </section>
-          <aside className="hidden lg:order-first lg:block lg:flex-shrink-0">
+          <aside className="hidden lg:order-first lg:block lg:shrink-0">
             <div className="relative flex h-full w-96 flex-col overflow-y-auto border-r border-gray-200 bg-white">
               {props.children[1]}
             </div>

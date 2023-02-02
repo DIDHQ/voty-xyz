@@ -40,7 +40,7 @@ export default function CommunityIndexPage() {
 
   return community?.extension ? (
     <main className="flex flex-1 overflow-hidden">
-      <aside className="hidden lg:order-first lg:block lg:flex-shrink-0">
+      <aside className="hidden lg:order-first lg:block lg:shrink-0">
         <div className="relative flex h-full w-96 flex-col overflow-y-auto border-r border-gray-200 bg-white">
           <div className="m-8 mb-0 flex items-start">
             <Avatar
@@ -57,13 +57,13 @@ export default function CommunityIndexPage() {
               </p>
             </div>
           </div>
-          <div className="flex space-x-4 mx-8 my-4">
+          <div className="mx-8 my-4 flex space-x-4">
             {community.extension.website ? (
               <a
                 href={community.extension.website}
                 className="text-gray-400 hover:text-gray-500"
               >
-                <GlobeAltIcon className="w-6 h-6" />
+                <GlobeAltIcon className="h-6 w-6" />
               </a>
             ) : null}
             {community.extension?.twitter ? (
@@ -71,7 +71,7 @@ export default function CommunityIndexPage() {
                 href={`https://twitter.com/${community.extension.twitter}`}
                 className="text-gray-400 hover:text-gray-500"
               >
-                <TwitterIcon className="w-6 h-6" />
+                <TwitterIcon className="h-6 w-6" />
               </a>
             ) : null}
             {community.extension?.discord ? (
@@ -79,7 +79,7 @@ export default function CommunityIndexPage() {
                 href={`https://discord.com/invite/${community.extension.discord}`}
                 className="text-gray-400 hover:text-gray-500"
               >
-                <DiscordIcon className="w-6 h-6" />
+                <DiscordIcon className="h-6 w-6" />
               </a>
             ) : null}
             {community.extension?.github ? (
@@ -87,11 +87,11 @@ export default function CommunityIndexPage() {
                 href={`https://github.com/${community.extension.github}`}
                 className="text-gray-400 hover:text-gray-500"
               >
-                <GitHubIcon className="w-6 h-6" />
+                <GitHubIcon className="h-6 w-6" />
               </a>
             ) : null}
           </div>
-          <div className="flex space-x-4 mx-8">
+          <div className="mx-8 flex space-x-4">
             <Link href={`/${query.did}/settings`}>
               <Button>Settings</Button>
             </Link>
@@ -144,7 +144,7 @@ export default function CommunityIndexPage() {
                   </div>
                   {/* <time
                     dateTime={group.datetime}
-                    className="flex-shrink-0 whitespace-nowrap text-sm text-gray-500"
+                    className="shrink-0 whitespace-nowrap text-sm text-gray-500"
                   >
                     {group.time}
                   </time> */}
@@ -163,7 +163,7 @@ export default function CommunityIndexPage() {
         </h1>
         <div
           className={clsx(
-            'p-5 bg-white border-b border-gray-200 pb-5 sm:flex sm:justify-between',
+            'border-b border-gray-200 bg-white p-5 sm:flex sm:justify-between',
             group ? 'sm:items-start' : 'sm:items-center',
           )}
         >
@@ -173,14 +173,14 @@ export default function CommunityIndexPage() {
             </h3>
             {group ? (
               <div className="mt-1">
-                <p className="text-sm text-gray-600 line-clamp-2">
+                <p className="text-sm text-gray-600">
                   {group?.extension?.about}
                 </p>
               </div>
             ) : null}
           </div>
           {group ? (
-            <div className="flex flex-shrink-0 space-x-4 mt-3 sm:mt-0 sm:ml-4">
+            <div className="mt-3 flex shrink-0 space-x-4 sm:mt-0 sm:ml-4">
               <Link href={`/${query.did}/settings?group=${query.group}`}>
                 <Button>Settings</Button>
               </Link>

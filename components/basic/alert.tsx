@@ -39,7 +39,7 @@ export default function Alert(props: {
       )}
     >
       <div className="flex">
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <Icon
             className={clsx('h-5 w-5', {
               'text-blue-400': props.type === 'info',

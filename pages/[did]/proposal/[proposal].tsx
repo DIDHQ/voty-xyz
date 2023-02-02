@@ -159,7 +159,7 @@ export default function ProposalPage() {
                             <span className="ml-2 w-0 flex-1 truncate">
                               {choice}
                             </span>
-                            <div className="ml-4 flex-shrink-0">
+                            <div className="ml-4 shrink-0">
                               {proposal.voting_type === 'single' ? (
                                 <input
                                   type="radio"
@@ -195,7 +195,7 @@ export default function ProposalPage() {
             account={account}
             value={did}
             onChange={setDid}
-            className="w-48 mr-4"
+            className="mr-4 w-48"
           />
           <Button
             primary

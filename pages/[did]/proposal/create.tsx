@@ -104,7 +104,7 @@ export default function CreateProposalPage() {
   )
 
   return (
-    <div className="flex flex-col w-full px-8">
+    <div className="flex w-full flex-col px-8">
       <div className="space-y-8 divide-y divide-gray-200">
         <div className="pt-8">
           <div>
@@ -151,7 +151,7 @@ export default function CreateProposalPage() {
               >
                 {watch('options')?.map((_, index) => (
                   <div key={index} className="mb-4 flex rounded-md shadow-sm">
-                    <div className="relative flex flex-grow items-stretch focus-within:z-10">
+                    <div className="relative flex grow items-stretch focus-within:z-10">
                       <input
                         {...register(`options.${index}`)}
                         placeholder={`Option ${index + 1}`}
@@ -182,7 +182,7 @@ export default function CreateProposalPage() {
               account={account}
               value={did}
               onChange={setDid}
-              className="w-48 mr-4"
+              className="mr-4 w-48"
             />
             <Button
               primary
@@ -211,7 +211,7 @@ function OptionDelete(props: {
   return (
     <button
       onClick={handleDelete}
-      className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+      className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 p-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
     >
       <XMarkIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
     </button>
