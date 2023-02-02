@@ -34,7 +34,6 @@ export default function GroupForm(props: {
   const { append, remove } = useFieldArray({
     control,
     name: 'groups',
-    keyName: '_id',
   })
   useEffect(() => {
     reset(props.community)
