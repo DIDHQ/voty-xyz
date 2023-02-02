@@ -3,6 +3,7 @@ import pMap from 'p-map'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
+import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 
 import DidSelect from '../../../components/did-select'
 import FormItem from '../../../components/basic/form-item'
@@ -19,7 +20,6 @@ import Button from '../../../components/basic/button'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
 import Select from '../../../components/basic/select'
-import JsonInput from '../../../components/json-input'
 import { useRetrieve } from '../../../hooks/use-api'
 import { DataType } from '../../../src/constants'
 
@@ -27,11 +27,14 @@ export default function CreateProposalPage() {
   const {
     register,
     setValue,
+    getValues,
+    watch,
     handleSubmit: onSubmit,
     control,
     formState,
   } = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
+    defaultValues: { options: [''] },
   })
   const [query] = useRouterQuery<['did', 'group']>()
   const { data: config } = useDidConfig(query.did)
@@ -40,6 +43,13 @@ export default function CreateProposalPage() {
     () =>
       query.group ? community?.groups?.[parseInt(query.group)] : undefined,
     [community?.groups, query.group],
+  )
+  const handleOptionDelete = useCallback(
+    (index: number) => {
+      const options = getValues('options')?.filter((_, i) => i !== index)
+      setValue('options', options && options.length > 0 ? options : [''])
+    },
+    [setValue, getValues],
   )
   useEffect(() => {
     if (!config?.community) {
@@ -139,13 +149,29 @@ export default function CreateProposalPage() {
                 label="Options"
                 error={formState.errors.options?.message}
               >
-                <Controller
-                  control={control}
-                  name="options"
-                  render={({ field: { value, onChange } }) => (
-                    <JsonInput value={value || []} onChange={onChange} />
-                  )}
-                />
+                {watch('options')?.map((_, index) => (
+                  <div key={index} className="mb-4 flex rounded-md shadow-sm">
+                    <div className="relative flex flex-grow items-stretch focus-within:z-10">
+                      <input
+                        {...register(`options.${index}`)}
+                        placeholder={`Option ${index + 1}`}
+                        className="block w-full rounded-none rounded-l-md border border-gray-300 pl-4 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      />
+                    </div>
+                    <OptionDelete index={index} onDelete={handleOptionDelete} />
+                  </div>
+                ))}
+                <Button
+                  onClick={() => {
+                    setValue('options', [...(watch('options') || []), ''])
+                  }}
+                  className="px-2"
+                >
+                  <PlusIcon
+                    className="h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                </Button>
               </FormItem>
             </div>
           </div>
@@ -170,5 +196,24 @@ export default function CreateProposalPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+function OptionDelete(props: {
+  index: number
+  onDelete: (index: number) => void
+}) {
+  const { onDelete } = props
+  const handleDelete = useCallback(() => {
+    onDelete(props.index)
+  }, [onDelete, props.index])
+
+  return (
+    <button
+      onClick={handleDelete}
+      className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+    >
+      <XMarkIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+    </button>
   )
 }
