@@ -11,11 +11,11 @@ import useSignJson from '../hooks/use-sign-json'
 import useWallet from '../hooks/use-wallet'
 import { Community, communitySchema } from '../src/schemas'
 import Button from './basic/button'
+import DurationInput from './basic/duration-input'
 import FormItem from './basic/form-item'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import JsonInput from './json-input'
-import NumericInput from './numeric-input'
 
 export default function GroupForm(props: {
   entry: string
@@ -187,7 +187,7 @@ export default function GroupForm(props: {
                 control={control}
                 name={`groups.${props.group}.timing.publicity`}
                 render={({ field: { value, onChange } }) => (
-                  <NumericInput value={value} onChange={onChange} />
+                  <DurationInput value={value} onChange={onChange} />
                 )}
               />
             </FormItem>
@@ -203,7 +203,7 @@ export default function GroupForm(props: {
                 control={control}
                 name={`groups.${props.group}.timing.voting`}
                 render={({ field: { value, onChange } }) => (
-                  <NumericInput value={value} onChange={onChange} />
+                  <DurationInput value={value} onChange={onChange} />
                 )}
               />
             </FormItem>
@@ -220,7 +220,7 @@ export default function GroupForm(props: {
                 control={control}
                 name={`groups.${props.group}.timing.adding_option`}
                 render={({ field: { value, onChange } }) => (
-                  <NumericInput value={value} onChange={onChange} />
+                  <DurationInput value={value} onChange={onChange} />
                 )}
               />
             </FormItem>
