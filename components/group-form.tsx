@@ -98,7 +98,7 @@ export default function GroupForm(props: {
         { shouldFocus: false },
       )
     }
-  }, [append, isNew, props.group])
+  }, [append, isNew])
 
   return index < 0 ? null : (
     <div className="space-y-8 divide-y divide-gray-200">
