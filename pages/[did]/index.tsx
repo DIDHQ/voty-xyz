@@ -2,7 +2,6 @@ import Link from 'next/link'
 import clsx from 'clsx'
 import { useCallback, useMemo } from 'react'
 import { useRouter } from 'next/router'
-import { nanoid } from 'nanoid'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
 
 import Avatar from '../../components/basic/avatar'
@@ -36,8 +35,8 @@ export default function CommunityIndexPage() {
   const proposals = useMemo(() => data?.flatMap(({ data }) => data), [data])
   const router = useRouter()
   const handleCreateGroup = useCallback(() => {
-    router.push(`/${query.did}/settings?group=${nanoid()}`)
-  }, [query.did, router])
+    router.push(`/${query.did}/settings?group=${community?.groups?.length}`)
+  }, [community?.groups?.length, query.did, router])
 
   return community?.extension ? (
     <main className="flex flex-1 overflow-hidden">
