@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useMemo } from 'react'
 
-import TextInput from './basic/text-input'
+import TextInput from './text-input'
 
 export default function NumericInput(props: {
   value: number
