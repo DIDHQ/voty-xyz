@@ -28,7 +28,8 @@ export default function CommunityIndexPage() {
   const handleImport = useAsync(useImport(config?.community))
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const group = useMemo(
-    () => community?.groups?.find(({ id }) => id === query.group),
+    () =>
+      community?.groups?.find(({ extension: { id } }) => id === query.group),
     [community?.groups, query.group],
   )
   const { data } = useListProposals(query.did, query.group)
@@ -122,10 +123,10 @@ export default function CommunityIndexPage() {
             </li>
             {community.groups?.map((group) => (
               <li
-                key={group.id}
+                key={group.extension.id}
                 className={clsx(
                   'relative py-5 px-8 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
-                  group.id === query.group
+                  group.extension.id === query.group
                     ? 'bg-gray-100 hover:bg-gray-200'
                     : 'bg-white hover:bg-gray-50',
                 )}
@@ -133,7 +134,7 @@ export default function CommunityIndexPage() {
                 <div className="flex justify-between space-x-3">
                   <div className="min-w-0 flex-1">
                     <Link
-                      href={`/${query.did}?group=${group.id}`}
+                      href={`/${query.did}?group=${group.extension.id}`}
                       className="block focus:outline-none"
                     >
                       <span className="absolute inset-0" aria-hidden="true" />
@@ -181,10 +182,12 @@ export default function CommunityIndexPage() {
           </div>
           {group ? (
             <div className="flex flex-shrink-0 space-x-4 mt-3 sm:mt-0 sm:ml-4">
-              <Link href={`/${query.did}/settings?group=${group.id}`}>
+              <Link href={`/${query.did}/settings?group=${group.extension.id}`}>
                 <Button>Settings</Button>
               </Link>
-              <Link href={`/${query.did}/proposal/create?group=${group.id}`}>
+              <Link
+                href={`/${query.did}/proposal/create?group=${group.extension.id}`}
+              >
                 <Button primary>New Proposal</Button>
               </Link>
             </div>

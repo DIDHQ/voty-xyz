@@ -26,7 +26,9 @@ export default async function verifyProposal(json: object): Promise<{
     getArweaveData(proposal.data.community),
   )
 
-  const group = community.groups?.find(({ id }) => id === proposal.data.group)
+  const group = community.groups?.find(
+    ({ extension: { id } }) => id === proposal.data.group,
+  )
   if (!group) {
     throw new Error('group not found')
   }
