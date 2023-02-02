@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { nanoid } from 'nanoid'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 
@@ -19,7 +20,7 @@ import NumericInput from './numeric-input'
 export default function GroupForm(props: {
   entry: string
   community: Community
-  group: string
+  group: number
 }) {
   const {
     control,
@@ -30,7 +31,7 @@ export default function GroupForm(props: {
   } = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
-  const { fields, append, remove } = useFieldArray({
+  const { append, remove } = useFieldArray({
     control,
     name: 'groups',
     keyName: '_id',
@@ -38,10 +39,7 @@ export default function GroupForm(props: {
   useEffect(() => {
     reset(props.community)
   }, [props.community, reset])
-  const index = useMemo(
-    () => fields.findIndex(({ extension: { id } }) => id === props.group),
-    [fields, props.group],
-  )
+  const index = props.group
   const { account } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
   const handleSignJson = useSignJson(props.entry)
@@ -72,11 +70,8 @@ export default function GroupForm(props: {
     ),
   )
   const isNew = useMemo(
-    () =>
-      !props.community.groups?.find(
-        ({ extension: { id } }) => id === props.group,
-      ),
-    [props.community.groups, props.group],
+    () => !props.community.groups?.[index],
+    [props.community.groups, index],
   )
   useEffect(() => {
     if (isNew) {
@@ -97,7 +92,7 @@ export default function GroupForm(props: {
             adding_option: 86400,
           },
           extension: {
-            id: props.group,
+            id: nanoid(),
           },
         },
         { shouldFocus: false },

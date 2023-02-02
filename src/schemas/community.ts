@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import { authorSchema } from './author'
 import { groupSchema } from './group'
 
@@ -10,7 +11,8 @@ export const communitySchema = z.object({
     .refine(
       (groups) =>
         !groups?.length ||
-        new Set(groups?.map(({ name }) => name)).size === groups?.length,
+        new Set(groups?.map(({ extension: { id } }) => id)).size ===
+          groups?.length,
       { message: 'groups name are not unique' },
     ),
   extension: z

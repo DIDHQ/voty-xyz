@@ -33,11 +33,8 @@ export default function ProposalPage() {
     proposal?.community,
   )
   const group = useMemo(
-    () =>
-      community?.groups?.find(
-        ({ extension: { id } }) => id === proposal?.group,
-      ),
-    [community?.groups, proposal?.group],
+    () => (proposal ? community?.groups?.[proposal?.group] : undefined),
+    [community?.groups, proposal],
   )
   const [did, setDid] = useState('')
   const { account } = useWallet()

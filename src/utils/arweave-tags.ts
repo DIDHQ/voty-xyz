@@ -20,7 +20,7 @@ export function getArweaveTags(json: Authorized<Community | Proposal | Vote>) {
       ...defaultArweaveTags,
       'app-data-type': DataType.PROPOSAL,
       'app-index-community': json.community,
-      'app-index-group': json.group,
+      'app-index-group': json.group.toString(),
     }
   }
   if (isVote(json)) {

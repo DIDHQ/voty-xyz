@@ -37,7 +37,7 @@ model Proposal {
   author String
 
   community String
-  group     String
+  group     Int
 
   data Bytes
 
@@ -53,7 +53,7 @@ model Vote {
   author String
 
   community String
-  group     String
+  group     Int
   proposal  String
 
   data Bytes
