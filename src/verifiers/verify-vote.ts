@@ -20,9 +20,7 @@ export default async function verifyVote(
     getArweaveData(vote.data.proposal),
   )
 
-  const group = community.groups?.find(
-    ({ extension: { id } }) => id === proposal.group,
-  )
+  const group = community.groups?.find(({ id }) => id === proposal.group)
   if (!group) {
     throw new Error('group not found')
   }

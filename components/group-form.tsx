@@ -39,7 +39,7 @@ export default function GroupForm(props: {
     reset(props.community)
   }, [props.community, reset])
   const index = useMemo(
-    () => fields.findIndex(({ extension: { id } }) => id === props.group),
+    () => fields.findIndex(({ id }) => id === props.group),
     [fields, props.group],
   )
   const { account } = useWallet()
@@ -72,16 +72,14 @@ export default function GroupForm(props: {
     ),
   )
   const isNew = useMemo(
-    () =>
-      !props.community.groups?.find(
-        ({ extension: { id } }) => id === props.group,
-      ),
+    () => !props.community.groups?.find(({ id }) => id === props.group),
     [props.community.groups, props.group],
   )
   useEffect(() => {
     if (isNew) {
       append(
         {
+          id: props.group,
           name: '',
           proposal_rights: {
             operator: 'or',
@@ -95,9 +93,6 @@ export default function GroupForm(props: {
             publicity: 3600,
             voting: 86400,
             adding_option: 86400,
-          },
-          extension: {
-            id: props.group,
           },
         },
         { shouldFocus: false },

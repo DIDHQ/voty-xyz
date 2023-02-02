@@ -37,8 +37,7 @@ export default function CreateProposalPage() {
   const { data: config } = useDidConfig(query.did)
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const group = useMemo(
-    () =>
-      community?.groups?.find(({ extension: { id } }) => id === query.group),
+    () => community?.groups?.find(({ id }) => id === query.group),
     [community?.groups, query.group],
   )
   useEffect(() => {
@@ -51,7 +50,7 @@ export default function CreateProposalPage() {
     if (!group) {
       return
     }
-    setValue('group', group.extension.id)
+    setValue('group', group.id)
   }, [setValue, group])
   const { data: coinTypesOfNumberSets } = useSWR(
     group?.voting_power
