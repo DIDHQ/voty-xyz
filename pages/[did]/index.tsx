@@ -2,7 +2,6 @@ import Link from 'next/link'
 import clsx from 'clsx'
 import { useCallback, useMemo } from 'react'
 import { useRouter } from 'next/router'
-import { nanoid } from 'nanoid'
 import { GlobeAltIcon } from '@heroicons/react/24/outline'
 
 import Avatar from '../../components/basic/avatar'
@@ -29,15 +28,15 @@ export default function CommunityIndexPage() {
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const group = useMemo(
     () =>
-      community?.groups?.find(({ extension: { id } }) => id === query.group),
+      query.group ? community?.groups?.[parseInt(query.group)] : undefined,
     [community?.groups, query.group],
   )
   const { data } = useListProposals(query.did, query.group)
   const proposals = useMemo(() => data?.flatMap(({ data }) => data), [data])
   const router = useRouter()
   const handleCreateGroup = useCallback(() => {
-    router.push(`/${query.did}/settings?group=${nanoid()}`)
-  }, [query.did, router])
+    router.push(`/${query.did}/settings?group=${community?.groups?.length}`)
+  }, [community?.groups?.length, query.did, router])
 
   return community?.extension ? (
     <main className="flex flex-1 overflow-hidden">
@@ -121,12 +120,12 @@ export default function CommunityIndexPage() {
                 </div>
               </div>
             </li>
-            {community.groups?.map((group) => (
+            {community.groups?.map((group, index) => (
               <li
-                key={group.extension.id}
+                key={index}
                 className={clsx(
                   'relative py-5 px-8 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600',
-                  group.extension.id === query.group
+                  query.group && index === parseInt(query.group)
                     ? 'bg-gray-100 hover:bg-gray-200'
                     : 'bg-white hover:bg-gray-50',
                 )}
@@ -134,7 +133,7 @@ export default function CommunityIndexPage() {
                 <div className="flex justify-between space-x-3">
                   <div className="min-w-0 flex-1">
                     <Link
-                      href={`/${query.did}?group=${group.extension.id}`}
+                      href={`/${query.did}?group=${index}`}
                       className="block focus:outline-none"
                     >
                       <span className="absolute inset-0" aria-hidden="true" />
@@ -182,12 +181,10 @@ export default function CommunityIndexPage() {
           </div>
           {group ? (
             <div className="flex flex-shrink-0 space-x-4 mt-3 sm:mt-0 sm:ml-4">
-              <Link href={`/${query.did}/settings?group=${group.extension.id}`}>
+              <Link href={`/${query.did}/settings?group=${query.group}`}>
                 <Button>Settings</Button>
               </Link>
-              <Link
-                href={`/${query.did}/proposal/create?group=${group.extension.id}`}
-              >
+              <Link href={`/${query.did}/proposal/create?group=${query.group}`}>
                 <Button primary>New Proposal</Button>
               </Link>
             </div>

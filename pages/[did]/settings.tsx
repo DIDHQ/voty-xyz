@@ -17,7 +17,7 @@ export default function CommunitySettingsPage() {
           <GroupForm
             entry={query.did}
             community={community}
-            group={query.group}
+            group={parseInt(query.group)}
           />
         ) : null
       ) : (

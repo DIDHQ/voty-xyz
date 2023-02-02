@@ -38,7 +38,7 @@ export default function CreateProposalPage() {
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const group = useMemo(
     () =>
-      community?.groups?.find(({ extension: { id } }) => id === query.group),
+      query.group ? community?.groups?.[parseInt(query.group)] : undefined,
     [community?.groups, query.group],
   )
   useEffect(() => {
@@ -48,11 +48,11 @@ export default function CreateProposalPage() {
     setValue('community', config?.community)
   }, [config?.community, setValue])
   useEffect(() => {
-    if (!group) {
+    if (!query.group) {
       return
     }
-    setValue('group', group.extension.id)
-  }, [setValue, group])
+    setValue('group', parseInt(query.group))
+  }, [query.group, setValue])
   const { data: coinTypesOfNumberSets } = useSWR(
     group?.voting_power
       ? ['requiredCoinTypesOfNumberSets', group.voting_power]

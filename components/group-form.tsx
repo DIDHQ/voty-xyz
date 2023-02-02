@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { nanoid } from 'nanoid'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 
@@ -19,7 +20,7 @@ import NumericInput from './numeric-input'
 export default function GroupForm(props: {
   entry: string
   community: Community
-  group: string
+  group: number
 }) {
   const {
     control,
@@ -30,18 +31,13 @@ export default function GroupForm(props: {
   } = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
-  const { fields, append, remove } = useFieldArray({
+  const { append, remove } = useFieldArray({
     control,
     name: 'groups',
-    keyName: '_id',
   })
   useEffect(() => {
     reset(props.community)
   }, [props.community, reset])
-  const index = useMemo(
-    () => fields.findIndex(({ extension: { id } }) => id === props.group),
-    [fields, props.group],
-  )
   const { account } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
   const handleSignJson = useSignJson(props.entry)
@@ -72,10 +68,7 @@ export default function GroupForm(props: {
     ),
   )
   const isNew = useMemo(
-    () =>
-      !props.community.groups?.find(
-        ({ extension: { id } }) => id === props.group,
-      ),
+    () => !props.community.groups?.[props.group],
     [props.community.groups, props.group],
   )
   useEffect(() => {
@@ -97,15 +90,15 @@ export default function GroupForm(props: {
             adding_option: 86400,
           },
           extension: {
-            id: props.group,
+            id: nanoid(),
           },
         },
         { shouldFocus: false },
       )
     }
-  }, [append, isNew, props.group])
+  }, [append, isNew])
 
-  return index < 0 ? null : (
+  return props.group < 0 ? null : (
     <div className="space-y-8 divide-y divide-gray-200">
       <div className="pt-8">
         <div>
@@ -115,29 +108,34 @@ export default function GroupForm(props: {
           <div className="sm:col-span-6">
             <FormItem
               label="Name"
-              error={formState.errors.groups?.[index]?.name?.message}
+              error={formState.errors.groups?.[props.group]?.name?.message}
             >
-              <TextInput {...register(`groups.${index}.name`)} />
+              <TextInput {...register(`groups.${props.group}.name`)} />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
             <FormItem
               label="About"
               error={
-                formState.errors.groups?.[index]?.extension?.about?.message
+                formState.errors.groups?.[props.group]?.extension?.about
+                  ?.message
               }
             >
-              <Textarea {...register(`groups.${index}.extension.about`)} />
+              <Textarea
+                {...register(`groups.${props.group}.extension.about`)}
+              />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
             <FormItem
               label="Proposal rights"
-              error={formState.errors.groups?.[index]?.proposal_rights?.message}
+              error={
+                formState.errors.groups?.[props.group]?.proposal_rights?.message
+              }
             >
               <Controller
                 control={control}
-                name={`groups.${index}.proposal_rights`}
+                name={`groups.${props.group}.proposal_rights`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
@@ -147,11 +145,13 @@ export default function GroupForm(props: {
           <div className="sm:col-span-6">
             <FormItem
               label="Voting power"
-              error={formState.errors?.groups?.[index]?.voting_power?.message}
+              error={
+                formState.errors?.groups?.[props.group]?.voting_power?.message
+              }
             >
               <Controller
                 control={control}
-                name={`groups.${index}.voting_power`}
+                name={`groups.${props.group}.voting_power`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
@@ -162,12 +162,13 @@ export default function GroupForm(props: {
             <FormItem
               label="Add option rights"
               error={
-                formState.errors.groups?.[index]?.add_option_rights?.message
+                formState.errors.groups?.[props.group]?.add_option_rights
+                  ?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${index}.add_option_rights`}
+                name={`groups.${props.group}.add_option_rights`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
@@ -178,12 +179,13 @@ export default function GroupForm(props: {
             <FormItem
               label="Publicity"
               error={
-                formState.errors?.groups?.[index]?.timing?.publicity?.message
+                formState.errors?.groups?.[props.group]?.timing?.publicity
+                  ?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${index}.timing.publicity`}
+                name={`groups.${props.group}.timing.publicity`}
                 render={({ field: { value, onChange } }) => (
                   <NumericInput value={value} onChange={onChange} />
                 )}
@@ -193,11 +195,13 @@ export default function GroupForm(props: {
           <div className="sm:col-span-2">
             <FormItem
               label="Voting"
-              error={formState.errors?.groups?.[index]?.timing?.voting?.message}
+              error={
+                formState.errors?.groups?.[props.group]?.timing?.voting?.message
+              }
             >
               <Controller
                 control={control}
-                name={`groups.${index}.timing.voting`}
+                name={`groups.${props.group}.timing.voting`}
                 render={({ field: { value, onChange } }) => (
                   <NumericInput value={value} onChange={onChange} />
                 )}
@@ -208,13 +212,13 @@ export default function GroupForm(props: {
             <FormItem
               label="Adding option"
               error={
-                formState.errors?.groups?.[index]?.timing?.adding_option
+                formState.errors?.groups?.[props.group]?.timing?.adding_option
                   ?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${index}.timing.adding_option`}
+                name={`groups.${props.group}.timing.adding_option`}
                 render={({ field: { value, onChange } }) => (
                   <NumericInput value={value} onChange={onChange} />
                 )}
@@ -230,7 +234,7 @@ export default function GroupForm(props: {
           ) : (
             <Button
               onClick={() => {
-                remove(index)
+                remove(props.group)
                 onSubmit(console.log, console.error)()
               }}
             >

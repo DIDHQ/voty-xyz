@@ -4,7 +4,7 @@ import { authorSchema } from './author'
 
 export const proposalSchema = z.object({
   community: z.string().min(1),
-  group: z.string().min(1),
+  group: z.number(),
   title: z.string().min(1),
   voting_type: z.enum(['single', 'multiple', 'weighted']),
   options: z
