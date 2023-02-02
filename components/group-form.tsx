@@ -187,7 +187,14 @@ export default function GroupForm(props: {
                 control={control}
                 name={`groups.${props.group}.timing.publicity`}
                 render={({ field: { value, onChange } }) => (
-                  <DurationInput value={value} onChange={onChange} />
+                  <DurationInput
+                    value={value}
+                    onChange={onChange}
+                    error={
+                      !!formState.errors?.groups?.[props.group]?.timing
+                        ?.publicity
+                    }
+                  />
                 )}
               />
             </FormItem>
@@ -203,7 +210,13 @@ export default function GroupForm(props: {
                 control={control}
                 name={`groups.${props.group}.timing.voting`}
                 render={({ field: { value, onChange } }) => (
-                  <DurationInput value={value} onChange={onChange} />
+                  <DurationInput
+                    value={value}
+                    onChange={onChange}
+                    error={
+                      !!formState.errors?.groups?.[props.group]?.timing?.voting
+                    }
+                  />
                 )}
               />
             </FormItem>
@@ -220,7 +233,14 @@ export default function GroupForm(props: {
                 control={control}
                 name={`groups.${props.group}.timing.adding_option`}
                 render={({ field: { value, onChange } }) => (
-                  <DurationInput value={value} onChange={onChange} />
+                  <DurationInput
+                    value={value}
+                    onChange={onChange}
+                    error={
+                      !!formState.errors?.groups?.[props.group]?.timing
+                        ?.adding_option
+                    }
+                  />
                 )}
               />
             </FormItem>

@@ -60,9 +60,9 @@ export const groupSchema = z.object({
   voting_power: numberSetsSchema,
   add_option_rights: booleanSetsSchema.optional(),
   timing: z.object({
-    publicity: z.number(),
-    voting: z.number(),
-    adding_option: z.number(),
+    publicity: z.number().min(3600),
+    voting: z.number().min(3600),
+    adding_option: z.number().min(3600),
   }),
   extension: z.object({
     id: z.string().min(1),

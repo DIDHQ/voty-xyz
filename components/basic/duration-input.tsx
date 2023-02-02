@@ -12,6 +12,7 @@ enum DurationType {
 export default function DurationInput(props: {
   value: number
   onChange(value: number): void
+  error?: boolean
   className?: string
 }) {
   const { onChange } = props
@@ -49,7 +50,13 @@ export default function DurationInput(props: {
         value={value}
         onChange={handleChange}
         onBlur={handleBlur}
-        className="block w-full rounded-md border-gray-300 pl-4 pr-24 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+        aria-invalid={props.error ? 'true' : 'false'}
+        className={clsx(
+          'block w-full rounded-md pl-4 pr-24 sm:text-sm',
+          props.error
+            ? 'border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500'
+            : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500',
+        )}
       />
       <div className="absolute inset-y-0 right-0 flex items-center">
         <select
