@@ -4,15 +4,14 @@ import { Fragment, ReactNode, useState } from 'react'
 
 export default function Slide<T>(props: {
   title: string
-  value?: T
-  onChange(value?: T): void
-  children: ({ handleOpen }: { handleOpen: () => void }) => ReactNode
+  trigger: ({ handleOpen }: { handleOpen: () => void }) => ReactNode
+  children: ReactNode
 }) {
   const [open, setOpen] = useState(false)
 
   return (
     <>
-      {props.children({ handleOpen: () => setOpen(true) })}
+      {props.trigger({ handleOpen: () => setOpen(true) })}
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={setOpen}>
           <div className="fixed inset-0" />
@@ -51,14 +50,7 @@ export default function Slide<T>(props: {
                         </div>
                       </div>
                       <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                        {/* Replace with your content */}
-                        <div className="absolute inset-0 px-4 sm:px-6">
-                          <div
-                            className="h-full border-2 border-dashed border-gray-200"
-                            aria-hidden="true"
-                          />
-                        </div>
-                        {/* /End replace */}
+                        {props.children}
                       </div>
                     </div>
                   </Dialog.Panel>

@@ -16,6 +16,7 @@ import FormItem from './basic/form-item'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import Slide from './basic/slide'
+import BooleanSetsForm from './boolean-sets-form'
 
 export default function GroupForm(props: {
   entry: string
@@ -140,10 +141,13 @@ export default function GroupForm(props: {
                   control={control}
                   name={`groups.${props.group}.permission.proposing`}
                   render={({ field: { value, onChange } }) => (
-                    <Slide title="Proposing" value={value} onChange={onChange}>
-                      {({ handleOpen }) => (
+                    <Slide
+                      title="Proposing"
+                      trigger={({ handleOpen }) => (
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
+                    >
+                      <BooleanSetsForm value={value} onChange={onChange} />
                     </Slide>
                   )}
                 />
@@ -179,12 +183,11 @@ export default function GroupForm(props: {
                   render={({ field: { value, onChange } }) => (
                     <Slide
                       title="Adding option"
-                      value={value}
-                      onChange={onChange}
-                    >
-                      {({ handleOpen }) => (
+                      trigger={({ handleOpen }) => (
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
+                    >
+                      <BooleanSetsForm value={value} onChange={onChange} />
                     </Slide>
                   )}
                 />
@@ -218,10 +221,13 @@ export default function GroupForm(props: {
                   control={control}
                   name={`groups.${props.group}.permission.voting`}
                   render={({ field: { value, onChange } }) => (
-                    <Slide title="Voting" value={value} onChange={onChange}>
-                      {({ handleOpen }) => (
+                    <Slide
+                      title="Voting"
+                      trigger={({ handleOpen }) => (
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
+                    >
+                      {null}
                     </Slide>
                   )}
                 />
