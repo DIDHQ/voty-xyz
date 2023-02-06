@@ -89,7 +89,6 @@ export default function GroupForm(props: {
           period: {
             proposing: 3600,
             voting: 86400,
-            adding_option: 86400,
           },
           extension: {
             id: nanoid(),
