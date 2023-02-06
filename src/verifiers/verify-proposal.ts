@@ -14,6 +14,7 @@ import verifyCommunity from './verify-community'
 export default async function verifyProposal(json: object): Promise<{
   proposal: Authorized<Proposal>
   community: Authorized<Community>
+  group: NonNullable<Community['groups']>[0]
 }> {
   const proposal = proposalWithAuthorSchema.safeParse(json)
   if (!proposal.success) {
@@ -44,5 +45,6 @@ export default async function verifyProposal(json: object): Promise<{
   return {
     proposal: proposal.data,
     community,
+    group,
   }
 }
