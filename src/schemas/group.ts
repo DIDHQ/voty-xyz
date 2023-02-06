@@ -5,9 +5,9 @@ import { booleanSetsSchema, numberSetsSchema } from './sets'
 export const groupSchema = z.object({
   name: z.string().min(1),
   permission: z.object({
-    proposal_rights: booleanSetsSchema,
+    submitting_proposal: booleanSetsSchema,
+    adding_option: booleanSetsSchema.optional(),
     voting_power: numberSetsSchema,
-    add_option_rights: booleanSetsSchema.optional(),
   }),
   timing: z.object({
     publicity: z.number().min(3600),

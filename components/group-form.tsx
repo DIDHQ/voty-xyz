@@ -77,7 +77,7 @@ export default function GroupForm(props: {
         {
           name: '',
           permission: {
-            proposal_rights: {
+            submitting_proposal: {
               operator: 'or',
               operands: [],
             },
@@ -133,12 +133,12 @@ export default function GroupForm(props: {
               label="Proposal rights"
               error={
                 formState.errors.groups?.[props.group]?.permission
-                  ?.proposal_rights?.message
+                  ?.submitting_proposal?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.group}.permission.proposal_rights`}
+                name={`groups.${props.group}.permission.submitting_proposal`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
@@ -167,12 +167,12 @@ export default function GroupForm(props: {
               label="Add option rights"
               error={
                 formState.errors.groups?.[props.group]?.permission
-                  ?.add_option_rights?.message
+                  ?.adding_option?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.group}.permission.add_option_rights`}
+                name={`groups.${props.group}.permission.adding_option`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
