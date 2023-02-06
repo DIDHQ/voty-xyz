@@ -3,6 +3,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import { Fragment, ReactNode, useState } from 'react'
 
 export default function Slide<T>(props: {
+  title: string
   value?: T
   onChange(value?: T): void
   children: ({ handleOpen }: { handleOpen: () => void }) => ReactNode
@@ -32,7 +33,7 @@ export default function Slide<T>(props: {
                       <div className="px-4 sm:px-6">
                         <div className="flex items-start justify-between">
                           <Dialog.Title className="text-lg font-medium text-gray-900">
-                            Panel title
+                            {props.title}
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button

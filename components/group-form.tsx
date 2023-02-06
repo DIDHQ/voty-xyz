@@ -141,7 +141,7 @@ export default function GroupForm(props: {
                   control={control}
                   name={`groups.${props.group}.permission.proposing`}
                   render={({ field: { value, onChange } }) => (
-                    <Slide value={value} onChange={onChange}>
+                    <Slide title="Proposing" value={value} onChange={onChange}>
                       {({ handleOpen }) => (
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
@@ -178,7 +178,11 @@ export default function GroupForm(props: {
                   control={control}
                   name={`groups.${props.group}.permission.adding_option`}
                   render={({ field: { value, onChange } }) => (
-                    <Slide value={value} onChange={onChange}>
+                    <Slide
+                      title="Adding option"
+                      value={value}
+                      onChange={onChange}
+                    >
                       {({ handleOpen }) => (
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
@@ -215,7 +219,7 @@ export default function GroupForm(props: {
                   control={control}
                   name={`groups.${props.group}.permission.voting`}
                   render={({ field: { value, onChange } }) => (
-                    <Slide value={value} onChange={onChange}>
+                    <Slide title="Voting" value={value} onChange={onChange}>
                       {({ handleOpen }) => (
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
