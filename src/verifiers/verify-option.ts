@@ -27,13 +27,13 @@ export default async function verifyOption(
     getArweaveData(option.proposal),
   )
 
-  if (!group.add_option_rights) {
+  if (!group.permission.adding_option) {
     throw new Error('group cannot add option')
   }
 
   if (
     !(await checkBoolean(
-      group.add_option_rights,
+      group.permission.adding_option,
       option.author.did as DID,
       mapSnapshots(proposal.snapshots),
     ))

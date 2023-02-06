@@ -10,7 +10,7 @@ enum DurationType {
 }
 
 export default function DurationInput(props: {
-  value: number
+  value?: number
   onChange(value: number): void
   error?: boolean
   className?: string
@@ -28,6 +28,9 @@ export default function DurationInput(props: {
     onChange(value * type)
   }, [onChange, type, value])
   useEffect(() => {
+    if (props.value === undefined) {
+      return
+    }
     for (let type of [
       DurationType.YEAR,
       DurationType.MONTH,
