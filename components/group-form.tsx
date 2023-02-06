@@ -147,7 +147,15 @@ export default function GroupForm(props: {
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
                     >
-                      <BooleanSetsForm value={value} onChange={onChange} />
+                      {({ handleClose }) => (
+                        <BooleanSetsForm
+                          value={value}
+                          onChange={(v) => {
+                            onChange(v)
+                            handleClose()
+                          }}
+                        />
+                      )}
                     </Slide>
                   )}
                 />
@@ -187,7 +195,15 @@ export default function GroupForm(props: {
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
                     >
-                      <BooleanSetsForm value={value} onChange={onChange} />
+                      {({ handleClose }) => (
+                        <BooleanSetsForm
+                          value={value}
+                          onChange={(v) => {
+                            onChange(v)
+                            handleClose()
+                          }}
+                        />
+                      )}
                     </Slide>
                   )}
                 />
@@ -227,7 +243,7 @@ export default function GroupForm(props: {
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
                     >
-                      {null}
+                      {() => null}
                     </Slide>
                   )}
                 />

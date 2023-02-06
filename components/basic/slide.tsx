@@ -5,7 +5,7 @@ import { Fragment, ReactNode, useState } from 'react'
 export default function Slide<T>(props: {
   title: string
   trigger: ({ handleOpen }: { handleOpen: () => void }) => ReactNode
-  children: ReactNode
+  children: ({ handleClose }: { handleClose: () => void }) => ReactNode
 }) {
   const [open, setOpen] = useState(false)
 
@@ -50,7 +50,7 @@ export default function Slide<T>(props: {
                         </div>
                       </div>
                       <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                        {props.children}
+                        {props.children({ handleClose: () => setOpen(false) })}
                       </div>
                     </div>
                   </Dialog.Panel>
