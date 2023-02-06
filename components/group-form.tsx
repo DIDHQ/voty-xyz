@@ -130,7 +130,7 @@ export default function GroupForm(props: {
           </div>
           <div className="sm:col-span-6">
             <FormItem
-              label="Proposal rights"
+              label="Proposing"
               error={
                 formState.errors.groups?.[props.group]?.permission?.proposing
                   ?.message
@@ -147,24 +147,7 @@ export default function GroupForm(props: {
           </div>
           <div className="sm:col-span-6">
             <FormItem
-              label="Voting power"
-              error={
-                formState.errors?.groups?.[props.group]?.permission?.voting
-                  ?.message
-              }
-            >
-              <Controller
-                control={control}
-                name={`groups.${props.group}.permission.voting`}
-                render={({ field: { value, onChange } }) => (
-                  <JsonInput value={value} onChange={onChange} />
-                )}
-              />
-            </FormItem>
-          </div>
-          <div className="sm:col-span-6">
-            <FormItem
-              label="Add option rights"
+              label="Adding option"
               error={
                 formState.errors.groups?.[props.group]?.permission
                   ?.adding_option?.message
@@ -173,6 +156,23 @@ export default function GroupForm(props: {
               <Controller
                 control={control}
                 name={`groups.${props.group}.permission.adding_option`}
+                render={({ field: { value, onChange } }) => (
+                  <JsonInput value={value} onChange={onChange} />
+                )}
+              />
+            </FormItem>
+          </div>
+          <div className="sm:col-span-6">
+            <FormItem
+              label="Voting"
+              error={
+                formState.errors?.groups?.[props.group]?.permission?.voting
+                  ?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`groups.${props.group}.permission.voting`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}

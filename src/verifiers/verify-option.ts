@@ -38,7 +38,7 @@ export default async function verifyOption(
       mapSnapshots(proposal.snapshots),
     ))
   ) {
-    throw new Error('does not have adding option rights')
+    throw new Error('does not have adding option permission')
   }
 
   return { option, proposal }

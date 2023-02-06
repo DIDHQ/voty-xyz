@@ -41,7 +41,7 @@ export default async function verifyProposal(json: object): Promise<{
       mapSnapshots(proposal.snapshots),
     ))
   ) {
-    throw new Error('does not have proposal rights')
+    throw new Error('does not have proposing permission')
   }
 
   return {
