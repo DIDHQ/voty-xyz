@@ -20,7 +20,6 @@ const ConnectButtonCustom = dynamic(
 )
 
 const navigation = [
-  { name: 'ph0ng.bit', href: '/ph0ng.bit', icon: HomeIcon, current: true },
   { name: 'regex.bit', href: '/regex.bit', icon: HomeIcon, current: true },
 ]
 
