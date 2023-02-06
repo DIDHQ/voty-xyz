@@ -23,7 +23,7 @@ export default async function verifyVote(
   )
 
   const votingPower = await calculateNumber(
-    group.voting_power,
+    group.permission.voting_power,
     vote.author.did as DID,
     mapSnapshots(proposal.snapshots),
   )

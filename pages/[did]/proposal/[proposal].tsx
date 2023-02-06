@@ -71,7 +71,7 @@ export default function ProposalPage() {
     group && did && proposal ? ['votingPower', group, did, proposal] : null,
     () =>
       calculateNumber(
-        group!.voting_power,
+        group!.permission.voting_power,
         did! as DID,
         mapSnapshots(proposal!.snapshots),
       ),

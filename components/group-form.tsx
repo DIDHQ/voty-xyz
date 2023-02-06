@@ -76,13 +76,15 @@ export default function GroupForm(props: {
       append(
         {
           name: '',
-          proposal_rights: {
-            operator: 'or',
-            operands: [],
-          },
-          voting_power: {
-            operator: 'sum',
-            operands: [],
+          permission: {
+            proposal_rights: {
+              operator: 'or',
+              operands: [],
+            },
+            voting_power: {
+              operator: 'sum',
+              operands: [],
+            },
           },
           timing: {
             publicity: 3600,
@@ -130,12 +132,13 @@ export default function GroupForm(props: {
             <FormItem
               label="Proposal rights"
               error={
-                formState.errors.groups?.[props.group]?.proposal_rights?.message
+                formState.errors.groups?.[props.group]?.permission
+                  ?.proposal_rights?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.group}.proposal_rights`}
+                name={`groups.${props.group}.permission.proposal_rights`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
@@ -146,12 +149,13 @@ export default function GroupForm(props: {
             <FormItem
               label="Voting power"
               error={
-                formState.errors?.groups?.[props.group]?.voting_power?.message
+                formState.errors?.groups?.[props.group]?.permission
+                  ?.voting_power?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.group}.voting_power`}
+                name={`groups.${props.group}.permission.voting_power`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
@@ -162,13 +166,13 @@ export default function GroupForm(props: {
             <FormItem
               label="Add option rights"
               error={
-                formState.errors.groups?.[props.group]?.add_option_rights
-                  ?.message
+                formState.errors.groups?.[props.group]?.permission
+                  ?.add_option_rights?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.group}.add_option_rights`}
+                name={`groups.${props.group}.permission.add_option_rights`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
