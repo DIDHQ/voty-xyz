@@ -4,12 +4,14 @@ import verifyAuthor from './verify-author'
 export default async function verifyCommunity(
   json: object,
 ): Promise<{ community: Authorized<Community> }> {
-  const community = communityWithAuthorSchema.safeParse(json)
-  if (!community.success) {
-    throw new Error(`schema error: ${community.error.message}`)
+  const parsed = communityWithAuthorSchema.safeParse(json)
+  if (!parsed.success) {
+    throw new Error(`schema error: ${parsed.error.message}`)
   }
 
-  await verifyAuthor(community.data)
+  const community = parsed.data
 
-  return { community: community.data }
+  await verifyAuthor(community)
+
+  return { community }
 }

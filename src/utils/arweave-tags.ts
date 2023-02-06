@@ -1,6 +1,6 @@
 import { DataType } from '../constants'
 import { Authorized, Community, Proposal, Vote } from '../schemas'
-import { isCommunity, isProposal, isVote } from './data-type'
+import { isCommunity, isOption, isProposal, isVote } from './data-type'
 
 export const defaultArweaveTags = {
   'content-type': 'application/json',
@@ -21,6 +21,13 @@ export function getArweaveTags(json: Authorized<Community | Proposal | Vote>) {
       'app-data-type': DataType.PROPOSAL,
       'app-index-community': json.community,
       'app-index-group': json.group.toString(),
+    }
+  }
+  if (isOption(json)) {
+    return {
+      ...defaultArweaveTags,
+      'app-data-type': DataType.OPTION,
+      'app-index-proposal': json.proposal,
     }
   }
   if (isVote(json)) {

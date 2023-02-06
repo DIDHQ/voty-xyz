@@ -5,6 +5,7 @@ import { DataType } from '../src/constants'
 import {
   communityWithAuthorSchema,
   proposalWithAuthorSchema,
+  optionWithAuthorSchema,
   voteWithAuthorSchema,
 } from '../src/schemas'
 
@@ -27,6 +28,8 @@ export default function useArweaveData<T extends DataType>(
         return communityWithAuthorSchema.parse(json)
       } else if (type === DataType.PROPOSAL) {
         return proposalWithAuthorSchema.parse(json)
+      } else if (type === DataType.OPTION) {
+        return optionWithAuthorSchema.parse(json)
       } else if (type === DataType.VOTE) {
         return voteWithAuthorSchema.parse(json)
       } else {

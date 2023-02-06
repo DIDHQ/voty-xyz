@@ -47,6 +47,22 @@ model Proposal {
   @@index([author])
 }
 
+model Option {
+  uri    String
+  ts     DateTime
+  author String
+
+  community String
+  group     Int
+  proposal  String
+
+  data Bytes
+
+  @@id([uri])
+  @@unique([proposal, author])
+  @@index([author])
+}
+
 model Vote {
   uri    String
   ts     DateTime

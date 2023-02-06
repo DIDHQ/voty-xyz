@@ -2,9 +2,15 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { getArweaveData } from '../../src/arweave'
 import { database } from '../../src/database'
-import { isCommunity, isProposal, isVote } from '../../src/utils/data-type'
+import {
+  isCommunity,
+  isProposal,
+  isOption,
+  isVote,
+} from '../../src/utils/data-type'
 import verifyCommunity from '../../src/verifiers/verify-community'
 import verifyProposal from '../../src/verifiers/verify-proposal'
+import verifyOption from '../../src/verifiers/verify-option'
 import verifyVote from '../../src/verifiers/verify-vote'
 
 const textEncoder = new TextEncoder()
@@ -61,6 +67,21 @@ export default async function handler(
           entry: community.author.did,
           community: proposal.community,
           group: proposal.group,
+          data,
+        },
+        update: {},
+      })
+    } else if (isOption(json)) {
+      const { option, proposal } = await verifyOption(json)
+      await database.option.upsert({
+        where: { uri },
+        create: {
+          uri,
+          ts,
+          author: option.author.did,
+          community: proposal.community,
+          group: proposal.group,
+          proposal: option.proposal,
           data,
         },
         update: {},

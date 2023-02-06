@@ -14,19 +14,22 @@ import verifyCommunity from './verify-community'
 export default async function verifyProposal(json: object): Promise<{
   proposal: Authorized<Proposal>
   community: Authorized<Community>
+  group: NonNullable<Community['groups']>[0]
 }> {
-  const proposal = proposalWithAuthorSchema.safeParse(json)
-  if (!proposal.success) {
-    throw new Error(`schema error: ${proposal.error.message}`)
+  const parsed = proposalWithAuthorSchema.safeParse(json)
+  if (!parsed.success) {
+    throw new Error(`schema error: ${parsed.error.message}`)
   }
 
-  await verifyAuthor(proposal.data)
+  const proposal = parsed.data
+
+  await verifyAuthor(proposal)
 
   const { community } = await verifyCommunity(
-    getArweaveData(proposal.data.community),
+    getArweaveData(proposal.community),
   )
 
-  const group = community.groups?.[proposal.data.group]
+  const group = community.groups?.[proposal.group]
   if (!group) {
     throw new Error('group not found')
   }
@@ -34,15 +37,16 @@ export default async function verifyProposal(json: object): Promise<{
   if (
     !(await checkBoolean(
       group.proposal_rights,
-      proposal.data.author.did as DID,
-      mapSnapshots(proposal.data.snapshots),
+      proposal.author.did as DID,
+      mapSnapshots(proposal.snapshots),
     ))
   ) {
     throw new Error('does not have proposal rights')
   }
 
   return {
-    proposal: proposal.data,
+    proposal,
     community,
+    group,
   }
 }

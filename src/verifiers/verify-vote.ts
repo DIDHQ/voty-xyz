@@ -9,30 +9,27 @@ import verifyProposal from './verify-proposal'
 export default async function verifyVote(
   json: object,
 ): Promise<{ vote: Authorized<Vote>; proposal: Authorized<Proposal> }> {
-  const vote = voteWithAuthorSchema.safeParse(json)
-  if (!vote.success) {
-    throw new Error(`schema error: ${vote.error.message}`)
+  const parsed = voteWithAuthorSchema.safeParse(json)
+  if (!parsed.success) {
+    throw new Error(`schema error: ${parsed.error.message}`)
   }
 
-  await verifyAuthor(vote.data)
+  const vote = parsed.data
 
-  const { proposal, community } = await verifyProposal(
-    getArweaveData(vote.data.proposal),
+  await verifyAuthor(vote)
+
+  const { proposal, group } = await verifyProposal(
+    getArweaveData(vote.proposal),
   )
-
-  const group = community.groups?.[proposal.group]
-  if (!group) {
-    throw new Error('group not found')
-  }
 
   const votingPower = await calculateNumber(
     group.voting_power,
-    vote.data.author.did as DID,
+    vote.author.did as DID,
     mapSnapshots(proposal.snapshots),
   )
-  if (votingPower !== vote.data.power) {
+  if (votingPower !== vote.power) {
     throw new Error('voting power not match')
   }
 
-  return { vote: vote.data, proposal }
+  return { vote, proposal }
 }

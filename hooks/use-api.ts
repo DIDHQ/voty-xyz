@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
 
 import { DataType } from '../src/constants'
-import { Authorized, Community, Proposal, Vote } from '../src/schemas'
+import { Authorized, Community, Proposal, Option, Vote } from '../src/schemas'
 import { fetchJson } from '../src/utils/fetcher'
 
 export function useRetrieve<T extends DataType>(type: T, uri?: string) {
@@ -14,6 +14,8 @@ export function useRetrieve<T extends DataType>(type: T, uri?: string) {
           ? Community
           : T extends DataType.PROPOSAL
           ? Proposal
+          : T extends DataType.OPTION
+          ? Option
           : T extends DataType.VOTE
           ? Vote
           : never
@@ -60,6 +62,21 @@ export function useListProposals(entry?: string, group?: string) {
         `/api/list/proposals?entry=${entry}&group=${group || ''}&next=${
           next || ''
         }`,
+      )
+    },
+  )
+}
+
+export function useListOptions(proposal?: string) {
+  return useSWRInfinite<{
+    data: (Authorized<Option> & { uri: string })[]
+    next?: string
+  }>(
+    (_pageIndex, previousPageData) =>
+      proposal ? [proposal, previousPageData?.next] : null,
+    ([proposal, next]) => {
+      return fetchJson(
+        `/api/list/options?proposal=${proposal}&next=${next || ''}`,
       )
     },
   )
