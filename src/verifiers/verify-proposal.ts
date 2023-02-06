@@ -36,7 +36,7 @@ export default async function verifyProposal(json: object): Promise<{
 
   if (
     !(await checkBoolean(
-      group.permission.submitting_proposal,
+      group.permission.proposing,
       proposal.author.did as DID,
       mapSnapshots(proposal.snapshots),
     ))

@@ -77,17 +77,17 @@ export default function GroupForm(props: {
         {
           name: '',
           permission: {
-            submitting_proposal: {
+            proposing: {
               operator: 'or',
               operands: [],
             },
-            voting_power: {
+            voting: {
               operator: 'sum',
               operands: [],
             },
           },
-          timing: {
-            publicity: 3600,
+          period: {
+            proposing: 3600,
             voting: 86400,
             adding_option: 86400,
           },
@@ -132,13 +132,13 @@ export default function GroupForm(props: {
             <FormItem
               label="Proposal rights"
               error={
-                formState.errors.groups?.[props.group]?.permission
-                  ?.submitting_proposal?.message
+                formState.errors.groups?.[props.group]?.permission?.proposing
+                  ?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.group}.permission.submitting_proposal`}
+                name={`groups.${props.group}.permission.proposing`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
@@ -149,13 +149,13 @@ export default function GroupForm(props: {
             <FormItem
               label="Voting power"
               error={
-                formState.errors?.groups?.[props.group]?.permission
-                  ?.voting_power?.message
+                formState.errors?.groups?.[props.group]?.permission?.voting
+                  ?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.group}.permission.voting_power`}
+                name={`groups.${props.group}.permission.voting`}
                 render={({ field: { value, onChange } }) => (
                   <JsonInput value={value} onChange={onChange} />
                 )}
@@ -181,22 +181,22 @@ export default function GroupForm(props: {
           </div>
           <div className="sm:col-span-2">
             <FormItem
-              label="Publicity"
+              label="Proposing"
               error={
-                formState.errors?.groups?.[props.group]?.timing?.publicity
+                formState.errors?.groups?.[props.group]?.period?.proposing
                   ?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.group}.timing.publicity`}
+                name={`groups.${props.group}.period.proposing`}
                 render={({ field: { value, onChange } }) => (
                   <DurationInput
                     value={value}
                     onChange={onChange}
                     error={
-                      !!formState.errors?.groups?.[props.group]?.timing
-                        ?.publicity
+                      !!formState.errors?.groups?.[props.group]?.period
+                        ?.proposing
                     }
                   />
                 )}
@@ -207,18 +207,18 @@ export default function GroupForm(props: {
             <FormItem
               label="Voting"
               error={
-                formState.errors?.groups?.[props.group]?.timing?.voting?.message
+                formState.errors?.groups?.[props.group]?.period?.voting?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.group}.timing.voting`}
+                name={`groups.${props.group}.period.voting`}
                 render={({ field: { value, onChange } }) => (
                   <DurationInput
                     value={value}
                     onChange={onChange}
                     error={
-                      !!formState.errors?.groups?.[props.group]?.timing?.voting
+                      !!formState.errors?.groups?.[props.group]?.period?.voting
                     }
                   />
                 )}
@@ -229,19 +229,19 @@ export default function GroupForm(props: {
             <FormItem
               label="Adding option"
               error={
-                formState.errors?.groups?.[props.group]?.timing?.adding_option
+                formState.errors?.groups?.[props.group]?.period?.adding_option
                   ?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.group}.timing.adding_option`}
+                name={`groups.${props.group}.period.adding_option`}
                 render={({ field: { value, onChange } }) => (
                   <DurationInput
                     value={value}
                     onChange={onChange}
                     error={
-                      !!formState.errors?.groups?.[props.group]?.timing
+                      !!formState.errors?.groups?.[props.group]?.period
                         ?.adding_option
                     }
                   />

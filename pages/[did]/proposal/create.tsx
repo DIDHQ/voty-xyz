@@ -64,10 +64,10 @@ export default function CreateProposalPage() {
     setValue('group', parseInt(query.group))
   }, [query.group, setValue])
   const { data: coinTypesOfNumberSets } = useSWR(
-    group?.permission.voting_power
-      ? ['requiredCoinTypesOfNumberSets', group.permission.voting_power]
+    group?.permission.voting
+      ? ['requiredCoinTypesOfNumberSets', group.permission.voting]
       : null,
-    () => requiredCoinTypesOfNumberSets(group!.permission.voting_power!),
+    () => requiredCoinTypesOfNumberSets(group!.permission.voting!),
   )
   const { data: snapshots } = useSWR(
     ['snapshots', coinTypesOfNumberSets],
