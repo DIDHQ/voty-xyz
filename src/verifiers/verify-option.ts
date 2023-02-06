@@ -14,15 +14,17 @@ import verifyProposal from './verify-proposal'
 export default async function verifyOption(
   json: object,
 ): Promise<{ option: Authorized<Option>; proposal: Authorized<Proposal> }> {
-  const option = optionWithAuthorSchema.safeParse(json)
-  if (!option.success) {
-    throw new Error(`schema error: ${option.error.message}`)
+  const parsed = optionWithAuthorSchema.safeParse(json)
+  if (!parsed.success) {
+    throw new Error(`schema error: ${parsed.error.message}`)
   }
 
-  await verifyAuthor(option.data)
+  const option = parsed.data
+
+  await verifyAuthor(option)
 
   const { proposal, group } = await verifyProposal(
-    getArweaveData(option.data.proposal),
+    getArweaveData(option.proposal),
   )
 
   if (!group.add_option_rights) {
@@ -32,12 +34,12 @@ export default async function verifyOption(
   if (
     !(await checkBoolean(
       group.add_option_rights,
-      option.data.author.did as DID,
+      option.author.did as DID,
       mapSnapshots(proposal.snapshots),
     ))
   ) {
     throw new Error('does not have adding option rights')
   }
 
-  return { option: option.data, proposal }
+  return { option, proposal }
 }
