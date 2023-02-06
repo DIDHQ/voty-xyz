@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@dotbit/plugin-avatar": "^0.0.1",
-    "@headlessui/react": "^1.7.8",
+    "@headlessui/react": "^1.7.9",
     "@heroicons/react": "^2.0.14",
     "@hookform/resolvers": "^2.9.10",
     "@nervosnetwork/ckb-sdk-core": "^0.103.1",
@@ -27,19 +27,19 @@
     "ethers": "^5.7.2",
     "immer": "^9.0.19",
     "lodash-es": "^4.17.21",
-    "nanoid": "^4.0.0",
+    "nanoid": "^4.0.1",
     "p-map": "^5.5.0",
-    "react-hook-form": "^7.42.1",
+    "react-hook-form": "^7.43.0",
     "swr": "^2.0.3",
     "tiny-invariant": "^1.3.1",
-    "wagmi": "^0.11.0",
+    "wagmi": "^0.11.4",
     "zod": "^3.20.2"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",
     "@typechain/ethers-v5": "^10.2.0",
     "@types/lodash-es": "^4.17.6",
-    "@types/node": "^18.11.18",
+    "@types/node": "^18.11.19",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "autoprefixer": "^10.4.13",
@@ -55,6 +55,6 @@
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.2.4",
     "typechain": "^8.1.1",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   }
 }
