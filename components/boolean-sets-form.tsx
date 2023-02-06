@@ -7,7 +7,7 @@ import {
   useFormContext,
 } from 'react-hook-form'
 
-import { BooleanSets, BooleanUnit } from '../src/schemas'
+import { BooleanSets } from '../src/schemas'
 import Button from './basic/button'
 import Select from './basic/select'
 import TextInput from './basic/text-input'
@@ -16,7 +16,7 @@ export default function BooleanSetsForm(props: {
   value?: BooleanSets
   onChange(value: BooleanSets): void
 }) {
-  const methods = useForm<BooleanSets>({ defaultValues: props.value })
+  const methods = useForm<BooleanSets>()
   const { reset, handleSubmit, watch } = methods
   useEffect(() => {
     reset(props.value)
@@ -25,7 +25,7 @@ export default function BooleanSetsForm(props: {
   return (
     <>
       <FormProvider {...methods}>
-        <BooleanSetsBlock path="" />
+        <BooleanSetsAndBlock />
       </FormProvider>
       <Button primary onClick={handleSubmit(props.onChange, console.error)}>
         Confirm
@@ -35,11 +35,8 @@ export default function BooleanSetsForm(props: {
   )
 }
 
-function BooleanSetsBlock<T extends string>(props: { path: T }) {
-  const { control } = useFormContext<{
-    operator: 'and' | 'or' | 'not'
-    operands: (BooleanSets | BooleanUnit)[]
-  }>()
+function BooleanSetsAndBlock() {
+  const { control } = useFormContext<BooleanSets>()
   const { fields, append } = useFieldArray({ control, name: 'operands' })
 
   return (
@@ -55,22 +52,9 @@ function BooleanSetsBlock<T extends string>(props: { path: T }) {
           />
         )}
       />
-      {fields.map((operand, index) =>
-        'function' in operand ? (
-          <BooleanUnitBlock
-            key={operand.function + index}
-            path={`${props.path}.${index}`}
-          />
-        ) : 'operator' in operand ? (
-          <BooleanSetsBlock
-            key={operand.operator + index}
-            path={`${props.path}.${index}`}
-          />
-        ) : null,
-      )}
-      <Button onClick={() => append({ function: '', arguments: [] })}>
-        Append Function
-      </Button>
+      {fields.map((operand, index) => (
+        <BooleanSetsOrBlock key={operand.operator + index} index={index} />
+      ))}
       <Button onClick={() => append({ operator: 'and', operands: [] })}>
         Append Operator
       </Button>
@@ -78,12 +62,48 @@ function BooleanSetsBlock<T extends string>(props: { path: T }) {
   )
 }
 
-function BooleanUnitBlock<T extends string>(props: { path: T }) {
+function BooleanSetsOrBlock(props: { index: number }) {
+  const { control } = useFormContext<BooleanSets>()
+  const { fields, append } = useFieldArray({
+    control,
+    name: `operands.${props.index}.operands`,
+  })
+
+  return (
+    <>
+      <Controller
+        control={control}
+        name={`operands.${props.index}.operator`}
+        render={({ field: { value, onChange } }) => (
+          <Select
+            options={['and', 'or', 'not']}
+            value={value}
+            onChange={onChange}
+          />
+        )}
+      />
+      {fields.map((operand, index) => (
+        <BooleanUnitBlock
+          key={operand.function + index}
+          i={props.index}
+          index={index}
+        />
+      ))}
+      <Button onClick={() => append({ function: '', arguments: [] })}>
+        Append Function
+      </Button>
+    </>
+  )
+}
+
+function BooleanUnitBlock(props: { i: number; index: number }) {
   const { register } = useFormContext<BooleanSets>()
 
   return (
     <>
-      <TextInput {...register(`${props.path}.function` as any)} />
+      <TextInput
+        {...register(`operands.${props.i}.operands.${props.index}.function`)}
+      />
     </>
   )
 }
