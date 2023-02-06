@@ -33,5 +33,6 @@ export const coinTypeToChainId: { [coinType: number]: number } = {
 export enum DataType {
   COMMUNITY = 'community',
   PROPOSAL = 'proposal',
+  OPTION = 'option',
   VOTE = 'vote',
 }

@@ -3,9 +3,15 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { arweave, idToURI } from '../../src/arweave'
 import { database } from '../../src/database'
 import { getArweaveTags } from '../../src/utils/arweave-tags'
-import { isCommunity, isProposal, isVote } from '../../src/utils/data-type'
+import {
+  isCommunity,
+  isProposal,
+  isOption,
+  isVote,
+} from '../../src/utils/data-type'
 import verifyCommunity from '../../src/verifiers/verify-community'
 import verifyProposal from '../../src/verifiers/verify-proposal'
+import verifyOption from '../../src/verifiers/verify-option'
 import verifyVote from '../../src/verifiers/verify-vote'
 
 const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
@@ -59,6 +65,19 @@ export default async function handler(
           entry: community.author.did,
           community: proposal.community,
           group: proposal.group,
+          data,
+        },
+      })
+    } else if (isOption(json)) {
+      const { option, proposal } = await verifyOption(json)
+      await database.option.create({
+        data: {
+          uri: idToURI(transaction.id),
+          ts,
+          author: option.author.did,
+          community: proposal.community,
+          group: proposal.group,
+          proposal: option.proposal,
           data,
         },
       })
