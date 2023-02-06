@@ -15,8 +15,7 @@ import DurationInput from './basic/duration-input'
 import FormItem from './basic/form-item'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
-import BooleanSetsSlide from './boolean-sets-slide'
-import NumberSetsSlide from './number-sets-slide'
+import Slide from './basic/slide'
 
 export default function GroupForm(props: {
   entry: string
@@ -142,11 +141,11 @@ export default function GroupForm(props: {
                   control={control}
                   name={`groups.${props.group}.permission.proposing`}
                   render={({ field: { value, onChange } }) => (
-                    <BooleanSetsSlide value={value} onChange={onChange}>
+                    <Slide value={value} onChange={onChange}>
                       {({ handleOpen }) => (
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
-                    </BooleanSetsSlide>
+                    </Slide>
                   )}
                 />
                 <Controller
@@ -179,11 +178,11 @@ export default function GroupForm(props: {
                   control={control}
                   name={`groups.${props.group}.permission.adding_option`}
                   render={({ field: { value, onChange } }) => (
-                    <BooleanSetsSlide value={value} onChange={onChange}>
+                    <Slide value={value} onChange={onChange}>
                       {({ handleOpen }) => (
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
-                    </BooleanSetsSlide>
+                    </Slide>
                   )}
                 />
                 <Controller
@@ -216,11 +215,11 @@ export default function GroupForm(props: {
                   control={control}
                   name={`groups.${props.group}.permission.voting`}
                   render={({ field: { value, onChange } }) => (
-                    <NumberSetsSlide value={value} onChange={onChange}>
+                    <Slide value={value} onChange={onChange}>
                       {({ handleOpen }) => (
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
-                    </NumberSetsSlide>
+                    </Slide>
                   )}
                 />
                 <Controller

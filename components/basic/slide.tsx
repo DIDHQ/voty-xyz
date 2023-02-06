@@ -2,14 +2,12 @@ import { Transition, Dialog } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { Fragment, ReactNode, useState } from 'react'
 
-import { BooleanSets } from '../src/schemas'
-
-export default function BooleanSetsSlide(props: {
-  value?: BooleanSets
-  onChange(value?: BooleanSets): void
+export default function Slide<T>(props: {
+  value?: T
+  onChange(value?: T): void
   children: ({ handleOpen }: { handleOpen: () => void }) => ReactNode
 }) {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
 
   return (
     <>
