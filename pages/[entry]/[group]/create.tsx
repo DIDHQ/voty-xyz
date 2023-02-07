@@ -103,7 +103,7 @@ export default function CreateProposalPage() {
   )
 
   return (
-    <div className="flex w-full flex-col px-8">
+    <div className="flex w-full flex-col">
       <div className="space-y-8 divide-y divide-gray-200">
         <div className="pt-8">
           <div>
