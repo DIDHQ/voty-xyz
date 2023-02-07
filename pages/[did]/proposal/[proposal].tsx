@@ -178,7 +178,7 @@ export default function ProposalPage() {
                             <span className="ml-2 w-0 flex-1 truncate">
                               {choice}
                             </span>
-                            <div className="ml-4 shrink-0">
+                            <div className="ml-4 shrink-0 leading-none">
                               {proposal.voting_type === 'single' ? (
                                 <input
                                   type="radio"
