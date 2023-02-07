@@ -17,6 +17,7 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import Slide from './basic/slide'
 import BooleanSetsForm from './boolean-sets-form'
+import NumberSetsForm from './number-sets-form'
 
 export default function GroupForm(props: {
   entry: string
@@ -243,7 +244,15 @@ export default function GroupForm(props: {
                         <Button onClick={handleOpen}>Permission</Button>
                       )}
                     >
-                      {() => null}
+                      {({ handleClose }) => (
+                        <NumberSetsForm
+                          value={value}
+                          onChange={(v) => {
+                            onChange(v)
+                            handleClose()
+                          }}
+                        />
+                      )}
                     </Slide>
                   )}
                 />
