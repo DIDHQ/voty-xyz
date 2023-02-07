@@ -2,18 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  overflow: auto !important;
-  height: auto !important;
-}
-
 * {
   box-sizing: border-box;
-}
-
-div#__next,
-div#__next > div[data-rk] {
-  height: 100%;
 }
 
 input::-webkit-outer-spin-button,

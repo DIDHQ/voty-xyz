@@ -23,7 +23,7 @@ export default function Toolbar() {
       <div className="flex h-18 max-w-5xl flex-1 items-center justify-between">
         <Breadcrumbs />
         <ConnectButtonCustom>
-          {({ openConnectModal }) =>
+          {({ openConnectModal, connectModalOpen }) =>
             account ? (
               <Link href="/settings" className="group block shrink-0">
                 <div className="flex items-center overflow-hidden">
@@ -39,7 +39,11 @@ export default function Toolbar() {
                 </div>
               </Link>
             ) : (
-              <Button primary onClick={openConnectModal}>
+              <Button
+                primary
+                loading={connectModalOpen}
+                onClick={openConnectModal}
+              >
                 Connect Wallet
               </Button>
             )

@@ -13,7 +13,7 @@ export default function SettingsPage() {
   }, [disconnect, router])
 
   return (
-    <main className="flex-1 overflow-hidden py-8">
+    <main className="flex-1 py-8">
       <Button key="1" onClick={handleDisconnect}>
         Disconnect
       </Button>

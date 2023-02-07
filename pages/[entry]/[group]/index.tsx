@@ -40,7 +40,7 @@ export default function GroupIndexPage() {
   }, [community?.groups?.length, query.entry, router])
 
   return community?.extension ? (
-    <main className="flex flex-1 overflow-hidden">
+    <main className="flex flex-1">
       <aside className="hidden lg:order-first lg:block lg:shrink-0">
         <div className="relative flex h-full w-96 flex-col overflow-y-auto border-r border-gray-200 bg-white">
           <div className="m-8 mb-0 flex items-start">
