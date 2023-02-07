@@ -5,14 +5,12 @@ import Toolbar from './toolbar'
 
 export default function Layout(props: { children: ReactNode }) {
   return (
-    <main className="flex h-screen">
+    <>
       <Sidebar />
-      <div className="flex flex-1 flex-col items-center">
-        <Toolbar />
-        <div className="min-h-screen w-full overflow-y-auto">
-          <div className="mx-auto w-full max-w-5xl">{props.children}</div>
-        </div>
+      <Toolbar />
+      <div className="mx-auto w-full p-18 pl-36">
+        <div className="mx-auto w-full max-w-5xl">{props.children}</div>
       </div>
-    </main>
+    </>
   )
 }

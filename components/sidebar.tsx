@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function Sidebar() {
   return (
-    <aside className="flex h-screen w-18 shrink-0 flex-col items-center border-r">
+    <aside className="fixed left-0 z-50 flex h-screen w-18 flex-col items-center border-r">
       <Link
         href="/"
         className="flex h-18 w-18 cursor-pointer items-center justify-center border-b"
