@@ -51,7 +51,7 @@ export default function ProposalPage() {
     resolver: zodResolver(voteSchema),
   })
   const handleSignJson = useSignJson(did)
-  const handleArweaveUpload = useUpload()
+  const handleUpload = useUpload()
   const handleSubmit = useAsync(
     useCallback(
       async (json: Vote) => {
@@ -59,9 +59,9 @@ export default function ProposalPage() {
         if (!signed) {
           throw new Error('signature failed')
         }
-        await handleArweaveUpload(signed)
+        await handleUpload(signed)
       },
-      [handleArweaveUpload, handleSignJson],
+      [handleUpload, handleSignJson],
     ),
   )
   useEffect(() => {
@@ -114,11 +114,11 @@ export default function ProposalPage() {
               </dd>
             </div>
             <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-500">Start Time</dt>
+              <dt className="text-sm font-medium text-gray-500">Start time</dt>
               <dd className="mt-1 text-sm text-gray-900">-</dd>
             </div>
             <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-500">End Time</dt>
+              <dt className="text-sm font-medium text-gray-500">End time</dt>
               <dd className="mt-1 text-sm text-gray-900">-</dd>
             </div>
             {proposal.extension?.body ? (

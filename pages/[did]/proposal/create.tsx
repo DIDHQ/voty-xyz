@@ -88,7 +88,7 @@ export default function CreateProposalPage() {
   const [did, setDid] = useState('')
   const { account } = useWallet()
   const handleSignJson = useSignJson(did)
-  const handleArweaveUpload = useUpload()
+  const handleUpload = useUpload()
   const handleSubmit = useAsync(
     useCallback(
       async (json: Proposal) => {
@@ -96,9 +96,9 @@ export default function CreateProposalPage() {
         if (!signed) {
           throw new Error('signature failed')
         }
-        await handleArweaveUpload(signed)
+        await handleUpload(signed)
       },
-      [handleArweaveUpload, handleSignJson],
+      [handleUpload, handleSignJson],
     ),
   )
 

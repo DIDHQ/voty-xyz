@@ -43,7 +43,7 @@ export default function GroupForm(props: {
   const { account } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
   const handleSignJson = useSignJson(props.entry)
-  const handleArweaveUpload = useUpload()
+  const handleUpload = useUpload()
   const { data: resolved } = useResolveDid(
     props.entry,
     account?.coinType,
@@ -64,9 +64,9 @@ export default function GroupForm(props: {
         if (!signed) {
           throw new Error('signature failed')
         }
-        await handleArweaveUpload(signed)
+        await handleUpload(signed)
       },
-      [handleArweaveUpload, handleSignJson],
+      [handleUpload, handleSignJson],
     ),
   )
   const isNew = useMemo(
