@@ -19,7 +19,7 @@ export default function CreateCommunityPage() {
   const { data: config } = useDidConfig(did)
 
   return (
-    <div className="p-8">
+    <div className="py-8">
       <FormItem label="DID" description="select an DID as your community entry">
         <DidSelect account={account} value={did} onChange={setDid} />
       </FormItem>

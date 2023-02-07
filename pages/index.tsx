@@ -11,7 +11,7 @@ export default function IndexPage() {
   const communities = useMemo(() => data?.flatMap(({ data }) => data), [data])
 
   return account ? (
-    <div className="p-8">
+    <div className="py-8">
       <Link href="/create">
         <Button primary>New Community</Button>
       </Link>
