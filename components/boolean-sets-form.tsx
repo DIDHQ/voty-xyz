@@ -51,7 +51,7 @@ function BooleanSetsAndBlock() {
   return (
     <>
       {fields.map((operand, index) => (
-        <Fragment key={operand.operator + index}>
+        <Fragment key={operand.id}>
           <BooleanSetsOrBlock index={index} />
           <Button onClick={() => remove(index)}>-</Button>
         </Fragment>
@@ -80,7 +80,7 @@ function BooleanSetsOrBlock(props: { index: number }) {
   return (
     <>
       {fields.map((operand, index) => (
-        <Fragment key={operand.function + index}>
+        <Fragment key={operand.id}>
           <BooleanUnitBlock i={props.index} index={index} />
           <Button onClick={() => remove(index)}>-</Button>
         </Fragment>
