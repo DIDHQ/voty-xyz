@@ -5,8 +5,12 @@ import { uniq, without } from 'lodash-es'
 import useSWR from 'swr'
 
 import DidSelect from '../../../components/did-select'
-import { useImport, useListVotes, useRetrieve } from '../../../hooks/use-api'
-import useArweaveUpload from '../../../hooks/use-arweave-upload'
+import {
+  useImport,
+  useListVotes,
+  useRetrieve,
+  useUpload,
+} from '../../../hooks/use-api'
 import useAsync from '../../../hooks/use-async'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useSignJson from '../../../hooks/use-sign-json'
@@ -47,7 +51,7 @@ export default function ProposalPage() {
     resolver: zodResolver(voteSchema),
   })
   const handleSignJson = useSignJson(did)
-  const handleArweaveUpload = useArweaveUpload()
+  const handleArweaveUpload = useUpload()
   const handleSubmit = useAsync(
     useCallback(
       async (json: Vote) => {

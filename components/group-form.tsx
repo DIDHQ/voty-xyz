@@ -3,7 +3,6 @@ import { nanoid } from 'nanoid'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 
-import useArweaveUpload from '../hooks/use-arweave-upload'
 import useAsync from '../hooks/use-async'
 import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import useResolveDid from '../hooks/use-resolve-did'
@@ -18,6 +17,7 @@ import Textarea from './basic/textarea'
 import Slide from './basic/slide'
 import BooleanSetsForm from './boolean-sets-form'
 import NumberSetsForm from './number-sets-form'
+import { useUpload } from '../hooks/use-api'
 
 export default function GroupForm(props: {
   entry: string
@@ -43,7 +43,7 @@ export default function GroupForm(props: {
   const { account } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
   const handleSignJson = useSignJson(props.entry)
-  const handleArweaveUpload = useArweaveUpload()
+  const handleArweaveUpload = useUpload()
   const { data: resolved } = useResolveDid(
     props.entry,
     account?.coinType,

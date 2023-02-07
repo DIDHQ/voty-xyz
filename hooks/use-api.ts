@@ -25,6 +25,19 @@ export function useRetrieve<T extends DataType>(type: T, uri?: string) {
   })
 }
 
+export function useUpload<T extends Authorized<Community | Proposal | Vote>>() {
+  return useCallback(async (json: T) => {
+    const textEncoder = new TextEncoder()
+    const body = textEncoder.encode(JSON.stringify(json))
+    const { uri } = await fetchJson<{ uri: string }>('/api/upload', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body,
+    })
+    return uri
+  }, [])
+}
+
 export function useImport(uri?: string) {
   return useCallback(async () => {
     if (!uri) {

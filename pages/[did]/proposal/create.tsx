@@ -8,7 +8,6 @@ import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import DidSelect from '../../../components/did-select'
 import FormItem from '../../../components/basic/form-item'
 import useRouterQuery from '../../../hooks/use-router-query'
-import useArweaveUpload from '../../../hooks/use-arweave-upload'
 import useAsync from '../../../hooks/use-async'
 import useDidConfig from '../../../hooks/use-did-config'
 import useSignJson from '../../../hooks/use-sign-json'
@@ -20,7 +19,7 @@ import Button from '../../../components/basic/button'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
 import Select from '../../../components/basic/select'
-import { useRetrieve } from '../../../hooks/use-api'
+import { useRetrieve, useUpload } from '../../../hooks/use-api'
 import { DataType } from '../../../src/constants'
 
 export default function CreateProposalPage() {
@@ -89,7 +88,7 @@ export default function CreateProposalPage() {
   const [did, setDid] = useState('')
   const { account } = useWallet()
   const handleSignJson = useSignJson(did)
-  const handleArweaveUpload = useArweaveUpload()
+  const handleArweaveUpload = useUpload()
   const handleSubmit = useAsync(
     useCallback(
       async (json: Proposal) => {

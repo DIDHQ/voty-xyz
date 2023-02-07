@@ -38,6 +38,9 @@ export default async function handler(
 
     if (isCommunity(json)) {
       const { community } = await verifyCommunity(json)
+      while (!uploader.isComplete) {
+        await uploader.uploadChunk()
+      }
       await database.$transaction([
         database.entry.upsert({
           where: { did: community.author.did },
@@ -57,6 +60,9 @@ export default async function handler(
       ])
     } else if (isProposal(json)) {
       const { proposal, community } = await verifyProposal(json)
+      while (!uploader.isComplete) {
+        await uploader.uploadChunk()
+      }
       await database.proposal.create({
         data: {
           uri: idToURI(transaction.id),
@@ -70,6 +76,9 @@ export default async function handler(
       })
     } else if (isOption(json)) {
       const { option, proposal } = await verifyOption(json)
+      while (!uploader.isComplete) {
+        await uploader.uploadChunk()
+      }
       await database.option.create({
         data: {
           uri: idToURI(transaction.id),
@@ -83,6 +92,9 @@ export default async function handler(
       })
     } else if (isVote(json)) {
       const { vote, proposal } = await verifyVote(json)
+      while (!uploader.isComplete) {
+        await uploader.uploadChunk()
+      }
       await database.vote.create({
         data: {
           uri: idToURI(transaction.id),
@@ -98,7 +110,7 @@ export default async function handler(
       throw new Error('sign type not supported')
     }
 
-    res.status(200).json(uploader)
+    res.status(200).json({ uri })
   } catch (err) {
     if (err instanceof Error) {
       res.status(500).send(err.message)

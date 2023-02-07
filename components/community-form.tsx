@@ -9,11 +9,11 @@ import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import FormItem from './basic/form-item'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignJson from '../hooks/use-sign-json'
-import useArweaveUpload from '../hooks/use-arweave-upload'
 import useWallet from '../hooks/use-wallet'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import Button from './basic/button'
+import { useUpload } from '../hooks/use-api'
 
 export default function CommunityForm(props: {
   entry: string
@@ -34,7 +34,7 @@ export default function CommunityForm(props: {
   const { account } = useWallet()
   const { data: snapshot } = useCurrentSnapshot(account?.coinType)
   const handleSignJson = useSignJson(props.entry)
-  const handleArweaveUpload = useArweaveUpload()
+  const handleArweaveUpload = useUpload()
   const { data: resolved } = useResolveDid(
     props.entry,
     account?.coinType,
