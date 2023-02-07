@@ -13,7 +13,9 @@ export default function ProposalListItem(props: {
 }) {
   return (
     <Link
-      href={`/${props.entry}/proposal/${encodeURIComponent(props.value.uri)}`}
+      href={`/${props.entry}/${props.value.group}/${encodeURIComponent(
+        props.value.uri,
+      )}`}
       className="block hover:bg-gray-100"
     >
       <div className="p-4 sm:px-6">
