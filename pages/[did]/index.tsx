@@ -35,7 +35,9 @@ export default function CommunityIndexPage() {
   const proposals = useMemo(() => data?.flatMap(({ data }) => data), [data])
   const router = useRouter()
   const handleCreateGroup = useCallback(() => {
-    router.push(`/${query.did}/settings?group=${community?.groups?.length}`)
+    router.push(
+      `/${query.did}/settings?group=${community?.groups?.length || 0}`,
+    )
   }, [community?.groups?.length, query.did, router])
 
   return community?.extension ? (
@@ -181,10 +183,12 @@ export default function CommunityIndexPage() {
           </div>
           {group ? (
             <div className="mt-3 flex shrink-0 space-x-4 sm:mt-0 sm:ml-4">
-              <Link href={`/${query.did}/settings?group=${query.group}`}>
+              <Link href={`/${query.did}/settings?group=${query.group || 0}`}>
                 <Button>Settings</Button>
               </Link>
-              <Link href={`/${query.did}/proposal/create?group=${query.group}`}>
+              <Link
+                href={`/${query.did}/proposal/create?group=${query.group || 0}`}
+              >
                 <Button primary>New Proposal</Button>
               </Link>
             </div>

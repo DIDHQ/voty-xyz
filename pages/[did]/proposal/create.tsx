@@ -70,7 +70,7 @@ export default function CreateProposalPage() {
     () => requiredCoinTypesOfNumberSets(group!.permission.voting!),
   )
   const { data: snapshots } = useSWR(
-    ['snapshots', coinTypesOfNumberSets],
+    coinTypesOfNumberSets ? ['snapshots', coinTypesOfNumberSets] : null,
     async () => {
       const snapshots = await pMap(coinTypesOfNumberSets!, getCurrentSnapshot, {
         concurrency: 5,

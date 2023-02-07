@@ -164,7 +164,7 @@ export default function ProposalPage() {
                                 <input
                                   type="radio"
                                   checked={JSON.stringify(choice) === value}
-                                  onClick={() => null}
+                                  onChange={() => null}
                                   className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                               ) : (
@@ -173,7 +173,7 @@ export default function ProposalPage() {
                                   checked={(
                                     JSON.parse(choice) as string[]
                                   ).includes(choice)}
-                                  onClick={() => null}
+                                  onChange={() => null}
                                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                               )}
