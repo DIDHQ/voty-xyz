@@ -24,10 +24,11 @@ export async function checkBoolean(
   if ('operator' in data) {
     const results = await pMap(
       data.operands,
-      (operand) => checkBoolean(operand, did, snapshots),
+      (operand) =>
+        checkBoolean(operand as unknown as BooleanSets, did, snapshots),
       { concurrency: 5 },
     )
-    if (data.operator === 'and') {
+    if ((data.operator as 'and' | 'or') === 'and') {
       return results.every((result) => result)
     } else if (data.operator === 'or') {
       return results.some((result) => result)
@@ -48,7 +49,7 @@ export function requiredCoinTypesOfBooleanSets(
   if ('operator' in data) {
     return uniq(
       Array.from(data.operands).flatMap((operand) =>
-        requiredCoinTypesOfBooleanSets(operand),
+        requiredCoinTypesOfBooleanSets(operand as unknown as BooleanSets),
       ),
     )
   }
