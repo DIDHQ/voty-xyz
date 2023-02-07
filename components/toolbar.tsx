@@ -5,6 +5,7 @@ import Button from './basic/button'
 import useWallet from '../hooks/use-wallet'
 import Link from 'next/link'
 import Avatar from './basic/avatar'
+import Breadcrumbs from './breadcrumbs'
 
 const ConnectButtonCustom = dynamic(
   () =>
@@ -20,7 +21,7 @@ export default function Toolbar() {
   return (
     <header className="flex h-18 w-full shrink-0 justify-center border-b px-4">
       <div className="flex h-18 max-w-5xl flex-1 items-center justify-between">
-        <h1 className="text-xl">Voty</h1>
+        <Breadcrumbs />
         <ConnectButtonCustom>
           {({ openConnectModal }) =>
             account ? (
