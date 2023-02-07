@@ -10,6 +10,7 @@ import {
 import { BooleanSets } from '../src/schemas'
 import Button from './basic/button'
 import Select from './basic/select'
+import JsonInput from './json-input'
 
 export default function BooleanSetsForm(props: {
   value?: BooleanSets
@@ -106,6 +107,13 @@ function BooleanUnitBlock(props: { i: number; index: number }) {
             value={value}
             onChange={onChange}
           />
+        )}
+      />
+      <Controller
+        control={control}
+        name={`operands.${props.i}.operands.${props.index}.arguments`}
+        render={({ field: { value, onChange } }) => (
+          <JsonInput value={value} onChange={onChange} />
         )}
       />
     </>

@@ -10,6 +10,7 @@ import {
 import { NumberSets } from '../src/schemas'
 import Button from './basic/button'
 import Select from './basic/select'
+import JsonInput from './json-input'
 
 export default function NumberSetsForm(props: {
   value?: NumberSets
@@ -82,6 +83,13 @@ function NumberUnitBlock(props: { index: number }) {
             value={value}
             onChange={onChange}
           />
+        )}
+      />
+      <Controller
+        control={control}
+        name={`operands.${props.index}.arguments`}
+        render={({ field: { value, onChange } }) => (
+          <JsonInput value={value} onChange={onChange} />
         )}
       />
     </>
