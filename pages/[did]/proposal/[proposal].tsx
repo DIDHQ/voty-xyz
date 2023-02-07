@@ -164,7 +164,9 @@ export default function ProposalPage() {
                               if (proposal.voting_type === 'single') {
                                 onChange(JSON.stringify(choice))
                               } else {
-                                const old = JSON.parse(value) as string[]
+                                const old = JSON.parse(
+                                  value || '[]',
+                                ) as string[]
                                 onChange(
                                   JSON.stringify(
                                     old.includes(choice)
@@ -190,7 +192,7 @@ export default function ProposalPage() {
                                 <input
                                   type="checkbox"
                                   checked={(
-                                    JSON.parse(choice) as string[]
+                                    JSON.parse(value || '[]') as string[]
                                   ).includes(choice)}
                                   onChange={() => null}
                                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
