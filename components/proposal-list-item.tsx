@@ -8,12 +8,12 @@ import Link from 'next/link'
 import { Authorized, Proposal } from '../src/schemas'
 
 export default function ProposalListItem(props: {
-  did: string
+  entry: string
   value: Authorized<Proposal> & { uri: string }
 }) {
   return (
     <Link
-      href={`/${props.did}/proposal/${encodeURIComponent(props.value.uri)}`}
+      href={`/${props.entry}/proposal/${encodeURIComponent(props.value.uri)}`}
       className="block hover:bg-gray-100"
     >
       <div className="p-4 sm:px-6">

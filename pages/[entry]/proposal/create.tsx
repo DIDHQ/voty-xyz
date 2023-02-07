@@ -35,8 +35,8 @@ export default function CreateProposalPage() {
     resolver: zodResolver(proposalSchema),
     defaultValues: { options: [''] },
   })
-  const [query] = useRouterQuery<['did', 'group']>()
-  const { data: config } = useDidConfig(query.did)
+  const [query] = useRouterQuery<['entry', 'group']>()
+  const { data: config } = useDidConfig(query.entry)
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const group = useMemo(
     () =>

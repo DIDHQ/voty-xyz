@@ -18,8 +18,8 @@ import Alert from '../../components/basic/alert'
 import useAsync from '../../hooks/use-async'
 
 export default function CommunityIndexPage() {
-  const [query] = useRouterQuery<['did', 'group']>()
-  const { data: config } = useDidConfig(query.did)
+  const [query] = useRouterQuery<['entry', 'group']>()
+  const { data: config } = useDidConfig(query.entry)
   const { data } = useArweaveData(DataType.COMMUNITY, config?.community)
   const handleImport = useAsync(useImport(config?.community))
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
@@ -28,14 +28,14 @@ export default function CommunityIndexPage() {
       query.group ? community?.groups?.[parseInt(query.group)] : undefined,
     [community?.groups, query.group],
   )
-  const { data: list } = useListProposals(query.did, query.group)
+  const { data: list } = useListProposals(query.entry, query.group)
   const proposals = useMemo(() => list?.flatMap(({ data }) => data), [list])
   const router = useRouter()
   const handleCreateGroup = useCallback(() => {
     router.push(
-      `/${query.did}/settings?group=${community?.groups?.length || 0}`,
+      `/${query.entry}/settings?group=${community?.groups?.length || 0}`,
     )
-  }, [community?.groups?.length, query.did, router])
+  }, [community?.groups?.length, query.entry, router])
 
   return community?.extension ? (
     <main className="flex flex-1 overflow-hidden">
@@ -44,7 +44,7 @@ export default function CommunityIndexPage() {
           <div className="m-8 mb-0 flex items-start">
             <Avatar
               size={16}
-              name={query.did}
+              name={query.entry}
               value={community.extension.avatar}
             />
             <div className="ml-4">
@@ -91,7 +91,7 @@ export default function CommunityIndexPage() {
             ) : null}
           </div>
           <div className="mx-8 flex space-x-4">
-            <Link href={`/${query.did}/settings`}>
+            <Link href={`/${query.entry}/settings`}>
               <Button>Settings</Button>
             </Link>
             <Button onClick={handleCreateGroup}>New Group</Button>
@@ -108,7 +108,7 @@ export default function CommunityIndexPage() {
               <div className="flex justify-between space-x-3">
                 <div className="min-w-0 flex-1">
                   <Link
-                    href={`/${query.did}`}
+                    href={`/${query.entry}`}
                     className="block focus:outline-none"
                   >
                     <span className="absolute inset-0" aria-hidden="true" />
@@ -132,7 +132,7 @@ export default function CommunityIndexPage() {
                 <div className="flex justify-between space-x-3">
                   <div className="min-w-0 flex-1">
                     <Link
-                      href={`/${query.did}?group=${index}`}
+                      href={`/${query.entry}?group=${index}`}
                       className="block focus:outline-none"
                     >
                       <span className="absolute inset-0" aria-hidden="true" />
@@ -180,11 +180,13 @@ export default function CommunityIndexPage() {
           </div>
           {group ? (
             <div className="mt-3 flex shrink-0 space-x-4 sm:mt-0 sm:ml-4">
-              <Link href={`/${query.did}/settings?group=${query.group || 0}`}>
+              <Link href={`/${query.entry}/settings?group=${query.group || 0}`}>
                 <Button>Settings</Button>
               </Link>
               <Link
-                href={`/${query.did}/proposal/create?group=${query.group || 0}`}
+                href={`/${query.entry}/proposal/create?group=${
+                  query.group || 0
+                }`}
               >
                 <Button primary>New Proposal</Button>
               </Link>
@@ -196,8 +198,8 @@ export default function CommunityIndexPage() {
         <ul role="list" className="divide-y divide-gray-200">
           {proposals?.map((proposal) => (
             <li key={proposal.uri}>
-              {query.did ? (
-                <ProposalListItem did={query.did} value={proposal} />
+              {query.entry ? (
+                <ProposalListItem entry={query.entry} value={proposal} />
               ) : null}
             </li>
           ))}
