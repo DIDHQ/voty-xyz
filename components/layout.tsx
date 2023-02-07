@@ -9,7 +9,7 @@ export default function Layout(props: { children: ReactNode }) {
       <Sidebar />
       <div className="flex flex-1 flex-col items-center">
         <Toolbar />
-        <div className="w-full overflow-y-auto">
+        <div className="min-h-screen w-full overflow-y-auto">
           <div className="mx-auto w-full max-w-5xl">{props.children}</div>
         </div>
       </div>
