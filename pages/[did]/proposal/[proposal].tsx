@@ -88,7 +88,7 @@ export default function ProposalPage() {
   }, [resetField, setValue, votingPower])
 
   return query.proposal && proposal && group ? (
-    <div className="p-8">
+    <div className="py-8">
       <div className="overflow-hidden bg-white shadow sm:rounded-lg">
         <div className="px-4 py-5 sm:px-6">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
@@ -250,7 +250,7 @@ export default function ProposalPage() {
       text="This proposal exists on the blockchain, but not imported into Voty."
       action="Import"
       onClick={handleImport.execute}
-      className="m-4"
+      className="mt-4"
     />
   ) : null
 }

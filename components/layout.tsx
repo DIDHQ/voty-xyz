@@ -1,8 +1,18 @@
-import dynamic from 'next/dynamic'
 import { ReactNode } from 'react'
 
-const Sidebar = dynamic(() => import('../components/sidebar'), { ssr: false })
+import Sidebar from './sidebar'
+import Toolbar from './toolbar'
 
 export default function Layout(props: { children: ReactNode }) {
-  return <Sidebar>{props.children}</Sidebar>
+  return (
+    <main className="flex h-screen">
+      <Sidebar />
+      <div className="flex flex-1 flex-col items-center">
+        <Toolbar />
+        <div className="min-h-screen w-full overflow-y-auto">
+          <div className="mx-auto w-full max-w-5xl">{props.children}</div>
+        </div>
+      </div>
+    </main>
+  )
 }

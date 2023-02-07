@@ -210,7 +210,7 @@ export default function CommunityIndexPage() {
       text="This community exists on the blockchain, but not imported into Voty."
       action="Import"
       onClick={handleImport.execute}
-      className="m-4"
+      className="mt-4"
     />
   ) : null
 }

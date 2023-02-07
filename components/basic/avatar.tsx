@@ -7,18 +7,20 @@ export default function Avatar(props: {
   value?: string
   className?: string
 }) {
+  const size = `${props.size / 4}rem`
+
   return props.value ? (
     <img
       src={props.value}
       alt={props.name}
-      width={props.size * 4}
-      height={props.size * 4}
-      style={{ width: props.size * 4, height: props.size * 4 }}
+      width={size}
+      height={size}
+      style={{ width: size, height: size }}
       className={clsx('rounded-full object-cover', props.className)}
     />
   ) : (
     <div className={clsx('overflow-hidden rounded-full', props.className)}>
-      <BoringAvatar size={props.size * 4} name={props.name} />
+      <BoringAvatar size={size} name={props.name} />
     </div>
   )
 }
