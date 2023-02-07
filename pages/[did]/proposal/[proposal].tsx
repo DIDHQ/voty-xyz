@@ -23,13 +23,12 @@ import Button from '../../../components/basic/button'
 import { DataType } from '../../../src/constants'
 import useArweaveData from '../../../hooks/use-arweave-data'
 import Alert from '../../../components/basic/alert'
+import useStatus from '../../../hooks/use-status'
 
 export default function ProposalPage() {
   const [query] = useRouterQuery<['proposal']>()
-  const { data: arweaveData } = useArweaveData(
-    DataType.PROPOSAL,
-    query.proposal,
-  )
+  const { data } = useArweaveData(DataType.PROPOSAL, query.proposal)
+  const { data: status } = useStatus(query.proposal)
   const handleImport = useAsync(useImport(query.proposal))
   const { data: proposal } = useRetrieve(DataType.PROPOSAL, query.proposal)
   const { data: community } = useRetrieve(
@@ -69,8 +68,8 @@ export default function ProposalPage() {
       setValue('proposal', query.proposal)
     }
   }, [query.proposal, setValue])
-  const { data } = useListVotes(query.proposal)
-  const votes = useMemo(() => data?.flatMap(({ data }) => data), [data])
+  const { data: list } = useListVotes(query.proposal)
+  const votes = useMemo(() => list?.flatMap(({ data }) => data), [list])
   const { data: votingPower, isValidating } = useSWR(
     group && did && proposal ? ['votingPower', group, did, proposal] : null,
     () =>
@@ -88,7 +87,7 @@ export default function ProposalPage() {
     }
   }, [resetField, setValue, votingPower])
 
-  return query.proposal && proposal ? (
+  return query.proposal && proposal && group ? (
     <div className="p-8">
       <div className="overflow-hidden bg-white shadow sm:rounded-lg">
         <div className="px-4 py-5 sm:px-6">
@@ -115,11 +114,27 @@ export default function ProposalPage() {
             </div>
             <div className="sm:col-span-1">
               <dt className="text-sm font-medium text-gray-500">Start time</dt>
-              <dd className="mt-1 text-sm text-gray-900">-</dd>
+              <dd className="mt-1 text-sm text-gray-900">
+                {status?.timestamp
+                  ? new Date(
+                      (status.timestamp + group.period.proposing) * 1000,
+                    ).toLocaleString([], { hour12: false })
+                  : '-'}
+              </dd>
             </div>
             <div className="sm:col-span-1">
               <dt className="text-sm font-medium text-gray-500">End time</dt>
-              <dd className="mt-1 text-sm text-gray-900">-</dd>
+              <dd className="mt-1 text-sm text-gray-900">
+                {status?.timestamp
+                  ? new Date(
+                      (status.timestamp +
+                        group.period.proposing +
+                        (group.period.adding_option || 0) +
+                        group.period.voting) *
+                        1000,
+                    ).toLocaleString([], { hour12: false })
+                  : '-'}
+              </dd>
             </div>
             {proposal.extension?.body ? (
               <div className="sm:col-span-2">
@@ -227,7 +242,7 @@ export default function ProposalPage() {
         ))}
       </ul>
     </div>
-  ) : arweaveData ? (
+  ) : data ? (
     <Alert
       type="info"
       text="This proposal exists on the blockchain, but not imported into Voty."

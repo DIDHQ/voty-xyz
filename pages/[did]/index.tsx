@@ -20,10 +20,7 @@ import useAsync from '../../hooks/use-async'
 export default function CommunityIndexPage() {
   const [query] = useRouterQuery<['did', 'group']>()
   const { data: config } = useDidConfig(query.did)
-  const { data: arweaveData } = useArweaveData(
-    DataType.PROPOSAL,
-    config?.community,
-  )
+  const { data } = useArweaveData(DataType.COMMUNITY, config?.community)
   const handleImport = useAsync(useImport(config?.community))
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const group = useMemo(
@@ -31,8 +28,8 @@ export default function CommunityIndexPage() {
       query.group ? community?.groups?.[parseInt(query.group)] : undefined,
     [community?.groups, query.group],
   )
-  const { data } = useListProposals(query.did, query.group)
-  const proposals = useMemo(() => data?.flatMap(({ data }) => data), [data])
+  const { data: list } = useListProposals(query.did, query.group)
+  const proposals = useMemo(() => list?.flatMap(({ data }) => data), [list])
   const router = useRouter()
   const handleCreateGroup = useCallback(() => {
     router.push(
@@ -207,7 +204,7 @@ export default function CommunityIndexPage() {
         </ul>
       </section>
     </main>
-  ) : arweaveData ? (
+  ) : data ? (
     <Alert
       type="info"
       text="This community exists on the blockchain, but not imported into Voty."
