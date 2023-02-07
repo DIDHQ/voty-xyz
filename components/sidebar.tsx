@@ -2,10 +2,10 @@ import Link from 'next/link'
 
 export default function Sidebar() {
   return (
-    <nav className="flex h-screen w-18 shrink-0 flex-col items-center gap-3 border-r py-3">
+    <nav className="flex h-screen w-18 shrink-0 flex-col items-center border-r">
       <Link
         href="/"
-        className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border"
+        className="flex h-18 w-18 cursor-pointer items-center justify-center border-b"
       >
         <img
           src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
@@ -13,7 +13,6 @@ export default function Sidebar() {
           className="h-8 w-auto"
         />
       </Link>
-      <hr className="w-full border-t-0 border-b" />
     </nav>
   )
 }

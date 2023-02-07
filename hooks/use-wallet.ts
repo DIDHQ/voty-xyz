@@ -29,7 +29,7 @@ export default function useWallet() {
     connector: account.connector,
   })
   const { disconnect } = useDisconnect()
-  const { data, error } = useSWR(
+  const { data } = useSWR(
     coinType !== undefined && account.address
       ? ['reverse', coinType, account.address, network.chain?.id]
       : null,
@@ -60,6 +60,11 @@ export default function useWallet() {
           : undefined,
       avatar: data?.avatar || ensAvatar || undefined,
       name: data?.name || ensName || undefined,
+      displayAddress: account.address
+        ? `${account.address.substring(0, 5)}...${account.address.substring(
+            38,
+          )}`
+        : undefined,
       signMessage: async (message: string | Uint8Array) => {
         if (coinType && coinTypeToChainId[coinType]) {
           const signature = Buffer.from(
