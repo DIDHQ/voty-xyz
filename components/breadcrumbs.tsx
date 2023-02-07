@@ -51,7 +51,7 @@ export default function Breadcrumbs() {
         page,
       ])
     }
-    return []
+    return compact([page])
   }, [query.entry, query.group, query.proposal, router.pathname])
 
   return (
