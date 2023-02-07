@@ -23,9 +23,11 @@ export default async function verifyOption(
 
   await verifyAuthor(option)
 
-  const { proposal, group } = await verifyProposal(
-    getArweaveData(option.proposal),
-  )
+  const data = await getArweaveData(option.proposal)
+  if (!data) {
+    throw new Error('proposal not found')
+  }
+  const { proposal, group } = await verifyProposal(data)
 
   if (!group.permission.adding_option) {
     throw new Error('group cannot add option')

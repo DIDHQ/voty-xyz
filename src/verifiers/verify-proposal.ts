@@ -25,9 +25,11 @@ export default async function verifyProposal(json: object): Promise<{
 
   await verifyAuthor(proposal)
 
-  const { community } = await verifyCommunity(
-    getArweaveData(proposal.community),
-  )
+  const data = await getArweaveData(proposal.community)
+  if (!data) {
+    throw new Error('community not found')
+  }
+  const { community } = await verifyCommunity(data)
 
   const group = community.groups?.[proposal.group]
   if (!group) {

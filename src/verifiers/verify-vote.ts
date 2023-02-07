@@ -18,9 +18,11 @@ export default async function verifyVote(
 
   await verifyAuthor(vote)
 
-  const { proposal, group } = await verifyProposal(
-    getArweaveData(vote.proposal),
-  )
+  const data = await getArweaveData(vote.proposal)
+  if (!data) {
+    throw new Error('proposal not found')
+  }
+  const { proposal, group } = await verifyProposal(data)
 
   const votingPower = await calculateNumber(
     group.permission.voting,
