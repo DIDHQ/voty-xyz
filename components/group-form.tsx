@@ -1,7 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { nanoid } from 'nanoid'
 import { useCallback, useEffect, useMemo } from 'react'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import {
+  Controller,
+  FormProvider,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form'
 
 import useAsync from '../hooks/use-async'
 import useCurrentSnapshot from '../hooks/use-current-snapshot'
@@ -14,7 +19,7 @@ import DurationInput from './basic/duration-input'
 import FormItem from './basic/form-item'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
-import BooleanSetsForm from './boolean-sets-form'
+import BooleanSetsBlock from './boolean-sets-block'
 import NumberSetsForm from './number-sets-form'
 import { useUpload } from '../hooks/use-api'
 
@@ -23,15 +28,16 @@ export default function GroupForm(props: {
   community: Community
   group: number
 }) {
+  const methods = useForm<Community>({
+    resolver: zodResolver(communitySchema),
+  })
   const {
     control,
     register,
     handleSubmit: onSubmit,
     reset,
     formState,
-  } = useForm<Community>({
-    resolver: zodResolver(communitySchema),
-  })
+  } = methods
   const { append, remove } = useFieldArray({
     control,
     name: 'groups',
@@ -134,13 +140,12 @@ export default function GroupForm(props: {
                 ?.message
             }
           >
-            <Controller
-              control={control}
-              name={`groups.${props.group}.permission.proposing`}
-              render={({ field: { value, onChange } }) => (
-                <BooleanSetsForm value={value} onChange={onChange} />
-              )}
-            />
+            <FormProvider {...methods}>
+              <BooleanSetsBlock
+                name="permission.proposing"
+                group={props.group}
+              />
+            </FormProvider>
           </FormItem>
         </div>
       </div>
