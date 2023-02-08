@@ -164,53 +164,55 @@ export default function GroupForm(props: {
           </FormItem>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-y-6 gap-x-4 pt-8 sm:grid-cols-6">
+      <div className="pt-8">
         <h3 className="text-lg font-medium leading-6 text-gray-900">Rules</h3>
-        <div className="sm:col-span-6">
-          <FormItem
-            label="Duration of announcement"
-            error={
-              formState.errors?.groups?.[props.group]?.period?.announcement
-                ?.message
-            }
-          >
-            <Controller
-              control={control}
-              name={`groups.${props.group}.period.announcement`}
-              render={({ field: { value, onChange } }) => (
-                <DurationInput
-                  value={value}
-                  onChange={onChange}
-                  error={
-                    !!formState.errors?.groups?.[props.group]?.period
-                      ?.announcement
-                  }
-                />
-              )}
-            />
-          </FormItem>
-        </div>
-        <div className="sm:col-span-6">
-          <FormItem
-            label="Duration of voting"
-            error={
-              formState.errors?.groups?.[props.group]?.period?.voting?.message
-            }
-          >
-            <Controller
-              control={control}
-              name={`groups.${props.group}.period.voting`}
-              render={({ field: { value, onChange } }) => (
-                <DurationInput
-                  value={value}
-                  onChange={onChange}
-                  error={
-                    !!formState.errors?.groups?.[props.group]?.period?.voting
-                  }
-                />
-              )}
-            />
-          </FormItem>
+        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+            <FormItem
+              label="Duration of announcement"
+              error={
+                formState.errors?.groups?.[props.group]?.period?.announcement
+                  ?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`groups.${props.group}.period.announcement`}
+                render={({ field: { value, onChange } }) => (
+                  <DurationInput
+                    value={value}
+                    onChange={onChange}
+                    error={
+                      !!formState.errors?.groups?.[props.group]?.period
+                        ?.announcement
+                    }
+                  />
+                )}
+              />
+            </FormItem>
+          </div>
+          <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+            <FormItem
+              label="Duration of voting"
+              error={
+                formState.errors?.groups?.[props.group]?.period?.voting?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`groups.${props.group}.period.voting`}
+                render={({ field: { value, onChange } }) => (
+                  <DurationInput
+                    value={value}
+                    onChange={onChange}
+                    error={
+                      !!formState.errors?.groups?.[props.group]?.period?.voting
+                    }
+                  />
+                )}
+              />
+            </FormItem>
+          </div>
         </div>
       </div>
       <div className="pt-6">
