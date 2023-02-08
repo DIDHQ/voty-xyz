@@ -29,7 +29,7 @@ export default function CreateProposalPage() {
     watch,
     handleSubmit: onSubmit,
     control,
-    formState,
+    formState: { errors },
   } = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
     defaultValues: { options: [''] },
@@ -112,23 +112,17 @@ export default function CreateProposalPage() {
           </div>
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-6">
-              <FormItem label="Title" error={formState.errors.title?.message}>
+              <FormItem label="Title" error={errors.title?.message}>
                 <TextInput {...register('title')} />
               </FormItem>
             </div>
             <div className="sm:col-span-6">
-              <FormItem
-                label="Body"
-                error={formState.errors.extension?.body?.message}
-              >
+              <FormItem label="Body" error={errors.extension?.body?.message}>
                 <Textarea {...register('extension.body')} />
               </FormItem>
             </div>
             <div className="sm:col-span-6">
-              <FormItem
-                label="Voting type"
-                error={formState.errors.voting_type?.message}
-              >
+              <FormItem label="Voting type" error={errors.voting_type?.message}>
                 <Controller
                   control={control}
                   name="voting_type"
@@ -143,10 +137,7 @@ export default function CreateProposalPage() {
               </FormItem>
             </div>
             <div className="sm:col-span-6">
-              <FormItem
-                label="Options"
-                error={formState.errors.options?.message}
-              >
+              <FormItem label="Options" error={errors.options?.message}>
                 {watch('options')?.map((_, index) => (
                   <div key={index} className="mb-4 flex rounded-md shadow-sm">
                     <div className="relative flex grow items-stretch focus-within:z-10">

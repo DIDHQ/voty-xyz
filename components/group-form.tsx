@@ -7,6 +7,7 @@ import {
   useFieldArray,
   useForm,
 } from 'react-hook-form'
+import clsx from 'clsx'
 
 import useAsync from '../hooks/use-async'
 import useResolveDid from '../hooks/use-resolve-did'
@@ -21,7 +22,6 @@ import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import NumberSetsBlock from './number-sets-block'
 import { useUpload } from '../hooks/use-api'
-import clsx from 'clsx'
 
 export default function GroupForm(props: {
   entry: string
@@ -37,7 +37,7 @@ export default function GroupForm(props: {
     register,
     handleSubmit: onSubmit,
     reset,
-    formState,
+    formState: { errors },
   } = methods
   const { append, remove } = useFieldArray({
     control,
@@ -111,7 +111,7 @@ export default function GroupForm(props: {
         <div className="sm:col-span-6">
           <FormItem
             label="Name"
-            error={formState.errors.groups?.[props.group]?.name?.message}
+            error={errors.groups?.[props.group]?.name?.message}
           >
             <TextInput
               {...register(`groups.${props.group}.name`)}
@@ -122,9 +122,7 @@ export default function GroupForm(props: {
         <div className="sm:col-span-6">
           <FormItem
             label="About"
-            error={
-              formState.errors.groups?.[props.group]?.extension?.about?.message
-            }
+            error={errors.groups?.[props.group]?.extension?.about?.message}
           >
             <Textarea
               {...register(`groups.${props.group}.extension.about`)}
@@ -140,10 +138,9 @@ export default function GroupForm(props: {
         <div className="sm:col-span-6">
           <FormItem
             error={
-              formState.errors.groups?.[props.group]?.permission?.proposing
+              errors.groups?.[props.group]?.permission?.proposing
                 ? JSON.stringify(
-                    formState.errors.groups?.[props.group]?.permission
-                      ?.proposing,
+                    errors.groups?.[props.group]?.permission?.proposing,
                   )
                 : undefined
             }
@@ -163,9 +160,9 @@ export default function GroupForm(props: {
         <div className="sm:col-span-6">
           <FormItem
             error={
-              formState.errors?.groups?.[props.group]?.permission?.voting
+              errors?.groups?.[props.group]?.permission?.voting
                 ? JSON.stringify(
-                    formState.errors?.groups?.[props.group]?.permission?.voting,
+                    errors?.groups?.[props.group]?.permission?.voting,
                   )
                 : undefined
             }
@@ -187,8 +184,7 @@ export default function GroupForm(props: {
             <FormItem
               label="Duration of announcement"
               error={
-                formState.errors?.groups?.[props.group]?.period?.announcement
-                  ?.message
+                errors?.groups?.[props.group]?.period?.announcement?.message
               }
             >
               <Controller
@@ -200,8 +196,7 @@ export default function GroupForm(props: {
                     onChange={onChange}
                     disabled={!isAdmin}
                     error={
-                      !!formState.errors?.groups?.[props.group]?.period
-                        ?.announcement
+                      !!errors?.groups?.[props.group]?.period?.announcement
                     }
                   />
                 )}
@@ -211,9 +206,7 @@ export default function GroupForm(props: {
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem
               label="Duration of voting"
-              error={
-                formState.errors?.groups?.[props.group]?.period?.voting?.message
-              }
+              error={errors?.groups?.[props.group]?.period?.voting?.message}
             >
               <Controller
                 control={control}
@@ -223,9 +216,7 @@ export default function GroupForm(props: {
                     value={value}
                     onChange={onChange}
                     disabled={!isAdmin}
-                    error={
-                      !!formState.errors?.groups?.[props.group]?.period?.voting
-                    }
+                    error={!!errors?.groups?.[props.group]?.period?.voting}
                   />
                 )}
               />
