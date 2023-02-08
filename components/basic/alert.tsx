@@ -5,11 +5,11 @@ import {
   XCircleIcon,
 } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
-import { useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 
 export default function Alert(props: {
   type: 'info' | 'success' | 'warning' | 'error'
-  text: string
+  children: ReactNode
   action?: string
   onClick?: () => void
   className?: string
@@ -59,7 +59,7 @@ export default function Alert(props: {
               'text-red-700': props.type === 'error',
             })}
           >
-            {props.text}
+            {props.children}
           </p>
           {props.action ? (
             <p
