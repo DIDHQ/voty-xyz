@@ -86,7 +86,7 @@ export default function Breadcrumbs() {
                   {page.name}
                 </Link>
               ) : (
-                <span className="ml-4 text-sm font-medium text-gray-500">
+                <span className="ml-4 text-sm font-medium text-gray-700">
                   {page.name}
                 </span>
               )}
