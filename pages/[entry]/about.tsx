@@ -1,13 +1,13 @@
 import useRouterQuery from '../../hooks/use-router-query'
-import useEntryConfig from '../../hooks/use-did-config'
+import useEntryRecord from '../../hooks/use-did-config'
 import { useRetrieve } from '../../hooks/use-api'
 import { DataType } from '../../src/constants'
 import CommunityLayout from '../../components/layouts/community'
 
 export default function CommunityAboutPage() {
   const [query] = useRouterQuery<['entry', 'group']>()
-  const { data: config } = useEntryConfig(query.entry)
-  const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
+  const { data: record } = useEntryRecord(query.entry)
+  const { data: community } = useRetrieve(DataType.COMMUNITY, record?.community)
 
   return (
     <CommunityLayout>

@@ -3,21 +3,18 @@ import useSWR from 'swr'
 
 import { didSuffixIs } from '../src/did'
 
-export default function useEntryConfig(entry: string | undefined) {
-  return useSWR<{ community?: string; delegation?: string }>(
-    entry ? ['entryConfig', entry] : null,
+export default function useEntryRecord(did?: string) {
+  return useSWR<{ community?: string }>(
+    did ? ['entryRecord', did] : null,
     async () => {
-      if (didSuffixIs(entry!, 'bit')) {
+      if (didSuffixIs(did!, 'bit')) {
         const dotbit = createInstance()
-        const records = await dotbit.records(
-          entry!,
-          'custom_key.voty_community',
-        )
+        const records = await dotbit.records(did!, 'custom_key.voty_community')
         return {
           community: records[0]?.value,
         }
       }
-      throw new Error(`unsupported entry: ${entry}`)
+      throw new Error(`unsupported entry: ${did}`)
     },
   )
 }
