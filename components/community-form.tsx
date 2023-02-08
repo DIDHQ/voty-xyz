@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import useAsync from '../hooks/use-async'
 import { Community, communitySchema } from '../src/schemas'
 import AvatarInput from './basic/avatar-input'
-import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import FormItem from './basic/form-item'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignJson from '../hooks/use-sign-json'
@@ -32,14 +31,9 @@ export default function CommunityForm(props: {
     reset(props.community)
   }, [props.community, reset])
   const { account } = useWallet()
-  const { data: snapshot } = useCurrentSnapshot(account?.coinType)
   const handleSignJson = useSignJson(props.entry)
   const handleUpload = useUpload()
-  const { data: resolved } = useResolveDid(
-    props.entry,
-    account?.coinType,
-    snapshot,
-  )
+  const { data: resolved } = useResolveDid(props.entry, account?.coinType)
   const isAdmin = useMemo(
     () =>
       resolved &&

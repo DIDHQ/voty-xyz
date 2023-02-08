@@ -9,7 +9,6 @@ import {
 } from 'react-hook-form'
 
 import useAsync from '../hooks/use-async'
-import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignJson from '../hooks/use-sign-json'
 import useWallet from '../hooks/use-wallet'
@@ -48,14 +47,9 @@ export default function GroupForm(props: {
     reset(props.community)
   }, [props.community, reset])
   const { account } = useWallet()
-  const { data: snapshot } = useCurrentSnapshot(account?.coinType)
   const handleSignJson = useSignJson(props.entry)
   const handleUpload = useUpload()
-  const { data: resolved } = useResolveDid(
-    props.entry,
-    account?.coinType,
-    snapshot,
-  )
+  const { data: resolved } = useResolveDid(props.entry, account?.coinType)
   const isAdmin = useMemo(
     () =>
       resolved &&
