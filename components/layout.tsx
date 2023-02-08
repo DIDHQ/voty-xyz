@@ -8,7 +8,7 @@ export default function Layout(props: { children: ReactNode }) {
     <>
       <Sidebar />
       <Toolbar />
-      <div className="mx-auto w-full p-18 pl-36">
+      <div className="mx-auto w-full p-16 pl-32">
         <div className="mx-auto w-full max-w-5xl">{props.children}</div>
       </div>
     </>

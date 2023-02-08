@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import { useMemo } from 'react'
 
 import useDidConfig from '../../hooks/use-did-config'
@@ -17,11 +16,6 @@ export default function CommunityIndexPage() {
   const { data } = useArweaveData(DataType.COMMUNITY, config?.community)
   const handleImport = useAsync(useImport(config?.community))
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
-  const group = useMemo(
-    () =>
-      query.group ? community?.groups?.[parseInt(query.group)] : undefined,
-    [community?.groups, query.group],
-  )
   const { data: list } = useListProposals(query.entry, query.group)
   const proposals = useMemo(() => list?.flatMap(({ data }) => data), [list])
 
@@ -31,45 +25,18 @@ export default function CommunityIndexPage() {
         entry={query.entry}
         group={query.group ? parseInt(query.group) : undefined}
         community={community}
-        className="sticky top-24"
+        className="fixed top-20"
       />
-      <main className="flex flex-1 overflow-hidden">
-        <section
-          aria-labelledby="primary-heading"
-          className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto lg:order-last"
-        >
-          <h1 id="primary-heading" className="sr-only">
-            Proposals
-          </h1>
-          <div
-            className={clsx(
-              'border-b border-gray-200 bg-white p-5 sm:flex sm:justify-between',
-              group ? 'sm:items-start' : 'sm:items-center',
-            )}
-          >
-            <div>
-              <h3 className="text-lg font-medium leading-6 text-gray-900">
-                {group?.name || 'Proposals'}
-              </h3>
-              {group ? (
-                <div className="mt-1">
-                  <p className="text-sm text-gray-600">
-                    {group?.extension?.about}
-                  </p>
-                </div>
+      <main className="flex flex-1 overflow-hidden pl-64 pt-4">
+        <ul role="list" className="divide-y divide-gray-200">
+          {proposals?.map((proposal) => (
+            <li key={proposal.uri}>
+              {query.entry ? (
+                <ProposalListItem entry={query.entry} value={proposal} />
               ) : null}
-            </div>
-          </div>
-          <ul role="list" className="divide-y divide-gray-200">
-            {proposals?.map((proposal) => (
-              <li key={proposal.uri}>
-                {query.entry ? (
-                  <ProposalListItem entry={query.entry} value={proposal} />
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </section>
+            </li>
+          ))}
+        </ul>
       </main>
     </>
   ) : data ? (
