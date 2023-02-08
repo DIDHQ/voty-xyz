@@ -18,7 +18,7 @@ export default function GroupIndexPage() {
   return (
     <CommunityLayout>
       <GroupLayout>
-        <div className="flex w-full justify-between">
+        <div className="sticky top-44 -mt-2 flex w-full justify-between bg-white pl-6 pt-6 pb-4">
           <Select
             options={['All', 'Active', 'Pending', 'Closed']}
             value={order}
@@ -29,7 +29,7 @@ export default function GroupIndexPage() {
             <Button primary>New Proposal</Button>
           </Link>
         </div>
-        <ul role="list" className="mt-4 divide-y divide-gray-200">
+        <ul role="list" className="divide-y divide-gray-200">
           {proposals?.map((proposal) => (
             <li key={proposal.uri}>
               {query.entry ? (

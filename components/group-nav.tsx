@@ -35,7 +35,7 @@ export default function GroupNav(props: { className?: string }) {
   )
 
   return (
-    <div className={clsx('w-full bg-white', props.className)}>
+    <div className={clsx('w-full bg-white pl-6', props.className)}>
       <div className="flex h-10 items-center">
         {group ? (
           group.permission.adding_option ? (
