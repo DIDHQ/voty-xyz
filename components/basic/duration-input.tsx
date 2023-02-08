@@ -48,7 +48,7 @@ export default function DurationInput(props: {
   }, [props.value])
 
   return (
-    <div className={clsx('relative rounded-md shadow-sm', props.className)}>
+    <div className={clsx('relative rounded-md', props.className)}>
       <input
         type="number"
         value={value}
