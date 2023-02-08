@@ -5,13 +5,13 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
 import { useRetrieve } from '../hooks/use-api'
-import useEntryRecord from '../hooks/use-did-config'
+import useDidRecord from '../hooks/use-did-record'
 import useRouterQuery from '../hooks/use-router-query'
 import { DataType } from '../src/constants'
 
 export default function GroupNav(props: { className?: string }) {
   const [query] = useRouterQuery<['entry', 'group']>()
-  const { data: record } = useEntryRecord(query.entry)
+  const { data: record } = useDidRecord(query.entry)
   const { data: community } = useRetrieve(DataType.COMMUNITY, record?.community)
   const group = useMemo(
     () =>

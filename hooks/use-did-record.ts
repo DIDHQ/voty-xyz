@@ -3,9 +3,9 @@ import useSWR from 'swr'
 
 import { didSuffixIs } from '../src/did'
 
-export default function useEntryRecord(did?: string) {
+export default function useDidRecord(did?: string) {
   return useSWR<{ community?: string }>(
-    did ? ['entryRecord', did] : null,
+    did ? ['didRecord', did] : null,
     async () => {
       if (didSuffixIs(did!, 'bit')) {
         const dotbit = createInstance()

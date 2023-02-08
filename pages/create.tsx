@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Alert from '../components/basic/alert'
 import FormItem from '../components/basic/form-item'
 import DidSelect from '../components/did-select'
-import useEntryRecord from '../hooks/use-did-config'
+import useDidRecord from '../hooks/use-did-record'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 
@@ -16,7 +16,7 @@ export default function CreateCommunityPage() {
   useEffect(() => {
     setEntry(dids?.[0] || '')
   }, [dids])
-  const { data: record } = useEntryRecord(entry)
+  const { data: record } = useDidRecord(entry)
 
   return (
     <div className="py-8">

@@ -9,7 +9,7 @@ import DidSelect from '../../../components/did-select'
 import FormItem from '../../../components/basic/form-item'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useAsync from '../../../hooks/use-async'
-import useEntryRecord from '../../../hooks/use-did-config'
+import useDidRecord from '../../../hooks/use-did-record'
 import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
 import { requiredCoinTypesOfNumberSets } from '../../../src/functions/number'
@@ -36,7 +36,7 @@ export default function CreateProposalPage() {
     defaultValues: { options: [''] },
   })
   const [query] = useRouterQuery<['entry', 'group']>()
-  const { data: record } = useEntryRecord(query.entry)
+  const { data: record } = useDidRecord(query.entry)
   const { data: community } = useRetrieve(DataType.COMMUNITY, record?.community)
   const group = useMemo(
     () =>
