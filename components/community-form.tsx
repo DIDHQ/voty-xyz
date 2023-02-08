@@ -64,11 +64,7 @@ export default function CommunityForm(props: {
   return (
     <div className="space-y-8 divide-y divide-gray-200 pl-6">
       <div className="pt-8">
-        <div>
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Profile
-          </h3>
-        </div>
+        <h3 className="text-lg font-medium leading-6 text-gray-900">Profile</h3>
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
             <FormItem label="Name" error={formState.errors.name?.message}>
@@ -121,11 +117,9 @@ export default function CommunityForm(props: {
         </div>
       </div>
       <div className="pt-8">
-        <div>
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Social accounts
-          </h3>
-        </div>
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Social accounts
+        </h3>
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="Twitter">

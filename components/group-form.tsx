@@ -1,7 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { nanoid } from 'nanoid'
 import { useCallback, useEffect, useMemo } from 'react'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import {
+  Controller,
+  FormProvider,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form'
 
 import useAsync from '../hooks/use-async'
 import useCurrentSnapshot from '../hooks/use-current-snapshot'
@@ -14,9 +19,8 @@ import DurationInput from './basic/duration-input'
 import FormItem from './basic/form-item'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
-import Slide from './basic/slide'
-import BooleanSetsForm from './boolean-sets-form'
-import NumberSetsForm from './number-sets-form'
+import BooleanSetsBlock from './boolean-sets-block'
+import NumberSetsBlock from './number-sets-block'
 import { useUpload } from '../hooks/use-api'
 
 export default function GroupForm(props: {
@@ -24,15 +28,16 @@ export default function GroupForm(props: {
   community: Community
   group: number
 }) {
+  const methods = useForm<Community>({
+    resolver: zodResolver(communitySchema),
+  })
   const {
     control,
     register,
     handleSubmit: onSubmit,
     reset,
     formState,
-  } = useForm<Community>({
-    resolver: zodResolver(communitySchema),
-  })
+  } = methods
   const { append, remove } = useFieldArray({
     control,
     name: 'groups',
@@ -89,7 +94,7 @@ export default function GroupForm(props: {
             },
           },
           period: {
-            proposing: 3600,
+            announcement: 3600,
             voting: 86400,
           },
           extension: {
@@ -126,135 +131,73 @@ export default function GroupForm(props: {
       </div>
       <div className="grid grid-cols-1 gap-y-6 gap-x-4 pt-8 sm:grid-cols-6">
         <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Proposer
+          Proposers
         </h3>
         <div className="sm:col-span-6">
           <FormItem
-            label="Proposing"
             error={
               formState.errors.groups?.[props.group]?.permission?.proposing
                 ?.message
             }
           >
-            <div className="flex gap-4">
-              <Controller
-                control={control}
-                name={`groups.${props.group}.permission.proposing`}
-                render={({ field: { value, onChange } }) => (
-                  <Slide
-                    title="Proposing"
-                    trigger={({ handleOpen }) => (
-                      <Button onClick={handleOpen}>Permission</Button>
-                    )}
-                  >
-                    {({ handleClose }) => (
-                      <BooleanSetsForm
-                        value={value}
-                        onChange={(v) => {
-                          onChange(v)
-                          handleClose()
-                        }}
-                      />
-                    )}
-                  </Slide>
-                )}
+            <FormProvider {...methods}>
+              <BooleanSetsBlock
+                name="permission.proposing"
+                group={props.group}
               />
-              <Controller
-                control={control}
-                name={`groups.${props.group}.period.proposing`}
-                render={({ field: { value, onChange } }) => (
-                  <DurationInput
-                    value={value}
-                    onChange={onChange}
-                    error={
-                      !!formState.errors?.groups?.[props.group]?.period
-                        ?.proposing
-                    }
-                  />
-                )}
-              />
-            </div>
+            </FormProvider>
           </FormItem>
         </div>
+      </div>
+      <div className="grid grid-cols-1 gap-y-6 gap-x-4 pt-8 sm:grid-cols-6">
+        <h3 className="text-lg font-medium leading-6 text-gray-900">Voters</h3>
         <div className="sm:col-span-6">
           <FormItem
-            label="Adding option"
-            error={
-              formState.errors.groups?.[props.group]?.permission?.adding_option
-                ?.message
-            }
-          >
-            <div className="flex gap-4">
-              <Controller
-                control={control}
-                name={`groups.${props.group}.permission.adding_option`}
-                render={({ field: { value, onChange } }) => (
-                  <Slide
-                    title="Adding option"
-                    trigger={({ handleOpen }) => (
-                      <Button onClick={handleOpen}>Permission</Button>
-                    )}
-                  >
-                    {({ handleClose }) => (
-                      <BooleanSetsForm
-                        value={value}
-                        onChange={(v) => {
-                          onChange(v)
-                          handleClose()
-                        }}
-                      />
-                    )}
-                  </Slide>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`groups.${props.group}.period.adding_option`}
-                render={({ field: { value, onChange } }) => (
-                  <DurationInput
-                    value={value}
-                    onChange={onChange}
-                    error={
-                      !!formState.errors?.groups?.[props.group]?.period
-                        ?.adding_option
-                    }
-                  />
-                )}
-              />
-            </div>
-          </FormItem>
-        </div>
-        <div className="sm:col-span-6">
-          <FormItem
-            label="Voting"
             error={
               formState.errors?.groups?.[props.group]?.permission?.voting
                 ?.message
             }
           >
-            <div className="flex gap-4">
+            <FormProvider {...methods}>
+              <NumberSetsBlock name="permission.voting" group={props.group} />
+            </FormProvider>
+          </FormItem>
+        </div>
+      </div>
+      <div className="pt-8">
+        <h3 className="text-lg font-medium leading-6 text-gray-900">Rules</h3>
+        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+            <FormItem
+              label="Duration of announcement"
+              error={
+                formState.errors?.groups?.[props.group]?.period?.announcement
+                  ?.message
+              }
+            >
               <Controller
                 control={control}
-                name={`groups.${props.group}.permission.voting`}
+                name={`groups.${props.group}.period.announcement`}
                 render={({ field: { value, onChange } }) => (
-                  <Slide
-                    title="Voting"
-                    trigger={({ handleOpen }) => (
-                      <Button onClick={handleOpen}>Permission</Button>
-                    )}
-                  >
-                    {({ handleClose }) => (
-                      <NumberSetsForm
-                        value={value}
-                        onChange={(v) => {
-                          onChange(v)
-                          handleClose()
-                        }}
-                      />
-                    )}
-                  </Slide>
+                  <DurationInput
+                    value={value}
+                    onChange={onChange}
+                    error={
+                      !!formState.errors?.groups?.[props.group]?.period
+                        ?.announcement
+                    }
+                  />
                 )}
               />
+            </FormItem>
+          </div>
+          <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+            <FormItem
+              label="Duration of voting"
+              error={
+                formState.errors?.groups?.[props.group]?.period?.voting?.message
+              }
+            >
               <Controller
                 control={control}
                 name={`groups.${props.group}.period.voting`}
@@ -268,8 +211,8 @@ export default function GroupForm(props: {
                   />
                 )}
               />
-            </div>
-          </FormItem>
+            </FormItem>
+          </div>
         </div>
       </div>
       <div className="pt-6">

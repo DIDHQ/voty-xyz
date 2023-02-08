@@ -117,7 +117,7 @@ export default function ProposalPage() {
               <dd className="mt-1 text-sm text-gray-900">
                 {status?.timestamp
                   ? new Date(
-                      (status.timestamp + group.period.proposing) * 1000,
+                      (status.timestamp + group.period.announcement) * 1000,
                     ).toLocaleString([], { hour12: false })
                   : '-'}
               </dd>
@@ -128,7 +128,7 @@ export default function ProposalPage() {
                 {status?.timestamp
                   ? new Date(
                       (status.timestamp +
-                        group.period.proposing +
+                        group.period.announcement +
                         (group.period.adding_option || 0) +
                         group.period.voting) *
                         1000,

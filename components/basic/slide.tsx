@@ -2,7 +2,7 @@ import { Transition, Dialog } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { Fragment, ReactNode, useState } from 'react'
 
-export default function Slide<T>(props: {
+export default function Slide(props: {
   title: string
   trigger: ({ handleOpen }: { handleOpen: () => void }) => ReactNode
   children: ({ handleClose }: { handleClose: () => void }) => ReactNode
@@ -13,7 +13,7 @@ export default function Slide<T>(props: {
     <>
       {props.trigger({ handleOpen: () => setOpen(true) })}
       <Transition.Root show={open} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={setOpen}>
+        <Dialog as="div" className="relative z-50" onClose={setOpen}>
           <div className="fixed inset-0" />
           <div className="fixed inset-0 overflow-hidden">
             <div className="absolute inset-0 overflow-hidden">
