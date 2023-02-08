@@ -14,7 +14,7 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
 import { useRetrieve } from '../hooks/use-api'
-import useDidConfig from '../hooks/use-did-config'
+import useEntryConfig from '../hooks/use-did-config'
 import useRouterQuery from '../hooks/use-router-query'
 import { DataType } from '../src/constants'
 import Avatar from './basic/avatar'
@@ -24,7 +24,7 @@ export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
   const [query] = useRouterQuery<['entry', 'group']>()
   const entry = query.entry
-  const { data: config } = useDidConfig(entry)
+  const { data: config } = useEntryConfig(entry)
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const navigation = useMemo(
     () =>

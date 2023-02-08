@@ -1,13 +1,13 @@
 import CommunityForm from '../../components/community-form'
 import useRouterQuery from '../../hooks/use-router-query'
-import useDidConfig from '../../hooks/use-did-config'
+import useEntryConfig from '../../hooks/use-did-config'
 import { useRetrieve } from '../../hooks/use-api'
 import { DataType } from '../../src/constants'
 import CommunityLayout from '../../components/layouts/community'
 
 export default function CommunitySettingsPage() {
   const [query] = useRouterQuery<['entry']>()
-  const { data: config } = useDidConfig(query.entry)
+  const { data: config } = useEntryConfig(query.entry)
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
 
   return (
