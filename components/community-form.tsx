@@ -62,7 +62,7 @@ export default function CommunityForm(props: {
   )
 
   return (
-    <div className="space-y-8 divide-y divide-gray-200">
+    <div className="space-y-8 divide-y divide-gray-200 pl-6">
       <div className="pt-8">
         <div>
           <h3 className="text-lg font-medium leading-6 text-gray-900">

@@ -11,7 +11,9 @@ export default function CommunityAboutPage() {
 
   return (
     <CommunityLayout>
-      <div className="flex w-full flex-col">{community?.extension?.about}</div>
+      <div className="flex w-full flex-col pt-6 pl-6">
+        {community?.extension?.about}
+      </div>
     </CommunityLayout>
   )
 }

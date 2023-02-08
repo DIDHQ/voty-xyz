@@ -84,7 +84,7 @@ export default function CommunityNav(props: { className?: string }) {
 
   return (
     <aside className={props.className}>
-      <div className="flex w-60 flex-col items-center rounded-md border pb-4">
+      <div className="flex w-60 flex-col items-center rounded-md border border-gray-300 pb-4 shadow-sm">
         <Avatar
           name={community?.author.did}
           value={community?.extension?.avatar}
