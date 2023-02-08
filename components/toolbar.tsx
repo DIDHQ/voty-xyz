@@ -19,7 +19,7 @@ export default function Toolbar() {
   const { account, avatar, name, displayAddress } = useWallet()
 
   return (
-    <header className="fixed top-0 z-40 flex h-16 w-full justify-center border-b pl-24 pr-6">
+    <header className="fixed top-0 z-40 flex h-16 w-full justify-center border-b bg-white pl-24 pr-6">
       <div className="flex h-16 max-w-5xl flex-1 items-center justify-between">
         <Breadcrumbs />
         <ConnectButtonCustom>
