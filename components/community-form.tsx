@@ -23,7 +23,7 @@ export default function CommunityForm(props: {
     register,
     handleSubmit: onSubmit,
     reset,
-    formState,
+    formState: { errors },
   } = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
@@ -61,31 +61,25 @@ export default function CommunityForm(props: {
         <h3 className="text-lg font-medium leading-6 text-gray-900">Profile</h3>
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
-            <FormItem label="Name" error={formState.errors.name?.message}>
+            <FormItem label="Name" error={errors.name?.message}>
               <TextInput
-                error={!!formState.errors.name?.message}
+                error={!!errors.name?.message}
                 {...register('name')}
                 disabled={!isAdmin}
               />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
-            <FormItem
-              label="About"
-              error={formState.errors.extension?.about?.message}
-            >
+            <FormItem label="About" error={errors.extension?.about?.message}>
               <Textarea
-                error={!!formState.errors.extension?.about?.message}
+                error={!!errors.extension?.about?.message}
                 {...register('extension.about')}
                 disabled={!isAdmin}
               />
             </FormItem>
           </div>
           <div className="sm:col-span-6">
-            <FormItem
-              label="Avatar"
-              error={formState.errors.extension?.avatar?.message}
-            >
+            <FormItem label="Avatar" error={errors.extension?.avatar?.message}>
               <Controller
                 control={control}
                 name="extension.avatar"
@@ -103,10 +97,10 @@ export default function CommunityForm(props: {
           <div className="sm:col-span-6">
             <FormItem
               label="Website"
-              error={formState.errors.extension?.website?.message}
+              error={errors.extension?.website?.message}
             >
               <TextInput
-                error={!!formState.errors.extension?.website?.message}
+                error={!!errors.extension?.website?.message}
                 {...register('extension.website')}
                 disabled={!isAdmin}
               />

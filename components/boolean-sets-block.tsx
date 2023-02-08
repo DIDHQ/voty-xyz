@@ -4,6 +4,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { Community } from '../src/schemas'
 import Select from './basic/select'
 import Slide from './basic/slide'
+import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
 import JsonInput from './json-input'
 
@@ -23,7 +24,7 @@ export default function BooleanSetsBlock(props: {
       {fields.length ? (
         <ul
           role="list"
-          className="mb-4 divide-y divide-gray-200 rounded-md border border-gray-200"
+          className="mb-4 divide-y divide-gray-200 rounded-md border"
         >
           {fields.map((operand, index) => (
             <BooleanUnitBlock
@@ -38,13 +39,9 @@ export default function BooleanSetsBlock(props: {
         </ul>
       ) : null}
       {props.disabled ? null : (
-        <button
-          type="button"
-          onClick={() => append({ function: '', arguments: [] })}
-          className="rounded-md bg-white text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        >
+        <TextButton onClick={() => append({ function: '', arguments: [] })}>
           Add
-        </button>
+        </TextButton>
       )}
     </>
   )
@@ -76,13 +73,9 @@ function BooleanUnitBlock(props: {
         <Slide
           title="Config"
           trigger={({ handleOpen }) => (
-            <button
-              type="button"
-              onClick={handleOpen}
-              className="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
+            <TextButton onClick={handleOpen}>
               {props.disabled ? 'View' : 'Edit'}
-            </button>
+            </TextButton>
           )}
         >
           {({ handleClose }) => (
@@ -118,13 +111,7 @@ function BooleanUnitBlock(props: {
             <span className="text-gray-300" aria-hidden="true">
               |
             </span>
-            <button
-              type="button"
-              onClick={handleRemove}
-              className="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              Remove
-            </button>
+            <TextButton onClick={handleRemove}>Remove</TextButton>
           </>
         )}
       </div>

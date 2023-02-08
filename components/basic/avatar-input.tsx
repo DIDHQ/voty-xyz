@@ -1,7 +1,7 @@
 import { ChangeEvent, MouseEvent, useCallback, useRef } from 'react'
 
 import Avatar from './avatar'
-import Button from './button'
+import TextButton from './text-button'
 
 export default function AvatarInput(props: {
   name?: string
@@ -43,14 +43,9 @@ export default function AvatarInput(props: {
         style={{ display: 'none' }}
         onChange={handleChange}
       />
-      <Button
-        type="button"
-        onClick={handleClick}
-        disabled={props.disabled}
-        className="ml-5"
-      >
-        Change
-      </Button>
+      <TextButton onClick={handleClick} className="ml-4">
+        {props.disabled ? 'View' : 'Edit'}
+      </TextButton>
     </div>
   )
 }

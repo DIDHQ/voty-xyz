@@ -26,33 +26,36 @@ export default function CreateCommunityPage() {
       {dids?.length === 0 ? (
         <Alert
           type="info"
-          text="Do not have a DID? Register now!"
           action="Register"
           onClick={() => {
-            window.location.href = 'https://app.did.id/explorer'
+            window.open('https://app.did.id/explorer')
           }}
           className="mt-6"
-        />
+        >
+          Do not have a DID? Register now!
+        </Alert>
       ) : config?.community ? (
         <Alert
           type="warning"
-          text={`${entry} already bounded to an community`}
           action="View"
           onClick={() => {
             router.push(`/${entry}`)
           }}
           className="mt-6"
-        />
+        >
+          Community of <b>{entry}</b> already existed.
+        </Alert>
       ) : (
         <Alert
           type="success"
-          text={`${entry} is able to create an community`}
           action="Create"
           onClick={() => {
             router.push(`/${entry}/settings`)
           }}
           className="mt-6"
-        />
+        >
+          <b>{entry}</b> is able to create an community.
+        </Alert>
       )}
     </div>
   )

@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 import useRouterQuery from '../../../hooks/use-router-query'
 import GroupForm from '../../../components/group-form'
 import { useEntryConfig, useRetrieve } from '../../../hooks/use-api'
@@ -9,12 +11,20 @@ export default function GroupSettingsPage() {
   const [query] = useRouterQuery<['entry', 'group']>()
   const { data: config } = useEntryConfig(query.entry)
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
+  const isNew = useMemo(
+    () =>
+      !!query.group &&
+      !!community?.groups &&
+      !community.groups[parseInt(query.group)],
+    [community?.groups, query.group],
+  )
 
   return (
     <CommunityLayout>
-      <GroupLayout>
+      <GroupLayout hideNav={isNew}>
         {query.entry && query.group && community ? (
           <GroupForm
+            key={query.entry + query.group}
             entry={query.entry}
             community={community}
             group={parseInt(query.group)}

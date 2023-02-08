@@ -98,7 +98,7 @@ export default function ProposalPage() {
             {proposal.author.did}
           </p>
         </div>
-        <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+        <div className="border-t px-4 py-5 sm:px-6">
           <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
             <div className="sm:col-span-1">
               <dt className="text-sm font-medium text-gray-500">Type</dt>
@@ -149,7 +149,7 @@ export default function ProposalPage() {
               <dd className="mt-1 text-sm text-gray-900">
                 <ul
                   role="list"
-                  className="divide-y divide-gray-200 rounded-md border border-gray-200"
+                  className="divide-y divide-gray-200 rounded-md border"
                 >
                   <Controller
                     control={control}
@@ -186,7 +186,7 @@ export default function ProposalPage() {
                                   type="radio"
                                   checked={JSON.stringify(choice) === value}
                                   onChange={() => null}
-                                  className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                  className="h-4 w-4 border text-indigo-600 focus:ring-indigo-500"
                                 />
                               ) : (
                                 <input
@@ -195,7 +195,7 @@ export default function ProposalPage() {
                                     JSON.parse(value || '[]') as string[]
                                   ).includes(choice)}
                                   onChange={() => null}
-                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                  className="h-4 w-4 rounded border text-indigo-600 focus:ring-indigo-500"
                                 />
                               )}
                             </div>
@@ -228,10 +228,7 @@ export default function ProposalPage() {
           </Button>
         </div>
       </div>
-      <ul
-        role="list"
-        className="divide-y divide-gray-200 rounded-md border border-gray-200"
-      >
+      <ul role="list" className="divide-y divide-gray-200 rounded-md border">
         {votes?.map((vote) => (
           <li
             key={vote.uri}
@@ -247,10 +244,11 @@ export default function ProposalPage() {
   ) : data ? (
     <Alert
       type="info"
-      text="This proposal exists on the blockchain, but not imported into Voty."
       action="Import"
       onClick={handleImport.execute}
       className="mt-4"
-    />
+    >
+      This proposal exists on the blockchain, but not imported into Voty.
+    </Alert>
   ) : null
 }

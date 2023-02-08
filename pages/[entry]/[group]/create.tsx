@@ -3,7 +3,6 @@ import pMap from 'p-map'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
-import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 
 import DidSelect from '../../../components/did-select'
 import FormItem from '../../../components/basic/form-item'
@@ -20,6 +19,7 @@ import Textarea from '../../../components/basic/textarea'
 import Select from '../../../components/basic/select'
 import { useEntryConfig, useRetrieve, useUpload } from '../../../hooks/use-api'
 import { DataType } from '../../../src/constants'
+import TextButton from '../../../components/basic/text-button'
 
 export default function CreateProposalPage() {
   const {
@@ -29,7 +29,7 @@ export default function CreateProposalPage() {
     watch,
     handleSubmit: onSubmit,
     control,
-    formState,
+    formState: { errors },
   } = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
     defaultValues: { options: [''] },
@@ -112,23 +112,17 @@ export default function CreateProposalPage() {
           </div>
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-6">
-              <FormItem label="Title" error={formState.errors.title?.message}>
+              <FormItem label="Title" error={errors.title?.message}>
                 <TextInput {...register('title')} />
               </FormItem>
             </div>
             <div className="sm:col-span-6">
-              <FormItem
-                label="Body"
-                error={formState.errors.extension?.body?.message}
-              >
+              <FormItem label="Body" error={errors.extension?.body?.message}>
                 <Textarea {...register('extension.body')} />
               </FormItem>
             </div>
             <div className="sm:col-span-6">
-              <FormItem
-                label="Voting type"
-                error={formState.errors.voting_type?.message}
-              >
+              <FormItem label="Voting type" error={errors.voting_type?.message}>
                 <Controller
                   control={control}
                   name="voting_type"
@@ -143,33 +137,40 @@ export default function CreateProposalPage() {
               </FormItem>
             </div>
             <div className="sm:col-span-6">
-              <FormItem
-                label="Options"
-                error={formState.errors.options?.message}
-              >
-                {watch('options')?.map((_, index) => (
-                  <div key={index} className="mb-4 flex rounded-md shadow-sm">
-                    <div className="relative flex grow items-stretch focus-within:z-10">
-                      <input
-                        {...register(`options.${index}`)}
-                        placeholder={`Option ${index + 1}`}
-                        className="block w-full rounded-none rounded-l-md border border-gray-300 pl-4 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
-                    <OptionDelete index={index} onDelete={handleOptionDelete} />
-                  </div>
-                ))}
-                <Button
+              <FormItem label="Options" error={errors.options?.message}>
+                <ul
+                  role="list"
+                  className="mb-4 divide-y divide-gray-300 rounded-md border "
+                >
+                  {watch('options')?.map((_, index) => (
+                    <li
+                      key={index}
+                      className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
+                    >
+                      <div className="flex w-0 flex-1 items-center">
+                        <span className="ml-2 w-0 flex-1 truncate">
+                          <input
+                            {...register(`options.${index}`)}
+                            placeholder={`Option ${index + 1}`}
+                          />
+                        </span>
+                      </div>
+                      <div className="ml-4 flex shrink-0 space-x-4">
+                        <OptionDelete
+                          index={index}
+                          onDelete={handleOptionDelete}
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <TextButton
                   onClick={() => {
                     setValue('options', [...(watch('options') || []), ''])
                   }}
-                  className="px-2"
                 >
-                  <PlusIcon
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                </Button>
+                  Add
+                </TextButton>
               </FormItem>
             </div>
           </div>
@@ -206,12 +207,5 @@ function OptionDelete(props: {
     onDelete(props.index)
   }, [onDelete, props.index])
 
-  return (
-    <button
-      onClick={handleDelete}
-      className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 p-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-    >
-      <XMarkIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-    </button>
-  )
+  return <TextButton onClick={handleDelete}>Remove</TextButton>
 }
