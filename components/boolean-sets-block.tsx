@@ -5,6 +5,7 @@ import { Community } from '../src/schemas'
 import Button from './basic/button'
 import Select from './basic/select'
 import Slide from './basic/slide'
+import TextInput from './basic/text-input'
 import JsonInput from './json-input'
 
 export default function BooleanSetsBlock(props: {
@@ -49,7 +50,7 @@ function BooleanUnitBlock(props: {
   index: number
   onRemove(index: number): void
 }) {
-  const { control, watch } = useFormContext<Community>()
+  const { control, watch, register } = useFormContext<Community>()
   const { onRemove } = props
   const handleRemove = useCallback(() => {
     onRemove(props.index)
@@ -79,6 +80,11 @@ function BooleanUnitBlock(props: {
         >
           {({ handleClose }) => (
             <>
+              <TextInput
+                {...register(
+                  `groups.${props.group}.${props.name}.operands.${props.index}.name`,
+                )}
+              />
               <Controller
                 control={control}
                 name={`groups.${props.group}.${props.name}.operands.${props.index}.function`}
