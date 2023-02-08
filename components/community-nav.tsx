@@ -18,7 +18,7 @@ import { DataType } from '../src/constants'
 import Avatar from './basic/avatar'
 import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
 
-export default function CommunityAside(props: { className?: string }) {
+export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
   const [query] = useRouterQuery<['entry', 'group']>()
   const entry = query.entry
