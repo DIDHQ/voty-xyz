@@ -3,7 +3,7 @@ import pMap from 'p-map'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
-import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
+import { XMarkIcon } from '@heroicons/react/20/solid'
 
 import DidSelect from '../../../components/did-select'
 import FormItem from '../../../components/basic/form-item'
@@ -20,6 +20,7 @@ import Textarea from '../../../components/basic/textarea'
 import Select from '../../../components/basic/select'
 import { useEntryConfig, useRetrieve, useUpload } from '../../../hooks/use-api'
 import { DataType } from '../../../src/constants'
+import TextButton from '../../../components/basic/text-button'
 
 export default function CreateProposalPage() {
   const {
@@ -150,17 +151,13 @@ export default function CreateProposalPage() {
                     <OptionDelete index={index} onDelete={handleOptionDelete} />
                   </div>
                 ))}
-                <Button
+                <TextButton
                   onClick={() => {
                     setValue('options', [...(watch('options') || []), ''])
                   }}
-                  className="px-2"
                 >
-                  <PlusIcon
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                </Button>
+                  Add
+                </TextButton>
               </FormItem>
             </div>
           </div>
