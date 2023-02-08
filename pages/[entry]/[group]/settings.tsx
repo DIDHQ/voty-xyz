@@ -21,7 +21,7 @@ export default function GroupSettingsPage() {
 
   return (
     <CommunityLayout>
-      <GroupLayout isNew={isNew}>
+      <GroupLayout hideNav={isNew}>
         {query.entry && query.group && community ? (
           <GroupForm
             key={query.entry + query.group}

@@ -234,11 +234,11 @@ export default function GroupForm(props: {
             <Button
               onClick={() => {
                 remove(props.group)
-                onSubmit(console.log, console.error)()
+                onSubmit(handleSubmit.execute, console.error)()
               }}
               disabled={!isAdmin}
             >
-              Delete
+              Archive
             </Button>
           )}
           <Button
