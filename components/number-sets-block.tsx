@@ -68,7 +68,7 @@ function NumberUnitBlock(props: {
         <span className="ml-2 w-0 flex-1 truncate">
           {watch(
             `groups.${props.group}.${props.name}.operands.${props.index}.name`,
-          )}
+          ) || `Sets #${props.index + 1}`}
         </span>
       </div>
       <div className="ml-4 flex shrink-0 space-x-4">
