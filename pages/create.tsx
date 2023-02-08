@@ -28,7 +28,7 @@ export default function CreateCommunityPage() {
           type="info"
           action="Register"
           onClick={() => {
-            window.location.href = 'https://app.did.id/explorer'
+            window.open('https://app.did.id/explorer')
           }}
           className="mt-6"
         >
@@ -43,7 +43,7 @@ export default function CreateCommunityPage() {
           }}
           className="mt-6"
         >
-          {entry} already bounded to an community
+          Community of <b>{entry}</b> already existed.
         </Alert>
       ) : (
         <Alert
@@ -54,7 +54,7 @@ export default function CreateCommunityPage() {
           }}
           className="mt-6"
         >
-          {entry} is able to create an community
+          <b>{entry}</b> is able to create an community.
         </Alert>
       )}
     </div>

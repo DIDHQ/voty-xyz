@@ -1,5 +1,5 @@
 import { HomeIcon } from '@heroicons/react/20/solid'
-import { capitalize, compact, last } from 'lodash-es'
+import { compact, last, lowerCase, upperFirst } from 'lodash-es'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
@@ -14,7 +14,7 @@ function getPageFromPathname(pathname: string) {
   if (name.startsWith('[') && name.endsWith(']')) {
     return
   }
-  return { name: capitalize(name) }
+  return { name: upperFirst(lowerCase(name)) }
 }
 
 export default function Breadcrumbs() {
