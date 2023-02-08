@@ -2,7 +2,6 @@ import { useCallback } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../src/schemas'
-import Button from './basic/button'
 import Select from './basic/select'
 import Slide from './basic/slide'
 import TextInput from './basic/text-input'
@@ -36,9 +35,13 @@ export default function BooleanSetsBlock(props: {
           ))}
         </ul>
       ) : null}
-      <Button onClick={() => append({ function: '', arguments: [] })}>
+      <button
+        type="button"
+        onClick={() => append({ function: '', arguments: [] })}
+        className="rounded-md bg-white text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
         Add
-      </Button>
+      </button>
     </>
   )
 }
