@@ -13,8 +13,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
-import { useRetrieve } from '../hooks/use-api'
-import useDidRecord from '../hooks/use-did-record'
+import { useRetrieve, useEntryConfig } from '../hooks/use-api'
 import useRouterQuery from '../hooks/use-router-query'
 import { DataType } from '../src/constants'
 import Avatar from './basic/avatar'
@@ -24,8 +23,8 @@ export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
   const [query] = useRouterQuery<['entry', 'group']>()
   const entry = query.entry
-  const { data: record } = useDidRecord(entry)
-  const { data: community } = useRetrieve(DataType.COMMUNITY, record?.community)
+  const { data: config } = useEntryConfig(entry)
+  const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const navigation = useMemo(
     () =>
       compact([

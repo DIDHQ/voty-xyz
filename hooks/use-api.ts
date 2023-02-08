@@ -6,6 +6,14 @@ import { DataType } from '../src/constants'
 import { Authorized, Community, Proposal, Option, Vote } from '../src/schemas'
 import { fetchJson } from '../src/utils/fetcher'
 
+export function useEntryConfig(did?: string) {
+  return useSWR<{ community?: string }>(did ? ['entry', did] : null, async () =>
+    fetchJson<{
+      community: string
+    }>(`/api/entry?did=${did}`),
+  )
+}
+
 export function useRetrieve<T extends DataType>(type: T, uri?: string) {
   return useSWR(uri ? ['retrieve', uri] : null, async () => {
     const { data } = await fetchJson<{

@@ -9,7 +9,6 @@ import DidSelect from '../../../components/did-select'
 import FormItem from '../../../components/basic/form-item'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useAsync from '../../../hooks/use-async'
-import useDidRecord from '../../../hooks/use-did-record'
 import useSignJson from '../../../hooks/use-sign-json'
 import useWallet from '../../../hooks/use-wallet'
 import { requiredCoinTypesOfNumberSets } from '../../../src/functions/number'
@@ -19,7 +18,7 @@ import Button from '../../../components/basic/button'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
 import Select from '../../../components/basic/select'
-import { useRetrieve, useUpload } from '../../../hooks/use-api'
+import { useEntryConfig, useRetrieve, useUpload } from '../../../hooks/use-api'
 import { DataType } from '../../../src/constants'
 
 export default function CreateProposalPage() {
@@ -36,8 +35,8 @@ export default function CreateProposalPage() {
     defaultValues: { options: [''] },
   })
   const [query] = useRouterQuery<['entry', 'group']>()
-  const { data: record } = useDidRecord(query.entry)
-  const { data: community } = useRetrieve(DataType.COMMUNITY, record?.community)
+  const { data: config } = useEntryConfig(query.entry)
+  const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const group = useMemo(
     () =>
       query.group ? community?.groups?.[parseInt(query.group)] : undefined,
@@ -51,11 +50,11 @@ export default function CreateProposalPage() {
     [setValue, getValues],
   )
   useEffect(() => {
-    if (!record?.community) {
+    if (!config?.community) {
       return
     }
-    setValue('community', record?.community)
-  }, [record?.community, setValue])
+    setValue('community', config?.community)
+  }, [config?.community, setValue])
   useEffect(() => {
     if (!query.group) {
       return

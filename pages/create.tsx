@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Alert from '../components/basic/alert'
 import FormItem from '../components/basic/form-item'
 import DidSelect from '../components/did-select'
-import useDidRecord from '../hooks/use-did-record'
+import { useEntryConfig } from '../hooks/use-api'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 
@@ -16,7 +16,7 @@ export default function CreateCommunityPage() {
   useEffect(() => {
     setEntry(dids?.[0] || '')
   }, [dids])
-  const { data: record } = useDidRecord(entry)
+  const { data: config } = useEntryConfig(entry)
 
   return (
     <div className="py-8">
@@ -33,7 +33,7 @@ export default function CreateCommunityPage() {
           }}
           className="mt-6"
         />
-      ) : record?.community ? (
+      ) : config?.community ? (
         <Alert
           type="warning"
           text={`${entry} already bounded to an community`}
