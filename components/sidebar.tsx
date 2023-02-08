@@ -16,7 +16,7 @@ export default function Sidebar() {
       </Link>
       <Link
         href="/create"
-        className="group mt-2 flex h-12 w-12 items-center justify-center rounded-full border-gray-200 hover:bg-indigo-600"
+        className="group mt-2 flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 hover:bg-indigo-600"
       >
         <PlusIcon className="h-8 w-8 text-indigo-600 group-hover:text-white" />
       </Link>
