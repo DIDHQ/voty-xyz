@@ -16,5 +16,6 @@ export default function useDidRecord(did?: string) {
       }
       throw new Error(`unsupported entry: ${did}`)
     },
+    { revalidateOnFocus: false },
   )
 }
