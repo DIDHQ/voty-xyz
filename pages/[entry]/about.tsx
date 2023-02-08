@@ -1,22 +1,19 @@
-import CommunityForm from '../../components/community-form'
 import useRouterQuery from '../../hooks/use-router-query'
 import useDidConfig from '../../hooks/use-did-config'
 import { useRetrieve } from '../../hooks/use-api'
 import { DataType } from '../../src/constants'
 import CommunityLayout from '../../components/layouts/community'
 
-export default function CommunitySettingsPage() {
-  const [query] = useRouterQuery<['entry']>()
+export default function CommunityAboutPage() {
+  const [query] = useRouterQuery<['entry', 'group']>()
   const { data: config } = useDidConfig(query.entry)
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
 
   return (
     <CommunityLayout>
-      {query.entry ? (
-        <div className="flex w-full flex-col">
-          <CommunityForm entry={query.entry} community={community} />
-        </div>
-      ) : null}
+      <div className="flex w-full flex-col pt-6 pl-6">
+        {community?.extension?.about}
+      </div>
     </CommunityLayout>
   )
 }
