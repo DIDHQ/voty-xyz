@@ -7,10 +7,13 @@ import { Authorized, Community, Proposal, Option, Vote } from '../src/schemas'
 import { fetchJson } from '../src/utils/fetcher'
 
 export function useEntryConfig(did?: string) {
-  return useSWR<{ community?: string }>(did ? ['entry', did] : null, async () =>
-    fetchJson<{
-      community: string
-    }>(`/api/entry?did=${did}`),
+  return useSWR<{ community?: string }>(
+    did ? ['entry', did] : null,
+    async () =>
+      fetchJson<{
+        community: string
+      }>(`/api/entry?did=${did}`),
+    { revalidateOnFocus: false },
   )
 }
 
