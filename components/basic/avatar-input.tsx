@@ -1,11 +1,13 @@
 import { ChangeEvent, MouseEvent, useCallback, useRef } from 'react'
 
 import Avatar from './avatar'
+import Button from './button'
 
-export default function AvatarFileInput(props: {
+export default function AvatarInput(props: {
   name?: string
   value?: string
   onChange?: (value?: string) => void
+  disabled?: boolean
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const { onChange } = props
@@ -41,13 +43,14 @@ export default function AvatarFileInput(props: {
         style={{ display: 'none' }}
         onChange={handleChange}
       />
-      <button
+      <Button
         type="button"
         onClick={handleClick}
-        className="ml-5 rounded-md border border-gray-300 bg-white py-2 px-3 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        disabled={props.disabled}
+        className="ml-5"
       >
         Change
-      </button>
+      </Button>
     </div>
   )
 }

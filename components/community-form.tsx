@@ -71,6 +71,7 @@ export default function CommunityForm(props: {
               <TextInput
                 error={!!formState.errors.name?.message}
                 {...register('name')}
+                disabled={!isAdmin}
               />
             </FormItem>
           </div>
@@ -82,6 +83,7 @@ export default function CommunityForm(props: {
               <Textarea
                 error={!!formState.errors.extension?.about?.message}
                 {...register('extension.about')}
+                disabled={!isAdmin}
               />
             </FormItem>
           </div>
@@ -98,6 +100,7 @@ export default function CommunityForm(props: {
                     name={props.entry}
                     value={value}
                     onChange={onChange}
+                    disabled={!isAdmin}
                   />
                 )}
               />
@@ -111,6 +114,7 @@ export default function CommunityForm(props: {
               <TextInput
                 error={!!formState.errors.extension?.website?.message}
                 {...register('extension.website')}
+                disabled={!isAdmin}
               />
             </FormItem>
           </div>
@@ -123,17 +127,26 @@ export default function CommunityForm(props: {
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="Twitter">
-              <TextInput {...register('extension.twitter')} />
+              <TextInput
+                {...register('extension.twitter')}
+                disabled={!isAdmin}
+              />
             </FormItem>
           </div>
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="Discord">
-              <TextInput {...register('extension.discord')} />
+              <TextInput
+                {...register('extension.discord')}
+                disabled={!isAdmin}
+              />
             </FormItem>
           </div>
           <div className="col-span-6 sm:col-span-6 lg:col-span-2">
             <FormItem label="GitHub">
-              <TextInput {...register('extension.github')} />
+              <TextInput
+                {...register('extension.github')}
+                disabled={!isAdmin}
+              />
             </FormItem>
           </div>
         </div>
