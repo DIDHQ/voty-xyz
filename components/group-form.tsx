@@ -88,7 +88,7 @@ export default function GroupForm(props: {
             },
           },
           period: {
-            proposing: 3600,
+            announcement: 3600,
             voting: 86400,
           },
           extension: {
@@ -170,19 +170,20 @@ export default function GroupForm(props: {
           <FormItem
             label="Proposing"
             error={
-              formState.errors?.groups?.[props.group]?.permission?.proposing
+              formState.errors?.groups?.[props.group]?.period?.announcement
                 ?.message
             }
           >
             <Controller
               control={control}
-              name={`groups.${props.group}.period.proposing`}
+              name={`groups.${props.group}.period.announcement`}
               render={({ field: { value, onChange } }) => (
                 <DurationInput
                   value={value}
                   onChange={onChange}
                   error={
-                    !!formState.errors?.groups?.[props.group]?.period?.proposing
+                    !!formState.errors?.groups?.[props.group]?.period
+                      ?.announcement
                   }
                 />
               )}
@@ -193,8 +194,7 @@ export default function GroupForm(props: {
           <FormItem
             label="Voting"
             error={
-              formState.errors?.groups?.[props.group]?.permission?.voting
-                ?.message
+              formState.errors?.groups?.[props.group]?.period?.voting?.message
             }
           >
             <Controller
