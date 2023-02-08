@@ -25,27 +25,30 @@ export default function CommunityAside(props: { className?: string }) {
   const { data: config } = useDidConfig(entry)
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
   const navigation = useMemo(
-    () => [
-      {
-        name: 'Timeline',
-        href: `/${entry}`,
-        icon: ClockIcon,
-        current: router.pathname === '/[entry]',
-      },
-      {
-        name: 'Settings',
-        href: `/${entry}/settings`,
-        icon: CogIcon,
-        current: router.pathname === '/[entry]/settings',
-      },
-      {
-        name: 'About',
-        href: `/${entry}/about`,
-        icon: DocumentIcon,
-        current: router.pathname === '/[entry]/about',
-      },
-    ],
-    [entry, router.pathname],
+    () =>
+      compact([
+        {
+          name: 'Timeline',
+          href: `/${entry}`,
+          icon: ClockIcon,
+          current: router.pathname === '/[entry]',
+        },
+        {
+          name: 'Settings',
+          href: `/${entry}/settings`,
+          icon: CogIcon,
+          current: router.pathname === '/[entry]/settings',
+        },
+        community?.extension?.about
+          ? {
+              name: 'About',
+              href: `/${entry}/about`,
+              icon: DocumentIcon,
+              current: router.pathname === '/[entry]/about',
+            }
+          : undefined,
+      ]),
+    [community?.extension?.about, entry, router.pathname],
   )
   const externals = useMemo(
     () =>
