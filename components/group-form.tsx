@@ -71,7 +71,7 @@ export default function GroupForm(props: {
     ),
   )
   const isNew = useMemo(
-    () => !props.community.groups?.[props.group],
+    () => props.community.groups && !props.community.groups[props.group],
     [props.community.groups, props.group],
   )
   useEffect(() => {
@@ -102,7 +102,7 @@ export default function GroupForm(props: {
     }
   }, [append, isNew])
 
-  return props.group < 0 ? null : (
+  return (
     <div
       className={clsx('space-y-8 divide-y divide-gray-200', props.className)}
     >
