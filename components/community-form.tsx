@@ -123,7 +123,7 @@ export default function CommunityForm(props: {
       <div className="pt-8">
         <div>
           <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Social Accounts
+            Social accounts
           </h3>
         </div>
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
