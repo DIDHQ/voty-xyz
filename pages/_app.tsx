@@ -5,7 +5,7 @@ import { mainnet, polygon, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import Head from 'next/head'
 
-import Layout from '../components/layout'
+import ShellLayout from '../components/layouts/shell'
 import '../styles/globals.css'
 
 const { chains, provider } = configureChains(
@@ -35,9 +35,9 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
-          <Layout>
+          <ShellLayout>
             <Component {...pageProps} />
-          </Layout>
+          </ShellLayout>
         </RainbowKitProvider>
       </WagmiConfig>
     </>

@@ -43,7 +43,7 @@ export default function GroupIndexPage() {
         entry={query.entry}
         group={query.group ? parseInt(query.group) : undefined}
         community={community}
-        className="sticky top-24"
+        className="sticky top-20"
       />
       <main className="flex flex-1">
         <section

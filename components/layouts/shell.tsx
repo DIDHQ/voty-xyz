@@ -1,9 +1,9 @@
 import { ReactNode } from 'react'
 
-import Sidebar from './sidebar'
-import Toolbar from './toolbar'
+import Sidebar from '../sidebar'
+import Toolbar from '../toolbar'
 
-export default function Layout(props: { children: ReactNode }) {
+export default function ShellLayout(props: { children: ReactNode }) {
   return (
     <>
       <Sidebar />
