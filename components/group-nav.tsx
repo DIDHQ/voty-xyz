@@ -54,7 +54,7 @@ export default function GroupNav(props: { className?: string }) {
           {group?.name || '...'}
         </h3>
       </div>
-      <div className="border-b border-gray-200">
+      <div className="border-b">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
           {tabs.map((tab) => (
             <Link
@@ -63,7 +63,7 @@ export default function GroupNav(props: { className?: string }) {
               className={clsx(
                 tab.current
                   ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                  : 'border-transparent text-gray-500 hover:border hover:text-gray-700',
                 'h-14 whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium',
               )}
               aria-current={tab.current ? 'page' : undefined}

@@ -15,10 +15,10 @@ export default function Button(
       {...restProps}
       disabled={loading || disabled}
       className={clsx(
-        'flex items-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500',
+        'flex items-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:border disabled:bg-gray-50 disabled:text-gray-500',
         primary
           ? 'border-transparent bg-indigo-600 text-white hover:bg-indigo-700'
-          : 'border-gray-300 bg-white shadow-sm hover:bg-gray-50',
+          : 'border bg-white shadow-sm hover:bg-gray-50',
         className,
       )}
     >
