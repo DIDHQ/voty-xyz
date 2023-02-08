@@ -23,5 +23,9 @@ export function FormSection(props: { title: string; children: ReactNode }) {
 }
 
 export function FormFooter(props: { children: ReactNode }) {
-  return <div className="flex justify-between pt-6">{props.children}</div>
+  return (
+    <div className="flex flex-row-reverse justify-between pt-6">
+      {props.children}
+    </div>
+  )
 }

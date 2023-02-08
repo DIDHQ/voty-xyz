@@ -172,12 +172,6 @@ export default function CreateProposalPage() {
         </Grid6>
       </FormSection>
       <FormFooter>
-        <DidSelect
-          account={account}
-          value={did}
-          onChange={setDid}
-          className="mr-4 w-48"
-        />
         <Button
           primary
           disabled={!did}
@@ -186,6 +180,12 @@ export default function CreateProposalPage() {
         >
           Submit
         </Button>
+        <DidSelect
+          account={account}
+          value={did}
+          onChange={setDid}
+          className="mr-4 w-48"
+        />
       </FormFooter>
     </Form>
   )

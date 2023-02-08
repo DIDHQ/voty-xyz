@@ -224,6 +224,14 @@ export default function GroupForm(props: {
         </Grid6>
       </FormSection>
       <FormFooter>
+        <Button
+          primary
+          disabled={!isAdmin}
+          loading={handleSubmit.status === 'pending'}
+          onClick={onSubmit(handleSubmit.execute, console.error)}
+        >
+          {isNew ? 'Create' : 'Submit'}
+        </Button>
         {isNew ? (
           <div />
         ) : (
@@ -237,14 +245,6 @@ export default function GroupForm(props: {
             Archive
           </Button>
         )}
-        <Button
-          primary
-          disabled={!isAdmin}
-          loading={handleSubmit.status === 'pending'}
-          onClick={onSubmit(handleSubmit.execute, console.error)}
-        >
-          {isNew ? 'Create' : 'Submit'}
-        </Button>
       </FormFooter>
     </Form>
   )
