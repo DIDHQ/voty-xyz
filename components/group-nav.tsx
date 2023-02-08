@@ -50,7 +50,9 @@ export default function GroupNav(props: { className?: string }) {
             />
           )
         ) : null}
-        <h3 className="text-2xl font-medium text-gray-900">{group?.name}</h3>
+        <h3 className="text-2xl font-medium text-gray-900">
+          {group?.name || '...'}
+        </h3>
       </div>
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
