@@ -20,7 +20,7 @@ import FormItem from './basic/form-item'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
-import NumberSetsForm from './number-sets-form'
+import NumberSetsBlock from './number-sets-block'
 import { useUpload } from '../hooks/use-api'
 
 export default function GroupForm(props: {
@@ -131,7 +131,7 @@ export default function GroupForm(props: {
       </div>
       <div className="grid grid-cols-1 gap-y-6 gap-x-4 pt-8 sm:grid-cols-6">
         <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Proposer
+          Proposers
         </h3>
         <div className="sm:col-span-6">
           <FormItem
@@ -150,30 +150,25 @@ export default function GroupForm(props: {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-y-6 gap-x-4 pt-8 sm:grid-cols-6">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">Voter</h3>
+        <h3 className="text-lg font-medium leading-6 text-gray-900">Voters</h3>
         <div className="sm:col-span-6">
           <FormItem
-            label="Voting"
             error={
               formState.errors?.groups?.[props.group]?.permission?.voting
                 ?.message
             }
           >
-            <Controller
-              control={control}
-              name={`groups.${props.group}.permission.voting`}
-              render={({ field: { value, onChange } }) => (
-                <NumberSetsForm value={value} onChange={onChange} />
-              )}
-            />
+            <FormProvider {...methods}>
+              <NumberSetsBlock name="permission.voting" group={props.group} />
+            </FormProvider>
           </FormItem>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-y-6 gap-x-4 pt-8 sm:grid-cols-6">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">Rule</h3>
+        <h3 className="text-lg font-medium leading-6 text-gray-900">Rules</h3>
         <div className="sm:col-span-6">
           <FormItem
-            label="Proposing"
+            label="Duration of announcement"
             error={
               formState.errors?.groups?.[props.group]?.period?.announcement
                 ?.message
@@ -197,7 +192,7 @@ export default function GroupForm(props: {
         </div>
         <div className="sm:col-span-6">
           <FormItem
-            label="Voting"
+            label="Duration of voting"
             error={
               formState.errors?.groups?.[props.group]?.period?.voting?.message
             }

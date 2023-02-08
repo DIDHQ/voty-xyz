@@ -8,8 +8,8 @@ import Slide from './basic/slide'
 import TextInput from './basic/text-input'
 import JsonInput from './json-input'
 
-export default function BooleanSetsBlock(props: {
-  name: 'permission.proposing' | 'permission.adding_option'
+export default function NumberSetsBlock(props: {
+  name: 'permission.voting'
   group: number
 }) {
   const { control } = useFormContext<Community>()
@@ -26,7 +26,7 @@ export default function BooleanSetsBlock(props: {
           className="mb-4 divide-y divide-gray-200 rounded-md border border-gray-200"
         >
           {fields.map((operand, index) => (
-            <BooleanUnitBlock
+            <NumberUnitBlock
               key={operand.id}
               name={props.name}
               group={props.group}
@@ -43,10 +43,10 @@ export default function BooleanSetsBlock(props: {
   )
 }
 
-function BooleanUnitBlock(props: {
-  name: 'permission.proposing' | 'permission.adding_option'
-  group: number
+function NumberUnitBlock(props: {
   index: number
+  name: 'permission.voting'
+  group: number
   onRemove(index: number): void
 }) {
   const { control, watch, register } = useFormContext<Community>()
@@ -54,7 +54,6 @@ function BooleanUnitBlock(props: {
   const handleRemove = useCallback(() => {
     onRemove(props.index)
   }, [onRemove, props.index])
-
   return (
     <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
       <div className="flex w-0 flex-1 items-center">
@@ -89,7 +88,7 @@ function BooleanUnitBlock(props: {
                 name={`groups.${props.group}.${props.name}.operands.${props.index}.function`}
                 render={({ field: { value, onChange } }) => (
                   <Select
-                    options={['is_did', 'is_sub_did_of', 'owns_erc721']}
+                    options={['static_power', 'erc20_balance']}
                     value={value}
                     onChange={onChange}
                   />
