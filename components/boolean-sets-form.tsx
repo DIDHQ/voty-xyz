@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from 'react'
+import { Fragment, useCallback, useEffect } from 'react'
 import {
   Controller,
   FormProvider,
@@ -10,6 +10,7 @@ import {
 import { BooleanSets } from '../src/schemas'
 import Button from './basic/button'
 import Select from './basic/select'
+import Slide from './basic/slide'
 import JsonInput from './json-input'
 
 export default function BooleanSetsForm(props: {
@@ -19,30 +20,24 @@ export default function BooleanSetsForm(props: {
   const methods = useForm<BooleanSets>({
     defaultValues: {
       operator: 'or',
-      operands: [
-        { operator: 'and', operands: [{ function: '', arguments: [] }] },
-      ],
+      operands: [{ function: '', arguments: [] }],
     },
   })
-  const { reset, handleSubmit, watch } = methods
+  const { reset, handleSubmit } = methods
   useEffect(() => {
     reset(props.value)
   }, [props.value, reset])
 
   return (
-    <>
+    <div onBlur={handleSubmit(props.onChange, console.error)}>
       <FormProvider {...methods}>
-        <BooleanSetsAndBlock />
+        <BooleanSetsBlock />
       </FormProvider>
-      <Button primary onClick={handleSubmit(props.onChange, console.error)}>
-        Confirm
-      </Button>
-      <pre>{JSON.stringify(watch(), null, 2)}</pre>
-    </>
+    </div>
   )
 }
 
-function BooleanSetsAndBlock() {
+function BooleanSetsBlock() {
   const { control } = useFormContext<BooleanSets>()
   const { fields, append, remove } = useFieldArray({
     control,
@@ -51,71 +46,90 @@ function BooleanSetsAndBlock() {
 
   return (
     <>
-      {fields.map((operand, index) => (
-        <Fragment key={operand.id}>
-          <BooleanSetsOrBlock index={index} />
-          <Button onClick={() => remove(index)}>-</Button>
-        </Fragment>
-      ))}
-      <Button
-        onClick={() =>
-          append({
-            operator: 'and',
-            operands: [{ function: '', arguments: [] }],
-          })
-        }
+      <ul
+        role="list"
+        className="divide-y divide-gray-200 rounded-md border border-gray-200"
       >
-        Append Operator
+        {fields.map((operand, index) => (
+          <Fragment key={operand.id}>
+            <BooleanUnitBlock index={index} onRemove={remove} />
+          </Fragment>
+        ))}
+      </ul>
+      <Button
+        onClick={() => append({ function: '', arguments: [] })}
+        className="mt-4"
+      >
+        Add
       </Button>
     </>
   )
 }
 
-function BooleanSetsOrBlock(props: { index: number }) {
-  const { control } = useFormContext<BooleanSets>()
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: `operands.${props.index}.operands`,
-  })
+function BooleanUnitBlock(props: {
+  index: number
+  onRemove(index: number): void
+}) {
+  const { control, watch } = useFormContext<BooleanSets>()
+  const { onRemove } = props
+  const handleRemove = useCallback(() => {
+    onRemove(props.index)
+  }, [onRemove, props.index])
 
   return (
-    <>
-      {fields.map((operand, index) => (
-        <Fragment key={operand.id}>
-          <BooleanUnitBlock i={props.index} index={index} />
-          <Button onClick={() => remove(index)}>-</Button>
-        </Fragment>
-      ))}
-      <Button onClick={() => append({ function: '', arguments: [] })}>
-        Append Function
-      </Button>
-    </>
-  )
-}
-
-function BooleanUnitBlock(props: { i: number; index: number }) {
-  const { control } = useFormContext<BooleanSets>()
-
-  return (
-    <>
-      <Controller
-        control={control}
-        name={`operands.${props.i}.operands.${props.index}.function`}
-        render={({ field: { value, onChange } }) => (
-          <Select
-            options={['is_did', 'is_sub_did_of', 'owns_erc721']}
-            value={value}
-            onChange={onChange}
+    <Slide
+      title="Config"
+      trigger={({ handleOpen }) => (
+        <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
+          <div className="flex w-0 flex-1 items-center">
+            <span className="ml-2 w-0 flex-1 truncate">
+              {watch(`operands.${props.index}.name`)}
+            </span>
+          </div>
+          <div className="ml-4 flex shrink-0 space-x-4">
+            <button
+              type="button"
+              onClick={handleOpen}
+              className="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Edit
+            </button>
+            <span className="text-gray-300" aria-hidden="true">
+              |
+            </span>
+            <button
+              type="button"
+              onClick={handleRemove}
+              className="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Remove
+            </button>
+          </div>
+        </li>
+      )}
+    >
+      {({ handleClose }) => (
+        <>
+          <Controller
+            control={control}
+            name={`operands.${props.index}.function`}
+            render={({ field: { value, onChange } }) => (
+              <Select
+                options={['is_did', 'is_sub_did_of', 'owns_erc721']}
+                value={value}
+                onChange={onChange}
+              />
+            )}
           />
-        )}
-      />
-      <Controller
-        control={control}
-        name={`operands.${props.i}.operands.${props.index}.arguments`}
-        render={({ field: { value, onChange } }) => (
-          <JsonInput value={value} onChange={onChange} />
-        )}
-      />
-    </>
+          <Controller
+            control={control}
+            name={`operands.${props.index}.arguments`}
+            render={({ field: { value, onChange } }) => (
+              <JsonInput value={value} onChange={onChange} />
+            )}
+          />
+        </>
+      )}
+    </Slide>
   )
 }
