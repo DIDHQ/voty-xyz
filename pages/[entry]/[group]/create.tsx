@@ -20,6 +20,8 @@ import Select from '../../../components/basic/select'
 import { useEntryConfig, useRetrieve, useUpload } from '../../../hooks/use-api'
 import { DataType } from '../../../src/constants'
 import TextButton from '../../../components/basic/text-button'
+import { Form, FormFooter, FormSection } from '../../../components/basic/form'
+import { Grid6, GridItem6 } from '../../../components/basic/grid'
 
 export default function CreateProposalPage() {
   const {
@@ -102,99 +104,90 @@ export default function CreateProposalPage() {
   )
 
   return (
-    <div className="flex w-full flex-col">
-      <div className="space-y-8 divide-y divide-gray-200">
-        <div className="pt-8">
-          <div>
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
-              Proposal
-            </h3>
-          </div>
-          <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-            <div className="sm:col-span-6">
-              <FormItem label="Title" error={errors.title?.message}>
-                <TextInput {...register('title')} />
-              </FormItem>
-            </div>
-            <div className="sm:col-span-6">
-              <FormItem label="Body" error={errors.extension?.body?.message}>
-                <Textarea {...register('extension.body')} />
-              </FormItem>
-            </div>
-            <div className="sm:col-span-6">
-              <FormItem label="Voting type" error={errors.voting_type?.message}>
-                <Controller
-                  control={control}
-                  name="voting_type"
-                  render={({ field: { value, onChange } }) => (
-                    <Select
-                      options={proposalSchema.shape.voting_type.options}
-                      value={value}
-                      onChange={onChange}
-                    />
-                  )}
-                />
-              </FormItem>
-            </div>
-            <div className="sm:col-span-6">
-              <FormItem label="Options" error={errors.options?.message}>
-                <ul
-                  role="list"
-                  className="mb-4 divide-y divide-gray-300 rounded-md border "
-                >
-                  {watch('options')?.map((_, index) => (
-                    <li
-                      key={index}
-                      className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
-                    >
-                      <div className="flex w-0 flex-1 items-center">
-                        <span className="ml-2 w-0 flex-1 truncate">
-                          <input
-                            {...register(`options.${index}`)}
-                            placeholder={`Option ${index + 1}`}
-                          />
-                        </span>
-                      </div>
-                      <div className="ml-4 flex shrink-0 space-x-4">
-                        <OptionDelete
-                          index={index}
-                          onDelete={handleOptionDelete}
+    <Form>
+      <FormSection title="Proposal">
+        <Grid6>
+          <GridItem6>
+            <FormItem label="Title" error={errors.title?.message}>
+              <TextInput {...register('title')} />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
+            <FormItem label="Body" error={errors.extension?.body?.message}>
+              <Textarea {...register('extension.body')} />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
+            <FormItem label="Voting type" error={errors.voting_type?.message}>
+              <Controller
+                control={control}
+                name="voting_type"
+                render={({ field: { value, onChange } }) => (
+                  <Select
+                    options={proposalSchema.shape.voting_type.options}
+                    value={value}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
+            <FormItem label="Options" error={errors.options?.message}>
+              <ul
+                role="list"
+                className="mb-4 divide-y divide-gray-200 rounded-md border "
+              >
+                {watch('options')?.map((_, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
+                  >
+                    <div className="flex w-0 flex-1 items-center">
+                      <span className="ml-2 w-0 flex-1 truncate">
+                        <input
+                          {...register(`options.${index}`)}
+                          placeholder={`Option ${index + 1}`}
                         />
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                <TextButton
-                  onClick={() => {
-                    setValue('options', [...(watch('options') || []), ''])
-                  }}
-                >
-                  Add
-                </TextButton>
-              </FormItem>
-            </div>
-          </div>
-        </div>
-        <div className="pt-5">
-          <div className="flex justify-end">
-            <DidSelect
-              account={account}
-              value={did}
-              onChange={setDid}
-              className="mr-4 w-48"
-            />
-            <Button
-              primary
-              disabled={!did}
-              onClick={onSubmit(handleSubmit.execute, console.error)}
-              loading={handleSubmit.status === 'pending'}
-            >
-              Submit
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
+                      </span>
+                    </div>
+                    <div className="ml-4 flex shrink-0 space-x-4">
+                      <OptionDelete
+                        index={index}
+                        onDelete={handleOptionDelete}
+                      />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <TextButton
+                onClick={() => {
+                  setValue('options', [...(watch('options') || []), ''])
+                }}
+              >
+                Add
+              </TextButton>
+            </FormItem>
+          </GridItem6>
+        </Grid6>
+      </FormSection>
+      <FormFooter>
+        <DidSelect
+          account={account}
+          value={did}
+          onChange={setDid}
+          className="mr-4 w-48"
+        />
+        <Button
+          primary
+          disabled={!did}
+          onClick={onSubmit(handleSubmit.execute, console.error)}
+          loading={handleSubmit.status === 'pending'}
+        >
+          Submit
+        </Button>
+      </FormFooter>
+    </Form>
   )
 }
 

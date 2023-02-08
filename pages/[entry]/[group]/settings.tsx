@@ -28,7 +28,7 @@ export default function GroupSettingsPage() {
             entry={query.entry}
             community={community}
             group={parseInt(query.group)}
-            className="pt-6 pl-6"
+            className="pl-6"
           />
         ) : null}
       </GroupLayout>

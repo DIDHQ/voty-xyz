@@ -7,7 +7,6 @@ import {
   useFieldArray,
   useForm,
 } from 'react-hook-form'
-import clsx from 'clsx'
 
 import useAsync from '../hooks/use-async'
 import useResolveDid from '../hooks/use-resolve-did'
@@ -22,6 +21,8 @@ import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import NumberSetsBlock from './number-sets-block'
 import { useUpload } from '../hooks/use-api'
+import { Form, FormFooter, FormSection } from './basic/form'
+import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 
 export default function GroupForm(props: {
   entry: string
@@ -103,84 +104,82 @@ export default function GroupForm(props: {
   }, [append, isNew])
 
   return (
-    <div
-      className={clsx('space-y-8 divide-y divide-gray-200', props.className)}
-    >
-      <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">Profile</h3>
-        <div className="sm:col-span-6">
-          <FormItem
-            label="Name"
-            error={errors.groups?.[props.group]?.name?.message}
-          >
-            <TextInput
-              {...register(`groups.${props.group}.name`)}
-              disabled={!isAdmin}
-            />
-          </FormItem>
-        </div>
-        <div className="sm:col-span-6">
-          <FormItem
-            label="About"
-            error={errors.groups?.[props.group]?.extension?.about?.message}
-          >
-            <Textarea
-              {...register(`groups.${props.group}.extension.about`)}
-              disabled={!isAdmin}
-            />
-          </FormItem>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 gap-y-6 gap-x-4 pt-8 sm:grid-cols-6">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Proposers
-        </h3>
-        <div className="sm:col-span-6">
-          <FormItem
-            error={
-              errors.groups?.[props.group]?.permission?.proposing
-                ? JSON.stringify(
-                    errors.groups?.[props.group]?.permission?.proposing,
-                  )
-                : undefined
-            }
-          >
-            <FormProvider {...methods}>
-              <BooleanSetsBlock
-                name="permission.proposing"
-                group={props.group}
+    <Form className={props.className}>
+      <FormSection title="Profile">
+        <Grid6>
+          <GridItem6>
+            <FormItem
+              label="Name"
+              error={errors.groups?.[props.group]?.name?.message}
+            >
+              <TextInput
+                {...register(`groups.${props.group}.name`)}
                 disabled={!isAdmin}
               />
-            </FormProvider>
-          </FormItem>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 gap-y-6 gap-x-4 pt-8 sm:grid-cols-6">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">Voters</h3>
-        <div className="sm:col-span-6">
-          <FormItem
-            error={
-              errors?.groups?.[props.group]?.permission?.voting
-                ? JSON.stringify(
-                    errors?.groups?.[props.group]?.permission?.voting,
-                  )
-                : undefined
-            }
-          >
-            <FormProvider {...methods}>
-              <NumberSetsBlock
-                name="permission.voting"
-                group={props.group}
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
+            <FormItem
+              label="About"
+              error={errors.groups?.[props.group]?.extension?.about?.message}
+            >
+              <Textarea
+                {...register(`groups.${props.group}.extension.about`)}
                 disabled={!isAdmin}
               />
-            </FormProvider>
-          </FormItem>
-        </div>
-      </div>
-      <div className="pt-8">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">Rules</h3>
-        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+            </FormItem>
+          </GridItem6>
+        </Grid6>
+      </FormSection>
+      <FormSection title="Proposers">
+        <Grid6>
+          <GridItem6>
+            <FormItem
+              error={
+                errors.groups?.[props.group]?.permission?.proposing
+                  ? JSON.stringify(
+                      errors.groups?.[props.group]?.permission?.proposing,
+                    )
+                  : undefined
+              }
+            >
+              <FormProvider {...methods}>
+                <BooleanSetsBlock
+                  name="permission.proposing"
+                  group={props.group}
+                  disabled={!isAdmin}
+                />
+              </FormProvider>
+            </FormItem>
+          </GridItem6>
+        </Grid6>
+      </FormSection>
+      <FormSection title="Voters">
+        <Grid6>
+          <GridItem6>
+            <FormItem
+              error={
+                errors?.groups?.[props.group]?.permission?.voting
+                  ? JSON.stringify(
+                      errors?.groups?.[props.group]?.permission?.voting,
+                    )
+                  : undefined
+              }
+            >
+              <FormProvider {...methods}>
+                <NumberSetsBlock
+                  name="permission.voting"
+                  group={props.group}
+                  disabled={!isAdmin}
+                />
+              </FormProvider>
+            </FormItem>
+          </GridItem6>
+        </Grid6>
+      </FormSection>
+      <FormSection title="Rules">
+        <Grid6>
+          <GridItem3>
             <FormItem
               label="Duration of announcement"
               error={
@@ -202,8 +201,8 @@ export default function GroupForm(props: {
                 )}
               />
             </FormItem>
-          </div>
-          <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+          </GridItem3>
+          <GridItem3>
             <FormItem
               label="Duration of voting"
               error={errors?.groups?.[props.group]?.period?.voting?.message}
@@ -221,34 +220,32 @@ export default function GroupForm(props: {
                 )}
               />
             </FormItem>
-          </div>
-        </div>
-      </div>
-      <div className="pt-6">
-        <div className="flex justify-between">
-          {isNew ? (
-            <div />
-          ) : (
-            <Button
-              onClick={() => {
-                remove(props.group)
-                onSubmit(handleSubmit.execute, console.error)()
-              }}
-              disabled={!isAdmin}
-            >
-              Archive
-            </Button>
-          )}
+          </GridItem3>
+        </Grid6>
+      </FormSection>
+      <FormFooter>
+        {isNew ? (
+          <div />
+        ) : (
           <Button
-            primary
+            onClick={() => {
+              remove(props.group)
+              onSubmit(handleSubmit.execute, console.error)()
+            }}
             disabled={!isAdmin}
-            loading={handleSubmit.status === 'pending'}
-            onClick={onSubmit(handleSubmit.execute, console.error)}
           >
-            {isNew ? 'Create' : 'Submit'}
+            Archive
           </Button>
-        </div>
-      </div>
-    </div>
+        )}
+        <Button
+          primary
+          disabled={!isAdmin}
+          loading={handleSubmit.status === 'pending'}
+          onClick={onSubmit(handleSubmit.execute, console.error)}
+        >
+          {isNew ? 'Create' : 'Submit'}
+        </Button>
+      </FormFooter>
+    </Form>
   )
 }

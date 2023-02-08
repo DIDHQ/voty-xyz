@@ -13,7 +13,11 @@ export default function CommunitySettingsPage() {
     <CommunityLayout>
       {query.entry ? (
         <div className="flex w-full flex-col">
-          <CommunityForm entry={query.entry} community={community} />
+          <CommunityForm
+            entry={query.entry}
+            community={community}
+            className="pl-6"
+          />
         </div>
       ) : null}
     </CommunityLayout>

@@ -13,10 +13,13 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import Button from './basic/button'
 import { useUpload } from '../hooks/use-api'
+import { Form, FormFooter, FormSection } from './basic/form'
+import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 
 export default function CommunityForm(props: {
   entry: string
   community?: Community
+  className?: string
 }) {
   const {
     control,
@@ -56,11 +59,10 @@ export default function CommunityForm(props: {
   )
 
   return (
-    <div className="space-y-8 divide-y divide-gray-200 pl-6">
-      <div className="pt-8">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">Profile</h3>
-        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <div className="sm:col-span-6">
+    <Form className={props.className}>
+      <FormSection title="Profile">
+        <Grid6>
+          <GridItem6>
             <FormItem label="Name" error={errors.name?.message}>
               <TextInput
                 error={!!errors.name?.message}
@@ -68,8 +70,8 @@ export default function CommunityForm(props: {
                 disabled={!isAdmin}
               />
             </FormItem>
-          </div>
-          <div className="sm:col-span-6">
+          </GridItem6>
+          <GridItem6>
             <FormItem label="About" error={errors.extension?.about?.message}>
               <Textarea
                 error={!!errors.extension?.about?.message}
@@ -77,8 +79,8 @@ export default function CommunityForm(props: {
                 disabled={!isAdmin}
               />
             </FormItem>
-          </div>
-          <div className="sm:col-span-6">
+          </GridItem6>
+          <GridItem6>
             <FormItem label="Avatar" error={errors.extension?.avatar?.message}>
               <Controller
                 control={control}
@@ -93,8 +95,8 @@ export default function CommunityForm(props: {
                 )}
               />
             </FormItem>
-          </div>
-          <div className="sm:col-span-6">
+          </GridItem6>
+          <GridItem6>
             <FormItem
               label="Website"
               error={errors.extension?.website?.message}
@@ -105,52 +107,47 @@ export default function CommunityForm(props: {
                 disabled={!isAdmin}
               />
             </FormItem>
-          </div>
-        </div>
-      </div>
-      <div className="pt-8">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Social accounts
-        </h3>
-        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+          </GridItem6>
+        </Grid6>
+      </FormSection>
+      <FormSection title="Social accounts">
+        <Grid6>
+          <GridItem2>
             <FormItem label="Twitter">
               <TextInput
                 {...register('extension.twitter')}
                 disabled={!isAdmin}
               />
             </FormItem>
-          </div>
-          <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+          </GridItem2>
+          <GridItem2>
             <FormItem label="Discord">
               <TextInput
                 {...register('extension.discord')}
                 disabled={!isAdmin}
               />
             </FormItem>
-          </div>
-          <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+          </GridItem2>
+          <GridItem2>
             <FormItem label="GitHub">
               <TextInput
                 {...register('extension.github')}
                 disabled={!isAdmin}
               />
             </FormItem>
-          </div>
-        </div>
-      </div>
-      <div className="pt-5">
-        <div className="flex justify-end">
-          <Button
-            primary
-            disabled={!isAdmin}
-            loading={handleSubmit.status === 'pending'}
-            onClick={onSubmit(handleSubmit.execute, console.error)}
-          >
-            {props.community ? 'Submit' : 'Create'}
-          </Button>
-        </div>
-      </div>
-    </div>
+          </GridItem2>
+        </Grid6>
+      </FormSection>
+      <FormFooter>
+        <Button
+          primary
+          disabled={!isAdmin}
+          loading={handleSubmit.status === 'pending'}
+          onClick={onSubmit(handleSubmit.execute, console.error)}
+        >
+          {props.community ? 'Submit' : 'Create'}
+        </Button>
+      </FormFooter>
+    </Form>
   )
 }
