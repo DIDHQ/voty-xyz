@@ -115,7 +115,10 @@ export default function GroupForm(props: {
             label="Name"
             error={formState.errors.groups?.[props.group]?.name?.message}
           >
-            <TextInput {...register(`groups.${props.group}.name`)} />
+            <TextInput
+              {...register(`groups.${props.group}.name`)}
+              disabled={!isAdmin}
+            />
           </FormItem>
         </div>
         <div className="sm:col-span-6">
@@ -125,7 +128,10 @@ export default function GroupForm(props: {
               formState.errors.groups?.[props.group]?.extension?.about?.message
             }
           >
-            <Textarea {...register(`groups.${props.group}.extension.about`)} />
+            <Textarea
+              {...register(`groups.${props.group}.extension.about`)}
+              disabled={!isAdmin}
+            />
           </FormItem>
         </div>
       </div>
@@ -144,6 +150,7 @@ export default function GroupForm(props: {
               <BooleanSetsBlock
                 name="permission.proposing"
                 group={props.group}
+                disabled={!isAdmin}
               />
             </FormProvider>
           </FormItem>
@@ -159,7 +166,11 @@ export default function GroupForm(props: {
             }
           >
             <FormProvider {...methods}>
-              <NumberSetsBlock name="permission.voting" group={props.group} />
+              <NumberSetsBlock
+                name="permission.voting"
+                group={props.group}
+                disabled={!isAdmin}
+              />
             </FormProvider>
           </FormItem>
         </div>
@@ -182,6 +193,7 @@ export default function GroupForm(props: {
                   <DurationInput
                     value={value}
                     onChange={onChange}
+                    disabled={!isAdmin}
                     error={
                       !!formState.errors?.groups?.[props.group]?.period
                         ?.announcement
@@ -205,6 +217,7 @@ export default function GroupForm(props: {
                   <DurationInput
                     value={value}
                     onChange={onChange}
+                    disabled={!isAdmin}
                     error={
                       !!formState.errors?.groups?.[props.group]?.period?.voting
                     }
@@ -225,6 +238,7 @@ export default function GroupForm(props: {
                 remove(props.group)
                 onSubmit(console.log, console.error)()
               }}
+              disabled={!isAdmin}
             >
               Delete
             </Button>
