@@ -57,10 +57,10 @@ export default function DurationInput(props: {
         disabled={props.disabled}
         aria-invalid={props.error ? 'true' : 'false'}
         className={clsx(
-          'block w-full rounded-md pl-4 pr-24 disabled:cursor-not-allowed disabled:border disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
+          'block w-full rounded-md pl-4 pr-24 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
           props.error
             ? 'border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500'
-            : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500',
+            : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-500',
         )}
       />
       <div className="absolute inset-y-0 right-0 flex items-center">

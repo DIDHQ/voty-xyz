@@ -149,7 +149,7 @@ export default function ProposalPage() {
               <dd className="mt-1 text-sm text-gray-900">
                 <ul
                   role="list"
-                  className="divide-y divide-gray-200 rounded-md border"
+                  className="divide-y divide-gray-200 rounded-md border border-gray-200"
                 >
                   <Controller
                     control={control}
@@ -186,7 +186,7 @@ export default function ProposalPage() {
                                   type="radio"
                                   checked={JSON.stringify(choice) === value}
                                   onChange={() => null}
-                                  className="h-4 w-4 border text-indigo-600 focus:ring-indigo-500"
+                                  className="h-4 w-4 border-gray-200 text-indigo-600 focus:ring-indigo-500"
                                 />
                               ) : (
                                 <input
@@ -195,7 +195,7 @@ export default function ProposalPage() {
                                     JSON.parse(value || '[]') as string[]
                                   ).includes(choice)}
                                   onChange={() => null}
-                                  className="h-4 w-4 rounded border text-indigo-600 focus:ring-indigo-500"
+                                  className="h-4 w-4 rounded border-gray-200 text-indigo-600 focus:ring-indigo-500"
                                 />
                               )}
                             </div>
@@ -228,7 +228,10 @@ export default function ProposalPage() {
           </Button>
         </div>
       </div>
-      <ul role="list" className="divide-y divide-gray-200 rounded-md border">
+      <ul
+        role="list"
+        className="divide-y divide-gray-200 rounded-md border border-gray-200"
+      >
         {votes?.map((vote) => (
           <li
             key={vote.uri}

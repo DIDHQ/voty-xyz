@@ -136,7 +136,7 @@ export default function CreateProposalPage() {
             <FormItem label="Options" error={errors.options?.message}>
               <ul
                 role="list"
-                className="mb-4 divide-y divide-gray-200 rounded-md border "
+                className="mb-4 divide-y divide-gray-200 rounded-md border border-gray-200"
               >
                 {watch('options')?.map((_, index) => (
                   <li

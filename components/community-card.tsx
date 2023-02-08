@@ -12,7 +12,7 @@ export default function CommunityCard(props: {
     <Link
       key={community.uri}
       href={`/${community.author.did}`}
-      className="block w-60 rounded-md border hover:bg-gray-50"
+      className="block w-60 rounded-md border border-gray-200 hover:bg-gray-50"
     >
       <div className="flex items-center p-4">
         <div className="shrink-0">
