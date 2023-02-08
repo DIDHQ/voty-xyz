@@ -7,30 +7,37 @@ import { Authorized, Community, Proposal, Option, Vote } from '../src/schemas'
 import { fetchJson } from '../src/utils/fetcher'
 
 export function useEntryConfig(did?: string) {
-  return useSWR<{ community?: string }>(did ? ['entry', did] : null, async () =>
-    fetchJson<{
-      community: string
-    }>(`/api/entry?did=${did}`),
+  return useSWR<{ community?: string }>(
+    did ? ['entry', did] : null,
+    async () =>
+      fetchJson<{
+        community: string
+      }>(`/api/entry?did=${did}`),
+    { revalidateOnFocus: false },
   )
 }
 
 export function useRetrieve<T extends DataType>(type: T, uri?: string) {
-  return useSWR(uri ? ['retrieve', uri] : null, async () => {
-    const { data } = await fetchJson<{
-      data: Authorized<
-        T extends DataType.COMMUNITY
-          ? Community
-          : T extends DataType.PROPOSAL
-          ? Proposal
-          : T extends DataType.OPTION
-          ? Option
-          : T extends DataType.VOTE
-          ? Vote
-          : never
-      >
-    }>(`/api/retrieve?type=${type}&uri=${uri}`)
-    return data
-  })
+  return useSWR(
+    uri ? ['retrieve', uri] : null,
+    async () => {
+      const { data } = await fetchJson<{
+        data: Authorized<
+          T extends DataType.COMMUNITY
+            ? Community
+            : T extends DataType.PROPOSAL
+            ? Proposal
+            : T extends DataType.OPTION
+            ? Option
+            : T extends DataType.VOTE
+            ? Vote
+            : never
+        >
+      }>(`/api/retrieve?type=${type}&uri=${uri}`)
+      return data
+    },
+    { revalidateOnFocus: false },
+  )
 }
 
 export function useUpload<T extends Authorized<Community | Proposal | Vote>>() {

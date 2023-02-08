@@ -10,6 +10,7 @@ import JsonInput from './json-input'
 export default function NumberSetsBlock(props: {
   name: 'permission.voting'
   group: number
+  disabled?: boolean
 }) {
   const { control } = useFormContext<Community>()
   const { fields, append, remove } = useFieldArray({
@@ -31,17 +32,20 @@ export default function NumberSetsBlock(props: {
               group={props.group}
               index={index}
               onRemove={remove}
+              disabled={props.disabled}
             />
           ))}
         </ul>
       ) : null}
-      <button
-        type="button"
-        onClick={() => append({ function: '', arguments: [] })}
-        className="rounded-md bg-white text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-      >
-        Add
-      </button>
+      {props.disabled ? null : (
+        <button
+          type="button"
+          onClick={() => append({ function: '', arguments: [] })}
+          className="rounded-md bg-white text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
+          Add
+        </button>
+      )}
     </>
   )
 }
@@ -51,6 +55,7 @@ function NumberUnitBlock(props: {
   name: 'permission.voting'
   group: number
   onRemove(index: number): void
+  disabled?: boolean
 }) {
   const { control, watch, register } = useFormContext<Community>()
   const { onRemove } = props
@@ -63,7 +68,7 @@ function NumberUnitBlock(props: {
         <span className="ml-2 w-0 flex-1 truncate">
           {watch(
             `groups.${props.group}.${props.name}.operands.${props.index}.name`,
-          )}
+          ) || `Sets #${props.index + 1}`}
         </span>
       </div>
       <div className="ml-4 flex shrink-0 space-x-4">
@@ -75,7 +80,7 @@ function NumberUnitBlock(props: {
               onClick={handleOpen}
               className="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
-              Edit
+              {props.disabled ? 'View' : 'Edit'}
             </button>
           )}
         >
@@ -107,16 +112,20 @@ function NumberUnitBlock(props: {
             </>
           )}
         </Slide>
-        <span className="text-gray-300" aria-hidden="true">
-          |
-        </span>
-        <button
-          type="button"
-          onClick={handleRemove}
-          className="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        >
-          Remove
-        </button>
+        {props.disabled ? null : (
+          <>
+            <span className="text-gray-300" aria-hidden="true">
+              |
+            </span>
+            <button
+              type="button"
+              onClick={handleRemove}
+              className="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Remove
+            </button>
+          </>
+        )}
       </div>
     </li>
   )

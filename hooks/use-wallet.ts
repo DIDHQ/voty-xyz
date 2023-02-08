@@ -45,6 +45,7 @@ export default function useWallet() {
         name: bit.account,
       }
     },
+    { revalidateOnFocus: false },
   )
   const { data: ensAvatar } = useEnsAvatar(account)
   const { data: ensName } = useEnsName(account)

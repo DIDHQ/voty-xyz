@@ -9,7 +9,6 @@ import {
 } from 'react-hook-form'
 
 import useAsync from '../hooks/use-async'
-import useCurrentSnapshot from '../hooks/use-current-snapshot'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignJson from '../hooks/use-sign-json'
 import useWallet from '../hooks/use-wallet'
@@ -22,11 +21,13 @@ import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import NumberSetsBlock from './number-sets-block'
 import { useUpload } from '../hooks/use-api'
+import clsx from 'clsx'
 
 export default function GroupForm(props: {
   entry: string
   community: Community
   group: number
+  className?: string
 }) {
   const methods = useForm<Community>({
     resolver: zodResolver(communitySchema),
@@ -46,14 +47,9 @@ export default function GroupForm(props: {
     reset(props.community)
   }, [props.community, reset])
   const { account } = useWallet()
-  const { data: snapshot } = useCurrentSnapshot(account?.coinType)
   const handleSignJson = useSignJson(props.entry)
   const handleUpload = useUpload()
-  const { data: resolved } = useResolveDid(
-    props.entry,
-    account?.coinType,
-    snapshot,
-  )
+  const { data: resolved } = useResolveDid(props.entry, account?.coinType)
   const isAdmin = useMemo(
     () =>
       resolved &&
@@ -107,7 +103,9 @@ export default function GroupForm(props: {
   }, [append, isNew])
 
   return props.group < 0 ? null : (
-    <div className="space-y-8 divide-y divide-gray-200">
+    <div
+      className={clsx('space-y-8 divide-y divide-gray-200', props.className)}
+    >
       <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
         <h3 className="text-lg font-medium leading-6 text-gray-900">Profile</h3>
         <div className="sm:col-span-6">
@@ -115,7 +113,10 @@ export default function GroupForm(props: {
             label="Name"
             error={formState.errors.groups?.[props.group]?.name?.message}
           >
-            <TextInput {...register(`groups.${props.group}.name`)} />
+            <TextInput
+              {...register(`groups.${props.group}.name`)}
+              disabled={!isAdmin}
+            />
           </FormItem>
         </div>
         <div className="sm:col-span-6">
@@ -125,7 +126,10 @@ export default function GroupForm(props: {
               formState.errors.groups?.[props.group]?.extension?.about?.message
             }
           >
-            <Textarea {...register(`groups.${props.group}.extension.about`)} />
+            <Textarea
+              {...register(`groups.${props.group}.extension.about`)}
+              disabled={!isAdmin}
+            />
           </FormItem>
         </div>
       </div>
@@ -144,6 +148,7 @@ export default function GroupForm(props: {
               <BooleanSetsBlock
                 name="permission.proposing"
                 group={props.group}
+                disabled={!isAdmin}
               />
             </FormProvider>
           </FormItem>
@@ -159,7 +164,11 @@ export default function GroupForm(props: {
             }
           >
             <FormProvider {...methods}>
-              <NumberSetsBlock name="permission.voting" group={props.group} />
+              <NumberSetsBlock
+                name="permission.voting"
+                group={props.group}
+                disabled={!isAdmin}
+              />
             </FormProvider>
           </FormItem>
         </div>
@@ -182,6 +191,7 @@ export default function GroupForm(props: {
                   <DurationInput
                     value={value}
                     onChange={onChange}
+                    disabled={!isAdmin}
                     error={
                       !!formState.errors?.groups?.[props.group]?.period
                         ?.announcement
@@ -205,6 +215,7 @@ export default function GroupForm(props: {
                   <DurationInput
                     value={value}
                     onChange={onChange}
+                    disabled={!isAdmin}
                     error={
                       !!formState.errors?.groups?.[props.group]?.period?.voting
                     }
@@ -225,6 +236,7 @@ export default function GroupForm(props: {
                 remove(props.group)
                 onSubmit(console.log, console.error)()
               }}
+              disabled={!isAdmin}
             >
               Delete
             </Button>

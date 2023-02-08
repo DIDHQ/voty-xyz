@@ -1,3 +1,4 @@
+import { PlusIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 
 export default function Sidebar() {
@@ -12,6 +13,12 @@ export default function Sidebar() {
           alt="LOGO"
           className="h-8 w-auto"
         />
+      </Link>
+      <Link
+        href="/create"
+        className="group mt-2 flex h-12 w-12 items-center justify-center rounded-full border hover:bg-indigo-600"
+      >
+        <PlusIcon className="h-8 w-8 text-indigo-600 group-hover:text-white" />
       </Link>
     </aside>
   )

@@ -91,7 +91,7 @@ export default function CommunityNav(props: { className?: string }) {
           className="mt-8"
         />
         <h3 className="my-4 text-xl font-bold text-gray-900 sm:text-2xl">
-          {community?.name}
+          {community?.name || '...'}
         </h3>
         <div className="mt-4 w-full space-y-1">
           <h3
