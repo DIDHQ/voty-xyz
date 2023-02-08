@@ -141,7 +141,11 @@ export default function GroupForm(props: {
           <FormItem
             error={
               formState.errors.groups?.[props.group]?.permission?.proposing
-                ?.message
+                ? JSON.stringify(
+                    formState.errors.groups?.[props.group]?.permission
+                      ?.proposing,
+                  )
+                : undefined
             }
           >
             <FormProvider {...methods}>
@@ -160,7 +164,10 @@ export default function GroupForm(props: {
           <FormItem
             error={
               formState.errors?.groups?.[props.group]?.permission?.voting
-                ?.message
+                ? JSON.stringify(
+                    formState.errors?.groups?.[props.group]?.permission?.voting,
+                  )
+                : undefined
             }
           >
             <FormProvider {...methods}>
