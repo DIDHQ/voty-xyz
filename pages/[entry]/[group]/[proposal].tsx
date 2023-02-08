@@ -247,10 +247,11 @@ export default function ProposalPage() {
   ) : data ? (
     <Alert
       type="info"
-      text="This proposal exists on the blockchain, but not imported into Voty."
       action="Import"
       onClick={handleImport.execute}
       className="mt-4"
-    />
+    >
+      This proposal exists on the blockchain, but not imported into Voty.
+    </Alert>
   ) : null
 }

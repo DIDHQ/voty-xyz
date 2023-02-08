@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 import GroupNav from '../group-nav'
 
 export default function GroupLayout(props: {
-  hideNav: boolean
+  hideNav?: boolean
   children: ReactNode
 }) {
   return (

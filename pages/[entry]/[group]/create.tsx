@@ -3,7 +3,6 @@ import pMap from 'p-map'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
-import { XMarkIcon } from '@heroicons/react/20/solid'
 
 import DidSelect from '../../../components/did-select'
 import FormItem from '../../../components/basic/form-item'
@@ -139,18 +138,32 @@ export default function CreateProposalPage() {
             </div>
             <div className="sm:col-span-6">
               <FormItem label="Options" error={errors.options?.message}>
-                {watch('options')?.map((_, index) => (
-                  <div key={index} className="mb-4 flex rounded-md shadow-sm">
-                    <div className="relative flex grow items-stretch focus-within:z-10">
-                      <input
-                        {...register(`options.${index}`)}
-                        placeholder={`Option ${index + 1}`}
-                        className="block w-full rounded-none rounded-l-md border border-gray-300 pl-4 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
-                    <OptionDelete index={index} onDelete={handleOptionDelete} />
-                  </div>
-                ))}
+                <ul
+                  role="list"
+                  className="mb-4 divide-y divide-gray-300 rounded-md border "
+                >
+                  {watch('options')?.map((_, index) => (
+                    <li
+                      key={index}
+                      className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
+                    >
+                      <div className="flex w-0 flex-1 items-center">
+                        <span className="ml-2 w-0 flex-1 truncate">
+                          <input
+                            {...register(`options.${index}`)}
+                            placeholder={`Option ${index + 1}`}
+                          />
+                        </span>
+                      </div>
+                      <div className="ml-4 flex shrink-0 space-x-4">
+                        <OptionDelete
+                          index={index}
+                          onDelete={handleOptionDelete}
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
                 <TextButton
                   onClick={() => {
                     setValue('options', [...(watch('options') || []), ''])
@@ -194,12 +207,5 @@ function OptionDelete(props: {
     onDelete(props.index)
   }, [onDelete, props.index])
 
-  return (
-    <button
-      onClick={handleDelete}
-      className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 p-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-    >
-      <XMarkIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-    </button>
-  )
+  return <TextButton onClick={handleDelete}>Remove</TextButton>
 }
