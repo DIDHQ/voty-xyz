@@ -35,11 +35,9 @@ export default function GroupNav(props: { className?: string }) {
   )
 
   return (
-    <div className={clsx('w-full', props.className)}>
+    <div className={clsx('w-full bg-white', props.className)}>
       <div>
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          {group?.name}
-        </h3>
+        <h3 className="text-2xl font-medium text-gray-900">{group?.name}</h3>
         {group ? (
           <div className="mt-1">
             <p className="text-sm text-gray-600">{group?.extension?.about}</p>

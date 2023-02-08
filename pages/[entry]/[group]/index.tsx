@@ -19,7 +19,7 @@ export default function GroupIndexPage() {
         <Link href={`/${query.entry}/${query.group || 0}/create`}>
           <Button primary>New Proposal</Button>
         </Link>
-        <ul role="list" className="divide-y divide-gray-200">
+        <ul role="list" className="mt-4 divide-y divide-gray-200">
           {proposals?.map((proposal) => (
             <li key={proposal.uri}>
               {query.entry ? (

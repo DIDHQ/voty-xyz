@@ -4,9 +4,9 @@ import GroupNav from '../group-nav'
 
 export default function GroupLayout(props: { children: ReactNode }) {
   return (
-    <div>
-      <GroupNav className="fixed top-20" />
+    <>
+      <GroupNav className="fixed top-16 z-40 pt-4" />
       <main className="pt-24">{props.children}</main>
-    </div>
+    </>
   )
 }
