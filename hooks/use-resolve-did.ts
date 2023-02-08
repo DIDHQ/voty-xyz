@@ -12,5 +12,6 @@ export default function useResolveDid(
       ? ['resolveDid', did, coinType, snapshot]
       : null,
     () => resolveDid(did!, { [coinType!]: snapshot! }),
+    { revalidateOnFocus: false },
   )
 }
