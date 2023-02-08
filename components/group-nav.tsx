@@ -27,7 +27,7 @@ export default function GroupNav(props: { className?: string }) {
         current: router.pathname === '/[entry]/[group]',
       },
       {
-        name: 'Rules',
+        name: 'Settings',
         href: `/${query.entry}/${query.group || 0}/settings`,
         current: router.pathname === '/[entry]/[group]/settings',
       },
