@@ -1,3 +1,4 @@
+import { TrophyIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -36,13 +37,21 @@ export default function GroupNav(props: { className?: string }) {
 
   return (
     <div className={clsx('w-full bg-white', props.className)}>
-      <div>
-        <h3 className="text-2xl font-medium text-gray-900">{group?.name}</h3>
+      <div className="flex h-10 items-center">
         {group ? (
-          <div className="mt-1">
-            <p className="text-sm text-gray-600">{group?.extension?.about}</p>
-          </div>
+          group.permission.adding_option ? (
+            <TrophyIcon
+              className="mr-3 h-6 w-6 shrink-0 text-gray-400"
+              aria-hidden="true"
+            />
+          ) : (
+            <UserGroupIcon
+              className="mr-3 h-6 w-6 shrink-0 text-gray-400"
+              aria-hidden="true"
+            />
+          )
         ) : null}
+        <h3 className="text-2xl font-medium text-gray-900">{group?.name}</h3>
       </div>
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
