@@ -3,9 +3,9 @@ import useSWR from 'swr'
 
 import { didSuffixIs } from '../src/did'
 
-export default function useDidConfig(did: string | undefined) {
-  return useSWR<{ community?: string; delegation?: string }>(
-    did ? ['didConfig', did] : null,
+export default function useDidRecord(did?: string) {
+  return useSWR<{ community?: string }>(
+    did ? ['didRecord', did] : null,
     async () => {
       if (didSuffixIs(did!, 'bit')) {
         const dotbit = createInstance()
@@ -14,7 +14,7 @@ export default function useDidConfig(did: string | undefined) {
           community: records[0]?.value,
         }
       }
-      throw new Error(`unsupported did: ${did}`)
+      throw new Error(`unsupported entry: ${did}`)
     },
   )
 }
