@@ -4,7 +4,7 @@ import { Authorized, Community } from '../src/schemas'
 import Avatar from './basic/avatar'
 
 export default function CommunityCard(props: {
-  community: Authorized<Community> & { uri: string; ts: string }
+  community: Authorized<Community> & { uri: string }
 }) {
   const { community } = props
 
