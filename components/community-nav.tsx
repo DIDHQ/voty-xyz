@@ -1,7 +1,7 @@
 import {
   ClockIcon,
   CogIcon,
-  DocumentIcon,
+  DocumentTextIcon,
   GlobeAltIcon,
   PlusIcon,
   TrophyIcon,
@@ -45,7 +45,7 @@ export default function CommunityNav(props: { className?: string }) {
           ? {
               name: 'About',
               href: `/${entry}/about`,
-              icon: DocumentIcon,
+              icon: DocumentTextIcon,
               current: router.pathname === '/[entry]/about',
             }
           : undefined,
