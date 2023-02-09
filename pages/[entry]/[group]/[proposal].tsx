@@ -33,7 +33,7 @@ export default function ProposalPage() {
     DataType.COMMUNITY,
     proposal?.community,
   )
-  const { data: counting } = useCounting(query.proposal)
+  const { data: counting, mutate: mutateCounting } = useCounting(query.proposal)
   const group = useMemo(
     () => (proposal ? community?.groups?.[proposal?.group] : undefined),
     [community?.groups, proposal],
@@ -67,7 +67,7 @@ export default function ProposalPage() {
       setValue('proposal', query.proposal)
     }
   }, [query.proposal, setValue])
-  const { data: list, mutate } = useListVotes(query.proposal)
+  const { data: list, mutate: mutateList } = useListVotes(query.proposal)
   const votes = useMemo(() => list?.flatMap(({ data }) => data), [list])
   const { data: votingPower, isValidating } = useSWR(
     group && did && proposal ? ['votingPower', group, did, proposal] : null,
@@ -87,9 +87,10 @@ export default function ProposalPage() {
   }, [resetField, setValue, votingPower])
   useEffect(() => {
     if (handleSubmit.status === 'success') {
-      mutate()
+      mutateList()
+      mutateCounting()
     }
-  }, [handleSubmit.status, mutate])
+  }, [handleSubmit.status, mutateList, mutateCounting])
 
   return proposal && group ? (
     <div className="flex py-8">
@@ -132,7 +133,7 @@ export default function ProposalPage() {
                     }}
                   >
                     <span className="ml-2 w-0 flex-1 truncate">{choice}</span>
-                    <span>{counting?.[choice]?.power.toString()}</span>
+                    <span>{counting?.[choice]?.power}</span>
                     <div className="ml-4 shrink-0 leading-none">
                       {proposal.voting_type === 'single' ? (
                         <input

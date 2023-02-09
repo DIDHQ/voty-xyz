@@ -83,21 +83,26 @@ export default async function handler(
     } else if (isVote(json)) {
       const { vote, proposal } = await verifyVote(json)
       await database.$transaction([
-        database.counting.upsert({
-          where: {
-            proposal_choice: { proposal: vote.proposal, choice: vote.choice },
-          },
-          create: {
-            proposal: vote.proposal,
-            choice: vote.choice,
-            voters: 1,
-            power: vote.power,
-          },
-          update: {
-            voters: { increment: 1 },
-            power: { increment: vote.power },
-          },
-        }),
+        ...(proposal.voting_type === 'single'
+          ? [JSON.parse(vote.choice) as string]
+          : (JSON.parse(vote.choice) as string[])
+        ).map((choice) =>
+          database.counting.upsert({
+            where: {
+              proposal_choice: { proposal: vote.proposal, choice },
+            },
+            create: {
+              proposal: vote.proposal,
+              choice,
+              voters: 1,
+              power: vote.power,
+            },
+            update: {
+              voters: { increment: 1 },
+              power: { increment: vote.power },
+            },
+          }),
+        ),
         database.vote.create({
           data: {
             uri,
