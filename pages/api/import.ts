@@ -66,6 +66,7 @@ export default async function handler(
           community: proposal.community,
           group: proposal.group,
           data,
+          voters: 0,
         },
       })
     } else if (isOption(json)) {
@@ -101,6 +102,10 @@ export default async function handler(
             },
           }),
         ),
+        database.proposal.update({
+          where: { uri: vote.proposal },
+          data: { voters: { increment: 1 } },
+        }),
         database.vote.create({
           data: {
             uri,

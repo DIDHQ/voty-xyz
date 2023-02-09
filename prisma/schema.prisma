@@ -41,6 +41,8 @@ model Proposal {
 
   data Bytes
 
+  voters Int
+
   @@id([uri])
   @@index([entry, group])
   @@index([community, group])
