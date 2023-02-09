@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { uniq, without } from 'lodash-es'
 import useSWR from 'swr'
+import { Counting } from '@prisma/client'
 
 import DidSelect from '../../../components/did-select'
 import {
@@ -114,56 +115,15 @@ export default function ProposalPage() {
             render={({ field: { value, onChange } }) => (
               <>
                 {proposal.options.map((choice) => (
-                  <li
+                  <Option
                     key={choice}
-                    className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
-                    style={{
-                      background: `linear-gradient(90deg, #f3f4f6 ${
-                        ((counting?.counting[choice]?.power || 0) /
-                          (counting?.power || 1)) *
-                        100
-                      }%, transparent ${
-                        ((counting?.counting[choice]?.power || 0) /
-                          (counting?.power || 1)) *
-                        100
-                      }%)`,
-                    }}
-                    onClick={() => {
-                      if (proposal.voting_type === 'single') {
-                        onChange(JSON.stringify(choice))
-                      } else {
-                        const old = JSON.parse(value || '[]') as string[]
-                        onChange(
-                          JSON.stringify(
-                            old.includes(choice)
-                              ? without(old, choice)
-                              : uniq([...old, choice]),
-                          ),
-                        )
-                      }
-                    }}
-                  >
-                    <span className="ml-2 w-0 flex-1 truncate">{choice}</span>
-                    <div className="ml-4 shrink-0 leading-none">
-                      {proposal.voting_type === 'single' ? (
-                        <input
-                          type="radio"
-                          checked={JSON.stringify(choice) === value}
-                          onChange={() => null}
-                          className="h-4 w-4 border border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        />
-                      ) : (
-                        <input
-                          type="checkbox"
-                          checked={(
-                            JSON.parse(value || '[]') as string[]
-                          ).includes(choice)}
-                          onChange={() => null}
-                          className="h-4 w-4 rounded border border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        />
-                      )}
-                    </div>
-                  </li>
+                    type={proposal.voting_type}
+                    choice={choice}
+                    votingPower={votingPower}
+                    counting={counting}
+                    value={value}
+                    onChange={onChange}
+                  />
                 ))}
               </>
             )}
@@ -248,4 +208,76 @@ export default function ProposalPage() {
       </Card>
     </div>
   ) : null
+}
+
+export function Option(props: {
+  type: 'single' | 'multiple'
+  choice: string
+  votingPower?: number
+  counting?: {
+    counting: { [choice: string]: Counting }
+    voters: number
+    power: number
+  }
+  value: string
+  onChange(value: string): void
+}) {
+  const { type, choice, votingPower = 0, counting, value, onChange } = props
+  const percentage = useMemo(() => {
+    const power =
+      type === 'single'
+        ? JSON.stringify(choice) === value
+          ? votingPower
+          : 0
+        : (JSON.parse(value || '[]') as string[]).includes(choice)
+        ? votingPower
+        : 0
+    return (
+      (((counting?.counting[choice]?.power || 0) + power) /
+        ((counting?.power || 1) + votingPower)) *
+      100
+    )
+  }, [choice, counting?.counting, counting?.power, type, value, votingPower])
+
+  return (
+    <li
+      className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
+      style={{
+        background: `linear-gradient(90deg, #f3f4f6 ${percentage}%, transparent ${percentage}%)`,
+      }}
+      onClick={() => {
+        if (type === 'single') {
+          onChange(JSON.stringify(choice))
+        } else {
+          const old = JSON.parse(value || '[]') as string[]
+          onChange(
+            JSON.stringify(
+              old.includes(choice)
+                ? without(old, choice)
+                : uniq([...old, choice]),
+            ),
+          )
+        }
+      }}
+    >
+      <span className="ml-2 w-0 flex-1 truncate">{choice}</span>
+      <div className="ml-4 shrink-0 leading-none">
+        {type === 'single' ? (
+          <input
+            type="radio"
+            checked={JSON.stringify(choice) === value}
+            onChange={() => null}
+            className="h-4 w-4 border border-gray-300 text-indigo-600 focus:ring-indigo-500"
+          />
+        ) : (
+          <input
+            type="checkbox"
+            checked={(JSON.parse(value || '[]') as string[]).includes(choice)}
+            onChange={() => null}
+            className="h-4 w-4 rounded border border-gray-300 text-indigo-600 focus:ring-indigo-500"
+          />
+        )}
+      </div>
+    </li>
+  )
 }
