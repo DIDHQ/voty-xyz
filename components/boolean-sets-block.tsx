@@ -74,7 +74,7 @@ function BooleanUnitBlock(props: {
         <div className="flex w-0 flex-1 items-center">
           <span className="ml-2 w-0 flex-1 truncate">
             {watch(
-              `groups.${props.group}.${props.name}.operands.${props.index}.name`,
+              `groups.${props.group}.${props.name}.operands.${props.index}.alias`,
             ) || `Sets #${props.index + 1}`}
           </span>
         </div>
@@ -94,10 +94,10 @@ function BooleanUnitBlock(props: {
       </li>
       {props.open ? (
         <div className="space-y-4 bg-gray-50 p-6">
-          <FormItem label="Name">
+          <FormItem label="Alias">
             <TextInput
               {...register(
-                `groups.${props.group}.${props.name}.operands.${props.index}.name`,
+                `groups.${props.group}.${props.name}.operands.${props.index}.alias`,
               )}
               placeholder={`Sets #${props.index + 1}`}
             />

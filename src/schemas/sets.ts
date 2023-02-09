@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const booleanUnitSchema = z.object({
-  name: z.string().optional(),
+  alias: z.string().optional(),
   function: z.string(),
   arguments: z.array(z.unknown()),
 })
@@ -14,7 +14,7 @@ export const booleanSetsSchema = z.object({
 export type BooleanSets = z.infer<typeof booleanSetsSchema>
 
 export const numberUnitSchema = z.object({
-  name: z.string().optional(),
+  alias: z.string().optional(),
   function: z.string(),
   arguments: z.array(z.unknown()),
 })
