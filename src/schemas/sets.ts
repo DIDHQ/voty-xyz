@@ -21,7 +21,7 @@ export const numberUnitSchema = z.object({
 export type NumberUnit = z.infer<typeof numberUnitSchema>
 
 export const numberSetsSchema = z.object({
-  operator: z.enum(['sum', 'max']),
+  operator: z.literal('max'),
   operands: z.array(numberUnitSchema).min(1),
 })
 export type NumberSets = z.infer<typeof numberSetsSchema>
