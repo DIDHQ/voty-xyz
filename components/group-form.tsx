@@ -23,6 +23,10 @@ import { useEntryConfig, useUpload } from '../hooks/use-api'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 
+const defaultAnnouncementPeriod = 3600
+
+const defaultVotingPeriod = 86400
+
 export default function GroupForm(props: {
   entry: string
   community: Community
@@ -90,8 +94,8 @@ export default function GroupForm(props: {
           },
         },
         period: {
-          announcement: 3600,
-          voting: 86400,
+          announcement: defaultAnnouncementPeriod,
+          voting: defaultVotingPeriod,
         },
         extension: {
           id: nanoid(),
@@ -198,6 +202,7 @@ export default function GroupForm(props: {
               }
             >
               <Controller
+                defaultValue={defaultAnnouncementPeriod}
                 control={control}
                 name={`groups.${props.group}.period.announcement`}
                 render={({ field: { value, onChange } }) => (
@@ -219,6 +224,7 @@ export default function GroupForm(props: {
               error={errors?.groups?.[props.group]?.period?.voting?.message}
             >
               <Controller
+                defaultValue={defaultVotingPeriod}
                 control={control}
                 name={`groups.${props.group}.period.voting`}
                 render={({ field: { value, onChange } }) => (
