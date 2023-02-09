@@ -13,7 +13,9 @@ export default function DidSelect(props: {
   const { data: dids } = useDids(props.account)
   const { onChange } = props
   useEffect(() => {
-    if (dids?.[0]) onChange(dids[0])
+    if (dids?.[0]) {
+      onChange(dids[0])
+    }
   }, [dids, onChange])
 
   return (
