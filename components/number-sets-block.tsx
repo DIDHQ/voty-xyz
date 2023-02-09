@@ -127,7 +127,7 @@ function NumberUnitBlock(props: {
             />
           </FormItem>
           <FormItem
-            label="Function"
+            label="Filter"
             error={
               errors.groups?.[props.group]?.permission?.[props.name]
                 ?.operands?.[props.index]?.function?.message
