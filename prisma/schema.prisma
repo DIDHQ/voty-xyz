@@ -83,7 +83,7 @@ model Counting {
   proposal String
   choice   String
   voters   BigInt
-  power    Decimal
+  power    Float
 
   @@id([proposal, choice])
 }
