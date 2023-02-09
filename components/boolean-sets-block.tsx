@@ -6,7 +6,7 @@ import { FormItem } from './basic/form'
 import RadioGroup from './basic/radio-group'
 import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
-import JsonInput from './json-input'
+import Textarea from './basic/textarea'
 
 export default function BooleanSetsBlock(props: {
   name: 'proposing' | 'adding_option'
@@ -63,6 +63,8 @@ function BooleanUnitBlock(props: {
     control,
     watch,
     register,
+    getValues,
+    setValue,
     formState: { errors },
   } = useFormContext<Community>()
   const { setOpen, onRemove } = props
@@ -148,26 +150,42 @@ function BooleanUnitBlock(props: {
                     },
                   ]}
                   value={value}
-                  onChange={onChange}
+                  onChange={(v) => {
+                    if (value === 'all') {
+                      setValue(
+                        `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`,
+                        [],
+                      )
+                    }
+                    onChange(v)
+                  }}
                 />
               )}
             />
           </FormItem>
-          <FormItem
-            label="Arguments"
-            error={
-              errors.groups?.[props.group]?.permission?.[props.name]
-                ?.operands?.[props.index]?.arguments?.message
-            }
-          >
-            <Controller
-              control={control}
-              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`}
-              render={({ field: { value, onChange } }) => (
-                <JsonInput value={value} onChange={onChange} />
-              )}
-            />
-          </FormItem>
+          {getValues(
+            `groups.${props.group}.permission.${props.name}.operands.${props.index}.function`,
+          ) === 'all' ? null : (
+            <FormItem
+              label="Whitelist"
+              error={
+                errors.groups?.[props.group]?.permission?.[props.name]
+                  ?.operands?.[props.index]?.arguments?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`}
+                render={({ field: { value, onChange } }) => (
+                  <Textarea
+                    value={value.join('\n')}
+                    onChange={(e) => onChange(e.target.value.split('\n'))}
+                    placeholder={'e.g.\nregex.bit\n...'}
+                  />
+                )}
+              />
+            </FormItem>
+          )}
         </div>
       ) : null}
     </>
