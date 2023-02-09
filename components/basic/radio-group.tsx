@@ -19,7 +19,7 @@ export default function RadioGroup(props: {
                 aria-describedby={`${option.id}-description`}
                 type="radio"
                 checked={option.id === props.value}
-                onClick={() => onChange(option.id)}
+                onChange={() => onChange(option.id)}
                 className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
               />
             </div>
