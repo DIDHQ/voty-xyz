@@ -11,7 +11,7 @@ import useWallet from '../hooks/use-wallet'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import Button from './basic/button'
-import { useUpload } from '../hooks/use-api'
+import { useEntryConfig, useUpload } from '../hooks/use-api'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 
@@ -29,6 +29,7 @@ export default function CommunityForm(props: {
   } = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
+  const { mutate } = useEntryConfig(props.entry)
   useEffect(() => {
     reset(props.community)
   }, [props.community, reset])
@@ -56,6 +57,11 @@ export default function CommunityForm(props: {
       [handleUpload, handleSignJson],
     ),
   )
+  useEffect(() => {
+    if (handleSubmit.status === 'success') {
+      mutate()
+    }
+  }, [handleSubmit.status, mutate])
 
   return (
     <Form className={props.className}>
