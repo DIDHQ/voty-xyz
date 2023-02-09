@@ -16,7 +16,7 @@ const ConnectButtonCustom = dynamic(
 )
 
 export default function Toolbar() {
-  const { account, avatar, name, displayAddress } = useWallet()
+  const { account, avatar, did, displayAddress } = useWallet()
 
   return (
     <header className="fixed top-0 z-40 flex h-16 w-full justify-center border-b border-gray-200 bg-white pl-24 pr-6">
@@ -31,10 +31,10 @@ export default function Toolbar() {
             account ? (
               <Link href="/settings" className="group block shrink-0">
                 <div className="flex items-center overflow-hidden">
-                  <Avatar size={9} name={name} value={avatar} />
+                  <Avatar size={9} name={did} value={avatar} />
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                      {name}
+                      {did}
                     </p>
                     <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
                       {displayAddress}

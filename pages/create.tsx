@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Alert from '../components/basic/alert'
 import { FormItem } from '../components/basic/form'
 import { Grid6, GridItem2, GridItem6 } from '../components/basic/grid'
-import EntrySelect from '../components/entry-select'
+import Select from '../components/basic/select'
 import { useEntryConfig, useRetrieve } from '../hooks/use-api'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
@@ -12,11 +12,14 @@ import { DataType } from '../src/constants'
 
 export default function CreateCommunityPage() {
   const router = useRouter()
-  const { account } = useWallet()
+  const { account, did } = useWallet()
   const { data: dids } = useDids(account)
   const [entry, setEntry] = useState('')
   const { data: config } = useEntryConfig(entry)
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
+  useEffect(() => {
+    setEntry(dids?.find((d) => d === did) || dids?.[0] || '')
+  }, [did, dids, setEntry])
 
   return (
     <Grid6 className="mt-6">
@@ -25,7 +28,7 @@ export default function CreateCommunityPage() {
           label="DID"
           description="select an DID as your community entry"
         >
-          <EntrySelect account={account} value={entry} onChange={setEntry} />
+          <Select options={dids} value={entry} onChange={setEntry} />
         </FormItem>
       </GridItem2>
       <GridItem6>
