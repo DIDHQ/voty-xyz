@@ -9,12 +9,12 @@ export const booleanUnitSchema = z.discriminatedUnion('function', [
   z.object({
     alias: z.string().optional(),
     function: z.literal('did'),
-    arguments: z.tuple([z.array(z.string())]),
+    arguments: z.tuple([z.array(z.string().min(1)).min(1)]),
   }),
   z.object({
     alias: z.string().optional(),
     function: z.literal('sub_did'),
-    arguments: z.tuple([z.array(z.string())]),
+    arguments: z.tuple([z.array(z.string().min(1)).min(1)]),
   }),
 ])
 export type BooleanUnit = z.infer<typeof booleanUnitSchema>
@@ -34,12 +34,12 @@ export const numberUnitSchema = z.discriminatedUnion('function', [
   z.object({
     alias: z.string().optional(),
     function: z.literal('did'),
-    arguments: z.tuple([z.number().gt(0), z.array(z.string())]),
+    arguments: z.tuple([z.number().gt(0), z.array(z.string().min(1)).min(1)]),
   }),
   z.object({
     alias: z.string().optional(),
     function: z.literal('sub_did'),
-    arguments: z.tuple([z.number().gt(0), z.array(z.string())]),
+    arguments: z.tuple([z.number().gt(0), z.array(z.string().min(1)).min(1)]),
   }),
 ])
 export type NumberUnit = z.infer<typeof numberUnitSchema>
