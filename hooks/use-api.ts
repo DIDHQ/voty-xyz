@@ -1,3 +1,4 @@
+import { Counting } from '@prisma/client'
 import { useCallback } from 'react'
 import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
@@ -6,9 +7,22 @@ import { DataType } from '../src/constants'
 import { Authorized, Community, Proposal, Option, Vote } from '../src/schemas'
 import { fetchJson } from '../src/utils/fetcher'
 
+export function useCounting(proposal?: string) {
+  return useSWR(
+    proposal ? ['counting', proposal] : null,
+    async () => {
+      const { data } = await fetchJson<{
+        data: { [choice: string]: Counting }
+      }>(`/api/counting?proposal=${proposal}`)
+      return data
+    },
+    { revalidateOnFocus: false },
+  )
+}
+
 export function useEntryConfig(did?: string) {
-  return useSWR<{ community?: string }>(
-    did ? ['entry', did] : null,
+  return useSWR(
+    did ? ['entryConfig', did] : null,
     async () =>
       fetchJson<{
         community: string

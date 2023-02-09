@@ -5,7 +5,12 @@ import { uniq, without } from 'lodash-es'
 import useSWR from 'swr'
 
 import DidSelect from '../../../components/did-select'
-import { useListVotes, useRetrieve, useUpload } from '../../../hooks/use-api'
+import {
+  useCounting,
+  useListVotes,
+  useRetrieve,
+  useUpload,
+} from '../../../hooks/use-api'
 import useAsync from '../../../hooks/use-async'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useSignJson from '../../../hooks/use-sign-json'
@@ -28,6 +33,7 @@ export default function ProposalPage() {
     DataType.COMMUNITY,
     proposal?.community,
   )
+  const { data: counting } = useCounting(query.proposal)
   const group = useMemo(
     () => (proposal ? community?.groups?.[proposal?.group] : undefined),
     [community?.groups, proposal],
@@ -121,6 +127,7 @@ export default function ProposalPage() {
                     }}
                   >
                     <span className="ml-2 w-0 flex-1 truncate">{choice}</span>
+                    <span>{counting?.[choice]?.power.toString()}</span>
                     <div className="ml-4 shrink-0 leading-none">
                       {proposal.voting_type === 'single' ? (
                         <input
