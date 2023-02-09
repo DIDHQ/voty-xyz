@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import useAsync from '../hooks/use-async'
 import { Community, communitySchema } from '../src/schemas'
 import AvatarInput from './basic/avatar-input'
-import useResolveDid from '../hooks/use-resolve-did'
+import useDidIsMatch from '../hooks/use-did-is-match'
 import useSignJson from '../hooks/use-sign-json'
 import useWallet from '../hooks/use-wallet'
 import TextInput from './basic/text-input'
@@ -36,15 +36,7 @@ export default function CommunityForm(props: {
   const { account } = useWallet()
   const handleSignJson = useSignJson(props.entry)
   const handleUpload = useUpload()
-  const { data: resolved } = useResolveDid(props.entry, account?.coinType)
-  const isAdmin = useMemo(
-    () =>
-      resolved &&
-      account &&
-      resolved.coinType === account.coinType &&
-      resolved.address === account.address,
-    [resolved, account],
-  )
+  const { data: isAdmin } = useDidIsMatch(props.entry, account)
   const handleSubmit = useAsync(
     useCallback(
       async (json: Community) => {
