@@ -3,7 +3,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../src/schemas'
 import { FormItem } from './basic/form'
-import Select from './basic/select'
+import RadioGroup from './basic/radio-group'
 import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
 import JsonInput from './json-input'
@@ -111,13 +111,30 @@ function BooleanUnitBlock(props: {
               placeholder={`Sets #${props.index + 1}`}
             />
           </FormItem>
-          <FormItem label="Function">
+          <FormItem label="Filter">
             <Controller
               control={control}
               name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.function`}
               render={({ field: { value, onChange } }) => (
-                <Select
-                  options={['all', 'did', 'sub_did']}
+                <RadioGroup
+                  options={[
+                    {
+                      id: 'sub_did',
+                      name: 'SubDID',
+                      description:
+                        'SubDID of specified DIDs can create new proposal',
+                    },
+                    {
+                      id: 'did',
+                      name: 'DID',
+                      description: 'Specified DIDs can create new proposal',
+                    },
+                    {
+                      id: 'all',
+                      name: 'All',
+                      description: 'Everyone can create new proposal',
+                    },
+                  ]}
                   value={value}
                   onChange={onChange}
                 />

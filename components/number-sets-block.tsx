@@ -3,7 +3,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../src/schemas'
 import { FormItem } from './basic/form'
-import Select from './basic/select'
+import RadioGroup from './basic/radio-group'
 import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
 import JsonInput from './json-input'
@@ -116,8 +116,25 @@ function NumberUnitBlock(props: {
               control={control}
               name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.function`}
               render={({ field: { value, onChange } }) => (
-                <Select
-                  options={['all', 'did', 'sub_did']}
+                <RadioGroup
+                  options={[
+                    {
+                      id: 'sub_did',
+                      name: 'SubDID',
+                      description:
+                        'SubDID of specified DIDs with fixed voting power',
+                    },
+                    {
+                      id: 'did',
+                      name: 'DID',
+                      description: 'Specified DIDs with fixed voting power',
+                    },
+                    {
+                      id: 'all',
+                      name: 'All',
+                      description: 'Everyone with fixed voting power',
+                    },
+                  ]}
                   value={value}
                   onChange={onChange}
                 />
