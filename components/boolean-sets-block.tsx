@@ -63,7 +63,6 @@ function BooleanUnitBlock(props: {
     control,
     watch,
     register,
-    getValues,
     setValue,
     formState: { errors },
   } = useFormContext<Community>()
@@ -74,6 +73,10 @@ function BooleanUnitBlock(props: {
   const handleRemove = useCallback(() => {
     onRemove(props.index)
   }, [onRemove, props.index])
+  const isAll =
+    watch(
+      `groups.${props.group}.permission.${props.name}.operands.${props.index}.function`,
+    ) === 'all'
 
   return (
     <>
@@ -163,9 +166,7 @@ function BooleanUnitBlock(props: {
               )}
             />
           </FormItem>
-          {getValues(
-            `groups.${props.group}.permission.${props.name}.operands.${props.index}.function`,
-          ) === 'all' ? null : (
+          {isAll ? null : (
             <FormItem
               label="Whitelist"
               error={
@@ -175,10 +176,12 @@ function BooleanUnitBlock(props: {
             >
               <Controller
                 control={control}
-                name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`}
+                name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
                 render={({ field: { value, onChange } }) => (
                   <Textarea
-                    value={value.join('\n')}
+                    value={
+                      Array.isArray(value) ? (value as string[]).join('\n') : ''
+                    }
                     onChange={(e) => onChange(e.target.value.split('\n'))}
                     placeholder={'e.g.\nregex.bit\n...'}
                   />

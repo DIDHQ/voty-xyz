@@ -6,7 +6,7 @@ import { FormItem } from './basic/form'
 import RadioGroup from './basic/radio-group'
 import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
-import JsonInput from './json-input'
+import Textarea from './basic/textarea'
 
 export default function NumberSetsBlock(props: {
   name: 'voting'
@@ -63,6 +63,7 @@ function NumberUnitBlock(props: {
     control,
     watch,
     register,
+    setValue,
     formState: { errors },
   } = useFormContext<Community>()
   const { setOpen, onRemove } = props
@@ -72,6 +73,10 @@ function NumberUnitBlock(props: {
   const handleRemove = useCallback(() => {
     onRemove(props.index)
   }, [onRemove, props.index])
+  const isAll =
+    watch(
+      `groups.${props.group}.permission.${props.name}.operands.${props.index}.function`,
+    ) === 'all'
 
   return (
     <>
@@ -148,23 +153,55 @@ function NumberUnitBlock(props: {
                     },
                   ]}
                   value={value}
-                  onChange={onChange}
+                  onChange={(v) => {
+                    if (value === 'all') {
+                      setValue(
+                        `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`,
+                        [],
+                      )
+                    }
+                    onChange(v)
+                  }}
                 />
               )}
             />
           </FormItem>
+          {isAll ? null : (
+            <FormItem
+              label="Whitelist"
+              error={
+                errors.groups?.[props.group]?.permission?.[props.name]
+                  ?.operands?.[props.index]?.arguments?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
+                render={({ field: { value, onChange } }) => (
+                  <Textarea
+                    value={
+                      Array.isArray(value) ? (value as string[]).join('\n') : ''
+                    }
+                    onChange={(e) => onChange(e.target.value.split('\n'))}
+                    placeholder={'e.g.\nregex.bit\n...'}
+                  />
+                )}
+              />
+            </FormItem>
+          )}
           <FormItem
-            label="Arguments"
+            label="Power"
             error={
               errors.groups?.[props.group]?.permission?.[props.name]
-                ?.operands?.[props.index]?.arguments?.message
+                ?.operands?.[props.index]?.arguments?.[isAll ? 0 : 1]?.message
             }
           >
-            <Controller
-              control={control}
-              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`}
-              render={({ field: { value, onChange } }) => (
-                <JsonInput value={value} onChange={onChange} />
+            <TextInput
+              type="number"
+              {...register(
+                `groups.${props.group}.permission.${props.name}.operands.${
+                  props.index
+                }.arguments.${isAll ? 0 : 1}`,
               )}
             />
           </FormItem>
