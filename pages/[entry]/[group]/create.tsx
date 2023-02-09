@@ -161,6 +161,7 @@ export default function CreateProposalPage() {
                         <input
                           {...register(`options.${index}`)}
                           placeholder={`Option ${index + 1}`}
+                          className="w-full outline-none"
                         />
                       </span>
                     </div>
