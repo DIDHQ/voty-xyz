@@ -3,20 +3,20 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../src/schemas'
 import { FormItem } from './basic/form'
-import Select from './basic/select'
+import RadioGroup from './basic/radio-group'
 import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
-import JsonInput from './json-input'
+import Textarea from './basic/textarea'
 
 export default function BooleanSetsBlock(props: {
-  name: 'permission.proposing' | 'permission.adding_option'
+  name: 'proposing' | 'adding_option'
   group: number
   disabled?: boolean
 }) {
   const { control } = useFormContext<Community>()
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `groups.${props.group}.${props.name}.operands`,
+    name: `groups.${props.group}.permission.${props.name}.operands`,
   })
   const [open, setOpen] = useState<number>()
 
@@ -42,7 +42,7 @@ export default function BooleanSetsBlock(props: {
         </ul>
       ) : null}
       {props.disabled ? null : (
-        <TextButton onClick={() => append({ function: '', arguments: [] })}>
+        <TextButton onClick={() => append({ function: 'all', arguments: [] })}>
           Add
         </TextButton>
       )}
@@ -51,7 +51,7 @@ export default function BooleanSetsBlock(props: {
 }
 
 function BooleanUnitBlock(props: {
-  name: 'permission.proposing' | 'permission.adding_option'
+  name: 'proposing' | 'adding_option'
   group: number
   index: number
   open: boolean
@@ -59,7 +59,13 @@ function BooleanUnitBlock(props: {
   onRemove(index: number): void
   disabled?: boolean
 }) {
-  const { control, watch, register } = useFormContext<Community>()
+  const {
+    control,
+    watch,
+    register,
+    setValue,
+    formState: { errors },
+  } = useFormContext<Community>()
   const { setOpen, onRemove } = props
   const handleOpen = useCallback(() => {
     setOpen(props.open ? undefined : props.index)
@@ -67,6 +73,10 @@ function BooleanUnitBlock(props: {
   const handleRemove = useCallback(() => {
     onRemove(props.index)
   }, [onRemove, props.index])
+  const isAll =
+    watch(
+      `groups.${props.group}.permission.${props.name}.operands.${props.index}.function`,
+    ) === 'all'
 
   return (
     <>
@@ -74,7 +84,7 @@ function BooleanUnitBlock(props: {
         <div className="flex w-0 flex-1 items-center">
           <span className="ml-2 w-0 flex-1 truncate">
             {watch(
-              `groups.${props.group}.${props.name}.operands.${props.index}.name`,
+              `groups.${props.group}.permission.${props.name}.operands.${props.index}.alias`,
             ) || `Sets #${props.index + 1}`}
           </span>
         </div>
@@ -94,36 +104,93 @@ function BooleanUnitBlock(props: {
       </li>
       {props.open ? (
         <div className="space-y-4 bg-gray-50 p-6">
-          <FormItem label="Name">
+          <FormItem
+            label="Alias"
+            error={
+              errors.groups?.[props.group]?.permission?.[props.name]
+                ?.operands?.[props.index]?.alias?.message
+            }
+          >
             <TextInput
               {...register(
-                `groups.${props.group}.${props.name}.operands.${props.index}.name`,
+                `groups.${props.group}.permission.${props.name}.operands.${props.index}.alias`,
               )}
+              error={
+                !!errors.groups?.[props.group]?.permission?.[props.name]
+                  ?.operands?.[props.index]?.alias?.message
+              }
               placeholder={`Sets #${props.index + 1}`}
             />
           </FormItem>
-          <FormItem label="Function">
+          <FormItem
+            label="Filter"
+            error={
+              errors.groups?.[props.group]?.permission?.[props.name]
+                ?.operands?.[props.index]?.function?.message
+            }
+          >
             <Controller
               control={control}
-              name={`groups.${props.group}.${props.name}.operands.${props.index}.function`}
+              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.function`}
               render={({ field: { value, onChange } }) => (
-                <Select
-                  options={['is_did', 'is_sub_did_of']}
+                <RadioGroup
+                  options={[
+                    {
+                      id: 'sub_did',
+                      name: 'SubDID',
+                      description:
+                        'SubDID of specified DIDs can create new proposal',
+                    },
+                    {
+                      id: 'did',
+                      name: 'DID',
+                      description: 'Specified DIDs can create new proposal',
+                    },
+                    {
+                      id: 'all',
+                      name: 'All',
+                      description: 'Everyone can create new proposal',
+                    },
+                  ]}
                   value={value}
-                  onChange={onChange}
+                  onChange={(v) => {
+                    setValue(
+                      `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`,
+                      [],
+                    )
+                    onChange(v)
+                  }}
                 />
               )}
             />
           </FormItem>
-          <FormItem label="Arguments">
-            <Controller
-              control={control}
-              name={`groups.${props.group}.${props.name}.operands.${props.index}.arguments`}
-              render={({ field: { value, onChange } }) => (
-                <JsonInput value={value} onChange={onChange} />
-              )}
-            />
-          </FormItem>
+          {isAll ? null : (
+            <FormItem
+              label="Whitelist"
+              error={
+                errors.groups?.[props.group]?.permission?.[props.name]
+                  ?.operands?.[props.index]?.arguments?.[0]?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
+                render={({ field: { value, onChange } }) => (
+                  <Textarea
+                    value={
+                      Array.isArray(value) ? (value as string[]).join('\n') : ''
+                    }
+                    onChange={(e) => onChange(e.target.value.split('\n'))}
+                    placeholder={'e.g.\nregex.bit\n...'}
+                    error={
+                      !!errors.groups?.[props.group]?.permission?.[props.name]
+                        ?.operands?.[props.index]?.arguments?.[0]?.message
+                    }
+                  />
+                )}
+              />
+            </FormItem>
+          )}
         </div>
       ) : null}
     </>

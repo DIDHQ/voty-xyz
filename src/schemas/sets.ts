@@ -1,10 +1,22 @@
 import { z } from 'zod'
 
-export const booleanUnitSchema = z.object({
-  name: z.string().optional(),
-  function: z.string(),
-  arguments: z.array(z.unknown()),
-})
+export const booleanUnitSchema = z.discriminatedUnion('function', [
+  z.object({
+    alias: z.string().optional(),
+    function: z.literal('all'),
+    arguments: z.tuple([]),
+  }),
+  z.object({
+    alias: z.string().optional(),
+    function: z.literal('did'),
+    arguments: z.tuple([z.array(z.string())]),
+  }),
+  z.object({
+    alias: z.string().optional(),
+    function: z.literal('sub_did'),
+    arguments: z.tuple([z.array(z.string())]),
+  }),
+])
 export type BooleanUnit = z.infer<typeof booleanUnitSchema>
 
 export const booleanSetsSchema = z.object({
@@ -13,11 +25,23 @@ export const booleanSetsSchema = z.object({
 })
 export type BooleanSets = z.infer<typeof booleanSetsSchema>
 
-export const numberUnitSchema = z.object({
-  name: z.string().optional(),
-  function: z.string(),
-  arguments: z.array(z.unknown()),
-})
+export const numberUnitSchema = z.discriminatedUnion('function', [
+  z.object({
+    alias: z.string().optional(),
+    function: z.literal('all'),
+    arguments: z.tuple([z.number().gt(0)]),
+  }),
+  z.object({
+    alias: z.string().optional(),
+    function: z.literal('did'),
+    arguments: z.tuple([z.number().gt(0), z.array(z.string())]),
+  }),
+  z.object({
+    alias: z.string().optional(),
+    function: z.literal('sub_did'),
+    arguments: z.tuple([z.number().gt(0), z.array(z.string())]),
+  }),
+])
 export type NumberUnit = z.infer<typeof numberUnitSchema>
 
 export const numberSetsSchema = z.object({

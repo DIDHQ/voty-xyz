@@ -9,6 +9,14 @@ enum DurationType {
   YEAR = 364 * 24 * 60 * 60,
 }
 
+const types = [
+  DurationType.YEAR,
+  DurationType.MONTH,
+  DurationType.WEEK,
+  DurationType.DAY,
+  DurationType.HOUR,
+]
+
 export default function DurationInput(props: {
   value?: number
   onChange(value: number): void
@@ -17,7 +25,7 @@ export default function DurationInput(props: {
   className?: string
 }) {
   const { onChange } = props
-  const [value, setValue] = useState(1)
+  const [value, setValue] = useState(0)
   const [type, setType] = useState<DurationType>(DurationType.HOUR)
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.valueAsNumber)
@@ -29,16 +37,12 @@ export default function DurationInput(props: {
     onChange(value * type)
   }, [onChange, type, value])
   useEffect(() => {
-    if (props.value === undefined) {
+    if (!props.value) {
+      setValue(0)
+      setType(DurationType.HOUR)
       return
     }
-    for (let type of [
-      DurationType.YEAR,
-      DurationType.MONTH,
-      DurationType.WEEK,
-      DurationType.DAY,
-      DurationType.HOUR,
-    ]) {
+    for (let type of types) {
       if (props.value % type === 0) {
         setValue(props.value / type)
         setType(type)

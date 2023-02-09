@@ -11,7 +11,7 @@ import useWallet from '../hooks/use-wallet'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import Button from './basic/button'
-import { useUpload } from '../hooks/use-api'
+import { useEntryConfig, useUpload } from '../hooks/use-api'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 
@@ -29,6 +29,7 @@ export default function CommunityForm(props: {
   } = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
+  const { mutate } = useEntryConfig(props.entry)
   useEffect(() => {
     reset(props.community)
   }, [props.community, reset])
@@ -56,6 +57,11 @@ export default function CommunityForm(props: {
       [handleUpload, handleSignJson],
     ),
   )
+  useEffect(() => {
+    if (handleSubmit.status === 'success') {
+      mutate()
+    }
+  }, [handleSubmit.status, mutate])
 
   return (
     <Form className={props.className}>
@@ -67,8 +73,8 @@ export default function CommunityForm(props: {
           <GridItem6>
             <FormItem label="Name" error={errors.name?.message}>
               <TextInput
-                error={!!errors.name?.message}
                 {...register('name')}
+                error={!!errors.name?.message}
                 disabled={!isAdmin}
               />
             </FormItem>
@@ -76,8 +82,8 @@ export default function CommunityForm(props: {
           <GridItem6>
             <FormItem label="About" error={errors.extension?.about?.message}>
               <Textarea
-                error={!!errors.extension?.about?.message}
                 {...register('extension.about')}
+                error={!!errors.extension?.about?.message}
                 disabled={!isAdmin}
               />
             </FormItem>
@@ -104,8 +110,8 @@ export default function CommunityForm(props: {
               error={errors.extension?.website?.message}
             >
               <TextInput
-                error={!!errors.extension?.website?.message}
                 {...register('extension.website')}
+                error={!!errors.extension?.website?.message}
                 disabled={!isAdmin}
               />
             </FormItem>
@@ -118,25 +124,34 @@ export default function CommunityForm(props: {
       >
         <Grid6>
           <GridItem2>
-            <FormItem label="Twitter">
+            <FormItem
+              label="Twitter"
+              error={errors.extension?.twitter?.message}
+            >
               <TextInput
                 {...register('extension.twitter')}
+                error={!!errors.extension?.twitter?.message}
                 disabled={!isAdmin}
               />
             </FormItem>
           </GridItem2>
           <GridItem2>
-            <FormItem label="Discord">
+            <FormItem
+              label="Discord"
+              error={errors.extension?.discord?.message}
+            >
               <TextInput
                 {...register('extension.discord')}
+                error={!!errors.extension?.discord?.message}
                 disabled={!isAdmin}
               />
             </FormItem>
           </GridItem2>
           <GridItem2>
-            <FormItem label="GitHub">
+            <FormItem label="GitHub" error={errors.extension?.github?.message}>
               <TextInput
                 {...register('extension.github')}
+                error={!!errors.extension?.github?.message}
                 disabled={!isAdmin}
               />
             </FormItem>

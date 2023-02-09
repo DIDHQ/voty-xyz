@@ -19,9 +19,13 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import NumberSetsBlock from './number-sets-block'
-import { useUpload } from '../hooks/use-api'
+import { useEntryConfig, useUpload } from '../hooks/use-api'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem3, GridItem6 } from './basic/grid'
+
+const defaultAnnouncementPeriod = 3600
+
+const defaultVotingPeriod = 86400
 
 export default function GroupForm(props: {
   entry: string
@@ -39,6 +43,7 @@ export default function GroupForm(props: {
     reset,
     formState: { errors },
   } = methods
+  const { mutate } = useEntryConfig(props.entry)
   const { append, remove } = useFieldArray({
     control,
     name: 'groups',
@@ -71,36 +76,38 @@ export default function GroupForm(props: {
     ),
   )
   const isNew = useMemo(
-    () => props.community.groups && !props.community.groups[props.group],
+    () => !props.community?.groups?.[props.group],
     [props.community.groups, props.group],
   )
   useEffect(() => {
     if (isNew) {
-      append(
-        {
-          name: '',
-          permission: {
-            proposing: {
-              operator: 'or',
-              operands: [],
-            },
-            voting: {
-              operator: 'max',
-              operands: [],
-            },
+      append({
+        name: '',
+        permission: {
+          proposing: {
+            operator: 'or',
+            operands: [],
           },
-          period: {
-            announcement: 3600,
-            voting: 86400,
-          },
-          extension: {
-            id: nanoid(),
+          voting: {
+            operator: 'max',
+            operands: [],
           },
         },
-        { shouldFocus: false },
-      )
+        period: {
+          announcement: defaultAnnouncementPeriod,
+          voting: defaultVotingPeriod,
+        },
+        extension: {
+          id: nanoid(),
+        },
+      })
     }
   }, [append, isNew])
+  useEffect(() => {
+    if (handleSubmit.status === 'success') {
+      mutate()
+    }
+  }, [handleSubmit.status, mutate])
 
   return (
     <Form className={props.className}>
@@ -116,6 +123,7 @@ export default function GroupForm(props: {
             >
               <TextInput
                 {...register(`groups.${props.group}.name`)}
+                error={!!errors.groups?.[props.group]?.name?.message}
                 disabled={!isAdmin}
               />
             </FormItem>
@@ -127,6 +135,9 @@ export default function GroupForm(props: {
             >
               <Textarea
                 {...register(`groups.${props.group}.extension.about`)}
+                error={
+                  !!errors.groups?.[props.group]?.extension?.about?.message
+                }
                 disabled={!isAdmin}
               />
             </FormItem>
@@ -150,7 +161,7 @@ export default function GroupForm(props: {
             >
               <FormProvider {...methods}>
                 <BooleanSetsBlock
-                  name="permission.proposing"
+                  name="proposing"
                   group={props.group}
                   disabled={!isAdmin}
                 />
@@ -176,7 +187,7 @@ export default function GroupForm(props: {
             >
               <FormProvider {...methods}>
                 <NumberSetsBlock
-                  name="permission.voting"
+                  name="voting"
                   group={props.group}
                   disabled={!isAdmin}
                 />
@@ -195,6 +206,7 @@ export default function GroupForm(props: {
               }
             >
               <Controller
+                defaultValue={defaultAnnouncementPeriod}
                 control={control}
                 name={`groups.${props.group}.period.announcement`}
                 render={({ field: { value, onChange } }) => (
@@ -216,6 +228,7 @@ export default function GroupForm(props: {
               error={errors?.groups?.[props.group]?.period?.voting?.message}
             >
               <Controller
+                defaultValue={defaultVotingPeriod}
                 control={control}
                 name={`groups.${props.group}.period.voting`}
                 render={({ field: { value, onChange } }) => (
