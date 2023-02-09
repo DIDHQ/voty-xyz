@@ -5,9 +5,10 @@ import Alert from '../components/basic/alert'
 import { FormItem } from '../components/basic/form'
 import { Grid6, GridItem2, GridItem6 } from '../components/basic/grid'
 import DidSelect from '../components/did-select'
-import { useEntryConfig } from '../hooks/use-api'
+import { useEntryConfig, useRetrieve } from '../hooks/use-api'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
+import { DataType } from '../src/constants'
 
 export default function CreateCommunityPage() {
   const router = useRouter()
@@ -18,6 +19,7 @@ export default function CreateCommunityPage() {
     setEntry(dids?.[0] || '')
   }, [dids])
   const { data: config } = useEntryConfig(entry)
+  const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
 
   return (
     <Grid6 className="mt-6">
@@ -45,7 +47,7 @@ export default function CreateCommunityPage() {
           >
             Do not have a DID? Register now!
           </Alert>
-        ) : config?.community ? (
+        ) : community ? (
           <Alert
             type="warning"
             action="View"
