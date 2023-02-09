@@ -108,7 +108,7 @@ function NumberUnitBlock(props: {
               name={`groups.${props.group}.${props.name}.operands.${props.index}.function`}
               render={({ field: { value, onChange } }) => (
                 <Select
-                  options={['static_power', 'erc20_balance']}
+                  options={['static_power']}
                   value={value}
                   onChange={onChange}
                 />

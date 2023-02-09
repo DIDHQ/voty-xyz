@@ -26,7 +26,7 @@ export async function checkBoolean(
         checkBoolean(operand as unknown as BooleanSets, did, snapshots),
       { concurrency: 5 },
     )
-    if ((data.operator as 'and' | 'or') === 'and') {
+    if ((data.operator as unknown) === 'and') {
       return results.every((result) => result)
     } else if (data.operator === 'or') {
       return results.some((result) => result)

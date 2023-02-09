@@ -108,7 +108,7 @@ function BooleanUnitBlock(props: {
               name={`groups.${props.group}.${props.name}.operands.${props.index}.function`}
               render={({ field: { value, onChange } }) => (
                 <Select
-                  options={['is_did', 'is_sub_did_of', 'owns_erc721']}
+                  options={['is_did', 'is_sub_did_of']}
                   value={value}
                   onChange={onChange}
                 />

@@ -4,12 +4,14 @@ import pMap from 'p-map'
 import { NumberSets, NumberUnit } from '../../schemas'
 import { DID, Snapshots } from '../../types'
 import { NumberFunction } from '../types'
-import { static_power } from './static-power'
+import { did_power } from './did-power'
+import { sub_did_power } from './sub-did-power'
 
 export const calculateNumberFunctions: {
   [name: string]: NumberFunction<any[]>
 } = {
-  static_power,
+  did_power,
+  sub_did_power,
 }
 
 export async function calculateNumber(
@@ -27,8 +29,6 @@ export async function calculateNumber(
       return max(results)!
     } else if (data.operator === 'sum') {
       return sum(results)
-    } else if (data.operator === 'sqrt') {
-      return Math.sqrt(results[0])
     }
     throw new Error(`unsupported operator: ${data.operator}`)
   }
