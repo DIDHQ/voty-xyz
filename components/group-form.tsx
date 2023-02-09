@@ -123,6 +123,7 @@ export default function GroupForm(props: {
             >
               <TextInput
                 {...register(`groups.${props.group}.name`)}
+                error={!!errors.groups?.[props.group]?.name?.message}
                 disabled={!isAdmin}
               />
             </FormItem>
@@ -134,6 +135,9 @@ export default function GroupForm(props: {
             >
               <Textarea
                 {...register(`groups.${props.group}.extension.about`)}
+                error={
+                  !!errors.groups?.[props.group]?.extension?.about?.message
+                }
                 disabled={!isAdmin}
               />
             </FormItem>
@@ -157,7 +161,7 @@ export default function GroupForm(props: {
             >
               <FormProvider {...methods}>
                 <BooleanSetsBlock
-                  name="permission.proposing"
+                  name="proposing"
                   group={props.group}
                   disabled={!isAdmin}
                 />
@@ -183,7 +187,7 @@ export default function GroupForm(props: {
             >
               <FormProvider {...methods}>
                 <NumberSetsBlock
-                  name="permission.voting"
+                  name="voting"
                   group={props.group}
                   disabled={!isAdmin}
                 />

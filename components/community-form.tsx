@@ -73,8 +73,8 @@ export default function CommunityForm(props: {
           <GridItem6>
             <FormItem label="Name" error={errors.name?.message}>
               <TextInput
-                error={!!errors.name?.message}
                 {...register('name')}
+                error={!!errors.name?.message}
                 disabled={!isAdmin}
               />
             </FormItem>
@@ -82,8 +82,8 @@ export default function CommunityForm(props: {
           <GridItem6>
             <FormItem label="About" error={errors.extension?.about?.message}>
               <Textarea
-                error={!!errors.extension?.about?.message}
                 {...register('extension.about')}
+                error={!!errors.extension?.about?.message}
                 disabled={!isAdmin}
               />
             </FormItem>
@@ -110,8 +110,8 @@ export default function CommunityForm(props: {
               error={errors.extension?.website?.message}
             >
               <TextInput
-                error={!!errors.extension?.website?.message}
                 {...register('extension.website')}
+                error={!!errors.extension?.website?.message}
                 disabled={!isAdmin}
               />
             </FormItem>
@@ -127,6 +127,7 @@ export default function CommunityForm(props: {
             <FormItem label="Twitter">
               <TextInput
                 {...register('extension.twitter')}
+                error={!!errors.extension?.twitter?.message}
                 disabled={!isAdmin}
               />
             </FormItem>
@@ -135,6 +136,7 @@ export default function CommunityForm(props: {
             <FormItem label="Discord">
               <TextInput
                 {...register('extension.discord')}
+                error={!!errors.extension?.discord?.message}
                 disabled={!isAdmin}
               />
             </FormItem>
@@ -143,6 +145,7 @@ export default function CommunityForm(props: {
             <FormItem label="GitHub">
               <TextInput
                 {...register('extension.github')}
+                error={!!errors.extension?.github?.message}
                 disabled={!isAdmin}
               />
             </FormItem>

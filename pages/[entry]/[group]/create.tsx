@@ -116,12 +116,18 @@ export default function CreateProposalPage() {
         <Grid6>
           <GridItem6>
             <FormItem label="Title" error={errors.title?.message}>
-              <TextInput {...register('title')} />
+              <TextInput
+                {...register('title')}
+                error={!!errors.title?.message}
+              />
             </FormItem>
           </GridItem6>
           <GridItem6>
             <FormItem label="Body" error={errors.extension?.body?.message}>
-              <Textarea {...register('extension.body')} />
+              <Textarea
+                {...register('extension.body')}
+                error={!!errors.extension?.body?.message}
+              />
             </FormItem>
           </GridItem6>
           <GridItem6>

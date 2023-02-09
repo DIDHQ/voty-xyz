@@ -9,14 +9,14 @@ import TextInput from './basic/text-input'
 import JsonInput from './json-input'
 
 export default function NumberSetsBlock(props: {
-  name: 'permission.voting'
+  name: 'voting'
   group: number
   disabled?: boolean
 }) {
   const { control } = useFormContext<Community>()
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `groups.${props.group}.${props.name}.operands`,
+    name: `groups.${props.group}.permission.${props.name}.operands`,
   })
   const [open, setOpen] = useState<number>()
 
@@ -51,7 +51,7 @@ export default function NumberSetsBlock(props: {
 }
 
 function NumberUnitBlock(props: {
-  name: 'permission.voting'
+  name: 'voting'
   group: number
   index: number
   open: boolean
@@ -59,7 +59,12 @@ function NumberUnitBlock(props: {
   onRemove(index: number): void
   disabled?: boolean
 }) {
-  const { control, watch, register } = useFormContext<Community>()
+  const {
+    control,
+    watch,
+    register,
+    formState: { errors },
+  } = useFormContext<Community>()
   const { setOpen, onRemove } = props
   const handleOpen = useCallback(() => {
     setOpen(props.open ? undefined : props.index)
@@ -74,7 +79,7 @@ function NumberUnitBlock(props: {
         <div className="flex w-0 flex-1 items-center">
           <span className="ml-2 w-0 flex-1 truncate">
             {watch(
-              `groups.${props.group}.${props.name}.operands.${props.index}.alias`,
+              `groups.${props.group}.permission.${props.name}.operands.${props.index}.alias`,
             ) || `Sets #${props.index + 1}`}
           </span>
         </div>
@@ -97,15 +102,19 @@ function NumberUnitBlock(props: {
           <FormItem label="Alias">
             <TextInput
               {...register(
-                `groups.${props.group}.${props.name}.operands.${props.index}.alias`,
+                `groups.${props.group}.permission.${props.name}.operands.${props.index}.alias`,
               )}
+              error={
+                !!errors.groups?.[props.group]?.permission?.[props.name]
+                  ?.operands?.[props.index]?.alias?.message
+              }
               placeholder={`Sets #${props.index + 1}`}
             />
           </FormItem>
           <FormItem label="Function">
             <Controller
               control={control}
-              name={`groups.${props.group}.${props.name}.operands.${props.index}.function`}
+              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.function`}
               render={({ field: { value, onChange } }) => (
                 <Select
                   options={['static_power']}
@@ -118,7 +127,7 @@ function NumberUnitBlock(props: {
           <FormItem label="Arguments">
             <Controller
               control={control}
-              name={`groups.${props.group}.${props.name}.operands.${props.index}.arguments`}
+              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`}
               render={({ field: { value, onChange } }) => (
                 <JsonInput value={value} onChange={onChange} />
               )}
