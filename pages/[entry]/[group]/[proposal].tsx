@@ -24,6 +24,8 @@ import { DataType } from '../../../src/constants'
 import useArweaveData from '../../../hooks/use-arweave-data'
 import Alert from '../../../components/basic/alert'
 import useStatus from '../../../hooks/use-status'
+import Card from '../../../components/basic/card'
+import { Grid6, GridItem3, GridItem6 } from '../../../components/basic/grid'
 
 export default function ProposalPage() {
   const [query] = useRouterQuery<['proposal']>()
@@ -89,127 +91,115 @@ export default function ProposalPage() {
 
   return query.proposal && proposal && group ? (
     <div className="py-8">
-      <div className="bg-white shadow sm:rounded-lg">
-        <div className="px-4 py-5 sm:px-6">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            {proposal.title}
-          </h3>
-          <p className="mt-1 max-w-2xl text-sm text-gray-500">
-            {proposal.author.did}
-          </p>
-        </div>
-        <div className="border-t px-4 py-5 sm:px-6">
-          <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-            <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-500">Type</dt>
+      <Card title={proposal.title} description={proposal.author.did}>
+        <Grid6>
+          <GridItem3>
+            <dt className="text-sm font-medium text-gray-500">Type</dt>
+            <dd className="mt-1 text-sm text-gray-900">
+              {proposal.voting_type}
+            </dd>
+          </GridItem3>
+          <GridItem3>
+            <dt className="text-sm font-medium text-gray-500">Author</dt>
+            <dd className="mt-1 text-sm text-gray-900">
+              {proposal.author.did}
+            </dd>
+          </GridItem3>
+          <GridItem3>
+            <dt className="text-sm font-medium text-gray-500">Start time</dt>
+            <dd className="mt-1 text-sm text-gray-900">
+              {status?.timestamp
+                ? new Date(
+                    (status.timestamp + group.period.announcement) * 1000,
+                  ).toLocaleString([], { hour12: false })
+                : '-'}
+            </dd>
+          </GridItem3>
+          <GridItem3>
+            <dt className="text-sm font-medium text-gray-500">End time</dt>
+            <dd className="mt-1 text-sm text-gray-900">
+              {status?.timestamp
+                ? new Date(
+                    (status.timestamp +
+                      group.period.announcement +
+                      (group.period.adding_option || 0) +
+                      group.period.voting) *
+                      1000,
+                  ).toLocaleString([], { hour12: false })
+                : '-'}
+            </dd>
+          </GridItem3>
+          {proposal.extension?.body ? (
+            <GridItem6>
+              <dt className="text-sm font-medium text-gray-500">Body</dt>
               <dd className="mt-1 text-sm text-gray-900">
-                {proposal.voting_type}
+                {proposal.extension.body}
               </dd>
-            </div>
-            <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-500">Author</dt>
-              <dd className="mt-1 text-sm text-gray-900">
-                {proposal.author.did}
-              </dd>
-            </div>
-            <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-500">Start time</dt>
-              <dd className="mt-1 text-sm text-gray-900">
-                {status?.timestamp
-                  ? new Date(
-                      (status.timestamp + group.period.announcement) * 1000,
-                    ).toLocaleString([], { hour12: false })
-                  : '-'}
-              </dd>
-            </div>
-            <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-500">End time</dt>
-              <dd className="mt-1 text-sm text-gray-900">
-                {status?.timestamp
-                  ? new Date(
-                      (status.timestamp +
-                        group.period.announcement +
-                        (group.period.adding_option || 0) +
-                        group.period.voting) *
-                        1000,
-                    ).toLocaleString([], { hour12: false })
-                  : '-'}
-              </dd>
-            </div>
-            {proposal.extension?.body ? (
-              <div className="sm:col-span-2">
-                <dt className="text-sm font-medium text-gray-500">Body</dt>
-                <dd className="mt-1 text-sm text-gray-900">
-                  {proposal.extension.body}
-                </dd>
-              </div>
-            ) : null}
-            <div className="sm:col-span-2">
-              <dt className="text-sm font-medium text-gray-500">Options</dt>
-              <dd className="mt-1 text-sm text-gray-900">
-                <ul
-                  role="list"
-                  className="divide-y divide-gray-200 rounded-md border border-gray-200"
-                >
-                  <Controller
-                    control={control}
-                    name="choice"
-                    render={({ field: { value, onChange } }) => (
-                      <>
-                        {proposal.options.map((choice) => (
-                          <li
-                            key={choice}
-                            className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
-                            onClick={() => {
-                              if (proposal.voting_type === 'single') {
-                                onChange(JSON.stringify(choice))
-                              } else {
-                                const old = JSON.parse(
-                                  value || '[]',
-                                ) as string[]
-                                onChange(
-                                  JSON.stringify(
-                                    old.includes(choice)
-                                      ? without(old, choice)
-                                      : uniq([...old, choice]),
-                                  ),
-                                )
-                              }
-                            }}
-                          >
-                            <span className="ml-2 w-0 flex-1 truncate">
-                              {choice}
-                            </span>
-                            <div className="ml-4 shrink-0 leading-none">
-                              {proposal.voting_type === 'single' ? (
-                                <input
-                                  type="radio"
-                                  checked={JSON.stringify(choice) === value}
-                                  onChange={() => null}
-                                  className="h-4 w-4 border border-gray-200 text-indigo-600 focus:ring-indigo-500"
-                                />
-                              ) : (
-                                <input
-                                  type="checkbox"
-                                  checked={(
-                                    JSON.parse(value || '[]') as string[]
-                                  ).includes(choice)}
-                                  onChange={() => null}
-                                  className="h-4 w-4 rounded border border-gray-200 text-indigo-600 focus:ring-indigo-500"
-                                />
-                              )}
-                            </div>
-                          </li>
-                        ))}
-                      </>
-                    )}
-                  />
-                </ul>
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </div>
+            </GridItem6>
+          ) : null}
+          <GridItem6>
+            <dt className="text-sm font-medium text-gray-500">Options</dt>
+            <dd className="mt-1 text-sm text-gray-900">
+              <ul
+                role="list"
+                className="divide-y divide-gray-200 rounded-md border border-gray-200"
+              >
+                <Controller
+                  control={control}
+                  name="choice"
+                  render={({ field: { value, onChange } }) => (
+                    <>
+                      {proposal.options.map((choice) => (
+                        <li
+                          key={choice}
+                          className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
+                          onClick={() => {
+                            if (proposal.voting_type === 'single') {
+                              onChange(JSON.stringify(choice))
+                            } else {
+                              const old = JSON.parse(value || '[]') as string[]
+                              onChange(
+                                JSON.stringify(
+                                  old.includes(choice)
+                                    ? without(old, choice)
+                                    : uniq([...old, choice]),
+                                ),
+                              )
+                            }
+                          }}
+                        >
+                          <span className="ml-2 w-0 flex-1 truncate">
+                            {choice}
+                          </span>
+                          <div className="ml-4 shrink-0 leading-none">
+                            {proposal.voting_type === 'single' ? (
+                              <input
+                                type="radio"
+                                checked={JSON.stringify(choice) === value}
+                                onChange={() => null}
+                                className="h-4 w-4 border border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                              />
+                            ) : (
+                              <input
+                                type="checkbox"
+                                checked={(
+                                  JSON.parse(value || '[]') as string[]
+                                ).includes(choice)}
+                                onChange={() => null}
+                                className="h-4 w-4 rounded border border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                              />
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </>
+                  )}
+                />
+              </ul>
+            </dd>
+          </GridItem6>
+        </Grid6>
+      </Card>
       <div className="py-5">
         <div className="flex justify-end">
           <DidSelect
