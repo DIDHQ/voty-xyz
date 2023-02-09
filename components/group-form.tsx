@@ -72,7 +72,7 @@ export default function GroupForm(props: {
     ),
   )
   const isNew = useMemo(
-    () => props.community.groups && !props.community.groups[props.group],
+    () => !props.community?.groups?.[props.group],
     [props.community.groups, props.group],
   )
   useEffect(() => {
