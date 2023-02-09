@@ -42,7 +42,7 @@ export default function BooleanSetsBlock(props: {
         </ul>
       ) : null}
       {props.disabled ? null : (
-        <TextButton onClick={() => append({ function: '', arguments: [] })}>
+        <TextButton onClick={() => append({ function: 'all', arguments: [] })}>
           Add
         </TextButton>
       )}

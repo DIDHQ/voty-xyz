@@ -8,6 +8,8 @@ import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 
+const defaultPower = 1
+
 export default function NumberSetsBlock(props: {
   name: 'voting'
   group: number
@@ -42,7 +44,9 @@ export default function NumberSetsBlock(props: {
         </ul>
       ) : null}
       {props.disabled ? null : (
-        <TextButton onClick={() => append({ function: '', arguments: [] })}>
+        <TextButton
+          onClick={() => append({ function: 'all', arguments: [defaultPower] })}
+        >
           Add
         </TextButton>
       )}
@@ -157,7 +161,7 @@ function NumberUnitBlock(props: {
                     if (value === 'all') {
                       setValue(
                         `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`,
-                        [],
+                        [defaultPower],
                       )
                     }
                     onChange(v)
@@ -197,7 +201,7 @@ function NumberUnitBlock(props: {
             }
           >
             <Controller
-              defaultValue={1 as unknown as undefined}
+              defaultValue={defaultPower}
               control={control}
               name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
               render={({ field: { value, onChange } }) => (
