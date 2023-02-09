@@ -4,19 +4,24 @@ import { InputHTMLAttributes, ReactNode } from 'react'
 export function Form(props: { className?: string; children: ReactNode }) {
   return (
     <div
-      className={clsx('space-y-6 divide-y divide-gray-200', props.className)}
+      className={clsx('space-y-8 divide-y divide-gray-200', props.className)}
     >
       {props.children}
     </div>
   )
 }
 
-export function FormSection(props: { title: string; children: ReactNode }) {
+export function FormSection(props: {
+  title: string
+  description?: string
+  children: ReactNode
+}) {
   return (
     <div>
-      <h3 className="my-6 text-lg font-medium leading-6 text-gray-900">
+      <h3 className="mt-8 text-lg font-medium leading-6 text-gray-900">
         {props.title}
       </h3>
+      <p className="mt-1 mb-6 text-sm text-gray-500">{props.description}</p>
       {props.children}
     </div>
   )
