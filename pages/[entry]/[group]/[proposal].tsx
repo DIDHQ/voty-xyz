@@ -67,7 +67,7 @@ export default function ProposalPage() {
       setValue('proposal', query.proposal)
     }
   }, [query.proposal, setValue])
-  const { data: list } = useListVotes(query.proposal)
+  const { data: list, mutate } = useListVotes(query.proposal)
   const votes = useMemo(() => list?.flatMap(({ data }) => data), [list])
   const { data: votingPower, isValidating } = useSWR(
     group && did && proposal ? ['votingPower', group, did, proposal] : null,
@@ -85,6 +85,11 @@ export default function ProposalPage() {
       setValue('power', votingPower)
     }
   }, [resetField, setValue, votingPower])
+  useEffect(() => {
+    if (handleSubmit.status === 'success') {
+      mutate()
+    }
+  }, [handleSubmit.status, mutate])
 
   return proposal && group ? (
     <div className="flex py-8">
