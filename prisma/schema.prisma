@@ -41,6 +41,8 @@ model Proposal {
 
   data Bytes
 
+  voters Int
+
   @@id([uri])
   @@index([entry, group])
   @@index([community, group])
@@ -77,4 +79,12 @@ model Vote {
   @@id([uri])
   @@unique([proposal, author])
   @@index([author])
+}
+
+model Counting {
+  proposal String
+  choice   String
+  power    Float
+
+  @@id([proposal, choice])
 }

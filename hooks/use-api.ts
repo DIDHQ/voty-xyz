@@ -6,9 +6,21 @@ import { DataType } from '../src/constants'
 import { Authorized, Community, Proposal, Option, Vote } from '../src/schemas'
 import { fetchJson } from '../src/utils/fetcher'
 
+export function useCounting(proposal?: string) {
+  return useSWR(
+    proposal ? ['counting', proposal] : null,
+    async () =>
+      fetchJson<{
+        power: { [choice: string]: number }
+        total: number
+      }>(`/api/counting?proposal=${proposal}`),
+    { revalidateOnFocus: false },
+  )
+}
+
 export function useEntryConfig(did?: string) {
-  return useSWR<{ community?: string }>(
-    did ? ['entry', did] : null,
+  return useSWR(
+    did ? ['entryConfig', did] : null,
     async () =>
       fetchJson<{
         community: string

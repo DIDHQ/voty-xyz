@@ -13,6 +13,7 @@ import verifyCommunity from '../../src/verifiers/verify-community'
 import verifyProposal from '../../src/verifiers/verify-proposal'
 import verifyOption from '../../src/verifiers/verify-option'
 import verifyVote from '../../src/verifiers/verify-vote'
+import { powerOfChoice } from '../../src/voting'
 
 const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
 
@@ -72,6 +73,7 @@ export default async function handler(
           community: proposal.community,
           group: proposal.group,
           data,
+          voters: 0,
         },
       })
     } else if (isOption(json)) {
@@ -95,17 +97,40 @@ export default async function handler(
       while (!uploader.isComplete) {
         await uploader.uploadChunk()
       }
-      await database.vote.create({
-        data: {
-          uri: idToURI(transaction.id),
-          ts,
-          author: vote.author.did,
-          community: proposal.community,
-          group: proposal.group,
-          proposal: vote.proposal,
-          data,
-        },
-      })
+      await database.$transaction([
+        ...Object.entries(
+          powerOfChoice(proposal.voting_type, vote.choice, vote.power),
+        ).map(([choice, power = 0]) =>
+          database.counting.upsert({
+            where: {
+              proposal_choice: { proposal: vote.proposal, choice },
+            },
+            create: {
+              proposal: vote.proposal,
+              choice,
+              power,
+            },
+            update: {
+              power: { increment: power },
+            },
+          }),
+        ),
+        database.proposal.update({
+          where: { uri: vote.proposal },
+          data: { voters: { increment: 1 } },
+        }),
+        database.vote.create({
+          data: {
+            uri: idToURI(transaction.id),
+            ts,
+            author: vote.author.did,
+            community: proposal.community,
+            group: proposal.group,
+            proposal: vote.proposal,
+            data,
+          },
+        }),
+      ])
     } else {
       throw new Error('sign type not supported')
     }

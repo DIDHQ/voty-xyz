@@ -1,4 +1,3 @@
-import { Fragment } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
@@ -6,6 +5,8 @@ import clsx from 'clsx'
 export default function Select(props: {
   options?: string[]
   value: string
+  full?: boolean
+  top?: boolean
   onChange(value: string): void
   className?: string
 }) {
@@ -25,12 +26,17 @@ export default function Select(props: {
             </Listbox.Button>
             <Transition
               show={open}
-              as={Fragment}
+              as="div"
               leave="transition ease-in duration-100"
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
+              className={clsx(
+                'absolute',
+                props.top ? 'bottom-full mb-1' : 'top-full mt-1',
+                props.full ? 'w-full' : undefined,
+              )}
             >
-              <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="z-10 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                 {props.options?.map((option) => (
                   <Listbox.Option
                     key={option}

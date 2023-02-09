@@ -161,6 +161,7 @@ export default function CreateProposalPage() {
                         <input
                           {...register(`options.${index}`)}
                           placeholder={`Option ${index + 1}`}
+                          className="w-full outline-none"
                         />
                       </span>
                     </div>
@@ -197,6 +198,7 @@ export default function CreateProposalPage() {
           account={account}
           value={did}
           onChange={setDid}
+          top
           className="mr-4 w-48"
         />
       </FormFooter>

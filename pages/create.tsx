@@ -14,11 +14,8 @@ export default function CreateCommunityPage() {
   const router = useRouter()
   const { account } = useWallet()
   const { data: dids } = useDids(account)
-  const [entry, setEntry] = useState('')
-  useEffect(() => {
-    setEntry(dids?.[0] || '')
-  }, [dids])
-  const { data: config } = useEntryConfig(entry)
+  const [did, setDid] = useState('')
+  const { data: config } = useEntryConfig(did)
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
 
   return (
@@ -30,8 +27,8 @@ export default function CreateCommunityPage() {
         >
           <DidSelect
             account={account}
-            value={entry}
-            onChange={setEntry}
+            value={did}
+            onChange={setDid}
             className="w-80"
           />
         </FormItem>
@@ -52,20 +49,20 @@ export default function CreateCommunityPage() {
             type="warning"
             action="View"
             onClick={() => {
-              router.push(`/${entry}`)
+              router.push(`/${did}`)
             }}
           >
-            Community of <b>{entry}</b> already existed.
+            Community of <b>{did}</b> already existed.
           </Alert>
         ) : (
           <Alert
             type="success"
             action="Create"
             onClick={() => {
-              router.push(`/${entry}/settings`)
+              router.push(`/${did}/settings`)
             }}
           >
-            <b>{entry}</b> is able to create an community.
+            <b>{did}</b> is able to create an community.
           </Alert>
         )}
       </GridItem6>

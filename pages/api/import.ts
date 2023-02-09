@@ -12,6 +12,7 @@ import verifyCommunity from '../../src/verifiers/verify-community'
 import verifyProposal from '../../src/verifiers/verify-proposal'
 import verifyOption from '../../src/verifiers/verify-option'
 import verifyVote from '../../src/verifiers/verify-vote'
+import { powerOfChoice } from '../../src/voting'
 
 const textEncoder = new TextEncoder()
 
@@ -50,17 +51,14 @@ export default async function handler(
             ts,
           },
         }),
-        database.community.upsert({
-          where: { uri },
-          create: { uri, ts, entry: community.author.did, data },
-          update: {},
+        database.community.create({
+          data: { uri, ts, entry: community.author.did, data },
         }),
       ])
     } else if (isProposal(json)) {
       const { proposal, community } = await verifyProposal(json)
-      await database.proposal.upsert({
-        where: { uri },
-        create: {
+      await database.proposal.create({
+        data: {
           uri,
           ts,
           author: proposal.author.did,
@@ -68,14 +66,13 @@ export default async function handler(
           community: proposal.community,
           group: proposal.group,
           data,
+          voters: 0,
         },
-        update: {},
       })
     } else if (isOption(json)) {
       const { option, proposal } = await verifyOption(json)
-      await database.option.upsert({
-        where: { uri },
-        create: {
+      await database.option.create({
+        data: {
           uri,
           ts,
           author: option.author.did,
@@ -84,23 +81,43 @@ export default async function handler(
           proposal: option.proposal,
           data,
         },
-        update: {},
       })
     } else if (isVote(json)) {
       const { vote, proposal } = await verifyVote(json)
-      await database.vote.upsert({
-        where: { uri },
-        create: {
-          uri,
-          ts,
-          author: vote.author.did,
-          community: proposal.community,
-          group: proposal.group,
-          proposal: vote.proposal,
-          data,
-        },
-        update: {},
-      })
+      await database.$transaction([
+        ...Object.entries(
+          powerOfChoice(proposal.voting_type, vote.choice, vote.power),
+        ).map(([choice, power = 0]) =>
+          database.counting.upsert({
+            where: {
+              proposal_choice: { proposal: vote.proposal, choice },
+            },
+            create: {
+              proposal: vote.proposal,
+              choice,
+              power,
+            },
+            update: {
+              power: { increment: power },
+            },
+          }),
+        ),
+        database.proposal.update({
+          where: { uri: vote.proposal },
+          data: { voters: { increment: 1 } },
+        }),
+        database.vote.create({
+          data: {
+            uri,
+            ts,
+            author: vote.author.did,
+            community: proposal.community,
+            group: proposal.group,
+            proposal: vote.proposal,
+            data,
+          },
+        }),
+      ])
     } else {
       throw new Error('import type not supported')
     }
