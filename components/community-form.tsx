@@ -124,7 +124,10 @@ export default function CommunityForm(props: {
       >
         <Grid6>
           <GridItem2>
-            <FormItem label="Twitter">
+            <FormItem
+              label="Twitter"
+              error={errors.extension?.twitter?.message}
+            >
               <TextInput
                 {...register('extension.twitter')}
                 error={!!errors.extension?.twitter?.message}
@@ -133,7 +136,10 @@ export default function CommunityForm(props: {
             </FormItem>
           </GridItem2>
           <GridItem2>
-            <FormItem label="Discord">
+            <FormItem
+              label="Discord"
+              error={errors.extension?.discord?.message}
+            >
               <TextInput
                 {...register('extension.discord')}
                 error={!!errors.extension?.discord?.message}
@@ -142,7 +148,7 @@ export default function CommunityForm(props: {
             </FormItem>
           </GridItem2>
           <GridItem2>
-            <FormItem label="GitHub">
+            <FormItem label="GitHub" error={errors.extension?.github?.message}>
               <TextInput
                 {...register('extension.github')}
                 error={!!errors.extension?.github?.message}

@@ -99,7 +99,13 @@ function BooleanUnitBlock(props: {
       </li>
       {props.open ? (
         <div className="space-y-4 bg-gray-50 p-6">
-          <FormItem label="Alias">
+          <FormItem
+            label="Alias"
+            error={
+              errors.groups?.[props.group]?.permission?.[props.name]
+                ?.operands?.[props.index]?.alias?.message
+            }
+          >
             <TextInput
               {...register(
                 `groups.${props.group}.permission.${props.name}.operands.${props.index}.alias`,
@@ -111,7 +117,13 @@ function BooleanUnitBlock(props: {
               placeholder={`Sets #${props.index + 1}`}
             />
           </FormItem>
-          <FormItem label="Filter">
+          <FormItem
+            label="Filter"
+            error={
+              errors.groups?.[props.group]?.permission?.[props.name]
+                ?.operands?.[props.index]?.function?.message
+            }
+          >
             <Controller
               control={control}
               name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.function`}
@@ -141,7 +153,13 @@ function BooleanUnitBlock(props: {
               )}
             />
           </FormItem>
-          <FormItem label="Arguments">
+          <FormItem
+            label="Arguments"
+            error={
+              errors.groups?.[props.group]?.permission?.[props.name]
+                ?.operands?.[props.index]?.arguments?.message
+            }
+          >
             <Controller
               control={control}
               name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`}

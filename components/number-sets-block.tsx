@@ -99,7 +99,13 @@ function NumberUnitBlock(props: {
       </li>
       {props.open ? (
         <div className="space-y-4 bg-gray-50 p-6">
-          <FormItem label="Alias">
+          <FormItem
+            label="Alias"
+            error={
+              errors.groups?.[props.group]?.permission?.[props.name]
+                ?.operands?.[props.index]?.alias?.message
+            }
+          >
             <TextInput
               {...register(
                 `groups.${props.group}.permission.${props.name}.operands.${props.index}.alias`,
@@ -111,7 +117,13 @@ function NumberUnitBlock(props: {
               placeholder={`Sets #${props.index + 1}`}
             />
           </FormItem>
-          <FormItem label="Function">
+          <FormItem
+            label="Function"
+            error={
+              errors.groups?.[props.group]?.permission?.[props.name]
+                ?.operands?.[props.index]?.function?.message
+            }
+          >
             <Controller
               control={control}
               name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.function`}
@@ -141,7 +153,13 @@ function NumberUnitBlock(props: {
               )}
             />
           </FormItem>
-          <FormItem label="Arguments">
+          <FormItem
+            label="Arguments"
+            error={
+              errors.groups?.[props.group]?.permission?.[props.name]
+                ?.operands?.[props.index]?.arguments?.message
+            }
+          >
             <Controller
               control={control}
               name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`}
