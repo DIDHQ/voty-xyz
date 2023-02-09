@@ -175,7 +175,7 @@ function NumberUnitBlock(props: {
               label="Whitelist"
               error={
                 errors.groups?.[props.group]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.message
+                  ?.operands?.[props.index]?.arguments?.[1]?.message
               }
             >
               <Controller
@@ -188,6 +188,10 @@ function NumberUnitBlock(props: {
                     }
                     onChange={(e) => onChange(e.target.value.split('\n'))}
                     placeholder={'e.g.\nregex.bit\n...'}
+                    error={
+                      !!errors.groups?.[props.group]?.permission?.[props.name]
+                        ?.operands?.[props.index]?.arguments?.[1]?.message
+                    }
                   />
                 )}
               />
@@ -215,6 +219,10 @@ function NumberUnitBlock(props: {
                     const output = parseInt(e.target.value, 10)
                     onChange(isNaN(output) ? 0 : output)
                   }}
+                  error={
+                    !!errors.groups?.[props.group]?.permission?.[props.name]
+                      ?.operands?.[props.index]?.arguments?.[0]?.message
+                  }
                 />
               )}
             />

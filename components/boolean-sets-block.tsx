@@ -171,7 +171,7 @@ function BooleanUnitBlock(props: {
               label="Whitelist"
               error={
                 errors.groups?.[props.group]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.message
+                  ?.operands?.[props.index]?.arguments?.[0]?.message
               }
             >
               <Controller
@@ -184,6 +184,10 @@ function BooleanUnitBlock(props: {
                     }
                     onChange={(e) => onChange(e.target.value.split('\n'))}
                     placeholder={'e.g.\nregex.bit\n...'}
+                    error={
+                      !!errors.groups?.[props.group]?.permission?.[props.name]
+                        ?.operands?.[props.index]?.arguments?.[0]?.message
+                    }
                   />
                 )}
               />
