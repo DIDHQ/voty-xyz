@@ -77,29 +77,26 @@ export default function GroupForm(props: {
   )
   useEffect(() => {
     if (isNew) {
-      append(
-        {
-          name: '',
-          permission: {
-            proposing: {
-              operator: 'or',
-              operands: [],
-            },
-            voting: {
-              operator: 'max',
-              operands: [],
-            },
+      append({
+        name: '',
+        permission: {
+          proposing: {
+            operator: 'or',
+            operands: [],
           },
-          period: {
-            announcement: 3600,
-            voting: 86400,
-          },
-          extension: {
-            id: nanoid(),
+          voting: {
+            operator: 'max',
+            operands: [],
           },
         },
-        { shouldFocus: false },
-      )
+        period: {
+          announcement: 3600,
+          voting: 86400,
+        },
+        extension: {
+          id: nanoid(),
+        },
+      })
     }
   }, [append, isNew])
   useEffect(() => {
