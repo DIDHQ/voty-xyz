@@ -13,7 +13,6 @@ export function useCounting(proposal?: string) {
     async () =>
       fetchJson<{
         counting: { [choice: string]: Counting }
-        voters: number
         power: number
       }>(`/api/counting?proposal=${proposal}`),
     { revalidateOnFocus: false },

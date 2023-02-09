@@ -12,6 +12,7 @@ import verifyCommunity from '../../src/verifiers/verify-community'
 import verifyProposal from '../../src/verifiers/verify-proposal'
 import verifyOption from '../../src/verifiers/verify-option'
 import verifyVote from '../../src/verifiers/verify-vote'
+import { powerOfChoice } from '../../src/voting'
 
 const textEncoder = new TextEncoder()
 
@@ -83,10 +84,9 @@ export default async function handler(
     } else if (isVote(json)) {
       const { vote, proposal } = await verifyVote(json)
       await database.$transaction([
-        ...(proposal.voting_type === 'single'
-          ? [JSON.parse(vote.choice) as string]
-          : (JSON.parse(vote.choice) as string[])
-        ).map((choice) =>
+        ...Object.entries(
+          powerOfChoice(proposal.voting_type, vote.choice, vote.power),
+        ).map(([choice, power = 0]) =>
           database.counting.upsert({
             where: {
               proposal_choice: { proposal: vote.proposal, choice },
@@ -94,12 +94,10 @@ export default async function handler(
             create: {
               proposal: vote.proposal,
               choice,
-              voters: 1,
-              power: vote.power,
+              power,
             },
             update: {
-              voters: { increment: 1 },
-              power: { increment: vote.power },
+              power: { increment: power },
             },
           }),
         ),

@@ -216,7 +216,6 @@ export function Option(props: {
   votingPower?: number
   counting?: {
     counting: { [choice: string]: Counting }
-    voters: number
     power: number
   }
   value: string

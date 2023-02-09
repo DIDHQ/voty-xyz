@@ -19,7 +19,6 @@ export default async function handler(
 
   res.json({
     counting: keyBy(data, ({ choice }) => choice),
-    voters: sumBy(data, ({ voters }) => voters),
     power: sumBy(data, ({ power }) => power),
   })
 }
