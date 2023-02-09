@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { uniq, without } from 'lodash-es'
 import useSWR from 'swr'
 import { Counting } from '@prisma/client'
 
@@ -25,6 +24,7 @@ import { DataType } from '../../../src/constants'
 import useStatus from '../../../hooks/use-status'
 import Card from '../../../components/basic/card'
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
+import { checkChoice, powerOfChoice, updateChoice } from '../../../src/voting'
 
 export default function ProposalPage() {
   const [query] = useRouterQuery<['proposal']>()
@@ -114,11 +114,11 @@ export default function ProposalPage() {
             name="choice"
             render={({ field: { value, onChange } }) => (
               <>
-                {proposal.options.map((choice) => (
+                {proposal.options.map((option) => (
                   <Option
-                    key={choice}
+                    key={option}
                     type={proposal.voting_type}
-                    choice={choice}
+                    option={option}
                     votingPower={votingPower}
                     counting={counting}
                     value={value}
@@ -212,7 +212,7 @@ export default function ProposalPage() {
 
 export function Option(props: {
   type: 'single' | 'multiple'
-  choice: string
+  option: string
   votingPower?: number
   counting?: {
     counting: { [choice: string]: Counting }
@@ -222,22 +222,15 @@ export function Option(props: {
   value: string
   onChange(value: string): void
 }) {
-  const { type, choice, votingPower = 0, counting, value, onChange } = props
+  const { type, option, votingPower = 0, counting, value, onChange } = props
   const percentage = useMemo(() => {
-    const power =
-      type === 'single'
-        ? JSON.stringify(choice) === value
-          ? votingPower
-          : 0
-        : (JSON.parse(value || '[]') as string[]).includes(choice)
-        ? votingPower
-        : 0
+    const power = powerOfChoice(type, value, votingPower)[option] || 0
     return (
-      (((counting?.counting[choice]?.power || 0) + power) /
+      (((counting?.counting[option]?.power || 0) + power) /
         ((counting?.power || 0) + votingPower)) *
       100
     )
-  }, [choice, counting?.counting, counting?.power, type, value, votingPower])
+  }, [option, counting?.counting, counting?.power, type, value, votingPower])
 
   return (
     <li
@@ -248,33 +241,22 @@ export function Option(props: {
         backgroundSize: `${percentage}% auto`,
       }}
       onClick={() => {
-        if (type === 'single') {
-          onChange(JSON.stringify(choice))
-        } else {
-          const old = JSON.parse(value || '[]') as string[]
-          onChange(
-            JSON.stringify(
-              old.includes(choice)
-                ? without(old, choice)
-                : uniq([...old, choice]),
-            ),
-          )
-        }
+        onChange(updateChoice(type, value, option))
       }}
     >
-      <span className="ml-2 w-0 flex-1 truncate">{choice}</span>
+      <span className="ml-2 w-0 flex-1 truncate">{option}</span>
       <div className="ml-4 shrink-0 leading-none">
         {type === 'single' ? (
           <input
             type="radio"
-            checked={JSON.stringify(choice) === value}
+            checked={checkChoice('single', value, option)}
             onChange={() => null}
             className="h-4 w-4 border border-gray-300 text-indigo-600 focus:ring-indigo-500"
           />
         ) : (
           <input
             type="checkbox"
-            checked={(JSON.parse(value || '[]') as string[]).includes(choice)}
+            checked={checkChoice('multiple', value, option)}
             onChange={() => null}
             className="h-4 w-4 rounded border border-gray-300 text-indigo-600 focus:ring-indigo-500"
           />
