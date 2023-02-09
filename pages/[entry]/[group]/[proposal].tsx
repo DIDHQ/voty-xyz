@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import { Counting } from '@prisma/client'
+import clsx from 'clsx'
 
 import DidSelect from '../../../components/did-select'
 import {
@@ -245,21 +246,15 @@ export function Option(props: {
     >
       <span className="ml-2 w-0 flex-1 truncate">{option}</span>
       <div className="ml-4 shrink-0 leading-none">
-        {type === 'single' ? (
-          <input
-            type="radio"
-            checked={checkChoice('single', value, option)}
-            onChange={() => null}
-            className="h-4 w-4 border border-gray-300 text-indigo-600 focus:ring-indigo-500"
-          />
-        ) : (
-          <input
-            type="checkbox"
-            checked={checkChoice('multiple', value, option)}
-            onChange={() => null}
-            className="h-4 w-4 rounded border border-gray-300 text-indigo-600 focus:ring-indigo-500"
-          />
-        )}
+        <input
+          type={type === 'single' ? 'radio' : 'checkbox'}
+          checked={checkChoice(type, value, option)}
+          onChange={() => null}
+          className={clsx(
+            type === 'single' ? undefined : 'rounded',
+            'h-4 w-4 border border-gray-300 text-indigo-600 focus:ring-indigo-500',
+          )}
+        />
       </div>
     </li>
   )
