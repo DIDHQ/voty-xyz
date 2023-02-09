@@ -234,7 +234,7 @@ export function Option(props: {
         : 0
     return (
       (((counting?.counting[choice]?.power || 0) + power) /
-        ((counting?.power || 1) + votingPower)) *
+        ((counting?.power || 0) + votingPower)) *
       100
     )
   }, [choice, counting?.counting, counting?.power, type, value, votingPower])
