@@ -1,6 +1,6 @@
 import { BooleanFunction } from '../types'
 
-export const is_did: BooleanFunction<[string[]]> = (did_list) => {
+export const did: BooleanFunction<[string[]]> = (did_list) => {
   const set = new Set(did_list)
 
   return {

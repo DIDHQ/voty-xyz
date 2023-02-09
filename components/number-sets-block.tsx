@@ -117,7 +117,7 @@ function NumberUnitBlock(props: {
               name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.function`}
               render={({ field: { value, onChange } }) => (
                 <Select
-                  options={['static_power']}
+                  options={['all', 'did', 'sub_did']}
                   value={value}
                   onChange={onChange}
                 />

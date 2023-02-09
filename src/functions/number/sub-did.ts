@@ -1,6 +1,6 @@
 import { NumberFunction } from '../types'
 
-export const did_power: NumberFunction<[string[], number]> = (
+export const sub_did: NumberFunction<[string[], number]> = (
   did_list,
   power,
 ) => {
@@ -9,7 +9,8 @@ export const did_power: NumberFunction<[string[], number]> = (
   return {
     requiredCoinTypes: [],
     execute: (did) => {
-      return set.has(did) ? power : 0
+      const indexOfFirstDot = did.indexOf('.')
+      return set.has(did.substring(indexOfFirstDot + 1)) ? power : 0
     },
   }
 }

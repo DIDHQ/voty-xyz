@@ -2,16 +2,18 @@ import { uniq } from 'lodash-es'
 import pMap from 'p-map'
 
 import { BooleanSets, BooleanUnit } from '../../schemas'
-import { BooleanFunction } from '../types'
-import { is_sub_did_of } from './is-sub-did-of'
-import { is_did } from './is-did'
 import { DID, Snapshots } from '../../types'
+import { BooleanFunction } from '../types'
+import { all } from './all'
+import { did } from './did'
+import { sub_did } from './sub-did'
 
 export const checkBooleanFunctions: {
   [name: string]: BooleanFunction<any[]>
 } = {
-  is_did,
-  is_sub_did_of,
+  all,
+  did,
+  sub_did,
 }
 
 export async function checkBoolean(
