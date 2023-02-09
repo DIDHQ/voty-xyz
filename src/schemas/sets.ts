@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const booleanUnitSchema = z.object({
   alias: z.string().optional(),
-  function: z.string(),
+  function: z.string().min(1),
   arguments: z.array(z.unknown()),
 })
 export type BooleanUnit = z.infer<typeof booleanUnitSchema>
@@ -15,7 +15,7 @@ export type BooleanSets = z.infer<typeof booleanSetsSchema>
 
 export const numberUnitSchema = z.object({
   alias: z.string().optional(),
-  function: z.string(),
+  function: z.string().min(1),
   arguments: z.array(z.unknown()),
 })
 export type NumberUnit = z.infer<typeof numberUnitSchema>
