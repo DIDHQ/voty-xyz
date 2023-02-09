@@ -11,8 +11,8 @@ export default forwardRef<
     <input
       ref={ref}
       aria-invalid={error ? 'true' : 'false'}
-      {...restProps}
       type="text"
+      {...restProps}
       className={clsx(
         'block w-full rounded-md border disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
         error

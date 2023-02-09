@@ -196,12 +196,24 @@ function NumberUnitBlock(props: {
                 ?.operands?.[props.index]?.arguments?.[isAll ? 0 : 1]?.message
             }
           >
-            <TextInput
-              type="number"
-              {...register(
-                `groups.${props.group}.permission.${props.name}.operands.${
-                  props.index
-                }.arguments.${isAll ? 0 : 1}`,
+            <Controller
+              defaultValue={1 as unknown as undefined}
+              control={control}
+              name={`groups.${props.group}.permission.${props.name}.operands.${
+                props.index
+              }.arguments.${isAll ? 0 : 1}`}
+              render={({ field: { value, onChange } }) => (
+                <TextInput
+                  value={
+                    isNaN(value) || value === 0
+                      ? ''
+                      : (value as number).toString()
+                  }
+                  onChange={(e) => {
+                    const output = parseInt(e.target.value, 10)
+                    onChange(isNaN(output) ? 0 : output)
+                  }}
+                />
               )}
             />
           </FormItem>
