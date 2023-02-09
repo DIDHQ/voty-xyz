@@ -1,8 +1,8 @@
 import { NumberFunction } from '../types'
 
-export const sub_did: NumberFunction<[string[], number]> = (
-  did_list,
+export const sub_did: NumberFunction<[number, string[]]> = (
   power,
+  did_list,
 ) => {
   const set = new Set(did_list)
 

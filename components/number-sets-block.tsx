@@ -176,7 +176,7 @@ function NumberUnitBlock(props: {
             >
               <Controller
                 control={control}
-                name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
+                name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.1`}
                 render={({ field: { value, onChange } }) => (
                   <Textarea
                     value={
@@ -193,15 +193,13 @@ function NumberUnitBlock(props: {
             label="Power"
             error={
               errors.groups?.[props.group]?.permission?.[props.name]
-                ?.operands?.[props.index]?.arguments?.[isAll ? 0 : 1]?.message
+                ?.operands?.[props.index]?.arguments?.[0]?.message
             }
           >
             <Controller
               defaultValue={1 as unknown as undefined}
               control={control}
-              name={`groups.${props.group}.permission.${props.name}.operands.${
-                props.index
-              }.arguments.${isAll ? 0 : 1}`}
+              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
               render={({ field: { value, onChange } }) => (
                 <TextInput
                   value={
