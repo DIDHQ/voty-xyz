@@ -13,13 +13,17 @@ export default function RadioGroup(props: {
     <fieldset>
       <div className="space-y-4">
         {props.options.map((option) => (
-          <div key={option.id} className="relative flex items-start">
+          <div
+            key={option.id}
+            onClick={() => onChange(option.id)}
+            className="relative flex items-start"
+          >
             <div className="flex h-5 items-center">
               <input
                 aria-describedby={`${option.id}-description`}
                 type="radio"
                 checked={option.id === props.value}
-                onChange={() => onChange(option.id)}
+                onChange={() => null}
                 className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
               />
             </div>
