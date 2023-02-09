@@ -109,7 +109,10 @@ export default function CreateProposalPage() {
 
   return (
     <Form>
-      <FormSection title="Proposal">
+      <FormSection
+        title="Proposal"
+        description="Basic information of the proposal."
+      >
         <Grid6>
           <GridItem6>
             <FormItem label="Title" error={errors.title?.message}>

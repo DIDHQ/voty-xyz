@@ -104,7 +104,10 @@ export default function GroupForm(props: {
 
   return (
     <Form className={props.className}>
-      <FormSection title="Profile">
+      <FormSection
+        title="Profile"
+        description="Basic information of the group."
+      >
         <Grid6>
           <GridItem6>
             <FormItem
@@ -130,7 +133,10 @@ export default function GroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Proposers">
+      <FormSection
+        title="Proposers"
+        description="Filters for proposal validation."
+      >
         <Grid6>
           <GridItem6>
             <FormItem
@@ -153,7 +159,10 @@ export default function GroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Voters">
+      <FormSection
+        title="Voters"
+        description="Voting power is calculated as maximum."
+      >
         <Grid6>
           <GridItem6>
             <FormItem
@@ -176,7 +185,7 @@ export default function GroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Rules">
+      <FormSection title="Rules" description="Proposal timing.">
         <Grid6>
           <GridItem3>
             <FormItem

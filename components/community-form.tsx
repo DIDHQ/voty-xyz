@@ -59,7 +59,10 @@ export default function CommunityForm(props: {
 
   return (
     <Form className={props.className}>
-      <FormSection title="Profile">
+      <FormSection
+        title="Profile"
+        description="Basic information of the community."
+      >
         <Grid6>
           <GridItem6>
             <FormItem label="Name" error={errors.name?.message}>
@@ -109,7 +112,10 @@ export default function CommunityForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Social accounts">
+      <FormSection
+        title="Social accounts"
+        description="Social relationship of the community."
+      >
         <Grid6>
           <GridItem2>
             <FormItem label="Twitter">
