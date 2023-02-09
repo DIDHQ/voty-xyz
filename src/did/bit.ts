@@ -1,6 +1,7 @@
 import { createInstance } from 'dotbit'
 import { getAddress } from 'ethers/lib/utils.js'
 import invariant from 'tiny-invariant'
+
 import { coinTypeToChainId } from '../constants'
 import { DidResolver } from '../types'
 

@@ -1,5 +1,6 @@
 import { providers } from 'ethers'
 import invariant from 'tiny-invariant'
+
 import { DidResolver } from '../types'
 
 const provider = new providers.StaticJsonRpcProvider(

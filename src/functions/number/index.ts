@@ -5,13 +5,11 @@ import { NumberSets, NumberUnit } from '../../schemas'
 import { DID, Snapshots } from '../../types'
 import { NumberFunction } from '../types'
 import { static_power } from './static-power'
-import { erc20_balance } from './erc20-balance'
 
 export const calculateNumberFunctions: {
   [name: string]: NumberFunction<any[]>
 } = {
   static_power,
-  erc20_balance,
 }
 
 export async function calculateNumber(

@@ -5,7 +5,6 @@ import { BooleanSets, BooleanUnit } from '../../schemas'
 import { BooleanFunction } from '../types'
 import { is_sub_did_of } from './is-sub-did-of'
 import { is_did } from './is-did'
-import { owns_erc721 } from './owns-erc721'
 import { DID, Snapshots } from '../../types'
 
 export const checkBooleanFunctions: {
@@ -13,7 +12,6 @@ export const checkBooleanFunctions: {
 } = {
   is_did,
   is_sub_did_of,
-  owns_erc721,
 }
 
 export async function checkBoolean(
