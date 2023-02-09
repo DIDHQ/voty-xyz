@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import DidSelect from '../../../components/did-select'
+import AuthorSelect from '../../../components/author-select'
 import {
   useCounting,
   useListVotes,
@@ -137,7 +137,7 @@ export default function ProposalPage() {
         </ul>
         <div className="py-6">
           <div className="flex justify-end">
-            <DidSelect
+            <AuthorSelect
               account={account}
               value={did}
               onChange={setDid}

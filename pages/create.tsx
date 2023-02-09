@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Alert from '../components/basic/alert'
 import { FormItem } from '../components/basic/form'
 import { Grid6, GridItem2, GridItem6 } from '../components/basic/grid'
-import DidSelect from '../components/did-select'
+import EntrySelect from '../components/entry-select'
 import { useEntryConfig, useRetrieve } from '../hooks/use-api'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
@@ -14,8 +14,8 @@ export default function CreateCommunityPage() {
   const router = useRouter()
   const { account } = useWallet()
   const { data: dids } = useDids(account)
-  const [did, setDid] = useState('')
-  const { data: config } = useEntryConfig(did)
+  const [entry, setEntry] = useState('')
+  const { data: config } = useEntryConfig(entry)
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
 
   return (
@@ -25,7 +25,7 @@ export default function CreateCommunityPage() {
           label="DID"
           description="select an DID as your community entry"
         >
-          <DidSelect account={account} value={did} onChange={setDid} />
+          <EntrySelect account={account} value={entry} onChange={setEntry} />
         </FormItem>
       </GridItem2>
       <GridItem6>
@@ -44,20 +44,20 @@ export default function CreateCommunityPage() {
             type="warning"
             action="View"
             onClick={() => {
-              router.push(`/${did}`)
+              router.push(`/${entry}`)
             }}
           >
-            Community of <b>{did}</b> already existed.
+            Community of <b>{entry}</b> already existed.
           </Alert>
         ) : (
           <Alert
             type="success"
             action="Create"
             onClick={() => {
-              router.push(`/${did}/settings`)
+              router.push(`/${entry}/settings`)
             }}
           >
-            <b>{did}</b> is able to create an community.
+            <b>{entry}</b> is able to create an community.
           </Alert>
         )}
       </GridItem6>

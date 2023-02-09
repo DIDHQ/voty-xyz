@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
+
 import useDids from '../hooks/use-dids'
 import { Account } from '../src/types'
 import Select from './basic/select'
 
-export default function DidSelect(props: {
+export default function EntrySelect(props: {
   account?: Account
   value: string
   onChange(value: string): void
