@@ -199,7 +199,7 @@ export default function CreateProposalPage() {
           value={did}
           onChange={setDid}
           top
-          className="mr-4 w-48"
+          className="mr-6"
         />
       </FormFooter>
     </Form>

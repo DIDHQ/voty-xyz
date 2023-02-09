@@ -25,12 +25,7 @@ export default function CreateCommunityPage() {
           label="DID"
           description="select an DID as your community entry"
         >
-          <DidSelect
-            account={account}
-            value={did}
-            onChange={setDid}
-            className="w-80"
-          />
+          <DidSelect account={account} value={did} onChange={setDid} />
         </FormItem>
       </GridItem2>
       <GridItem6>

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import DidSelect from '../../../components/did-select'
 import {
@@ -25,9 +26,10 @@ import useStatus from '../../../hooks/use-status'
 import Card from '../../../components/basic/card'
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
 import { checkChoice, powerOfChoice, updateChoice } from '../../../src/voting'
+import TextButton from '../../../components/basic/text-button'
 
 export default function ProposalPage() {
-  const [query] = useRouterQuery<['proposal']>()
+  const [query] = useRouterQuery<['entry', 'group', 'proposal']>()
   const { data: status } = useStatus(query.proposal)
   const { data: proposal } = useRetrieve(DataType.PROPOSAL, query.proposal)
   const { data: community } = useRetrieve(
@@ -94,10 +96,14 @@ export default function ProposalPage() {
   }, [handleSubmit.status, mutateList, mutateCounting])
 
   return proposal && group ? (
-    <div className="flex py-8">
+    <div className="flex py-6">
       <div className="mr-6 flex-[2_2_0%]">
         <div>
-          <h2 className="font-semibold leading-6 text-indigo-600">Proposal</h2>
+          <Link href={`/${query.entry}/${query.group}`}>
+            <TextButton className="text-[1rem] font-semibold leading-6">
+              ← {group.name}
+            </TextButton>
+          </Link>
           <h3 className="mt-2 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
             {proposal.title}
           </h3>
@@ -129,14 +135,14 @@ export default function ProposalPage() {
             )}
           />
         </ul>
-        <div className="py-5">
+        <div className="py-6">
           <div className="flex justify-end">
             <DidSelect
               account={account}
               value={did}
               onChange={setDid}
               top
-              className="mr-4 w-48"
+              className="mr-6"
             />
             <Button
               primary
