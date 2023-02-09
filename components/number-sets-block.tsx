@@ -158,12 +158,10 @@ function NumberUnitBlock(props: {
                   ]}
                   value={value}
                   onChange={(v) => {
-                    if (value === 'all') {
-                      setValue(
-                        `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`,
-                        [defaultPower],
-                      )
-                    }
+                    setValue(
+                      `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`,
+                      [defaultPower],
+                    )
                     onChange(v)
                   }}
                 />

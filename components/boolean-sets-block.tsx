@@ -154,12 +154,10 @@ function BooleanUnitBlock(props: {
                   ]}
                   value={value}
                   onChange={(v) => {
-                    if (value === 'all') {
-                      setValue(
-                        `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`,
-                        [],
-                      )
-                    }
+                    setValue(
+                      `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`,
+                      [],
+                    )
                     onChange(v)
                   }}
                 />
