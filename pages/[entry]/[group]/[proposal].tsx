@@ -117,6 +117,17 @@ export default function ProposalPage() {
                   <li
                     key={choice}
                     className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
+                    style={{
+                      background: `linear-gradient(90deg, #f3f4f6 ${
+                        ((counting?.counting[choice]?.power || 0) /
+                          (counting?.power || 1)) *
+                        100
+                      }%, transparent ${
+                        ((counting?.counting[choice]?.power || 0) /
+                          (counting?.power || 1)) *
+                        100
+                      }%)`,
+                    }}
                     onClick={() => {
                       if (proposal.voting_type === 'single') {
                         onChange(JSON.stringify(choice))
@@ -133,7 +144,6 @@ export default function ProposalPage() {
                     }}
                   >
                     <span className="ml-2 w-0 flex-1 truncate">{choice}</span>
-                    <span>{counting?.[choice]?.power}</span>
                     <div className="ml-4 shrink-0 leading-none">
                       {proposal.voting_type === 'single' ? (
                         <input

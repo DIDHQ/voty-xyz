@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash-es'
+import { keyBy, sumBy } from 'lodash-es'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { database } from '../../src/database'
@@ -17,5 +17,9 @@ export default async function handler(
     },
   })
 
-  res.json({ data: keyBy(data, (counting) => counting.choice) })
+  res.json({
+    counting: keyBy(data, ({ choice }) => choice),
+    voters: sumBy(data, ({ voters }) => voters),
+    power: sumBy(data, ({ power }) => power),
+  })
 }

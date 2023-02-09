@@ -10,12 +10,12 @@ import { fetchJson } from '../src/utils/fetcher'
 export function useCounting(proposal?: string) {
   return useSWR(
     proposal ? ['counting', proposal] : null,
-    async () => {
-      const { data } = await fetchJson<{
-        data: { [choice: string]: Counting }
-      }>(`/api/counting?proposal=${proposal}`)
-      return data
-    },
+    async () =>
+      fetchJson<{
+        counting: { [choice: string]: Counting }
+        voters: number
+        power: number
+      }>(`/api/counting?proposal=${proposal}`),
     { revalidateOnFocus: false },
   )
 }
