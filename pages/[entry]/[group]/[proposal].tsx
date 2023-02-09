@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
-import { Counting } from '@prisma/client'
 import clsx from 'clsx'
 
 import DidSelect from '../../../components/did-select'
@@ -216,8 +215,8 @@ export function Option(props: {
   option: string
   votingPower?: number
   counting?: {
-    counting: { [choice: string]: Counting }
-    power: number
+    power: { [choice: string]: number }
+    total: number
   }
   value: string
   onChange(value: string): void
@@ -226,11 +225,11 @@ export function Option(props: {
   const percentage = useMemo(() => {
     const power = powerOfChoice(type, value, votingPower)[option] || 0
     return (
-      (((counting?.counting[option]?.power || 0) + power) /
-        ((counting?.power || 0) + votingPower)) *
+      (((counting?.power[option] || 0) + power) /
+        ((counting?.total || 0) + votingPower)) *
       100
     )
-  }, [option, counting?.counting, counting?.power, type, value, votingPower])
+  }, [option, counting?.power, counting?.total, type, value, votingPower])
 
   return (
     <li

@@ -1,4 +1,3 @@
-import { Counting } from '@prisma/client'
 import { useCallback } from 'react'
 import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
@@ -12,8 +11,8 @@ export function useCounting(proposal?: string) {
     proposal ? ['counting', proposal] : null,
     async () =>
       fetchJson<{
-        counting: { [choice: string]: Counting }
-        power: number
+        power: { [choice: string]: number }
+        total: number
       }>(`/api/counting?proposal=${proposal}`),
     { revalidateOnFocus: false },
   )
