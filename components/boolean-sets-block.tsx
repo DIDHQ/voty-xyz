@@ -80,7 +80,7 @@ function BooleanUnitBlock(props: {
         </div>
         <div className="ml-4 flex shrink-0 space-x-4">
           <TextButton onClick={handleOpen}>
-            {props.disabled ? 'View' : 'Edit'}
+            {props.open ? 'Hide' : props.disabled ? 'View' : 'Edit'}
           </TextButton>
           {props.disabled ? null : (
             <>
