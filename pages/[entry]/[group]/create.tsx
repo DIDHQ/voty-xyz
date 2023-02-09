@@ -5,7 +5,6 @@ import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 
 import DidSelect from '../../../components/did-select'
-import FormItem from '../../../components/basic/form-item'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useAsync from '../../../hooks/use-async'
 import useSignJson from '../../../hooks/use-sign-json'
@@ -20,7 +19,12 @@ import Select from '../../../components/basic/select'
 import { useEntryConfig, useRetrieve, useUpload } from '../../../hooks/use-api'
 import { DataType } from '../../../src/constants'
 import TextButton from '../../../components/basic/text-button'
-import { Form, FormFooter, FormSection } from '../../../components/basic/form'
+import {
+  Form,
+  FormFooter,
+  FormSection,
+  FormItem,
+} from '../../../components/basic/form'
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
 
 export default function CreateProposalPage() {

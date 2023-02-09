@@ -15,13 +15,12 @@ import useWallet from '../hooks/use-wallet'
 import { Community, communitySchema } from '../src/schemas'
 import Button from './basic/button'
 import DurationInput from './basic/duration-input'
-import FormItem from './basic/form-item'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import NumberSetsBlock from './number-sets-block'
 import { useUpload } from '../hooks/use-api'
-import { Form, FormFooter, FormSection } from './basic/form'
+import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 
 export default function GroupForm(props: {
@@ -86,7 +85,7 @@ export default function GroupForm(props: {
               operands: [],
             },
             voting: {
-              operator: 'sum',
+              operator: 'max',
               operands: [],
             },
           },

@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 import Alert from '../components/basic/alert'
-import FormItem from '../components/basic/form-item'
+import { FormItem } from '../components/basic/form'
 import { Grid6, GridItem2, GridItem6 } from '../components/basic/grid'
 import DidSelect from '../components/did-select'
 import { useEntryConfig } from '../hooks/use-api'
