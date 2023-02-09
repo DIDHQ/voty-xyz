@@ -95,17 +95,34 @@ export default async function handler(
       while (!uploader.isComplete) {
         await uploader.uploadChunk()
       }
-      await database.vote.create({
-        data: {
-          uri: idToURI(transaction.id),
-          ts,
-          author: vote.author.did,
-          community: proposal.community,
-          group: proposal.group,
-          proposal: vote.proposal,
-          data,
-        },
-      })
+      await database.$transaction([
+        database.counting.upsert({
+          where: {
+            proposal_choice: { proposal: vote.proposal, choice: vote.choice },
+          },
+          create: {
+            proposal: vote.proposal,
+            choice: vote.choice,
+            voters: 1,
+            power: vote.power,
+          },
+          update: {
+            voters: { increment: 1 },
+            power: { increment: vote.power },
+          },
+        }),
+        database.vote.create({
+          data: {
+            uri: idToURI(transaction.id),
+            ts,
+            author: vote.author.did,
+            community: proposal.community,
+            group: proposal.group,
+            proposal: vote.proposal,
+            data,
+          },
+        }),
+      ])
     } else {
       throw new Error('sign type not supported')
     }

@@ -82,17 +82,34 @@ export default async function handler(
       })
     } else if (isVote(json)) {
       const { vote, proposal } = await verifyVote(json)
-      await database.vote.create({
-        data: {
-          uri,
-          ts,
-          author: vote.author.did,
-          community: proposal.community,
-          group: proposal.group,
-          proposal: vote.proposal,
-          data,
-        },
-      })
+      await database.$transaction([
+        database.counting.upsert({
+          where: {
+            proposal_choice: { proposal: vote.proposal, choice: vote.choice },
+          },
+          create: {
+            proposal: vote.proposal,
+            choice: vote.choice,
+            voters: 1,
+            power: vote.power,
+          },
+          update: {
+            voters: { increment: 1 },
+            power: { increment: vote.power },
+          },
+        }),
+        database.vote.create({
+          data: {
+            uri,
+            ts,
+            author: vote.author.did,
+            community: proposal.community,
+            group: proposal.group,
+            proposal: vote.proposal,
+            data,
+          },
+        }),
+      ])
     } else {
       throw new Error('import type not supported')
     }
