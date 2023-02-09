@@ -15,13 +15,12 @@ import useWallet from '../hooks/use-wallet'
 import { Community, communitySchema } from '../src/schemas'
 import Button from './basic/button'
 import DurationInput from './basic/duration-input'
-import FormItem from './basic/form-item'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import NumberSetsBlock from './number-sets-block'
 import { useUpload } from '../hooks/use-api'
-import { Form, FormFooter, FormSection } from './basic/form'
+import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 
 export default function GroupForm(props: {
@@ -86,7 +85,7 @@ export default function GroupForm(props: {
               operands: [],
             },
             voting: {
-              operator: 'sum',
+              operator: 'max',
               operands: [],
             },
           },
@@ -105,7 +104,10 @@ export default function GroupForm(props: {
 
   return (
     <Form className={props.className}>
-      <FormSection title="Profile">
+      <FormSection
+        title="Profile"
+        description="Basic information of the group."
+      >
         <Grid6>
           <GridItem6>
             <FormItem
@@ -131,7 +133,10 @@ export default function GroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Proposers">
+      <FormSection
+        title="Proposers"
+        description="Filters for proposal validation."
+      >
         <Grid6>
           <GridItem6>
             <FormItem
@@ -154,7 +159,10 @@ export default function GroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Voters">
+      <FormSection
+        title="Voting power"
+        description="Voting power is calculated as maximum."
+      >
         <Grid6>
           <GridItem6>
             <FormItem
@@ -177,7 +185,7 @@ export default function GroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Rules">
+      <FormSection title="Rules" description="Proposal timing.">
         <Grid6>
           <GridItem3>
             <FormItem

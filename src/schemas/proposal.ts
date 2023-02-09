@@ -6,7 +6,7 @@ export const proposalSchema = z.object({
   community: z.string().min(1),
   group: z.number(),
   title: z.string().min(1),
-  voting_type: z.enum(['single', 'multiple', 'weighted']),
+  voting_type: z.enum(['single', 'multiple']),
   options: z
     .array(z.string().min(1))
     .refine((options) => new Set(options).size === options.length, {

@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import useAsync from '../hooks/use-async'
 import { Community, communitySchema } from '../src/schemas'
 import AvatarInput from './basic/avatar-input'
-import FormItem from './basic/form-item'
 import useResolveDid from '../hooks/use-resolve-did'
 import useSignJson from '../hooks/use-sign-json'
 import useWallet from '../hooks/use-wallet'
@@ -13,7 +12,7 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import Button from './basic/button'
 import { useUpload } from '../hooks/use-api'
-import { Form, FormFooter, FormSection } from './basic/form'
+import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 
 export default function CommunityForm(props: {
@@ -60,7 +59,10 @@ export default function CommunityForm(props: {
 
   return (
     <Form className={props.className}>
-      <FormSection title="Profile">
+      <FormSection
+        title="Profile"
+        description="Basic information of the community."
+      >
         <Grid6>
           <GridItem6>
             <FormItem label="Name" error={errors.name?.message}>
@@ -110,7 +112,10 @@ export default function CommunityForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Social accounts">
+      <FormSection
+        title="Social accounts"
+        description="Social relationship of the community."
+      >
         <Grid6>
           <GridItem2>
             <FormItem label="Twitter">

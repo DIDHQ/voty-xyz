@@ -1,9 +1,9 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../src/schemas'
+import { FormItem } from './basic/form'
 import Select from './basic/select'
-import Slide from './basic/slide'
 import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
 import JsonInput from './json-input'
@@ -18,6 +18,7 @@ export default function BooleanSetsBlock(props: {
     control,
     name: `groups.${props.group}.${props.name}.operands`,
   })
+  const [open, setOpen] = useState<number>()
 
   return (
     <>
@@ -32,6 +33,8 @@ export default function BooleanSetsBlock(props: {
               name={props.name}
               group={props.group}
               index={index}
+              open={open === index}
+              setOpen={setOpen}
               onRemove={remove}
               disabled={props.disabled}
             />
@@ -51,70 +54,78 @@ function BooleanUnitBlock(props: {
   name: 'permission.proposing' | 'permission.adding_option'
   group: number
   index: number
+  open: boolean
+  setOpen(index?: number): void
   onRemove(index: number): void
   disabled?: boolean
 }) {
   const { control, watch, register } = useFormContext<Community>()
-  const { onRemove } = props
+  const { setOpen, onRemove } = props
+  const handleOpen = useCallback(() => {
+    setOpen(props.open ? undefined : props.index)
+  }, [setOpen, props.open, props.index])
   const handleRemove = useCallback(() => {
     onRemove(props.index)
   }, [onRemove, props.index])
 
   return (
-    <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
-      <div className="flex w-0 flex-1 items-center">
-        <span className="ml-2 w-0 flex-1 truncate">
-          {watch(
-            `groups.${props.group}.${props.name}.operands.${props.index}.name`,
-          ) || `Sets #${props.index + 1}`}
-        </span>
-      </div>
-      <div className="ml-4 flex shrink-0 space-x-4">
-        <Slide
-          title="Config"
-          trigger={({ handleOpen }) => (
-            <TextButton onClick={handleOpen}>
-              {props.disabled ? 'View' : 'Edit'}
-            </TextButton>
-          )}
-        >
-          {({ handleClose }) => (
+    <>
+      <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
+        <div className="flex w-0 flex-1 items-center">
+          <span className="ml-2 w-0 flex-1 truncate">
+            {watch(
+              `groups.${props.group}.${props.name}.operands.${props.index}.name`,
+            ) || `Sets #${props.index + 1}`}
+          </span>
+        </div>
+        <div className="ml-4 flex shrink-0 space-x-4">
+          <TextButton onClick={handleOpen}>
+            {props.open ? 'Hide' : props.disabled ? 'View' : 'Edit'}
+          </TextButton>
+          {props.disabled ? null : (
             <>
-              <TextInput
-                {...register(
-                  `groups.${props.group}.${props.name}.operands.${props.index}.name`,
-                )}
-              />
-              <Controller
-                control={control}
-                name={`groups.${props.group}.${props.name}.operands.${props.index}.function`}
-                render={({ field: { value, onChange } }) => (
-                  <Select
-                    options={['is_did', 'is_sub_did_of', 'owns_erc721']}
-                    value={value}
-                    onChange={onChange}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name={`groups.${props.group}.${props.name}.operands.${props.index}.arguments`}
-                render={({ field: { value, onChange } }) => (
-                  <JsonInput value={value} onChange={onChange} />
-                )}
-              />
+              <span className="text-gray-300" aria-hidden="true">
+                |
+              </span>
+              <TextButton onClick={handleRemove}>Remove</TextButton>
             </>
           )}
-        </Slide>
-        {props.disabled ? null : (
-          <>
-            <span className="text-gray-300" aria-hidden="true">
-              |
-            </span>
-            <TextButton onClick={handleRemove}>Remove</TextButton>
-          </>
-        )}
-      </div>
-    </li>
+        </div>
+      </li>
+      {props.open ? (
+        <div className="space-y-4 bg-gray-50 p-6">
+          <FormItem label="Name">
+            <TextInput
+              {...register(
+                `groups.${props.group}.${props.name}.operands.${props.index}.name`,
+              )}
+              placeholder={`Sets #${props.index + 1}`}
+            />
+          </FormItem>
+          <FormItem label="Function">
+            <Controller
+              control={control}
+              name={`groups.${props.group}.${props.name}.operands.${props.index}.function`}
+              render={({ field: { value, onChange } }) => (
+                <Select
+                  options={['is_did', 'is_sub_did_of', 'owns_erc721']}
+                  value={value}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </FormItem>
+          <FormItem label="Arguments">
+            <Controller
+              control={control}
+              name={`groups.${props.group}.${props.name}.operands.${props.index}.arguments`}
+              render={({ field: { value, onChange } }) => (
+                <JsonInput value={value} onChange={onChange} />
+              )}
+            />
+          </FormItem>
+        </div>
+      ) : null}
+    </>
   )
 }

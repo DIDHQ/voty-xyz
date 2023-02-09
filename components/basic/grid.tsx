@@ -1,8 +1,14 @@
+import clsx from 'clsx'
 import { ReactNode } from 'react'
 
-export function Grid6(props: { children: ReactNode }) {
+export function Grid6(props: { children: ReactNode; className?: string }) {
   return (
-    <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+    <div
+      className={clsx(
+        'grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6',
+        props.className,
+      )}
+    >
       {props.children}
     </div>
   )
