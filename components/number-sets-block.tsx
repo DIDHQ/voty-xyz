@@ -208,14 +208,10 @@ function NumberUnitBlock(props: {
               name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
               render={({ field: { value, onChange } }) => (
                 <TextInput
-                  value={
-                    isNaN(value) || value === 0
-                      ? ''
-                      : (value as number).toString()
-                  }
+                  type="number"
+                  value={value}
                   onChange={(e) => {
-                    const output = parseInt(e.target.value, 10)
-                    onChange(isNaN(output) ? 0 : output)
+                    onChange(e.target.valueAsNumber)
                   }}
                   error={
                     !!errors.groups?.[props.group]?.permission?.[props.name]
