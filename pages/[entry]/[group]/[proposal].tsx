@@ -107,7 +107,7 @@ export default function ProposalPage() {
         </div>
         <ul
           role="list"
-          className="divide-y divide-gray-200 rounded-md border border-gray-200"
+          className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
         >
           <Controller
             control={control}
@@ -241,9 +241,11 @@ export function Option(props: {
 
   return (
     <li
-      className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
+      className="flex items-center justify-between bg-no-repeat py-3 pl-2 pr-4 text-sm"
       style={{
-        background: `linear-gradient(90deg, #f3f4f6 ${percentage}%, transparent ${percentage}%)`,
+        transition: 'background-size 0.3s ease-out',
+        backgroundImage: `linear-gradient(90deg, #f3f4f6 100%, transparent 100%)`,
+        backgroundSize: `${percentage}% auto`,
       }}
       onClick={() => {
         if (type === 'single') {
