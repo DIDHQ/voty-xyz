@@ -42,7 +42,7 @@ export default function useWallet() {
       } as KeyInfo)
       return {
         avatar: (await bit.avatar())?.url,
-        name: bit.account,
+        did: bit.account,
       }
     },
     { revalidateOnFocus: false },
@@ -59,8 +59,8 @@ export default function useWallet() {
               address: account.address,
             }
           : undefined,
+      did: data?.did || ensName || undefined,
       avatar: data?.avatar || ensAvatar || undefined,
-      name: data?.name || ensName || undefined,
       displayAddress: account.address
         ? `${account.address.substring(0, 5)}...${account.address.substring(
             38,
@@ -87,7 +87,7 @@ export default function useWallet() {
       coinType,
       account.address,
       data?.avatar,
-      data?.name,
+      data?.did,
       ensAvatar,
       ensName,
       signMessageAsync,

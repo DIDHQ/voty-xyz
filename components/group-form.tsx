@@ -9,7 +9,7 @@ import {
 } from 'react-hook-form'
 
 import useAsync from '../hooks/use-async'
-import useResolveDid from '../hooks/use-resolve-did'
+import useDidIsMatch from '../hooks/use-did-is-match'
 import useSignJson from '../hooks/use-sign-json'
 import useWallet from '../hooks/use-wallet'
 import { Community, communitySchema } from '../src/schemas'
@@ -54,15 +54,7 @@ export default function GroupForm(props: {
   const { account } = useWallet()
   const handleSignJson = useSignJson(props.entry)
   const handleUpload = useUpload()
-  const { data: resolved } = useResolveDid(props.entry, account?.coinType)
-  const isAdmin = useMemo(
-    () =>
-      resolved &&
-      account &&
-      resolved.coinType === account.coinType &&
-      resolved.address === account.address,
-    [resolved, account],
-  )
+  const { data: isAdmin } = useDidIsMatch(props.entry, account)
   const handleSubmit = useAsync(
     useCallback(
       async (json: Community) => {

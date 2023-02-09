@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 
-import DidSelect from '../../../components/did-select'
+import AuthorSelect from '../../../components/author-select'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useAsync from '../../../hooks/use-async'
 import useSignJson from '../../../hooks/use-sign-json'
@@ -194,7 +194,7 @@ export default function CreateProposalPage() {
         >
           Submit
         </Button>
-        <DidSelect
+        <AuthorSelect
           account={account}
           value={did}
           onChange={setDid}
