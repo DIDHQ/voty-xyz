@@ -198,6 +198,7 @@ export default function CreateProposalPage() {
           account={account}
           value={did}
           onChange={setDid}
+          top
           className="mr-4 w-48"
         />
       </FormFooter>

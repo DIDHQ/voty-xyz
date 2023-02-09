@@ -216,6 +216,7 @@ export default function ProposalPage() {
             account={account}
             value={did}
             onChange={setDid}
+            top
             className="mr-4 w-48"
           />
           <Button
