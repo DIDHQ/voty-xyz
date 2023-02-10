@@ -29,9 +29,9 @@ export function useEntryConfig(did?: string) {
   )
 }
 
-export function useRetrieve<T extends DataType>(type: T, uri?: string) {
+export function useRetrieve<T extends DataType>(type: T, permalink?: string) {
   return useSWR(
-    uri ? ['retrieve', uri] : null,
+    permalink ? ['retrieve', permalink] : null,
     async () => {
       const { data } = await fetchJson<{
         data: Authorized<
@@ -45,7 +45,7 @@ export function useRetrieve<T extends DataType>(type: T, uri?: string) {
             ? Vote
             : never
         >
-      }>(`/api/retrieve?type=${type}&uri=${uri}`)
+      }>(`/api/retrieve?type=${type}&permalink=${permalink}`)
       return data
     },
     { revalidateOnFocus: false },
@@ -56,18 +56,21 @@ export function useUpload<T extends Authorized<Community | Proposal | Vote>>() {
   return useCallback(async (json: T) => {
     const textEncoder = new TextEncoder()
     const body = textEncoder.encode(JSON.stringify(json))
-    const { uri } = await fetchJson<{ uri: string }>('/api/upload', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body,
-    })
-    return uri
+    const { permalink } = await fetchJson<{ permalink: string }>(
+      '/api/upload',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body,
+      },
+    )
+    return permalink
   }, [])
 }
 
 export function useListCommunities() {
   return useSWRInfinite<{
-    data: (Authorized<Community> & { uri: string })[]
+    data: (Authorized<Community> & { permalink: string })[]
     next?: string
   }>(
     (_pageIndex, previousPageData) => [previousPageData?.next],
@@ -79,7 +82,7 @@ export function useListCommunities() {
 
 export function useListProposals(entry?: string, group?: string) {
   return useSWRInfinite<{
-    data: (Authorized<Proposal> & { uri: string })[]
+    data: (Authorized<Proposal> & { permalink: string })[]
     next?: string
   }>(
     (_pageIndex, previousPageData) =>
@@ -96,7 +99,7 @@ export function useListProposals(entry?: string, group?: string) {
 
 export function useListOptions(proposal?: string) {
   return useSWRInfinite<{
-    data: (Authorized<Option> & { uri: string })[]
+    data: (Authorized<Option> & { permalink: string })[]
     next?: string
   }>(
     (_pageIndex, previousPageData) =>
@@ -111,7 +114,7 @@ export function useListOptions(proposal?: string) {
 
 export function useListVotes(proposal?: string) {
   return useSWRInfinite<{
-    data: (Authorized<Vote> & { uri: string })[]
+    data: (Authorized<Vote> & { permalink: string })[]
     next?: string
   }>(
     (_pageIndex, previousPageData) =>

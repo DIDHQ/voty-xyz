@@ -4,13 +4,13 @@ import { Authorized, Community } from '../src/schemas'
 import Avatar from './basic/avatar'
 
 export default function CommunityCard(props: {
-  community: Authorized<Community> & { uri: string }
+  community: Authorized<Community> & { permalink: string }
 }) {
   const { community } = props
 
   return (
     <Link
-      key={community.uri}
+      key={community.permalink}
       href={`/${community.author.did}`}
       className="block rounded-md border border-gray-200 hover:bg-gray-50"
     >

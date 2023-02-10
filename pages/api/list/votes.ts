@@ -15,17 +15,17 @@ export default async function handler(
     next?: string
   }
   const votes = await database.vote.findMany({
-    cursor: query.next ? { uri: query.next } : undefined,
+    cursor: query.next ? { permalink: query.next } : undefined,
     where: { proposal: query.proposal },
     take: 50,
     orderBy: { ts: 'desc' },
   })
   res.json({
     data: votes
-      .map(({ uri, data }) => {
+      .map(({ permalink, data }) => {
         try {
           return {
-            uri,
+            permalink,
             ...voteWithAuthorSchema.parse(JSON.parse(textDecoder.decode(data))),
           }
         } catch {
@@ -33,6 +33,6 @@ export default async function handler(
         }
       })
       .filter((vote) => vote),
-    next: last(votes)?.uri,
+    next: last(votes)?.permalink,
   })
 }

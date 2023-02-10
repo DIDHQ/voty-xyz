@@ -24,7 +24,7 @@ export default function CommunityIndexPage() {
       </div>
       <ul role="list" className="divide-y divide-gray-200">
         {proposals?.map((proposal) => (
-          <li key={proposal.uri}>
+          <li key={proposal.permalink}>
             {query.entry ? (
               <ProposalListItem entry={query.entry} value={proposal} />
             ) : null}

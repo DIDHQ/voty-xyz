@@ -15,17 +15,17 @@ export default async function handler(
     next?: string
   }
   const options = await database.option.findMany({
-    cursor: query.next ? { uri: query.next } : undefined,
+    cursor: query.next ? { permalink: query.next } : undefined,
     where: { proposal: query.proposal },
     take: 50,
     orderBy: { ts: 'desc' },
   })
   res.json({
     data: options
-      .map(({ uri, data }) => {
+      .map(({ permalink, data }) => {
         try {
           return {
-            uri,
+            permalink,
             ...optionWithAuthorSchema.parse(
               JSON.parse(textDecoder.decode(data)),
             ),
@@ -35,6 +35,6 @@ export default async function handler(
         }
       })
       .filter((option) => option),
-    next: last(options)?.uri,
+    next: last(options)?.permalink,
   })
 }

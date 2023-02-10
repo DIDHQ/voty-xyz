@@ -20,18 +20,18 @@ export default async function handler(
   })
   const communities = keyBy(
     await database.community.findMany({
-      where: { uri: { in: entries.map(({ community }) => community) } },
+      where: { permalink: { in: entries.map(({ community }) => community) } },
     }),
-    ({ uri }) => uri,
+    ({ permalink }) => permalink,
   )
   res.json({
     data: entries
       .map(({ community }) => communities[community])
       .filter((community) => community)
-      .map(({ uri, data }) => {
+      .map(({ permalink, data }) => {
         try {
           return {
-            uri,
+            permalink,
             ...communityWithAuthorSchema.parse(
               JSON.parse(textDecoder.decode(data)),
             ),

@@ -16,13 +16,13 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const query = req.query as {
-    uri: string
+    permalink: string
     type: DataType
   }
   switch (query.type) {
     case DataType.COMMUNITY: {
       const community = await database.community.findUnique({
-        where: { uri: query.uri },
+        where: { permalink: query.permalink },
       })
       if (community) {
         res.json({
@@ -37,7 +37,7 @@ export default async function handler(
     }
     case DataType.PROPOSAL: {
       const proposal = await database.proposal.findUnique({
-        where: { uri: query.uri },
+        where: { permalink: query.permalink },
       })
       if (proposal) {
         res.json({
@@ -52,7 +52,7 @@ export default async function handler(
     }
     case DataType.OPTION: {
       const option = await database.option.findUnique({
-        where: { uri: query.uri },
+        where: { permalink: query.permalink },
       })
       if (option) {
         res.json({
@@ -67,7 +67,7 @@ export default async function handler(
     }
     case DataType.VOTE: {
       const vote = await database.vote.findUnique({
-        where: { uri: query.uri },
+        where: { permalink: query.permalink },
       })
       if (vote) {
         res.json({

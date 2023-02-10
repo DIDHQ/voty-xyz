@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { arweave, idToURI } from '../../src/arweave'
+import { arweave, id2Permalink } from '../../src/arweave'
 import { database } from '../../src/database'
 import { getArweaveTags } from '../../src/utils/arweave-tags'
 import {
@@ -34,7 +34,7 @@ export default async function handler(
     })
     await arweave.transactions.sign(transaction, jwk)
     const uploader = await arweave.transactions.getUploader(transaction)
-    const uri = idToURI(transaction.id)
+    const permalink = id2Permalink(transaction.id)
     const ts = new Date()
 
     if (isCommunity(json)) {
@@ -47,16 +47,17 @@ export default async function handler(
           where: { did: community.author.did },
           create: {
             did: community.author.did,
-            community: uri,
+            community: permalink,
+            subscribers: 0,
             ts,
           },
           update: {
-            community: uri,
+            community: permalink,
             ts,
           },
         }),
         database.community.create({
-          data: { uri, ts, entry: community.author.did, data },
+          data: { permalink, ts, entry: community.author.did, data },
         }),
       ])
     } else if (isProposal(json)) {
@@ -66,7 +67,7 @@ export default async function handler(
       }
       await database.proposal.create({
         data: {
-          uri: idToURI(transaction.id),
+          permalink: id2Permalink(transaction.id),
           ts,
           author: proposal.author.did,
           entry: community.author.did,
@@ -83,7 +84,7 @@ export default async function handler(
       }
       await database.option.create({
         data: {
-          uri: idToURI(transaction.id),
+          permalink: id2Permalink(transaction.id),
           ts,
           author: option.author.did,
           community: proposal.community,
@@ -116,12 +117,12 @@ export default async function handler(
           }),
         ),
         database.proposal.update({
-          where: { uri: vote.proposal },
+          where: { permalink: vote.proposal },
           data: { voters: { increment: 1 } },
         }),
         database.vote.create({
           data: {
-            uri: idToURI(transaction.id),
+            permalink: id2Permalink(transaction.id),
             ts,
             author: vote.author.did,
             community: proposal.community,
@@ -135,7 +136,7 @@ export default async function handler(
       throw new Error('sign type not supported')
     }
 
-    res.status(200).json({ uri })
+    res.status(200).json({ permalink })
   } catch (err) {
     if (err instanceof Error) {
       res.status(500).send(err.message)

@@ -4,17 +4,19 @@ import {
   UserIcon,
 } from '@heroicons/react/20/solid'
 import Link from 'next/link'
-import { uriToID } from '../src/arweave'
+import { permalink2Id } from '../src/arweave'
 
 import { Authorized, Proposal } from '../src/schemas'
 
 export default function ProposalListItem(props: {
   entry: string
-  value: Authorized<Proposal> & { uri: string }
+  value: Authorized<Proposal> & { permalink: string }
 }) {
   return (
     <Link
-      href={`/${props.entry}/${props.value.group}/${uriToID(props.value.uri)}`}
+      href={`/${props.entry}/${props.value.group}/${permalink2Id(
+        props.value.permalink,
+      )}`}
       className="block hover:bg-gray-100"
     >
       <div className="p-4 sm:px-6">

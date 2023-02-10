@@ -7,12 +7,12 @@ export const arweave = Arweave.init({
 })
 
 export async function getArweaveTimestamp(
-  uri: string,
+  permalink: string,
 ): Promise<number | undefined> {
-  if (!uri.startsWith('ar://')) {
-    throw new Error('uri not supported')
+  if (!permalink.startsWith('ar://')) {
+    throw new Error('permalink not supported')
   }
-  const status = await arweave.transactions.getStatus(uriToID(uri))
+  const status = await arweave.transactions.getStatus(permalink2Id(permalink))
   if (status.confirmed?.block_indep_hash) {
     const block = await arweave.blocks.get(status.confirmed.block_indep_hash)
     return block.timestamp
@@ -20,11 +20,13 @@ export async function getArweaveTimestamp(
   return undefined
 }
 
-export async function getArweaveData(uri: string): Promise<object | undefined> {
-  if (!uri.startsWith('ar://')) {
-    throw new Error('uri not supported')
+export async function getArweaveData(
+  permalink: string,
+): Promise<object | undefined> {
+  if (!permalink.startsWith('ar://')) {
+    throw new Error('permalink not supported')
   }
-  const id = uriToID(uri)
+  const id = permalink2Id(permalink)
   const data = await arweave.transactions.getData(id, {
     decode: true,
     string: true,
@@ -32,10 +34,10 @@ export async function getArweaveData(uri: string): Promise<object | undefined> {
   return typeof data === 'string' && data ? JSON.parse(data) : undefined
 }
 
-export function idToURI(id: string) {
+export function id2Permalink(id: string) {
   return `ar://${id}`
 }
 
-export function uriToID(uri: string) {
-  return uri.replace(/^ar:\/\//, '')
+export function permalink2Id(permalink: string) {
+  return permalink.replace(/^ar:\/\//, '')
 }

@@ -16,25 +16,27 @@ model Entry {
 
   community String
 
+  subscribers Int
+
   @@id([did])
 }
 
 model Community {
-  uri   String
-  ts    DateTime
-  entry String
+  permalink String
+  ts        DateTime
+  entry     String
 
   data Bytes
 
-  @@id([uri])
+  @@id([permalink])
   @@index([entry])
 }
 
 model Proposal {
-  uri    String
-  ts     DateTime
-  entry  String
-  author String
+  permalink String
+  ts        DateTime
+  entry     String
+  author    String
 
   community String
   group     Int
@@ -43,16 +45,16 @@ model Proposal {
 
   voters Int
 
-  @@id([uri])
+  @@id([permalink])
   @@index([entry, group])
   @@index([community, group])
   @@index([author])
 }
 
 model Option {
-  uri    String
-  ts     DateTime
-  author String
+  permalink String
+  ts        DateTime
+  author    String
 
   community String
   group     Int
@@ -60,15 +62,15 @@ model Option {
 
   data Bytes
 
-  @@id([uri])
+  @@id([permalink])
   @@unique([proposal, author])
   @@index([author])
 }
 
 model Vote {
-  uri    String
-  ts     DateTime
-  author String
+  permalink String
+  ts        DateTime
+  author    String
 
   community String
   group     Int
@@ -76,7 +78,7 @@ model Vote {
 
   data Bytes
 
-  @@id([uri])
+  @@id([permalink])
   @@unique([proposal, author])
   @@index([author])
 }
@@ -87,4 +89,13 @@ model Counting {
   power    Float
 
   @@id([proposal, choice])
+}
+
+model Subscription {
+  entry      String
+  subscriber String
+
+  ts DateTime
+
+  @@id([entry, subscriber])
 }
