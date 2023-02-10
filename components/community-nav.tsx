@@ -14,7 +14,9 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
 import { useRetrieve, useEntryConfig } from '../hooks/use-api'
+import useDidIsMatch from '../hooks/use-did-is-match'
 import useRouterQuery from '../hooks/use-router-query'
+import useWallet from '../hooks/use-wallet'
 import { DataType } from '../src/constants'
 import Avatar from './basic/avatar'
 import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
@@ -80,6 +82,8 @@ export default function CommunityNav(props: { className?: string }) {
         : [],
     [community],
   )
+  const { account } = useWallet()
+  const { data: isAdmin } = useDidIsMatch(query.entry, account)
 
   return (
     <aside className={props.className}>
@@ -133,12 +137,16 @@ export default function CommunityNav(props: { className?: string }) {
                 id="projects-headline"
               >
                 Groups
-                <Link
-                  href={`/${entry}/${community?.groups?.length || 0}/settings`}
-                  className="float-right"
-                >
-                  <PlusIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" />
-                </Link>
+                {isAdmin ? (
+                  <Link
+                    href={`/${entry}/${
+                      community?.groups?.length || 0
+                    }/settings`}
+                    className="float-right"
+                  >
+                    <PlusIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                  </Link>
+                ) : null}
               </h3>
               <div
                 className="mt-1 space-y-1"

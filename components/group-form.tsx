@@ -67,12 +67,12 @@ export default function GroupForm(props: {
       [handleUpload, handleSignJson],
     ),
   )
-  const isNew = useMemo(
+  const isNewGroup = useMemo(
     () => !props.community?.groups?.[props.group],
     [props.community.groups, props.group],
   )
   useEffect(() => {
-    if (isNew) {
+    if (isNewGroup) {
       append({
         name: '',
         permission: {
@@ -94,7 +94,7 @@ export default function GroupForm(props: {
         },
       })
     }
-  }, [append, isNew])
+  }, [append, isNewGroup])
   useEffect(() => {
     if (handleSubmit.status === 'success') {
       mutate()
@@ -243,9 +243,9 @@ export default function GroupForm(props: {
           loading={handleSubmit.status === 'pending'}
           onClick={onSubmit(handleSubmit.execute, console.error)}
         >
-          {isNew ? 'Create' : 'Submit'}
+          {isNewGroup ? 'Create' : 'Submit'}
         </Button>
-        {isNew ? (
+        {isNewGroup ? (
           <div />
         ) : (
           <Button

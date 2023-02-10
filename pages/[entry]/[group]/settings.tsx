@@ -11,17 +11,14 @@ export default function GroupSettingsPage() {
   const [query] = useRouterQuery<['entry', 'group']>()
   const { data: config } = useEntryConfig(query.entry)
   const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
-  const isNew = useMemo(
-    () =>
-      !!query.group &&
-      !!community?.groups &&
-      !community.groups[parseInt(query.group)],
+  const isNewGroup = useMemo(
+    () => !!query.group && !community?.groups?.[parseInt(query.group)],
     [community?.groups, query.group],
   )
 
   return (
     <CommunityLayout>
-      <GroupLayout hideNav={isNew}>
+      <GroupLayout hideNav={isNewGroup}>
         {query.entry && query.group && community ? (
           <GroupForm
             key={query.entry + query.group}
