@@ -3,6 +3,7 @@ import pMap from 'p-map'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
+import Link from 'next/link'
 
 import AuthorSelect from '../../../components/author-select'
 import useRouterQuery from '../../../hooks/use-router-query'
@@ -108,101 +109,108 @@ export default function CreateProposalPage() {
   )
 
   return (
-    <Form>
-      <FormSection
-        title="Proposal"
-        description="Basic information of the proposal."
-      >
-        <Grid6>
-          <GridItem6>
-            <FormItem label="Title" error={errors.title?.message}>
-              <TextInput
-                {...register('title')}
-                error={!!errors.title?.message}
-              />
-            </FormItem>
-          </GridItem6>
-          <GridItem6>
-            <FormItem label="Body" error={errors.extension?.body?.message}>
-              <Textarea
-                {...register('extension.body')}
-                error={!!errors.extension?.body?.message}
-              />
-            </FormItem>
-          </GridItem6>
-          <GridItem6>
-            <FormItem label="Voting type" error={errors.voting_type?.message}>
-              <Controller
-                control={control}
-                name="voting_type"
-                render={({ field: { value, onChange } }) => (
-                  <Select
-                    options={proposalSchema.shape.voting_type.options}
-                    value={value}
-                    onChange={onChange}
-                  />
-                )}
-              />
-            </FormItem>
-          </GridItem6>
-          <GridItem6>
-            <FormItem label="Options" error={errors.options?.message}>
-              <ul
-                role="list"
-                className="mb-4 divide-y divide-gray-200 rounded-md border border-gray-200"
-              >
-                {watch('options')?.map((_, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
-                  >
-                    <div className="flex w-0 flex-1 items-center">
-                      <span className="ml-2 w-0 flex-1 truncate">
-                        <input
-                          {...register(`options.${index}`)}
-                          placeholder={`Option ${index + 1}`}
-                          className="w-full outline-none"
-                        />
-                      </span>
-                    </div>
-                    <div className="ml-4 flex shrink-0 space-x-4">
-                      <OptionDelete
-                        index={index}
-                        onDelete={handleOptionDelete}
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <TextButton
-                onClick={() => {
-                  setValue('options', [...(watch('options') || []), ''])
-                }}
-              >
-                Add
-              </TextButton>
-            </FormItem>
-          </GridItem6>
-        </Grid6>
-      </FormSection>
-      <FormFooter>
-        <Button
-          primary
-          disabled={!did}
-          onClick={onSubmit(handleSubmit.execute, console.error)}
-          loading={handleSubmit.status === 'pending'}
+    <div className="mt-6">
+      <Link href={`/${query.entry}/${query.group}`}>
+        <TextButton>
+          <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+        </TextButton>
+      </Link>
+      <Form>
+        <FormSection
+          title="Proposal"
+          description="Basic information of the proposal."
         >
-          Submit
-        </Button>
-        <AuthorSelect
-          account={account}
-          value={did}
-          onChange={setDid}
-          top
-          className="mr-6"
-        />
-      </FormFooter>
-    </Form>
+          <Grid6>
+            <GridItem6>
+              <FormItem label="Title" error={errors.title?.message}>
+                <TextInput
+                  {...register('title')}
+                  error={!!errors.title?.message}
+                />
+              </FormItem>
+            </GridItem6>
+            <GridItem6>
+              <FormItem label="Body" error={errors.extension?.body?.message}>
+                <Textarea
+                  {...register('extension.body')}
+                  error={!!errors.extension?.body?.message}
+                />
+              </FormItem>
+            </GridItem6>
+            <GridItem6>
+              <FormItem label="Voting type" error={errors.voting_type?.message}>
+                <Controller
+                  control={control}
+                  name="voting_type"
+                  render={({ field: { value, onChange } }) => (
+                    <Select
+                      options={proposalSchema.shape.voting_type.options}
+                      value={value}
+                      onChange={onChange}
+                    />
+                  )}
+                />
+              </FormItem>
+            </GridItem6>
+            <GridItem6>
+              <FormItem label="Options" error={errors.options?.message}>
+                <ul
+                  role="list"
+                  className="mb-4 divide-y divide-gray-200 rounded-md border border-gray-200"
+                >
+                  {watch('options')?.map((_, index) => (
+                    <li
+                      key={index}
+                      className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
+                    >
+                      <div className="flex w-0 flex-1 items-center">
+                        <span className="ml-2 w-0 flex-1 truncate">
+                          <input
+                            {...register(`options.${index}`)}
+                            placeholder={`Option ${index + 1}`}
+                            className="w-full outline-none"
+                          />
+                        </span>
+                      </div>
+                      <div className="ml-4 flex shrink-0 space-x-4">
+                        <OptionDelete
+                          index={index}
+                          onDelete={handleOptionDelete}
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <TextButton
+                  onClick={() => {
+                    setValue('options', [...(watch('options') || []), ''])
+                  }}
+                >
+                  Add
+                </TextButton>
+              </FormItem>
+            </GridItem6>
+          </Grid6>
+        </FormSection>
+        <FormFooter>
+          <Button
+            primary
+            disabled={!did}
+            onClick={onSubmit(handleSubmit.execute, console.error)}
+            loading={handleSubmit.status === 'pending'}
+          >
+            Submit
+          </Button>
+          <AuthorSelect
+            account={account}
+            value={did}
+            onChange={setDid}
+            top
+            className="mr-6"
+          />
+        </FormFooter>
+      </Form>
+    </div>
   )
 }
 

@@ -102,9 +102,7 @@ export default function ProposalPage() {
         <div>
           <Link href={`/${query.entry}/${query.group}`}>
             <TextButton>
-              <h2 className="text-[1rem] font-semibold leading-6">
-                ← {group.name}
-              </h2>
+              <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>
           </Link>
           <h3 className="mt-2 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
