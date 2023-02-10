@@ -74,7 +74,7 @@ export default function CreateProposalPage() {
       : null,
     () => requiredCoinTypesOfNumberSets(group!.permission.voting!),
   )
-  const { data: snapshots } = useSWR(
+  const { data: snapshots, error } = useSWR(
     coinTypesOfNumberSets ? ['snapshots', coinTypesOfNumberSets] : null,
     async () => {
       const snapshots = await pMap(coinTypesOfNumberSets!, getCurrentSnapshot, {
@@ -107,6 +107,7 @@ export default function CreateProposalPage() {
       [handleUpload, handleSignJson],
     ),
   )
+  console.log('snapshots', snapshots, error)
 
   return (
     <div className="mt-6">
