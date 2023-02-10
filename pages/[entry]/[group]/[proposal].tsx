@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 import AuthorSelect from '../../../components/author-select'
 import {
-  useCounting,
+  useTurnout,
   useListVotes,
   useRetrieve,
   useUpload,
@@ -19,7 +19,7 @@ import useWallet from '../../../hooks/use-wallet'
 import { calculateNumber } from '../../../src/functions/number'
 import { Vote, voteSchema } from '../../../src/schemas'
 import { mapSnapshots } from '../../../src/snapshot'
-import { DID } from '../../../src/types'
+import { DID, Turnout } from '../../../src/types'
 import Button from '../../../components/basic/button'
 import { DataType } from '../../../src/constants'
 import useStatus from '../../../hooks/use-status'
@@ -42,7 +42,7 @@ export default function ProposalPage() {
     DataType.COMMUNITY,
     proposal?.community,
   )
-  const { data: counting, mutate: mutateCounting } = useCounting(query.proposal)
+  const { data: turnout, mutate: mutateTurnout } = useTurnout(query.proposal)
   const group = useMemo(
     () => (proposal ? community?.groups?.[proposal?.group] : undefined),
     [community?.groups, proposal],
@@ -97,10 +97,10 @@ export default function ProposalPage() {
   useEffect(() => {
     if (handleSubmit.status === 'success') {
       mutateList()
-      mutateCounting()
+      mutateTurnout()
       setValue('choice', '')
     }
-  }, [handleSubmit.status, mutateList, mutateCounting, setValue])
+  }, [handleSubmit.status, mutateList, mutateTurnout, setValue])
 
   return proposal && group ? (
     <div className="flex py-6">
@@ -133,7 +133,7 @@ export default function ProposalPage() {
                     type={proposal.voting_type}
                     option={option}
                     votingPower={votingPower}
-                    counting={counting}
+                    turnout={turnout}
                     value={value}
                     onChange={onChange}
                   />
@@ -227,23 +227,20 @@ export function Option(props: {
   type: 'single' | 'multiple'
   option: string
   votingPower?: number
-  counting?: {
-    power: { [choice: string]: number }
-    total: number
-  }
+  turnout?: Turnout
   value: string
   onChange(value: string): void
 }) {
-  const { type, option, votingPower = 0, counting, value, onChange } = props
+  const { type, option, votingPower = 0, turnout, value, onChange } = props
   const percentage = useMemo(() => {
     const power = powerOfChoice(type, value, votingPower)[option] || 0
     const denominator =
-      (counting?.total || 0) + (choiceIsEmpty(type, value) ? 0 : votingPower)
+      (turnout?.total || 0) + (choiceIsEmpty(type, value) ? 0 : votingPower)
     if (denominator === 0) {
       return 0
     }
-    return (((counting?.power[option] || 0) + power) / denominator) * 100
-  }, [option, counting?.power, counting?.total, type, value, votingPower])
+    return (((turnout?.powers[option] || 0) + power) / denominator) * 100
+  }, [option, turnout?.powers, turnout?.total, type, value, votingPower])
 
   return (
     <li

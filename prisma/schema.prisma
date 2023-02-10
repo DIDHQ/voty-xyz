@@ -10,17 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Entry {
-  did String
-  ts  DateTime
-
-  community String
-
-  subscribers Int
-
-  @@id([did])
-}
-
 model Community {
   permalink String
   ts        DateTime
@@ -43,7 +32,7 @@ model Proposal {
 
   data Bytes
 
-  voters Int
+  votes Int
 
   @@id([permalink])
   @@index([entry, group])
@@ -83,12 +72,24 @@ model Vote {
   @@index([author])
 }
 
-model Counting {
-  proposal String
-  choice   String
-  power    Float
+model Entry {
+  did String
+  ts  DateTime
 
-  @@id([proposal, choice])
+  community String
+
+  subscribers Int
+
+  @@id([did])
+}
+
+model Turnout {
+  proposal String
+  option   String
+
+  power Float
+
+  @@id([proposal, option])
 }
 
 model Subscription {

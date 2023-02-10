@@ -16,3 +16,8 @@ export type Status = {
   timestamp?: number
   // revoked?: number
 }
+
+export type Turnout = {
+  powers: { [option: string]: number }
+  total: number
+}

@@ -74,7 +74,7 @@ export default async function handler(
           community: proposal.community,
           group: proposal.group,
           data,
-          voters: 0,
+          votes: 0,
         },
       })
     } else if (isOption(json)) {
@@ -101,14 +101,14 @@ export default async function handler(
       await database.$transaction([
         ...Object.entries(
           powerOfChoice(proposal.voting_type, vote.choice, vote.power),
-        ).map(([choice, power = 0]) =>
-          database.counting.upsert({
+        ).map(([option, power = 0]) =>
+          database.turnout.upsert({
             where: {
-              proposal_choice: { proposal: vote.proposal, choice },
+              proposal_option: { proposal: vote.proposal, option },
             },
             create: {
               proposal: vote.proposal,
-              choice,
+              option,
               power,
             },
             update: {
@@ -118,7 +118,7 @@ export default async function handler(
         ),
         database.proposal.update({
           where: { permalink: vote.proposal },
-          data: { voters: { increment: 1 } },
+          data: { votes: { increment: 1 } },
         }),
         database.vote.create({
           data: {

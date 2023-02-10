@@ -2,6 +2,7 @@ import { keyBy, mapValues, sumBy } from 'lodash-es'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { database } from '../../src/database'
+import { Turnout } from '../../src/types'
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,17 +12,17 @@ export default async function handler(
     proposal: string
   }
 
-  const data = await database.counting.findMany({
+  const choices = await database.turnout.findMany({
     where: {
       proposal: query.proposal,
     },
   })
 
   res.json({
-    power: mapValues(
-      keyBy(data, ({ choice }) => choice),
+    powers: mapValues(
+      keyBy(choices, ({ option }) => option),
       ({ power }) => power,
     ),
-    total: sumBy(data, ({ power }) => power),
-  })
+    total: sumBy(choices, ({ power }) => power),
+  } satisfies Turnout)
 }

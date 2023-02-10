@@ -4,16 +4,13 @@ import useSWRInfinite from 'swr/infinite'
 
 import { DataType } from '../src/constants'
 import { Authorized, Community, Proposal, Option, Vote } from '../src/schemas'
+import { Turnout } from '../src/types'
 import { fetchJson } from '../src/utils/fetcher'
 
-export function useCounting(proposal?: string) {
+export function useTurnout(proposal?: string) {
   return useSWR(
-    proposal ? ['counting', proposal] : null,
-    async () =>
-      fetchJson<{
-        power: { [choice: string]: number }
-        total: number
-      }>(`/api/counting?proposal=${proposal}`),
+    proposal ? ['turnout', proposal] : null,
+    async () => fetchJson<Turnout>(`/api/turnout?proposal=${proposal}`),
     { revalidateOnFocus: false },
   )
 }
