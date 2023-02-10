@@ -202,7 +202,10 @@ function GroupListItem(props: {
       )}
     >
       {emoji ? (
-        <span className="mr-3 w-6 shrink-0 text-xl" aria-hidden="true">
+        <span
+          className="mr-3 w-6 shrink-0 text-center text-xl"
+          aria-hidden="true"
+        >
           {emoji}
         </span>
       ) : (

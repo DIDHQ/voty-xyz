@@ -50,7 +50,7 @@ export default function GroupNav(props: { className?: string }) {
       <div className="flex h-10 items-center">
         {emoji ? (
           <span
-            className="mr-3 w-8 shrink-0 text-3xl text-gray-400"
+            className="mr-3 w-8 shrink-0 text-center text-3xl text-gray-400"
             aria-hidden="true"
           >
             {emoji}
