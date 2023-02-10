@@ -8,7 +8,7 @@ export default function IndexPage() {
   const communities = useMemo(() => data?.flatMap(({ data }) => data), [data])
 
   return (
-    <div className="py-8">
+    <div className="space-y-6 py-8">
       {communities?.map((community) => (
         <CommunityCard key={community.uri} community={community} />
       ))}
