@@ -4,14 +4,12 @@ import pMap from 'p-map'
 import { NumberSets, NumberUnit } from '../../schemas'
 import { DID, Snapshots } from '../../types'
 import { NumberFunction } from '../types'
-import { all } from './all'
 import { did } from './did'
 import { sub_did } from './sub-did'
 
 export const calculateNumberFunctions: {
   [name: string]: NumberFunction<any[]>
 } = {
-  all,
   did,
   sub_did,
 }
