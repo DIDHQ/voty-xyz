@@ -15,7 +15,7 @@ export default function Toolbar() {
       <div className="flex h-16 max-w-5xl flex-1 items-center justify-between">
         <Link href="/">
           <TextButton>
-            <h1 className="font-bold">VOTY•XYZ</h1>
+            <h1 className="text-lg font-bold">VOTY</h1>
           </TextButton>
         </Link>
         <ConnectButton.Custom>
