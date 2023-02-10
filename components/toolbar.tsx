@@ -11,7 +11,7 @@ export default function Toolbar() {
   const { account, avatar, did, displayAddress } = useWallet()
 
   return (
-    <header className="fixed top-0 z-40 flex h-16 w-full justify-center border-b border-gray-200 bg-white pl-24 pr-6">
+    <header className="fixed top-0 z-40 flex h-16 w-full justify-center border-b border-gray-200 bg-white/80 pl-24 pr-6 backdrop-blur">
       <div className="flex h-16 max-w-5xl flex-1 items-center justify-between">
         <Link href="/">
           <TextButton>
