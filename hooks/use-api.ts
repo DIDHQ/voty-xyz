@@ -65,19 +65,6 @@ export function useUpload<T extends Authorized<Community | Proposal | Vote>>() {
   }, [])
 }
 
-export function useImport(uri?: string) {
-  return useCallback(async () => {
-    if (!uri) {
-      return
-    }
-    await fetchJson('/api/import', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ uri }),
-    })
-  }, [uri])
-}
-
 export function useListCommunities() {
   return useSWRInfinite<{
     data: (Authorized<Community> & { uri: string })[]
