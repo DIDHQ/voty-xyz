@@ -1,5 +1,6 @@
 import { TrophyIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
+import { compact } from 'lodash-es'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
@@ -19,24 +20,27 @@ export default function GroupNav(props: { className?: string }) {
   )
   const router = useRouter()
   const tabs = useMemo(
-    () => [
-      {
-        name: 'Proposals',
-        href: `/${query.entry}/${query.group || 0}`,
-        current: router.pathname === '/[entry]/[group]',
-      },
-      {
-        name: 'Settings',
-        href: `/${query.entry}/${query.group || 0}/settings`,
-        current: router.pathname === '/[entry]/[group]/settings',
-      },
-      {
-        name: 'About',
-        href: `/${query.entry}/${query.group || 0}/about`,
-        current: router.pathname === '/[entry]/[group]/about',
-      },
-    ],
-    [query, router.pathname],
+    () =>
+      compact([
+        {
+          name: 'Proposals',
+          href: `/${query.entry}/${query.group || 0}`,
+          current: router.pathname === '/[entry]/[group]',
+        },
+        {
+          name: 'Settings',
+          href: `/${query.entry}/${query.group || 0}/settings`,
+          current: router.pathname === '/[entry]/[group]/settings',
+        },
+        group?.extension.about
+          ? {
+              name: 'About',
+              href: `/${query.entry}/${query.group || 0}/about`,
+              current: router.pathname === '/[entry]/[group]/about',
+            }
+          : undefined,
+      ]),
+    [group?.extension.about, query.entry, query.group, router.pathname],
   )
 
   return (
