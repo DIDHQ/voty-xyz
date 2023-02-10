@@ -25,7 +25,12 @@ import { DataType } from '../../../src/constants'
 import useStatus from '../../../hooks/use-status'
 import Card from '../../../components/basic/card'
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
-import { checkChoice, powerOfChoice, updateChoice } from '../../../src/voting'
+import {
+  checkChoice,
+  choiceIsEmpty,
+  powerOfChoice,
+  updateChoice,
+} from '../../../src/voting'
 import TextButton from '../../../components/basic/text-button'
 import Markdown from '../../../components/basic/markdown'
 
@@ -232,11 +237,12 @@ export function Option(props: {
   const { type, option, votingPower = 0, counting, value, onChange } = props
   const percentage = useMemo(() => {
     const power = powerOfChoice(type, value, votingPower)[option] || 0
-    return (
-      (((counting?.power[option] || 0) + power) /
-        ((counting?.total || 0) + votingPower)) *
-      100
-    )
+    const denominator =
+      (counting?.total || 0) + (choiceIsEmpty(type, value) ? 0 : votingPower)
+    if (denominator === 0) {
+      return 0
+    }
+    return (((counting?.power[option] || 0) + power) / denominator) * 100
   }, [option, counting?.power, counting?.total, type, value, votingPower])
 
   return (

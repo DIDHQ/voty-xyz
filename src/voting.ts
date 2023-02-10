@@ -65,3 +65,16 @@ export function powerOfChoice(
     return {}
   }
 }
+
+export function choiceIsEmpty(
+  type: 'single' | 'multiple',
+  choice: string,
+): boolean {
+  if (type === 'single') {
+    return !choice
+  }
+  if (type === 'multiple') {
+    return !choice || choice === '[]'
+  }
+  return true
+}
