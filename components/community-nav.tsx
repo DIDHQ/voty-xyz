@@ -4,7 +4,6 @@ import {
   DocumentTextIcon,
   GlobeAltIcon,
   PlusIcon,
-  TrophyIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
@@ -20,6 +19,7 @@ import useRouterQuery from '../hooks/use-router-query'
 import useWallet from '../hooks/use-wallet'
 import { DataType } from '../src/constants'
 import Avatar from './basic/avatar'
+import { extractStartEmoji } from '../src/utils/emoji'
 
 export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
@@ -154,39 +154,13 @@ export default function CommunityNav(props: { className?: string }) {
                   aria-labelledby="projects-headline"
                 >
                   {community?.groups?.map((group, index) => (
-                    <Link
-                      key={group.name}
-                      href={`/${entry}/${index}`}
-                      className={clsx(
-                        query.group === index.toString()
-                          ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
-                          : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                        'group flex items-center border-l-4 px-3 py-2 text-sm font-medium',
-                      )}
-                    >
-                      {group.permission.adding_option ? (
-                        <TrophyIcon
-                          className={clsx(
-                            query.group === index.toString()
-                              ? 'text-indigo-500'
-                              : 'text-gray-400 group-hover:text-gray-500',
-                            'mr-3 h-6 w-6 shrink-0',
-                          )}
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <UserGroupIcon
-                          className={clsx(
-                            query.group === index.toString()
-                              ? 'text-indigo-500'
-                              : 'text-gray-400 group-hover:text-gray-500',
-                            'mr-3 h-6 w-6 shrink-0',
-                          )}
-                          aria-hidden="true"
-                        />
-                      )}
-                      <span className="truncate">{group.name}</span>
-                    </Link>
+                    <GroupListItem
+                      key={group.name + index}
+                      entry={query.entry}
+                      index={index}
+                      name={group.name}
+                      current={query.group === index.toString()}
+                    />
                   ))}
                 </div>
               </div>
@@ -206,5 +180,46 @@ export default function CommunityNav(props: { className?: string }) {
         ))}
       </div>
     </aside>
+  )
+}
+
+function GroupListItem(props: {
+  entry?: string
+  index: number
+  name: string
+  current: boolean
+}) {
+  const emoji = useMemo(() => extractStartEmoji(props.name), [props.name])
+
+  return (
+    <Link
+      href={`/${props.entry}/${props.index}`}
+      className={clsx(
+        props.current
+          ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
+          : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+        'group flex items-center border-l-4 px-3 py-2 text-sm font-medium',
+      )}
+    >
+      {emoji ? (
+        <span
+          className="mr-3 w-6 shrink-0 text-center text-xl"
+          aria-hidden="true"
+        >
+          {emoji}
+        </span>
+      ) : (
+        <UserGroupIcon
+          className={clsx(
+            props.current
+              ? 'text-indigo-500'
+              : 'text-gray-400 group-hover:text-gray-500',
+            'mr-3 h-6 w-6 shrink-0',
+          )}
+          aria-hidden="true"
+        />
+      )}
+      <span className="truncate">{props.name.replace(emoji || '', '')}</span>
+    </Link>
   )
 }

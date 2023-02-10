@@ -163,7 +163,7 @@ export default function GroupForm(props: {
         </Grid6>
       </FormSection>
       <FormSection
-        title="Voting power"
+        title="Voters"
         description="Voting power is calculated as maximum."
       >
         <Grid6>

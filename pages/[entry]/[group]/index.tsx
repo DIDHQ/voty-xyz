@@ -18,7 +18,7 @@ export default function GroupIndexPage() {
   return (
     <CommunityLayout>
       <GroupLayout>
-        <div className="sticky top-44 -mt-2 flex w-full justify-between bg-white pl-6 pt-6 pb-4">
+        <div className="sticky top-44 -mt-2 flex w-full justify-between bg-white/80 pl-6 pt-6 pb-4 backdrop-blur">
           <Select
             options={['All', 'Active', 'Pending', 'Closed']}
             value={order}

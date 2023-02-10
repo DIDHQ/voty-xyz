@@ -1,4 +1,4 @@
-import { TrophyIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { UserGroupIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import Link from 'next/link'
@@ -8,6 +8,7 @@ import { useMemo } from 'react'
 import { useRetrieve, useEntryConfig } from '../hooks/use-api'
 import useRouterQuery from '../hooks/use-router-query'
 import { DataType } from '../src/constants'
+import { extractStartEmoji } from '../src/utils/emoji'
 
 export default function GroupNav(props: { className?: string }) {
   const [query] = useRouterQuery<['entry', 'group']>()
@@ -42,25 +43,31 @@ export default function GroupNav(props: { className?: string }) {
       ]),
     [group?.extension.about, query.entry, query.group, router.pathname],
   )
+  const emoji = useMemo(() => extractStartEmoji(group?.name), [group?.name])
 
   return (
-    <div className={clsx('w-full bg-white pl-6', props.className)}>
+    <div
+      className={clsx(
+        'w-full bg-white/80 pl-6 backdrop-blur ',
+        props.className,
+      )}
+    >
       <div className="flex h-10 items-center">
-        {group ? (
-          group.permission.adding_option ? (
-            <TrophyIcon
-              className="mr-3 h-6 w-6 shrink-0 text-gray-400"
-              aria-hidden="true"
-            />
-          ) : (
-            <UserGroupIcon
-              className="mr-3 h-6 w-6 shrink-0 text-gray-400"
-              aria-hidden="true"
-            />
-          )
-        ) : null}
-        <h3 className="h-10 text-2xl font-medium text-gray-900">
-          {group?.name || '...'}
+        {emoji ? (
+          <span
+            className="mr-3 w-8 shrink-0 text-center text-3xl text-gray-400"
+            aria-hidden="true"
+          >
+            {emoji}
+          </span>
+        ) : (
+          <UserGroupIcon
+            className="mr-3 h-8 w-8 shrink-0 text-gray-400"
+            aria-hidden="true"
+          />
+        )}
+        <h3 className="text-2xl font-medium text-gray-900">
+          {group?.name.replace(emoji || '', '') || '...'}
         </h3>
       </div>
       <div className="border-b">

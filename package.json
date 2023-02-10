@@ -24,6 +24,7 @@
     "boring-avatars": "^1.7.0",
     "clsx": "^1.2.1",
     "dotbit": "^0.4.14",
+    "emoji-regex": "^10.2.1",
     "ethers": "^5.7.2",
     "immer": "^9.0.19",
     "lodash-es": "^4.17.21",

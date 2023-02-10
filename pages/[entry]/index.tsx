@@ -14,12 +14,14 @@ export default function CommunityIndexPage() {
 
   return (
     <CommunityLayout>
-      <Select
-        options={['All', 'Active', 'Pending', 'Closed']}
-        value={order}
-        onChange={setOrder}
-        className="m-6 mb-2 w-36 shrink-0"
-      />
+      <div className="sticky top-16 -mt-2 flex w-full justify-between border-b border-gray-200 bg-white/80 pl-6 pt-6 pb-4 backdrop-blur">
+        <Select
+          options={['All', 'Active', 'Pending', 'Closed']}
+          value={order}
+          onChange={setOrder}
+          className="w-36 shrink-0"
+        />
+      </div>
       <ul role="list" className="divide-y divide-gray-200">
         {proposals?.map((proposal) => (
           <li key={proposal.uri}>
