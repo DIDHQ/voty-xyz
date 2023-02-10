@@ -8,6 +8,7 @@ import { useMemo } from 'react'
 import { useRetrieve, useEntryConfig } from '../hooks/use-api'
 import useRouterQuery from '../hooks/use-router-query'
 import { DataType } from '../src/constants'
+import { extractStartEmoji } from '../src/utils/emoji'
 
 export default function GroupNav(props: { className?: string }) {
   const [query] = useRouterQuery<['entry', 'group']>()
@@ -42,16 +43,26 @@ export default function GroupNav(props: { className?: string }) {
       ]),
     [group?.extension.about, query.entry, query.group, router.pathname],
   )
+  const emoji = useMemo(() => extractStartEmoji(group?.name), [group?.name])
 
   return (
     <div className={clsx('w-full bg-white pl-6', props.className)}>
       <div className="flex h-10 items-center">
-        <UserGroupIcon
-          className="mr-3 h-8 w-8 shrink-0 text-gray-400"
-          aria-hidden="true"
-        />
+        {emoji ? (
+          <span
+            className="mr-3 w-8 shrink-0 text-3xl text-gray-400"
+            aria-hidden="true"
+          >
+            {emoji}
+          </span>
+        ) : (
+          <UserGroupIcon
+            className="mr-3 h-8 w-8 shrink-0 text-gray-400"
+            aria-hidden="true"
+          />
+        )}
         <h3 className="text-2xl font-medium text-gray-900">
-          {group?.name || '...'}
+          {group?.name.replace(emoji || '', '') || '...'}
         </h3>
       </div>
       <div className="border-b">
