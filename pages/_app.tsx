@@ -1,9 +1,15 @@
-import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import type { AppProps } from 'next/app'
+import Head from 'next/head'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { mainnet, polygon, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
-import Head from 'next/head'
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { connectorsForWallets } from '@rainbow-me/rainbowkit'
+import {
+  injectedWallet,
+  metaMaskWallet,
+  walletConnectWallet,
+} from '@rainbow-me/rainbowkit/wallets'
 
 import ShellLayout from '../components/layouts/shell'
 import '../styles/globals.css'
@@ -13,10 +19,13 @@ const { chains, provider } = configureChains(
   [publicProvider()],
 )
 
-const { connectors } = getDefaultWallets({
-  appName: 'Voty',
-  chains,
-})
+const wallets = [
+  injectedWallet({ chains }),
+  metaMaskWallet({ chains }),
+  walletConnectWallet({ chains }),
+]
+
+const connectors = connectorsForWallets([{ groupName: 'Voty', wallets }])
 
 const wagmiClient = createClient({
   autoConnect: true,
