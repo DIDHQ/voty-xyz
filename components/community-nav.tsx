@@ -13,13 +13,13 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
+import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
 import { useRetrieve, useEntryConfig } from '../hooks/use-api'
 import useDidIsMatch from '../hooks/use-did-is-match'
 import useRouterQuery from '../hooks/use-router-query'
 import useWallet from '../hooks/use-wallet'
 import { DataType } from '../src/constants'
 import Avatar from './basic/avatar'
-import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
 
 export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
@@ -131,64 +131,66 @@ export default function CommunityNav(props: { className?: string }) {
                 </Link>
               ))}
             </div>
-            <div className="mt-4 w-full">
-              <h3
-                className="px-3 text-sm font-medium text-gray-400"
-                id="projects-headline"
-              >
-                Groups
-                {isAdmin ? (
-                  <Link
-                    href={`/${entry}/${
-                      community?.groups?.length || 0
-                    }/settings`}
-                    className="float-right"
-                  >
-                    <PlusIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" />
-                  </Link>
-                ) : null}
-              </h3>
-              <div
-                className="mt-1 space-y-1"
-                aria-labelledby="projects-headline"
-              >
-                {community?.groups?.map((group, index) => (
-                  <Link
-                    key={group.name}
-                    href={`/${entry}/${index}`}
-                    className={clsx(
-                      query.group === index.toString()
-                        ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
-                        : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                      'group flex items-center border-l-4 px-3 py-2 text-sm font-medium',
-                    )}
-                  >
-                    {group.permission.adding_option ? (
-                      <TrophyIcon
-                        className={clsx(
-                          query.group === index.toString()
-                            ? 'text-indigo-500'
-                            : 'text-gray-400 group-hover:text-gray-500',
-                          'mr-3 h-6 w-6 shrink-0',
-                        )}
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <UserGroupIcon
-                        className={clsx(
-                          query.group === index.toString()
-                            ? 'text-indigo-500'
-                            : 'text-gray-400 group-hover:text-gray-500',
-                          'mr-3 h-6 w-6 shrink-0',
-                        )}
-                        aria-hidden="true"
-                      />
-                    )}
-                    <span className="truncate">{group.name}</span>
-                  </Link>
-                ))}
+            {community?.groups?.length || isAdmin ? (
+              <div className="mt-4 w-full">
+                <h3
+                  className="px-3 text-sm font-medium text-gray-400"
+                  id="projects-headline"
+                >
+                  Groups
+                  {isAdmin ? (
+                    <Link
+                      href={`/${entry}/${
+                        community?.groups?.length || 0
+                      }/settings`}
+                      className="float-right"
+                    >
+                      <PlusIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                    </Link>
+                  ) : null}
+                </h3>
+                <div
+                  className="mt-1 space-y-1"
+                  aria-labelledby="projects-headline"
+                >
+                  {community?.groups?.map((group, index) => (
+                    <Link
+                      key={group.name}
+                      href={`/${entry}/${index}`}
+                      className={clsx(
+                        query.group === index.toString()
+                          ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
+                          : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                        'group flex items-center border-l-4 px-3 py-2 text-sm font-medium',
+                      )}
+                    >
+                      {group.permission.adding_option ? (
+                        <TrophyIcon
+                          className={clsx(
+                            query.group === index.toString()
+                              ? 'text-indigo-500'
+                              : 'text-gray-400 group-hover:text-gray-500',
+                            'mr-3 h-6 w-6 shrink-0',
+                          )}
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <UserGroupIcon
+                          className={clsx(
+                            query.group === index.toString()
+                              ? 'text-indigo-500'
+                              : 'text-gray-400 group-hover:text-gray-500',
+                            'mr-3 h-6 w-6 shrink-0',
+                          )}
+                          aria-hidden="true"
+                        />
+                      )}
+                      <span className="truncate">{group.name}</span>
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : null}
           </>
         ) : null}
       </div>
