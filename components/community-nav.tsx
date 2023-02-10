@@ -4,7 +4,6 @@ import {
   DocumentTextIcon,
   GlobeAltIcon,
   PlusIcon,
-  TrophyIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
@@ -164,27 +163,15 @@ export default function CommunityNav(props: { className?: string }) {
                         'group flex items-center border-l-4 px-3 py-2 text-sm font-medium',
                       )}
                     >
-                      {group.permission.adding_option ? (
-                        <TrophyIcon
-                          className={clsx(
-                            query.group === index.toString()
-                              ? 'text-indigo-500'
-                              : 'text-gray-400 group-hover:text-gray-500',
-                            'mr-3 h-6 w-6 shrink-0',
-                          )}
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <UserGroupIcon
-                          className={clsx(
-                            query.group === index.toString()
-                              ? 'text-indigo-500'
-                              : 'text-gray-400 group-hover:text-gray-500',
-                            'mr-3 h-6 w-6 shrink-0',
-                          )}
-                          aria-hidden="true"
-                        />
-                      )}
+                      <UserGroupIcon
+                        className={clsx(
+                          query.group === index.toString()
+                            ? 'text-indigo-500'
+                            : 'text-gray-400 group-hover:text-gray-500',
+                          'mr-3 h-6 w-6 shrink-0',
+                        )}
+                        aria-hidden="true"
+                      />
                       <span className="truncate">{group.name}</span>
                     </Link>
                   ))}

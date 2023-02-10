@@ -1,4 +1,4 @@
-import { TrophyIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { UserGroupIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import Link from 'next/link'
@@ -46,20 +46,11 @@ export default function GroupNav(props: { className?: string }) {
   return (
     <div className={clsx('w-full bg-white pl-6', props.className)}>
       <div className="flex h-10 items-center">
-        {group ? (
-          group.permission.adding_option ? (
-            <TrophyIcon
-              className="mr-3 h-6 w-6 shrink-0 text-gray-400"
-              aria-hidden="true"
-            />
-          ) : (
-            <UserGroupIcon
-              className="mr-3 h-6 w-6 shrink-0 text-gray-400"
-              aria-hidden="true"
-            />
-          )
-        ) : null}
-        <h3 className="h-10 text-2xl font-medium text-gray-900">
+        <UserGroupIcon
+          className="mr-3 h-8 w-8 shrink-0 text-gray-400"
+          aria-hidden="true"
+        />
+        <h3 className="text-2xl font-medium text-gray-900">
           {group?.name || '...'}
         </h3>
       </div>
