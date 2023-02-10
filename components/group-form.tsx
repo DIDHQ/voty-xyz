@@ -77,11 +77,11 @@ export default function GroupForm(props: {
         name: '',
         permission: {
           proposing: {
-            operator: 'or',
+            operation: 'or',
             operands: [],
           },
           voting: {
-            operator: 'max',
+            operation: 'max',
             operands: [],
           },
         },

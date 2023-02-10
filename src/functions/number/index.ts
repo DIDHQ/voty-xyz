@@ -21,18 +21,18 @@ export async function calculateNumber(
   did: DID,
   snapshots: Snapshots,
 ): Promise<number> {
-  if ('operator' in data) {
+  if ('operation' in data) {
     const results = await pMap(
       data.operands,
       (operand) => calculateNumber(operand, did, snapshots),
       { concurrency: 5 },
     )
-    if (data.operator === 'max') {
+    if (data.operation === 'max') {
       return max(results)!
-    } else if (data.operator === 'sum') {
+    } else if (data.operation === 'sum') {
       return sum(results)
     }
-    throw new Error(`unsupported operator: ${data.operator}`)
+    throw new Error(`unsupported operation: ${data.operation}`)
   }
   return calculateNumberFunctions[data.function](...data.arguments).execute(
     did,
@@ -43,7 +43,7 @@ export async function calculateNumber(
 export function requiredCoinTypesOfNumberSets(
   data: NumberSets | NumberUnit,
 ): number[] {
-  if ('operator' in data) {
+  if ('operation' in data) {
     return uniq(
       Array.from(data.operands).flatMap((operand) =>
         requiredCoinTypesOfNumberSets(operand),

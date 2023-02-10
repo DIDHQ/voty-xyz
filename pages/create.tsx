@@ -28,7 +28,12 @@ export default function CreateCommunityPage() {
           label="DID"
           description="select an DID as your community entry"
         >
-          <Select options={dids} value={entry} onChange={setEntry} />
+          <Select
+            options={dids}
+            value={entry}
+            onChange={setEntry}
+            className="w-fit"
+          />
         </FormItem>
       </GridItem2>
       <GridItem6>
@@ -50,7 +55,7 @@ export default function CreateCommunityPage() {
               router.push(`/${entry}`)
             }}
           >
-            Community of <b>{entry}</b> already existed.
+            Community of <b>{entry}</b> already exists.
           </Alert>
         ) : (
           <Alert
@@ -60,7 +65,7 @@ export default function CreateCommunityPage() {
               router.push(`/${entry}/settings`)
             }}
           >
-            <b>{entry}</b> is able to create an community.
+            <b>{entry}</b> is able to be used as community entry.
           </Alert>
         )}
       </GridItem6>
