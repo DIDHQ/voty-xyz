@@ -4,10 +4,7 @@ import { ReactNode } from 'react'
 export function Grid6(props: { children: ReactNode; className?: string }) {
   return (
     <div
-      className={clsx(
-        'grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6',
-        props.className,
-      )}
+      className={clsx('grid grid-cols-1 gap-6 sm:grid-cols-6', props.className)}
     >
       {props.children}
     </div>

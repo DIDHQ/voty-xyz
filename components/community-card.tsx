@@ -12,21 +12,21 @@ export default function CommunityCard(props: {
     <Link
       key={community.uri}
       href={`/${community.author.did}`}
-      className="block w-fit rounded-md border border-gray-200 hover:bg-gray-50"
+      className="block rounded-md border border-gray-200 hover:bg-gray-50"
     >
-      <div className="flex items-center p-4">
+      <div className="flex items-center p-6">
         <div className="shrink-0">
           <Avatar
-            size={12}
+            size={20}
             name={community.author.did}
             value={community.extension?.avatar}
           />
         </div>
         <div className="px-4">
-          <p className="truncate font-medium text-indigo-600">
+          <p className="truncate text-xl font-medium text-indigo-600">
             {community.name}
           </p>
-          <p className="flex items-center text-sm text-gray-500">
+          <p className="flex items-center text-lg text-gray-500">
             <span className="truncate">{community.author.did}</span>
           </p>
         </div>
