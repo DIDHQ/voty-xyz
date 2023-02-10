@@ -93,8 +93,9 @@ export default function ProposalPage() {
     if (handleSubmit.status === 'success') {
       mutateList()
       mutateCounting()
+      setValue('choice', '')
     }
-  }, [handleSubmit.status, mutateList, mutateCounting])
+  }, [handleSubmit.status, mutateList, mutateCounting, setValue])
 
   return proposal && group ? (
     <div className="flex py-6">
