@@ -251,7 +251,7 @@ export function Option(props: {
       style={{
         transition: 'background-size 0.3s ease-out',
         backgroundImage: `linear-gradient(90deg, #f3f4f6 100%, transparent 100%)`,
-        backgroundSize: `${percentage}% auto`,
+        backgroundSize: `${percentage}% 100%`,
       }}
       onClick={() => {
         onChange(updateChoice(type, value, option))
