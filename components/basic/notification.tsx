@@ -4,7 +4,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 export default function Notification(props: {
-  show?: boolean
+  show: boolean
   children: ReactNode
 }) {
   const [show, setShow] = useState(props.show)

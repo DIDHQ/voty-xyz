@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/router'
 
 import useAsync from '../hooks/use-async'
 import { Community, communitySchema } from '../src/schemas'
@@ -14,6 +15,7 @@ import Button from './basic/button'
 import { useEntryConfig, useUpload } from '../hooks/use-api'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
+import Notification from './basic/notification'
 
 export default function CommunityForm(props: {
   entry: string
@@ -44,122 +46,135 @@ export default function CommunityForm(props: {
         if (!signed) {
           throw new Error('signing failed')
         }
-        await handleUpload(signed)
+        return handleUpload(signed)
       },
       [handleUpload, handleSignDocument],
     ),
   )
+  const router = useRouter()
   useEffect(() => {
     if (handleSubmit.status === 'success') {
       mutate()
+      router.push(`/${props.entry}`)
     }
-  }, [handleSubmit.status, mutate])
+  }, [handleSubmit.status, mutate, props.entry, router])
 
   return (
-    <Form className={props.className}>
-      <FormSection
-        title="Profile"
-        description="Basic information of the community."
-      >
-        <Grid6>
-          <GridItem6>
-            <FormItem label="Name" error={errors.name?.message}>
-              <TextInput
-                {...register('name')}
-                error={!!errors.name?.message}
-                disabled={!isAdmin}
-              />
-            </FormItem>
-          </GridItem6>
-          <GridItem6>
-            <FormItem label="About" error={errors.extension?.about?.message}>
-              <Textarea
-                {...register('extension.about')}
-                error={!!errors.extension?.about?.message}
-                disabled={!isAdmin}
-              />
-            </FormItem>
-          </GridItem6>
-          <GridItem6>
-            <FormItem label="Avatar" error={errors.extension?.avatar?.message}>
-              <Controller
-                control={control}
-                name="extension.avatar"
-                render={({ field: { value, onChange } }) => (
-                  <AvatarInput
-                    name={props.entry}
-                    value={value}
-                    onChange={onChange}
-                    disabled={!isAdmin}
-                  />
-                )}
-              />
-            </FormItem>
-          </GridItem6>
-          <GridItem6>
-            <FormItem
-              label="Website"
-              error={errors.extension?.website?.message}
-            >
-              <TextInput
-                {...register('extension.website')}
-                error={!!errors.extension?.website?.message}
-                disabled={!isAdmin}
-              />
-            </FormItem>
-          </GridItem6>
-        </Grid6>
-      </FormSection>
-      <FormSection
-        title="Social accounts"
-        description="Social relationship of the community."
-      >
-        <Grid6>
-          <GridItem2>
-            <FormItem
-              label="Twitter"
-              error={errors.extension?.twitter?.message}
-            >
-              <TextInput
-                {...register('extension.twitter')}
-                error={!!errors.extension?.twitter?.message}
-                disabled={!isAdmin}
-              />
-            </FormItem>
-          </GridItem2>
-          <GridItem2>
-            <FormItem
-              label="Discord"
-              error={errors.extension?.discord?.message}
-            >
-              <TextInput
-                {...register('extension.discord')}
-                error={!!errors.extension?.discord?.message}
-                disabled={!isAdmin}
-              />
-            </FormItem>
-          </GridItem2>
-          <GridItem2>
-            <FormItem label="GitHub" error={errors.extension?.github?.message}>
-              <TextInput
-                {...register('extension.github')}
-                error={!!errors.extension?.github?.message}
-                disabled={!isAdmin}
-              />
-            </FormItem>
-          </GridItem2>
-        </Grid6>
-      </FormSection>
-      <FormFooter>
-        <Button
-          primary
-          disabled={!isAdmin}
-          loading={handleSubmit.status === 'pending'}
-          onClick={onSubmit(handleSubmit.execute, console.error)}
+    <>
+      <Notification show={handleSubmit.status === 'error'}>
+        {handleSubmit.error?.message}
+      </Notification>
+      <Form className={props.className}>
+        <FormSection
+          title="Profile"
+          description="Basic information of the community."
         >
-          {props.community ? 'Submit' : 'Create'}
-        </Button>
-      </FormFooter>
-    </Form>
+          <Grid6>
+            <GridItem6>
+              <FormItem label="Name" error={errors.name?.message}>
+                <TextInput
+                  {...register('name')}
+                  error={!!errors.name?.message}
+                  disabled={!isAdmin}
+                />
+              </FormItem>
+            </GridItem6>
+            <GridItem6>
+              <FormItem label="About" error={errors.extension?.about?.message}>
+                <Textarea
+                  {...register('extension.about')}
+                  error={!!errors.extension?.about?.message}
+                  disabled={!isAdmin}
+                />
+              </FormItem>
+            </GridItem6>
+            <GridItem6>
+              <FormItem
+                label="Avatar"
+                error={errors.extension?.avatar?.message}
+              >
+                <Controller
+                  control={control}
+                  name="extension.avatar"
+                  render={({ field: { value, onChange } }) => (
+                    <AvatarInput
+                      name={props.entry}
+                      value={value}
+                      onChange={onChange}
+                      disabled={!isAdmin}
+                    />
+                  )}
+                />
+              </FormItem>
+            </GridItem6>
+            <GridItem6>
+              <FormItem
+                label="Website"
+                error={errors.extension?.website?.message}
+              >
+                <TextInput
+                  {...register('extension.website')}
+                  error={!!errors.extension?.website?.message}
+                  disabled={!isAdmin}
+                />
+              </FormItem>
+            </GridItem6>
+          </Grid6>
+        </FormSection>
+        <FormSection
+          title="Social accounts"
+          description="Social relationship of the community."
+        >
+          <Grid6>
+            <GridItem2>
+              <FormItem
+                label="Twitter"
+                error={errors.extension?.twitter?.message}
+              >
+                <TextInput
+                  {...register('extension.twitter')}
+                  error={!!errors.extension?.twitter?.message}
+                  disabled={!isAdmin}
+                />
+              </FormItem>
+            </GridItem2>
+            <GridItem2>
+              <FormItem
+                label="Discord"
+                error={errors.extension?.discord?.message}
+              >
+                <TextInput
+                  {...register('extension.discord')}
+                  error={!!errors.extension?.discord?.message}
+                  disabled={!isAdmin}
+                />
+              </FormItem>
+            </GridItem2>
+            <GridItem2>
+              <FormItem
+                label="GitHub"
+                error={errors.extension?.github?.message}
+              >
+                <TextInput
+                  {...register('extension.github')}
+                  error={!!errors.extension?.github?.message}
+                  disabled={!isAdmin}
+                />
+              </FormItem>
+            </GridItem2>
+          </Grid6>
+        </FormSection>
+        <FormFooter>
+          <Button
+            primary
+            disabled={!isAdmin}
+            loading={handleSubmit.status === 'pending'}
+            onClick={onSubmit(handleSubmit.execute, console.error)}
+          >
+            {props.community ? 'Submit' : 'Create'}
+          </Button>
+        </FormFooter>
+      </Form>
+    </>
   )
 }
