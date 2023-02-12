@@ -64,7 +64,7 @@ export default function ProposalPage() {
       async (vote: Vote) => {
         const signed = await handleSignDocument(vote)
         if (!signed) {
-          throw new Error('signature failed')
+          throw new Error('signing failed')
         }
         await handleUpload(signed)
       },

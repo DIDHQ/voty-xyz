@@ -42,7 +42,7 @@ export default function CommunityForm(props: {
       async (community: Community) => {
         const signed = await handleSignDocument(community)
         if (!signed) {
-          throw new Error('signature failed')
+          throw new Error('signing failed')
         }
         await handleUpload(signed)
       },

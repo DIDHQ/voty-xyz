@@ -100,7 +100,7 @@ export default function CreateProposalPage() {
       async (proposal: Proposal) => {
         const signed = await handleSignDocument(proposal)
         if (!signed) {
-          throw new Error('signature failed')
+          throw new Error('signing failed')
         }
         await handleUpload(signed)
       },
