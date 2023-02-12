@@ -69,6 +69,19 @@ export default function GroupForm(props: {
       [handleUpload, handleSignDocument],
     ),
   )
+  const handleArchive = useAsync(
+    useCallback(
+      async (community: Community) => {
+        remove(props.group)
+        const signed = await handleSignDocument(community)
+        if (!signed) {
+          throw new Error('signing failed')
+        }
+        return handleUpload(signed)
+      },
+      [remove, props.group, handleSignDocument, handleUpload],
+    ),
+  )
   const isNewGroup = useMemo(
     () => !props.community?.groups?.[props.group],
     [props.community.groups, props.group],
@@ -104,6 +117,12 @@ export default function GroupForm(props: {
       router.push(`/${props.entry}/${props.group}`)
     }
   }, [handleSubmit.status, mutate, props.entry, props.group, router])
+  useEffect(() => {
+    if (handleArchive.status === 'success') {
+      mutate()
+      router.push(`/${props.entry}`)
+    }
+  }, [handleArchive.status, mutate, props.entry, router])
 
   return (
     <>
@@ -257,11 +276,9 @@ export default function GroupForm(props: {
             <div />
           ) : (
             <Button
-              onClick={() => {
-                remove(props.group)
-                onSubmit(handleSubmit.execute, console.error)()
-              }}
               disabled={!isAdmin}
+              loading={handleArchive.status === 'pending'}
+              onClick={onSubmit(handleArchive.execute, console.error)}
             >
               Archive
             </Button>
