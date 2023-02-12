@@ -2,11 +2,12 @@ export default function RadioGroup(props: {
   options: { value: string; name: string }[]
   value: string
   onChange(value: string): void
+  className?: string
 }) {
   const { onChange } = props
 
   return (
-    <fieldset className="mt-4">
+    <fieldset className={props.className}>
       <legend className="sr-only">Notification method</legend>
       <div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
         {props.options.map((option) => (

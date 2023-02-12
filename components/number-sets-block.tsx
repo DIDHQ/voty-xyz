@@ -12,6 +12,7 @@ const defaultPower = 1
 
 export default function NumberSetsBlock(props: {
   name: 'voting'
+  entry: string
   group: number
   disabled?: boolean
 }) {
@@ -33,6 +34,7 @@ export default function NumberSetsBlock(props: {
             <NumberUnitBlock
               key={operand.id}
               name={props.name}
+              entry={props.entry}
               group={props.group}
               index={index}
               open={open === index}
@@ -45,7 +47,12 @@ export default function NumberSetsBlock(props: {
       ) : null}
       {props.disabled ? null : (
         <TextButton
-          onClick={() => append({ function: 'all', arguments: [defaultPower] })}
+          onClick={() =>
+            append({
+              function: 'prefixes_dot_suffix_fixed_power',
+              arguments: [defaultPower, [''], props.entry],
+            })
+          }
         >
           Add
         </TextButton>
@@ -56,6 +63,7 @@ export default function NumberSetsBlock(props: {
 
 function NumberUnitBlock(props: {
   name: 'voting'
+  entry: string
   group: number
   index: number
   open: boolean
@@ -67,7 +75,6 @@ function NumberUnitBlock(props: {
     control,
     watch,
     register,
-    setValue,
     formState: { errors },
   } = useFormContext<Community>()
   const { setOpen, onRemove } = props
@@ -77,10 +84,6 @@ function NumberUnitBlock(props: {
   const handleRemove = useCallback(() => {
     onRemove(props.index)
   }, [onRemove, props.index])
-  const isAll =
-    watch(
-      `groups.${props.group}.permission.${props.name}.operands.${props.index}.function`,
-    ) === 'all'
 
   return (
     <>
@@ -127,61 +130,67 @@ function NumberUnitBlock(props: {
             />
           </FormItem>
           <FormItem
-            label="Filter"
+            label="Base on"
             error={
               errors.groups?.[props.group]?.permission?.[props.name]
-                ?.operands?.[props.index]?.function?.message
+                ?.operands?.[props.index]?.arguments?.[2]?.message
             }
           >
             <Controller
               control={control}
-              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.function`}
+              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.2`}
               render={({ field: { value, onChange } }) => (
                 <RadioGroup
                   options={[
-                    { value: 'sub_did', name: 'SubDID' },
-                    { value: 'did', name: 'DID' },
-                    { value: 'all', name: 'All' },
+                    { value: props.entry, name: 'SubDID' },
+                    { value: 'bit', name: '.bit' },
+                    { value: 'eth', name: 'ENS' },
                   ]}
                   value={value}
-                  onChange={(v) => {
-                    setValue(
-                      `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`,
-                      [defaultPower],
-                    )
-                    onChange(v)
-                  }}
+                  onChange={onChange}
                 />
               )}
             />
           </FormItem>
-          {isAll ? null : (
-            <FormItem
-              label="Whitelist"
-              error={
-                errors.groups?.[props.group]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[1]?.message
-              }
-            >
-              <Controller
-                control={control}
-                name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.1`}
-                render={({ field: { value, onChange } }) => (
-                  <Textarea
-                    value={
-                      Array.isArray(value) ? (value as string[]).join('\n') : ''
-                    }
-                    onChange={(e) => onChange(e.target.value.split('\n'))}
-                    placeholder={'e.g.\nregex.bit\n...'}
-                    error={
-                      !!errors.groups?.[props.group]?.permission?.[props.name]
-                        ?.operands?.[props.index]?.arguments?.[1]?.message
-                    }
-                  />
-                )}
+          <FormItem
+            label="Filter"
+            error={
+              errors.groups?.[props.group]?.permission?.[props.name]
+                ?.operands?.[props.index]?.arguments?.[1]?.message
+            }
+          >
+            <Controller
+              control={control}
+              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.1`}
+              render={({ field: { value, onChange } }) => (
+                <RadioGroup
+                  options={[
+                    { value: 'whitelist', name: 'Whitelist' },
+                    { value: 'all', name: 'All' },
+                  ]}
+                  value={value.length ? 'whitelist' : 'all'}
+                  onChange={(v) => onChange(v === 'whitelist' ? [''] : [])}
+                />
+              )}
+            />
+          </FormItem>
+          <Controller
+            control={control}
+            name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.1`}
+            render={({ field: { value, onChange } }) => (
+              <Textarea
+                value={
+                  Array.isArray(value) ? (value as string[]).join('\n') : ''
+                }
+                onChange={(e) => onChange(e.target.value.split('\n'))}
+                placeholder={'e.g.\nregex.bit\n...'}
+                error={
+                  !!errors.groups?.[props.group]?.permission?.[props.name]
+                    ?.operands?.[props.index]?.arguments?.[1]?.message
+                }
               />
-            </FormItem>
-          )}
+            )}
+          />
           <FormItem
             label="Power"
             error={

@@ -10,6 +10,7 @@ import Textarea from './basic/textarea'
 
 export default function BooleanSetsBlock(props: {
   name: 'proposing' | 'adding_option'
+  entry: string
   group: number
   disabled?: boolean
 }) {
@@ -31,6 +32,7 @@ export default function BooleanSetsBlock(props: {
             <BooleanUnitBlock
               key={operand.id}
               name={props.name}
+              entry={props.entry}
               group={props.group}
               index={index}
               open={open === index}
@@ -42,7 +44,14 @@ export default function BooleanSetsBlock(props: {
         </ul>
       ) : null}
       {props.disabled ? null : (
-        <TextButton onClick={() => append({ function: 'all', arguments: [] })}>
+        <TextButton
+          onClick={() =>
+            append({
+              function: 'prefixes_dot_suffix_exact_match',
+              arguments: [[''], props.entry],
+            })
+          }
+        >
           Add
         </TextButton>
       )}
@@ -52,6 +61,7 @@ export default function BooleanSetsBlock(props: {
 
 function BooleanUnitBlock(props: {
   name: 'proposing' | 'adding_option'
+  entry: string
   group: number
   index: number
   open: boolean
@@ -63,7 +73,6 @@ function BooleanUnitBlock(props: {
     control,
     watch,
     register,
-    setValue,
     formState: { errors },
   } = useFormContext<Community>()
   const { setOpen, onRemove } = props
@@ -73,10 +82,6 @@ function BooleanUnitBlock(props: {
   const handleRemove = useCallback(() => {
     onRemove(props.index)
   }, [onRemove, props.index])
-  const isAll =
-    watch(
-      `groups.${props.group}.permission.${props.name}.operands.${props.index}.function`,
-    ) === 'all'
 
   return (
     <>
@@ -123,61 +128,71 @@ function BooleanUnitBlock(props: {
             />
           </FormItem>
           <FormItem
-            label="Filter"
+            label="Base on"
             error={
               errors.groups?.[props.group]?.permission?.[props.name]
-                ?.operands?.[props.index]?.function?.message
+                ?.operands?.[props.index]?.arguments?.[1]?.message
             }
           >
             <Controller
               control={control}
-              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.function`}
+              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.1`}
               render={({ field: { value, onChange } }) => (
                 <RadioGroup
                   options={[
-                    { value: 'sub_did', name: 'SubDID' },
-                    { value: 'did', name: 'DID' },
-                    { value: 'all', name: 'All' },
+                    { value: props.entry, name: 'SubDID' },
+                    { value: 'bit', name: '.bit' },
+                    { value: 'eth', name: 'ENS' },
                   ]}
                   value={value}
-                  onChange={(v) => {
-                    setValue(
-                      `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments`,
-                      [],
-                    )
-                    onChange(v)
-                  }}
+                  onChange={onChange}
                 />
               )}
             />
           </FormItem>
-          {isAll ? null : (
-            <FormItem
-              label="Whitelist"
-              error={
-                errors.groups?.[props.group]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[0]?.message
-              }
-            >
-              <Controller
-                control={control}
-                name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
-                render={({ field: { value, onChange } }) => (
-                  <Textarea
-                    value={
-                      Array.isArray(value) ? (value as string[]).join('\n') : ''
-                    }
-                    onChange={(e) => onChange(e.target.value.split('\n'))}
-                    placeholder={'e.g.\nregex.bit\n...'}
-                    error={
-                      !!errors.groups?.[props.group]?.permission?.[props.name]
-                        ?.operands?.[props.index]?.arguments?.[0]?.message
-                    }
-                  />
-                )}
-              />
-            </FormItem>
-          )}
+          <FormItem
+            label="Filter"
+            error={
+              errors.groups?.[props.group]?.permission?.[props.name]
+                ?.operands?.[props.index]?.arguments?.[0]?.message
+            }
+          >
+            <Controller
+              control={control}
+              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
+              render={({ field: { value, onChange } }) => (
+                <RadioGroup
+                  options={[
+                    { value: 'whitelist', name: 'Whitelist' },
+                    { value: 'all', name: 'All' },
+                  ]}
+                  value={value.length ? 'whitelist' : 'all'}
+                  onChange={(v) => onChange(v === 'whitelist' ? [''] : [])}
+                />
+              )}
+            />
+          </FormItem>
+          {watch(
+            `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`,
+          )?.length ? (
+            <Controller
+              control={control}
+              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
+              render={({ field: { value, onChange } }) => (
+                <Textarea
+                  value={
+                    Array.isArray(value) ? (value as string[]).join('\n') : ''
+                  }
+                  onChange={(e) => onChange(e.target.value.split('\n'))}
+                  placeholder={'e.g.\nregex.bit\n...'}
+                  error={
+                    !!errors.groups?.[props.group]?.permission?.[props.name]
+                      ?.operands?.[props.index]?.arguments?.[0]?.message
+                  }
+                />
+              )}
+            />
+          ) : null}
         </div>
       ) : null}
     </>

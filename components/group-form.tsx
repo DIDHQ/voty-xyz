@@ -181,6 +181,7 @@ export default function GroupForm(props: {
                 <FormProvider {...methods}>
                   <BooleanSetsBlock
                     name="proposing"
+                    entry={props.entry}
                     group={props.group}
                     disabled={!isAdmin}
                   />
@@ -207,6 +208,7 @@ export default function GroupForm(props: {
                 <FormProvider {...methods}>
                   <NumberSetsBlock
                     name="voting"
+                    entry={props.entry}
                     group={props.group}
                     disabled={!isAdmin}
                   />
