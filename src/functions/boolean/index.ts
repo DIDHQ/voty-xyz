@@ -4,14 +4,12 @@ import pMap from 'p-map'
 import { BooleanSets, BooleanUnit } from '../../schemas'
 import { DID, Snapshots } from '../../types'
 import { BooleanFunction } from '../types'
-import { did } from './did'
-import { sub_did } from './sub-did'
+import { prefixes_dot_suffix_exact_match } from './prefixes-dot-suffix-exact-match'
 
 export const checkBooleanFunctions: {
   [name: string]: BooleanFunction<any[]>
 } = {
-  did,
-  sub_did,
+  prefixes_dot_suffix_exact_match,
 }
 
 export async function checkBoolean(
