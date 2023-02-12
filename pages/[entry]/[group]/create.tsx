@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { startCase } from 'lodash-es'
+import { startCase, uniq } from 'lodash-es'
 
 import AuthorSelect from '../../../components/author-select'
 import useRouterQuery from '../../../hooks/use-router-query'
@@ -18,7 +18,6 @@ import { getCurrentSnapshot } from '../../../src/snapshot'
 import Button from '../../../components/basic/button'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
-import Select from '../../../components/basic/select'
 import { useEntryConfig, useRetrieve, useUpload } from '../../../hooks/use-api'
 import { DataType } from '../../../src/constants'
 import TextButton from '../../../components/basic/text-button'
@@ -32,6 +31,7 @@ import { Grid6, GridItem6 } from '../../../components/basic/grid'
 import Notification from '../../../components/basic/notification'
 import { permalink2Id } from '../../../src/arweave'
 import RadioGroup from '../../../components/basic/radio-group'
+import { requiredCoinTypesOfDidResolver } from '../../../src/did'
 
 export default function CreateProposalPage() {
   const {
@@ -73,20 +73,24 @@ export default function CreateProposalPage() {
     }
     setValue('group', parseInt(query.group))
   }, [query.group, setValue])
-  const { data: coinTypesOfNumberSets } = useSWR(
+  const { data: requiredCoinTypes } = useSWR(
     group?.permission.voting
-      ? ['requiredCoinTypesOfNumberSets', group.permission.voting]
+      ? ['requiredCoinTypes', group.permission.voting]
       : null,
-    () => requiredCoinTypesOfNumberSets(group!.permission.voting!),
+    () =>
+      uniq([
+        ...requiredCoinTypesOfDidResolver,
+        ...requiredCoinTypesOfNumberSets(group!.permission.voting!),
+      ]),
   )
   const { data: snapshots } = useSWR(
-    coinTypesOfNumberSets ? ['snapshots', coinTypesOfNumberSets] : null,
+    requiredCoinTypes ? ['snapshots', requiredCoinTypes] : null,
     async () => {
-      const snapshots = await pMap(coinTypesOfNumberSets!, getCurrentSnapshot, {
+      const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
         concurrency: 5,
       })
       return snapshots.reduce((obj, snapshot, index) => {
-        obj[coinTypesOfNumberSets![index]] = snapshot.toString()
+        obj[requiredCoinTypes![index]] = snapshot.toString()
         return obj
       }, {} as { [coinType: string]: string })
     },
@@ -216,6 +220,18 @@ export default function CreateProposalPage() {
                   >
                     Add
                   </TextButton>
+                </FormItem>
+              </GridItem6>
+              <GridItem6>
+                <FormItem
+                  label="Snapshots"
+                  error={
+                    errors.snapshots
+                      ? JSON.stringify(errors.snapshots)
+                      : undefined
+                  }
+                >
+                  {JSON.stringify(watch('snapshots'))}
                 </FormItem>
               </GridItem6>
             </Grid6>
