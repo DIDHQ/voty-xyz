@@ -174,23 +174,27 @@ function NumberUnitBlock(props: {
               )}
             />
           </FormItem>
-          <Controller
-            control={control}
-            name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.1`}
-            render={({ field: { value, onChange } }) => (
-              <Textarea
-                value={
-                  Array.isArray(value) ? (value as string[]).join('\n') : ''
-                }
-                onChange={(e) => onChange(e.target.value.split('\n'))}
-                placeholder={'e.g.\nregex.bit\n...'}
-                error={
-                  !!errors.groups?.[props.group]?.permission?.[props.name]
-                    ?.operands?.[props.index]?.arguments?.[1]?.message
-                }
-              />
-            )}
-          />
+          {watch(
+            `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.1`,
+          )?.length ? (
+            <Controller
+              control={control}
+              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.1`}
+              render={({ field: { value, onChange } }) => (
+                <Textarea
+                  value={
+                    Array.isArray(value) ? (value as string[]).join('\n') : ''
+                  }
+                  onChange={(e) => onChange(e.target.value.split('\n'))}
+                  placeholder={'e.g.\nregex.bit\n...'}
+                  error={
+                    !!errors.groups?.[props.group]?.permission?.[props.name]
+                      ?.operands?.[props.index]?.arguments?.[1]?.message
+                  }
+                />
+              )}
+            />
+          ) : null}
           <FormItem
             label="Power"
             error={
