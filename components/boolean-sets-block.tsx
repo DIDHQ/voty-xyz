@@ -135,22 +135,9 @@ function BooleanUnitBlock(props: {
               render={({ field: { value, onChange } }) => (
                 <RadioGroup
                   options={[
-                    {
-                      id: 'sub_did',
-                      name: 'SubDID',
-                      description:
-                        'SubDID of specified DIDs can create new proposal',
-                    },
-                    {
-                      id: 'did',
-                      name: 'DID',
-                      description: 'Specified DIDs can create new proposal',
-                    },
-                    {
-                      id: 'all',
-                      name: 'All',
-                      description: 'Everyone can create new proposal',
-                    },
+                    { value: 'sub_did', name: 'SubDID' },
+                    { value: 'did', name: 'DID' },
+                    { value: 'all', name: 'All' },
                   ]}
                   value={value}
                   onChange={(v) => {

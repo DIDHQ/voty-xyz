@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { startCase } from 'lodash-es'
 
 import AuthorSelect from '../../../components/author-select'
 import useRouterQuery from '../../../hooks/use-router-query'
@@ -30,6 +31,7 @@ import {
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
 import Notification from '../../../components/basic/notification'
 import { permalink2Id } from '../../../src/arweave'
+import RadioGroup from '../../../components/basic/radio-group'
 
 export default function CreateProposalPage() {
   const {
@@ -118,6 +120,14 @@ export default function CreateProposalPage() {
       )
     }
   }, [handleSubmit.value, query.entry, query.group, router])
+  const options = useMemo(
+    () =>
+      proposalSchema.shape.voting_type.options.map((option) => ({
+        value: option,
+        name: startCase(option),
+      })),
+    [],
+  )
 
   return (
     <>
@@ -161,8 +171,8 @@ export default function CreateProposalPage() {
                     control={control}
                     name="voting_type"
                     render={({ field: { value, onChange } }) => (
-                      <Select
-                        options={proposalSchema.shape.voting_type.options}
+                      <RadioGroup
+                        options={options}
                         value={value}
                         onChange={onChange}
                       />

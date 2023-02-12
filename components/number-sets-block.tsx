@@ -139,22 +139,9 @@ function NumberUnitBlock(props: {
               render={({ field: { value, onChange } }) => (
                 <RadioGroup
                   options={[
-                    {
-                      id: 'sub_did',
-                      name: 'SubDID',
-                      description:
-                        'SubDID of specified DIDs with fixed voting power',
-                    },
-                    {
-                      id: 'did',
-                      name: 'DID',
-                      description: 'Specified DIDs with fixed voting power',
-                    },
-                    {
-                      id: 'all',
-                      name: 'All',
-                      description: 'Everyone with fixed voting power',
-                    },
+                    { value: 'sub_did', name: 'SubDID' },
+                    { value: 'did', name: 'DID' },
+                    { value: 'all', name: 'All' },
                   ]}
                   value={value}
                   onChange={(v) => {
