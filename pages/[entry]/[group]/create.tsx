@@ -44,7 +44,7 @@ export default function CreateProposalPage() {
     formState: { errors },
   } = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
-    defaultValues: { options: [''] },
+    defaultValues: { options: [''], voting_type: 'single' },
   })
   const [query] = useRouterQuery<['entry', 'group']>()
   const { data: config } = useEntryConfig(query.entry)
@@ -220,18 +220,6 @@ export default function CreateProposalPage() {
                   >
                     Add
                   </TextButton>
-                </FormItem>
-              </GridItem6>
-              <GridItem6>
-                <FormItem
-                  label="Snapshots"
-                  error={
-                    errors.snapshots
-                      ? JSON.stringify(errors.snapshots)
-                      : undefined
-                  }
-                >
-                  {JSON.stringify(watch('snapshots'))}
                 </FormItem>
               </GridItem6>
             </Grid6>
