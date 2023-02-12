@@ -49,10 +49,12 @@ export function useRetrieve<T extends DataType>(type: T, permalink?: string) {
   )
 }
 
-export function useUpload<T extends Authorized<Community | Proposal | Vote>>() {
-  return useCallback(async (json: T) => {
+export function useUpload<
+  T extends Authorized<Community | Proposal | Option | Vote>,
+>() {
+  return useCallback(async (document: T) => {
     const textEncoder = new TextEncoder()
-    const body = textEncoder.encode(JSON.stringify(json))
+    const body = textEncoder.encode(JSON.stringify(document))
     const { permalink } = await fetchJson<{ permalink: string }>(
       '/api/upload',
       {

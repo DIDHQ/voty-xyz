@@ -3,6 +3,7 @@ import { checkBoolean } from '../functions/boolean'
 import {
   Authorized,
   Community,
+  Group,
   Proposal,
   proposalWithAuthorSchema,
 } from '../schemas'
@@ -11,12 +12,12 @@ import { DID } from '../types'
 import verifyAuthor from './verify-author'
 import verifyCommunity from './verify-community'
 
-export default async function verifyProposal(json: object): Promise<{
+export default async function verifyProposal(document: object): Promise<{
   proposal: Authorized<Proposal>
   community: Authorized<Community>
-  group: NonNullable<Community['groups']>[0]
+  group: Group
 }> {
-  const parsed = proposalWithAuthorSchema.safeParse(json)
+  const parsed = proposalWithAuthorSchema.safeParse(document)
   if (!parsed.success) {
     throw new Error(`schema error: ${parsed.error.message}`)
   }

@@ -24,9 +24,11 @@ export async function getCurrentSnapshot(coinType: number): Promise<bigint> {
   return BigInt(blockNumber)
 }
 
-export function mapSnapshots(json: { [coinType: string]: string }): Snapshots {
+export function mapSnapshots(snapshots: {
+  [coinType: string]: string
+}): Snapshots {
   return mapKeys(
-    mapValues(json, (value) => BigInt(value)),
+    mapValues(snapshots, (value) => BigInt(value)),
     (_value, key) => parseInt(key),
   )
 }

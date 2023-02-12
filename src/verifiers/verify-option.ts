@@ -12,9 +12,9 @@ import verifyAuthor from './verify-author'
 import verifyProposal from './verify-proposal'
 
 export default async function verifyOption(
-  json: object,
+  document: object,
 ): Promise<{ option: Authorized<Option>; proposal: Authorized<Proposal> }> {
-  const parsed = optionWithAuthorSchema.safeParse(json)
+  const parsed = optionWithAuthorSchema.safeParse(document)
   if (!parsed.success) {
     throw new Error(`schema error: ${parsed.error.message}`)
   }

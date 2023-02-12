@@ -26,11 +26,11 @@ export function formatSignature(buffer: Uint8Array) {
   return Buffer.from(buffer).toString(signatureEncoding)
 }
 
-export async function wrapJsonMessage(json: object): Promise<string> {
+export async function wrapDocumentMessage(document: object): Promise<string> {
   const textEncoder = new TextEncoder()
-  const data = textEncoder.encode(JSON.stringify(json))
+  const data = textEncoder.encode(JSON.stringify(document))
   const buffer = await arweave.crypto.hash(data, 'SHA-256')
   return `You are signing to modify ${dataTypeOf(
-    json,
+    document,
   )} on Voty.\n\nhash: 0x${Buffer.from(buffer).toString('hex')}`
 }
