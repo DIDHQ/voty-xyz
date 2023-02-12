@@ -23,12 +23,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const json = req.body
+  const document = req.body
 
   try {
-    const data = Buffer.from(textEncoder.encode(JSON.stringify(json)))
+    const data = Buffer.from(textEncoder.encode(JSON.stringify(document)))
     const transaction = await arweave.createTransaction({ data })
-    const tags = getArweaveTags(json)
+    const tags = getArweaveTags(document)
     Object.entries(tags).forEach(([key, value]) => {
       transaction.addTag(key, value)
     })
@@ -37,8 +37,8 @@ export default async function handler(
     const permalink = id2Permalink(transaction.id)
     const ts = new Date()
 
-    if (isCommunity(json)) {
-      const { community } = await verifyCommunity(json)
+    if (isCommunity(document)) {
+      const { community } = await verifyCommunity(document)
       while (!uploader.isComplete) {
         await uploader.uploadChunk()
       }
@@ -60,8 +60,8 @@ export default async function handler(
           data: { permalink, ts, entry: community.author.did, data },
         }),
       ])
-    } else if (isProposal(json)) {
-      const { proposal, community } = await verifyProposal(json)
+    } else if (isProposal(document)) {
+      const { proposal, community } = await verifyProposal(document)
       while (!uploader.isComplete) {
         await uploader.uploadChunk()
       }
@@ -77,8 +77,8 @@ export default async function handler(
           votes: 0,
         },
       })
-    } else if (isOption(json)) {
-      const { option, proposal } = await verifyOption(json)
+    } else if (isOption(document)) {
+      const { option, proposal } = await verifyOption(document)
       while (!uploader.isComplete) {
         await uploader.uploadChunk()
       }
@@ -93,8 +93,8 @@ export default async function handler(
           data,
         },
       })
-    } else if (isVote(json)) {
-      const { vote, proposal } = await verifyVote(json)
+    } else if (isVote(document)) {
+      const { vote, proposal } = await verifyVote(document)
       while (!uploader.isComplete) {
         await uploader.uploadChunk()
       }

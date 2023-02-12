@@ -7,9 +7,9 @@ import verifyAuthor from './verify-author'
 import verifyProposal from './verify-proposal'
 
 export default async function verifyVote(
-  json: object,
+  document: object,
 ): Promise<{ vote: Authorized<Vote>; proposal: Authorized<Proposal> }> {
-  const parsed = voteWithAuthorSchema.safeParse(json)
+  const parsed = voteWithAuthorSchema.safeParse(document)
   if (!parsed.success) {
     throw new Error(`schema error: ${parsed.error.message}`)
   }

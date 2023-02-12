@@ -1,36 +1,37 @@
 import arweave from 'arweave'
-import { verifyMessage } from 'ethers/lib/utils.js'
 
-import { coinTypeToChainId } from './constants'
 import { Author } from './schemas'
-import { dataTypeOf } from './utils/data-type'
+import { Proof } from './types'
 
-const signatureEncoding = 'base64'
-
-export function verifySignature(
-  message: string,
-  author: Pick<Author, 'coin_type' | 'address' | 'signature'>,
-): boolean {
-  if (coinTypeToChainId[author.coin_type] === undefined) {
-    throw new Error(
-      `unsupported verify signature coin type: ${author.coin_type}`,
-    )
-  }
-  return (
-    verifyMessage(message, Buffer.from(author.signature, signatureEncoding)) ===
-    author.address
-  )
+export async function signDocument(
+  document: object,
+  signMessage: (message: string) => Buffer | Promise<Buffer>,
+): Promise<Proof> {
+  const message = await encodeDocument(document)
+  const buffer = await signMessage(message)
+  return `1:${buffer.toString('base64')}`
 }
 
-export function formatSignature(buffer: Uint8Array) {
-  return Buffer.from(buffer).toString(signatureEncoding)
+export async function verifyDocument(
+  document: object,
+  proof: Proof,
+  verifyMessage: (
+    message: string,
+    signature: Buffer,
+  ) => string | Promise<string>,
+): Promise<string> {
+  const message = await encodeDocument(document)
+  return verifyMessage(message, Buffer.from(proof.replace(/^1:/, ''), 'base64'))
 }
 
-export async function wrapJsonMessage(json: object): Promise<string> {
+async function encodeDocument(
+  document: object & { author?: Author },
+): Promise<string> {
+  const { author, ...rest } = document
   const textEncoder = new TextEncoder()
-  const data = textEncoder.encode(JSON.stringify(json))
+  const data = textEncoder.encode(JSON.stringify(rest))
   const buffer = await arweave.crypto.hash(data, 'SHA-256')
-  return `You are signing to modify ${dataTypeOf(
-    json,
-  )} on Voty.\n\nhash: 0x${Buffer.from(buffer).toString('hex')}`
+  return `You are signing for Voty Protocol.\n\nhash: 0x${Buffer.from(
+    buffer,
+  ).toString('hex')}`
 }

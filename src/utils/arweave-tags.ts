@@ -1,5 +1,5 @@
 import { DataType } from '../constants'
-import { Authorized, Community, Proposal, Vote } from '../schemas'
+import { Authorized, Community, Proposal, Option, Vote } from '../schemas'
 import { isCommunity, isOption, isProposal, isVote } from './data-type'
 
 export const defaultArweaveTags = {
@@ -8,33 +8,35 @@ export const defaultArweaveTags = {
   'app-version': '0.0.0',
 }
 
-export function getArweaveTags(json: Authorized<Community | Proposal | Vote>) {
-  if (isCommunity(json)) {
+export function getArweaveTags(
+  document: Authorized<Community | Proposal | Option | Vote>,
+) {
+  if (isCommunity(document)) {
     return {
       ...defaultArweaveTags,
       'app-data-type': DataType.COMMUNITY,
     }
   }
-  if (isProposal(json)) {
+  if (isProposal(document)) {
     return {
       ...defaultArweaveTags,
       'app-data-type': DataType.PROPOSAL,
-      'app-index-community': json.community,
-      'app-index-group': json.group.toString(),
+      'app-index-community': document.community,
+      'app-index-group': document.group.toString(),
     }
   }
-  if (isOption(json)) {
+  if (isOption(document)) {
     return {
       ...defaultArweaveTags,
       'app-data-type': DataType.OPTION,
-      'app-index-proposal': json.proposal,
+      'app-index-proposal': document.proposal,
     }
   }
-  if (isVote(json)) {
+  if (isVote(document)) {
     return {
       ...defaultArweaveTags,
       'app-data-type': DataType.VOTE,
-      'app-index-proposal': json.proposal,
+      'app-index-proposal': document.proposal,
     }
   }
   throw new Error('cannot get arweave tags')

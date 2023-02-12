@@ -8,7 +8,7 @@ import Link from 'next/link'
 import AuthorSelect from '../../../components/author-select'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useAsync from '../../../hooks/use-async'
-import useSignJson from '../../../hooks/use-sign-json'
+import useSignDocument from '../../../hooks/use-sign-document'
 import useWallet from '../../../hooks/use-wallet'
 import { requiredCoinTypesOfNumberSets } from '../../../src/functions/number'
 import { Proposal, proposalSchema } from '../../../src/schemas'
@@ -93,18 +93,18 @@ export default function CreateProposalPage() {
   }, [setValue, snapshots])
   const [did, setDid] = useState('')
   const { account } = useWallet()
-  const handleSignJson = useSignJson(did)
+  const handleSignDocument = useSignDocument(did)
   const handleUpload = useUpload()
   const handleSubmit = useAsync(
     useCallback(
-      async (json: Proposal) => {
-        const signed = await handleSignJson(json)
+      async (proposal: Proposal) => {
+        const signed = await handleSignDocument(proposal)
         if (!signed) {
-          throw new Error('signature failed')
+          throw new Error('signing failed')
         }
         await handleUpload(signed)
       },
-      [handleUpload, handleSignJson],
+      [handleUpload, handleSignDocument],
     ),
   )
 

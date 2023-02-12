@@ -14,7 +14,7 @@ import {
 } from '../../../hooks/use-api'
 import useAsync from '../../../hooks/use-async'
 import useRouterQuery from '../../../hooks/use-router-query'
-import useSignJson from '../../../hooks/use-sign-json'
+import useSignDocument from '../../../hooks/use-sign-document'
 import useWallet from '../../../hooks/use-wallet'
 import { calculateNumber } from '../../../src/functions/number'
 import { Vote, voteSchema } from '../../../src/schemas'
@@ -57,18 +57,18 @@ export default function ProposalPage() {
   } = useForm<Vote>({
     resolver: zodResolver(voteSchema),
   })
-  const handleSignJson = useSignJson(did)
+  const handleSignDocument = useSignDocument(did)
   const handleUpload = useUpload()
   const handleSubmit = useAsync(
     useCallback(
-      async (json: Vote) => {
-        const signed = await handleSignJson(json)
+      async (vote: Vote) => {
+        const signed = await handleSignDocument(vote)
         if (!signed) {
-          throw new Error('signature failed')
+          throw new Error('signing failed')
         }
         await handleUpload(signed)
       },
-      [handleUpload, handleSignJson],
+      [handleUpload, handleSignDocument],
     ),
   )
   useEffect(() => {

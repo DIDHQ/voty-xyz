@@ -6,7 +6,7 @@ import useAsync from '../hooks/use-async'
 import { Community, communitySchema } from '../src/schemas'
 import AvatarInput from './basic/avatar-input'
 import useDidIsMatch from '../hooks/use-did-is-match'
-import useSignJson from '../hooks/use-sign-json'
+import useSignDocument from '../hooks/use-sign-document'
 import useWallet from '../hooks/use-wallet'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
@@ -34,19 +34,19 @@ export default function CommunityForm(props: {
     reset(props.community)
   }, [props.community, reset])
   const { account } = useWallet()
-  const handleSignJson = useSignJson(props.entry)
+  const handleSignDocument = useSignDocument(props.entry)
   const handleUpload = useUpload()
   const { data: isAdmin } = useDidIsMatch(props.entry, account)
   const handleSubmit = useAsync(
     useCallback(
-      async (json: Community) => {
-        const signed = await handleSignJson(json)
+      async (community: Community) => {
+        const signed = await handleSignDocument(community)
         if (!signed) {
-          throw new Error('signature failed')
+          throw new Error('signing failed')
         }
         await handleUpload(signed)
       },
-      [handleUpload, handleSignJson],
+      [handleUpload, handleSignDocument],
     ),
   )
   useEffect(() => {

@@ -23,15 +23,16 @@ export default function useArweaveData<T extends DataType>(
           string: true,
         },
       )
-      const json = JSON.parse(data as string)
+      const document = JSON.parse(data as string)
+
       if (type === DataType.COMMUNITY) {
-        return communityWithAuthorSchema.parse(json)
+        return communityWithAuthorSchema.parse(document)
       } else if (type === DataType.PROPOSAL) {
-        return proposalWithAuthorSchema.parse(json)
+        return proposalWithAuthorSchema.parse(document)
       } else if (type === DataType.OPTION) {
-        return optionWithAuthorSchema.parse(json)
+        return optionWithAuthorSchema.parse(document)
       } else if (type === DataType.VOTE) {
-        return voteWithAuthorSchema.parse(json)
+        return voteWithAuthorSchema.parse(document)
       } else {
         throw new Error('data type not supported')
       }

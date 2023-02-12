@@ -1,33 +1,33 @@
 import { DataType } from '../constants'
 import { Community, Option, Proposal, Vote } from '../schemas'
 
-export function isCommunity(json: object): json is Community {
-  return 'name' in json
+export function isCommunity(document: object): document is Community {
+  return 'name' in document
 }
 
-export function isProposal(json: object): json is Proposal {
-  return 'community' in json && 'group' in json
+export function isProposal(document: object): document is Proposal {
+  return 'community' in document && 'group' in document
 }
 
-export function isOption(json: object): json is Option {
-  return 'proposal' in json && 'title' in json
+export function isOption(document: object): document is Option {
+  return 'proposal' in document && 'title' in document
 }
 
-export function isVote(json: object): json is Vote {
-  return 'proposal' in json && 'choice' in json
+export function isVote(document: object): document is Vote {
+  return 'proposal' in document && 'choice' in document
 }
 
-export function dataTypeOf(json: object): DataType {
-  if (isCommunity(json)) {
+export function dataTypeOf(document: object): DataType {
+  if (isCommunity(document)) {
     return DataType.COMMUNITY
   }
-  if (isProposal(json)) {
+  if (isProposal(document)) {
     return DataType.PROPOSAL
   }
-  if (isOption(json)) {
+  if (isOption(document)) {
     return DataType.OPTION
   }
-  if (isVote(json)) {
+  if (isVote(document)) {
     return DataType.VOTE
   }
   throw new Error('unrecognized data type')
