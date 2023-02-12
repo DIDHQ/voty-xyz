@@ -163,11 +163,11 @@ function BooleanUnitBlock(props: {
               render={({ field: { value, onChange } }) => (
                 <RadioGroup
                   options={[
-                    { value: 'whitelist', name: 'Whitelist' },
+                    { value: 'allowlist', name: 'Allowlist' },
                     { value: 'all', name: 'All' },
                   ]}
-                  value={value.length ? 'whitelist' : 'all'}
-                  onChange={(v) => onChange(v === 'whitelist' ? [''] : [])}
+                  value={value.length ? 'allowlist' : 'all'}
+                  onChange={(v) => onChange(v === 'allowlist' ? [''] : [])}
                 />
               )}
             />
