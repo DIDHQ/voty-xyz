@@ -14,7 +14,6 @@ import { createInstance } from 'dotbit'
 import { BitPluginAvatar } from '@dotbit/plugin-avatar'
 
 import { chainIdToCoinType, coinTypeToChainId } from '../src/constants'
-import { formatSignature } from '../src/signature'
 
 export default function useWallet() {
   const account = useAccount()
@@ -76,7 +75,7 @@ export default function useWallet() {
             ).substring(2),
             'hex',
           )
-          return formatSignature(signature)
+          return signature
         }
         throw new Error(`sign message unsupported coin type: ${coinType}`)
       },
