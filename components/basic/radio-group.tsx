@@ -8,13 +8,10 @@ export default function RadioGroup(props: {
 
   return (
     <fieldset className={props.className}>
-      <legend className="sr-only">Notification method</legend>
       <div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
         {props.options.map((option) => (
           <div key={option.value} className="flex items-center">
             <input
-              id={option.value}
-              name="notification-method"
               type="radio"
               checked={option.value === props.value}
               onChange={() => onChange(option.value)}
