@@ -1,4 +1,5 @@
 import { ChangeEvent, MouseEvent, useCallback, useRef } from 'react'
+import imageCompression from 'browser-image-compression'
 
 import Avatar from './avatar'
 import TextButton from './text-button'
@@ -12,13 +13,18 @@ export default function AvatarInput(props: {
   const inputRef = useRef<HTMLInputElement>(null)
   const { onChange } = props
   const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
+    async (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files?.[0]) {
         const reader = new FileReader()
         reader.onloadend = () => {
           onChange?.(reader.result as string)
         }
-        reader.readAsDataURL(e.target.files[0])
+        reader.readAsDataURL(
+          await imageCompression(e.target.files[0], {
+            maxSizeMB: 0.05,
+            maxWidthOrHeight: 320,
+          }),
+        )
       }
     },
     [onChange],
