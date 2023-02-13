@@ -24,6 +24,7 @@ import { requiredCoinTypesOfDidResolver } from '../../../src/did'
 import { formatDuration } from '../../../src/utils/time'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
 import Markdown from '../../../components/basic/markdown'
+import Status from '../../../components/status'
 
 const AuthorSelect = dynamic(
   () => import('../../../components/author-select'),
@@ -223,7 +224,10 @@ export default function CreateProposalPage() {
       </div>
       <div className="sticky top-24 w-80 shrink-0">
         <div className="-mt-2 space-y-6 rounded-md border border-gray-200 p-6">
-          <DetailList title="Information">
+          <DetailList
+            title="Information"
+            right={<Status permalink={community?.permalink} />}
+          >
             <DetailItem title="Community">{community?.name}</DetailItem>
             <DetailItem title="Group">{group?.name}</DetailItem>
           </DetailList>
