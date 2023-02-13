@@ -220,11 +220,11 @@ export default function CreateProposalPage() {
               <FormProvider {...methods}>
                 <SigningButton
                   did={did}
+                  icon={HandRaisedIcon}
                   disabled={!did || !community || !snapshots}
                   onSuccess={handleSuccess}
                   className="rounded-l-none"
                 >
-                  <HandRaisedIcon className="mr-2 h-5 w-5" aria-hidden="true" />
                   Propose
                 </SigningButton>
               </FormProvider>
