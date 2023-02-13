@@ -3,8 +3,10 @@ import Head from 'next/head'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { mainnet, polygon, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
-import { connectorsForWallets } from '@rainbow-me/rainbowkit'
+import {
+  connectorsForWallets,
+  RainbowKitProvider,
+} from '@rainbow-me/rainbowkit'
 import {
   injectedWallet,
   metaMaskWallet,
