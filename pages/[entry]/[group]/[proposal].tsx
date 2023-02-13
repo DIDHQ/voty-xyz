@@ -4,8 +4,8 @@ import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import clsx from 'clsx'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 
-import AuthorSelect from '../../../components/author-select'
 import {
   useTurnout,
   useListVotes,
@@ -16,7 +16,6 @@ import {
 import useAsync from '../../../hooks/use-async'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useSignDocument from '../../../hooks/use-sign-document'
-import useWallet from '../../../hooks/use-wallet'
 import { calculateNumber } from '../../../src/functions/number'
 import { Vote, voteSchema } from '../../../src/schemas'
 import { mapSnapshots } from '../../../src/snapshot'
@@ -35,6 +34,11 @@ import TextButton from '../../../components/basic/text-button'
 import Markdown from '../../../components/basic/markdown'
 import Notification from '../../../components/basic/notification'
 
+const AuthorSelect = dynamic(
+  () => import('../../../components/author-select'),
+  { ssr: false },
+)
+
 export default function ProposalPage() {
   const [query] = useRouterQuery<['entry', 'group', 'proposal']>()
   const { data: status } = useStatus(query.proposal)
@@ -46,7 +50,6 @@ export default function ProposalPage() {
     [community?.groups, proposal],
   )
   const [did, setDid] = useState('')
-  const { account } = useWallet()
   const {
     setValue,
     resetField,
@@ -150,7 +153,6 @@ export default function ProposalPage() {
             <div className="py-6">
               <div className="flex justify-end">
                 <AuthorSelect
-                  account={account}
                   value={did}
                   onChange={setDid}
                   top

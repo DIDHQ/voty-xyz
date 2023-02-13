@@ -6,12 +6,11 @@ import useSWR from 'swr'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { startCase, uniq } from 'lodash-es'
+import dynamic from 'next/dynamic'
 
-import AuthorSelect from '../../../components/author-select'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useAsync from '../../../hooks/use-async'
 import useSignDocument from '../../../hooks/use-sign-document'
-import useWallet from '../../../hooks/use-wallet'
 import { requiredCoinTypesOfNumberSets } from '../../../src/functions/number'
 import { Proposal, proposalSchema } from '../../../src/schemas'
 import { getCurrentSnapshot } from '../../../src/snapshot'
@@ -31,6 +30,11 @@ import Notification from '../../../components/basic/notification'
 import { permalink2Id } from '../../../src/arweave'
 import RadioGroup from '../../../components/basic/radio-group'
 import { requiredCoinTypesOfDidResolver } from '../../../src/did'
+
+const AuthorSelect = dynamic(
+  () => import('../../../components/author-select'),
+  { ssr: false },
+)
 
 export default function CreateProposalPage() {
   const {
@@ -99,7 +103,6 @@ export default function CreateProposalPage() {
     }
   }, [setValue, snapshots])
   const [did, setDid] = useState('')
-  const { account } = useWallet()
   const handleSignDocument = useSignDocument(did)
   const handleUpload = useUpload()
   const handleSubmit = useAsync(
@@ -241,13 +244,7 @@ export default function CreateProposalPage() {
             >
               Submit
             </Button>
-            <AuthorSelect
-              account={account}
-              value={did}
-              onChange={setDid}
-              top
-              className="mr-6"
-            />
+            <AuthorSelect value={did} onChange={setDid} top className="mr-6" />
           </FormFooter>
         </Form>
       </div>
