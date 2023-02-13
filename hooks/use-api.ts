@@ -15,9 +15,9 @@ export function useEntry(entry?: string) {
         community: string
       }>(`/api/entry?did=${entry}`)
       const { data } = await fetchJson<{
-        data: Authorized<Community> & { permalink: string }
+        data: Authorized<Community>
       }>(`/api/retrieve?type=${DataType.COMMUNITY}&permalink=${community}`)
-      return data
+      return { ...data, permalink: community }
     },
     { revalidateOnFocus: false },
   )
@@ -45,7 +45,7 @@ export function useRetrieve<T extends DataType>(type: T, permalink?: string) {
             : T extends DataType.VOTE
             ? Vote
             : never
-        > & { permalink: string }
+        >
       }>(`/api/retrieve?type=${type}&permalink=${permalink}`)
       return data
     },
