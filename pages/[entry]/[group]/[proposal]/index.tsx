@@ -27,7 +27,7 @@ import {
 } from '../../../../src/voting'
 import TextButton from '../../../../components/basic/text-button'
 import Markdown from '../../../../components/basic/markdown'
-import { coinTypeNames, DataType } from '../../../../src/constants'
+import { DataType } from '../../../../src/constants'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import Status from '../../../../components/status'
 
@@ -190,15 +190,10 @@ export default function ProposalPage() {
                 : '-'}
             </DetailItem>
           </DetailList>
-          <DetailList title="Snapshots">
-            {Object.entries(proposal.snapshots).map(([coinType, snapshot]) => (
-              <DetailItem
-                key={coinType}
-                title={coinTypeNames[parseInt(coinType)]}
-              >
-                {snapshot}
-              </DetailItem>
-            ))}
+          <DetailList title="Terms and conditions">
+            <article className="prose-sm prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
+              <Markdown>{group?.extension.terms_and_conditions}</Markdown>
+            </article>
           </DetailList>
         </div>
       </div>
