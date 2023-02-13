@@ -13,13 +13,13 @@ const defaultPower = 1
 export default function NumberSetsBlock(props: {
   name: 'voting'
   entry: string
-  group: number
+  groupIndex: number
   disabled?: boolean
 }) {
   const { control } = useFormContext<Community>()
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `groups.${props.group}.permission.${props.name}.operands`,
+    name: `groups.${props.groupIndex}.permission.${props.name}.operands`,
   })
   const [open, setOpen] = useState<number>()
 
@@ -35,7 +35,7 @@ export default function NumberSetsBlock(props: {
               key={operand.id}
               name={props.name}
               entry={props.entry}
-              group={props.group}
+              groupIndex={props.groupIndex}
               index={index}
               open={open === index}
               setOpen={setOpen}
@@ -64,7 +64,7 @@ export default function NumberSetsBlock(props: {
 function NumberUnitBlock(props: {
   name: 'voting'
   entry: string
-  group: number
+  groupIndex: number
   index: number
   open: boolean
   setOpen(index?: number): void
@@ -91,7 +91,7 @@ function NumberUnitBlock(props: {
         <div className="flex w-0 flex-1 items-center">
           <span className="ml-2 w-0 flex-1 truncate">
             {watch(
-              `groups.${props.group}.permission.${props.name}.operands.${props.index}.alias`,
+              `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.alias`,
             ) || `Sets #${props.index + 1}`}
           </span>
         </div>
@@ -114,16 +114,16 @@ function NumberUnitBlock(props: {
           <FormItem
             label="Alias"
             error={
-              errors.groups?.[props.group]?.permission?.[props.name]
+              errors.groups?.[props.groupIndex]?.permission?.[props.name]
                 ?.operands?.[props.index]?.alias?.message
             }
           >
             <TextInput
               {...register(
-                `groups.${props.group}.permission.${props.name}.operands.${props.index}.alias`,
+                `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.alias`,
               )}
               error={
-                !!errors.groups?.[props.group]?.permission?.[props.name]
+                !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
                   ?.operands?.[props.index]?.alias?.message
               }
               placeholder={`Sets #${props.index + 1}`}
@@ -132,13 +132,13 @@ function NumberUnitBlock(props: {
           <FormItem
             label="Base on"
             error={
-              errors.groups?.[props.group]?.permission?.[props.name]
+              errors.groups?.[props.groupIndex]?.permission?.[props.name]
                 ?.operands?.[props.index]?.arguments?.[2]?.message
             }
           >
             <Controller
               control={control}
-              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.2`}
+              name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`}
               render={({ field: { value, onChange } }) => (
                 <RadioGroup
                   options={[
@@ -155,13 +155,13 @@ function NumberUnitBlock(props: {
           <FormItem
             label="Filter"
             error={
-              errors.groups?.[props.group]?.permission?.[props.name]
+              errors.groups?.[props.groupIndex]?.permission?.[props.name]
                 ?.operands?.[props.index]?.arguments?.[1]?.message
             }
           >
             <Controller
               control={control}
-              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.1`}
+              name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
               render={({ field: { value, onChange } }) => (
                 <RadioGroup
                   options={[
@@ -175,11 +175,11 @@ function NumberUnitBlock(props: {
             />
           </FormItem>
           {watch(
-            `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.1`,
+            `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`,
           )?.length ? (
             <Controller
               control={control}
-              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.1`}
+              name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
               render={({ field: { value, onChange } }) => (
                 <Textarea
                   value={
@@ -187,8 +187,9 @@ function NumberUnitBlock(props: {
                   }
                   onChange={(e) => onChange(e.target.value.split('\n'))}
                   error={
-                    !!errors.groups?.[props.group]?.permission?.[props.name]
-                      ?.operands?.[props.index]?.arguments?.[1]?.message
+                    !!errors.groups?.[props.groupIndex]?.permission?.[
+                      props.name
+                    ]?.operands?.[props.index]?.arguments?.[1]?.message
                   }
                 />
               )}
@@ -197,14 +198,14 @@ function NumberUnitBlock(props: {
           <FormItem
             label="Power"
             error={
-              errors.groups?.[props.group]?.permission?.[props.name]
+              errors.groups?.[props.groupIndex]?.permission?.[props.name]
                 ?.operands?.[props.index]?.arguments?.[0]?.message
             }
           >
             <Controller
               defaultValue={defaultPower}
               control={control}
-              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
+              name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
               render={({ field: { value, onChange } }) => (
                 <TextInput
                   type="number"
@@ -213,8 +214,9 @@ function NumberUnitBlock(props: {
                     onChange(e.target.valueAsNumber)
                   }}
                   error={
-                    !!errors.groups?.[props.group]?.permission?.[props.name]
-                      ?.operands?.[props.index]?.arguments?.[0]?.message
+                    !!errors.groups?.[props.groupIndex]?.permission?.[
+                      props.name
+                    ]?.operands?.[props.index]?.arguments?.[0]?.message
                   }
                 />
               )}

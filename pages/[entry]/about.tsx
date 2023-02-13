@@ -1,11 +1,11 @@
 import useRouterQuery from '../../hooks/use-router-query'
-import { useCommunity } from '../../hooks/use-api'
+import { useEntry } from '../../hooks/use-api'
 import CommunityLayout from '../../components/layouts/community'
 import Markdown from '../../components/basic/markdown'
 
 export default function CommunityAboutPage() {
-  const [query] = useRouterQuery<['entry']>()
-  const { data: community } = useCommunity(query.entry)
+  const query = useRouterQuery<['entry']>()
+  const { data: community } = useEntry(query.entry)
 
   return (
     <CommunityLayout>

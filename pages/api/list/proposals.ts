@@ -18,7 +18,7 @@ export default async function handler(
   const proposals = await database.proposal.findMany({
     cursor: query.next ? { permalink: query.next } : undefined,
     where: query.group
-      ? { entry: query.entry, group: parseInt(query.group) }
+      ? { entry: query.entry, group: query.group }
       : { entry: query.entry },
     take: 50,
     orderBy: { ts: 'desc' },

@@ -13,43 +13,43 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
 import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
-import { useCommunity } from '../hooks/use-api'
+import { useEntry } from '../hooks/use-api'
 import useDidIsMatch from '../hooks/use-did-is-match'
 import useRouterQuery from '../hooks/use-router-query'
 import useWallet from '../hooks/use-wallet'
 import Avatar from './basic/avatar'
 import { extractStartEmoji } from '../src/utils/emoji'
+import { Group } from '../src/schemas'
 
 export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
-  const [query] = useRouterQuery<['entry', 'group']>()
-  const entry = query.entry
-  const { data: community } = useCommunity(entry)
+  const query = useRouterQuery<['entry', 'group']>()
+  const { data: community } = useEntry(query.entry)
   const navigation = useMemo(
     () =>
       compact([
         {
           name: 'Timeline',
-          href: `/${entry}`,
+          href: `/${query.entry}`,
           icon: ClockIcon,
           current: router.pathname === '/[entry]',
         },
         {
           name: 'Settings',
-          href: `/${entry}/settings`,
+          href: `/${query.entry}/settings`,
           icon: CogIcon,
           current: router.pathname === '/[entry]/settings',
         },
         community?.extension?.about
           ? {
               name: 'About',
-              href: `/${entry}/about`,
+              href: `/${query.entry}/about`,
               icon: DocumentTextIcon,
               current: router.pathname === '/[entry]/about',
             }
           : undefined,
       ]),
-    [community?.extension?.about, entry, router.pathname],
+    [community?.extension?.about, query.entry, router.pathname],
   )
   const externals = useMemo(
     () =>
@@ -97,7 +97,6 @@ export default function CommunityNav(props: { className?: string }) {
         </h3>
         {community ? (
           <>
-            {' '}
             <div className="mt-4 w-full space-y-1">
               <h3
                 className="px-3 text-sm font-medium text-gray-400"
@@ -138,9 +137,7 @@ export default function CommunityNav(props: { className?: string }) {
                   Groups
                   {isAdmin ? (
                     <Link
-                      href={`/${entry}/${
-                        community?.groups?.length || 0
-                      }/settings`}
+                      href={`/${query.entry}/create`}
                       className="float-right"
                     >
                       <PlusIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" />
@@ -155,9 +152,8 @@ export default function CommunityNav(props: { className?: string }) {
                     <GroupListItem
                       key={group.name + index}
                       entry={query.entry}
-                      index={index}
-                      name={group.name}
-                      current={query.group === index.toString()}
+                      group={group}
+                      current={query.group === group.extension.id}
                     />
                   ))}
                 </div>
@@ -183,15 +179,17 @@ export default function CommunityNav(props: { className?: string }) {
 
 function GroupListItem(props: {
   entry?: string
-  index: number
-  name: string
+  group: Group
   current: boolean
 }) {
-  const emoji = useMemo(() => extractStartEmoji(props.name), [props.name])
+  const emoji = useMemo(
+    () => extractStartEmoji(props.group.name),
+    [props.group.name],
+  )
 
   return (
     <Link
-      href={`/${props.entry}/${props.index}`}
+      href={`/${props.entry}/${props.group.extension.id}`}
       className={clsx(
         props.current
           ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
@@ -217,7 +215,9 @@ function GroupListItem(props: {
           aria-hidden="true"
         />
       )}
-      <span className="truncate">{props.name.replace(emoji || '', '')}</span>
+      <span className="truncate">
+        {props.group.name.replace(emoji || '', '')}
+      </span>
     </Link>
   )
 }

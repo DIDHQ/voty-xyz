@@ -1,19 +1,13 @@
-import { useMemo } from 'react'
-
 import useRouterQuery from '../../../hooks/use-router-query'
-import { useCommunity } from '../../../hooks/use-api'
+import { useEntry, useGroup } from '../../../hooks/use-api'
 import CommunityLayout from '../../../components/layouts/community'
 import GroupLayout from '../../../components/layouts/group'
 import Markdown from '../../../components/basic/markdown'
 
 export default function GroupAboutPage() {
-  const [query] = useRouterQuery<['entry', 'group']>()
-  const { data: community } = useCommunity(query.entry)
-  const group = useMemo(
-    () =>
-      query.group ? community?.groups?.[parseInt(query.group)] : undefined,
-    [community?.groups, query.group],
-  )
+  const query = useRouterQuery<['entry', 'group']>()
+  const { data: community } = useEntry(query.entry)
+  const group = useGroup(community, query.group)
 
   return (
     <CommunityLayout>

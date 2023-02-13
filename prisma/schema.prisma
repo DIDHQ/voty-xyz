@@ -28,7 +28,7 @@ model Proposal {
   author    String
 
   community String
-  group     Int
+  group     String
 
   data Bytes
 
@@ -46,7 +46,7 @@ model Option {
   author    String
 
   community String
-  group     Int
+  group     String
   proposal  String
 
   data Bytes
@@ -62,7 +62,7 @@ model Vote {
   author    String
 
   community String
-  group     Int
+  group     String
   proposal  String
 
   data Bytes

@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
 
@@ -7,29 +7,46 @@ import { Authorized, Community, Proposal, Option, Vote } from '../src/schemas'
 import { Turnout } from '../src/types'
 import { fetchJson } from '../src/utils/fetcher'
 
-export function useCommunity(entry?: string) {
+export function useEntry(entry?: string) {
   return useSWR(
-    entry ? ['community', entry] : null,
+    entry ? ['entry', entry] : null,
     async () => {
       const { community } = await fetchJson<{
         community: string
       }>(`/api/entry?did=${entry}`)
       const { data } = await fetchJson<{
-        data: Authorized<Community> & { permalink: string }
+        data: Authorized<Community>
       }>(`/api/retrieve?type=${DataType.COMMUNITY}&permalink=${community}`)
-      return data
+      return { ...data, permalink: community }
     },
     { revalidateOnFocus: false },
   )
 }
 
-export function useProposal(proposal?: string) {
+export function useGroup(community?: Community, group?: string) {
+  return useMemo(
+    () => community?.groups?.find((g) => g.extension.id === group),
+    [community?.groups, group],
+  )
+}
+
+export function useRetrieve<T extends DataType>(type: T, permalink?: string) {
   return useSWR(
-    proposal ? ['proposal', proposal] : null,
+    permalink ? ['retrieve', type, permalink] : null,
     async () => {
       const { data } = await fetchJson<{
-        data: Authorized<Proposal> & { permalink: string }
-      }>(`/api/retrieve?type=${DataType.PROPOSAL}&permalink=${proposal}`)
+        data: Authorized<
+          T extends DataType.COMMUNITY
+            ? Community
+            : T extends DataType.PROPOSAL
+            ? Proposal
+            : T extends DataType.OPTION
+            ? Option
+            : T extends DataType.VOTE
+            ? Vote
+            : never
+        >
+      }>(`/api/retrieve?type=${type}&permalink=${permalink}`)
       return data
     },
     { revalidateOnFocus: false },

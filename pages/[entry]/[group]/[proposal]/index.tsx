@@ -9,46 +9,47 @@ import dynamic from 'next/dynamic'
 import {
   useTurnout,
   useListVotes,
-  useProposal,
-  useCommunity,
-} from '../../../hooks/use-api'
-import useRouterQuery from '../../../hooks/use-router-query'
-import { calculateNumber } from '../../../src/functions/number'
-import { Vote, voteSchema } from '../../../src/schemas'
-import { mapSnapshots } from '../../../src/snapshot'
-import { DID, Turnout } from '../../../src/types'
-import useStatus from '../../../hooks/use-status'
-import Card from '../../../components/basic/card'
-import { Grid6, GridItem6 } from '../../../components/basic/grid'
+  useRetrieve,
+  useGroup,
+} from '../../../../hooks/use-api'
+import useRouterQuery from '../../../../hooks/use-router-query'
+import { calculateNumber } from '../../../../src/functions/number'
+import { Vote, voteSchema } from '../../../../src/schemas'
+import { mapSnapshots } from '../../../../src/snapshot'
+import { DID, Turnout } from '../../../../src/types'
+import useStatus from '../../../../hooks/use-status'
+import Card from '../../../../components/basic/card'
+import { Grid6, GridItem6 } from '../../../../components/basic/grid'
 import {
   checkChoice,
   choiceIsEmpty,
   powerOfChoice,
   updateChoice,
-} from '../../../src/voting'
-import TextButton from '../../../components/basic/text-button'
-import Markdown from '../../../components/basic/markdown'
+} from '../../../../src/voting'
+import TextButton from '../../../../components/basic/text-button'
+import Markdown from '../../../../components/basic/markdown'
+import { DataType } from '../../../../src/constants'
 
 const AuthorSelect = dynamic(
-  () => import('../../../components/author-select'),
+  () => import('../../../../components/author-select'),
   { ssr: false },
 )
 
 const SigningButton = dynamic(
-  () => import('../../../components/signing-button'),
+  () => import('../../../../components/signing-button'),
   { ssr: false },
 )
 
 export default function ProposalPage() {
-  const [query] = useRouterQuery<['entry', 'group', 'proposal']>()
-  const { data: status } = useStatus(query.proposal)
-  const { data: community } = useCommunity(query.entry)
-  const { data: proposal } = useProposal(query.proposal)
-  const { data: turnout, mutate: mutateTurnout } = useTurnout(query.proposal)
-  const group = useMemo(
-    () => (proposal ? community?.groups?.[proposal?.group] : undefined),
-    [community?.groups, proposal],
+  const query = useRouterQuery<['proposal']>()
+  const { data: proposal } = useRetrieve(DataType.PROPOSAL, query.proposal)
+  const { data: community } = useRetrieve(
+    DataType.COMMUNITY,
+    proposal?.community,
   )
+  const group = useGroup(community, proposal?.group)
+  const { data: status } = useStatus(query.proposal)
+  const { data: turnout, mutate: mutateTurnout } = useTurnout(query.proposal)
   const [did, setDid] = useState('')
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
@@ -83,11 +84,11 @@ export default function ProposalPage() {
     setValue('choice', '')
   }, [mutateList, mutateTurnout, setValue])
 
-  return proposal && group ? (
+  return community && proposal && group ? (
     <div className="flex py-6">
       <div className="mr-6 flex-[2_2_0%]">
         <div>
-          <Link href={`/${query.entry}/${query.group}`}>
+          <Link href={`/${community.author.did}/${proposal.group}`}>
             <TextButton>
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>

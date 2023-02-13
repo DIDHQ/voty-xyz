@@ -5,7 +5,7 @@ import Alert from '../components/basic/alert'
 import { FormItem } from '../components/basic/form'
 import { Grid6, GridItem2, GridItem6 } from '../components/basic/grid'
 import Select from '../components/basic/select'
-import { useCommunity } from '../hooks/use-api'
+import { useEntry } from '../hooks/use-api'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 
@@ -14,7 +14,7 @@ export default function CreateCommunityPage() {
   const { account, did } = useWallet()
   const { data: dids } = useDids(account)
   const [entry, setEntry] = useState('')
-  const { data: community } = useCommunity(entry)
+  const { data: community } = useEntry(entry)
   useEffect(() => {
     setEntry(dids?.find((d) => d === did) || dids?.[0] || '')
   }, [did, dids, setEntry])

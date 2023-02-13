@@ -1,28 +1,34 @@
-import { useMemo } from 'react'
+import { useCallback } from 'react'
+import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import GroupForm from '../../../components/group-form'
-import { useCommunity } from '../../../hooks/use-api'
+import { useEntry } from '../../../hooks/use-api'
 import CommunityLayout from '../../../components/layouts/community'
 import GroupLayout from '../../../components/layouts/group'
+import useDidIsMatch from '../../../hooks/use-did-is-match'
+import useWallet from '../../../hooks/use-wallet'
 
 export default function GroupSettingsPage() {
-  const [query] = useRouterQuery<['entry', 'group']>()
-  const { data: community } = useCommunity(query.entry)
-  const isNewGroup = useMemo(
-    () => !!query.group && !community?.groups?.[parseInt(query.group)],
-    [community?.groups, query.group],
-  )
+  const router = useRouter()
+  const query = useRouterQuery<['entry', 'group']>()
+  const { account } = useWallet()
+  const { data: community, mutate } = useEntry(query.entry)
+  const { data: isAdmin } = useDidIsMatch(query.entry, account)
+  const handleSuccess = useCallback(() => {
+    mutate()
+    router.push(`/${query.entry}/${query.group}`)
+  }, [mutate, query.entry, query.group, router])
 
   return (
     <CommunityLayout>
-      <GroupLayout hideNav={isNewGroup}>
+      <GroupLayout>
         {query.entry && query.group && community ? (
           <GroupForm
-            key={query.entry + query.group}
-            entry={query.entry}
             community={community}
-            group={parseInt(query.group)}
+            group={query.group}
+            onSuccess={handleSuccess}
+            disabled={!isAdmin}
             className="pl-6"
           />
         ) : null}

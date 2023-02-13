@@ -32,7 +32,9 @@ export default async function verifyProposal(document: object): Promise<{
   }
   const { community } = await verifyCommunity(data)
 
-  const group = community.groups?.[proposal.group]
+  const group = community.groups?.find(
+    (group) => group.extension.id === proposal.group,
+  )
   if (!group) {
     throw new Error('group not found')
   }
