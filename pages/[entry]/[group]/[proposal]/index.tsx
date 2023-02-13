@@ -159,7 +159,7 @@ export default function ProposalPage() {
         ) : null}
       </div>
       <div className="sticky top-24 w-80 shrink-0">
-        <div className="-mt-2 space-y-6 rounded border border-gray-200 p-6">
+        <div className="-mt-2 space-y-6 rounded-md border border-gray-200 p-6">
           <DetailList title="Information">
             <DetailItem title="Community">{community.name}</DetailItem>
             <DetailItem title="Group">{group.name}</DetailItem>
