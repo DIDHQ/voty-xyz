@@ -11,32 +11,32 @@ import {
   useListVotes,
   useRetrieve,
   useGroup,
-} from '../../../hooks/use-api'
-import useRouterQuery from '../../../hooks/use-router-query'
-import { calculateNumber } from '../../../src/functions/number'
-import { Vote, voteSchema } from '../../../src/schemas'
-import { mapSnapshots } from '../../../src/snapshot'
-import { DID, Turnout } from '../../../src/types'
-import useStatus from '../../../hooks/use-status'
-import Card from '../../../components/basic/card'
-import { Grid6, GridItem6 } from '../../../components/basic/grid'
+} from '../../../../hooks/use-api'
+import useRouterQuery from '../../../../hooks/use-router-query'
+import { calculateNumber } from '../../../../src/functions/number'
+import { Vote, voteSchema } from '../../../../src/schemas'
+import { mapSnapshots } from '../../../../src/snapshot'
+import { DID, Turnout } from '../../../../src/types'
+import useStatus from '../../../../hooks/use-status'
+import Card from '../../../../components/basic/card'
+import { Grid6, GridItem6 } from '../../../../components/basic/grid'
 import {
   checkChoice,
   choiceIsEmpty,
   powerOfChoice,
   updateChoice,
-} from '../../../src/voting'
-import TextButton from '../../../components/basic/text-button'
-import Markdown from '../../../components/basic/markdown'
-import { DataType } from '../../../src/constants'
+} from '../../../../src/voting'
+import TextButton from '../../../../components/basic/text-button'
+import Markdown from '../../../../components/basic/markdown'
+import { DataType } from '../../../../src/constants'
 
 const AuthorSelect = dynamic(
-  () => import('../../../components/author-select'),
+  () => import('../../../../components/author-select'),
   { ssr: false },
 )
 
 const SigningButton = dynamic(
-  () => import('../../../components/signing-button'),
+  () => import('../../../../components/signing-button'),
   { ssr: false },
 )
 
