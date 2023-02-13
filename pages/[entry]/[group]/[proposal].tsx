@@ -11,6 +11,7 @@ import {
   useListVotes,
   useProposal,
   useCommunity,
+  useGroup,
 } from '../../../hooks/use-api'
 import useRouterQuery from '../../../hooks/use-router-query'
 import { calculateNumber } from '../../../src/functions/number'
@@ -40,15 +41,12 @@ const SigningButton = dynamic(
 )
 
 export default function ProposalPage() {
-  const [query] = useRouterQuery<['entry', 'group', 'proposal']>()
-  const { data: status } = useStatus(query.proposal)
-  const { data: community } = useCommunity(query.entry)
+  const [query] = useRouterQuery<['proposal']>()
   const { data: proposal } = useProposal(query.proposal)
+  const { data: community } = useCommunity(proposal?.community)
+  const group = useGroup(community, proposal?.group)
+  const { data: status } = useStatus(query.proposal)
   const { data: turnout, mutate: mutateTurnout } = useTurnout(query.proposal)
-  const group = useMemo(
-    () => (proposal ? community?.groups?.[proposal?.group] : undefined),
-    [community?.groups, proposal],
-  )
   const [did, setDid] = useState('')
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
@@ -83,11 +81,11 @@ export default function ProposalPage() {
     setValue('choice', '')
   }, [mutateList, mutateTurnout, setValue])
 
-  return proposal && group ? (
+  return community && proposal && group ? (
     <div className="flex py-6">
       <div className="mr-6 flex-[2_2_0%]">
         <div>
-          <Link href={`/${query.entry}/${query.group}`}>
+          <Link href={`/${community.author.did}/${proposal.group}`}>
             <TextButton>
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>

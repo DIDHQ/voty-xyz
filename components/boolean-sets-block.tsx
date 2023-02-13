@@ -11,13 +11,13 @@ import Textarea from './basic/textarea'
 export default function BooleanSetsBlock(props: {
   name: 'proposing' | 'adding_option'
   entry: string
-  group: number
+  groupIndex: number
   disabled?: boolean
 }) {
   const { control } = useFormContext<Community>()
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `groups.${props.group}.permission.${props.name}.operands`,
+    name: `groups.${props.groupIndex}.permission.${props.name}.operands`,
   })
   const [open, setOpen] = useState<number>()
 
@@ -33,7 +33,7 @@ export default function BooleanSetsBlock(props: {
               key={operand.id}
               name={props.name}
               entry={props.entry}
-              group={props.group}
+              groupIndex={props.groupIndex}
               index={index}
               open={open === index}
               setOpen={setOpen}
@@ -62,7 +62,7 @@ export default function BooleanSetsBlock(props: {
 function BooleanUnitBlock(props: {
   name: 'proposing' | 'adding_option'
   entry: string
-  group: number
+  groupIndex: number
   index: number
   open: boolean
   setOpen(index?: number): void
@@ -89,7 +89,7 @@ function BooleanUnitBlock(props: {
         <div className="flex w-0 flex-1 items-center">
           <span className="ml-2 w-0 flex-1 truncate">
             {watch(
-              `groups.${props.group}.permission.${props.name}.operands.${props.index}.alias`,
+              `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.alias`,
             ) || `Sets #${props.index + 1}`}
           </span>
         </div>
@@ -112,16 +112,16 @@ function BooleanUnitBlock(props: {
           <FormItem
             label="Alias"
             error={
-              errors.groups?.[props.group]?.permission?.[props.name]
+              errors.groups?.[props.groupIndex]?.permission?.[props.name]
                 ?.operands?.[props.index]?.alias?.message
             }
           >
             <TextInput
               {...register(
-                `groups.${props.group}.permission.${props.name}.operands.${props.index}.alias`,
+                `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.alias`,
               )}
               error={
-                !!errors.groups?.[props.group]?.permission?.[props.name]
+                !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
                   ?.operands?.[props.index]?.alias?.message
               }
               placeholder={`Sets #${props.index + 1}`}
@@ -130,13 +130,13 @@ function BooleanUnitBlock(props: {
           <FormItem
             label="Base on"
             error={
-              errors.groups?.[props.group]?.permission?.[props.name]
+              errors.groups?.[props.groupIndex]?.permission?.[props.name]
                 ?.operands?.[props.index]?.arguments?.[1]?.message
             }
           >
             <Controller
               control={control}
-              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.1`}
+              name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
               render={({ field: { value, onChange } }) => (
                 <RadioGroup
                   options={[
@@ -153,13 +153,13 @@ function BooleanUnitBlock(props: {
           <FormItem
             label="Filter"
             error={
-              errors.groups?.[props.group]?.permission?.[props.name]
+              errors.groups?.[props.groupIndex]?.permission?.[props.name]
                 ?.operands?.[props.index]?.arguments?.[0]?.message
             }
           >
             <Controller
               control={control}
-              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
+              name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
               render={({ field: { value, onChange } }) => (
                 <RadioGroup
                   options={[
@@ -173,11 +173,11 @@ function BooleanUnitBlock(props: {
             />
           </FormItem>
           {watch(
-            `groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`,
+            `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
           )?.length ? (
             <Controller
               control={control}
-              name={`groups.${props.group}.permission.${props.name}.operands.${props.index}.arguments.0`}
+              name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
               render={({ field: { value, onChange } }) => (
                 <Textarea
                   value={
@@ -185,8 +185,9 @@ function BooleanUnitBlock(props: {
                   }
                   onChange={(e) => onChange(e.target.value.split('\n'))}
                   error={
-                    !!errors.groups?.[props.group]?.permission?.[props.name]
-                      ?.operands?.[props.index]?.arguments?.[0]?.message
+                    !!errors.groups?.[props.groupIndex]?.permission?.[
+                      props.name
+                    ]?.operands?.[props.index]?.arguments?.[0]?.message
                   }
                 />
               )}

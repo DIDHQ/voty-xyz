@@ -14,7 +14,7 @@ import { Proposal, proposalSchema } from '../../../src/schemas'
 import { getCurrentSnapshot } from '../../../src/snapshot'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
-import { useCommunity } from '../../../hooks/use-api'
+import { useCommunity, useGroup } from '../../../hooks/use-api'
 import TextButton from '../../../components/basic/text-button'
 import {
   Form,
@@ -52,11 +52,7 @@ export default function CreateProposalPage() {
   } = methods
   const [query] = useRouterQuery<['entry', 'group']>()
   const { data: community } = useCommunity(query.entry)
-  const group = useMemo(
-    () =>
-      query.group ? community?.groups?.[parseInt(query.group)] : undefined,
-    [community?.groups, query.group],
-  )
+  const group = useGroup(community, query.group)
   const handleOptionDelete = useCallback(
     (index: number) => {
       const options = getValues('options')?.filter((_, i) => i !== index)
@@ -74,7 +70,7 @@ export default function CreateProposalPage() {
     if (!query.group) {
       return
     }
-    setValue('group', parseInt(query.group))
+    setValue('group', query.group)
   }, [query.group, setValue])
   const { data: requiredCoinTypes } = useSWR(
     group?.permission.voting
@@ -112,7 +108,6 @@ export default function CreateProposalPage() {
     },
     [query.entry, query.group, router],
   )
-
   const options = useMemo(
     () =>
       proposalSchema.shape.voting_type.options.map((option) => ({

@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
 
@@ -20,6 +20,13 @@ export function useCommunity(entry?: string) {
       return data
     },
     { revalidateOnFocus: false },
+  )
+}
+
+export function useGroup(community?: Community, group?: string) {
+  return useMemo(
+    () => community?.groups?.find((g) => g.extension.id === group),
+    [community?.groups, group],
   )
 }
 
