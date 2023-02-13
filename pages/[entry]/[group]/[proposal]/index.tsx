@@ -56,7 +56,7 @@ export default function ProposalPage() {
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
   })
-  const { setValue, resetField, control } = methods
+  const { setValue, resetField, control, watch } = methods
   useEffect(() => {
     if (query.proposal) {
       setValue('proposal', query.proposal)
@@ -140,7 +140,12 @@ export default function ProposalPage() {
                 did={did}
                 icon={BoltIcon}
                 onSuccess={handleSuccess}
-                disabled={!status?.timestamp || !votingPower || isValidating}
+                disabled={
+                  choiceIsEmpty(proposal.voting_type, watch('choice')) ||
+                  !status?.timestamp ||
+                  !votingPower ||
+                  isValidating
+                }
                 className="rounded-l-none"
               >
                 {votingPower}
