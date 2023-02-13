@@ -3,6 +3,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../src/schemas'
 import { FormItem } from './basic/form'
+import { Grid6, GridItem2, GridItem3, GridItem6 } from './basic/grid'
 import RadioGroup from './basic/radio-group'
 import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
@@ -110,119 +111,129 @@ function NumberUnitBlock(props: {
         </div>
       </li>
       {props.open ? (
-        <div className="space-y-4 bg-gray-50 p-6">
-          <FormItem
-            label="Alias"
-            error={
-              errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                ?.operands?.[props.index]?.alias?.message
-            }
-          >
-            <TextInput
-              {...register(
-                `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.alias`,
-              )}
+        <Grid6 className="bg-gray-50 p-6">
+          <GridItem6>
+            <FormItem
+              label="Alias"
               error={
-                !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                errors.groups?.[props.groupIndex]?.permission?.[props.name]
                   ?.operands?.[props.index]?.alias?.message
               }
-              placeholder={`Sets #${props.index + 1}`}
-            />
-          </FormItem>
-          <FormItem
-            label="Base on"
-            error={
-              errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                ?.operands?.[props.index]?.arguments?.[2]?.message
-            }
-          >
-            <Controller
-              control={control}
-              name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`}
-              render={({ field: { value, onChange } }) => (
-                <RadioGroup
-                  options={[
-                    { value: props.entry, name: 'SubDID' },
-                    { value: 'bit', name: '.bit' },
-                    { value: 'eth', name: 'ENS' },
-                  ]}
-                  value={value}
-                  onChange={onChange}
-                />
-              )}
-            />
-          </FormItem>
-          <FormItem
-            label="Filter"
-            error={
-              errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                ?.operands?.[props.index]?.arguments?.[1]?.message
-            }
-          >
-            <Controller
-              control={control}
-              name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
-              render={({ field: { value, onChange } }) => (
-                <RadioGroup
-                  options={[
-                    { value: 'allowlist', name: 'Allowlist' },
-                    { value: 'all', name: 'All' },
-                  ]}
-                  value={value.length ? 'allowlist' : 'all'}
-                  onChange={(v) => onChange(v === 'allowlist' ? [''] : [])}
-                />
-              )}
-            />
-          </FormItem>
+            >
+              <TextInput
+                {...register(
+                  `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.alias`,
+                )}
+                error={
+                  !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                    ?.operands?.[props.index]?.alias?.message
+                }
+                placeholder={`Sets #${props.index + 1}`}
+              />
+            </FormItem>
+          </GridItem6>
+          <GridItem3>
+            <FormItem
+              label="Base on"
+              error={
+                errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                  ?.operands?.[props.index]?.arguments?.[2]?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`}
+                render={({ field: { value, onChange } }) => (
+                  <RadioGroup
+                    options={[
+                      { value: props.entry, name: 'SubDID' },
+                      { value: 'bit', name: '.bit' },
+                      { value: 'eth', name: 'ENS' },
+                    ]}
+                    value={value}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </FormItem>
+          </GridItem3>
+          <GridItem3>
+            <FormItem
+              label="Filter"
+              error={
+                errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                  ?.operands?.[props.index]?.arguments?.[1]?.message
+              }
+            >
+              <Controller
+                control={control}
+                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
+                render={({ field: { value, onChange } }) => (
+                  <RadioGroup
+                    options={[
+                      { value: 'allowlist', name: 'Allowlist' },
+                      { value: 'all', name: 'All' },
+                    ]}
+                    value={value.length ? 'allowlist' : 'all'}
+                    onChange={(v) => onChange(v === 'allowlist' ? [''] : [])}
+                  />
+                )}
+              />
+            </FormItem>
+          </GridItem3>
           {watch(
             `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`,
           )?.length ? (
-            <Controller
-              control={control}
-              name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
-              render={({ field: { value, onChange } }) => (
-                <Textarea
-                  value={
-                    Array.isArray(value) ? (value as string[]).join('\n') : ''
-                  }
-                  onChange={(e) => onChange(e.target.value.split('\n'))}
-                  error={
-                    !!errors.groups?.[props.groupIndex]?.permission?.[
-                      props.name
-                    ]?.operands?.[props.index]?.arguments?.[1]?.message
-                  }
-                />
-              )}
-            />
+            <GridItem6>
+              <Controller
+                control={control}
+                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
+                render={({ field: { value, onChange } }) => (
+                  <Textarea
+                    value={
+                      Array.isArray(value) ? (value as string[]).join('\n') : ''
+                    }
+                    onChange={(e) => onChange(e.target.value.split('\n'))}
+                    error={
+                      !!errors.groups?.[props.groupIndex]?.permission?.[
+                        props.name
+                      ]?.operands?.[props.index]?.arguments?.[1]?.message
+                    }
+                  />
+                )}
+              />
+            </GridItem6>
           ) : null}
-          <FormItem
-            label="Power"
-            error={
-              errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                ?.operands?.[props.index]?.arguments?.[0]?.message
-            }
-          >
-            <Controller
-              defaultValue={defaultPower}
-              control={control}
-              name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
-              render={({ field: { value, onChange } }) => (
-                <TextInput
-                  type="number"
-                  value={value}
-                  onChange={(e) => {
-                    onChange(e.target.valueAsNumber)
-                  }}
-                  error={
-                    !!errors.groups?.[props.groupIndex]?.permission?.[
-                      props.name
-                    ]?.operands?.[props.index]?.arguments?.[0]?.message
-                  }
-                />
-              )}
-            />
-          </FormItem>
-        </div>
+          <GridItem2>
+            <FormItem
+              label="Power"
+              error={
+                errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                  ?.operands?.[props.index]?.arguments?.[0]?.message
+              }
+            >
+              <Controller
+                defaultValue={defaultPower}
+                control={control}
+                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
+                render={({ field: { value, onChange } }) => (
+                  <TextInput
+                    type="number"
+                    value={value}
+                    onChange={(e) => {
+                      onChange(e.target.valueAsNumber)
+                    }}
+                    error={
+                      !!errors.groups?.[props.groupIndex]?.permission?.[
+                        props.name
+                      ]?.operands?.[props.index]?.arguments?.[0]?.message
+                    }
+                  />
+                )}
+              />
+            </FormItem>
+          </GridItem2>
+        </Grid6>
       ) : null}
     </>
   )
