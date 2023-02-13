@@ -2,6 +2,10 @@ import { useEffect } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dynamic from 'next/dynamic'
+import {
+  DocumentArrowUpIcon,
+  DocumentPlusIcon,
+} from '@heroicons/react/20/solid'
 
 import { Community, communitySchema } from '../src/schemas'
 import AvatarInput from './basic/avatar-input'
@@ -138,10 +142,11 @@ export default function CommunityForm(props: {
         <FormProvider {...methods}>
           <SigningButton
             did={props.entry}
+            icon={props.community ? DocumentArrowUpIcon : DocumentPlusIcon}
             onSuccess={onSuccess}
             disabled={props.disabled}
           >
-            {props.community ? 'Submit' : 'Create'}
+            {props.community ? 'Update' : 'Create'}
           </SigningButton>
         </FormProvider>
       </FormFooter>
