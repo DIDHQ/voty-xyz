@@ -23,6 +23,7 @@ import RadioGroup from '../../../components/basic/radio-group'
 import { requiredCoinTypesOfDidResolver } from '../../../src/did'
 import { formatPeriod } from '../../../src/utils/time'
 import { coinTypeNames } from '../../../src/constants'
+import { DetailItem, DetailList } from '../../../components/basic/detail'
 
 const AuthorSelect = dynamic(
   () => import('../../../components/author-select'),
@@ -221,53 +222,26 @@ export default function CreateProposalPage() {
       </div>
       <div className="sticky top-24 w-80 shrink-0">
         <div className="-mt-2 space-y-6 rounded border border-gray-200 p-6">
-          <div>
-            <h3 className="font-medium text-gray-900">Information</h3>
-            <dl className="mt-2 divide-y divide-gray-200 border-y">
-              <div className="flex justify-between py-3 text-sm font-medium">
-                <dt className="text-gray-500">Community</dt>
-                <dd className="whitespace-nowrap text-gray-900">
-                  {community?.name}
-                </dd>
-              </div>
-              <div className="flex justify-between py-3 text-sm font-medium">
-                <dt className="text-gray-500">Group</dt>
-                <dd className="whitespace-nowrap text-gray-900">
-                  {group?.name}
-                </dd>
-              </div>
-              <div className="flex justify-between py-3 text-sm font-medium">
-                <dt className="text-gray-500">Announcement</dt>
-                <dd className="whitespace-nowrap text-gray-900">
-                  {group ? formatPeriod(group.period.announcement) : null}
-                </dd>
-              </div>
-              <div className="flex justify-between py-3 text-sm font-medium">
-                <dt className="text-gray-500">Voting period</dt>
-                <dd className="whitespace-nowrap text-gray-900">
-                  {group ? formatPeriod(group.period.voting) : null}
-                </dd>
-              </div>
-            </dl>
-          </div>
-          <div>
-            <h3 className="font-medium text-gray-900">Snapshots</h3>
-            <dl className="mt-2 divide-y divide-gray-200 border-y">
-              {Object.entries(snapshots || {}).map(([coinType, snapshot]) => (
-                <div
-                  key={coinType}
-                  className="flex justify-between py-3 text-sm font-medium"
-                >
-                  <dt className="text-gray-500">
-                    {coinTypeNames[parseInt(coinType)]}
-                  </dt>
-                  <dd className="whitespace-nowrap text-gray-900">
-                    {snapshot}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
+          <DetailList title="Information">
+            <DetailItem title="Community">{community?.name}</DetailItem>
+            <DetailItem title="Group">{group?.name}</DetailItem>
+            <DetailItem title="Announcement">
+              {group ? formatPeriod(group.period.announcement) : null}
+            </DetailItem>
+            <DetailItem title="Voting period">
+              {group ? formatPeriod(group.period.voting) : null}
+            </DetailItem>
+          </DetailList>
+          <DetailList title="Snapshots">
+            {Object.entries(snapshots || {}).map(([coinType, snapshot]) => (
+              <DetailItem
+                key={coinType}
+                title={coinTypeNames[parseInt(coinType)]}
+              >
+                {snapshot}
+              </DetailItem>
+            ))}
+          </DetailList>
         </div>
       </div>
     </div>
