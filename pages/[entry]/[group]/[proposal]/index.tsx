@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import clsx from 'clsx'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import { startCase } from 'lodash-es'
 
 import {
   useTurnout,
@@ -18,8 +19,6 @@ import { Vote, voteSchema } from '../../../../src/schemas'
 import { mapSnapshots } from '../../../../src/snapshot'
 import { DID, Turnout } from '../../../../src/types'
 import useStatus from '../../../../hooks/use-status'
-import Card from '../../../../components/basic/card'
-import { Grid6, GridItem6 } from '../../../../components/basic/grid'
 import {
   checkChoice,
   choiceIsEmpty,
@@ -29,6 +28,7 @@ import {
 import TextButton from '../../../../components/basic/text-button'
 import Markdown from '../../../../components/basic/markdown'
 import { DataType } from '../../../../src/constants'
+import { DetailItem, DetailList } from '../../../../components/basic/detail'
 
 const AuthorSelect = dynamic(
   () => import('../../../../components/author-select'),
@@ -85,8 +85,8 @@ export default function ProposalPage() {
   }, [mutateList, mutateTurnout, setValue])
 
   return community && proposal && group ? (
-    <div className="flex py-6">
-      <div className="mr-6 flex-[2_2_0%]">
+    <div className="mt-6 flex items-start">
+      <div className="mr-6 flex-1">
         <div>
           <Link href={`/${community.author.did}/${proposal.group}`}>
             <TextButton>
@@ -156,33 +156,25 @@ export default function ProposalPage() {
           </ul>
         ) : null}
       </div>
-      <Card title="Information" className="flex-1">
-        <Grid6>
-          <GridItem6>
-            <dt className="text-sm font-medium text-gray-500">Type</dt>
-            <dd className="mt-1 text-sm text-gray-900">
-              {proposal.voting_type}
-            </dd>
-          </GridItem6>
-          <GridItem6>
-            <dt className="text-sm font-medium text-gray-500">Author</dt>
-            <dd className="mt-1 text-sm text-gray-900">
-              {proposal.author.did}
-            </dd>
-          </GridItem6>
-          <GridItem6>
-            <dt className="text-sm font-medium text-gray-500">Start time</dt>
-            <dd className="mt-1 text-sm text-gray-900">
+      <div className="sticky top-24 w-80 shrink-0">
+        <div className="-mt-2 space-y-6 rounded border border-gray-200 p-6">
+          <DetailList title="Information">
+            <DetailItem title="Community">{community.name}</DetailItem>
+            <DetailItem title="Group">{group.name}</DetailItem>
+            <DetailItem title="Proposer">{proposal.author.did}</DetailItem>
+            <DetailItem title="Voting type">
+              {startCase(proposal.voting_type)}
+            </DetailItem>
+          </DetailList>
+          <DetailList title="Schedule">
+            <DetailItem title="Start">
               {status?.timestamp
                 ? new Date(
                     (status.timestamp + group.duration.announcement) * 1000,
                   ).toLocaleString([], { hour12: false })
                 : '-'}
-            </dd>
-          </GridItem6>
-          <GridItem6>
-            <dt className="text-sm font-medium text-gray-500">End time</dt>
-            <dd className="mt-1 text-sm text-gray-900">
+            </DetailItem>
+            <DetailItem title="End">
               {status?.timestamp
                 ? new Date(
                     (status.timestamp +
@@ -192,10 +184,10 @@ export default function ProposalPage() {
                       1000,
                   ).toLocaleString([], { hour12: false })
                 : '-'}
-            </dd>
-          </GridItem6>
-        </Grid6>
-      </Card>
+            </DetailItem>
+          </DetailList>
+        </div>
+      </div>
     </div>
   ) : null
 }
