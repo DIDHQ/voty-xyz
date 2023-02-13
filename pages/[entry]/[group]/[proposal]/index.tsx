@@ -6,6 +6,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { startCase } from 'lodash-es'
+import { CubeIcon, CubeTransparentIcon } from '@heroicons/react/24/outline'
 
 import {
   useTurnout,
@@ -29,6 +30,7 @@ import TextButton from '../../../../components/basic/text-button'
 import Markdown from '../../../../components/basic/markdown'
 import { coinTypeNames, DataType } from '../../../../src/constants'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
+import { permalink2Url } from '../../../../src/arweave'
 
 const AuthorSelect = dynamic(
   () => import('../../../../components/author-select'),
@@ -159,21 +161,6 @@ export default function ProposalPage() {
       <div className="sticky top-24 w-80 shrink-0">
         <div className="-mt-2 space-y-6 rounded border border-gray-200 p-6">
           <DetailList title="Information">
-            <DetailItem title="Arweave">
-              <TextButton
-                onClick={() => {
-                  window.open(
-                    query.proposal?.replace(
-                      /^ar:\/\//,
-                      'https://arseed.web3infra.dev/',
-                    ),
-                  )
-                }}
-              >
-                {query.proposal?.replace(/^ar:\/\//, '').substring(0, 8)}...
-                {query.proposal?.substring(40)}
-              </TextButton>
-            </DetailItem>
             <DetailItem title="Community">{community.name}</DetailItem>
             <DetailItem title="Group">{group.name}</DetailItem>
             <DetailItem title="Proposer">{proposal.author.did}</DetailItem>
@@ -181,6 +168,20 @@ export default function ProposalPage() {
               {startCase(proposal.voting_type)}
             </DetailItem>
           </DetailList>
+          <TextButton
+            onClick={() => {
+              if (query.proposal) {
+                window.open(permalink2Url(query.proposal))
+              }
+            }}
+            className="float-right"
+          >
+            {status ? (
+              <CubeIcon className="h-5 w-5" />
+            ) : (
+              <CubeTransparentIcon className="h-5 w-5" />
+            )}
+          </TextButton>
           <DetailList title="Schedule">
             <DetailItem title="Start">
               {status?.timestamp
