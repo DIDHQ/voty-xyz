@@ -20,7 +20,7 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import NumberSetsBlock from './number-sets-block'
-import { useEntryConfig, useUpload } from '../hooks/use-api'
+import { useCommunity, useUpload } from '../hooks/use-api'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 import Notification from './basic/notification'
@@ -45,7 +45,7 @@ export default function GroupForm(props: {
     reset,
     formState: { errors },
   } = methods
-  const { mutate } = useEntryConfig(props.entry)
+  const { mutate } = useCommunity(props.entry)
   const { append, remove } = useFieldArray({
     control,
     name: 'groups',

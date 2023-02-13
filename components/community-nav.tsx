@@ -13,11 +13,10 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
 import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
-import { useRetrieve, useEntryConfig } from '../hooks/use-api'
+import { useCommunity } from '../hooks/use-api'
 import useDidIsMatch from '../hooks/use-did-is-match'
 import useRouterQuery from '../hooks/use-router-query'
 import useWallet from '../hooks/use-wallet'
-import { DataType } from '../src/constants'
 import Avatar from './basic/avatar'
 import { extractStartEmoji } from '../src/utils/emoji'
 
@@ -25,8 +24,7 @@ export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
   const [query] = useRouterQuery<['entry', 'group']>()
   const entry = query.entry
-  const { data: config } = useEntryConfig(entry)
-  const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
+  const { data: community } = useCommunity(entry)
   const navigation = useMemo(
     () =>
       compact([

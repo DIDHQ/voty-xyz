@@ -5,15 +5,13 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
-import { useRetrieve, useEntryConfig } from '../hooks/use-api'
+import { useCommunity } from '../hooks/use-api'
 import useRouterQuery from '../hooks/use-router-query'
-import { DataType } from '../src/constants'
 import { extractStartEmoji } from '../src/utils/emoji'
 
 export default function GroupNav(props: { className?: string }) {
   const [query] = useRouterQuery<['entry', 'group']>()
-  const { data: config } = useEntryConfig(query.entry)
-  const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
+  const { data: community } = useCommunity(query.entry)
   const group = useMemo(
     () =>
       query.group ? community?.groups?.[parseInt(query.group)] : undefined,

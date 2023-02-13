@@ -2,15 +2,13 @@ import { useMemo } from 'react'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import GroupForm from '../../../components/group-form'
-import { useEntryConfig, useRetrieve } from '../../../hooks/use-api'
-import { DataType } from '../../../src/constants'
+import { useCommunity } from '../../../hooks/use-api'
 import CommunityLayout from '../../../components/layouts/community'
 import GroupLayout from '../../../components/layouts/group'
 
 export default function GroupSettingsPage() {
   const [query] = useRouterQuery<['entry', 'group']>()
-  const { data: config } = useEntryConfig(query.entry)
-  const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
+  const { data: community } = useCommunity(query.entry)
   const isNewGroup = useMemo(
     () => !!query.group && !community?.groups?.[parseInt(query.group)],
     [community?.groups, query.group],

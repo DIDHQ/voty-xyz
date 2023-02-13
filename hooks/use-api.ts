@@ -7,64 +7,33 @@ import { Authorized, Community, Proposal, Option, Vote } from '../src/schemas'
 import { Turnout } from '../src/types'
 import { fetchJson } from '../src/utils/fetcher'
 
-export function useTurnout(proposal?: string) {
+export function useCommunity(entry?: string) {
   return useSWR(
-    proposal ? ['turnout', proposal] : null,
-    async () => fetchJson<Turnout>(`/api/turnout?proposal=${proposal}`),
-    { revalidateOnFocus: false },
-  )
-}
-
-export function useEntryConfig(did?: string) {
-  return useSWR(
-    did ? ['entryConfig', did] : null,
-    async () =>
-      fetchJson<{
-        community: string
-      }>(`/api/entry?did=${did}`),
-    { revalidateOnFocus: false },
-  )
-}
-
-export function useRetrieve<T extends DataType>(type: T, permalink?: string) {
-  return useSWR(
-    permalink ? ['retrieve', permalink] : null,
+    entry ? ['community', entry] : null,
     async () => {
+      const { community } = await fetchJson<{
+        community: string
+      }>(`/api/entry?did=${entry}`)
       const { data } = await fetchJson<{
-        data: Authorized<
-          T extends DataType.COMMUNITY
-            ? Community
-            : T extends DataType.PROPOSAL
-            ? Proposal
-            : T extends DataType.OPTION
-            ? Option
-            : T extends DataType.VOTE
-            ? Vote
-            : never
-        >
-      }>(`/api/retrieve?type=${type}&permalink=${permalink}`)
+        data: Authorized<Community> & { permalink: string }
+      }>(`/api/retrieve?type=${DataType.COMMUNITY}&permalink=${community}`)
       return data
     },
     { revalidateOnFocus: false },
   )
 }
 
-export function useUpload<
-  T extends Authorized<Community | Proposal | Option | Vote>,
->() {
-  return useCallback(async (document: T) => {
-    const textEncoder = new TextEncoder()
-    const body = textEncoder.encode(JSON.stringify(document))
-    const { permalink } = await fetchJson<{ permalink: string }>(
-      '/api/upload',
-      {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body,
-      },
-    )
-    return permalink
-  }, [])
+export function useProposal(proposal?: string) {
+  return useSWR(
+    proposal ? ['proposal', proposal] : null,
+    async () => {
+      const { data } = await fetchJson<{
+        data: Authorized<Proposal> & { permalink: string }
+      }>(`/api/retrieve?type=${DataType.PROPOSAL}&permalink=${proposal}`)
+      return data
+    },
+    { revalidateOnFocus: false },
+  )
 }
 
 export function useListCommunities() {
@@ -124,4 +93,30 @@ export function useListVotes(proposal?: string) {
       )
     },
   )
+}
+
+export function useTurnout(proposal?: string) {
+  return useSWR(
+    proposal ? ['turnout', proposal] : null,
+    async () => fetchJson<Turnout>(`/api/turnout?proposal=${proposal}`),
+    { revalidateOnFocus: false },
+  )
+}
+
+export function useUpload<
+  T extends Authorized<Community | Proposal | Option | Vote>,
+>() {
+  return useCallback(async (document: T) => {
+    const textEncoder = new TextEncoder()
+    const body = textEncoder.encode(JSON.stringify(document))
+    const { permalink } = await fetchJson<{ permalink: string }>(
+      '/api/upload',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body,
+      },
+    )
+    return permalink
+  }, [])
 }

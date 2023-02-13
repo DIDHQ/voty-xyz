@@ -18,8 +18,7 @@ import { getCurrentSnapshot } from '../../../src/snapshot'
 import Button from '../../../components/basic/button'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
-import { useEntryConfig, useRetrieve, useUpload } from '../../../hooks/use-api'
-import { DataType } from '../../../src/constants'
+import { useCommunity, useUpload } from '../../../hooks/use-api'
 import TextButton from '../../../components/basic/text-button'
 import {
   Form,
@@ -47,8 +46,7 @@ export default function CreateProposalPage() {
     defaultValues: { options: [''], voting_type: 'single' },
   })
   const [query] = useRouterQuery<['entry', 'group']>()
-  const { data: config } = useEntryConfig(query.entry)
-  const { data: community } = useRetrieve(DataType.COMMUNITY, config?.community)
+  const { data: community } = useCommunity(query.entry)
   const group = useMemo(
     () =>
       query.group ? community?.groups?.[parseInt(query.group)] : undefined,
@@ -62,11 +60,11 @@ export default function CreateProposalPage() {
     [setValue, getValues],
   )
   useEffect(() => {
-    if (!config?.community) {
+    if (!community) {
       return
     }
-    setValue('community', config?.community)
-  }, [config?.community, setValue])
+    setValue('community', community.permalink)
+  }, [community, setValue])
   useEffect(() => {
     if (!query.group) {
       return

@@ -9,8 +9,9 @@ import AuthorSelect from '../../../components/author-select'
 import {
   useTurnout,
   useListVotes,
-  useRetrieve,
   useUpload,
+  useProposal,
+  useCommunity,
 } from '../../../hooks/use-api'
 import useAsync from '../../../hooks/use-async'
 import useRouterQuery from '../../../hooks/use-router-query'
@@ -21,7 +22,6 @@ import { Vote, voteSchema } from '../../../src/schemas'
 import { mapSnapshots } from '../../../src/snapshot'
 import { DID, Turnout } from '../../../src/types'
 import Button from '../../../components/basic/button'
-import { DataType } from '../../../src/constants'
 import useStatus from '../../../hooks/use-status'
 import Card from '../../../components/basic/card'
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
@@ -38,11 +38,8 @@ import Notification from '../../../components/basic/notification'
 export default function ProposalPage() {
   const [query] = useRouterQuery<['entry', 'group', 'proposal']>()
   const { data: status } = useStatus(query.proposal)
-  const { data: proposal } = useRetrieve(DataType.PROPOSAL, query.proposal)
-  const { data: community } = useRetrieve(
-    DataType.COMMUNITY,
-    proposal?.community,
-  )
+  const { data: community } = useCommunity(query.entry)
+  const { data: proposal } = useProposal(query.proposal)
   const { data: turnout, mutate: mutateTurnout } = useTurnout(query.proposal)
   const group = useMemo(
     () => (proposal ? community?.groups?.[proposal?.group] : undefined),
