@@ -16,16 +16,15 @@ import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
 import { useEntry, useGroup } from '../../../hooks/use-api'
 import TextButton from '../../../components/basic/text-button'
-import {
-  Form,
-  FormFooter,
-  FormSection,
-  FormItem,
-} from '../../../components/basic/form'
+import { Form, FormFooter, FormItem } from '../../../components/basic/form'
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
 import { permalink2Id } from '../../../src/arweave'
 import RadioGroup from '../../../components/basic/radio-group'
 import { requiredCoinTypesOfDidResolver } from '../../../src/did'
+import { formatDuration } from '../../../src/utils/time'
+import { DetailItem, DetailList } from '../../../components/basic/detail'
+import Markdown from '../../../components/basic/markdown'
+import Status from '../../../components/status'
 
 const AuthorSelect = dynamic(
   () => import('../../../components/author-select'),
@@ -94,6 +93,7 @@ export default function CreateProposalPage() {
         return obj
       }, {} as { [coinType: string]: string })
     },
+    { refreshInterval: 30000 },
   )
   useEffect(() => {
     if (snapshots) {
@@ -118,18 +118,15 @@ export default function CreateProposalPage() {
   )
 
   return (
-    <div className="mt-6">
-      <Link href={`/${query.entry}/${query.group}`}>
-        <TextButton>
-          <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
-        </TextButton>
-      </Link>
-      <Form>
-        <FormSection
-          title="Proposal"
-          description="Basic information of the proposal."
-        >
-          <Grid6>
+    <div className="mt-6 flex items-start">
+      <div className="mr-6 flex-1">
+        <Link href={`/${query.entry}/${query.group}`}>
+          <TextButton>
+            <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+          </TextButton>
+        </Link>
+        <Form>
+          <Grid6 className="mt-6">
             <GridItem6>
               <FormItem label="Title" error={errors.title?.message}>
                 <TextInput
@@ -210,20 +207,44 @@ export default function CreateProposalPage() {
               </FormItem>
             </GridItem6>
           </Grid6>
-        </FormSection>
-        <FormFooter>
-          <FormProvider {...methods}>
-            <SigningButton
-              did={did}
-              disabled={!did || !community || !snapshots}
-              onSuccess={handleSuccess}
-            >
-              Submit
-            </SigningButton>
-          </FormProvider>
-          <AuthorSelect value={did} onChange={setDid} top className="mr-6" />
-        </FormFooter>
-      </Form>
+          <FormFooter>
+            <FormProvider {...methods}>
+              <SigningButton
+                did={did}
+                disabled={!did || !community || !snapshots}
+                onSuccess={handleSuccess}
+              >
+                Submit
+              </SigningButton>
+            </FormProvider>
+            <AuthorSelect value={did} onChange={setDid} top className="mr-6" />
+          </FormFooter>
+        </Form>
+      </div>
+      <div className="sticky top-24 w-80 shrink-0">
+        <div className="-mt-2 space-y-6 rounded-md border border-gray-200 p-6">
+          <DetailList
+            title="Information"
+            right={<Status permalink={community?.permalink} />}
+          >
+            <DetailItem title="Community">{community?.name}</DetailItem>
+            <DetailItem title="Group">{group?.name}</DetailItem>
+          </DetailList>
+          <DetailList title="Duration">
+            <DetailItem title="Announcement">
+              {group ? formatDuration(group.duration.announcement) : null}
+            </DetailItem>
+            <DetailItem title="Voting">
+              {group ? formatDuration(group.duration.voting) : null}
+            </DetailItem>
+          </DetailList>
+          <DetailList title="Terms and conditions">
+            <article className="prose-sm pt-2 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
+              <Markdown>{group?.extension.terms_and_conditions}</Markdown>
+            </article>
+          </DetailList>
+        </div>
+      </div>
     </div>
   )
 }

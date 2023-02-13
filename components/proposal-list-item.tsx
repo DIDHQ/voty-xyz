@@ -25,7 +25,7 @@ export default function ProposalListItem(props: {
             <p className="truncate text-sm font-medium text-indigo-600">
               {props.value.title}
             </p>
-            <p>{props.value.extension?.body}</p>
+            <p className="line-clamp-3">{props.value.extension?.body}</p>
           </div>
           <div className="ml-2 flex shrink-0">
             <p className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">

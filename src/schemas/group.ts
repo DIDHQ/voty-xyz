@@ -4,7 +4,7 @@ import { booleanSetsSchema, numberSetsSchema } from './sets'
 
 export const groupSchema = z.object({
   name: z.string().min(1),
-  period: z.object({
+  duration: z.object({
     announcement: z.number().min(3600),
     adding_option: z.number().min(3600).optional(),
     voting: z.number().min(3600),
@@ -16,6 +16,7 @@ export const groupSchema = z.object({
   }),
   extension: z.object({
     id: z.string().min(1),
+    terms_and_conditions: z.string().min(1),
     about: z.string().optional(),
   }),
 })
