@@ -1,23 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import {
   Controller,
   FormProvider,
   useFieldArray,
   useForm,
 } from 'react-hook-form'
-import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 
-import useDidIsMatch from '../hooks/use-did-is-match'
-import useWallet from '../hooks/use-wallet'
-import { Community, communitySchema } from '../src/schemas'
+import { Authorized, Community, communitySchema } from '../src/schemas'
 import DurationInput from './basic/duration-input'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import NumberSetsBlock from './number-sets-block'
-import { useCommunity } from '../hooks/use-api'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 
@@ -28,11 +24,13 @@ const defaultAnnouncementPeriod = 3600
 const defaultVotingPeriod = 86400
 
 export default function GroupForm(props: {
-  entry: string
-  community: Community
+  community: Authorized<Community>
   group: string
+  onSuccess: () => void
+  disabled?: boolean
   className?: string
 }) {
+  const { onSuccess } = props
   const methods = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
@@ -42,7 +40,6 @@ export default function GroupForm(props: {
     reset,
     formState: { errors },
   } = methods
-  const { mutate } = useCommunity(props.entry)
   const { append } = useFieldArray({
     control,
     name: 'groups',
@@ -50,8 +47,6 @@ export default function GroupForm(props: {
   useEffect(() => {
     reset(props.community)
   }, [props.community, reset])
-  const { account } = useWallet()
-  const { data: isAdmin } = useDidIsMatch(props.entry, account)
   const groupIndex = useMemo(() => {
     const index = props.community?.groups?.findIndex(
       (g) => g.extension.id === props.group,
@@ -89,11 +84,6 @@ export default function GroupForm(props: {
       })
     }
   }, [append, isNewGroup, props.group])
-  const router = useRouter()
-  const handleSubmitSuccess = useCallback(() => {
-    mutate()
-    router.push(`/${props.entry}/${props.group}`)
-  }, [mutate, props.entry, props.group, router])
 
   return (
     <Form className={props.className}>
@@ -110,7 +100,7 @@ export default function GroupForm(props: {
               <TextInput
                 {...register(`groups.${groupIndex}.name`)}
                 error={!!errors.groups?.[groupIndex]?.name?.message}
-                disabled={!isAdmin}
+                disabled={props.disabled}
               />
             </FormItem>
           </GridItem6>
@@ -123,7 +113,7 @@ export default function GroupForm(props: {
               <Textarea
                 {...register(`groups.${groupIndex}.extension.about`)}
                 error={!!errors.groups?.[groupIndex]?.extension?.about?.message}
-                disabled={!isAdmin}
+                disabled={props.disabled}
               />
             </FormItem>
           </GridItem6>
@@ -147,9 +137,9 @@ export default function GroupForm(props: {
               <FormProvider {...methods}>
                 <BooleanSetsBlock
                   name="proposing"
-                  entry={props.entry}
+                  entry={props.community.author.did}
                   groupIndex={groupIndex}
-                  disabled={!isAdmin}
+                  disabled={props.disabled}
                 />
               </FormProvider>
             </FormItem>
@@ -174,9 +164,9 @@ export default function GroupForm(props: {
               <FormProvider {...methods}>
                 <NumberSetsBlock
                   name="voting"
-                  entry={props.entry}
+                  entry={props.community.author.did}
                   groupIndex={groupIndex}
-                  disabled={!isAdmin}
+                  disabled={props.disabled}
                 />
               </FormProvider>
             </FormItem>
@@ -200,7 +190,7 @@ export default function GroupForm(props: {
                   <DurationInput
                     value={value}
                     onChange={onChange}
-                    disabled={!isAdmin}
+                    disabled={props.disabled}
                     error={!!errors?.groups?.[groupIndex]?.period?.announcement}
                   />
                 )}
@@ -220,7 +210,7 @@ export default function GroupForm(props: {
                   <DurationInput
                     value={value}
                     onChange={onChange}
-                    disabled={!isAdmin}
+                    disabled={props.disabled}
                     error={!!errors?.groups?.[groupIndex]?.period?.voting}
                   />
                 )}
@@ -232,9 +222,9 @@ export default function GroupForm(props: {
       <FormFooter>
         <FormProvider {...methods}>
           <SigningButton
-            did={props.entry}
-            onSuccess={handleSubmitSuccess}
-            disabled={!isAdmin}
+            did={props.community.author.did}
+            onSuccess={onSuccess}
+            disabled={props.disabled}
           >
             {isNewGroup ? 'Create' : 'Submit'}
           </SigningButton>

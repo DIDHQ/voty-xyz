@@ -21,8 +21,10 @@ const SigningButton = dynamic(() => import('../components/signing-button'), {
 export default function CommunityForm(props: {
   entry: string
   community?: Community
+  onSuccess: () => void
   className?: string
 }) {
+  const { onSuccess } = props
   const methods = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
@@ -147,7 +149,7 @@ export default function CommunityForm(props: {
         <FormProvider {...methods}>
           <SigningButton
             did={props.entry}
-            onSuccess={handleSuccess}
+            onSuccess={onSuccess}
             disabled={!isAdmin}
           >
             {props.community ? 'Submit' : 'Create'}

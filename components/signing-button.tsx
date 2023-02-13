@@ -13,7 +13,7 @@ export default function SigningButton<
 >(props: {
   did: string
   onSuccess: (permalink: string) => void
-  disabled: boolean
+  disabled?: boolean
   children: ReactNode
   className?: string
 }) {
