@@ -4,7 +4,7 @@ export function DetailList(props: { title: string; children: ReactNode }) {
   return (
     <div>
       <h3 className="font-medium text-gray-900">{props.title}</h3>
-      <dl className="mt-2 divide-y divide-gray-200 border-y">
+      <dl className="mt-2 divide-y divide-gray-200 border-t">
         {props.children}
       </dl>
     </div>

@@ -16,6 +16,7 @@ export const groupSchema = z.object({
   }),
   extension: z.object({
     id: z.string().min(1),
+    terms_and_conditions: z.string().min(1),
     about: z.string().optional(),
   }),
 })

@@ -22,8 +22,8 @@ import { permalink2Id } from '../../../src/arweave'
 import RadioGroup from '../../../components/basic/radio-group'
 import { requiredCoinTypesOfDidResolver } from '../../../src/did'
 import { formatDuration } from '../../../src/utils/time'
-import { coinTypeNames } from '../../../src/constants'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
+import Markdown from '../../../components/basic/markdown'
 
 const AuthorSelect = dynamic(
   () => import('../../../components/author-select'),
@@ -115,6 +115,7 @@ export default function CreateProposalPage() {
       })),
     [],
   )
+  console.log(group?.extension.terms_and_conditions)
 
   return (
     <div className="mt-6 flex items-start">
@@ -234,15 +235,10 @@ export default function CreateProposalPage() {
               {group ? formatDuration(group.duration.voting) : null}
             </DetailItem>
           </DetailList>
-          <DetailList title="Snapshots">
-            {Object.entries(snapshots || {}).map(([coinType, snapshot]) => (
-              <DetailItem
-                key={coinType}
-                title={coinTypeNames[parseInt(coinType)]}
-              >
-                {snapshot}
-              </DetailItem>
-            ))}
+          <DetailList title="Terms and conditions">
+            <article className="prose-sm prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
+              <Markdown>{group?.extension.terms_and_conditions}</Markdown>
+            </article>
           </DetailList>
         </div>
       </div>

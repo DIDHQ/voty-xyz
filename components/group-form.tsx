@@ -15,7 +15,7 @@ import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import NumberSetsBlock from './number-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
-import { Grid6, GridItem3, GridItem6 } from './basic/grid'
+import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 
 const SigningButton = dynamic(() => import('./signing-button'), { ssr: false })
 
@@ -80,6 +80,7 @@ export default function GroupForm(props: {
         },
         extension: {
           id: props.group,
+          terms_and_conditions: '',
         },
       })
     }
@@ -173,9 +174,9 @@ export default function GroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Rules" description="Proposal timing.">
+      <FormSection title="Rules" description="Schedule, terms and conditions.">
         <Grid6>
-          <GridItem3>
+          <GridItem2>
             <FormItem
               label="Duration of announcement"
               error={
@@ -198,8 +199,8 @@ export default function GroupForm(props: {
                 )}
               />
             </FormItem>
-          </GridItem3>
-          <GridItem3>
+          </GridItem2>
+          <GridItem2>
             <FormItem
               label="Duration of voting"
               error={errors?.groups?.[groupIndex]?.duration?.voting?.message}
@@ -218,7 +219,27 @@ export default function GroupForm(props: {
                 )}
               />
             </FormItem>
-          </GridItem3>
+          </GridItem2>
+          <GridItem6>
+            <FormItem
+              label="Terms and conditions"
+              description="Styling with Markdown is supported"
+              error={
+                errors?.groups?.[groupIndex]?.extension?.terms_and_conditions
+                  ?.message
+              }
+            >
+              <Textarea
+                {...register(
+                  `groups.${groupIndex}.extension.terms_and_conditions`,
+                )}
+                error={
+                  !!errors?.groups?.[groupIndex]?.extension
+                    ?.terms_and_conditions?.message
+                }
+              />
+            </FormItem>
+          </GridItem6>
         </Grid6>
       </FormSection>
       <FormFooter>
