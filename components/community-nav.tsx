@@ -23,7 +23,7 @@ import { Group } from '../src/schemas'
 
 export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
-  const [query] = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['entry', 'group']>()
   const { data: community } = useEntry(query.entry)
   const navigation = useMemo(
     () =>

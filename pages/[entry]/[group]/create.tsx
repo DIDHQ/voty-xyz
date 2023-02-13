@@ -50,7 +50,7 @@ export default function CreateProposalPage() {
     control,
     formState: { errors },
   } = methods
-  const [query] = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['entry', 'group']>()
   const { data: community } = useEntry(query.entry)
   const group = useGroup(community, query.group)
   const handleOptionDelete = useCallback(

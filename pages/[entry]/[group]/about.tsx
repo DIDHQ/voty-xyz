@@ -5,7 +5,7 @@ import GroupLayout from '../../../components/layouts/group'
 import Markdown from '../../../components/basic/markdown'
 
 export default function GroupAboutPage() {
-  const [query] = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['entry', 'group']>()
   const { data: community } = useEntry(query.entry)
   const group = useGroup(community, query.group)
 

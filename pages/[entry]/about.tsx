@@ -4,7 +4,7 @@ import CommunityLayout from '../../components/layouts/community'
 import Markdown from '../../components/basic/markdown'
 
 export default function CommunityAboutPage() {
-  const [query] = useRouterQuery<['entry']>()
+  const query = useRouterQuery<['entry']>()
   const { data: community } = useEntry(query.entry)
 
   return (

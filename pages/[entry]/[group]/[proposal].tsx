@@ -41,7 +41,7 @@ const SigningButton = dynamic(
 )
 
 export default function ProposalPage() {
-  const [query] = useRouterQuery<['proposal']>()
+  const query = useRouterQuery<['proposal']>()
   const { data: proposal } = useRetrieve(DataType.PROPOSAL, query.proposal)
   const { data: community } = useRetrieve(
     DataType.COMMUNITY,

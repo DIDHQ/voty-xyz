@@ -10,7 +10,7 @@ import Button from '../../../components/basic/button'
 import Select from '../../../components/basic/select'
 
 export default function GroupIndexPage() {
-  const [query] = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['entry', 'group']>()
   const { data: list } = useListProposals(query.entry, query.group)
   const proposals = useMemo(() => list?.flatMap(({ data }) => data), [list])
   const [order, setOrder] = useState('All')

@@ -11,7 +11,7 @@ import useDidIsMatch from '../../hooks/use-did-is-match'
 
 export default function CreateGroupPage() {
   const router = useRouter()
-  const [query] = useRouterQuery<['entry']>()
+  const query = useRouterQuery<['entry']>()
   const { account } = useWallet()
   const { data: community, mutate } = useEntry(query.entry)
   const { data: isAdmin } = useDidIsMatch(query.entry, account)

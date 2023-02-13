@@ -11,7 +11,7 @@ import useWallet from '../../../hooks/use-wallet'
 
 export default function GroupSettingsPage() {
   const router = useRouter()
-  const [query] = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['entry', 'group']>()
   const { account } = useWallet()
   const { data: community, mutate } = useEntry(query.entry)
   const { data: isAdmin } = useDidIsMatch(query.entry, account)

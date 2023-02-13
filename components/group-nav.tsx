@@ -10,7 +10,7 @@ import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../src/utils/emoji'
 
 export default function GroupNav(props: { className?: string }) {
-  const [query] = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['entry', 'group']>()
   const { data: community } = useEntry(query.entry)
   const group = useGroup(community, query.group)
   const router = useRouter()
