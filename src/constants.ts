@@ -30,6 +30,14 @@ export const coinTypeToChainId: { [coinType: number]: number } = {
   [commonCoinTypes.BSC]: commonChainIds.BSC,
 }
 
+export const coinTypeNames: { [coinType: number]: string } = {
+  [commonCoinTypes.ETH]: 'Ethereum',
+  [commonCoinTypes.TRX]: 'Tron',
+  [commonCoinTypes.CKB]: 'Nervos',
+  [commonCoinTypes.MATIC]: 'Polygon',
+  [commonCoinTypes.BSC]: 'BNB Chain',
+}
+
 export enum DataType {
   COMMUNITY = 'community',
   PROPOSAL = 'proposal',
