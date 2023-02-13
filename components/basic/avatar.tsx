@@ -1,5 +1,7 @@
-import BoringAvatar from 'boring-avatars'
 import clsx from 'clsx'
+import dynamic from 'next/dynamic'
+
+const BoringAvatar = dynamic(() => import('boring-avatars'), { ssr: false })
 
 export default function Avatar(props: {
   size: number
