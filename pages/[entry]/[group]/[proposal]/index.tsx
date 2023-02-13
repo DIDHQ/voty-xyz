@@ -6,6 +6,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { startCase } from 'lodash-es'
+import { BoltIcon } from '@heroicons/react/20/solid'
 
 import {
   useTurnout,
@@ -31,8 +32,8 @@ import { DataType } from '../../../../src/constants'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import Status from '../../../../components/status'
 
-const AuthorSelect = dynamic(
-  () => import('../../../../components/author-select'),
+const VoterSelect = dynamic(
+  () => import('../../../../components/voter-select'),
   { ssr: false },
 )
 
@@ -125,16 +126,24 @@ export default function ProposalPage() {
             )}
           />
         </ul>
-        <div className="py-6">
-          <div className="flex justify-end">
-            <AuthorSelect value={did} onChange={setDid} top className="mr-6" />
+        <div className="flex justify-end py-6">
+          <div className="flex rounded-md">
+            <VoterSelect
+              group={group}
+              snapshots={mapSnapshots(proposal.snapshots)}
+              value={did}
+              onChange={setDid}
+              className="rounded-r-none border-r-0"
+            />
             <FormProvider {...methods}>
               <SigningButton
                 did={did}
+                icon={BoltIcon}
                 onSuccess={handleSuccess}
                 disabled={!status?.timestamp || !votingPower || isValidating}
+                className="rounded-l-none"
               >
-                Vote {votingPower}
+                {votingPower}
               </SigningButton>
             </FormProvider>
           </div>
