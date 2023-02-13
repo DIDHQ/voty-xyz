@@ -20,7 +20,9 @@ const rules: ParserRules = {
       const href = (node as any).target
       return typeof href === 'string' &&
         (href.startsWith('/') || href.startsWith('#')) ? (
-        <Link href={href}>{output((node as any).content, state)}</Link>
+        <Link key={state.key} href={href}>
+          {output((node as any).content, state)}
+        </Link>
       ) : (
         <a key={state.key} href={href}>
           {output((node as any).content, state)}
