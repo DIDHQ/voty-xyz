@@ -185,7 +185,13 @@ export default function CreateProposalPage() {
                 </FormItem>
               </GridItem6>
               <GridItem6>
-                <FormItem label="Options" error={errors.options?.message}>
+                <FormItem
+                  label="Options"
+                  error={
+                    errors.options?.message ||
+                    errors.options?.find?.((option) => option?.message)?.message
+                  }
+                >
                   <ul
                     role="list"
                     className="mb-4 divide-y divide-gray-200 rounded-md border border-gray-200"
