@@ -1,17 +1,17 @@
 import { useEffect } from 'react'
 
 import useDids from '../hooks/use-dids'
-import { Account } from '../src/types'
+import useWallet from '../hooks/use-wallet'
 import Select from './basic/select'
 
 export default function AuthorSelect(props: {
-  account?: Account
   value: string
   onChange(value: string): void
   top?: boolean
   className?: string
 }) {
-  const { data: dids } = useDids(props.account)
+  const { account } = useWallet()
+  const { data: dids } = useDids(account)
   const { onChange } = props
   useEffect(() => {
     if (dids?.[0]) {
