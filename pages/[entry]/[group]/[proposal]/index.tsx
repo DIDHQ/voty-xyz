@@ -27,7 +27,7 @@ import {
 } from '../../../../src/voting'
 import TextButton from '../../../../components/basic/text-button'
 import Markdown from '../../../../components/basic/markdown'
-import { DataType } from '../../../../src/constants'
+import { coinTypeNames, DataType } from '../../../../src/constants'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 
 const AuthorSelect = dynamic(
@@ -159,6 +159,21 @@ export default function ProposalPage() {
       <div className="sticky top-24 w-80 shrink-0">
         <div className="-mt-2 space-y-6 rounded border border-gray-200 p-6">
           <DetailList title="Information">
+            <DetailItem title="Arweave">
+              <TextButton
+                onClick={() => {
+                  window.open(
+                    query.proposal?.replace(
+                      /^ar:\/\//,
+                      'https://arseed.web3infra.dev/',
+                    ),
+                  )
+                }}
+              >
+                {query.proposal?.replace(/^ar:\/\//, '').substring(0, 8)}...
+                {query.proposal?.substring(40)}
+              </TextButton>
+            </DetailItem>
             <DetailItem title="Community">{community.name}</DetailItem>
             <DetailItem title="Group">{group.name}</DetailItem>
             <DetailItem title="Proposer">{proposal.author.did}</DetailItem>
@@ -185,6 +200,16 @@ export default function ProposalPage() {
                   ).toLocaleString([], { hour12: false })
                 : '-'}
             </DetailItem>
+          </DetailList>
+          <DetailList title="Snapshots">
+            {Object.entries(proposal.snapshots).map(([coinType, snapshot]) => (
+              <DetailItem
+                key={coinType}
+                title={coinTypeNames[parseInt(coinType)]}
+              >
+                {snapshot}
+              </DetailItem>
+            ))}
           </DetailList>
         </div>
       </div>
