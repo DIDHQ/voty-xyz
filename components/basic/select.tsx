@@ -14,8 +14,13 @@ export default function Select(props: {
     <Listbox value={props.value} onChange={props.onChange}>
       {({ open }) => (
         <>
-          <div className={clsx('relative', props.className)}>
-            <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-200 bg-white py-2 pl-3 pr-10 text-left focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+          <div className="relative">
+            <Listbox.Button
+              className={clsx(
+                'relative w-full cursor-default rounded-md border border-gray-200 bg-white py-2 pl-3 pr-10 text-left focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
+                props.className,
+              )}
+            >
               <span className="block min-h-[20px] truncate">{props.value}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon

@@ -7,6 +7,10 @@ import {
   useForm,
 } from 'react-hook-form'
 import dynamic from 'next/dynamic'
+import {
+  DocumentArrowUpIcon,
+  DocumentPlusIcon,
+} from '@heroicons/react/20/solid'
 
 import { Authorized, Community, communitySchema } from '../src/schemas'
 import DurationInput from './basic/duration-input'
@@ -246,10 +250,11 @@ export default function GroupForm(props: {
         <FormProvider {...methods}>
           <SigningButton
             did={props.community.author.did}
+            icon={isNewGroup ? DocumentPlusIcon : DocumentArrowUpIcon}
             onSuccess={onSuccess}
             disabled={props.disabled}
           >
-            {isNewGroup ? 'Create' : 'Submit'}
+            {isNewGroup ? 'Create' : 'Update'}
           </SigningButton>
         </FormProvider>
       </FormFooter>

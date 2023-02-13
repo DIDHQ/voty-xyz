@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect } from 'react'
+import { ExoticComponent, ReactNode, useCallback, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import { useUpload } from '../hooks/use-api'
@@ -12,6 +12,7 @@ export default function SigningButton<
   T extends Community | Proposal | Option | Vote,
 >(props: {
   did: string
+  icon?: ExoticComponent<{ className?: string }>
   onSuccess: (permalink: string) => void
   disabled?: boolean
   children: ReactNode
@@ -46,6 +47,7 @@ export default function SigningButton<
       </Notification>
       <Button
         primary
+        icon={props.icon}
         onClick={onSubmit(handleSubmit.execute, console.error)}
         disabled={props.disabled}
         loading={handleSubmit.status === 'pending'}

@@ -11,7 +11,7 @@ import dynamic from 'next/dynamic'
 import useRouterQuery from '../../../hooks/use-router-query'
 import { requiredCoinTypesOfNumberSets } from '../../../src/functions/number'
 import { Proposal, proposalSchema } from '../../../src/schemas'
-import { getCurrentSnapshot } from '../../../src/snapshot'
+import { getCurrentSnapshot, mapSnapshots } from '../../../src/snapshot'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
 import { useEntry, useGroup } from '../../../hooks/use-api'
@@ -25,9 +25,10 @@ import { formatDuration } from '../../../src/utils/time'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
 import Markdown from '../../../components/basic/markdown'
 import Status from '../../../components/status'
+import { HandRaisedIcon } from '@heroicons/react/20/solid'
 
-const AuthorSelect = dynamic(
-  () => import('../../../components/author-select'),
+const ProposerSelect = dynamic(
+  () => import('../../../components/proposer-select'),
   { ssr: false },
 )
 
@@ -208,16 +209,26 @@ export default function CreateProposalPage() {
             </GridItem6>
           </Grid6>
           <FormFooter>
-            <FormProvider {...methods}>
-              <SigningButton
-                did={did}
-                disabled={!did || !community || !snapshots}
-                onSuccess={handleSuccess}
-              >
-                Submit
-              </SigningButton>
-            </FormProvider>
-            <AuthorSelect value={did} onChange={setDid} top className="mr-6" />
+            <div className="flex rounded-md">
+              <ProposerSelect
+                group={group}
+                snapshots={snapshots ? mapSnapshots(snapshots) : undefined}
+                value={did}
+                onChange={setDid}
+                className="rounded-r-none border-r-0"
+              />
+              <FormProvider {...methods}>
+                <SigningButton
+                  did={did}
+                  icon={HandRaisedIcon}
+                  disabled={!did || !community || !snapshots}
+                  onSuccess={handleSuccess}
+                  className="rounded-l-none"
+                >
+                  Propose
+                </SigningButton>
+              </FormProvider>
+            </div>
           </FormFooter>
         </Form>
       </div>
