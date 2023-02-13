@@ -85,6 +85,7 @@ export default function CreateProposalPage() {
         ...requiredCoinTypesOfDidResolver,
         ...requiredCoinTypesOfNumberSets(group!.permission.voting!),
       ]),
+    { revalidateOnFocus: false },
   )
   const { data: snapshots } = useSWR(
     requiredCoinTypes ? ['snapshots', requiredCoinTypes] : null,
@@ -217,7 +218,11 @@ export default function CreateProposalPage() {
         </FormSection>
         <FormFooter>
           <FormProvider {...methods}>
-            <SigningButton did={did} disabled={!did} onSuccess={handleSuccess}>
+            <SigningButton
+              did={did}
+              disabled={!did || !community || !snapshots}
+              onSuccess={handleSuccess}
+            >
               Submit
             </SigningButton>
           </FormProvider>
