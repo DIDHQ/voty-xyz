@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 import clsx from 'clsx'
 import Link from 'next/link'
@@ -9,18 +9,14 @@ import dynamic from 'next/dynamic'
 import {
   useTurnout,
   useListVotes,
-  useUpload,
   useProposal,
   useCommunity,
 } from '../../../hooks/use-api'
-import useAsync from '../../../hooks/use-async'
 import useRouterQuery from '../../../hooks/use-router-query'
-import useSignDocument from '../../../hooks/use-sign-document'
 import { calculateNumber } from '../../../src/functions/number'
 import { Vote, voteSchema } from '../../../src/schemas'
 import { mapSnapshots } from '../../../src/snapshot'
 import { DID, Turnout } from '../../../src/types'
-import Button from '../../../components/basic/button'
 import useStatus from '../../../hooks/use-status'
 import Card from '../../../components/basic/card'
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
@@ -32,10 +28,14 @@ import {
 } from '../../../src/voting'
 import TextButton from '../../../components/basic/text-button'
 import Markdown from '../../../components/basic/markdown'
-import Notification from '../../../components/basic/notification'
 
 const AuthorSelect = dynamic(
   () => import('../../../components/author-select'),
+  { ssr: false },
+)
+
+const SigningButton = dynamic(
+  () => import('../../../components/signing-button'),
   { ssr: false },
 )
 
@@ -50,28 +50,10 @@ export default function ProposalPage() {
     [community?.groups, proposal],
   )
   const [did, setDid] = useState('')
-  const {
-    setValue,
-    resetField,
-    control,
-    handleSubmit: onSubmit,
-  } = useForm<Vote>({
+  const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
   })
-  const handleSignDocument = useSignDocument(did)
-  const handleUpload = useUpload()
-  const handleSubmit = useAsync(
-    useCallback(
-      async (vote: Vote) => {
-        const signed = await handleSignDocument(vote)
-        if (!signed) {
-          throw new Error('signing failed')
-        }
-        return handleUpload(signed)
-      },
-      [handleUpload, handleSignDocument],
-    ),
-  )
+  const { setValue, resetField, control } = methods
   useEffect(() => {
     if (query.proposal) {
       setValue('proposal', query.proposal)
@@ -95,143 +77,126 @@ export default function ProposalPage() {
       setValue('power', votingPower)
     }
   }, [resetField, setValue, votingPower])
-  useEffect(() => {
-    if (handleSubmit.status === 'success') {
-      mutateList()
-      mutateTurnout()
-      setValue('choice', '')
-    }
-  }, [handleSubmit.status, mutateList, mutateTurnout, setValue])
+  const handleSuccess = useCallback(() => {
+    mutateList()
+    mutateTurnout()
+    setValue('choice', '')
+  }, [mutateList, mutateTurnout, setValue])
 
-  return (
-    <>
-      <Notification show={handleSubmit.status === 'error'}>
-        {handleSubmit.error?.message}
-      </Notification>
-      {proposal && group ? (
-        <div className="flex py-6">
-          <div className="mr-6 flex-[2_2_0%]">
-            <div>
-              <Link href={`/${query.entry}/${query.group}`}>
-                <TextButton>
-                  <h2 className="text-[1rem] font-semibold leading-6">
-                    ← Back
-                  </h2>
-                </TextButton>
-              </Link>
-              <h3 className="mt-2 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
-                {proposal.title}
-              </h3>
-              <article className="prose mt-8">
-                <Markdown>{proposal.extension?.body}</Markdown>
-              </article>
-            </div>
-            <ul
-              role="list"
-              className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
-            >
-              <Controller
-                control={control}
-                name="choice"
-                render={({ field: { value, onChange } }) => (
-                  <>
-                    {proposal.options.map((option) => (
-                      <Option
-                        key={option}
-                        type={proposal.voting_type}
-                        option={option}
-                        votingPower={votingPower}
-                        turnout={turnout}
-                        value={value}
-                        onChange={onChange}
-                      />
-                    ))}
-                  </>
-                )}
-              />
-            </ul>
-            <div className="py-6">
-              <div className="flex justify-end">
-                <AuthorSelect
-                  value={did}
-                  onChange={setDid}
-                  top
-                  className="mr-6"
-                />
-                <Button
-                  primary
-                  onClick={onSubmit(handleSubmit.execute, console.error)}
-                  disabled={!votingPower || isValidating}
-                  loading={handleSubmit.status === 'pending'}
-                >
-                  Vote {votingPower}
-                </Button>
-              </div>
-            </div>
-            {votes?.length ? (
-              <ul
-                role="list"
-                className="divide-y divide-gray-200 rounded-md border border-gray-200"
-              >
-                {votes?.map((vote) => (
-                  <li
-                    key={vote.permalink}
-                    className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
-                  >
-                    <span className="ml-2 truncate">{vote.author.did}</span>
-                    <span>{vote.choice}</span>
-                    <span>{vote.power}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </div>
-          <Card title="Information" className="flex-1">
-            <Grid6>
-              <GridItem6>
-                <dt className="text-sm font-medium text-gray-500">Type</dt>
-                <dd className="mt-1 text-sm text-gray-900">
-                  {proposal.voting_type}
-                </dd>
-              </GridItem6>
-              <GridItem6>
-                <dt className="text-sm font-medium text-gray-500">Author</dt>
-                <dd className="mt-1 text-sm text-gray-900">
-                  {proposal.author.did}
-                </dd>
-              </GridItem6>
-              <GridItem6>
-                <dt className="text-sm font-medium text-gray-500">
-                  Start time
-                </dt>
-                <dd className="mt-1 text-sm text-gray-900">
-                  {status?.timestamp
-                    ? new Date(
-                        (status.timestamp + group.period.announcement) * 1000,
-                      ).toLocaleString([], { hour12: false })
-                    : '-'}
-                </dd>
-              </GridItem6>
-              <GridItem6>
-                <dt className="text-sm font-medium text-gray-500">End time</dt>
-                <dd className="mt-1 text-sm text-gray-900">
-                  {status?.timestamp
-                    ? new Date(
-                        (status.timestamp +
-                          group.period.announcement +
-                          (group.period.adding_option || 0) +
-                          group.period.voting) *
-                          1000,
-                      ).toLocaleString([], { hour12: false })
-                    : '-'}
-                </dd>
-              </GridItem6>
-            </Grid6>
-          </Card>
+  return proposal && group ? (
+    <div className="flex py-6">
+      <div className="mr-6 flex-[2_2_0%]">
+        <div>
+          <Link href={`/${query.entry}/${query.group}`}>
+            <TextButton>
+              <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+            </TextButton>
+          </Link>
+          <h3 className="mt-2 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
+            {proposal.title}
+          </h3>
+          <article className="prose mt-8">
+            <Markdown>{proposal.extension?.body}</Markdown>
+          </article>
         </div>
-      ) : null}
-    </>
-  )
+        <ul
+          role="list"
+          className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
+        >
+          <Controller
+            control={control}
+            name="choice"
+            render={({ field: { value, onChange } }) => (
+              <>
+                {proposal.options.map((option) => (
+                  <Option
+                    key={option}
+                    type={proposal.voting_type}
+                    option={option}
+                    votingPower={votingPower}
+                    turnout={turnout}
+                    value={value}
+                    onChange={onChange}
+                  />
+                ))}
+              </>
+            )}
+          />
+        </ul>
+        <div className="py-6">
+          <div className="flex justify-end">
+            <AuthorSelect value={did} onChange={setDid} top className="mr-6" />
+            <FormProvider {...methods}>
+              <SigningButton
+                did={did}
+                onSuccess={handleSuccess}
+                disabled={!votingPower || isValidating}
+              >
+                Vote {votingPower}
+              </SigningButton>
+            </FormProvider>
+          </div>
+        </div>
+        {votes?.length ? (
+          <ul
+            role="list"
+            className="divide-y divide-gray-200 rounded-md border border-gray-200"
+          >
+            {votes?.map((vote) => (
+              <li
+                key={vote.permalink}
+                className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
+              >
+                <span className="ml-2 truncate">{vote.author.did}</span>
+                <span>{vote.choice}</span>
+                <span>{vote.power}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+      <Card title="Information" className="flex-1">
+        <Grid6>
+          <GridItem6>
+            <dt className="text-sm font-medium text-gray-500">Type</dt>
+            <dd className="mt-1 text-sm text-gray-900">
+              {proposal.voting_type}
+            </dd>
+          </GridItem6>
+          <GridItem6>
+            <dt className="text-sm font-medium text-gray-500">Author</dt>
+            <dd className="mt-1 text-sm text-gray-900">
+              {proposal.author.did}
+            </dd>
+          </GridItem6>
+          <GridItem6>
+            <dt className="text-sm font-medium text-gray-500">Start time</dt>
+            <dd className="mt-1 text-sm text-gray-900">
+              {status?.timestamp
+                ? new Date(
+                    (status.timestamp + group.period.announcement) * 1000,
+                  ).toLocaleString([], { hour12: false })
+                : '-'}
+            </dd>
+          </GridItem6>
+          <GridItem6>
+            <dt className="text-sm font-medium text-gray-500">End time</dt>
+            <dd className="mt-1 text-sm text-gray-900">
+              {status?.timestamp
+                ? new Date(
+                    (status.timestamp +
+                      group.period.announcement +
+                      (group.period.adding_option || 0) +
+                      group.period.voting) *
+                      1000,
+                  ).toLocaleString([], { hour12: false })
+                : '-'}
+            </dd>
+          </GridItem6>
+        </Grid6>
+      </Card>
+    </div>
+  ) : null
 }
 
 export function Option(props: {
