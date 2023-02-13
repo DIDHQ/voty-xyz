@@ -33,7 +33,7 @@ export const coinTypeToChainId: { [coinType: number]: number } = {
 export const coinTypeNames: { [coinType: number]: string } = {
   [commonCoinTypes.ETH]: 'Ethereum',
   [commonCoinTypes.TRX]: 'Tron',
-  [commonCoinTypes.CKB]: 'Nervos',
+  [commonCoinTypes.CKB]: 'Nervos CKB',
   [commonCoinTypes.MATIC]: 'Polygon',
   [commonCoinTypes.BSC]: 'BNB Chain',
 }
