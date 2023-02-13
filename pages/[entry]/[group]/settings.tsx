@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import GroupForm from '../../../components/group-form'
-import { useCommunity } from '../../../hooks/use-api'
+import { useEntry } from '../../../hooks/use-api'
 import CommunityLayout from '../../../components/layouts/community'
 import GroupLayout from '../../../components/layouts/group'
 import useDidIsMatch from '../../../hooks/use-did-is-match'
@@ -13,11 +13,12 @@ export default function GroupSettingsPage() {
   const router = useRouter()
   const [query] = useRouterQuery<['entry', 'group']>()
   const { account } = useWallet()
-  const { data: community } = useCommunity(query.entry)
+  const { data: community, mutate } = useEntry(query.entry)
   const { data: isAdmin } = useDidIsMatch(query.entry, account)
   const handleSuccess = useCallback(() => {
+    mutate()
     router.push(`/${query.entry}/${query.group}`)
-  }, [query.entry, query.group, router])
+  }, [mutate, query.entry, query.group, router])
 
   return (
     <CommunityLayout>

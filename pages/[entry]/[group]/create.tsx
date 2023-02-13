@@ -14,7 +14,7 @@ import { Proposal, proposalSchema } from '../../../src/schemas'
 import { getCurrentSnapshot } from '../../../src/snapshot'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
-import { useCommunity, useGroup } from '../../../hooks/use-api'
+import { useEntry, useGroup } from '../../../hooks/use-api'
 import TextButton from '../../../components/basic/text-button'
 import {
   Form,
@@ -51,7 +51,7 @@ export default function CreateProposalPage() {
     formState: { errors },
   } = methods
   const [query] = useRouterQuery<['entry', 'group']>()
-  const { data: community } = useCommunity(query.entry)
+  const { data: community } = useEntry(query.entry)
   const group = useGroup(community, query.group)
   const handleOptionDelete = useCallback(
     (index: number) => {

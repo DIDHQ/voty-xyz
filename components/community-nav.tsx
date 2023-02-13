@@ -13,7 +13,7 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
 import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
-import { useCommunity } from '../hooks/use-api'
+import { useEntry } from '../hooks/use-api'
 import useDidIsMatch from '../hooks/use-did-is-match'
 import useRouterQuery from '../hooks/use-router-query'
 import useWallet from '../hooks/use-wallet'
@@ -24,33 +24,32 @@ import { Group } from '../src/schemas'
 export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
   const [query] = useRouterQuery<['entry', 'group']>()
-  const entry = query.entry
-  const { data: community } = useCommunity(entry)
+  const { data: community } = useEntry(query.entry)
   const navigation = useMemo(
     () =>
       compact([
         {
           name: 'Timeline',
-          href: `/${entry}`,
+          href: `/${query.entry}`,
           icon: ClockIcon,
           current: router.pathname === '/[entry]',
         },
         {
           name: 'Settings',
-          href: `/${entry}/settings`,
+          href: `/${query.entry}/settings`,
           icon: CogIcon,
           current: router.pathname === '/[entry]/settings',
         },
         community?.extension?.about
           ? {
               name: 'About',
-              href: `/${entry}/about`,
+              href: `/${query.entry}/about`,
               icon: DocumentTextIcon,
               current: router.pathname === '/[entry]/about',
             }
           : undefined,
       ]),
-    [community?.extension?.about, entry, router.pathname],
+    [community?.extension?.about, query.entry, router.pathname],
   )
   const externals = useMemo(
     () =>
@@ -137,7 +136,10 @@ export default function CommunityNav(props: { className?: string }) {
                 >
                   Groups
                   {isAdmin ? (
-                    <Link href={`/${entry}/create`} className="float-right">
+                    <Link
+                      href={`/${query.entry}/create`}
+                      className="float-right"
+                    >
                       <PlusIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" />
                     </Link>
                   ) : null}

@@ -9,8 +9,7 @@ import dynamic from 'next/dynamic'
 import {
   useTurnout,
   useListVotes,
-  useProposal,
-  useCommunity,
+  useRetrieve,
   useGroup,
 } from '../../../hooks/use-api'
 import useRouterQuery from '../../../hooks/use-router-query'
@@ -29,6 +28,7 @@ import {
 } from '../../../src/voting'
 import TextButton from '../../../components/basic/text-button'
 import Markdown from '../../../components/basic/markdown'
+import { DataType } from '../../../src/constants'
 
 const AuthorSelect = dynamic(
   () => import('../../../components/author-select'),
@@ -42,8 +42,11 @@ const SigningButton = dynamic(
 
 export default function ProposalPage() {
   const [query] = useRouterQuery<['proposal']>()
-  const { data: proposal } = useProposal(query.proposal)
-  const { data: community } = useCommunity(proposal?.community)
+  const { data: proposal } = useRetrieve(DataType.PROPOSAL, query.proposal)
+  const { data: community } = useRetrieve(
+    DataType.COMMUNITY,
+    proposal?.community,
+  )
   const group = useGroup(community, proposal?.group)
   const { data: status } = useStatus(query.proposal)
   const { data: turnout, mutate: mutateTurnout } = useTurnout(query.proposal)
