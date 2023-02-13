@@ -16,16 +16,12 @@ import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
 import { useEntry, useGroup } from '../../../hooks/use-api'
 import TextButton from '../../../components/basic/text-button'
-import {
-  Form,
-  FormFooter,
-  FormSection,
-  FormItem,
-} from '../../../components/basic/form'
+import { Form, FormFooter, FormItem } from '../../../components/basic/form'
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
 import { permalink2Id } from '../../../src/arweave'
 import RadioGroup from '../../../components/basic/radio-group'
 import { requiredCoinTypesOfDidResolver } from '../../../src/did'
+import { formatPeriod } from '../../../src/utils/time'
 
 const AuthorSelect = dynamic(
   () => import('../../../components/author-select'),
@@ -118,18 +114,15 @@ export default function CreateProposalPage() {
   )
 
   return (
-    <div className="mt-6">
-      <Link href={`/${query.entry}/${query.group}`}>
-        <TextButton>
-          <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
-        </TextButton>
-      </Link>
-      <Form>
-        <FormSection
-          title="Proposal"
-          description="Basic information of the proposal."
-        >
-          <Grid6>
+    <div className="mt-6 flex items-start">
+      <div className="mr-6 flex-1">
+        <Link href={`/${query.entry}/${query.group}`}>
+          <TextButton>
+            <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+          </TextButton>
+        </Link>
+        <Form>
+          <Grid6 className="mt-6">
             <GridItem6>
               <FormItem label="Title" error={errors.title?.message}>
                 <TextInput
@@ -210,20 +203,48 @@ export default function CreateProposalPage() {
               </FormItem>
             </GridItem6>
           </Grid6>
-        </FormSection>
-        <FormFooter>
-          <FormProvider {...methods}>
-            <SigningButton
-              did={did}
-              disabled={!did || !community || !snapshots}
-              onSuccess={handleSuccess}
-            >
-              Submit
-            </SigningButton>
-          </FormProvider>
-          <AuthorSelect value={did} onChange={setDid} top className="mr-6" />
-        </FormFooter>
-      </Form>
+          <FormFooter>
+            <FormProvider {...methods}>
+              <SigningButton
+                did={did}
+                disabled={!did || !community || !snapshots}
+                onSuccess={handleSuccess}
+              >
+                Submit
+              </SigningButton>
+            </FormProvider>
+            <AuthorSelect value={did} onChange={setDid} top className="mr-6" />
+          </FormFooter>
+        </Form>
+      </div>
+      <div className="sticky top-24 w-80 shrink-0">
+        <div className="-mt-2 rounded border border-gray-200 px-6">
+          <dl className="divide-y divide-gray-200">
+            <div className="flex justify-between py-3 text-sm font-medium">
+              <dt className="text-gray-500">Community</dt>
+              <dd className="whitespace-nowrap text-gray-900">
+                {community?.name}
+              </dd>
+            </div>
+            <div className="flex justify-between py-3 text-sm font-medium">
+              <dt className="text-gray-500">Group</dt>
+              <dd className="whitespace-nowrap text-gray-900">{group?.name}</dd>
+            </div>
+            <div className="flex justify-between py-3 text-sm font-medium">
+              <dt className="text-gray-500">Announcement period</dt>
+              <dd className="whitespace-nowrap text-gray-900">
+                {group ? formatPeriod(group.period.announcement) : null}
+              </dd>
+            </div>
+            <div className="flex justify-between py-3 text-sm font-medium">
+              <dt className="text-gray-500">Voting period</dt>
+              <dd className="whitespace-nowrap text-gray-900">
+                {group ? formatPeriod(group.period.voting) : null}
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
     </div>
   )
 }

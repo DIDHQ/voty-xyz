@@ -24,6 +24,7 @@
     "boring-avatars": "^1.7.0",
     "browser-image-compression": "^2.0.0",
     "clsx": "^1.2.1",
+    "dayjs": "^1.11.7",
     "dotbit": "^0.4.16",
     "emoji-regex": "^10.2.1",
     "ethers": "^5.7.2",
