@@ -157,7 +157,11 @@ export default function CreateProposalPage() {
                 </FormItem>
               </GridItem6>
               <GridItem6>
-                <FormItem label="Body" error={errors.extension?.body?.message}>
+                <FormItem
+                  label="Body"
+                  description="Styling with Markdown is supported"
+                  error={errors.extension?.body?.message}
+                >
                   <Textarea
                     {...register('extension.body')}
                     error={!!errors.extension?.body?.message}

@@ -80,7 +80,11 @@ export default function CommunityForm(props: {
               </FormItem>
             </GridItem6>
             <GridItem6>
-              <FormItem label="About" error={errors.extension?.about?.message}>
+              <FormItem
+                label="About"
+                description="Styling with Markdown is supported"
+                error={errors.extension?.about?.message}
+              >
                 <Textarea
                   {...register('extension.about')}
                   error={!!errors.extension?.about?.message}

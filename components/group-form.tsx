@@ -150,6 +150,7 @@ export default function GroupForm(props: {
             <GridItem6>
               <FormItem
                 label="About"
+                description="Styling with Markdown is supported"
                 error={errors.groups?.[props.group]?.extension?.about?.message}
               >
                 <Textarea

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import {
   defaultRules,
   ParserRules,
@@ -11,6 +12,20 @@ const rules: ParserRules = {
     ...defaultRules.paragraph,
     react: (node, output, state) => {
       return <p key={state.key}>{output((node as any).content, state)}</p>
+    },
+  },
+  link: {
+    ...defaultRules.link,
+    react: (node, output, state) => {
+      const href = (node as any).target
+      return typeof href === 'string' &&
+        (href.startsWith('/') || href.startsWith('#')) ? (
+        <Link href={href}>{output((node as any).content, state)}</Link>
+      ) : (
+        <a key={state.key} href={href}>
+          {output((node as any).content, state)}
+        </a>
+      )
     },
   },
 }
