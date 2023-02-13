@@ -19,9 +19,9 @@ import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 
 const SigningButton = dynamic(() => import('./signing-button'), { ssr: false })
 
-const defaultAnnouncementPeriod = 3600
+const defaultAnnouncementDuration = 3600
 
-const defaultVotingPeriod = 86400
+const defaultVotingDuration = 86400
 
 export default function GroupForm(props: {
   community: Authorized<Community>
@@ -74,9 +74,9 @@ export default function GroupForm(props: {
             operands: [],
           },
         },
-        period: {
-          announcement: defaultAnnouncementPeriod,
-          voting: defaultVotingPeriod,
+        duration: {
+          announcement: defaultAnnouncementDuration,
+          voting: defaultVotingDuration,
         },
         extension: {
           id: props.group,
@@ -179,19 +179,21 @@ export default function GroupForm(props: {
             <FormItem
               label="Duration of announcement"
               error={
-                errors?.groups?.[groupIndex]?.period?.announcement?.message
+                errors?.groups?.[groupIndex]?.duration?.announcement?.message
               }
             >
               <Controller
-                defaultValue={defaultAnnouncementPeriod}
+                defaultValue={defaultAnnouncementDuration}
                 control={control}
-                name={`groups.${groupIndex}.period.announcement`}
+                name={`groups.${groupIndex}.duration.announcement`}
                 render={({ field: { value, onChange } }) => (
                   <DurationInput
                     value={value}
                     onChange={onChange}
                     disabled={props.disabled}
-                    error={!!errors?.groups?.[groupIndex]?.period?.announcement}
+                    error={
+                      !!errors?.groups?.[groupIndex]?.duration?.announcement
+                    }
                   />
                 )}
               />
@@ -200,18 +202,18 @@ export default function GroupForm(props: {
           <GridItem3>
             <FormItem
               label="Duration of voting"
-              error={errors?.groups?.[groupIndex]?.period?.voting?.message}
+              error={errors?.groups?.[groupIndex]?.duration?.voting?.message}
             >
               <Controller
-                defaultValue={defaultVotingPeriod}
+                defaultValue={defaultVotingDuration}
                 control={control}
-                name={`groups.${groupIndex}.period.voting`}
+                name={`groups.${groupIndex}.duration.voting`}
                 render={({ field: { value, onChange } }) => (
                   <DurationInput
                     value={value}
                     onChange={onChange}
                     disabled={props.disabled}
-                    error={!!errors?.groups?.[groupIndex]?.period?.voting}
+                    error={!!errors?.groups?.[groupIndex]?.duration?.voting}
                   />
                 )}
               />

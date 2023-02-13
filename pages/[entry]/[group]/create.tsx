@@ -21,7 +21,7 @@ import { Grid6, GridItem6 } from '../../../components/basic/grid'
 import { permalink2Id } from '../../../src/arweave'
 import RadioGroup from '../../../components/basic/radio-group'
 import { requiredCoinTypesOfDidResolver } from '../../../src/did'
-import { formatPeriod } from '../../../src/utils/time'
+import { formatDuration } from '../../../src/utils/time'
 import { coinTypeNames } from '../../../src/constants'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
 
@@ -225,11 +225,13 @@ export default function CreateProposalPage() {
           <DetailList title="Information">
             <DetailItem title="Community">{community?.name}</DetailItem>
             <DetailItem title="Group">{group?.name}</DetailItem>
+          </DetailList>
+          <DetailList title="Duration">
             <DetailItem title="Announcement">
-              {group ? formatPeriod(group.period.announcement) : null}
+              {group ? formatDuration(group.duration.announcement) : null}
             </DetailItem>
-            <DetailItem title="Voting period">
-              {group ? formatPeriod(group.period.voting) : null}
+            <DetailItem title="Voting">
+              {group ? formatDuration(group.duration.voting) : null}
             </DetailItem>
           </DetailList>
           <DetailList title="Snapshots">
