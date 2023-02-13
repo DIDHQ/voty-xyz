@@ -40,12 +40,7 @@ export default function GroupNav(props: { className?: string }) {
   const emoji = useMemo(() => extractStartEmoji(group?.name), [group?.name])
 
   return (
-    <div
-      className={clsx(
-        'w-full bg-white/80 pl-6 backdrop-blur ',
-        props.className,
-      )}
-    >
+    <div className={clsx('bg-white/80 backdrop-blur', props.className)}>
       <div className="flex h-10 items-center">
         {emoji ? (
           <span
