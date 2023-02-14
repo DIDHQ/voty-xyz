@@ -1,10 +1,10 @@
 import { Group } from './schemas'
 
 export enum Period {
-  ANNOUNCING,
-  ADDING_OPTION,
-  VOTING,
-  ENDED,
+  ANNOUNCING = 'Announcing',
+  ADDING_OPTION = 'Adding option',
+  VOTING = 'Voting',
+  ENDED = 'Ended',
 }
 
 export function getPeriod(

@@ -1,4 +1,5 @@
 import useStatus from '../hooks/use-status'
+import { getPeriod } from '../utils/duration'
 import { Group } from '../utils/schemas'
 import { DetailList, DetailItem } from './basic/detail'
 
@@ -9,6 +10,11 @@ export default function ProposalSchedule(props: {
   const { data: status } = useStatus(props.proposal)
   return (
     <DetailList title="Schedule">
+      <DetailItem title="Status">
+        {status?.timestamp
+          ? getPeriod(Date.now() / 1000, status?.timestamp, props.duration)
+          : '-'}
+      </DetailItem>
       <DetailItem title="Start">
         {status?.timestamp
           ? new Date(
