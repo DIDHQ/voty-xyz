@@ -11,7 +11,9 @@ import { trpc } from '../../../utils/trpc'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['entry', 'group']>()
-  const { data: list } = trpc.proposal.list.useInfiniteQuery(query)
+  const { data: list } = trpc.proposal.list.useInfiniteQuery(query, {
+    enabled: !!query.entry && !!query.group,
+  })
   const proposals = useMemo(
     () => list?.pages.flatMap(({ data }) => data),
     [list],

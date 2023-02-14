@@ -7,8 +7,10 @@ import Select from '../../components/basic/select'
 import { trpc } from '../../utils/trpc'
 
 export default function CommunityIndexPage() {
-  const query = useRouterQuery<['entry', 'group']>()
-  const { data: list } = trpc.proposal.list.useInfiniteQuery(query)
+  const query = useRouterQuery<['entry']>()
+  const { data: list } = trpc.proposal.list.useInfiniteQuery(query, {
+    enabled: !!query.entry,
+  })
   const proposals = useMemo(
     () => list?.pages.flatMap(({ data }) => data),
     [list],

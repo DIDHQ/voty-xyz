@@ -62,8 +62,10 @@ export default function ProposalPage() {
       setValue('proposal', query.proposal)
     }
   }, [query.proposal, setValue])
-  const { data: list, refetch: refetchList } =
-    trpc.vote.list.useInfiniteQuery(query)
+  const { data: list, refetch: refetchList } = trpc.vote.list.useInfiniteQuery(
+    query,
+    { enabled: !!query.proposal },
+  )
   const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
   const { data: votingPower, isValidating } = useSWR(
     group && did && proposal ? ['votingPower', group, did, proposal] : null,
