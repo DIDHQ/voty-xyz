@@ -8,12 +8,7 @@ import dynamic from 'next/dynamic'
 import { startCase } from 'lodash-es'
 import { BoltIcon } from '@heroicons/react/20/solid'
 
-import {
-  useTurnout,
-  useListVotes,
-  useRetrieve,
-  useGroup,
-} from '../../../../hooks/use-api'
+import { useTurnout, useListVotes, useGroup } from '../../../../hooks/use-api'
 import useRouterQuery from '../../../../hooks/use-router-query'
 import { calculateNumber } from '../../../../utils/functions/number'
 import { Vote, voteSchema } from '../../../../utils/schemas'
@@ -29,10 +24,10 @@ import {
 } from '../../../../utils/voting'
 import TextButton from '../../../../components/basic/text-button'
 import Markdown from '../../../../components/basic/markdown'
-import { DataType } from '../../../../utils/constants'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import Status from '../../../../components/status'
 import { permalink2Url } from '../../../../utils/arweave'
+import { trpc } from '../../../../utils/trpc'
 
 const VoterSelect = dynamic(
   () => import('../../../../components/voter-select'),
@@ -46,10 +41,13 @@ const SigningButton = dynamic(
 
 export default function ProposalPage() {
   const query = useRouterQuery<['proposal']>()
-  const { data: proposal } = useRetrieve(DataType.PROPOSAL, query.proposal)
-  const { data: community } = useRetrieve(
-    DataType.COMMUNITY,
-    proposal?.community,
+  const { data: proposal } = trpc.proposal.getByPermalink.useQuery(
+    { permalink: query.proposal },
+    { enabled: !!query.proposal },
+  )
+  const { data: community } = trpc.community.getByPermalink.useQuery(
+    { permalink: proposal?.community },
+    { enabled: !!proposal?.community },
   )
   const group = useGroup(community, proposal?.group)
   const { data: status } = useStatus(query.proposal)

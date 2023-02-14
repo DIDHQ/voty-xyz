@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react'
 import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
 
-import { DataType } from '../utils/constants'
 import { Authorized, Community, Proposal, Option, Vote } from '../utils/schemas'
 import { Turnout } from '../utils/types'
 import { fetchJson } from '../utils/fetcher'
@@ -11,29 +10,6 @@ export function useGroup(community?: Community, group?: string) {
   return useMemo(
     () => community?.groups?.find((g) => g.extension.id === group),
     [community?.groups, group],
-  )
-}
-
-export function useRetrieve<T extends DataType>(type: T, permalink?: string) {
-  return useSWR(
-    permalink ? ['retrieve', type, permalink] : null,
-    async () => {
-      const { data } = await fetchJson<{
-        data: Authorized<
-          T extends DataType.COMMUNITY
-            ? Community
-            : T extends DataType.PROPOSAL
-            ? Proposal
-            : T extends DataType.OPTION
-            ? Option
-            : T extends DataType.VOTE
-            ? Vote
-            : never
-        >
-      }>(`/api/retrieve?type=${type}&permalink=${permalink}`)
-      return data
-    },
-    { revalidateOnFocus: false },
   )
 }
 

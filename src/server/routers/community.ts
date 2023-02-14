@@ -9,11 +9,7 @@ const textDecoder = new TextDecoder()
 
 export const communityRouter = router({
   getByEntry: procedure
-    .input(
-      z.object({
-        entry: z.string().nullish(),
-      }),
-    )
+    .input(z.object({ entry: z.string().nullish() }))
     .output(communityWithAuthorSchema)
     .query(async ({ input }) => {
       if (!input.entry) {
@@ -36,13 +32,12 @@ export const communityRouter = router({
       )
     }),
   getByPermalink: procedure
-    .input(
-      z.object({
-        permalink: z.string(),
-      }),
-    )
+    .input(z.object({ permalink: z.string().nullish() }))
     .output(communityWithAuthorSchema)
     .query(async ({ input }) => {
+      if (!input.permalink) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
       const community = await database.community.findUnique({
         where: { permalink: input.permalink },
       })
