@@ -21,8 +21,17 @@ export default function Avatar(props: {
       className={clsx('rounded-full object-cover', props.className)}
     />
   ) : (
-    <div className={clsx('overflow-hidden rounded-full', props.className)}>
-      <BoringAvatar size={size} name={props.name} />
+    <div
+      className={clsx(
+        'overflow-hidden rounded-full bg-gray-200',
+        props.className,
+      )}
+    >
+      {props.name ? (
+        <BoringAvatar size={size} name={props.name} />
+      ) : (
+        <div style={{ width: size, height: size }} />
+      )}
     </div>
   )
 }

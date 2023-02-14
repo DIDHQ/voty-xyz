@@ -20,6 +20,7 @@ import useWallet from '../hooks/use-wallet'
 import Avatar from './basic/avatar'
 import { extractStartEmoji } from '../utils/emoji'
 import { Group } from '../utils/schemas'
+import TextButton from './basic/text-button'
 
 export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
@@ -87,7 +88,7 @@ export default function CommunityNav(props: { className?: string }) {
     <aside className={props.className}>
       <div className="flex w-full flex-col items-center rounded-md border border-gray-200 pb-4">
         <Avatar
-          name={query.entry}
+          name={community?.author.did}
           value={community?.extension?.avatar}
           size={20}
           className="mt-8"
@@ -140,7 +141,9 @@ export default function CommunityNav(props: { className?: string }) {
                       href={`/${query.entry}/create`}
                       className="float-right"
                     >
-                      <PlusIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                      <TextButton>
+                        <PlusIcon className="h-5 w-5" />
+                      </TextButton>
                     </Link>
                   ) : null}
                 </h3>
@@ -194,7 +197,7 @@ function GroupListItem(props: {
         props.current
           ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
           : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-        'group flex items-center border-l-4 px-3 py-2 text-sm font-medium',
+        'group flex w-full items-center border-l-4 px-3 py-2 text-sm font-medium',
       )}
     >
       {emoji ? (
