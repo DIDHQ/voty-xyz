@@ -11,7 +11,7 @@ import { Group } from '../utils/schemas'
 import { DID, Snapshots } from '../utils/types'
 import Select from './basic/select'
 import { calculateNumber } from '../utils/functions/number'
-import { fetchJson } from '../utils/fetcher'
+import { trpc } from '../utils/trpc'
 
 export default function VoterSelect(props: {
   proposal?: string
@@ -47,19 +47,8 @@ export default function VoterSelect(props: {
       refetchOnWindowFocus: false,
     },
   )
-  const { data: powers } = useQuery(
-    [dids, props.proposal],
-    async () => {
-      const { powers } = await fetchJson<{ powers: { [did: string]: number } }>(
-        '/api/voted',
-        {
-          method: 'POST',
-          body: JSON.stringify({ proposal: props.proposal, authors: dids }),
-          headers: { 'content-type': 'application/json' },
-        },
-      )
-      return powers
-    },
+  const { data: powers } = trpc.vote.groupByProposal.useQuery(
+    { proposal: props.proposal, authors: dids },
     { enabled: !!dids && !!props.proposal, refetchOnWindowFocus: false },
   )
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, last } from 'lodash-es'
+import { compact, keyBy, last, mapValues } from 'lodash-es'
 import { z } from 'zod'
 
 import { database } from '../../utils/database'
@@ -51,6 +51,34 @@ export const voteRouter = router({
         ),
         next: last(votes)?.permalink,
       }
+    }),
+  groupByProposal: procedure
+    .input(
+      z.object({
+        proposal: z.string().nullish(),
+        authors: z.array(z.string()).nullish(),
+      }),
+    )
+    .output(z.record(z.string(), z.number()))
+    .query(async ({ input }) => {
+      if (!input.proposal) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+      if (!input.authors) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+      const votes = await database.vote.findMany({
+        where: {
+          proposal: input.proposal,
+          author: { in: input.authors },
+        },
+      })
+      return mapValues(
+        keyBy(votes, ({ author }) => author),
+        ({ data }) =>
+          voteWithAuthorSchema.parse(JSON.parse(textDecoder.decode(data)))
+            .power,
+      )
     }),
 })
 
