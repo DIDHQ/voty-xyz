@@ -132,7 +132,7 @@ export default function ProposalPage() {
         <div className="flex justify-end py-6">
           {disabled ? (
             <Alert type="warning" className="w-full">
-              None of your DIDs have proposal rights.
+              None of your DIDs have voting power.
             </Alert>
           ) : (
             <div className="flex rounded-md">
