@@ -133,7 +133,7 @@ export default function ProposalPage() {
               snapshots={mapSnapshots(proposal.snapshots)}
               value={did}
               onChange={setDid}
-              className="rounded-r-none"
+              className="rounded-r-none active:z-10"
             />
             <FormProvider {...methods}>
               <SigningButton
@@ -146,7 +146,7 @@ export default function ProposalPage() {
                   !votingPower ||
                   isValidating
                 }
-                className="z-10 rounded-l-none border-l-0"
+                className="rounded-l-none border-l-0 active:z-10"
               >
                 {votingPower}
               </SigningButton>
