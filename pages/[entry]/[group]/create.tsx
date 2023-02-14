@@ -250,7 +250,7 @@ export default function CreateProposalPage() {
             </DetailItem>
           </DetailList>
           <DetailList title="Terms and conditions">
-            <article className="prose-sm pt-2 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
+            <article className="prose-sm pt-2 prose-pre:overflow-x-auto prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
               <Markdown>{group?.extension.terms_and_conditions}</Markdown>
             </article>
           </DetailList>
