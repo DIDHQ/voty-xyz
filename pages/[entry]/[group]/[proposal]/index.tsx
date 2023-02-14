@@ -129,6 +129,7 @@ export default function ProposalPage() {
         <div className="flex justify-end py-6">
           <div className="flex rounded-md">
             <VoterSelect
+              proposal={query.proposal}
               group={group}
               snapshots={mapSnapshots(proposal.snapshots)}
               value={did}

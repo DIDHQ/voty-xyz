@@ -11,8 +11,10 @@ import { Group } from '../src/schemas'
 import { DID, Snapshots } from '../src/types'
 import Select from './basic/select'
 import { calculateNumber } from '../src/functions/number'
+import { fetchJson } from '../src/utils/fetcher'
 
 export default function VoterSelect(props: {
+  proposal?: string
   group?: Group
   snapshots?: Snapshots
   value: string
@@ -44,13 +46,28 @@ export default function VoterSelect(props: {
     },
     { revalidateOnFocus: false },
   )
+  const { data: powers } = useSWR(
+    dids && props.proposal ? [dids, props.proposal] : null,
+    async () => {
+      const { powers } = await fetchJson<{ powers: { [did: string]: number } }>(
+        '/api/voted',
+        {
+          method: 'POST',
+          body: JSON.stringify({ proposal: props.proposal, authors: dids }),
+          headers: { 'content-type': 'application/json' },
+        },
+      )
+      return powers
+    },
+    { revalidateOnFocus: false },
+  )
   useEffect(() => {
     onChange(
-      dids?.find((d) => votes?.[d] && d === did) ||
-        dids?.find((d) => votes?.[d]) ||
+      dids?.find((d) => !powers?.[d] && votes?.[d] && d === did) ||
+        dids?.find((d) => !powers?.[d] && votes?.[d]) ||
         '',
     )
-  }, [did, dids, votes, onChange])
+  }, [did, dids, votes, onChange, powers])
 
   return (
     <Select
@@ -60,7 +77,7 @@ export default function VoterSelect(props: {
         <Listbox.Option
           key={option}
           value={option}
-          disabled={!votes?.[option]}
+          disabled={!!powers?.[option] || !votes?.[option]}
           className={({ active, disabled }) =>
             clsx(
               active
@@ -93,7 +110,7 @@ export default function VoterSelect(props: {
                     'ml-2 truncate',
                   )}
                 >
-                  {votes?.[option]}
+                  {powers?.[option] ? 'voted' : votes?.[option]}
                 </span>
               </div>
               {selected ? (
