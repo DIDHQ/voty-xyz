@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
-import { id2Permalink } from '../utils/arweave'
+import { id2Permalink } from '../utils/permalink'
 
 export default function useRouterQuery<S extends string[] = []>() {
   const router = useRouter()

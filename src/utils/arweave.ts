@@ -3,6 +3,7 @@ import type { JWKInterface } from 'arweave/node/lib/wallet'
 
 import { DataType } from './constants'
 import { isCommunity, isProposal, isOption, isVote } from './data-type'
+import { id2Permalink, permalink2Id } from './permalink'
 import { Authorized, Community, Option, Proposal, Vote } from './schemas'
 
 export const arweave = Arweave.init({
@@ -31,8 +32,7 @@ export async function getArweaveData(
   if (!permalink.startsWith('ar://')) {
     throw new Error('permalink not supported')
   }
-  const id = permalink2Id(permalink)
-  const data = await arweave.transactions.getData(id, {
+  const data = await arweave.transactions.getData(permalink2Id(permalink), {
     decode: true,
     string: true,
   })
@@ -81,7 +81,7 @@ function getArweaveTags(
 
 const textEncoder = new TextEncoder()
 
-export async function upload(
+export async function uploadToArweave(
   document: Authorized<Community | Proposal | Option | Vote>,
   jwk: JWKInterface,
 ): Promise<{ permalink: string; data: Buffer }> {
@@ -97,16 +97,4 @@ export async function upload(
     await uploader.uploadChunk()
   }
   return { permalink: id2Permalink(transaction.id), data }
-}
-
-export function id2Permalink(id: string) {
-  return `ar://${id}`
-}
-
-export function permalink2Id(permalink: string) {
-  return permalink.replace(/^ar:\/\//, '')
-}
-
-export function permalink2Url(permalink: string) {
-  return `https://arseed.web3infra.dev/${permalink2Id(permalink)}`
 }

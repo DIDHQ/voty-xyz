@@ -22,10 +22,9 @@ export default function SigningProposalButton(props: {
   const handleClick = useCallback(
     async (proposal: Proposal) => {
       const signed = await handleSignDocument(proposal)
-      if (!signed) {
-        throw new Error('signing failed')
+      if (signed) {
+        return handleCreate.mutate(signed)
       }
-      return handleCreate.mutate(signed)
     },
     [handleSignDocument, handleCreate],
   )

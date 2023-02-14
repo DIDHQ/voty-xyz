@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
-import { coinTypeToChainId } from '../utils/constants'
 
+import { coinTypeToChainId } from '../utils/constants'
 import {
   Community,
   Proposal,
@@ -23,23 +23,26 @@ export default function useSignDocument<
       if (!account) {
         return
       }
-      if (coinTypeToChainId[account.coinType]) {
-        const [proof, snapshot] = await Promise.all([
-          signDocument(document, signMessage),
-          getCurrentSnapshot(account.coinType),
-        ])
-        return {
-          ...document,
-          author: {
-            did,
-            snapshot: snapshot.toString(),
-            coin_type: account.coinType,
-            address: account.address,
-            proof,
-          } satisfies Author,
+      try {
+        if (coinTypeToChainId[account.coinType]) {
+          const [proof, snapshot] = await Promise.all([
+            signDocument(document, signMessage),
+            getCurrentSnapshot(account.coinType),
+          ])
+          return {
+            ...document,
+            author: {
+              did,
+              snapshot: snapshot.toString(),
+              coin_type: account.coinType,
+              address: account.address,
+              proof,
+            } satisfies Author,
+          }
         }
+      } catch (err) {
+        console.error(err)
       }
-      throw new Error(`unsupported signing coin type: ${account.coinType}`)
     },
     [account, signMessage, did],
   )

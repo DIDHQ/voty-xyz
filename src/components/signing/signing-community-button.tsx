@@ -22,10 +22,9 @@ export default function SigningCommunityButton(props: {
   const handleClick = useCallback(
     async (community: Community) => {
       const signed = await handleSignDocument(community)
-      if (!signed) {
-        throw new Error('signing failed')
+      if (signed) {
+        return handleCreate.mutate(signed)
       }
-      return handleCreate.mutate(signed)
     },
     [handleSignDocument, handleCreate],
   )

@@ -19,14 +19,17 @@ import useGroup from '../../../hooks/use-group'
 import TextButton from '../../../components/basic/text-button'
 import { Form, FormFooter, FormItem } from '../../../components/basic/form'
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
-import { permalink2Id } from '../../../utils/arweave'
+import { permalink2Id } from '../../../utils/permalink'
 import RadioGroup from '../../../components/basic/radio-group'
 import { requiredCoinTypesOfDidResolver } from '../../../utils/did'
 import { formatDuration } from '../../../utils/time'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
 import Markdown from '../../../components/basic/markdown'
-import Status from '../../../components/status'
 import { trpc } from '../../../utils/trpc'
+
+const StatusIcon = dynamic(() => import('../../../components/status-icon'), {
+  ssr: false,
+})
 
 const ProposerSelect = dynamic(
   () => import('../../../components/proposer-select'),
@@ -214,7 +217,7 @@ export default function CreateProposalPage() {
                 snapshots={snapshots}
                 value={did}
                 onChange={setDid}
-                className="rounded-r-none active:z-10"
+                className="rounded-r-none focus:z-10 active:z-10"
               />
               <FormProvider {...methods}>
                 <SigningProposalButton
@@ -222,7 +225,7 @@ export default function CreateProposalPage() {
                   icon={HandRaisedIcon}
                   disabled={!did || !community || !snapshots}
                   onSuccess={handleSuccess}
-                  className="rounded-l-none border-l-0 active:z-10"
+                  className="rounded-l-none border-l-0 focus:z-10 active:z-10"
                 >
                   Propose
                 </SigningProposalButton>
@@ -235,7 +238,7 @@ export default function CreateProposalPage() {
         <div className="-mt-2 space-y-6 rounded-md border border-gray-200 p-6">
           <DetailList
             title="Information"
-            right={<Status permalink={community?.permalink} />}
+            right={<StatusIcon permalink={community?.permalink} />}
           >
             <DetailItem title="Community">{community?.name}</DetailItem>
             <DetailItem title="Group">{group?.name}</DetailItem>

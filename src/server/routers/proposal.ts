@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { compact, last } from 'lodash-es'
 import { z } from 'zod'
 
-import { upload } from '../../utils/arweave'
+import { uploadToArweave } from '../../utils/arweave'
 import { database } from '../../utils/database'
 import { proposalWithAuthorSchema } from '../../utils/schemas'
 import verifyProposal from '../../utils/verifiers/verify-proposal'
@@ -81,7 +81,7 @@ export const proposalRouter = router({
     .output(z.string())
     .mutation(async ({ input }) => {
       const { proposal, community } = await verifyProposal(input)
-      const { permalink, data } = await upload(proposal, jwk)
+      const { permalink, data } = await uploadToArweave(proposal, jwk)
       const ts = new Date()
 
       await database.proposal.create({
