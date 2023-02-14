@@ -13,7 +13,6 @@ import useRouterQuery from '../../../../hooks/use-router-query'
 import { calculateNumber } from '../../../../utils/functions/number'
 import { Vote, voteSchema } from '../../../../utils/schemas'
 import { DID } from '../../../../utils/types'
-import useStatus from '../../../../hooks/use-status'
 import {
   checkChoice,
   choiceIsEmpty,
@@ -32,6 +31,11 @@ import { ChoiceRouter } from '../../../../server/routers/choice'
 const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
   ssr: false,
 })
+
+const ProposalSchedule = dynamic(
+  () => import('../../../../components/proposal-schedule'),
+  { ssr: false },
+)
 
 const VoterSelect = dynamic(
   () => import('../../../../components/voter-select'),
@@ -54,7 +58,6 @@ export default function ProposalPage() {
     { enabled: !!proposal?.community },
   )
   const group = useGroup(community, proposal?.group)
-  const { data: status } = useStatus(query.proposal)
   const { data: choices, refetch: refetchChoices } =
     trpc.choice.groupByProposal.useQuery(query, { enabled: !!query.proposal })
   const [did, setDid] = useState('')
@@ -154,7 +157,6 @@ export default function ProposalPage() {
                 onSuccess={handleSuccess}
                 disabled={
                   choiceIsEmpty(proposal.voting_type, watch('choice')) ||
-                  !status?.timestamp ||
                   !votingPower ||
                   isLoading
                 }
@@ -225,26 +227,10 @@ export default function ProposalPage() {
               {startCase(proposal.voting_type)}
             </DetailItem>
           </DetailList>
-          <DetailList title="Schedule">
-            <DetailItem title="Start">
-              {status?.timestamp
-                ? new Date(
-                    (status.timestamp + group.duration.announcement) * 1000,
-                  ).toLocaleString([], { hour12: false })
-                : '-'}
-            </DetailItem>
-            <DetailItem title="End">
-              {status?.timestamp
-                ? new Date(
-                    (status.timestamp +
-                      group.duration.announcement +
-                      (group.duration.adding_option || 0) +
-                      group.duration.voting) *
-                      1000,
-                  ).toLocaleString([], { hour12: false })
-                : '-'}
-            </DetailItem>
-          </DetailList>
+          <ProposalSchedule
+            proposal={query.proposal}
+            duration={group.duration}
+          />
           <DetailList title="Terms and conditions">
             <article className="prose-sm pt-2 prose-pre:overflow-x-auto prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
               <Markdown>{group?.extension.terms_and_conditions}</Markdown>
