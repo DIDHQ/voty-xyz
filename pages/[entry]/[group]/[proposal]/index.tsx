@@ -32,7 +32,6 @@ import Markdown from '../../../../components/basic/markdown'
 import { DataType } from '../../../../src/constants'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import Status from '../../../../components/status'
-import Alert from '../../../../components/basic/alert'
 import { permalink2Url } from '../../../../src/arweave'
 
 const VoterSelect = dynamic(
@@ -132,38 +131,32 @@ export default function ProposalPage() {
           />
         </ul>
         <div className="flex justify-end py-6">
-          {disabled ? (
-            <Alert type="warning" className="w-full">
-              None of your DIDs have voting power.
-            </Alert>
-          ) : (
-            <div className="flex rounded-md">
-              <VoterSelect
-                proposal={query.proposal}
-                group={group}
-                snapshots={mapSnapshots(proposal.snapshots)}
-                value={did}
-                onChange={setDid}
-                className="rounded-r-none active:z-10"
-              />
-              <FormProvider {...methods}>
-                <SigningButton
-                  did={did}
-                  icon={BoltIcon}
-                  onSuccess={handleSuccess}
-                  disabled={
-                    choiceIsEmpty(proposal.voting_type, watch('choice')) ||
-                    !status?.timestamp ||
-                    !votingPower ||
-                    isValidating
-                  }
-                  className="rounded-l-none border-l-0 active:z-10"
-                >
-                  {votingPower}
-                </SigningButton>
-              </FormProvider>
-            </div>
-          )}
+          <div className="flex rounded-md">
+            <VoterSelect
+              proposal={query.proposal}
+              group={group}
+              snapshots={mapSnapshots(proposal.snapshots)}
+              value={did}
+              onChange={setDid}
+              className="rounded-r-none active:z-10"
+            />
+            <FormProvider {...methods}>
+              <SigningButton
+                did={did}
+                icon={BoltIcon}
+                onSuccess={handleSuccess}
+                disabled={
+                  choiceIsEmpty(proposal.voting_type, watch('choice')) ||
+                  !status?.timestamp ||
+                  !votingPower ||
+                  isValidating
+                }
+                className="rounded-l-none border-l-0 active:z-10"
+              >
+                {votingPower}
+              </SigningButton>
+            </FormProvider>
+          </div>
         </div>
         {votes?.length ? (
           <table className="min-w-full divide-y divide-gray-300">
