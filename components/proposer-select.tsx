@@ -19,7 +19,7 @@ export default function ProposerSelect(props: {
   const { onChange } = props
   const { account, did } = useWallet()
   const { data: dids } = useDids(account)
-  const { data } = useSWR(
+  const { data: disables } = useSWR(
     dids && props.group && props.snapshots
       ? [dids, props.group, props.snapshots]
       : null,
@@ -34,18 +34,26 @@ export default function ProposerSelect(props: {
           ),
         { concurrency: 5 },
       )
-      return dids!.filter((_, index) => booleans[index])
+      return dids!.reduce((obj, did, index) => {
+        obj[did] = !booleans[index]
+        return obj
+      }, {} as { [key: string]: boolean })
     },
     { revalidateOnFocus: false },
   )
   useEffect(() => {
-    onChange(data?.find((d) => d === did) || data?.[0] || '')
-  }, [did, data, onChange])
+    onChange(
+      dids?.find((d) => !disables?.[d] && d === did) ||
+        dids?.find((d) => !disables?.[d]) ||
+        '',
+    )
+  }, [did, dids, disables, onChange])
 
   return (
     <Select
       top
-      options={data}
+      options={dids}
+      disables={disables}
       value={props.value}
       onChange={props.onChange}
       className={props.className}
