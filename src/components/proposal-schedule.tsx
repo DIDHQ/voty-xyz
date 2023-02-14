@@ -1,6 +1,7 @@
 import useStatus from '../hooks/use-status'
 import { getPeriod } from '../utils/duration'
 import { Group } from '../utils/schemas'
+import { formatTime } from '../utils/time'
 import { DetailList, DetailItem } from './basic/detail'
 
 export default function ProposalSchedule(props: {
@@ -17,20 +18,18 @@ export default function ProposalSchedule(props: {
       </DetailItem>
       <DetailItem title="Start">
         {status?.timestamp
-          ? new Date(
-              (status.timestamp + props.duration.announcement) * 1000,
-            ).toLocaleString([], { hour12: false })
+          ? formatTime((status.timestamp + props.duration.announcement) * 1000)
           : '-'}
       </DetailItem>
       <DetailItem title="End">
         {status?.timestamp
-          ? new Date(
+          ? formatTime(
               (status.timestamp +
                 props.duration.announcement +
                 (props.duration.adding_option || 0) +
                 props.duration.voting) *
                 1000,
-            ).toLocaleString([], { hour12: false })
+            )
           : '-'}
       </DetailItem>
     </DetailList>
