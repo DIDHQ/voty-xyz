@@ -64,10 +64,10 @@ export default function CreateProposalPage() {
     [setValue, getValues],
   )
   useEffect(() => {
-    if (query.entry) {
-      setValue('community', query.entry)
+    if (community) {
+      setValue('community', community.permalink)
     }
-  }, [query.entry, setValue])
+  }, [community, setValue])
   useEffect(() => {
     if (query.group) {
       setValue('group', query.group)

@@ -15,7 +15,9 @@ const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
 export const communityRouter = router({
   getByEntry: procedure
     .input(z.object({ entry: z.string().nullish() }))
-    .output(communityWithAuthorSchema)
+    .output(
+      communityWithAuthorSchema.merge(z.object({ permalink: z.string() })),
+    )
     .query(async ({ input }) => {
       if (!input.entry) {
         throw new TRPCError({ code: 'NOT_FOUND' })
@@ -32,9 +34,12 @@ export const communityRouter = router({
       if (!community) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
-      return communityWithAuthorSchema.parse(
-        JSON.parse(textDecoder.decode(community.data)),
-      )
+      return {
+        permalink: community.permalink,
+        ...communityWithAuthorSchema.parse(
+          JSON.parse(textDecoder.decode(community.data)),
+        ),
+      }
     }),
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().nullish() }))
