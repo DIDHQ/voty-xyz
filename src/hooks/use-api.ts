@@ -7,22 +7,6 @@ import { Authorized, Community, Proposal, Option, Vote } from '../utils/schemas'
 import { Turnout } from '../utils/types'
 import { fetchJson } from '../utils/fetcher'
 
-export function useEntry(entry?: string) {
-  return useSWR(
-    entry ? ['entry', entry] : null,
-    async () => {
-      const { community } = await fetchJson<{
-        community: string
-      }>(`/api/entry?did=${entry}`)
-      const { data } = await fetchJson<{
-        data: Authorized<Community>
-      }>(`/api/retrieve?type=${DataType.COMMUNITY}&permalink=${community}`)
-      return { ...data, permalink: community }
-    },
-    { revalidateOnFocus: false },
-  )
-}
-
 export function useGroup(community?: Community, group?: string) {
   return useMemo(
     () => community?.groups?.find((g) => g.extension.id === group),

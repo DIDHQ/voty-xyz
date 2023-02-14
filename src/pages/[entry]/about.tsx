@@ -1,11 +1,14 @@
 import useRouterQuery from '../../hooks/use-router-query'
-import { useEntry } from '../../hooks/use-api'
 import CommunityLayout from '../../components/layouts/community'
 import Markdown from '../../components/basic/markdown'
+import { trpc } from '../../utils/trpc'
 
 export default function CommunityAboutPage() {
   const query = useRouterQuery<['entry']>()
-  const { data: community } = useEntry(query.entry)
+  const { data: community } = trpc.community.getByEntry.useQuery(
+    { entry: query.entry },
+    { enabled: !!query.entry },
+  )
 
   return (
     <CommunityLayout>

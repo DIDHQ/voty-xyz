@@ -5,16 +5,19 @@ import Alert from '../components/basic/alert'
 import { FormItem } from '../components/basic/form'
 import { Grid6, GridItem2, GridItem6 } from '../components/basic/grid'
 import Select from '../components/basic/select'
-import { useEntry } from '../hooks/use-api'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
+import { trpc } from '../utils/trpc'
 
 export default function CreateCommunityPage() {
   const router = useRouter()
   const { account, did } = useWallet()
   const { data: dids } = useDids(account)
   const [entry, setEntry] = useState('')
-  const { data: community } = useEntry(entry)
+  const { data: community } = trpc.community.getByEntry.useQuery(
+    { entry },
+    { enabled: !!entry },
+  )
   useEffect(() => {
     setEntry(dids?.find((d) => d === did) || dids?.[0] || '')
   }, [did, dids, setEntry])

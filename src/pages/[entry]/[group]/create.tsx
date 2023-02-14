@@ -15,7 +15,7 @@ import { Proposal, proposalSchema } from '../../../utils/schemas'
 import { getCurrentSnapshot, mapSnapshots } from '../../../utils/snapshot'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
-import { useEntry, useGroup } from '../../../hooks/use-api'
+import { useGroup } from '../../../hooks/use-api'
 import TextButton from '../../../components/basic/text-button'
 import { Form, FormFooter, FormItem } from '../../../components/basic/form'
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
@@ -26,6 +26,7 @@ import { formatDuration } from '../../../utils/time'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
 import Markdown from '../../../components/basic/markdown'
 import Status from '../../../components/status'
+import { trpc } from '../../../utils/trpc'
 
 const ProposerSelect = dynamic(
   () => import('../../../components/proposer-select'),
@@ -51,7 +52,10 @@ export default function CreateProposalPage() {
     formState: { errors },
   } = methods
   const query = useRouterQuery<['entry', 'group']>()
-  const { data: community } = useEntry(query.entry)
+  const { data: community } = trpc.community.getByEntry.useQuery(
+    { entry: query.entry },
+    { enabled: !!query.entry },
+  )
   const group = useGroup(community, query.group)
   const handleOptionDelete = useCallback(
     (index: number) => {
@@ -61,16 +65,14 @@ export default function CreateProposalPage() {
     [setValue, getValues],
   )
   useEffect(() => {
-    if (!community) {
-      return
+    if (query.entry) {
+      setValue('community', query.entry)
     }
-    setValue('community', community.permalink)
-  }, [community, setValue])
+  }, [query.entry, setValue])
   useEffect(() => {
-    if (!query.group) {
-      return
+    if (query.group) {
+      setValue('group', query.group)
     }
-    setValue('group', query.group)
   }, [query.group, setValue])
   const { data: requiredCoinTypes } = useSWR(
     group?.permission.voting
@@ -236,7 +238,7 @@ export default function CreateProposalPage() {
         <div className="-mt-2 space-y-6 rounded-md border border-gray-200 p-6">
           <DetailList
             title="Information"
-            right={<Status permalink={community?.permalink} />}
+            right={<Status permalink={query.entry} />}
           >
             <DetailItem title="Community">{community?.name}</DetailItem>
             <DetailItem title="Group">{group?.name}</DetailItem>
