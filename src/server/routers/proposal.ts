@@ -2,8 +2,10 @@ import { TRPCError } from '@trpc/server'
 import { compact, last } from 'lodash-es'
 import { z } from 'zod'
 
+import { upload } from '../../utils/arweave'
 import { database } from '../../utils/database'
 import { proposalWithAuthorSchema } from '../../utils/schemas'
+import verifyProposal from '../../utils/verifiers/verify-proposal'
 import { procedure, router } from '../trpc'
 
 const textDecoder = new TextDecoder()
@@ -71,6 +73,26 @@ export const proposalRouter = router({
         ),
         next: last(proposals)?.permalink,
       }
+    }),
+  create: procedure
+    .input(proposalWithAuthorSchema)
+    .mutation(async ({ input }) => {
+      const { proposal, community } = await verifyProposal(input)
+      const { permalink, data } = await upload(proposal)
+      const ts = new Date()
+
+      await database.proposal.create({
+        data: {
+          permalink,
+          ts,
+          author: proposal.author.did,
+          entry: community.author.did,
+          community: proposal.community,
+          group: proposal.group,
+          data,
+          votes: 0,
+        },
+      })
     }),
 })
 

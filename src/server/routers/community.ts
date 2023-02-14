@@ -2,8 +2,10 @@ import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last } from 'lodash-es'
 import { z } from 'zod'
 
+import { upload } from '../../utils/arweave'
 import { database } from '../../utils/database'
 import { communityWithAuthorSchema } from '../../utils/schemas'
+import verifyCommunity from '../../utils/verifiers/verify-community'
 import { procedure, router } from '../trpc'
 
 const textDecoder = new TextDecoder()
@@ -93,6 +95,32 @@ export const communityRouter = router({
         ),
         next: last(entries)?.did,
       }
+    }),
+  create: procedure
+    .input(communityWithAuthorSchema)
+    .mutation(async ({ input }) => {
+      const { community } = await verifyCommunity(input)
+      const { permalink, data } = await upload(community)
+      const ts = new Date()
+
+      await database.$transaction([
+        database.community.create({
+          data: { permalink, ts, entry: community.author.did, data },
+        }),
+        database.entry.upsert({
+          where: { did: community.author.did },
+          create: {
+            did: community.author.did,
+            community: permalink,
+            subscribers: 0,
+            ts,
+          },
+          update: {
+            community: permalink,
+            ts,
+          },
+        }),
+      ])
     }),
 })
 
