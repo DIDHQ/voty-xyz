@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { startCase, uniq } from 'lodash-es'
 import dynamic from 'next/dynamic'
+import { HandRaisedIcon } from '@heroicons/react/20/solid'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import { requiredCoinTypesOfNumberSets } from '../../../src/functions/number'
@@ -25,7 +26,6 @@ import { formatDuration } from '../../../src/utils/time'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
 import Markdown from '../../../components/basic/markdown'
 import Status from '../../../components/status'
-import { HandRaisedIcon } from '@heroicons/react/20/solid'
 
 const ProposerSelect = dynamic(
   () => import('../../../components/proposer-select'),
