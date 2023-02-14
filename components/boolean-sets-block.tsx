@@ -49,7 +49,7 @@ export default function BooleanSetsBlock(props: {
           onClick={() =>
             append({
               function: 'prefixes_dot_suffix_exact_match',
-              arguments: [[''], props.entry],
+              arguments: [props.entry, ['']],
             })
           }
         >
@@ -135,12 +135,12 @@ function BooleanUnitBlock(props: {
               label="Base on"
               error={
                 errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[1]?.message
+                  ?.operands?.[props.index]?.arguments?.[0]?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
+                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
                 render={({ field: { value, onChange } }) => (
                   <RadioGroup
                     options={[
@@ -160,12 +160,12 @@ function BooleanUnitBlock(props: {
               label="Filter"
               error={
                 errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[0]?.message
+                  ?.operands?.[props.index]?.arguments?.[1]?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
+                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
                 render={({ field: { value, onChange } }) => (
                   <RadioGroup
                     options={[
@@ -180,12 +180,12 @@ function BooleanUnitBlock(props: {
             </FormItem>
           </GridItem3>
           {watch(
-            `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
+            `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`,
           )?.length ? (
             <GridItem6>
               <Controller
                 control={control}
-                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
+                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
                 render={({ field: { value, onChange } }) => (
                   <Textarea
                     value={
@@ -195,7 +195,7 @@ function BooleanUnitBlock(props: {
                     error={
                       !!errors.groups?.[props.groupIndex]?.permission?.[
                         props.name
-                      ]?.operands?.[props.index]?.arguments?.[0]?.message
+                      ]?.operands?.[props.index]?.arguments?.[1]?.message
                     }
                   />
                 )}

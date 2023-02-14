@@ -4,7 +4,7 @@ export const booleanUnitSchema = z.discriminatedUnion('function', [
   z.object({
     alias: z.string().optional(),
     function: z.literal('prefixes_dot_suffix_exact_match'),
-    arguments: z.tuple([z.array(z.string().min(1)), z.string().min(1)]),
+    arguments: z.tuple([z.string().min(1), z.array(z.string().min(1))]),
   }),
 ])
 export type BooleanUnit = z.infer<typeof booleanUnitSchema>
@@ -20,9 +20,9 @@ export const numberUnitSchema = z.discriminatedUnion('function', [
     alias: z.string().optional(),
     function: z.literal('prefixes_dot_suffix_fixed_power'),
     arguments: z.tuple([
-      z.number().gt(0),
-      z.array(z.string().min(1)),
       z.string().min(1),
+      z.array(z.string().min(1)),
+      z.number().gt(0),
     ]),
   }),
 ])

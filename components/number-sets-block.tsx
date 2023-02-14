@@ -51,7 +51,7 @@ export default function NumberSetsBlock(props: {
           onClick={() =>
             append({
               function: 'prefixes_dot_suffix_fixed_power',
-              arguments: [defaultPower, [''], props.entry],
+              arguments: [props.entry, [''], defaultPower],
             })
           }
         >
@@ -137,12 +137,12 @@ function NumberUnitBlock(props: {
               label="Base on"
               error={
                 errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[2]?.message
+                  ?.operands?.[props.index]?.arguments?.[0]?.message
               }
             >
               <Controller
                 control={control}
-                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`}
+                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
                 render={({ field: { value, onChange } }) => (
                   <RadioGroup
                     options={[
@@ -209,13 +209,13 @@ function NumberUnitBlock(props: {
               label="Power"
               error={
                 errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[0]?.message
+                  ?.operands?.[props.index]?.arguments?.[2]?.message
               }
             >
               <Controller
                 defaultValue={defaultPower}
                 control={control}
-                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
+                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`}
                 render={({ field: { value, onChange } }) => (
                   <TextInput
                     type="number"
@@ -226,7 +226,7 @@ function NumberUnitBlock(props: {
                     error={
                       !!errors.groups?.[props.groupIndex]?.permission?.[
                         props.name
-                      ]?.operands?.[props.index]?.arguments?.[0]?.message
+                      ]?.operands?.[props.index]?.arguments?.[2]?.message
                     }
                   />
                 )}
