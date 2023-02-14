@@ -12,7 +12,6 @@ import { useGroup } from '../../../../hooks/use-api'
 import useRouterQuery from '../../../../hooks/use-router-query'
 import { calculateNumber } from '../../../../utils/functions/number'
 import { Vote, voteSchema } from '../../../../utils/schemas'
-import { mapSnapshots } from '../../../../utils/snapshot'
 import { DID } from '../../../../utils/types'
 import useStatus from '../../../../hooks/use-status'
 import {
@@ -76,7 +75,7 @@ export default function ProposalPage() {
       calculateNumber(
         group!.permission.voting,
         did! as DID,
-        mapSnapshots(proposal!.snapshots),
+        proposal!.snapshots,
       ),
     { enabled: !!group && !!did && !!proposal },
   )
@@ -140,7 +139,7 @@ export default function ProposalPage() {
             <VoterSelect
               proposal={query.proposal}
               group={group}
-              snapshots={mapSnapshots(proposal.snapshots)}
+              snapshots={proposal.snapshots}
               value={did}
               onChange={setDid}
               className="rounded-r-none active:z-10"

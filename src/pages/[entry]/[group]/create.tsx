@@ -12,7 +12,7 @@ import { HandRaisedIcon } from '@heroicons/react/20/solid'
 import useRouterQuery from '../../../hooks/use-router-query'
 import { requiredCoinTypesOfNumberSets } from '../../../utils/functions/number'
 import { Proposal, proposalSchema } from '../../../utils/schemas'
-import { getCurrentSnapshot, mapSnapshots } from '../../../utils/snapshot'
+import { getCurrentSnapshot } from '../../../utils/snapshot'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
 import { useGroup } from '../../../hooks/use-api'
@@ -211,7 +211,7 @@ export default function CreateProposalPage() {
             <div className="flex rounded-md">
               <ProposerSelect
                 group={group}
-                snapshots={snapshots ? mapSnapshots(snapshots) : undefined}
+                snapshots={snapshots}
                 value={did}
                 onChange={setDid}
                 className="rounded-r-none active:z-10"

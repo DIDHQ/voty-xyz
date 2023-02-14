@@ -7,7 +7,6 @@ import {
   Proposal,
   proposalWithAuthorSchema,
 } from '../schemas'
-import { mapSnapshots } from '../snapshot'
 import { DID } from '../types'
 import verifyAuthor from './verify-author'
 import verifyCommunity from './verify-community'
@@ -43,7 +42,7 @@ export default async function verifyProposal(document: object): Promise<{
     !(await checkBoolean(
       group.permission.proposing,
       proposal.author.did as DID,
-      mapSnapshots(proposal.snapshots),
+      proposal.snapshots,
     ))
   ) {
     throw new Error('does not have proposing permission')
