@@ -32,8 +32,7 @@ export async function getArweaveData(
   if (!permalink.startsWith('ar://')) {
     throw new Error('permalink not supported')
   }
-  const id = permalink2Id(permalink)
-  const data = await arweave.transactions.getData(id, {
+  const data = await arweave.transactions.getData(permalink2Id(permalink), {
     decode: true,
     string: true,
   })
