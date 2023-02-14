@@ -74,4 +74,4 @@ export const proposalRouter = router({
     }),
 })
 
-export type proposalRouter = typeof proposalRouter
+export type ProposalRouter = typeof proposalRouter

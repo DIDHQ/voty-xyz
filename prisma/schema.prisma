@@ -83,7 +83,7 @@ model Entry {
   @@id([did])
 }
 
-model Turnout {
+model Choice {
   proposal String
   option   String
 

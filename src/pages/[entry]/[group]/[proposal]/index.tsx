@@ -8,12 +8,12 @@ import dynamic from 'next/dynamic'
 import { startCase } from 'lodash-es'
 import { BoltIcon } from '@heroicons/react/20/solid'
 
-import { useTurnout, useGroup } from '../../../../hooks/use-api'
+import { useGroup } from '../../../../hooks/use-api'
 import useRouterQuery from '../../../../hooks/use-router-query'
 import { calculateNumber } from '../../../../utils/functions/number'
 import { Vote, voteSchema } from '../../../../utils/schemas'
 import { mapSnapshots } from '../../../../utils/snapshot'
-import { DID, Turnout } from '../../../../utils/types'
+import { DID } from '../../../../utils/types'
 import useStatus from '../../../../hooks/use-status'
 import {
   checkChoice,
@@ -28,6 +28,8 @@ import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import Status from '../../../../components/status'
 import { permalink2Url } from '../../../../utils/arweave'
 import { trpc } from '../../../../utils/trpc'
+import { inferRouterOutputs } from '@trpc/server'
+import { ChoiceRouter } from '../../../../server/routers/choice'
 
 const VoterSelect = dynamic(
   () => import('../../../../components/voter-select'),
@@ -51,7 +53,8 @@ export default function ProposalPage() {
   )
   const group = useGroup(community, proposal?.group)
   const { data: status } = useStatus(query.proposal)
-  const { data: turnout, mutate: mutateTurnout } = useTurnout(query.proposal)
+  const { data: choices, refetch: refetchChoices } =
+    trpc.choice.groupByProposal.useQuery(query, { enabled: !!query.proposal })
   const [did, setDid] = useState('')
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
@@ -85,9 +88,9 @@ export default function ProposalPage() {
   }, [resetField, setValue, votingPower])
   const handleSuccess = useCallback(() => {
     refetchList()
-    mutateTurnout()
+    refetchChoices()
     setValue('choice', '')
-  }, [refetchList, mutateTurnout, setValue])
+  }, [refetchList, refetchChoices, setValue])
   const disabled = !did
 
   return community && proposal && group ? (
@@ -121,7 +124,7 @@ export default function ProposalPage() {
                     type={proposal.voting_type}
                     option={option}
                     votingPower={votingPower}
-                    turnout={turnout}
+                    choices={choices}
                     disabled={disabled}
                     value={value}
                     onChange={onChange}
@@ -254,21 +257,21 @@ export function Option(props: {
   type: 'single' | 'multiple'
   option: string
   votingPower?: number
-  turnout?: Turnout
+  choices?: inferRouterOutputs<ChoiceRouter>['groupByProposal']
   disabled?: boolean
   value: string
   onChange(value: string): void
 }) {
-  const { type, option, votingPower = 0, turnout, value, onChange } = props
+  const { type, option, votingPower = 0, choices, value, onChange } = props
   const percentage = useMemo(() => {
     const power = powerOfChoice(type, value, votingPower)[option] || 0
     const denominator =
-      (turnout?.total || 0) + (choiceIsEmpty(type, value) ? 0 : votingPower)
+      (choices?.total || 0) + (choiceIsEmpty(type, value) ? 0 : votingPower)
     if (denominator === 0) {
       return 0
     }
-    return (((turnout?.powers[option] || 0) + power) / denominator) * 100
-  }, [option, turnout?.powers, turnout?.total, type, value, votingPower])
+    return (((choices?.powers[option] || 0) + power) / denominator) * 100
+  }, [option, choices?.powers, choices?.total, type, value, votingPower])
 
   return (
     <li

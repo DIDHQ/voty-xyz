@@ -1,22 +1,12 @@
 import { useCallback, useMemo } from 'react'
-import useSWR from 'swr'
 
 import { Authorized, Community, Proposal, Option, Vote } from '../utils/schemas'
-import { Turnout } from '../utils/types'
 import { fetchJson } from '../utils/fetcher'
 
 export function useGroup(community?: Community, group?: string) {
   return useMemo(
     () => community?.groups?.find((g) => g.extension.id === group),
     [community?.groups, group],
-  )
-}
-
-export function useTurnout(proposal?: string) {
-  return useSWR(
-    proposal ? ['turnout', proposal] : null,
-    async () => fetchJson<Turnout>(`/api/turnout?proposal=${proposal}`),
-    { revalidateOnFocus: false },
   )
 }
 

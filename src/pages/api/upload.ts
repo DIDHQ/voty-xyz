@@ -102,7 +102,7 @@ export default async function handler(
         ...Object.entries(
           powerOfChoice(proposal.voting_type, vote.choice, vote.power),
         ).map(([option, power = 0]) =>
-          database.turnout.upsert({
+          database.choice.upsert({
             where: {
               proposal_option: { proposal: vote.proposal, option },
             },

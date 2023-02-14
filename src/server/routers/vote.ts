@@ -54,4 +54,4 @@ export const voteRouter = router({
     }),
 })
 
-export type voteRouter = typeof voteRouter
+export type VoteRouter = typeof voteRouter
