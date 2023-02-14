@@ -215,7 +215,7 @@ export default function CreateProposalPage() {
                 snapshots={snapshots ? mapSnapshots(snapshots) : undefined}
                 value={did}
                 onChange={setDid}
-                className="rounded-r-none border-r-0"
+                className="rounded-r-none"
               />
               <FormProvider {...methods}>
                 <SigningButton
@@ -223,7 +223,7 @@ export default function CreateProposalPage() {
                   icon={HandRaisedIcon}
                   disabled={!did || !community || !snapshots}
                   onSuccess={handleSuccess}
-                  className="rounded-l-none"
+                  className="z-10 rounded-l-none border-l-0"
                 >
                   Propose
                 </SigningButton>
