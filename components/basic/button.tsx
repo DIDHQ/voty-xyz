@@ -45,7 +45,9 @@ export default function Button(
           />
         </svg>
       ) : props.icon ? (
-        <props.icon className="-ml-1 mr-3 h-5 w-5" />
+        <props.icon
+          className={clsx(children ? '-ml-1 mr-3' : undefined, 'h-5 w-5')}
+        />
       ) : null}
       {children}
     </button>
