@@ -4,7 +4,7 @@ import {
   UserIcon,
 } from '@heroicons/react/20/solid'
 import Link from 'next/link'
-import { permalink2Id } from '../utils/arweave'
+import { permalink2Id } from '../utils/permalink'
 
 import { Authorized, Proposal } from '../utils/schemas'
 

@@ -2,7 +2,7 @@ import { CubeIcon, CubeTransparentIcon } from '@heroicons/react/24/outline'
 import { useMemo } from 'react'
 
 import useStatus from '../hooks/use-status'
-import { permalink2Url } from '../utils/arweave'
+import { permalink2Url } from '../utils/permalink'
 import TextButton from './basic/text-button'
 
 export default function StatusIcon(props: { permalink?: string }) {

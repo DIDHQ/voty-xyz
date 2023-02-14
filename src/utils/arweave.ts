@@ -3,6 +3,7 @@ import type { JWKInterface } from 'arweave/node/lib/wallet'
 
 import { DataType } from './constants'
 import { isCommunity, isProposal, isOption, isVote } from './data-type'
+import { id2Permalink, permalink2Id } from './permalink'
 import { Authorized, Community, Option, Proposal, Vote } from './schemas'
 
 export const arweave = Arweave.init({
@@ -97,16 +98,4 @@ export async function uploadToArweave(
     await uploader.uploadChunk()
   }
   return { permalink: id2Permalink(transaction.id), data }
-}
-
-export function id2Permalink(id: string) {
-  return `ar://${id}`
-}
-
-export function permalink2Id(permalink: string) {
-  return permalink.replace(/^ar:\/\//, '')
-}
-
-export function permalink2Url(permalink: string) {
-  return `https://arseed.web3infra.dev/${permalink2Id(permalink)}`
 }

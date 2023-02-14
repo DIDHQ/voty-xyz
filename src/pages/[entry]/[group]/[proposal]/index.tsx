@@ -24,7 +24,7 @@ import {
 import TextButton from '../../../../components/basic/text-button'
 import Markdown from '../../../../components/basic/markdown'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
-import { permalink2Url } from '../../../../utils/arweave'
+import { permalink2Url } from '../../../../utils/permalink'
 import { trpc } from '../../../../utils/trpc'
 import { inferRouterOutputs } from '@trpc/server'
 import { ChoiceRouter } from '../../../../server/routers/choice'
