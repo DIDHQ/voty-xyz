@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic'
 import { startCase } from 'lodash-es'
 import { BoltIcon } from '@heroicons/react/20/solid'
 
-import { useGroup } from '../../../../hooks/use-api'
+import useGroup from '../../../../hooks/use-group'
 import useRouterQuery from '../../../../hooks/use-router-query'
 import { calculateNumber } from '../../../../utils/functions/number'
 import { Vote, voteSchema } from '../../../../utils/schemas'

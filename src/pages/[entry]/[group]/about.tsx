@@ -1,5 +1,5 @@
 import useRouterQuery from '../../../hooks/use-router-query'
-import { useGroup } from '../../../hooks/use-api'
+import useGroup from '../../../hooks/use-group'
 import CommunityLayout from '../../../components/layouts/community'
 import GroupLayout from '../../../components/layouts/group'
 import Markdown from '../../../components/basic/markdown'

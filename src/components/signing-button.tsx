@@ -1,10 +1,11 @@
 import { ExoticComponent, ReactNode, useCallback, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import { useUpload } from '../hooks/use-api'
 import useAsync from '../hooks/use-async'
 import useSignDocument from '../hooks/use-sign-document'
+import { isCommunity, isProposal, isVote } from '../utils/data-type'
 import { Community, Option, Proposal, Vote } from '../utils/schemas'
+import { trpc } from '../utils/trpc'
 import Button from './basic/button'
 import Notification from './basic/notification'
 
@@ -20,8 +21,10 @@ export default function SigningButton<
 }) {
   const { onSuccess } = props
   const { handleSubmit: onSubmit } = useFormContext<T>()
-  const handleSignDocument = useSignDocument(props.did)
-  const handleUpload = useUpload()
+  const handleSignDocument = useSignDocument<T>(props.did)
+  const handleUploadCommunity = trpc.community.create.useMutation()
+  const handleUploadProposal = trpc.proposal.create.useMutation()
+  const handleUploadVote = trpc.vote.create.useMutation()
   const handleSubmit = useAsync(
     useCallback(
       async (document: T) => {
@@ -29,9 +32,20 @@ export default function SigningButton<
         if (!signed) {
           throw new Error('signing failed')
         }
-        return handleUpload(signed)
+        if (isCommunity(signed)) {
+          return handleUploadCommunity.mutate(signed)
+        } else if (isProposal(signed)) {
+          return handleUploadProposal.mutate(signed)
+        } else if (isVote(signed)) {
+          return handleUploadVote.mutate(signed)
+        }
       },
-      [handleSignDocument, handleUpload],
+      [
+        handleSignDocument,
+        handleUploadCommunity,
+        handleUploadProposal,
+        handleUploadVote,
+      ],
     ),
   )
   useEffect(() => {
