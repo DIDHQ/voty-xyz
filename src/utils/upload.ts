@@ -44,6 +44,7 @@ function getArweaveTags(
     return {
       ...defaultArweaveTags,
       'app-data-type': DataType.COMMUNITY,
+      'app-index-entry': document.author.did,
     }
   }
   if (isProposal(document)) {
