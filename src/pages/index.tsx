@@ -3,10 +3,13 @@ import { useMemo } from 'react'
 import { Grid6, GridItem2 } from '../components/basic/grid'
 import CommunityCard from '../components/community-card'
 import { useListCommunities } from '../hooks/use-api'
+import { trpc } from '../utils/trpc'
 
 export default function IndexPage() {
   const { data } = useListCommunities()
   const communities = useMemo(() => data?.flatMap(({ data }) => data), [data])
+  const hello = trpc.hello.useQuery({ text: 'client' })
+  console.log(hello)
 
   return (
     <Grid6 className="py-6">
