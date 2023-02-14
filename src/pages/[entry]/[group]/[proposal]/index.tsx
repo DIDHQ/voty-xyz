@@ -153,6 +153,8 @@ export default function ProposalPage() {
             <FormProvider {...methods}>
               <SigningVoteButton
                 did={did}
+                proposal={query.proposal}
+                duration={group.duration}
                 icon={BoltIcon}
                 onSuccess={handleSuccess}
                 disabled={
