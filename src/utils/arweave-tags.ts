@@ -1,5 +1,5 @@
-import { DataType } from '../constants'
-import { Authorized, Community, Proposal, Option, Vote } from '../schemas'
+import { DataType } from './constants'
+import { Authorized, Community, Proposal, Option, Vote } from './schemas'
 import { isCommunity, isOption, isProposal, isVote } from './data-type'
 
 export const defaultArweaveTags = {

@@ -1,5 +1,5 @@
-import { DataType } from '../constants'
-import { Community, Option, Proposal, Vote } from '../schemas'
+import { DataType } from './constants'
+import { Community, Option, Proposal, Vote } from './schemas'
 
 export function isCommunity(document: object): document is Community {
   return 'name' in document
