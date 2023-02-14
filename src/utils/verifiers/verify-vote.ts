@@ -1,7 +1,6 @@
 import { getArweaveData } from '../arweave'
 import { calculateNumber } from '../functions/number'
 import { Authorized, Proposal, Vote, voteWithAuthorSchema } from '../schemas'
-import { mapSnapshots } from '../snapshot'
 import { DID } from '../types'
 import verifyAuthor from './verify-author'
 import verifyProposal from './verify-proposal'
@@ -27,7 +26,7 @@ export default async function verifyVote(
   const votingPower = await calculateNumber(
     group.permission.voting,
     vote.author.did as DID,
-    mapSnapshots(proposal.snapshots),
+    proposal.snapshots,
   )
   if (votingPower !== vote.power) {
     throw new Error('voting power not match')

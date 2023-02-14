@@ -13,7 +13,6 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
 import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
-import { useEntry } from '../hooks/use-api'
 import useDidIsMatch from '../hooks/use-did-is-match'
 import useRouterQuery from '../hooks/use-router-query'
 import useWallet from '../hooks/use-wallet'
@@ -21,11 +20,14 @@ import Avatar from './basic/avatar'
 import { extractStartEmoji } from '../utils/emoji'
 import { Group } from '../utils/schemas'
 import TextButton from './basic/text-button'
+import { trpc } from '../utils/trpc'
 
 export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
   const query = useRouterQuery<['entry', 'group']>()
-  const { data: community } = useEntry(query.entry)
+  const { data: community } = trpc.community.getByEntry.useQuery(query, {
+    enabled: !!query.entry,
+  })
   const navigation = useMemo(
     () =>
       compact([

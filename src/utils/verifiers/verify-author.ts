@@ -9,7 +9,6 @@ export default async function verifyAuthor(
   document: object & { author: Author },
 ): Promise<void> {
   const { author, ...rest } = document
-  const snapshot = BigInt(author.snapshot)
 
   if (coinTypeToChainId[author.coin_type] === undefined) {
     throw new Error(`unsupported author coin type: ${author.coin_type}`)
@@ -22,7 +21,7 @@ export default async function verifyAuthor(
   }
 
   const resolved = await resolveDid(author.did, {
-    [author.coin_type]: snapshot,
+    [author.coin_type]: author.snapshot,
   })
   if (
     resolved.coinType !== author.coin_type ||

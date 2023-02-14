@@ -5,13 +5,16 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
-import { useEntry, useGroup } from '../hooks/use-api'
+import useGroup from '../hooks/use-group'
 import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../utils/emoji'
+import { trpc } from '../utils/trpc'
 
 export default function GroupNav(props: { className?: string }) {
   const query = useRouterQuery<['entry', 'group']>()
-  const { data: community } = useEntry(query.entry)
+  const { data: community } = trpc.community.getByEntry.useQuery(query, {
+    enabled: !!query.entry,
+  })
   const group = useGroup(community, query.group)
   const router = useRouter()
   const tabs = useMemo(

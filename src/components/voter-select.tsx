@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import pMap from 'p-map'
 import { Listbox } from '@headlessui/react'
 import clsx from 'clsx'
@@ -11,7 +11,7 @@ import { Group } from '../utils/schemas'
 import { DID, Snapshots } from '../utils/types'
 import Select from './basic/select'
 import { calculateNumber } from '../utils/functions/number'
-import { fetchJson } from '../utils/fetcher'
+import { trpc } from '../utils/trpc'
 
 export default function VoterSelect(props: {
   proposal?: string
@@ -24,10 +24,8 @@ export default function VoterSelect(props: {
   const { onChange } = props
   const { account, did } = useWallet()
   const { data: dids } = useDids(account)
-  const { data: votes } = useSWR(
-    dids && props.group && props.snapshots
-      ? [dids, props.group, props.snapshots]
-      : null,
+  const { data: votes } = useQuery(
+    [dids, props.group, props.snapshots],
     async () => {
       const numbers = await pMap(
         dids!,
@@ -44,22 +42,14 @@ export default function VoterSelect(props: {
         return obj
       }, {} as { [key: string]: number })
     },
-    { revalidateOnFocus: false },
-  )
-  const { data: powers } = useSWR(
-    dids && props.proposal ? [dids, props.proposal] : null,
-    async () => {
-      const { powers } = await fetchJson<{ powers: { [did: string]: number } }>(
-        '/api/voted',
-        {
-          method: 'POST',
-          body: JSON.stringify({ proposal: props.proposal, authors: dids }),
-          headers: { 'content-type': 'application/json' },
-        },
-      )
-      return powers
+    {
+      enabled: !!dids && !!props.group && !!props.snapshots,
+      refetchOnWindowFocus: false,
     },
-    { revalidateOnFocus: false },
+  )
+  const { data: powers } = trpc.vote.groupByProposal.useQuery(
+    { proposal: props.proposal, authors: dids },
+    { enabled: !!dids && !!props.proposal, refetchOnWindowFocus: false },
   )
   useEffect(() => {
     onChange(

@@ -1,15 +1,20 @@
 import { useMemo, useState } from 'react'
 
 import useRouterQuery from '../../hooks/use-router-query'
-import { useListProposals } from '../../hooks/use-api'
 import ProposalListItem from '../../components/proposal-list-item'
 import CommunityLayout from '../../components/layouts/community'
 import Select from '../../components/basic/select'
+import { trpc } from '../../utils/trpc'
 
 export default function CommunityIndexPage() {
-  const query = useRouterQuery<['entry', 'group']>()
-  const { data: list } = useListProposals(query.entry, query.group)
-  const proposals = useMemo(() => list?.flatMap(({ data }) => data), [list])
+  const query = useRouterQuery<['entry']>()
+  const { data: list } = trpc.proposal.list.useInfiniteQuery(query, {
+    enabled: !!query.entry,
+  })
+  const proposals = useMemo(
+    () => list?.pages.flatMap(({ data }) => data),
+    [list],
+  )
   const [order, setOrder] = useState('All')
 
   return (

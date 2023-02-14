@@ -1,11 +1,11 @@
 import { CoinType, createInstance } from 'dotbit'
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 
 import { Account } from '../utils/types'
 
 export default function useDids(account?: Account) {
-  return useSWR(
-    account ? ['dids', account.address, account.coinType] : null,
+  return useQuery(
+    ['dids', account?.address, account?.coinType],
     async () => {
       const dotbit = createInstance()
       const accounts = await dotbit.accountsOfOwner({
@@ -14,6 +14,6 @@ export default function useDids(account?: Account) {
       })
       return accounts.map(({ account }) => account)
     },
-    { revalidateOnFocus: false },
+    { enabled: !!account, refetchOnWindowFocus: false },
   )
 }

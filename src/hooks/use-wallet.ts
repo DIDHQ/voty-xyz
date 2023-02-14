@@ -8,7 +8,7 @@ import {
   useNetwork,
   useSignMessage,
 } from 'wagmi'
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import { KeyInfo } from 'dotbit/lib/fetchers/BitIndexer.type'
 import { createInstance } from 'dotbit'
 import { BitPluginAvatar } from '@dotbit/plugin-avatar'
@@ -28,10 +28,8 @@ export default function useWallet() {
     connector: account.connector,
   })
   const { disconnect } = useDisconnect()
-  const { data } = useSWR(
-    coinType !== undefined && account.address
-      ? ['reverse', coinType, account.address, network.chain?.id]
-      : null,
+  const { data } = useQuery(
+    ['reverse', coinType, account.address, network.chain?.id],
     async () => {
       const dotbit = createInstance()
       dotbit.installPlugin(new BitPluginAvatar())
@@ -44,7 +42,10 @@ export default function useWallet() {
         did: bit.account,
       }
     },
-    { revalidateOnFocus: false },
+    {
+      enabled: coinType !== undefined && !!account.address,
+      refetchOnWindowFocus: false,
+    },
   )
   const { data: ensAvatar } = useEnsAvatar(account)
   const { data: ensName } = useEnsName(account)

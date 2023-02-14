@@ -1,11 +1,13 @@
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
+
 import { getCurrentSnapshot } from '../utils/snapshot'
 
 export default function useCurrentSnapshot(coinType?: number) {
-  return useSWR(
-    coinType === undefined ? null : ['current snapshot', coinType],
+  return useQuery(
+    ['current snapshot', coinType],
     () => {
       return getCurrentSnapshot(coinType!)
     },
+    { enabled: coinType !== undefined },
   )
 }

@@ -3,21 +3,24 @@ import { useRouter } from 'next/router'
 
 import CommunityForm from '../../components/community-form'
 import useRouterQuery from '../../hooks/use-router-query'
-import { useEntry } from '../../hooks/use-api'
 import CommunityLayout from '../../components/layouts/community'
 import useDidIsMatch from '../../hooks/use-did-is-match'
 import useWallet from '../../hooks/use-wallet'
+import { trpc } from '../../utils/trpc'
 
 export default function CommunitySettingsPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry']>()
   const { account } = useWallet()
-  const { data: community, mutate } = useEntry(query.entry)
+  const { data: community, refetch } = trpc.community.getByEntry.useQuery(
+    query,
+    { enabled: !!query.entry },
+  )
   const { data: isAdmin } = useDidIsMatch(query.entry, account)
   const handleSuccess = useCallback(() => {
-    mutate()
+    refetch()
     router.push(`/${query.entry}`)
-  }, [mutate, query.entry, router])
+  }, [refetch, query.entry, router])
 
   return (
     <CommunityLayout>

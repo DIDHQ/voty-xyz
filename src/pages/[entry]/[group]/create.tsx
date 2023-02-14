@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import pMap from 'p-map'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { startCase, uniq } from 'lodash-es'
@@ -12,10 +12,10 @@ import { HandRaisedIcon } from '@heroicons/react/20/solid'
 import useRouterQuery from '../../../hooks/use-router-query'
 import { requiredCoinTypesOfNumberSets } from '../../../utils/functions/number'
 import { Proposal, proposalSchema } from '../../../utils/schemas'
-import { getCurrentSnapshot, mapSnapshots } from '../../../utils/snapshot'
+import { getCurrentSnapshot } from '../../../utils/snapshot'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
-import { useEntry, useGroup } from '../../../hooks/use-api'
+import useGroup from '../../../hooks/use-group'
 import TextButton from '../../../components/basic/text-button'
 import { Form, FormFooter, FormItem } from '../../../components/basic/form'
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
@@ -26,14 +26,15 @@ import { formatDuration } from '../../../utils/time'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
 import Markdown from '../../../components/basic/markdown'
 import Status from '../../../components/status'
+import { trpc } from '../../../utils/trpc'
 
 const ProposerSelect = dynamic(
   () => import('../../../components/proposer-select'),
   { ssr: false },
 )
 
-const SigningButton = dynamic(
-  () => import('../../../components/signing-button'),
+const SigningProposalButton = dynamic(
+  () => import('../../../components/signing/signing-proposal-button'),
   { ssr: false },
 )
 
@@ -51,7 +52,9 @@ export default function CreateProposalPage() {
     formState: { errors },
   } = methods
   const query = useRouterQuery<['entry', 'group']>()
-  const { data: community } = useEntry(query.entry)
+  const { data: community } = trpc.community.getByEntry.useQuery(query, {
+    enabled: !!query.entry,
+  })
   const group = useGroup(community, query.group)
   const handleOptionDelete = useCallback(
     (index: number) => {
@@ -61,30 +64,26 @@ export default function CreateProposalPage() {
     [setValue, getValues],
   )
   useEffect(() => {
-    if (!community) {
-      return
+    if (community) {
+      setValue('community', community.permalink)
     }
-    setValue('community', community.permalink)
   }, [community, setValue])
   useEffect(() => {
-    if (!query.group) {
-      return
+    if (query.group) {
+      setValue('group', query.group)
     }
-    setValue('group', query.group)
   }, [query.group, setValue])
-  const { data: requiredCoinTypes } = useSWR(
-    group?.permission.voting
-      ? ['requiredCoinTypes', group.permission.voting]
-      : null,
+  const { data: requiredCoinTypes } = useQuery(
+    ['requiredCoinTypes', group?.permission.voting],
     () =>
       uniq([
         ...requiredCoinTypesOfDidResolver,
         ...requiredCoinTypesOfNumberSets(group!.permission.voting!),
       ]),
-    { revalidateOnFocus: false },
+    { enabled: !!group?.permission.voting, refetchOnWindowFocus: false },
   )
-  const { data: snapshots } = useSWR(
-    requiredCoinTypes ? ['snapshots', requiredCoinTypes] : null,
+  const { data: snapshots } = useQuery(
+    ['snapshots', requiredCoinTypes],
     async () => {
       const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
         concurrency: 5,
@@ -94,7 +93,7 @@ export default function CreateProposalPage() {
         return obj
       }, {} as { [coinType: string]: string })
     },
-    { refreshInterval: 30000 },
+    { enabled: !!requiredCoinTypes, refetchInterval: 30000 },
   )
   useEffect(() => {
     if (snapshots) {
@@ -212,13 +211,13 @@ export default function CreateProposalPage() {
             <div className="flex rounded-md">
               <ProposerSelect
                 group={group}
-                snapshots={snapshots ? mapSnapshots(snapshots) : undefined}
+                snapshots={snapshots}
                 value={did}
                 onChange={setDid}
                 className="rounded-r-none active:z-10"
               />
               <FormProvider {...methods}>
-                <SigningButton
+                <SigningProposalButton
                   did={did}
                   icon={HandRaisedIcon}
                   disabled={!did || !community || !snapshots}
@@ -226,7 +225,7 @@ export default function CreateProposalPage() {
                   className="rounded-l-none border-l-0 active:z-10"
                 >
                   Propose
-                </SigningButton>
+                </SigningProposalButton>
               </FormProvider>
             </div>
           </FormFooter>

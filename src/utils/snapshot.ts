@@ -1,16 +1,14 @@
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
 import CKB from '@nervosnetwork/ckb-sdk-core'
-import { mapKeys, mapValues } from 'lodash-es'
 import invariant from 'tiny-invariant'
 
 import { chainIdToRpc, coinTypeToChainId, commonCoinTypes } from './constants'
-import { Snapshots } from './types'
 
-export async function getCurrentSnapshot(coinType: number): Promise<bigint> {
+export async function getCurrentSnapshot(coinType: number): Promise<string> {
   if (coinType === commonCoinTypes.CKB) {
     const ckb = new CKB('https://mainnet.ckb.dev/')
     const blockNumber = await ckb.rpc.getTipBlockNumber()
-    return BigInt(blockNumber)
+    return blockNumber
   }
   const chainId = coinTypeToChainId[coinType]
   invariant(
@@ -21,14 +19,5 @@ export async function getCurrentSnapshot(coinType: number): Promise<bigint> {
   invariant(rpc, `current snapshot chain rpc not found: ${chainId}`)
   const provider = new StaticJsonRpcProvider(rpc, chainId)
   const blockNumber = await provider.getBlockNumber()
-  return BigInt(blockNumber)
-}
-
-export function mapSnapshots(snapshots: {
-  [coinType: string]: string
-}): Snapshots {
-  return mapKeys(
-    mapValues(snapshots, (value) => BigInt(value)),
-    (_value, key) => parseInt(key),
-  )
+  return BigInt(blockNumber).toString()
 }

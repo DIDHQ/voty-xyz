@@ -1,12 +1,15 @@
 import useRouterQuery from '../../../hooks/use-router-query'
-import { useEntry, useGroup } from '../../../hooks/use-api'
+import useGroup from '../../../hooks/use-group'
 import CommunityLayout from '../../../components/layouts/community'
 import GroupLayout from '../../../components/layouts/group'
 import Markdown from '../../../components/basic/markdown'
+import { trpc } from '../../../utils/trpc'
 
 export default function GroupAboutPage() {
   const query = useRouterQuery<['entry', 'group']>()
-  const { data: community } = useEntry(query.entry)
+  const { data: community } = trpc.community.getByEntry.useQuery(query, {
+    enabled: !!query.entry,
+  })
   const group = useGroup(community, query.group)
 
   return (

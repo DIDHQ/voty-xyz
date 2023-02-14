@@ -1,4 +1,4 @@
-import type { AppProps } from 'next/app'
+import type { AppType } from 'next/app'
 import Head from 'next/head'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { mainnet, polygon, bsc } from 'wagmi/chains'
@@ -14,6 +14,7 @@ import {
 } from '@rainbow-me/rainbowkit/wallets'
 
 import ShellLayout from '../components/layouts/shell'
+import { trpc } from '../utils/trpc'
 import '../../styles/globals.css'
 
 const { chains, provider } = configureChains(
@@ -35,7 +36,7 @@ const wagmiClient = createClient({
   provider,
 })
 
-export default function App({ Component, pageProps }: AppProps) {
+const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
@@ -55,3 +56,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </>
   )
 }
+
+export default trpc.withTRPC(MyApp)

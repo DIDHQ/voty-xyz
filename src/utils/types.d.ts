@@ -5,7 +5,7 @@ export type DidResolver<S extends 'bit' | 'eth' = string> = (
   snapshots: Snapshots,
 ) => Promise<Account>
 
-export type Snapshots = { [coinType: number]: bigint }
+export type Snapshots = { [coinType: number]: string }
 
 export type Proof = `${number}:${string}`
 
@@ -17,9 +17,4 @@ export type Account = {
 export type Status = {
   timestamp?: number
   // revoked?: number
-}
-
-export type Turnout = {
-  powers: { [option: string]: number }
-  total: number
 }

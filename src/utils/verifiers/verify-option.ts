@@ -6,7 +6,6 @@ import {
   Option,
   optionWithAuthorSchema,
 } from '../schemas'
-import { mapSnapshots } from '../snapshot'
 import { DID } from '../types'
 import verifyAuthor from './verify-author'
 import verifyProposal from './verify-proposal'
@@ -37,7 +36,7 @@ export default async function verifyOption(
     !(await checkBoolean(
       group.permission.adding_option,
       option.author.did as DID,
-      mapSnapshots(proposal.snapshots),
+      proposal.snapshots,
     ))
   ) {
     throw new Error('does not have adding option permission')

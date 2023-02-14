@@ -1,4 +1,4 @@
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 
 import { resolveDid } from '../utils/did'
 import { getCurrentSnapshot } from '../utils/snapshot'
@@ -9,8 +9,8 @@ export default function useDidIsMatch(
   account?: Account,
   snapshots?: Snapshots,
 ) {
-  return useSWR(
-    did && account ? ['matchDid', did, account] : null,
+  return useQuery(
+    ['matchDid', did, account],
     async () => {
       const resolved = await resolveDid(
         did!,
@@ -25,8 +25,6 @@ export default function useDidIsMatch(
         resolved.address === account.address
       )
     },
-    {
-      revalidateOnFocus: false,
-    },
+    { enabled: !!did && !!account, refetchOnWindowFocus: false },
   )
 }
