@@ -28,8 +28,5 @@ function encodeDocument(document: object & { author?: Author }): string {
   const { author, ...rest } = document
   const textEncoder = new TextEncoder()
   const data = textEncoder.encode(JSON.stringify(rest))
-  const buffer = sha256(data)
-  return `You are signing for Voty Protocol.\n\nhash: 0x${Buffer.from(
-    buffer,
-  ).toString('hex')}`
+  return `You are signing for Voty Protocol.\n\nhash: ${sha256(data)}`
 }
