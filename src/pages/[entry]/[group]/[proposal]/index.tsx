@@ -24,11 +24,14 @@ import {
 import TextButton from '../../../../components/basic/text-button'
 import Markdown from '../../../../components/basic/markdown'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
-import Status from '../../../../components/status'
 import { permalink2Url } from '../../../../utils/arweave'
 import { trpc } from '../../../../utils/trpc'
 import { inferRouterOutputs } from '@trpc/server'
 import { ChoiceRouter } from '../../../../server/routers/choice'
+
+const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
+  ssr: false,
+})
 
 const VoterSelect = dynamic(
   () => import('../../../../components/voter-select'),
@@ -213,7 +216,7 @@ export default function ProposalPage() {
         <div className="-mt-2 space-y-6 rounded-md border border-gray-200 p-6">
           <DetailList
             title="Information"
-            right={<Status permalink={query.proposal} />}
+            right={<StatusIcon permalink={query.proposal} />}
           >
             <DetailItem title="Community">{community.name}</DetailItem>
             <DetailItem title="Group">{group.name}</DetailItem>

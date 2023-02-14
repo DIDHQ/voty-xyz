@@ -5,7 +5,7 @@ import useStatus from '../hooks/use-status'
 import { permalink2Url } from '../utils/arweave'
 import TextButton from './basic/text-button'
 
-export default function Status(props: { permalink?: string }) {
+export default function StatusIcon(props: { permalink?: string }) {
   const { data: status } = useStatus(props.permalink)
   const icon = useMemo(
     () =>

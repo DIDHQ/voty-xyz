@@ -25,8 +25,11 @@ import { requiredCoinTypesOfDidResolver } from '../../../utils/did'
 import { formatDuration } from '../../../utils/time'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
 import Markdown from '../../../components/basic/markdown'
-import Status from '../../../components/status'
 import { trpc } from '../../../utils/trpc'
+
+const StatusIcon = dynamic(() => import('../../../components/status-icon'), {
+  ssr: false,
+})
 
 const ProposerSelect = dynamic(
   () => import('../../../components/proposer-select'),
@@ -235,7 +238,7 @@ export default function CreateProposalPage() {
         <div className="-mt-2 space-y-6 rounded-md border border-gray-200 p-6">
           <DetailList
             title="Information"
-            right={<Status permalink={community?.permalink} />}
+            right={<StatusIcon permalink={community?.permalink} />}
           >
             <DetailItem title="Community">{community?.name}</DetailItem>
             <DetailItem title="Group">{group?.name}</DetailItem>
