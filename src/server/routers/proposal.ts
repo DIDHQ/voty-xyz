@@ -2,15 +2,13 @@ import { TRPCError } from '@trpc/server'
 import { compact, last } from 'lodash-es'
 import { z } from 'zod'
 
-import { uploadToArweave } from '../../utils/arweave'
+import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
 import { proposalWithAuthorSchema } from '../../utils/schemas'
 import verifyProposal from '../../utils/verifiers/verify-proposal'
 import { procedure, router } from '../trpc'
 
 const textDecoder = new TextDecoder()
-
-const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
 
 export const proposalRouter = router({
   getByPermalink: procedure
@@ -81,7 +79,7 @@ export const proposalRouter = router({
     .output(z.string())
     .mutation(async ({ input }) => {
       const { proposal, community } = await verifyProposal(input)
-      const { permalink, data } = await uploadToArweave(proposal, jwk)
+      const { permalink, data } = await uploadToArweave(proposal)
       const ts = new Date()
 
       await database.proposal.create({

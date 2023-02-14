@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last, mapValues } from 'lodash-es'
 import { z } from 'zod'
 
-import { uploadToArweave } from '../../utils/arweave'
+import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
 import { voteWithAuthorSchema } from '../../utils/schemas'
 import verifyVote from '../../utils/verifiers/verify-vote'
@@ -10,8 +10,6 @@ import { powerOfChoice } from '../../utils/voting'
 import { procedure, router } from '../trpc'
 
 const textDecoder = new TextDecoder()
-
-const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
 
 export const voteRouter = router({
   list: procedure
@@ -90,7 +88,7 @@ export const voteRouter = router({
     .output(z.string())
     .mutation(async ({ input }) => {
       const { vote, proposal } = await verifyVote(input)
-      const { permalink, data } = await uploadToArweave(vote, jwk)
+      const { permalink, data } = await uploadToArweave(vote)
       const ts = new Date()
 
       await database.$transaction([

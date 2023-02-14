@@ -2,15 +2,13 @@ import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last } from 'lodash-es'
 import { z } from 'zod'
 
-import { uploadToArweave } from '../../utils/arweave'
+import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
 import { communityWithAuthorSchema } from '../../utils/schemas'
 import verifyCommunity from '../../utils/verifiers/verify-community'
 import { procedure, router } from '../trpc'
 
 const textDecoder = new TextDecoder()
-
-const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
 
 export const communityRouter = router({
   getByEntry: procedure
@@ -108,7 +106,7 @@ export const communityRouter = router({
     .output(z.string())
     .mutation(async ({ input }) => {
       const { community } = await verifyCommunity(input)
-      const { permalink, data } = await uploadToArweave(community, jwk)
+      const { permalink, data } = await uploadToArweave(community)
       const ts = new Date()
 
       await database.$transaction([
