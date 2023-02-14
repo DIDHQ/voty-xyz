@@ -217,7 +217,7 @@ export default function CreateProposalPage() {
                 snapshots={snapshots}
                 value={did}
                 onChange={setDid}
-                className="rounded-r-none hover:z-10 active:z-10"
+                className="rounded-r-none focus:z-10 active:z-10"
               />
               <FormProvider {...methods}>
                 <SigningProposalButton
@@ -225,7 +225,7 @@ export default function CreateProposalPage() {
                   icon={HandRaisedIcon}
                   disabled={!did || !community || !snapshots}
                   onSuccess={handleSuccess}
-                  className="rounded-l-none border-l-0 hover:z-10 active:z-10"
+                  className="rounded-l-none border-l-0 focus:z-10 active:z-10"
                 >
                   Propose
                 </SigningProposalButton>
