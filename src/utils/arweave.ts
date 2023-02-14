@@ -81,7 +81,7 @@ function getArweaveTags(
 
 const textEncoder = new TextEncoder()
 
-export async function upload(
+export async function uploadToArweave(
   document: Authorized<Community | Proposal | Option | Vote>,
   jwk: JWKInterface,
 ): Promise<{ permalink: string; data: Buffer }> {

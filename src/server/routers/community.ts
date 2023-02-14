@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last } from 'lodash-es'
 import { z } from 'zod'
 
-import { upload } from '../../utils/arweave'
+import { uploadToArweave } from '../../utils/arweave'
 import { database } from '../../utils/database'
 import { communityWithAuthorSchema } from '../../utils/schemas'
 import verifyCommunity from '../../utils/verifiers/verify-community'
@@ -108,7 +108,7 @@ export const communityRouter = router({
     .output(z.string())
     .mutation(async ({ input }) => {
       const { community } = await verifyCommunity(input)
-      const { permalink, data } = await upload(community, jwk)
+      const { permalink, data } = await uploadToArweave(community, jwk)
       const ts = new Date()
 
       await database.$transaction([
