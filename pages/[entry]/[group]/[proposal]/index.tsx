@@ -92,7 +92,7 @@ export default function ProposalPage() {
   return community && proposal && group ? (
     <div className="mt-6 flex items-start">
       <div className="mr-6 flex-1">
-        <div>
+        <div className="mb-6 border-b border-gray-200 pb-6">
           <Link href={`/${community.author.did}/${proposal.group}`}>
             <TextButton>
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
