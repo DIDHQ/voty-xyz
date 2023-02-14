@@ -31,6 +31,7 @@ import Markdown from '../../../../components/basic/markdown'
 import { DataType } from '../../../../src/constants'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import Status from '../../../../components/status'
+import Alert from '../../../../components/basic/alert'
 
 const VoterSelect = dynamic(
   () => import('../../../../components/voter-select'),
@@ -85,6 +86,7 @@ export default function ProposalPage() {
     mutateTurnout()
     setValue('choice', '')
   }, [mutateList, mutateTurnout, setValue])
+  const disabled = !did
 
   return community && proposal && group ? (
     <div className="mt-6 flex items-start">
@@ -118,6 +120,7 @@ export default function ProposalPage() {
                     option={option}
                     votingPower={votingPower}
                     turnout={turnout}
+                    disabled={disabled}
                     value={value}
                     onChange={onChange}
                   />
@@ -127,32 +130,38 @@ export default function ProposalPage() {
           />
         </ul>
         <div className="flex justify-end py-6">
-          <div className="flex rounded-md">
-            <VoterSelect
-              proposal={query.proposal}
-              group={group}
-              snapshots={mapSnapshots(proposal.snapshots)}
-              value={did}
-              onChange={setDid}
-              className="rounded-r-none active:z-10"
-            />
-            <FormProvider {...methods}>
-              <SigningButton
-                did={did}
-                icon={BoltIcon}
-                onSuccess={handleSuccess}
-                disabled={
-                  choiceIsEmpty(proposal.voting_type, watch('choice')) ||
-                  !status?.timestamp ||
-                  !votingPower ||
-                  isValidating
-                }
-                className="rounded-l-none border-l-0 active:z-10"
-              >
-                {votingPower}
-              </SigningButton>
-            </FormProvider>
-          </div>
+          {disabled ? (
+            <Alert type="warning" className="w-full">
+              None of your DIDs have proposal rights.
+            </Alert>
+          ) : (
+            <div className="flex rounded-md">
+              <VoterSelect
+                proposal={query.proposal}
+                group={group}
+                snapshots={mapSnapshots(proposal.snapshots)}
+                value={did}
+                onChange={setDid}
+                className="rounded-r-none active:z-10"
+              />
+              <FormProvider {...methods}>
+                <SigningButton
+                  did={did}
+                  icon={BoltIcon}
+                  onSuccess={handleSuccess}
+                  disabled={
+                    choiceIsEmpty(proposal.voting_type, watch('choice')) ||
+                    !status?.timestamp ||
+                    !votingPower ||
+                    isValidating
+                  }
+                  className="rounded-l-none border-l-0 active:z-10"
+                >
+                  {votingPower}
+                </SigningButton>
+              </FormProvider>
+            </div>
+          )}
         </div>
         {votes?.length ? (
           <ul
@@ -221,6 +230,7 @@ export function Option(props: {
   option: string
   votingPower?: number
   turnout?: Turnout
+  disabled?: boolean
   value: string
   onChange(value: string): void
 }) {
@@ -244,7 +254,9 @@ export function Option(props: {
         backgroundSize: `${percentage}% 100%`,
       }}
       onClick={() => {
-        onChange(updateChoice(type, value, option))
+        if (!props.disabled) {
+          onChange(updateChoice(type, value, option))
+        }
       }}
     >
       <span className="ml-2 w-0 flex-1 truncate">{option}</span>
@@ -252,10 +264,12 @@ export function Option(props: {
         <input
           type={type === 'single' ? 'radio' : 'checkbox'}
           checked={checkChoice(type, value, option)}
+          disabled={props.disabled}
           onChange={() => null}
           className={clsx(
             type === 'single' ? undefined : 'rounded',
-            'h-4 w-4 border border-gray-300 text-indigo-600 focus:ring-indigo-500',
+            'h-4 w-4 border border-gray-300',
+            'text-indigo-600 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-50',
           )}
         />
       </div>
