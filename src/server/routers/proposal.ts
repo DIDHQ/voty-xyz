@@ -78,6 +78,7 @@ export const proposalRouter = router({
     }),
   create: procedure
     .input(proposalWithAuthorSchema)
+    .output(z.string())
     .mutation(async ({ input }) => {
       const { proposal, community } = await verifyProposal(input)
       const { permalink, data } = await upload(proposal, jwk)
@@ -95,6 +96,8 @@ export const proposalRouter = router({
           votes: 0,
         },
       })
+
+      return permalink
     }),
 })
 

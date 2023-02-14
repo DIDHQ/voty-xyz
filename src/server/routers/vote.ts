@@ -85,46 +85,51 @@ export const voteRouter = router({
             .power,
       )
     }),
-  create: procedure.input(voteWithAuthorSchema).mutation(async ({ input }) => {
-    const { vote, proposal } = await verifyVote(input)
-    const { permalink, data } = await upload(vote, jwk)
-    const ts = new Date()
+  create: procedure
+    .input(voteWithAuthorSchema)
+    .output(z.string())
+    .mutation(async ({ input }) => {
+      const { vote, proposal } = await verifyVote(input)
+      const { permalink, data } = await upload(vote, jwk)
+      const ts = new Date()
 
-    await database.$transaction([
-      database.vote.create({
-        data: {
-          permalink,
-          ts,
-          author: vote.author.did,
-          community: proposal.community,
-          group: proposal.group,
-          proposal: vote.proposal,
-          data,
-        },
-      }),
-      database.proposal.update({
-        where: { permalink: vote.proposal },
-        data: { votes: { increment: 1 } },
-      }),
-      ...Object.entries(
-        powerOfChoice(proposal.voting_type, vote.choice, vote.power),
-      ).map(([option, power = 0]) =>
-        database.choice.upsert({
-          where: {
-            proposal_option: { proposal: vote.proposal, option },
-          },
-          create: {
+      await database.$transaction([
+        database.vote.create({
+          data: {
+            permalink,
+            ts,
+            author: vote.author.did,
+            community: proposal.community,
+            group: proposal.group,
             proposal: vote.proposal,
-            option,
-            power,
-          },
-          update: {
-            power: { increment: power },
+            data,
           },
         }),
-      ),
-    ])
-  }),
+        database.proposal.update({
+          where: { permalink: vote.proposal },
+          data: { votes: { increment: 1 } },
+        }),
+        ...Object.entries(
+          powerOfChoice(proposal.voting_type, vote.choice, vote.power),
+        ).map(([option, power = 0]) =>
+          database.choice.upsert({
+            where: {
+              proposal_option: { proposal: vote.proposal, option },
+            },
+            create: {
+              proposal: vote.proposal,
+              option,
+              power,
+            },
+            update: {
+              power: { increment: power },
+            },
+          }),
+        ),
+      ])
+
+      return permalink
+    }),
 })
 
 export type VoteRouter = typeof voteRouter

@@ -105,6 +105,7 @@ export const communityRouter = router({
     }),
   create: procedure
     .input(communityWithAuthorSchema)
+    .output(z.string())
     .mutation(async ({ input }) => {
       const { community } = await verifyCommunity(input)
       const { permalink, data } = await upload(community, jwk)
@@ -128,6 +129,8 @@ export const communityRouter = router({
           },
         }),
       ])
+
+      return permalink
     }),
 })
 
