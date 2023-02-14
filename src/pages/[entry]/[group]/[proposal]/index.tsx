@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic'
 import { startCase } from 'lodash-es'
 import { BoltIcon } from '@heroicons/react/20/solid'
 
-import { useTurnout, useListVotes, useGroup } from '../../../../hooks/use-api'
+import { useTurnout, useGroup } from '../../../../hooks/use-api'
 import useRouterQuery from '../../../../hooks/use-router-query'
 import { calculateNumber } from '../../../../utils/functions/number'
 import { Vote, voteSchema } from '../../../../utils/schemas'
@@ -62,8 +62,9 @@ export default function ProposalPage() {
       setValue('proposal', query.proposal)
     }
   }, [query.proposal, setValue])
-  const { data: list, mutate: mutateList } = useListVotes(query.proposal)
-  const votes = useMemo(() => list?.flatMap(({ data }) => data), [list])
+  const { data: list, refetch: refetchList } =
+    trpc.vote.list.useInfiniteQuery(query)
+  const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
   const { data: votingPower, isValidating } = useSWR(
     group && did && proposal ? ['votingPower', group, did, proposal] : null,
     () =>
@@ -81,10 +82,10 @@ export default function ProposalPage() {
     }
   }, [resetField, setValue, votingPower])
   const handleSuccess = useCallback(() => {
-    mutateList()
+    refetchList()
     mutateTurnout()
     setValue('choice', '')
-  }, [mutateList, mutateTurnout, setValue])
+  }, [refetchList, mutateTurnout, setValue])
   const disabled = !did
 
   return community && proposal && group ? (

@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server'
+import { compact, keyBy, last } from 'lodash-es'
 import { z } from 'zod'
 
 import { database } from '../../utils/database'
@@ -47,6 +48,51 @@ export const communityRouter = router({
       return communityWithAuthorSchema.parse(
         JSON.parse(textDecoder.decode(community.data)),
       )
+    }),
+  list: procedure
+    .input(z.object({ cursor: z.string().nullish() }))
+    .output(
+      z.object({
+        data: z.array(
+          communityWithAuthorSchema.merge(z.object({ permalink: z.string() })),
+        ),
+        next: z.string().nullish(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const entries = await database.entry.findMany({
+        cursor: input.cursor ? { did: input.cursor } : undefined,
+        take: 50,
+        orderBy: { ts: 'desc' },
+      })
+      const communities = keyBy(
+        await database.community.findMany({
+          where: {
+            permalink: { in: entries.map(({ community }) => community) },
+          },
+        }),
+        ({ permalink }) => permalink,
+      )
+      return {
+        data: compact(
+          entries
+            .map(({ community }) => communities[community])
+            .filter((community) => community)
+            .map(({ permalink, data }) => {
+              try {
+                return {
+                  permalink,
+                  ...communityWithAuthorSchema.parse(
+                    JSON.parse(textDecoder.decode(data)),
+                  ),
+                }
+              } catch {
+                return
+              }
+            }),
+        ),
+        next: last(entries)?.did,
+      }
     }),
 })
 

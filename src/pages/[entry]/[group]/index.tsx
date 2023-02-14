@@ -2,17 +2,20 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 
 import useRouterQuery from '../../../hooks/use-router-query'
-import { useListProposals } from '../../../hooks/use-api'
 import ProposalListItem from '../../../components/proposal-list-item'
 import CommunityLayout from '../../../components/layouts/community'
 import GroupLayout from '../../../components/layouts/group'
 import Button from '../../../components/basic/button'
 import Select from '../../../components/basic/select'
+import { trpc } from '../../../utils/trpc'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['entry', 'group']>()
-  const { data: list } = useListProposals(query.entry, query.group)
-  const proposals = useMemo(() => list?.flatMap(({ data }) => data), [list])
+  const { data: list } = trpc.proposal.list.useInfiniteQuery(query)
+  const proposals = useMemo(
+    () => list?.pages.flatMap(({ data }) => data),
+    [list],
+  )
   const [order, setOrder] = useState('All')
 
   return (
