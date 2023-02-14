@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import pMap from 'p-map'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { startCase, uniq } from 'lodash-es'
@@ -73,19 +73,17 @@ export default function CreateProposalPage() {
       setValue('group', query.group)
     }
   }, [query.group, setValue])
-  const { data: requiredCoinTypes } = useSWR(
-    group?.permission.voting
-      ? ['requiredCoinTypes', group.permission.voting]
-      : null,
+  const { data: requiredCoinTypes } = useQuery(
+    ['requiredCoinTypes', group?.permission.voting],
     () =>
       uniq([
         ...requiredCoinTypesOfDidResolver,
         ...requiredCoinTypesOfNumberSets(group!.permission.voting!),
       ]),
-    { revalidateOnFocus: false },
+    { enabled: !!group?.permission.voting, refetchOnWindowFocus: false },
   )
-  const { data: snapshots } = useSWR(
-    requiredCoinTypes ? ['snapshots', requiredCoinTypes] : null,
+  const { data: snapshots } = useQuery(
+    ['snapshots', requiredCoinTypes],
     async () => {
       const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
         concurrency: 5,
@@ -95,7 +93,7 @@ export default function CreateProposalPage() {
         return obj
       }, {} as { [coinType: string]: string })
     },
-    { refreshInterval: 30000 },
+    { enabled: !!requiredCoinTypes, refetchInterval: 30000 },
   )
   useEffect(() => {
     if (snapshots) {

@@ -1,4 +1,4 @@
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 
 import { arweave } from '../utils/arweave'
 import { DataType } from '../utils/constants'
@@ -13,8 +13,8 @@ export default function useArweaveData<T extends DataType>(
   type: T,
   id?: string,
 ) {
-  return useSWR(
-    id ? ['arweaveData', id] : null,
+  return useQuery(
+    ['arweaveData', id],
     async () => {
       const data = await arweave.transactions.getData(
         id!.replace(/^ar:\/\//, ''),
@@ -37,6 +37,6 @@ export default function useArweaveData<T extends DataType>(
         throw new Error('data type not supported')
       }
     },
-    { revalidateOnFocus: false },
+    { enabled: !!id, refetchOnWindowFocus: false },
   )
 }

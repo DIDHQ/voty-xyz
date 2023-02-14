@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import pMap from 'p-map'
 
 import useWallet from '../hooks/use-wallet'
@@ -19,10 +19,8 @@ export default function ProposerSelect(props: {
   const { onChange } = props
   const { account, did } = useWallet()
   const { data: dids } = useDids(account)
-  const { data: disables } = useSWR(
-    dids && props.group && props.snapshots
-      ? [dids, props.group, props.snapshots]
-      : null,
+  const { data: disables } = useQuery(
+    [dids, props.group, props.snapshots],
     async () => {
       const booleans = await pMap(
         dids!,
@@ -39,7 +37,10 @@ export default function ProposerSelect(props: {
         return obj
       }, {} as { [key: string]: boolean })
     },
-    { revalidateOnFocus: false },
+    {
+      enabled: !!dids && !!props.group && !!props.snapshots,
+      refetchOnWindowFocus: false,
+    },
   )
   useEffect(() => {
     onChange(

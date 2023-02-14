@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
@@ -70,14 +70,15 @@ export default function ProposalPage() {
     { enabled: !!query.proposal },
   )
   const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
-  const { data: votingPower, isValidating } = useSWR(
-    group && did && proposal ? ['votingPower', group, did, proposal] : null,
+  const { data: votingPower, isLoading } = useQuery(
+    ['votingPower', group, did, proposal],
     () =>
       calculateNumber(
         group!.permission.voting,
         did! as DID,
         mapSnapshots(proposal!.snapshots),
       ),
+    { enabled: !!group && !!did && !!proposal },
   )
   useEffect(() => {
     if (votingPower === undefined) {
@@ -153,7 +154,7 @@ export default function ProposalPage() {
                   choiceIsEmpty(proposal.voting_type, watch('choice')) ||
                   !status?.timestamp ||
                   !votingPower ||
-                  isValidating
+                  isLoading
                 }
                 className="rounded-l-none border-l-0 active:z-10"
               >

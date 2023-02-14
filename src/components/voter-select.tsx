@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import pMap from 'p-map'
 import { Listbox } from '@headlessui/react'
 import clsx from 'clsx'
@@ -24,10 +24,8 @@ export default function VoterSelect(props: {
   const { onChange } = props
   const { account, did } = useWallet()
   const { data: dids } = useDids(account)
-  const { data: votes } = useSWR(
-    dids && props.group && props.snapshots
-      ? [dids, props.group, props.snapshots]
-      : null,
+  const { data: votes } = useQuery(
+    [dids, props.group, props.snapshots],
     async () => {
       const numbers = await pMap(
         dids!,
@@ -44,10 +42,13 @@ export default function VoterSelect(props: {
         return obj
       }, {} as { [key: string]: number })
     },
-    { revalidateOnFocus: false },
+    {
+      enabled: !!dids && !!props.group && !!props.snapshots,
+      refetchOnWindowFocus: false,
+    },
   )
-  const { data: powers } = useSWR(
-    dids && props.proposal ? [dids, props.proposal] : null,
+  const { data: powers } = useQuery(
+    [dids, props.proposal],
     async () => {
       const { powers } = await fetchJson<{ powers: { [did: string]: number } }>(
         '/api/voted',
@@ -59,7 +60,7 @@ export default function VoterSelect(props: {
       )
       return powers
     },
-    { revalidateOnFocus: false },
+    { enabled: !!dids && !!props.proposal, refetchOnWindowFocus: false },
   )
   useEffect(() => {
     onChange(
