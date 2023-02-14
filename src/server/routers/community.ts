@@ -10,6 +10,8 @@ import { procedure, router } from '../trpc'
 
 const textDecoder = new TextDecoder()
 
+const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
+
 export const communityRouter = router({
   getByEntry: procedure
     .input(z.object({ entry: z.string().nullish() }))
@@ -100,7 +102,7 @@ export const communityRouter = router({
     .input(communityWithAuthorSchema)
     .mutation(async ({ input }) => {
       const { community } = await verifyCommunity(input)
-      const { permalink, data } = await upload(community)
+      const { permalink, data } = await upload(community, jwk)
       const ts = new Date()
 
       await database.$transaction([

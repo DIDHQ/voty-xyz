@@ -11,6 +11,8 @@ import { procedure, router } from '../trpc'
 
 const textDecoder = new TextDecoder()
 
+const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
+
 export const voteRouter = router({
   list: procedure
     .input(
@@ -85,7 +87,7 @@ export const voteRouter = router({
     }),
   create: procedure.input(voteWithAuthorSchema).mutation(async ({ input }) => {
     const { vote, proposal } = await verifyVote(input)
-    const { permalink, data } = await upload(vote)
+    const { permalink, data } = await upload(vote, jwk)
     const ts = new Date()
 
     await database.$transaction([

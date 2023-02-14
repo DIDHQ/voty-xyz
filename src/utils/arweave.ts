@@ -1,4 +1,5 @@
 import Arweave from 'arweave'
+import type { JWKInterface } from 'arweave/node/lib/wallet'
 
 import { DataType } from './constants'
 import { isCommunity, isProposal, isOption, isVote } from './data-type'
@@ -78,12 +79,11 @@ function getArweaveTags(
   throw new Error('cannot get arweave tags')
 }
 
-const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
-
 const textEncoder = new TextEncoder()
 
 export async function upload(
   document: Authorized<Community | Proposal | Option | Vote>,
+  jwk: JWKInterface,
 ): Promise<{ permalink: string; data: Buffer }> {
   const data = Buffer.from(textEncoder.encode(JSON.stringify(document)))
   const transaction = await arweave.createTransaction({ data })

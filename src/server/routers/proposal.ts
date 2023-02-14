@@ -10,6 +10,8 @@ import { procedure, router } from '../trpc'
 
 const textDecoder = new TextDecoder()
 
+const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
+
 export const proposalRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().nullish() }))
@@ -78,7 +80,7 @@ export const proposalRouter = router({
     .input(proposalWithAuthorSchema)
     .mutation(async ({ input }) => {
       const { proposal, community } = await verifyProposal(input)
-      const { permalink, data } = await upload(proposal)
+      const { permalink, data } = await upload(proposal, jwk)
       const ts = new Date()
 
       await database.proposal.create({
