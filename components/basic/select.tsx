@@ -39,7 +39,7 @@ export default function Select(props: {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
               className={clsx(
-                'absolute',
+                'absolute z-50',
                 props.top ? 'bottom-full mb-1' : 'top-full mt-1',
                 props.full ? 'w-full' : undefined,
               )}

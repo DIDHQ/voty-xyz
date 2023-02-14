@@ -24,6 +24,7 @@ import {
   checkChoice,
   choiceIsEmpty,
   powerOfChoice,
+  stringifyChoice,
   updateChoice,
 } from '../../../../src/voting'
 import TextButton from '../../../../components/basic/text-button'
@@ -31,6 +32,7 @@ import Markdown from '../../../../components/basic/markdown'
 import { DataType } from '../../../../src/constants'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import Status from '../../../../components/status'
+import { permalink2Url } from '../../../../src/arweave'
 
 const VoterSelect = dynamic(
   () => import('../../../../components/voter-select'),
@@ -85,11 +87,12 @@ export default function ProposalPage() {
     mutateTurnout()
     setValue('choice', '')
   }, [mutateList, mutateTurnout, setValue])
+  const disabled = !did
 
   return community && proposal && group ? (
     <div className="mt-6 flex items-start">
       <div className="mr-6 flex-1">
-        <div>
+        <div className="mb-6 border-b border-gray-200 pb-6">
           <Link href={`/${community.author.did}/${proposal.group}`}>
             <TextButton>
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
@@ -118,6 +121,7 @@ export default function ProposalPage() {
                     option={option}
                     votingPower={votingPower}
                     turnout={turnout}
+                    disabled={disabled}
                     value={value}
                     onChange={onChange}
                   />
@@ -155,21 +159,50 @@ export default function ProposalPage() {
           </div>
         </div>
         {votes?.length ? (
-          <ul
-            role="list"
-            className="divide-y divide-gray-200 rounded-md border border-gray-200"
-          >
-            {votes?.map((vote) => (
-              <li
-                key={vote.permalink}
-                className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
-              >
-                <span className="ml-2 truncate">{vote.author.did}</span>
-                <span>{vote.choice}</span>
-                <span>{vote.power}</span>
-              </li>
-            ))}
-          </ul>
+          <table className="min-w-full divide-y divide-gray-300">
+            <thead>
+              <tr>
+                <th
+                  scope="col"
+                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                >
+                  DID
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  Choice
+                </th>
+                <th
+                  scope="col"
+                  className="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-6"
+                >
+                  Power
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {votes.map((vote) => (
+                <tr key={vote.permalink}>
+                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                    {vote.author.did}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {stringifyChoice(proposal.voting_type, vote.choice)}
+                  </td>
+                  <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                    <a
+                      href={permalink2Url(vote.permalink)}
+                      className="text-indigo-600 hover:text-indigo-900"
+                    >
+                      {vote.power}
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         ) : null}
       </div>
       <div className="sticky top-24 w-80 shrink-0">
@@ -221,6 +254,7 @@ export function Option(props: {
   option: string
   votingPower?: number
   turnout?: Turnout
+  disabled?: boolean
   value: string
   onChange(value: string): void
 }) {
@@ -244,7 +278,9 @@ export function Option(props: {
         backgroundSize: `${percentage}% 100%`,
       }}
       onClick={() => {
-        onChange(updateChoice(type, value, option))
+        if (!props.disabled) {
+          onChange(updateChoice(type, value, option))
+        }
       }}
     >
       <span className="ml-2 w-0 flex-1 truncate">{option}</span>
@@ -252,10 +288,12 @@ export function Option(props: {
         <input
           type={type === 'single' ? 'radio' : 'checkbox'}
           checked={checkChoice(type, value, option)}
+          disabled={props.disabled}
           onChange={() => null}
           className={clsx(
             type === 'single' ? undefined : 'rounded',
-            'h-4 w-4 border border-gray-300 text-indigo-600 focus:ring-indigo-500',
+            'h-4 w-4 border border-gray-300',
+            'text-indigo-600 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-50',
           )}
         />
       </div>

@@ -18,8 +18,7 @@ export function updateChoice(
       )
     }
     return ''
-  } catch (err) {
-    console.error('updateChoice', err)
+  } catch {
     return ''
   }
 }
@@ -37,8 +36,7 @@ export function checkChoice(
       return (JSON.parse(choice || '[]') as string[]).includes(option)
     }
     return false
-  } catch (err) {
-    console.error('checkChoice', err)
+  } catch {
     return false
   }
 }
@@ -60,8 +58,7 @@ export function powerOfChoice(
       }, {} as { [option: string]: number })
     }
     return {}
-  } catch (err) {
-    console.error('powerOfChoice', err)
+  } catch {
     return {}
   }
 }
@@ -77,4 +74,18 @@ export function choiceIsEmpty(
     return !choice || choice === '[]'
   }
   return true
+}
+
+export function stringifyChoice(type: 'single' | 'multiple', choice: string) {
+  try {
+    if (type === 'single') {
+      return JSON.parse(choice)
+    }
+    if (type === 'multiple') {
+      return (JSON.parse(choice || '[]') as string[]).sort().join(', ')
+    }
+    return ''
+  } catch {
+    return ''
+  }
 }
