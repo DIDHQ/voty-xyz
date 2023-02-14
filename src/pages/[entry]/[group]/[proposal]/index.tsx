@@ -148,7 +148,7 @@ export default function ProposalPage() {
               snapshots={proposal.snapshots}
               value={did}
               onChange={setDid}
-              className="rounded-r-none active:z-10"
+              className="rounded-r-none hover:z-10 active:z-10"
             />
             <FormProvider {...methods}>
               <SigningVoteButton
@@ -160,7 +160,7 @@ export default function ProposalPage() {
                   !votingPower ||
                   isLoading
                 }
-                className="rounded-l-none border-l-0 active:z-10"
+                className="rounded-l-none border-l-0 hover:z-10 active:z-10"
               >
                 {votingPower}
               </SigningVoteButton>
