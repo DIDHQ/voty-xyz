@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { startCase, uniq } from 'lodash-es'
 import dynamic from 'next/dynamic'
+import { HandRaisedIcon } from '@heroicons/react/20/solid'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import { requiredCoinTypesOfNumberSets } from '../../../src/functions/number'
@@ -25,7 +26,6 @@ import { formatDuration } from '../../../src/utils/time'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
 import Markdown from '../../../components/basic/markdown'
 import Status from '../../../components/status'
-import { HandRaisedIcon } from '@heroicons/react/20/solid'
 
 const ProposerSelect = dynamic(
   () => import('../../../components/proposer-select'),
@@ -215,7 +215,7 @@ export default function CreateProposalPage() {
                 snapshots={snapshots ? mapSnapshots(snapshots) : undefined}
                 value={did}
                 onChange={setDid}
-                className="rounded-r-none border-r-0"
+                className="rounded-r-none"
               />
               <FormProvider {...methods}>
                 <SigningButton
@@ -223,7 +223,7 @@ export default function CreateProposalPage() {
                   icon={HandRaisedIcon}
                   disabled={!did || !community || !snapshots}
                   onSuccess={handleSuccess}
-                  className="rounded-l-none"
+                  className="z-10 rounded-l-none border-l-0"
                 >
                   Propose
                 </SigningButton>
@@ -250,7 +250,7 @@ export default function CreateProposalPage() {
             </DetailItem>
           </DetailList>
           <DetailList title="Terms and conditions">
-            <article className="prose-sm pt-2 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
+            <article className="prose-sm pt-2 prose-pre:overflow-x-auto prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
               <Markdown>{group?.extension.terms_and_conditions}</Markdown>
             </article>
           </DetailList>

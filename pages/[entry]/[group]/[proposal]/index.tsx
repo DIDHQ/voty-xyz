@@ -133,7 +133,7 @@ export default function ProposalPage() {
               snapshots={mapSnapshots(proposal.snapshots)}
               value={did}
               onChange={setDid}
-              className="rounded-r-none border-r-0"
+              className="rounded-r-none"
             />
             <FormProvider {...methods}>
               <SigningButton
@@ -146,7 +146,7 @@ export default function ProposalPage() {
                   !votingPower ||
                   isValidating
                 }
-                className="rounded-l-none"
+                className="z-10 rounded-l-none border-l-0"
               >
                 {votingPower}
               </SigningButton>
@@ -205,7 +205,7 @@ export default function ProposalPage() {
             </DetailItem>
           </DetailList>
           <DetailList title="Terms and conditions">
-            <article className="prose-sm pt-2 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
+            <article className="prose-sm pt-2 prose-pre:overflow-x-auto prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
               <Markdown>{group?.extension.terms_and_conditions}</Markdown>
             </article>
           </DetailList>

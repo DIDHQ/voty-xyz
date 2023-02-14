@@ -1,10 +1,13 @@
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
+import { ReactNode } from 'react'
 
 export default function Select(props: {
   options?: string[]
   value: string
+  disables?: { [key: string]: boolean }
+  renderItem?: (option: string) => ReactNode
   full?: boolean
   top?: boolean
   onChange(value: string): void
@@ -42,41 +45,51 @@ export default function Select(props: {
               )}
             >
               <Listbox.Options className="z-10 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                {props.options?.map((option) => (
-                  <Listbox.Option
-                    key={option}
-                    className={({ active }) =>
-                      clsx(
-                        active ? 'bg-indigo-600 text-white' : 'text-gray-900',
-                        'relative cursor-default select-none py-2 pl-3 pr-9',
-                      )
-                    }
-                    value={option}
-                  >
-                    {({ selected, active }) => (
-                      <>
-                        <span
-                          className={clsx(
-                            selected ? 'font-semibold' : 'font-normal',
-                            'block truncate',
-                          )}
-                        >
-                          {option}
-                        </span>
-                        {selected ? (
-                          <span
-                            className={clsx(
-                              active ? 'text-white' : 'text-indigo-600',
-                              'absolute inset-y-0 right-0 flex items-center pr-4',
-                            )}
-                          >
-                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                          </span>
-                        ) : null}
-                      </>
-                    )}
-                  </Listbox.Option>
-                ))}
+                {props.renderItem
+                  ? props.options?.map(props.renderItem)
+                  : props.options?.map((option) => (
+                      <Listbox.Option
+                        key={option}
+                        value={option}
+                        disabled={props.disables?.[option]}
+                        className={({ active, disabled }) =>
+                          clsx(
+                            active
+                              ? 'bg-indigo-600 text-white'
+                              : disabled
+                              ? 'cursor-not-allowed text-gray-400'
+                              : 'text-gray-900',
+                            'relative cursor-default select-none py-2 pl-3 pr-9',
+                          )
+                        }
+                      >
+                        {({ selected, active }) => (
+                          <>
+                            <span
+                              className={clsx(
+                                selected ? 'font-semibold' : 'font-normal',
+                                'block truncate',
+                              )}
+                            >
+                              {option}
+                            </span>
+                            {selected ? (
+                              <span
+                                className={clsx(
+                                  active ? 'text-white' : 'text-indigo-600',
+                                  'absolute inset-y-0 right-0 flex items-center pr-4',
+                                )}
+                              >
+                                <CheckIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </span>
+                            ) : null}
+                          </>
+                        )}
+                      </Listbox.Option>
+                    ))}
               </Listbox.Options>
             </Transition>
           </div>
