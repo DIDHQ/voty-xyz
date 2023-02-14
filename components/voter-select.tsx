@@ -45,7 +45,7 @@ export default function VoterSelect(props: {
   return (
     <Select
       top
-      options={dids}
+      options={data}
       value={props.value}
       onChange={props.onChange}
       className={props.className}
