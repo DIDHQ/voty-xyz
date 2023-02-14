@@ -14,7 +14,7 @@ export default function GroupSettingsPage() {
   const query = useRouterQuery<['entry', 'group']>()
   const { account } = useWallet()
   const { data: community, refetch } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
+    query,
     { enabled: !!query.entry },
   )
   const { data: isAdmin } = useDidIsMatch(query.entry, account)
