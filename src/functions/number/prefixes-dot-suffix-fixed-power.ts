@@ -1,8 +1,8 @@
 import { NumberFunction } from '../types'
 
 export const prefixes_dot_suffix_fixed_power: NumberFunction<
-  [number, string[], string]
-> = (power, prefixes, suffix) => {
+  [string, string[], number]
+> = (suffix, prefixes, power) => {
   const set = new Set(prefixes.map((prefix) => `${prefix}.${suffix}`))
 
   return {
