@@ -25,7 +25,7 @@ import TextButton from '../../../../components/basic/text-button'
 import Markdown from '../../../../components/basic/markdown'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import Status from '../../../../components/status'
-import { permalink2Url } from '../../../../utils/arweave'
+import { id2Permalink, permalink2Url } from '../../../../utils/arweave'
 import { trpc } from '../../../../utils/trpc'
 import { inferRouterOutputs } from '@trpc/server'
 import { ChoiceRouter } from '../../../../server/routers/choice'
@@ -35,8 +35,8 @@ const VoterSelect = dynamic(
   { ssr: false },
 )
 
-const SigningButton = dynamic(
-  () => import('../../../../components/signing-button'),
+const SigningVoteButton = dynamic(
+  () => import('../../../../components/signing/signing-vote-button'),
   { ssr: false },
 )
 
@@ -145,7 +145,7 @@ export default function ProposalPage() {
               className="rounded-r-none active:z-10"
             />
             <FormProvider {...methods}>
-              <SigningButton
+              <SigningVoteButton
                 did={did}
                 icon={BoltIcon}
                 onSuccess={handleSuccess}
@@ -158,7 +158,7 @@ export default function ProposalPage() {
                 className="rounded-l-none border-l-0 active:z-10"
               >
                 {votingPower}
-              </SigningButton>
+              </SigningVoteButton>
             </FormProvider>
           </div>
         </div>

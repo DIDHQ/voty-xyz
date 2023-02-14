@@ -33,8 +33,8 @@ const ProposerSelect = dynamic(
   { ssr: false },
 )
 
-const SigningButton = dynamic(
-  () => import('../../../components/signing-button'),
+const SigningProposalButton = dynamic(
+  () => import('../../../components/signing/signing-proposal-button'),
   { ssr: false },
 )
 
@@ -217,7 +217,7 @@ export default function CreateProposalPage() {
                 className="rounded-r-none active:z-10"
               />
               <FormProvider {...methods}>
-                <SigningButton
+                <SigningProposalButton
                   did={did}
                   icon={HandRaisedIcon}
                   disabled={!did || !community || !snapshots}
@@ -225,7 +225,7 @@ export default function CreateProposalPage() {
                   className="rounded-l-none border-l-0 active:z-10"
                 >
                   Propose
-                </SigningButton>
+                </SigningProposalButton>
               </FormProvider>
             </div>
           </FormFooter>
@@ -235,7 +235,7 @@ export default function CreateProposalPage() {
         <div className="-mt-2 space-y-6 rounded-md border border-gray-200 p-6">
           <DetailList
             title="Information"
-            right={<Status permalink={query.entry} />}
+            right={<Status permalink={community?.permalink} />}
           >
             <DetailItem title="Community">{community?.name}</DetailItem>
             <DetailItem title="Group">{group?.name}</DetailItem>

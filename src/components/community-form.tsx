@@ -14,9 +14,10 @@ import Textarea from './basic/textarea'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 
-const SigningButton = dynamic(() => import('./signing-button'), {
-  ssr: false,
-})
+const SigningCommunityButton = dynamic(
+  () => import('./signing/signing-community-button'),
+  { ssr: false },
+)
 
 export default function CommunityForm(props: {
   entry: string
@@ -140,14 +141,14 @@ export default function CommunityForm(props: {
       </FormSection>
       <FormFooter>
         <FormProvider {...methods}>
-          <SigningButton
+          <SigningCommunityButton
             did={props.entry}
             icon={props.community ? DocumentArrowUpIcon : DocumentPlusIcon}
             onSuccess={onSuccess}
             disabled={props.disabled}
           >
             {props.community ? 'Update' : 'Create'}
-          </SigningButton>
+          </SigningCommunityButton>
         </FormProvider>
       </FormFooter>
     </Form>

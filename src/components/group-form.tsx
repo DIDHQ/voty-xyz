@@ -21,7 +21,10 @@ import NumberSetsBlock from './number-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 
-const SigningButton = dynamic(() => import('./signing-button'), { ssr: false })
+const SigningCommunityButton = dynamic(
+  () => import('./signing/signing-community-button'),
+  { ssr: false },
+)
 
 const defaultAnnouncementDuration = 3600
 
@@ -248,14 +251,14 @@ export default function GroupForm(props: {
       </FormSection>
       <FormFooter>
         <FormProvider {...methods}>
-          <SigningButton
+          <SigningCommunityButton
             did={props.community.author.did}
             icon={isNewGroup ? DocumentPlusIcon : DocumentArrowUpIcon}
             onSuccess={onSuccess}
             disabled={props.disabled}
           >
             {isNewGroup ? 'Create' : 'Update'}
-          </SigningButton>
+          </SigningCommunityButton>
         </FormProvider>
       </FormFooter>
     </Form>
