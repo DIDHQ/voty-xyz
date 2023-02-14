@@ -24,6 +24,7 @@ import {
   checkChoice,
   choiceIsEmpty,
   powerOfChoice,
+  stringifyChoice,
   updateChoice,
 } from '../../../../src/voting'
 import TextButton from '../../../../components/basic/text-button'
@@ -32,6 +33,7 @@ import { DataType } from '../../../../src/constants'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import Status from '../../../../components/status'
 import Alert from '../../../../components/basic/alert'
+import { permalink2Url } from '../../../../src/arweave'
 
 const VoterSelect = dynamic(
   () => import('../../../../components/voter-select'),
@@ -164,21 +166,50 @@ export default function ProposalPage() {
           )}
         </div>
         {votes?.length ? (
-          <ul
-            role="list"
-            className="divide-y divide-gray-200 rounded-md border border-gray-200"
-          >
-            {votes?.map((vote) => (
-              <li
-                key={vote.permalink}
-                className="flex items-center justify-between py-3 pl-2 pr-4 text-sm"
-              >
-                <span className="ml-2 truncate">{vote.author.did}</span>
-                <span>{vote.choice}</span>
-                <span>{vote.power}</span>
-              </li>
-            ))}
-          </ul>
+          <table className="min-w-full divide-y divide-gray-300">
+            <thead>
+              <tr>
+                <th
+                  scope="col"
+                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                >
+                  DID
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  Choice
+                </th>
+                <th
+                  scope="col"
+                  className="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-6"
+                >
+                  Power
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {votes.map((vote) => (
+                <tr key={vote.permalink}>
+                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                    {vote.author.did}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {stringifyChoice(proposal.voting_type, vote.choice)}
+                  </td>
+                  <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                    <a
+                      href={permalink2Url(vote.permalink)}
+                      className="text-indigo-600 hover:text-indigo-900"
+                    >
+                      {vote.power}
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         ) : null}
       </div>
       <div className="sticky top-24 w-80 shrink-0">

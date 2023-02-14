@@ -78,3 +78,13 @@ export function choiceIsEmpty(
   }
   return true
 }
+
+export function stringifyChoice(type: 'single' | 'multiple', choice: string) {
+  if (type === 'single') {
+    return JSON.parse(choice)
+  }
+  if (type === 'multiple') {
+    return (JSON.parse(choice || '[]') as string[]).sort().join(', ')
+  }
+  return ''
+}
