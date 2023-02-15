@@ -96,6 +96,7 @@ export default function ProposalPage() {
     refetchList()
     refetchChoices()
     setValue('choice', '')
+    setDid('')
   }, [refetchList, refetchChoices, setValue])
   const disabled = !did
 
