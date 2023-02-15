@@ -165,7 +165,7 @@ export default function ProposalPage() {
                 }
                 className="rounded-l-none border-l-0 focus:z-10 active:z-10"
               >
-                {votingPower}
+                Vote ({votingPower})
               </SigningVoteButton>
             </FormProvider>
           </div>
