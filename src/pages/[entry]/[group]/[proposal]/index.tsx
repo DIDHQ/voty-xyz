@@ -217,7 +217,7 @@ export default function ProposalPage() {
           </table>
         ) : null}
       </div>
-      <div className="sticky top-24 w-80 shrink-0">
+      <div className="sticky top-24 -mt-2 w-80 shrink-0">
         <StatusIcon
           permalink={query.proposal}
           className="absolute right-3 top-1"
