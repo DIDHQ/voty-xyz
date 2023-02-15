@@ -2,6 +2,7 @@ import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/20/solid'
 import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline'
 import { useCallback, useEffect } from 'react'
 
+import useWallet from '../hooks/use-wallet'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
 import TextButton from './basic/text-button'
@@ -10,6 +11,7 @@ export default function SubscriptionButton(props: {
   entry?: string
   className?: string
 }) {
+  const { did } = useWallet()
   const { refetch: refetchList } = trpc.subscription.list.useQuery(undefined, {
     refetchOnWindowFocus: false,
   })
@@ -32,7 +34,7 @@ export default function SubscriptionButton(props: {
     mutate({ entry: props.entry })
   }, [mutate, props.entry])
 
-  return (
+  return did ? (
     <>
       <Notification show={isError}>{error?.message}</Notification>
       {data ? (
@@ -53,5 +55,5 @@ export default function SubscriptionButton(props: {
         </TextButton>
       )}
     </>
-  )
+  ) : null
 }
