@@ -10,7 +10,11 @@ export default function SubscriptionButton(props: {
   entry?: string
   className?: string
 }) {
-  const { data: subscribed, refetch } = trpc.subscription.get.useQuery(props)
+  const {
+    data: subscribed,
+    refetch,
+    isLoading,
+  } = trpc.subscription.get.useQuery(props)
   const handleSubscribe = trpc.subscription.subscribe.useMutation()
   const handleUnsubscribe = trpc.subscription.unsubscribe.useMutation()
   useEffect(() => {
@@ -34,7 +38,7 @@ export default function SubscriptionButton(props: {
       </Notification>
       {subscribed ? (
         <TextButton
-          disabled={handleUnsubscribe.isLoading}
+          disabled={isLoading || handleUnsubscribe.isLoading}
           onClick={() => handleUnsubscribe.mutate({ entry: props.entry })}
           className={props.className}
         >
@@ -42,7 +46,7 @@ export default function SubscriptionButton(props: {
         </TextButton>
       ) : (
         <TextButton
-          disabled={handleSubscribe.isLoading}
+          disabled={isLoading || handleSubscribe.isLoading}
           onClick={() => handleSubscribe.mutate({ entry: props.entry })}
           className={props.className}
         >
