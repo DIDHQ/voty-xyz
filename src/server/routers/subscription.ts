@@ -9,6 +9,25 @@ import { procedure, router } from '../trpc'
 const textDecoder = new TextDecoder()
 
 export const subscriptionRouter = router({
+  get: procedure
+    .input(z.object({ entry: z.string().nullish() }))
+    .output(z.boolean())
+    .query(async ({ ctx, input }) => {
+      if (!ctx.user) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' })
+      }
+      if (!input.entry) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
+      }
+
+      const subscription = await database.subscription.findUnique({
+        where: {
+          entry_subscriber: { entry: input.entry, subscriber: ctx.user.did },
+        },
+      })
+
+      return !!subscription
+    }),
   list: procedure
     .input(z.object({ subscriber: z.string().nullish() }))
     .output(z.array(communityWithAuthorSchema))
@@ -58,7 +77,7 @@ export const subscriptionRouter = router({
       )
     }),
   subscribe: procedure
-    .input(z.object({ entry: z.string() }))
+    .input(z.object({ entry: z.string().nullish() }))
     .mutation(async ({ ctx, input }) => {
       if (!ctx.user) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
@@ -82,7 +101,7 @@ export const subscriptionRouter = router({
       ])
     }),
   unsubscribe: procedure
-    .input(z.object({ entry: z.string() }))
+    .input(z.object({ entry: z.string().nullish() }))
     .mutation(async ({ ctx, input }) => {
       if (!ctx.user) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })

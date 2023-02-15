@@ -23,6 +23,10 @@ const StatusIcon = dynamic(() => import('./status-icon'), {
   ssr: false,
 })
 
+const SubscriptionButton = dynamic(() => import('./subscription-button'), {
+  ssr: false,
+})
+
 const CreateGroupButton = dynamic(() => import('./create-group-button'), {
   ssr: false,
 })
@@ -113,6 +117,10 @@ export default function CommunityNav(props: { className?: string }) {
                 id="projects-headline"
               >
                 Community
+                <SubscriptionButton
+                  entry={query.entry}
+                  className="float-right"
+                />
               </h3>
               {navigation.map((item) => (
                 <Link
@@ -144,12 +152,10 @@ export default function CommunityNav(props: { className?: string }) {
                 id="projects-headline"
               >
                 Groups
-                {
-                  <CreateGroupButton
-                    entry={query.entry}
-                    className="float-right"
-                  />
-                }
+                <CreateGroupButton
+                  entry={query.entry}
+                  className="float-right"
+                />
               </h3>
               <div
                 className="mt-1 space-y-1"
