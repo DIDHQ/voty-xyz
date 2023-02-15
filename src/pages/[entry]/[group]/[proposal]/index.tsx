@@ -7,6 +7,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { startCase } from 'lodash-es'
 import { BoltIcon } from '@heroicons/react/20/solid'
+import type { inferRouterOutputs } from '@trpc/server'
 
 import useGroup from '../../../../hooks/use-group'
 import useRouterQuery from '../../../../hooks/use-router-query'
@@ -25,7 +26,6 @@ import Markdown from '../../../../components/basic/markdown'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import { permalink2Url } from '../../../../utils/permalink'
 import { trpc } from '../../../../utils/trpc'
-import { inferRouterOutputs } from '@trpc/server'
 import { ChoiceRouter } from '../../../../server/routers/choice'
 
 const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
