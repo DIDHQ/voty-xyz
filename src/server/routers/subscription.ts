@@ -9,25 +9,6 @@ import { procedure, router } from '../trpc'
 const textDecoder = new TextDecoder()
 
 export const subscriptionRouter = router({
-  get: procedure
-    .input(z.object({ entry: z.string().nullish() }))
-    .output(z.boolean())
-    .query(async ({ ctx, input }) => {
-      if (!ctx.did) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' })
-      }
-      if (!input.entry) {
-        throw new TRPCError({ code: 'BAD_REQUEST' })
-      }
-
-      const subscription = await database.subscription.findUnique({
-        where: {
-          entry_subscriber: { entry: input.entry, subscriber: ctx.did },
-        },
-      })
-
-      return !!subscription
-    }),
   list: procedure
     .output(z.array(communityWithAuthorSchema))
     .query(async ({ ctx }) => {
@@ -75,7 +56,13 @@ export const subscriptionRouter = router({
       )
     }),
   set: procedure
-    .input(z.object({ entry: z.string().nullish(), subscribe: z.boolean() }))
+    .input(
+      z.object({
+        entry: z.string().nullish(),
+        subscribe: z.boolean().nullish(),
+      }),
+    )
+    .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
       if (!ctx.did) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
@@ -84,36 +71,45 @@ export const subscriptionRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      await database.$transaction(
-        input.subscribe
-          ? [
-              database.subscription.create({
-                data: {
-                  entry: input.entry,
-                  subscriber: ctx.did,
-                  ts: new Date(),
-                },
-              }),
-              database.entry.update({
-                where: { did: input.entry },
-                data: { subscribers: { increment: 1 } },
-              }),
-            ]
-          : [
-              database.subscription.delete({
-                where: {
-                  entry_subscriber: {
-                    entry: input.entry,
-                    subscriber: ctx.did,
-                  },
-                },
-              }),
-              database.entry.update({
-                where: { did: input.entry },
-                data: { subscribers: { decrement: 1 } },
-              }),
-            ],
-      )
+      if (input.subscribe === undefined || input.subscribe === null) {
+        const subscription = await database.subscription.findUnique({
+          where: {
+            entry_subscriber: { entry: input.entry, subscriber: ctx.did },
+          },
+        })
+        return !!subscription
+      }
+      if (input.subscribe === true) {
+        database.$transaction([
+          database.subscription.create({
+            data: {
+              entry: input.entry,
+              subscriber: ctx.did,
+              ts: new Date(),
+            },
+          }),
+          database.entry.update({
+            where: { did: input.entry },
+            data: { subscribers: { increment: 1 } },
+          }),
+        ])
+      } else {
+        database.$transaction([
+          database.subscription.delete({
+            where: {
+              entry_subscriber: {
+                entry: input.entry,
+                subscriber: ctx.did,
+              },
+            },
+          }),
+          database.entry.update({
+            where: { did: input.entry },
+            data: { subscribers: { decrement: 1 } },
+          }),
+        ])
+      }
+      return input.subscribe
     }),
 })
 

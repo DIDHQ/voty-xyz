@@ -10,38 +10,34 @@ export default function SubscriptionButton(props: {
   entry?: string
   className?: string
 }) {
-  const {
-    data: subscribed,
-    refetch,
-    isFetching,
-  } = trpc.subscription.get.useQuery(props, { refetchOnWindowFocus: false })
   const { refetch: refetchList } = trpc.subscription.list.useQuery(undefined, {
     refetchOnWindowFocus: false,
   })
-  const handleSet = trpc.subscription.set.useMutation()
+  const { data, mutate, isLoading, isSuccess, isError, error } =
+    trpc.subscription.set.useMutation()
   const handleSubscribe = useCallback(
-    () => handleSet.mutate({ entry: props.entry, subscribe: true }),
-    [handleSet, props.entry],
+    () => mutate({ entry: props.entry, subscribe: true }),
+    [mutate, props.entry],
   )
   const handleUnsubscribe = useCallback(
-    () => handleSet.mutate({ entry: props.entry, subscribe: false }),
-    [handleSet, props.entry],
+    () => mutate({ entry: props.entry, subscribe: false }),
+    [mutate, props.entry],
   )
   useEffect(() => {
-    if (handleSet.isSuccess) {
-      refetch()
+    if (isSuccess) {
       refetchList()
     }
-  }, [handleSet.isSuccess, refetch, refetchList])
+  }, [isSuccess, refetchList])
+  useEffect(() => {
+    mutate({ entry: props.entry })
+  }, [mutate, props.entry])
 
   return (
     <>
-      <Notification show={handleSet.isError}>
-        {handleSet.error?.message}
-      </Notification>
-      {subscribed ? (
+      <Notification show={isError}>{error?.message}</Notification>
+      {data ? (
         <TextButton
-          disabled={isFetching || handleSet.isLoading}
+          disabled={isLoading}
           onClick={handleUnsubscribe}
           className={props.className}
         >
@@ -49,7 +45,7 @@ export default function SubscriptionButton(props: {
         </TextButton>
       ) : (
         <TextButton
-          disabled={isFetching || handleSet.isLoading}
+          disabled={isLoading}
           onClick={handleSubscribe}
           className={props.className}
         >
