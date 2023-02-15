@@ -15,7 +15,8 @@ export default async function verifyAuthor<T extends object>(
   }
 
   if (
-    (await verifyDocument(rest, author.proof, verifyMessage)) !== author.address
+    (await verifyDocument(1, rest, author.proof, verifyMessage)) !==
+    author.address
   ) {
     throw new Error('invalid author address')
   }

@@ -26,7 +26,7 @@ export default function useSignDocument<
       try {
         if (coinTypeToChainId[account.coinType]) {
           const [proof, snapshot] = await Promise.all([
-            signDocument(document, signMessage),
+            signDocument(1, document, signMessage),
             getCurrentSnapshot(account.coinType),
           ])
           return {
