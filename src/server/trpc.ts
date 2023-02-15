@@ -1,6 +1,8 @@
 import { initTRPC } from '@trpc/server'
 
-const t = initTRPC.create()
+import { Context } from '../utils/trpc/context'
+
+const t = initTRPC.context<Context>().create()
 
 export const router = t.router
 

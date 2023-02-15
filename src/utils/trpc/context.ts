@@ -1,8 +1,8 @@
 import { inferAsyncReturnType } from '@trpc/server'
 import { CreateNextContextOptions } from '@trpc/server/adapters/next'
 
-import { Author } from './schemas'
-import verifyAuthor from './verifiers/verify-author'
+import { Author } from '../schemas'
+import verifyAuthor from '../verifiers/verify-author'
 
 export async function createContext({ req }: CreateNextContextOptions) {
   async function getUserFromHeader() {
@@ -18,9 +18,7 @@ export async function createContext({ req }: CreateNextContextOptions) {
   }
   const user = await getUserFromHeader()
 
-  return {
-    user,
-  }
+  return { user }
 }
 
 export type Context = inferAsyncReturnType<typeof createContext>
