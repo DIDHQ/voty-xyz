@@ -23,6 +23,9 @@ export async function verifyDocument(
   ) => string | Promise<string>,
 ): Promise<string> {
   const message = encodeDocument(version, document)
+  if (!proof.startsWith(`${version}:`)) {
+    throw new Error('unsupported version')
+  }
   return verifyMessage(
     message,
     Buffer.from(proof.replace(`\^${version}:`, ''), 'base64'),
