@@ -13,7 +13,7 @@ export const subscriptionRouter = router({
     .input(z.object({ entry: z.string().nullish() }))
     .output(z.boolean())
     .query(async ({ ctx, input }) => {
-      if (!ctx.user) {
+      if (!ctx.did) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
       }
       if (!input.entry) {
@@ -22,7 +22,7 @@ export const subscriptionRouter = router({
 
       const subscription = await database.subscription.findUnique({
         where: {
-          entry_subscriber: { entry: input.entry, subscriber: ctx.user.did },
+          entry_subscriber: { entry: input.entry, subscriber: ctx.did },
         },
       })
 
@@ -32,7 +32,7 @@ export const subscriptionRouter = router({
     .input(z.object({ subscriber: z.string().nullish() }))
     .output(z.array(communityWithAuthorSchema))
     .query(async ({ ctx, input }) => {
-      if (!ctx.user) {
+      if (!ctx.did) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
       }
       if (!input.subscriber) {
@@ -79,7 +79,7 @@ export const subscriptionRouter = router({
   subscribe: procedure
     .input(z.object({ entry: z.string().nullish() }))
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.user) {
+      if (!ctx.did) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
       }
       if (!input.entry) {
@@ -90,7 +90,7 @@ export const subscriptionRouter = router({
         database.subscription.create({
           data: {
             entry: input.entry,
-            subscriber: ctx.user.did,
+            subscriber: ctx.did,
             ts: new Date(),
           },
         }),
@@ -103,7 +103,7 @@ export const subscriptionRouter = router({
   unsubscribe: procedure
     .input(z.object({ entry: z.string().nullish() }))
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.user) {
+      if (!ctx.did) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
       }
       if (!input.entry) {
@@ -115,7 +115,7 @@ export const subscriptionRouter = router({
           where: {
             entry_subscriber: {
               entry: input.entry,
-              subscriber: ctx.user.did,
+              subscriber: ctx.did,
             },
           },
         }),

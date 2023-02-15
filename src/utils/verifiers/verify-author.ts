@@ -6,6 +6,7 @@ import { Author } from '../schemas'
 import { verifyDocument } from '../signature'
 
 export default async function verifyAuthor<T extends object>(
+  version: 0 | 1,
   document: T & { author: Author },
 ): Promise<{ author: Author }> {
   const { author, ...rest } = document
@@ -15,7 +16,7 @@ export default async function verifyAuthor<T extends object>(
   }
 
   if (
-    (await verifyDocument(1, rest, author.proof, verifyMessage)) !==
+    (await verifyDocument(version, rest, author.proof, verifyMessage)) !==
     author.address
   ) {
     throw new Error('invalid author address')

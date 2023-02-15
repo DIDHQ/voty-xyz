@@ -11,7 +11,7 @@ export default async function verifyCommunity(
 
   const community = parsed.data
 
-  await verifyAuthor(community)
+  await verifyAuthor(1, community)
 
   return { community }
 }

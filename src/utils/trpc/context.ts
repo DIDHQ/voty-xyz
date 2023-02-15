@@ -1,24 +1,22 @@
 import { inferAsyncReturnType } from '@trpc/server'
 import { CreateNextContextOptions } from '@trpc/server/adapters/next'
 
-import { Author } from '../schemas'
+import { parseAuthorization, verifyAuthorization } from '../authorization'
 import verifyAuthor from '../verifiers/verify-author'
 
 export async function createContext({ req }: CreateNextContextOptions) {
-  async function getUserFromHeader() {
+  async function getDidFromHeader() {
     if (req.headers.authorization) {
-      const [expiration, json] = req.headers.authorization.split(' ')
-      const { author } = await verifyAuthor({
-        expiration: parseInt(expiration),
-        author: JSON.parse(json) as Author,
-      })
-      return author
+      const authorization = parseAuthorization(req.headers.authorization)
+      if (verifyAuthorization(authorization)) {
+        const { author } = await verifyAuthor(0, authorization)
+        return author.did
+      }
     }
     return null
   }
-  const user = await getUserFromHeader()
-
-  return { user }
+  const did = await getDidFromHeader()
+  return { did }
 }
 
 export type Context = inferAsyncReturnType<typeof createContext>
