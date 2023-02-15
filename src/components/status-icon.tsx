@@ -5,7 +5,10 @@ import useStatus from '../hooks/use-status'
 import { permalink2Url } from '../utils/permalink'
 import TextButton from './basic/text-button'
 
-export default function StatusIcon(props: { permalink?: string }) {
+export default function StatusIcon(props: {
+  permalink?: string
+  className?: string
+}) {
   const { data: status } = useStatus(props.permalink)
   const icon = useMemo(
     () =>
@@ -18,10 +21,10 @@ export default function StatusIcon(props: { permalink?: string }) {
   )
 
   return props.permalink ? (
-    <a href={permalink2Url(props.permalink)}>
+    <a href={permalink2Url(props.permalink)} className={props.className}>
       <TextButton>{icon}</TextButton>
     </a>
   ) : (
-    <TextButton>{icon}</TextButton>
+    <TextButton className={props.className}>{icon}</TextButton>
   )
 }

@@ -3,7 +3,6 @@ import {
   CogIcon,
   DocumentTextIcon,
   GlobeAltIcon,
-  PlusIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
@@ -11,16 +10,22 @@ import { compact } from 'lodash-es'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
+import dynamic from 'next/dynamic'
 
 import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
-import useDidIsMatch from '../hooks/use-did-is-match'
 import useRouterQuery from '../hooks/use-router-query'
-import useWallet from '../hooks/use-wallet'
 import Avatar from './basic/avatar'
 import { extractStartEmoji } from '../utils/emoji'
 import { Group } from '../utils/schemas'
-import TextButton from './basic/text-button'
 import { trpc } from '../utils/trpc'
+
+const StatusIcon = dynamic(() => import('./status-icon'), {
+  ssr: false,
+})
+
+const CreateGroupButton = dynamic(() => import('./create-group-button'), {
+  ssr: false,
+})
 
 export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
@@ -83,12 +88,14 @@ export default function CommunityNav(props: { className?: string }) {
         : [],
     [community],
   )
-  const { account } = useWallet()
-  const { data: isAdmin } = useDidIsMatch(query.entry, account)
 
   return (
     <aside className={props.className}>
       <div className="flex w-full flex-col items-center rounded-md border border-gray-200 pb-4">
+        <StatusIcon
+          permalink={community?.permalink}
+          className="absolute right-3 top-3"
+        />
         <Avatar
           name={community?.author.did}
           value={community?.extension?.avatar}
@@ -131,39 +138,33 @@ export default function CommunityNav(props: { className?: string }) {
                 </Link>
               ))}
             </div>
-            {community?.groups?.length || isAdmin ? (
-              <div className="mt-4 w-full">
-                <h3
-                  className="px-3 text-sm font-medium text-gray-400"
-                  id="projects-headline"
-                >
-                  Groups
-                  {isAdmin ? (
-                    <Link
-                      href={`/${query.entry}/create`}
-                      className="float-right"
-                    >
-                      <TextButton>
-                        <PlusIcon className="h-5 w-5" />
-                      </TextButton>
-                    </Link>
-                  ) : null}
-                </h3>
-                <div
-                  className="mt-1 space-y-1"
-                  aria-labelledby="projects-headline"
-                >
-                  {community?.groups?.map((group, index) => (
-                    <GroupListItem
-                      key={group.name + index}
-                      entry={query.entry}
-                      group={group}
-                      current={query.group === group.extension.id}
-                    />
-                  ))}
-                </div>
+            <div className="mt-4 w-full">
+              <h3
+                className="px-3 text-sm font-medium text-gray-400"
+                id="projects-headline"
+              >
+                Groups
+                {
+                  <CreateGroupButton
+                    entry={query.entry}
+                    className="float-right"
+                  />
+                }
+              </h3>
+              <div
+                className="mt-1 space-y-1"
+                aria-labelledby="projects-headline"
+              >
+                {community?.groups?.map((group, index) => (
+                  <GroupListItem
+                    key={group.name + index}
+                    entry={query.entry}
+                    group={group}
+                    current={query.group === group.extension.id}
+                  />
+                ))}
               </div>
-            ) : null}
+            </div>
           </>
         ) : null}
       </div>
