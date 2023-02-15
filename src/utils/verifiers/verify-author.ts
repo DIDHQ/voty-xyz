@@ -5,9 +5,9 @@ import { resolveDid } from '../did'
 import { Author } from '../schemas'
 import { verifyDocument } from '../signature'
 
-export default async function verifyAuthor(
-  document: object & { author: Author },
-): Promise<void> {
+export default async function verifyAuthor<T extends object>(
+  document: T & { author: Author },
+): Promise<{ author: Author }> {
   const { author, ...rest } = document
 
   if (coinTypeToChainId[author.coin_type] === undefined) {
@@ -29,4 +29,6 @@ export default async function verifyAuthor(
   ) {
     throw new Error('invalid author snapshot')
   }
+
+  return { author }
 }
