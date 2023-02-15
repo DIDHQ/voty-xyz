@@ -18,19 +18,19 @@ export const communityRouter = router({
     )
     .query(async ({ input }) => {
       if (!input.entry) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'BAD_REQUEST' })
       }
       const entry = await database.entry.findUnique({
         where: { did: input.entry },
       })
       if (!entry) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
       }
       const community = await database.community.findUnique({
         where: { permalink: entry?.community },
       })
       if (!community) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
       }
       return {
         permalink: community.permalink,
@@ -44,13 +44,13 @@ export const communityRouter = router({
     .output(communityWithAuthorSchema)
     .query(async ({ input }) => {
       if (!input.permalink) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'BAD_REQUEST' })
       }
       const community = await database.community.findUnique({
         where: { permalink: input.permalink },
       })
       if (!community) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
       }
       return communityWithAuthorSchema.parse(
         JSON.parse(textDecoder.decode(community.data)),

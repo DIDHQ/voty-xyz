@@ -16,13 +16,13 @@ export const proposalRouter = router({
     .output(proposalWithAuthorSchema)
     .query(async ({ input }) => {
       if (!input.permalink) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'BAD_REQUEST' })
       }
       const proposal = await database.proposal.findUnique({
         where: { permalink: input.permalink },
       })
       if (!proposal) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
       }
       return proposalWithAuthorSchema.parse(
         JSON.parse(textDecoder.decode(proposal.data)),
@@ -46,7 +46,7 @@ export const proposalRouter = router({
     )
     .query(async ({ input }) => {
       if (!input.entry) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'BAD_REQUEST' })
       }
       const proposals = await database.proposal.findMany({
         cursor: input.cursor ? { permalink: input.cursor } : undefined,

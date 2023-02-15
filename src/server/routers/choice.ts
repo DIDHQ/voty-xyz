@@ -13,7 +13,7 @@ export const choiceRouter = router({
     )
     .query(async ({ input }) => {
       if (!input.proposal) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'BAD_REQUEST' })
       }
       const choices = await database.choice.findMany({
         where: { proposal: input.proposal },
