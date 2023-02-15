@@ -29,7 +29,7 @@ export const voteRouter = router({
     )
     .query(async ({ input }) => {
       if (!input.proposal) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'BAD_REQUEST' })
       }
       const votes = await database.vote.findMany({
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
@@ -64,11 +64,8 @@ export const voteRouter = router({
     )
     .output(z.record(z.string(), z.number()))
     .query(async ({ input }) => {
-      if (!input.proposal) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
-      }
-      if (!input.authors) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+      if (!input.proposal || !input.authors) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
       }
       const votes = await database.vote.findMany({
         where: {

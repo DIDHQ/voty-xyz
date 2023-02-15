@@ -16,7 +16,7 @@ export default async function verifyVote(
 
   const vote = parsed.data
 
-  await verifyAuthor(vote)
+  await verifyAuthor(1, vote)
 
   const [timestamp, data] = await Promise.all([
     getArweaveTimestamp(vote.proposal),

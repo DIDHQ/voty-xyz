@@ -1,6 +1,8 @@
 import { PlusIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 
+import SubscriptionList from './subscription-list'
+
 export default function Sidebar() {
   return (
     <aside className="fixed left-0 z-50 flex h-screen w-16 flex-col items-center border-r border-gray-200">
@@ -20,6 +22,7 @@ export default function Sidebar() {
       >
         <PlusIcon className="h-8 w-8 text-indigo-600 group-hover:text-white" />
       </Link>
+      <SubscriptionList className="" />
     </aside>
   )
 }

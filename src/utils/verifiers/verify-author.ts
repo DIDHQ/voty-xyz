@@ -5,9 +5,10 @@ import { resolveDid } from '../did'
 import { Author } from '../schemas'
 import { verifyDocument } from '../signature'
 
-export default async function verifyAuthor(
-  document: object & { author: Author },
-): Promise<void> {
+export default async function verifyAuthor<T extends object>(
+  version: 0 | 1,
+  document: T & { author: Author },
+): Promise<{ author: Author }> {
   const { author, ...rest } = document
 
   if (coinTypeToChainId[author.coin_type] === undefined) {
@@ -15,7 +16,8 @@ export default async function verifyAuthor(
   }
 
   if (
-    (await verifyDocument(rest, author.proof, verifyMessage)) !== author.address
+    (await verifyDocument(version, rest, author.proof, verifyMessage)) !==
+    author.address
   ) {
     throw new Error('invalid author address')
   }
@@ -29,4 +31,6 @@ export default async function verifyAuthor(
   ) {
     throw new Error('invalid author snapshot')
   }
+
+  return { author }
 }

@@ -24,7 +24,5 @@ export default function StatusIcon(props: {
     <a href={permalink2Url(props.permalink)} className={props.className}>
       <TextButton>{icon}</TextButton>
     </a>
-  ) : (
-    <TextButton className={props.className}>{icon}</TextButton>
-  )
+  ) : null
 }

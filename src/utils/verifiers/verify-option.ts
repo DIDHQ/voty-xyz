@@ -20,7 +20,7 @@ export default async function verifyOption(
 
   const option = parsed.data
 
-  await verifyAuthor(option)
+  await verifyAuthor(1, option)
 
   const data = await getArweaveData(option.proposal)
   if (!data) {

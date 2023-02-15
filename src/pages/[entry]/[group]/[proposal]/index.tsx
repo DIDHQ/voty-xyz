@@ -7,6 +7,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { startCase } from 'lodash-es'
 import { BoltIcon } from '@heroicons/react/20/solid'
+import type { inferRouterOutputs } from '@trpc/server'
 
 import useGroup from '../../../../hooks/use-group'
 import useRouterQuery from '../../../../hooks/use-router-query'
@@ -25,7 +26,6 @@ import Markdown from '../../../../components/basic/markdown'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import { permalink2Url } from '../../../../utils/permalink'
 import { trpc } from '../../../../utils/trpc'
-import { inferRouterOutputs } from '@trpc/server'
 import { ChoiceRouter } from '../../../../server/routers/choice'
 
 const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
@@ -75,7 +75,7 @@ export default function ProposalPage() {
     { enabled: !!query.proposal },
   )
   const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
-  const { data: votingPower, isLoading } = useQuery(
+  const { data: votingPower, isFetching } = useQuery(
     ['votingPower', group, did, proposal],
     () =>
       calculateNumber(
@@ -161,11 +161,11 @@ export default function ProposalPage() {
                 disabled={
                   choiceIsEmpty(proposal.voting_type, watch('choice')) ||
                   !votingPower ||
-                  isLoading
+                  isFetching
                 }
                 className="rounded-l-none border-l-0 focus:z-10 active:z-10"
               >
-                {votingPower}
+                Vote{votingPower ? ` (${votingPower})` : null}
               </SigningVoteButton>
             </FormProvider>
           </div>

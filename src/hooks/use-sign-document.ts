@@ -1,32 +1,26 @@
 import { useCallback } from 'react'
 
 import { coinTypeToChainId } from '../utils/constants'
-import {
-  Community,
-  Proposal,
-  Option,
-  Vote,
-  Authorized,
-  Author,
-} from '../utils/schemas'
+import { Authorized, Author } from '../utils/schemas'
 import { signDocument } from '../utils/signature'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import useWallet from './use-wallet'
 
-export default function useSignDocument<
-  T extends Community | Proposal | Option | Vote,
->(did: string): (document: T) => Promise<Authorized<T> | undefined> {
+export default function useSignDocument<T extends object>(
+  version: 0 | 1,
+  did?: string,
+): (document: T) => Promise<Authorized<T> | undefined> {
   const { account, signMessage } = useWallet()
 
   return useCallback(
     async (document: T) => {
-      if (!account) {
+      if (!did || !account) {
         return
       }
       try {
         if (coinTypeToChainId[account.coinType]) {
           const [proof, snapshot] = await Promise.all([
-            signDocument(document, signMessage),
+            signDocument(version, document, signMessage),
             getCurrentSnapshot(account.coinType),
           ])
           return {
@@ -44,6 +38,6 @@ export default function useSignDocument<
         console.error(err)
       }
     },
-    [account, signMessage, did],
+    [did, account, version, signMessage],
   )
 }
