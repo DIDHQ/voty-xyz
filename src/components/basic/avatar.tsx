@@ -7,6 +7,7 @@ export default function Avatar(props: {
   size: number
   name?: string
   value?: string
+  variant?: 'marble' | 'beam' | 'pixel' | 'sunset' | 'ring' | 'bauhaus'
   className?: string
 }) {
   const size = `${props.size / 4}rem`
@@ -28,7 +29,7 @@ export default function Avatar(props: {
       )}
     >
       {props.name ? (
-        <BoringAvatar size={size} name={props.name} />
+        <BoringAvatar size={size} name={props.name} variant={props.variant} />
       ) : (
         <div style={{ width: size, height: size }} />
       )}

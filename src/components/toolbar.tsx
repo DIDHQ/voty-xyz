@@ -23,7 +23,12 @@ export default function Toolbar() {
             account ? (
               <Link href="/settings" className="group block shrink-0">
                 <div className="flex items-center overflow-hidden">
-                  <Avatar size={9} name={did} value={avatar} />
+                  <Avatar
+                    size={9}
+                    name={did || account.address}
+                    value={avatar}
+                    variant="beam"
+                  />
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
                       {did}
