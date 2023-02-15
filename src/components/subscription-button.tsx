@@ -1,6 +1,6 @@
 import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/20/solid'
 import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
@@ -15,39 +15,38 @@ export default function SubscriptionButton(props: {
     refetch,
     isLoading,
   } = trpc.subscription.get.useQuery(props)
-  const handleSubscribe = trpc.subscription.subscribe.useMutation()
-  const handleUnsubscribe = trpc.subscription.unsubscribe.useMutation()
+  const handleSet = trpc.subscription.set.useMutation()
+  const handleSubscribe = useCallback(
+    () => handleSet.mutate({ entry: props.entry, subscribe: true }),
+    [handleSet, props.entry],
+  )
+  const handleUnsubscribe = useCallback(
+    () => handleSet.mutate({ entry: props.entry, subscribe: false }),
+    [handleSet, props.entry],
+  )
   useEffect(() => {
-    if (handleSubscribe.isSuccess) {
+    if (handleSet.isSuccess) {
       refetch()
     }
-  }, [handleSubscribe.isSuccess, refetch])
-  useEffect(() => {
-    if (handleUnsubscribe.isSuccess) {
-      refetch()
-    }
-  }, [handleUnsubscribe.isSuccess, refetch])
+  }, [handleSet.isSuccess, refetch])
 
   return (
     <>
-      <Notification show={handleSubscribe.isError}>
-        {handleSubscribe.error?.message}
-      </Notification>
-      <Notification show={handleUnsubscribe.isError}>
-        {handleUnsubscribe.error?.message}
+      <Notification show={handleSet.isError}>
+        {handleSet.error?.message}
       </Notification>
       {subscribed ? (
         <TextButton
-          disabled={isLoading || handleUnsubscribe.isLoading}
-          onClick={() => handleUnsubscribe.mutate({ entry: props.entry })}
+          disabled={isLoading || handleSet.isLoading}
+          onClick={handleUnsubscribe}
           className={props.className}
         >
           <BookmarkSolidIcon className="h-5 w-5" />
         </TextButton>
       ) : (
         <TextButton
-          disabled={isLoading || handleSubscribe.isLoading}
-          onClick={() => handleSubscribe.mutate({ entry: props.entry })}
+          disabled={isLoading || handleSet.isLoading}
+          onClick={handleSubscribe}
           className={props.className}
         >
           <BookmarkOutlineIcon className="h-5 w-5" />

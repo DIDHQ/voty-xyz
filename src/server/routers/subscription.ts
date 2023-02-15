@@ -76,8 +76,8 @@ export const subscriptionRouter = router({
           }),
       )
     }),
-  subscribe: procedure
-    .input(z.object({ entry: z.string().nullish() }))
+  set: procedure
+    .input(z.object({ entry: z.string().nullish(), subscribe: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       if (!ctx.did) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
@@ -86,44 +86,36 @@ export const subscriptionRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      await database.$transaction([
-        database.subscription.create({
-          data: {
-            entry: input.entry,
-            subscriber: ctx.did,
-            ts: new Date(),
-          },
-        }),
-        database.entry.update({
-          where: { did: input.entry },
-          data: { subscribers: { increment: 1 } },
-        }),
-      ])
-    }),
-  unsubscribe: procedure
-    .input(z.object({ entry: z.string().nullish() }))
-    .mutation(async ({ ctx, input }) => {
-      if (!ctx.did) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' })
-      }
-      if (!input.entry) {
-        throw new TRPCError({ code: 'BAD_REQUEST' })
-      }
-
-      await database.$transaction([
-        database.subscription.delete({
-          where: {
-            entry_subscriber: {
-              entry: input.entry,
-              subscriber: ctx.did,
-            },
-          },
-        }),
-        database.entry.update({
-          where: { did: input.entry },
-          data: { subscribers: { decrement: 1 } },
-        }),
-      ])
+      await database.$transaction(
+        input.subscribe
+          ? [
+              database.subscription.create({
+                data: {
+                  entry: input.entry,
+                  subscriber: ctx.did,
+                  ts: new Date(),
+                },
+              }),
+              database.entry.update({
+                where: { did: input.entry },
+                data: { subscribers: { increment: 1 } },
+              }),
+            ]
+          : [
+              database.subscription.delete({
+                where: {
+                  entry_subscriber: {
+                    entry: input.entry,
+                    subscriber: ctx.did,
+                  },
+                },
+              }),
+              database.entry.update({
+                where: { did: input.entry },
+                data: { subscribers: { decrement: 1 } },
+              }),
+            ],
+      )
     }),
 })
 
