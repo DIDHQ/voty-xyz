@@ -14,7 +14,10 @@ export default function SubscriptionButton(props: {
     data: subscribed,
     refetch,
     isFetching,
-  } = trpc.subscription.get.useQuery(props)
+  } = trpc.subscription.get.useQuery(props, { refetchOnWindowFocus: false })
+  const { refetch: refetchList } = trpc.subscription.list.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  })
   const handleSet = trpc.subscription.set.useMutation()
   const handleSubscribe = useCallback(
     () => handleSet.mutate({ entry: props.entry, subscribe: true }),
@@ -27,8 +30,9 @@ export default function SubscriptionButton(props: {
   useEffect(() => {
     if (handleSet.isSuccess) {
       refetch()
+      refetchList()
     }
-  }, [handleSet.isSuccess, refetch])
+  }, [handleSet.isSuccess, refetch, refetchList])
 
   return (
     <>

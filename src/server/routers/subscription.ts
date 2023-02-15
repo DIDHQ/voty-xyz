@@ -29,30 +29,28 @@ export const subscriptionRouter = router({
       return !!subscription
     }),
   list: procedure
-    .input(z.object({ subscriber: z.string().nullish() }))
     .output(z.array(communityWithAuthorSchema))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx }) => {
       if (!ctx.did) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
       }
-      if (!input.subscriber) {
-        throw new TRPCError({ code: 'BAD_REQUEST' })
-      }
 
       const subscriptions = await database.subscription.findMany({
-        where: { subscriber: input.subscriber },
+        where: { subscriber: ctx.did },
         orderBy: { ts: 'desc' },
       })
       const entries = keyBy(
         await database.entry.findMany({
           where: { did: { in: subscriptions.map(({ entry }) => entry) } },
         }),
-        ({ community }) => community,
+        ({ did }) => did,
       )
       const communities = keyBy(
         await database.community.findMany({
           where: {
-            permalink: { in: Object.keys(entries) },
+            permalink: {
+              in: Object.values(entries).map(({ community }) => community),
+            },
           },
         }),
         ({ permalink }) => permalink,

@@ -17,8 +17,12 @@ export function getAuthorization() {
   return localStorage.getItem(`voty.${did}`)
 }
 
-export function setAuthorizationCurrent(did: string) {
-  localStorage.setItem('voty.current', did)
+export function setAuthorizationCurrent(did?: string) {
+  if (did) {
+    localStorage.setItem('voty.current', did)
+  } else {
+    localStorage.removeItem('voty.current')
+  }
 }
 
 export function setAuthorization(authorization: Authorized<Authorization>) {
