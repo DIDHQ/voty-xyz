@@ -75,7 +75,7 @@ export default function ProposalPage() {
     { enabled: !!query.proposal },
   )
   const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
-  const { data: votingPower, isLoading } = useQuery(
+  const { data: votingPower, isFetching } = useQuery(
     ['votingPower', group, did, proposal],
     () =>
       calculateNumber(
@@ -161,7 +161,7 @@ export default function ProposalPage() {
                 disabled={
                   choiceIsEmpty(proposal.voting_type, watch('choice')) ||
                   !votingPower ||
-                  isLoading
+                  isFetching
                 }
                 className="rounded-l-none border-l-0 focus:z-10 active:z-10"
               >
