@@ -28,7 +28,7 @@ export async function verifyDocument(
   }
   return verifyMessage(
     message,
-    Buffer.from(proof.replace(`\^${version}:`, ''), 'base64'),
+    Buffer.from(proof.replace(new RegExp(`\^${version}:`), ''), 'base64'),
   )
 }
 
