@@ -14,6 +14,7 @@ export default function SubscriptionButton(props: {
   const { account } = useWallet()
   const { refetch: refetchList } = trpc.subscription.list.useQuery(undefined, {
     refetchOnWindowFocus: false,
+    retry: false,
   })
   const { data, mutate, isLoading, isSuccess, isError, error } =
     trpc.subscription.set.useMutation()
