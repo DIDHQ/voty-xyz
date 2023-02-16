@@ -20,4 +20,5 @@ export const groupSchema = z.object({
     about: z.string().optional(),
   }),
 })
+
 export type Group = z.infer<typeof groupSchema>

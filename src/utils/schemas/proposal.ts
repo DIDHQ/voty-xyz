@@ -17,4 +17,5 @@ export const proposalSchema = z.object({
     })
     .optional(),
 })
+
 export type Proposal = z.infer<typeof proposalSchema>

@@ -11,6 +11,7 @@ export const authorshipSchema = z.object({
   }),
   testnet: z.literal(true).optional(),
 })
+
 export type Authorship = z.infer<typeof authorshipSchema>
 
 export function authorized<T extends Zod.ZodRawShape>(obj: Zod.ZodObject<T>) {

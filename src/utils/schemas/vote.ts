@@ -5,4 +5,5 @@ export const voteSchema = z.object({
   choice: z.string(),
   power: z.number(),
 })
+
 export type Vote = z.infer<typeof voteSchema>

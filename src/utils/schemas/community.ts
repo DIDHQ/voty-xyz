@@ -25,4 +25,5 @@ export const communitySchema = z.object({
     })
     .optional(),
 })
+
 export type Community = z.infer<typeof communitySchema>
