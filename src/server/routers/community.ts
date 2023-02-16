@@ -14,7 +14,9 @@ export const communityRouter = router({
   getByEntry: procedure
     .input(z.object({ entry: z.string().optional() }))
     .output(
-      communityWithAuthorSchema.merge(z.object({ permalink: z.string() })),
+      communityWithAuthorSchema
+        .merge(z.object({ permalink: z.string() }))
+        .optional(),
     )
     .query(async ({ input }) => {
       if (!input.entry) {
@@ -24,13 +26,13 @@ export const communityRouter = router({
         where: { did: input.entry },
       })
       if (!entry) {
-        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
+        return
       }
       const community = await database.community.findUnique({
         where: { permalink: entry?.community },
       })
       if (!community) {
-        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
+        return
       }
       return {
         permalink: community.permalink,
@@ -41,7 +43,7 @@ export const communityRouter = router({
     }),
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(communityWithAuthorSchema)
+    .output(communityWithAuthorSchema.optional())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -50,7 +52,7 @@ export const communityRouter = router({
         where: { permalink: input.permalink },
       })
       if (!community) {
-        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
+        return
       }
       return communityWithAuthorSchema.parse(
         JSON.parse(textDecoder.decode(community.data)),

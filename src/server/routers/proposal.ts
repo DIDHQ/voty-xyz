@@ -13,7 +13,7 @@ const textDecoder = new TextDecoder()
 export const proposalRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(proposalWithAuthorSchema)
+    .output(proposalWithAuthorSchema.optional())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -22,7 +22,7 @@ export const proposalRouter = router({
         where: { permalink: input.permalink },
       })
       if (!proposal) {
-        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
+        return
       }
       return proposalWithAuthorSchema.parse(
         JSON.parse(textDecoder.decode(proposal.data)),
