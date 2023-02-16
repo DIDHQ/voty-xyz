@@ -20,20 +20,19 @@ export default function useSignDocument<T extends object>(
       }
       try {
         const coinType = requiredCoinTypeOfDidChecker(did)
-        const [proof, snapshot] = await Promise.all([
-          signDocument(document, account.address, signMessage),
-          getCurrentSnapshot(coinType),
-        ])
-        return {
-          ...document,
-          authorship: {
-            did,
-            snapshot: snapshot.toString(),
-            coin_type: coinType,
-            testnet: isTestnet || undefined,
-          },
-          proof,
+        const snapshot = await getCurrentSnapshot(coinType)
+        const authorship = {
+          did,
+          snapshot,
+          coin_type: coinType,
+          testnet: isTestnet || undefined,
         }
+        const proof = await signDocument(
+          { ...document, authorship },
+          account.address,
+          signMessage,
+        )
+        return { ...document, authorship, proof }
       } catch (err) {
         console.error(err)
       }
