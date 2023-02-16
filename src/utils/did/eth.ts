@@ -1,10 +1,11 @@
 import { providers } from 'ethers'
 import invariant from 'tiny-invariant'
 
+import { chainIdToRpc, commonChainIds } from '../constants'
 import { DidResolver } from '../types'
 
 const provider = new providers.StaticJsonRpcProvider(
-  'https://rpc.ankr.com/eth',
+  chainIdToRpc[commonChainIds.ETH],
   1,
 )
 
