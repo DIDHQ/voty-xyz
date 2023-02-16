@@ -8,7 +8,6 @@ import { isTestnet } from '../utils/testnet'
 import useWallet from './use-wallet'
 
 export default function useSignDocument<T extends object>(
-  version: 0 | 1,
   did?: string,
 ): (document: T) => Promise<Authorized<T> | undefined> {
   const { account, signMessage } = useWallet()
@@ -21,7 +20,7 @@ export default function useSignDocument<T extends object>(
       try {
         if (coinTypeToChainId[account.coinType]) {
           const [proof, snapshot] = await Promise.all([
-            signDocument(version, document, signMessage),
+            signDocument(document, account.address, signMessage),
             getCurrentSnapshot(account.coinType),
           ])
           return {
@@ -30,7 +29,6 @@ export default function useSignDocument<T extends object>(
               did,
               snapshot: snapshot.toString(),
               coin_type: account.coinType,
-              address: account.address,
               proof,
               testnet: isTestnet || undefined,
             } satisfies Author,
@@ -40,6 +38,6 @@ export default function useSignDocument<T extends object>(
         console.error(err)
       }
     },
-    [did, account, version, signMessage],
+    [did, account, signMessage],
   )
 }

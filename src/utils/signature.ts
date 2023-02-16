@@ -1,51 +1,41 @@
-import { sha256 } from 'ethers/lib/utils.js'
+import { getAddress, sha256 } from 'ethers/lib/utils.js'
 
 import { Author } from './schemas'
-import { Proof } from './types'
 
 export async function signDocument(
-  version: 0 | 1,
   document: object,
+  address: string,
   signMessage: (message: string) => Buffer | Promise<Buffer>,
-): Promise<Proof> {
-  const message = encodeDocument(version, document)
+): Promise<Author['proof']> {
+  const message = encodeDocument(document)
   const buffer = await signMessage(message)
-  return `${version}:${buffer.toString('base64')}`
+  return {
+    type: 'evm_address_signature',
+    address: getAddress(address),
+    signature: buffer.toString('base64'),
+  }
 }
 
 export async function verifyDocument(
-  version: 0 | 1,
   document: object,
-  proof: Proof,
+  proof: Author['proof'],
   verifyMessage: (
     message: string,
     signature: Buffer,
   ) => string | Promise<string>,
-): Promise<string> {
-  const message = encodeDocument(version, document)
-  if (!proof.startsWith(`${version}:`)) {
-    throw new Error('unsupported version')
-  }
-  return verifyMessage(
+): Promise<boolean> {
+  const message = encodeDocument(document)
+  const address = await verifyMessage(
     message,
-    Buffer.from(proof.replace(new RegExp(`\^${version}:`), ''), 'base64'),
+    Buffer.from(proof.signature, 'base64'),
   )
+  return proof.address === address
 }
 
-function encodeDocument(
-  version: 0 | 1,
-  document: object & { author?: Author },
-): string {
+function encodeDocument(document: object & { author?: Author }): string {
   const { author, ...rest } = document
   const textEncoder = new TextEncoder()
-  const data = JSON.stringify(rest)
-  if (version === 0) {
-    return data
-  }
-  if (version === 1) {
-    return `You are signing for Voty Protocol.\n\nhash: ${sha256(
-      textEncoder.encode(data),
-    )}`
-  }
-  throw new Error('unsupported version')
+  return `You are signing for Voty Protocol.\n\nhash: ${sha256(
+    textEncoder.encode(JSON.stringify(rest)),
+  )}`
 }

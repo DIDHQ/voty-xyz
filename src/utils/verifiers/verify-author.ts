@@ -7,7 +7,6 @@ import { verifyDocument } from '../signature'
 import { isTestnet } from '../testnet'
 
 export default async function verifyAuthor<T extends object>(
-  version: 0 | 1,
   document: T & { author: Author },
 ): Promise<{ author: Author }> {
   const { author, ...rest } = document
@@ -20,10 +19,7 @@ export default async function verifyAuthor<T extends object>(
     throw new Error('mainnet/testnet mismatch')
   }
 
-  if (
-    (await verifyDocument(version, rest, author.proof, verifyMessage)) !==
-    author.address
-  ) {
+  if (!(await verifyDocument(rest, author.proof, verifyMessage))) {
     throw new Error('invalid author address')
   }
 
@@ -32,7 +28,7 @@ export default async function verifyAuthor<T extends object>(
   })
   if (
     resolved.coinType !== author.coin_type ||
-    resolved.address !== author.address
+    resolved.address !== author.proof.address
   ) {
     throw new Error('invalid author snapshot')
   }

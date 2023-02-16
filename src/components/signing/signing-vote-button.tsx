@@ -21,7 +21,7 @@ export default function SigningVoteButton(props: {
 }) {
   const { onSuccess } = props
   const { handleSubmit: onSubmit } = useFormContext<Vote>()
-  const handleSignDocument = useSignDocument<Vote>(1, props.did)
+  const handleSignDocument = useSignDocument<Vote>(props.did)
   const handleCreate = trpc.vote.create.useMutation()
   const handleClick = useCallback(
     async (vote: Vote) => {

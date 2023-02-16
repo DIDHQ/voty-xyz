@@ -7,8 +7,6 @@ export type DidResolver<S extends 'bit' | 'eth' = string> = {
 
 export type Snapshots = { [coinType: number]: string }
 
-export type Proof = `${number}:${string}`
-
 export type Account = {
   coinType: number
   address: string

@@ -9,7 +9,7 @@ export async function createContext({ req }: CreateNextContextOptions) {
     if (req.headers.authorization) {
       const authorization = parseAuthorization(req.headers.authorization)
       if (verifyAuthorization(authorization)) {
-        const { author } = await verifyAuthor(0, authorization)
+        const { author } = await verifyAuthor(authorization)
         return author.did
       }
     }
