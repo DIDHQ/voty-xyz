@@ -18,7 +18,7 @@ export default function ProposerSelect(props: {
 }) {
   const { onChange } = props
   const { account, did } = useWallet()
-  const { data: dids } = useDids(account)
+  const { data: dids } = useDids(account, props.snapshots)
   const { data: disables } = useQuery(
     [dids, props.group, props.snapshots],
     async () => {
