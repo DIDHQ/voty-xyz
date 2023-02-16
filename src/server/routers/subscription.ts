@@ -80,7 +80,7 @@ export const subscriptionRouter = router({
         return !!subscription
       }
       if (input.subscribe === true) {
-        database.$transaction([
+        await database.$transaction([
           database.subscription.create({
             data: {
               entry: input.entry,
@@ -94,7 +94,7 @@ export const subscriptionRouter = router({
           }),
         ])
       } else {
-        database.$transaction([
+        await database.$transaction([
           database.subscription.delete({
             where: {
               entry_subscriber: {
