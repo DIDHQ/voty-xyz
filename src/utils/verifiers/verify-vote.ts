@@ -2,7 +2,6 @@ import { getArweaveData, getArweaveTimestamp } from '../arweave'
 import { getPeriod, Period } from '../duration'
 import { calculateNumber } from '../functions/number'
 import { Authorized, Proposal, Vote, voteWithAuthorSchema } from '../schemas'
-import { DID } from '../types'
 import verifyAuthor from './verify-author'
 import verifyProposal from './verify-proposal'
 
@@ -35,7 +34,7 @@ export default async function verifyVote(
 
   const votingPower = await calculateNumber(
     group.permission.voting,
-    vote.author.did as DID,
+    vote.author.did,
     proposal.snapshots,
   )
   if (votingPower !== vote.power) {

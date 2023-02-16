@@ -8,7 +8,7 @@ import { CheckIcon } from '@heroicons/react/20/solid'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import { Group } from '../utils/schemas'
-import { DID, Snapshots } from '../utils/types'
+import { Snapshots } from '../utils/types'
 import Select from './basic/select'
 import { calculateNumber } from '../utils/functions/number'
 import { trpc } from '../utils/trpc'
@@ -32,7 +32,7 @@ export default function VoterSelect(props: {
         (did) =>
           calculateNumber(
             props.group!.permission.voting,
-            did as DID,
+            did,
             props.snapshots!,
           ),
         { concurrency: 5 },
