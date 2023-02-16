@@ -1,4 +1,4 @@
-import { BooleanFunction } from '../types'
+import { BooleanFunction } from '../../types'
 
 export const prefixes_dot_suffix_exact_match: BooleanFunction<
   [string, string[]]

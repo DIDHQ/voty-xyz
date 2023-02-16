@@ -1,4 +1,4 @@
-import { NumberFunction } from '../types'
+import { NumberFunction } from '../../types'
 
 export const prefixes_dot_suffix_fixed_power: NumberFunction<
   [string, string[], number]
