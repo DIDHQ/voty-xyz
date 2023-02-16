@@ -36,7 +36,7 @@ export async function snapshotAddressAccounts(
     errno: number
     errmsg: string
     data: { accounts: { account: string }[] }
-  }>('', {
+  }>('https://test-snapshot-api.did.id/v1/snapshot/address/accounts', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
