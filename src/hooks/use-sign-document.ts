@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { coinTypeToChainId } from '../utils/constants'
+import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import { Authorized, Author } from '../utils/schemas'
 import { signDocument } from '../utils/signature'
 import { getCurrentSnapshot } from '../utils/snapshot'
@@ -18,21 +18,20 @@ export default function useSignDocument<T extends object>(
         return
       }
       try {
-        if (coinTypeToChainId[account.coinType]) {
-          const [proof, snapshot] = await Promise.all([
-            signDocument(document, account.address, signMessage),
-            getCurrentSnapshot(account.coinType),
-          ])
-          return {
-            ...document,
-            author: {
-              did,
-              snapshot: snapshot.toString(),
-              coin_type: account.coinType,
-              proof,
-              testnet: isTestnet || undefined,
-            } satisfies Author,
-          }
+        const coinType = requiredCoinTypeOfDidChecker(did)
+        const [proof, snapshot] = await Promise.all([
+          signDocument(document, account.address, signMessage),
+          getCurrentSnapshot(coinType),
+        ])
+        return {
+          ...document,
+          author: {
+            did,
+            snapshot: snapshot.toString(),
+            coin_type: coinType,
+            proof,
+            testnet: isTestnet || undefined,
+          } satisfies Author,
         }
       } catch (err) {
         console.error(err)
