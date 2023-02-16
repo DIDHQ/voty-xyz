@@ -4,6 +4,7 @@ import { DataType } from './constants'
 import { isCommunity, isProposal, isOption, isVote } from './data-type'
 import { id2Permalink } from './permalink'
 import { Authorized, Community, Proposal, Option, Vote } from './schemas'
+import { isTestnet } from './testnet'
 
 const textEncoder = new TextEncoder()
 
@@ -34,7 +35,7 @@ export async function uploadToArweave(
 const defaultArweaveTags = {
   'content-type': 'application/json',
   'app-name': 'voty',
-  'app-version': '0.0.0',
+  'app-version': `0.0.0${isTestnet ? '-test' : ''}`,
 }
 
 function getArweaveTags(
@@ -52,7 +53,7 @@ function getArweaveTags(
       ...defaultArweaveTags,
       'app-data-type': DataType.PROPOSAL,
       'app-index-community': document.community,
-      'app-index-group': document.group.toString(),
+      'app-index-group': document.group,
     }
   }
   if (isOption(document)) {
