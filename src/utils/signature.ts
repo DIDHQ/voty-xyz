@@ -10,7 +10,7 @@ export async function signDocument(
   const message = encodeDocument(document)
   const buffer = await signMessage(message)
   return {
-    type: 'evm_address_signature',
+    type: 'eth_personal_sign',
     address: getAddress(address),
     signature: buffer.toString('base64'),
   }

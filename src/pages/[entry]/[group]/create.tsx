@@ -21,7 +21,7 @@ import { Form, FormFooter, FormItem } from '../../../components/basic/form'
 import { Grid6, GridItem6 } from '../../../components/basic/grid'
 import { permalink2Id } from '../../../utils/permalink'
 import RadioGroup from '../../../components/basic/radio-group'
-import { requiredCoinTypesOfDidResolver } from '../../../utils/did'
+import { requiredCoinTypeOfDidChecker } from '../../../utils/did'
 import { formatDuration } from '../../../utils/time'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
 import Markdown from '../../../components/basic/markdown'
@@ -81,7 +81,7 @@ export default function CreateProposalPage() {
     ['requiredCoinTypes', did, group?.permission.voting],
     () =>
       uniq([
-        ...requiredCoinTypesOfDidResolver(did),
+        requiredCoinTypeOfDidChecker(did),
         ...requiredCoinTypesOfNumberSets(group!.permission.voting!),
       ]),
     {

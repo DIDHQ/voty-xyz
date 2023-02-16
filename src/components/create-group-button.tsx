@@ -1,7 +1,8 @@
 import { PlusIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
+import { useMemo } from 'react'
 
-import useDidIsMatch from '../hooks/use-did-is-match'
+import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 import TextButton from './basic/text-button'
 
@@ -10,7 +11,11 @@ export default function CreateGroupButton(props: {
   className?: string
 }) {
   const { account } = useWallet()
-  const { data: isAdmin } = useDidIsMatch(props.entry, account)
+  const { data: dids } = useDids(account)
+  const isAdmin = useMemo(
+    () => !!(props.entry && dids?.includes(props.entry)),
+    [dids, props.entry],
+  )
 
   return isAdmin ? (
     <Link href={`/${props.entry}/create`} className={props.className}>

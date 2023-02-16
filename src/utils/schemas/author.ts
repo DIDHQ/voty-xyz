@@ -2,10 +2,10 @@ import { z } from 'zod'
 
 export const authorSchema = z.object({
   did: z.string().min(1),
-  snapshot: z.string().min(1),
   coin_type: z.number(),
+  snapshot: z.string().min(1),
   proof: z.object({
-    type: z.literal('evm_address_signature'),
+    type: z.literal('eth_personal_sign'),
     address: z.string(),
     signature: z.string(),
   }),

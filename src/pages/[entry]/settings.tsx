@@ -1,12 +1,12 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useRouter } from 'next/router'
 
 import CommunityForm from '../../components/community-form'
 import useRouterQuery from '../../hooks/use-router-query'
 import CommunityLayout from '../../components/layouts/community'
-import useDidIsMatch from '../../hooks/use-did-is-match'
 import useWallet from '../../hooks/use-wallet'
 import { trpc } from '../../utils/trpc'
+import useDids from '../../hooks/use-dids'
 
 export default function CommunitySettingsPage() {
   const router = useRouter()
@@ -16,7 +16,11 @@ export default function CommunitySettingsPage() {
     query,
     { enabled: !!query.entry },
   )
-  const { data: isAdmin } = useDidIsMatch(query.entry, account)
+  const { data: dids } = useDids(account)
+  const isAdmin = useMemo(
+    () => !!(query.entry && dids?.includes(query.entry)),
+    [dids, query.entry],
+  )
   const handleSuccess = useCallback(() => {
     refetch()
     router.push(`/${query.entry}`)

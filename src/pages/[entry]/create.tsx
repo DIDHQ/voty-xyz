@@ -6,8 +6,8 @@ import useRouterQuery from '../../hooks/use-router-query'
 import GroupForm from '../../components/group-form'
 import CommunityLayout from '../../components/layouts/community'
 import useWallet from '../../hooks/use-wallet'
-import useDidIsMatch from '../../hooks/use-did-is-match'
 import { trpc } from '../../utils/trpc'
+import useDids from '../../hooks/use-dids'
 
 export default function CreateGroupPage() {
   const router = useRouter()
@@ -17,7 +17,11 @@ export default function CreateGroupPage() {
     query,
     { enabled: !!query.entry },
   )
-  const { data: isAdmin } = useDidIsMatch(query.entry, account)
+  const { data: dids } = useDids(account)
+  const isAdmin = useMemo(
+    () => !!(query.entry && dids?.includes(query.entry)),
+    [dids, query.entry],
+  )
   const group = useMemo(() => nanoid(), [])
   const handleSuccess = useCallback(() => {
     refetch()

@@ -1,13 +1,13 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import GroupForm from '../../../components/group-form'
 import CommunityLayout from '../../../components/layouts/community'
 import GroupLayout from '../../../components/layouts/group'
-import useDidIsMatch from '../../../hooks/use-did-is-match'
 import useWallet from '../../../hooks/use-wallet'
 import { trpc } from '../../../utils/trpc'
+import useDids from '../../../hooks/use-dids'
 
 export default function GroupSettingsPage() {
   const router = useRouter()
@@ -17,7 +17,11 @@ export default function GroupSettingsPage() {
     query,
     { enabled: !!query.entry },
   )
-  const { data: isAdmin } = useDidIsMatch(query.entry, account)
+  const { data: dids } = useDids(account)
+  const isAdmin = useMemo(
+    () => !!(query.entry && dids?.includes(query.entry)),
+    [dids, query.entry],
+  )
   const handleSuccess = useCallback(() => {
     refetch()
     router.push(`/${query.entry}/${query.group}`)
