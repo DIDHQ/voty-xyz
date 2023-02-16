@@ -23,8 +23,8 @@ export default function useSignDocument<T extends object>(
         const snapshot = await getCurrentSnapshot(coinType)
         const authorship = {
           author: did,
-          snapshot,
           coin_type: coinType,
+          snapshot,
           testnet: isTestnet || undefined,
         } satisfies Authorship
         const proof = await signDocument(
