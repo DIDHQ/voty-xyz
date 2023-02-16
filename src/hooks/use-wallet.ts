@@ -64,7 +64,7 @@ export default function useWallet() {
               address: account.address,
             }
           : undefined,
-      did: bit?.did || ensName || undefined,
+      name: bit?.did || ensName || undefined,
       avatar: bit?.avatar || ensAvatar || undefined,
       displayAddress: account.address
         ? `${account.address.substring(0, 5)}...${account.address.substring(

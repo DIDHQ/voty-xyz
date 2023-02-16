@@ -11,7 +11,7 @@ export default function SubscriptionButton(props: {
   entry?: string
   className?: string
 }) {
-  const { did } = useWallet()
+  const { account } = useWallet()
   const { refetch: refetchList } = trpc.subscription.list.useQuery(undefined, {
     refetchOnWindowFocus: false,
   })
@@ -34,7 +34,7 @@ export default function SubscriptionButton(props: {
     mutate({ entry: props.entry })
   }, [mutate, props.entry])
 
-  return did ? (
+  return account ? (
     <>
       <Notification show={isError}>{error?.message}</Notification>
       {data ? (

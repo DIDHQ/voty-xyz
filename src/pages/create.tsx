@@ -11,7 +11,7 @@ import { trpc } from '../utils/trpc'
 
 export default function CreateCommunityPage() {
   const router = useRouter()
-  const { account, did } = useWallet()
+  const { account, name } = useWallet()
   const { data: dids } = useDids(account)
   const [entry, setEntry] = useState('')
   const { data: community } = trpc.community.getByEntry.useQuery(
@@ -19,8 +19,8 @@ export default function CreateCommunityPage() {
     { enabled: !!entry },
   )
   useEffect(() => {
-    setEntry(dids?.find((d) => d === did) || dids?.[0] || '')
-  }, [did, dids, setEntry])
+    setEntry(dids?.find((d) => d === name) || dids?.[0] || '')
+  }, [name, dids, setEntry])
 
   return (
     <Grid6 className="mt-6">

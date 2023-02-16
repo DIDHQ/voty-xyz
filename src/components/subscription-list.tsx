@@ -1,10 +1,10 @@
 import clsx from 'clsx'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import useRouterQuery from '../hooks/use-router-query'
 
+import useDids from '../hooks/use-dids'
+import useRouterQuery from '../hooks/use-router-query'
 import useSignDocument from '../hooks/use-sign-document'
-import useWallet from '../hooks/use-wallet'
 import {
   Authorization,
   authorizationMessage,
@@ -16,14 +16,14 @@ import Avatar from './basic/avatar'
 
 export default function SubscriptionList(props: { className?: string }) {
   const query = useRouterQuery<['entry']>()
-  const { did } = useWallet()
+  const { data: dids } = useDids()
   const { data, error } = trpc.subscription.list.useQuery(undefined, {
     refetchOnWindowFocus: false,
   })
-  const handleSignDocument = useSignDocument<Authorization>(did)
+  const handleSignDocument = useSignDocument<Authorization>(dids?.[0])
   useEffect(() => {
-    setAuthorizationCurrent(did)
-  }, [did])
+    setAuthorizationCurrent(dids?.[0])
+  }, [dids])
   useEffect(() => {
     if (error?.data?.code === 'UNAUTHORIZED') {
       handleSignDocument({ message: authorizationMessage }).then((signed) => {

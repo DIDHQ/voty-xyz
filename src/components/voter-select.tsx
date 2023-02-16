@@ -22,7 +22,7 @@ export default function VoterSelect(props: {
   className?: string
 }) {
   const { onChange } = props
-  const { account, did } = useWallet()
+  const { account, name } = useWallet()
   const { data: dids } = useDids(account, props.snapshots)
   const { data: votes } = useQuery(
     [dids, props.group, props.snapshots],
@@ -53,11 +53,11 @@ export default function VoterSelect(props: {
   )
   useEffect(() => {
     onChange(
-      dids?.find((d) => !powers?.[d] && votes?.[d] && d === did) ||
+      dids?.find((d) => !powers?.[d] && votes?.[d] && d === name) ||
         dids?.find((d) => !powers?.[d] && votes?.[d]) ||
         '',
     )
-  }, [did, dids, votes, onChange, powers])
+  }, [name, dids, votes, onChange, powers])
 
   return (
     <Select

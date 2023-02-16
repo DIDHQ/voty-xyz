@@ -17,7 +17,7 @@ export default function ProposerSelect(props: {
   className?: string
 }) {
   const { onChange } = props
-  const { account, did } = useWallet()
+  const { account, name } = useWallet()
   const { data: dids } = useDids(account, props.snapshots)
   const { data: disables } = useQuery(
     [dids, props.group, props.snapshots],
@@ -44,11 +44,11 @@ export default function ProposerSelect(props: {
   )
   useEffect(() => {
     onChange(
-      dids?.find((d) => !disables?.[d] && d === did) ||
+      dids?.find((d) => !disables?.[d] && d === name) ||
         dids?.find((d) => !disables?.[d]) ||
         '',
     )
-  }, [did, dids, disables, onChange])
+  }, [name, dids, disables, onChange])
 
   return (
     <Select

@@ -9,7 +9,7 @@ import TextButton from './basic/text-button'
 import { isTestnet } from '../utils/testnet'
 
 export default function Toolbar() {
-  const { account, avatar, did, displayAddress } = useWallet()
+  const { account, avatar, name: did, displayAddress } = useWallet()
 
   return (
     <header className="fixed top-0 z-40 flex h-16 w-full justify-center border-b border-gray-200 bg-white/80 pl-32 pr-16 backdrop-blur">
