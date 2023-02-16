@@ -12,7 +12,7 @@ const textDecoder = new TextDecoder()
 
 export const proposalRouter = router({
   getByPermalink: procedure
-    .input(z.object({ permalink: z.string().nullish() }))
+    .input(z.object({ permalink: z.string().optional() }))
     .output(proposalWithAuthorSchema)
     .query(async ({ input }) => {
       if (!input.permalink) {
@@ -31,9 +31,9 @@ export const proposalRouter = router({
   list: procedure
     .input(
       z.object({
-        entry: z.string().nullish(),
-        group: z.string().nullish(),
-        cursor: z.string().nullish(),
+        entry: z.string().optional(),
+        group: z.string().optional(),
+        cursor: z.string().optional(),
       }),
     )
     .output(
@@ -41,7 +41,7 @@ export const proposalRouter = router({
         data: z.array(
           proposalWithAuthorSchema.merge(z.object({ permalink: z.string() })),
         ),
-        next: z.string().nullish(),
+        next: z.string().optional(),
       }),
     )
     .query(async ({ input }) => {

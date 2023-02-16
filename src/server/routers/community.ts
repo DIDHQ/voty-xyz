@@ -12,7 +12,7 @@ const textDecoder = new TextDecoder()
 
 export const communityRouter = router({
   getByEntry: procedure
-    .input(z.object({ entry: z.string().nullish() }))
+    .input(z.object({ entry: z.string().optional() }))
     .output(
       communityWithAuthorSchema.merge(z.object({ permalink: z.string() })),
     )
@@ -40,7 +40,7 @@ export const communityRouter = router({
       }
     }),
   getByPermalink: procedure
-    .input(z.object({ permalink: z.string().nullish() }))
+    .input(z.object({ permalink: z.string().optional() }))
     .output(communityWithAuthorSchema)
     .query(async ({ input }) => {
       if (!input.permalink) {
@@ -57,13 +57,13 @@ export const communityRouter = router({
       )
     }),
   list: procedure
-    .input(z.object({ cursor: z.string().nullish() }))
+    .input(z.object({ cursor: z.string().optional() }))
     .output(
       z.object({
         data: z.array(
           communityWithAuthorSchema.merge(z.object({ permalink: z.string() })),
         ),
-        next: z.string().nullish(),
+        next: z.string().optional(),
       }),
     )
     .query(async ({ input }) => {

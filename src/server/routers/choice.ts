@@ -7,7 +7,7 @@ import { procedure, router } from '../trpc'
 
 export const choiceRouter = router({
   groupByProposal: procedure
-    .input(z.object({ proposal: z.string().nullish() }))
+    .input(z.object({ proposal: z.string().optional() }))
     .output(
       z.object({ powers: z.record(z.string(), z.number()), total: z.number() }),
     )

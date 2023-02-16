@@ -15,8 +15,8 @@ export const voteRouter = router({
   list: procedure
     .input(
       z.object({
-        proposal: z.string().nullish(),
-        cursor: z.string().nullish(),
+        proposal: z.string().optional(),
+        cursor: z.string().optional(),
       }),
     )
     .output(
@@ -24,7 +24,7 @@ export const voteRouter = router({
         data: z.array(
           voteWithAuthorSchema.merge(z.object({ permalink: z.string() })),
         ),
-        next: z.string().nullish(),
+        next: z.string().optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -58,8 +58,8 @@ export const voteRouter = router({
   groupByProposal: procedure
     .input(
       z.object({
-        proposal: z.string().nullish(),
-        authors: z.array(z.string()).nullish(),
+        proposal: z.string().optional(),
+        authors: z.array(z.string()).optional(),
       }),
     )
     .output(z.record(z.string(), z.number()))

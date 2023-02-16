@@ -58,8 +58,8 @@ export const subscriptionRouter = router({
   set: procedure
     .input(
       z.object({
-        entry: z.string().nullish(),
-        subscribe: z.boolean().nullish(),
+        entry: z.string().optional(),
+        subscribe: z.boolean().optional(),
       }),
     )
     .output(z.boolean())
