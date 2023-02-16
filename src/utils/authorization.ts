@@ -1,4 +1,5 @@
 import { Authorized } from './schemas'
+import { isTestnet } from './testnet'
 
 export const authorizationMessage = 'Welcome to Voty'
 
@@ -10,24 +11,24 @@ export function getAuthorization() {
   if (typeof localStorage === 'undefined') {
     return
   }
-  const did = localStorage.getItem('voty.current')
+  const did = localStorage.getItem(`${isTestnet ? 'testnet.' : ''}voty.current`)
   if (!did) {
     return
   }
-  return localStorage.getItem(`voty.${did}`)
+  return localStorage.getItem(`${isTestnet ? 'testnet.' : ''}voty.${did}`)
 }
 
 export function setAuthorizationCurrent(did?: string) {
   if (did) {
-    localStorage.setItem('voty.current', did)
+    localStorage.setItem(`${isTestnet ? 'testnet.' : ''}voty.current`, did)
   } else {
-    localStorage.removeItem('voty.current')
+    localStorage.removeItem(`${isTestnet ? 'testnet.' : ''}voty.current`)
   }
 }
 
 export function setAuthorization(authorization: Authorized<Authorization>) {
   localStorage.setItem(
-    `voty.${authorization.author.did}`,
+    `${isTestnet ? 'testnet.' : ''}voty.${authorization.author.did}`,
     JSON.stringify(authorization),
   )
 }
