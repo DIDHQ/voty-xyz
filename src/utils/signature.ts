@@ -24,6 +24,9 @@ export async function verifyDocument(
     signature: Buffer,
   ) => string | Promise<string>,
 ): Promise<boolean> {
+  if (proof.type !== 'eth_personal_sign') {
+    return false
+  }
   const message = encodeDocument(document)
   const address = await verifyMessage(
     message,

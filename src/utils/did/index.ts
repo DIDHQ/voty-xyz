@@ -4,7 +4,7 @@ import { DID } from '../types'
 import { bitChecker } from './bit'
 import { ethChecker } from './eth'
 
-export async function checkDidAuthor(
+export async function checkDidAuthorshipProof(
   { did, coin_type, snapshot }: Authorship,
   proof: Proof,
 ): Promise<boolean> {

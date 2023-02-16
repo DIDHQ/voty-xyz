@@ -1,6 +1,6 @@
 import { verifyMessage } from 'ethers/lib/utils.js'
 
-import { checkDidAuthor } from '../did'
+import { checkDidAuthorshipProof } from '../did'
 import { Authorized, Authorship } from '../schemas/authorship'
 import { Proof, Proved } from '../schemas/proof'
 import { verifyDocument } from '../signature'
@@ -16,11 +16,11 @@ export default async function verifyAuthorshipProof<T extends object>(
   }
 
   if (!(await verifyDocument(rest, proof, verifyMessage))) {
-    throw new Error('invalid author address')
+    throw new Error('invalid proof')
   }
 
-  if (!(await checkDidAuthor(rest.authorship, proof))) {
-    throw new Error('proof of did is invalid')
+  if (!(await checkDidAuthorshipProof(rest.authorship, proof))) {
+    throw new Error('invalid authorship')
   }
 
   return { authorship: rest.authorship, proof }
