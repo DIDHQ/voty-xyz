@@ -2,7 +2,7 @@ export type DID<S extends 'bit' | 'eth' = string> = `${string}.${S}`
 
 export type DidResolver<S extends 'bit' | 'eth' = string> = {
   requiredCoinTypes: number[]
-  resolve: (did: DID<S> | string, snapshots: Snapshots) => Promise<Account>
+  resolve: (did: DID<S>, snapshots: Snapshots) => Promise<Account>
 }
 
 export type Snapshots = { [coinType: number]: string }

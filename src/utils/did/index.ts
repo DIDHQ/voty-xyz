@@ -1,8 +1,11 @@
-import { DID, DidResolver } from '../types'
+import { Account, DID, Snapshots } from '../types'
 import { bitResolver } from './bit'
 import { ethResolver } from './eth'
 
-export const resolveDid: DidResolver['resolve'] = async (did, snapshots) => {
+export async function resolveDid(
+  did: string,
+  snapshots: Snapshots,
+): Promise<Account> {
   if (didSuffixIs(did, 'bit')) {
     return bitResolver.resolve(did, snapshots)
   }
