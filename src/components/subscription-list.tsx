@@ -25,8 +25,8 @@ export default function SubscriptionList(props: { className?: string }) {
   })
   const handleSignDocument = useSignDocument<Authorization>(dids?.[0])
   useEffect(() => {
-    setAuthorizationCurrent(dids?.[0])
-  }, [dids])
+    setAuthorizationCurrent(account?.address)
+  }, [account?.address])
   useEffect(() => {
     if (error?.data?.code === 'UNAUTHORIZED') {
       handleSignDocument({ message: authorizationMessage }).then((signed) => {

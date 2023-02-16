@@ -2,22 +2,24 @@ import { getArweaveData, getArweaveTimestamp } from '../arweave'
 import { getPeriod, Period } from '../duration'
 import { calculateNumber } from '../functions/number'
 import { Authorized, authorized } from '../schemas/authorship'
+import { proved, Proved } from '../schemas/proof'
 import { Proposal } from '../schemas/proposal'
 import { Vote, voteSchema } from '../schemas/vote'
-import verifyAuthorship from './verify-authorship'
+import verifyAuthorshipProof from './verify-authorship-proof'
 import verifyProposal from './verify-proposal'
 
-export default async function verifyVote(
-  document: object,
-): Promise<{ vote: Authorized<Vote>; proposal: Authorized<Proposal> }> {
-  const parsed = authorized(voteSchema).safeParse(document)
+export default async function verifyVote(document: object): Promise<{
+  vote: Proved<Authorized<Vote>>
+  proposal: Proved<Authorized<Proposal>>
+}> {
+  const parsed = proved(authorized(voteSchema)).safeParse(document)
   if (!parsed.success) {
     throw new Error(`schema error: ${parsed.error.message}`)
   }
 
   const vote = parsed.data
 
-  await verifyAuthorship(vote)
+  await verifyAuthorshipProof(vote)
 
   const [timestamp, data] = await Promise.all([
     getArweaveTimestamp(vote.proposal),

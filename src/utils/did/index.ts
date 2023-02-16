@@ -1,14 +1,13 @@
 import { Authorship } from '../schemas/authorship'
+import { Proof } from '../schemas/proof'
 import { DID } from '../types'
 import { bitChecker } from './bit'
 import { ethChecker } from './eth'
 
-export async function checkDidAuthor({
-  did,
-  coin_type,
-  snapshot,
-  proof,
-}: Authorship): Promise<boolean> {
+export async function checkDidAuthor(
+  { did, coin_type, snapshot }: Authorship,
+  proof: Proof,
+): Promise<boolean> {
   if (didSuffixIs(did, 'bit')) {
     return bitChecker(did).check(coin_type, snapshot, proof)
   }

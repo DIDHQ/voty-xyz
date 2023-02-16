@@ -4,11 +4,6 @@ export const authorshipSchema = z.object({
   did: z.string().min(1),
   coin_type: z.number(),
   snapshot: z.string().min(1),
-  proof: z.object({
-    type: z.literal('eth_personal_sign'),
-    address: z.string(),
-    signature: z.string(),
-  }),
   testnet: z.literal(true).optional(),
 })
 
