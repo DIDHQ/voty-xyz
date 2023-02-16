@@ -21,9 +21,7 @@ export const voteRouter = router({
     )
     .output(
       z.object({
-        data: z.array(
-          voteWithAuthorSchema.merge(z.object({ permalink: z.string() })),
-        ),
+        data: z.array(voteWithAuthorSchema.extend({ permalink: z.string() })),
         next: z.string().optional(),
       }),
     )

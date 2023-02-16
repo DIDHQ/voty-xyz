@@ -39,7 +39,7 @@ export const proposalRouter = router({
     .output(
       z.object({
         data: z.array(
-          proposalWithAuthorSchema.merge(z.object({ permalink: z.string() })),
+          proposalWithAuthorSchema.extend({ permalink: z.string() }),
         ),
         next: z.string().optional(),
       }),

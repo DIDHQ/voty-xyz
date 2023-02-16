@@ -14,9 +14,7 @@ export const communityRouter = router({
   getByEntry: procedure
     .input(z.object({ entry: z.string().optional() }))
     .output(
-      communityWithAuthorSchema
-        .merge(z.object({ permalink: z.string() }))
-        .optional(),
+      communityWithAuthorSchema.extend({ permalink: z.string() }).optional(),
     )
     .query(async ({ input }) => {
       if (!input.entry) {
@@ -63,7 +61,7 @@ export const communityRouter = router({
     .output(
       z.object({
         data: z.array(
-          communityWithAuthorSchema.merge(z.object({ permalink: z.string() })),
+          communityWithAuthorSchema.extend({ permalink: z.string() }),
         ),
         next: z.string().optional(),
       }),
