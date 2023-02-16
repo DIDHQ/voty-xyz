@@ -8,15 +8,16 @@ import { authorized } from '../../utils/schemas/authorship'
 import { communitySchema } from '../../utils/schemas/community'
 import verifyCommunity from '../../utils/verifiers/verify-community'
 import { procedure, router } from '../trpc'
+import { proved } from '../../utils/schemas/proof'
 
 const textDecoder = new TextDecoder()
+
+const schema = proved(authorized(communitySchema))
 
 export const communityRouter = router({
   getByEntry: procedure
     .input(z.object({ entry: z.string().optional() }))
-    .output(
-      authorized(communitySchema).extend({ permalink: z.string() }).optional(),
-    )
+    .output(schema.extend({ permalink: z.string() }).optional())
     .query(async ({ input }) => {
       if (!input.entry) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -35,14 +36,12 @@ export const communityRouter = router({
       }
       return {
         permalink: community.permalink,
-        ...authorized(communitySchema).parse(
-          JSON.parse(textDecoder.decode(community.data)),
-        ),
+        ...schema.parse(JSON.parse(textDecoder.decode(community.data))),
       }
     }),
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(authorized(communitySchema).optional())
+    .output(schema.optional())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -53,17 +52,13 @@ export const communityRouter = router({
       if (!community) {
         return
       }
-      return authorized(communitySchema).parse(
-        JSON.parse(textDecoder.decode(community.data)),
-      )
+      return schema.parse(JSON.parse(textDecoder.decode(community.data)))
     }),
   list: procedure
     .input(z.object({ cursor: z.string().optional() }))
     .output(
       z.object({
-        data: z.array(
-          authorized(communitySchema).extend({ permalink: z.string() }),
-        ),
+        data: z.array(schema.extend({ permalink: z.string() })),
         next: z.string().optional(),
       }),
     )
@@ -90,9 +85,7 @@ export const communityRouter = router({
               try {
                 return {
                   permalink,
-                  ...authorized(communitySchema).parse(
-                    JSON.parse(textDecoder.decode(data)),
-                  ),
+                  ...schema.parse(JSON.parse(textDecoder.decode(data))),
                 }
               } catch {
                 return
@@ -103,7 +96,7 @@ export const communityRouter = router({
       }
     }),
   create: procedure
-    .input(authorized(communitySchema))
+    .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
       const { community } = await verifyCommunity(input)

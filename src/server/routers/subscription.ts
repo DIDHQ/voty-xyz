@@ -5,57 +5,56 @@ import { z } from 'zod'
 import { database } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
 import { communitySchema } from '../../utils/schemas/community'
+import { proved } from '../../utils/schemas/proof'
 import { procedure, router } from '../trpc'
 
 const textDecoder = new TextDecoder()
 
+const schema = proved(authorized(communitySchema))
+
 export const subscriptionRouter = router({
-  list: procedure
-    .output(z.array(authorized(communitySchema)))
-    .query(async ({ ctx }) => {
-      if (!ctx.did) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' })
-      }
+  list: procedure.output(z.array(schema)).query(async ({ ctx }) => {
+    if (!ctx.did) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' })
+    }
 
-      const subscriptions = await database.subscription.findMany({
-        where: { subscriber: ctx.did },
-        orderBy: { ts: 'desc' },
-      })
-      const entries = keyBy(
-        await database.entry.findMany({
-          where: { did: { in: subscriptions.map(({ entry }) => entry) } },
-        }),
-        ({ did }) => did,
-      )
-      const communities = keyBy(
-        await database.community.findMany({
-          where: {
-            permalink: {
-              in: Object.values(entries).map(({ community }) => community),
-            },
+    const subscriptions = await database.subscription.findMany({
+      where: { subscriber: ctx.did },
+      orderBy: { ts: 'desc' },
+    })
+    const entries = keyBy(
+      await database.entry.findMany({
+        where: { did: { in: subscriptions.map(({ entry }) => entry) } },
+      }),
+      ({ did }) => did,
+    )
+    const communities = keyBy(
+      await database.community.findMany({
+        where: {
+          permalink: {
+            in: Object.values(entries).map(({ community }) => community),
           },
-        }),
-        ({ permalink }) => permalink,
-      )
+        },
+      }),
+      ({ permalink }) => permalink,
+    )
 
-      return compact(
-        subscriptions
-          .map(({ entry }) => communities[entries[entry]?.community])
-          .filter((community) => community)
-          .map(({ permalink, data }) => {
-            try {
-              return {
-                permalink,
-                ...authorized(communitySchema).parse(
-                  JSON.parse(textDecoder.decode(data)),
-                ),
-              }
-            } catch {
-              return
+    return compact(
+      subscriptions
+        .map(({ entry }) => communities[entries[entry]?.community])
+        .filter((community) => community)
+        .map(({ permalink, data }) => {
+          try {
+            return {
+              permalink,
+              ...schema.parse(JSON.parse(textDecoder.decode(data))),
             }
-          }),
-      )
-    }),
+          } catch {
+            return
+          }
+        }),
+    )
+  }),
   set: procedure
     .input(
       z.object({
