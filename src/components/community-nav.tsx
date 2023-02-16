@@ -16,7 +16,7 @@ import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
 import useRouterQuery from '../hooks/use-router-query'
 import Avatar from './basic/avatar'
 import { extractStartEmoji } from '../utils/emoji'
-import { Group } from '../utils/schemas'
+import { Group } from '../utils/schemas/group'
 import { trpc } from '../utils/trpc'
 
 const StatusIcon = dynamic(() => import('./status-icon'), {
@@ -101,7 +101,7 @@ export default function CommunityNav(props: { className?: string }) {
           className="absolute right-3 top-3"
         />
         <Avatar
-          name={community?.author.did}
+          name={community?.authorship.author}
           value={community?.extension?.avatar}
           size={20}
           className="mt-8"

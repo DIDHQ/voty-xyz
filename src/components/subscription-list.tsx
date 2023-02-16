@@ -25,8 +25,8 @@ export default function SubscriptionList(props: { className?: string }) {
   })
   const handleSignDocument = useSignDocument<Authorization>(dids?.[0])
   useEffect(() => {
-    setAuthorizationCurrent(dids?.[0])
-  }, [dids])
+    setAuthorizationCurrent(account?.address)
+  }, [account?.address])
   useEffect(() => {
     if (error?.data?.code === 'UNAUTHORIZED') {
       handleSignDocument({ message: authorizationMessage }).then((signed) => {
@@ -40,14 +40,17 @@ export default function SubscriptionList(props: { className?: string }) {
   return (
     <div className={props.className}>
       {data?.map((community) => (
-        <Link key={community.author.did} href={`/${community.author.did}`}>
+        <Link
+          key={community.authorship.author}
+          href={`/${community.authorship.author}`}
+        >
           <Avatar
             size={12}
-            name={community.author.did}
+            name={community.authorship.author}
             value={community.extension?.avatar}
             className={clsx(
               'mt-4 ring-2 ring-offset-2',
-              community.author.did === query.entry
+              community.authorship.author === query.entry
                 ? 'ring-indigo-500'
                 : 'ring-transparent hover:ring-gray-300',
             )}

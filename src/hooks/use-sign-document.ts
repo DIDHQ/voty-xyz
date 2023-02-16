@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
-import { Authorized, Author } from '../utils/schemas'
+import { Authorized, Authorship } from '../utils/schemas/authorship'
+import { Proved } from '../utils/schemas/proof'
 import { signDocument } from '../utils/signature'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import { isTestnet } from '../utils/testnet'
@@ -9,7 +10,7 @@ import useWallet from './use-wallet'
 
 export default function useSignDocument<T extends object>(
   did?: string,
-): (document: T) => Promise<Authorized<T> | undefined> {
+): (document: T) => Promise<Proved<Authorized<T>> | undefined> {
   const { account, signMessage } = useWallet()
 
   return useCallback(
@@ -19,20 +20,19 @@ export default function useSignDocument<T extends object>(
       }
       try {
         const coinType = requiredCoinTypeOfDidChecker(did)
-        const [proof, snapshot] = await Promise.all([
-          signDocument(document, account.address, signMessage),
-          getCurrentSnapshot(coinType),
-        ])
-        return {
-          ...document,
-          author: {
-            did,
-            snapshot: snapshot.toString(),
-            coin_type: coinType,
-            proof,
-            testnet: isTestnet || undefined,
-          } satisfies Author,
-        }
+        const snapshot = await getCurrentSnapshot(coinType)
+        const authorship = {
+          author: did,
+          coin_type: coinType,
+          snapshot,
+          testnet: isTestnet || undefined,
+        } satisfies Authorship
+        const proof = await signDocument(
+          { ...document, authorship },
+          account.address,
+          signMessage,
+        )
+        return { ...document, authorship, proof }
       } catch (err) {
         console.error(err)
       }

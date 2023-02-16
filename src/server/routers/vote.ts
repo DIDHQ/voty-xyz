@@ -4,12 +4,16 @@ import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
-import { voteWithAuthorSchema } from '../../utils/schemas'
+import { authorized } from '../../utils/schemas/authorship'
+import { voteSchema } from '../../utils/schemas/vote'
 import verifyVote from '../../utils/verifiers/verify-vote'
 import { powerOfChoice } from '../../utils/voting'
 import { procedure, router } from '../trpc'
+import { proved } from '../../utils/schemas/proof'
 
 const textDecoder = new TextDecoder()
+
+const schema = proved(authorized(voteSchema))
 
 export const voteRouter = router({
   list: procedure
@@ -21,9 +25,7 @@ export const voteRouter = router({
     )
     .output(
       z.object({
-        data: z.array(
-          voteWithAuthorSchema.merge(z.object({ permalink: z.string() })),
-        ),
+        data: z.array(schema.extend({ permalink: z.string() })),
         next: z.string().optional(),
       }),
     )
@@ -43,9 +45,7 @@ export const voteRouter = router({
             try {
               return {
                 permalink,
-                ...voteWithAuthorSchema.parse(
-                  JSON.parse(textDecoder.decode(data)),
-                ),
+                ...schema.parse(JSON.parse(textDecoder.decode(data))),
               }
             } catch {
               return
@@ -75,13 +75,11 @@ export const voteRouter = router({
       })
       return mapValues(
         keyBy(votes, ({ author }) => author),
-        ({ data }) =>
-          voteWithAuthorSchema.parse(JSON.parse(textDecoder.decode(data)))
-            .power,
+        ({ data }) => schema.parse(JSON.parse(textDecoder.decode(data))).power,
       )
     }),
   create: procedure
-    .input(voteWithAuthorSchema)
+    .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
       const { vote, proposal } = await verifyVote(input)
@@ -93,7 +91,7 @@ export const voteRouter = router({
           data: {
             permalink,
             ts,
-            author: vote.author.did,
+            author: vote.authorship.author,
             community: proposal.community,
             group: proposal.group,
             proposal: vote.proposal,

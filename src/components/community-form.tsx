@@ -7,7 +7,7 @@ import {
   DocumentPlusIcon,
 } from '@heroicons/react/20/solid'
 
-import { Community, communitySchema } from '../utils/schemas'
+import { Community, communitySchema } from '../utils/schemas/community'
 import AvatarInput from './basic/avatar-input'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'

@@ -58,6 +58,5 @@ export const coinTypeNames: { [coinType: number]: string } = {
 export enum DataType {
   COMMUNITY = 'community',
   PROPOSAL = 'proposal',
-  OPTION = 'option',
   VOTE = 'vote',
 }

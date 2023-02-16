@@ -1,4 +1,4 @@
-import type { Author } from './schemas'
+import type { Authorship } from './schemas'
 
 export type DID<S extends 'bit' | 'eth' = string> = `${string}.${S}`
 
@@ -9,7 +9,7 @@ export type DidChecker<S extends 'bit' | 'eth' = string> = (did: DID<S>) => {
   check: (
     coinType: number,
     snapshot: string,
-    proof: Author['proof'],
+    proof: Authorship['proof'],
   ) => Promise<boolean>
 }
 

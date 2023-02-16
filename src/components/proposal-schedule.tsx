@@ -1,6 +1,6 @@
 import useStatus from '../hooks/use-status'
 import { getPeriod } from '../utils/duration'
-import { Group } from '../utils/schemas'
+import { Group } from '../utils/schemas/group'
 import { formatTime } from '../utils/time'
 import { DetailList, DetailItem } from './basic/detail'
 

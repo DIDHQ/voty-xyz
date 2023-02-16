@@ -4,20 +4,20 @@ import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
-import { communityWithAuthorSchema } from '../../utils/schemas'
+import { authorized } from '../../utils/schemas/authorship'
+import { communitySchema } from '../../utils/schemas/community'
 import verifyCommunity from '../../utils/verifiers/verify-community'
 import { procedure, router } from '../trpc'
+import { proved } from '../../utils/schemas/proof'
 
 const textDecoder = new TextDecoder()
+
+const schema = proved(authorized(communitySchema))
 
 export const communityRouter = router({
   getByEntry: procedure
     .input(z.object({ entry: z.string().optional() }))
-    .output(
-      communityWithAuthorSchema
-        .merge(z.object({ permalink: z.string() }))
-        .optional(),
-    )
+    .output(schema.extend({ permalink: z.string() }).optional())
     .query(async ({ input }) => {
       if (!input.entry) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -36,14 +36,12 @@ export const communityRouter = router({
       }
       return {
         permalink: community.permalink,
-        ...communityWithAuthorSchema.parse(
-          JSON.parse(textDecoder.decode(community.data)),
-        ),
+        ...schema.parse(JSON.parse(textDecoder.decode(community.data))),
       }
     }),
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(communityWithAuthorSchema.optional())
+    .output(schema.optional())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -54,17 +52,13 @@ export const communityRouter = router({
       if (!community) {
         return
       }
-      return communityWithAuthorSchema.parse(
-        JSON.parse(textDecoder.decode(community.data)),
-      )
+      return schema.parse(JSON.parse(textDecoder.decode(community.data)))
     }),
   list: procedure
     .input(z.object({ cursor: z.string().optional() }))
     .output(
       z.object({
-        data: z.array(
-          communityWithAuthorSchema.merge(z.object({ permalink: z.string() })),
-        ),
+        data: z.array(schema.extend({ permalink: z.string() })),
         next: z.string().optional(),
       }),
     )
@@ -91,9 +85,7 @@ export const communityRouter = router({
               try {
                 return {
                   permalink,
-                  ...communityWithAuthorSchema.parse(
-                    JSON.parse(textDecoder.decode(data)),
-                  ),
+                  ...schema.parse(JSON.parse(textDecoder.decode(data))),
                 }
               } catch {
                 return
@@ -104,7 +96,7 @@ export const communityRouter = router({
       }
     }),
   create: procedure
-    .input(communityWithAuthorSchema)
+    .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
       const { community } = await verifyCommunity(input)
@@ -113,12 +105,12 @@ export const communityRouter = router({
 
       await database.$transaction([
         database.community.create({
-          data: { permalink, ts, entry: community.author.did, data },
+          data: { permalink, ts, entry: community.authorship.author, data },
         }),
         database.entry.upsert({
-          where: { did: community.author.did },
+          where: { did: community.authorship.author },
           create: {
-            did: community.author.did,
+            did: community.authorship.author,
             community: permalink,
             subscribers: 0,
             ts,

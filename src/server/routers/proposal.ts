@@ -4,16 +4,20 @@ import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
-import { proposalWithAuthorSchema } from '../../utils/schemas'
+import { authorized } from '../../utils/schemas/authorship'
+import { proposalSchema } from '../../utils/schemas/proposal'
 import verifyProposal from '../../utils/verifiers/verify-proposal'
 import { procedure, router } from '../trpc'
+import { proved } from '../../utils/schemas/proof'
 
 const textDecoder = new TextDecoder()
+
+const schema = proved(authorized(proposalSchema))
 
 export const proposalRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(proposalWithAuthorSchema.optional())
+    .output(schema.optional())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -24,9 +28,7 @@ export const proposalRouter = router({
       if (!proposal) {
         return
       }
-      return proposalWithAuthorSchema.parse(
-        JSON.parse(textDecoder.decode(proposal.data)),
-      )
+      return schema.parse(JSON.parse(textDecoder.decode(proposal.data)))
     }),
   list: procedure
     .input(
@@ -38,9 +40,7 @@ export const proposalRouter = router({
     )
     .output(
       z.object({
-        data: z.array(
-          proposalWithAuthorSchema.merge(z.object({ permalink: z.string() })),
-        ),
+        data: z.array(schema.extend({ permalink: z.string() })),
         next: z.string().optional(),
       }),
     )
@@ -62,9 +62,7 @@ export const proposalRouter = router({
             try {
               return {
                 permalink,
-                ...proposalWithAuthorSchema.parse(
-                  JSON.parse(textDecoder.decode(data)),
-                ),
+                ...schema.parse(JSON.parse(textDecoder.decode(data))),
               }
             } catch {
               return
@@ -75,7 +73,7 @@ export const proposalRouter = router({
       }
     }),
   create: procedure
-    .input(proposalWithAuthorSchema)
+    .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
       const { proposal, community } = await verifyProposal(input)
@@ -86,8 +84,8 @@ export const proposalRouter = router({
         data: {
           permalink,
           ts,
-          author: proposal.author.did,
-          entry: community.author.did,
+          author: proposal.authorship.author,
+          entry: community.authorship.author,
           community: proposal.community,
           group: proposal.group,
           data,

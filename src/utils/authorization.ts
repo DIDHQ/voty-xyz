@@ -1,4 +1,5 @@
-import { Authorized } from './schemas'
+import { Authorized } from './schemas/authorship'
+import { Proved } from './schemas/proof'
 import { isTestnet } from './testnet'
 
 export const authorizationMessage = 'Welcome to Voty'
@@ -11,29 +12,35 @@ export function getAuthorization() {
   if (typeof localStorage === 'undefined') {
     return
   }
-  const did = localStorage.getItem(`${isTestnet ? 'testnet.' : ''}voty.current`)
-  if (!did) {
+  const address = localStorage.getItem(
+    `${isTestnet ? 'testnet.' : ''}voty.current`,
+  )
+  if (!address) {
     return
   }
-  return localStorage.getItem(`${isTestnet ? 'testnet.' : ''}voty.${did}`)
+  return localStorage.getItem(`${isTestnet ? 'testnet.' : ''}voty.${address}`)
 }
 
-export function setAuthorizationCurrent(did?: string) {
-  if (did) {
-    localStorage.setItem(`${isTestnet ? 'testnet.' : ''}voty.current`, did)
+export function setAuthorizationCurrent(address?: string) {
+  if (address) {
+    localStorage.setItem(`${isTestnet ? 'testnet.' : ''}voty.current`, address)
   } else {
     localStorage.removeItem(`${isTestnet ? 'testnet.' : ''}voty.current`)
   }
 }
 
-export function setAuthorization(authorization: Authorized<Authorization>) {
+export function setAuthorization(
+  authorization: Proved<Authorized<Authorization>>,
+) {
   localStorage.setItem(
-    `${isTestnet ? 'testnet.' : ''}voty.${authorization.author.did}`,
+    `${isTestnet ? 'testnet.' : ''}voty.${authorization.proof.address}`,
     JSON.stringify(authorization),
   )
 }
 
-export function parseAuthorization(text: string): Authorized<Authorization> {
+export function parseAuthorization(
+  text: string,
+): Proved<Authorized<Authorization>> {
   return JSON.parse(text)
 }
 

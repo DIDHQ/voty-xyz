@@ -1,4 +1,4 @@
-import { Group } from './schemas'
+import { Group } from './schemas/group'
 
 export enum Period {
   ANNOUNCING = 'Announcing',

@@ -1,21 +1,20 @@
-import { Author } from '../schemas'
+import { Authorship } from '../schemas/authorship'
+import { Proof } from '../schemas/proof'
 import { DID } from '../types'
 import { bitChecker } from './bit'
 import { ethChecker } from './eth'
 
-export async function checkDidAuthor({
-  did,
-  coin_type,
-  snapshot,
-  proof,
-}: Author): Promise<boolean> {
-  if (didSuffixIs(did, 'bit')) {
-    return bitChecker(did).check(coin_type, snapshot, proof)
+export async function checkDidAuthorshipProof(
+  { author, coin_type, snapshot }: Authorship,
+  proof: Proof,
+): Promise<boolean> {
+  if (didSuffixIs(author, 'bit')) {
+    return bitChecker(author).check(coin_type, snapshot, proof)
   }
-  if (didSuffixIs(did, 'eth')) {
-    return ethChecker(did).check(coin_type, snapshot, proof)
+  if (didSuffixIs(author, 'eth')) {
+    return ethChecker(author).check(coin_type, snapshot, proof)
   }
-  throw new Error(`unsupported did: ${did}`)
+  throw new Error(`unsupported did: ${author}`)
 }
 
 export function requiredCoinTypeOfDidChecker(did: string): number {

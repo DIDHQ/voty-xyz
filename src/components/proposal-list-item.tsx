@@ -4,9 +4,10 @@ import {
   UserIcon,
 } from '@heroicons/react/20/solid'
 import Link from 'next/link'
-import { permalink2Id } from '../utils/permalink'
 
-import { Authorized, Proposal } from '../utils/schemas'
+import { permalink2Id } from '../utils/permalink'
+import { Authorized } from '../utils/schemas/authorship'
+import { Proposal } from '../utils/schemas/proposal'
 
 export default function ProposalListItem(props: {
   entry: string
@@ -40,7 +41,7 @@ export default function ProposalListItem(props: {
                 className="mr-1.5 h-5 w-5 shrink-0 text-gray-400"
                 aria-hidden="true"
               />
-              {props.value.author.did}
+              {props.value.authorship.author}
             </p>
             <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
               <RectangleStackIcon
@@ -57,8 +58,8 @@ export default function ProposalListItem(props: {
             />
             <p>
               Snapshot{' '}
-              <time dateTime={props.value.author.snapshot}>
-                {props.value.author.snapshot}
+              <time dateTime={props.value.authorship.snapshot}>
+                {props.value.authorship.snapshot}
               </time>
             </p>
           </div>

@@ -11,7 +11,7 @@ import { HandRaisedIcon } from '@heroicons/react/20/solid'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import { requiredCoinTypesOfNumberSets } from '../../../utils/functions/number'
-import { Proposal, proposalSchema } from '../../../utils/schemas'
+import { Proposal, proposalSchema } from '../../../utils/schemas/proposal'
 import { getCurrentSnapshot } from '../../../utils/snapshot'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
