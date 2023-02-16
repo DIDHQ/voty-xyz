@@ -13,7 +13,8 @@ export const resolveEth: DidResolver<'eth'> = async (
   did,
   snapshots, // TODO: use snapshots
 ) => {
-  const address = await provider.resolveName(did)
-  invariant(address)
-  return { coinType: 60, address }
+  throw new Error('not implemented yet')
+  // const address = await provider.resolveName(did)
+  // invariant(address)
+  // return { coinType: 60, address }
 }
