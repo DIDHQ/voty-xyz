@@ -98,7 +98,7 @@ export default function ProposalPage() {
     <div className="mt-6 flex items-start">
       <div className="mr-6 flex-1">
         <div className="mb-6 border-b border-gray-200 pb-6">
-          <Link href={`/${community.authorship.did}/${proposal.group}`}>
+          <Link href={`/${community.authorship.author}/${proposal.group}`}>
             <TextButton>
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>
@@ -192,7 +192,7 @@ export default function ProposalPage() {
               {votes.map((vote) => (
                 <tr key={vote.permalink}>
                   <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                    {vote.authorship.did}
+                    {vote.authorship.author}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                     {stringifyChoice(proposal.voting_type, vote.choice)}
@@ -220,7 +220,9 @@ export default function ProposalPage() {
           <DetailList title="Information">
             <DetailItem title="Community">{community.name}</DetailItem>
             <DetailItem title="Group">{group.name}</DetailItem>
-            <DetailItem title="Proposer">{proposal.authorship.did}</DetailItem>
+            <DetailItem title="Proposer">
+              {proposal.authorship.author}
+            </DetailItem>
             <DetailItem title="Voting type">
               {startCase(proposal.voting_type)}
             </DetailItem>

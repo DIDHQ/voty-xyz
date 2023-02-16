@@ -5,16 +5,16 @@ import { bitChecker } from './bit'
 import { ethChecker } from './eth'
 
 export async function checkDidAuthorshipProof(
-  { did, coin_type, snapshot }: Authorship,
+  { author, coin_type, snapshot }: Authorship,
   proof: Proof,
 ): Promise<boolean> {
-  if (didSuffixIs(did, 'bit')) {
-    return bitChecker(did).check(coin_type, snapshot, proof)
+  if (didSuffixIs(author, 'bit')) {
+    return bitChecker(author).check(coin_type, snapshot, proof)
   }
-  if (didSuffixIs(did, 'eth')) {
-    return ethChecker(did).check(coin_type, snapshot, proof)
+  if (didSuffixIs(author, 'eth')) {
+    return ethChecker(author).check(coin_type, snapshot, proof)
   }
-  throw new Error(`unsupported did: ${did}`)
+  throw new Error(`unsupported did: ${author}`)
 }
 
 export function requiredCoinTypeOfDidChecker(did: string): number {

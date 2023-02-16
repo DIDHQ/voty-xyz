@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
-import { Authorized } from '../utils/schemas/authorship'
+import { Authorized, Authorship } from '../utils/schemas/authorship'
 import { Proved } from '../utils/schemas/proof'
 import { signDocument } from '../utils/signature'
 import { getCurrentSnapshot } from '../utils/snapshot'
@@ -22,11 +22,11 @@ export default function useSignDocument<T extends object>(
         const coinType = requiredCoinTypeOfDidChecker(did)
         const snapshot = await getCurrentSnapshot(coinType)
         const authorship = {
-          did,
+          author: did,
           snapshot,
           coin_type: coinType,
           testnet: isTestnet || undefined,
-        }
+        } satisfies Authorship
         const proof = await signDocument(
           { ...document, authorship },
           account.address,

@@ -41,7 +41,7 @@ export default function ProposalListItem(props: {
                 className="mr-1.5 h-5 w-5 shrink-0 text-gray-400"
                 aria-hidden="true"
               />
-              {props.value.authorship.did}
+              {props.value.authorship.author}
             </p>
             <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
               <RectangleStackIcon

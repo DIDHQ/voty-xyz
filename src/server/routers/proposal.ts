@@ -84,8 +84,8 @@ export const proposalRouter = router({
         data: {
           permalink,
           ts,
-          author: proposal.authorship.did,
-          entry: community.authorship.did,
+          author: proposal.authorship.author,
+          entry: community.authorship.author,
           community: proposal.community,
           group: proposal.group,
           data,

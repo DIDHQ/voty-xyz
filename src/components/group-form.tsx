@@ -146,7 +146,7 @@ export default function GroupForm(props: {
               <FormProvider {...methods}>
                 <BooleanSetsBlock
                   name="proposing"
-                  entry={props.community.authorship.did}
+                  entry={props.community.authorship.author}
                   groupIndex={groupIndex}
                   disabled={props.disabled}
                 />
@@ -173,7 +173,7 @@ export default function GroupForm(props: {
               <FormProvider {...methods}>
                 <NumberSetsBlock
                   name="voting"
-                  entry={props.community.authorship.did}
+                  entry={props.community.authorship.author}
                   groupIndex={groupIndex}
                   disabled={props.disabled}
                 />
@@ -253,7 +253,7 @@ export default function GroupForm(props: {
       <FormFooter>
         <FormProvider {...methods}>
           <SigningCommunityButton
-            did={props.community.authorship.did}
+            did={props.community.authorship.author}
             icon={isNewGroup ? DocumentPlusIcon : DocumentArrowUpIcon}
             onSuccess={onSuccess}
             disabled={props.disabled}

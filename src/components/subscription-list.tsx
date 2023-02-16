@@ -41,16 +41,16 @@ export default function SubscriptionList(props: { className?: string }) {
     <div className={props.className}>
       {data?.map((community) => (
         <Link
-          key={community.authorship.did}
-          href={`/${community.authorship.did}`}
+          key={community.authorship.author}
+          href={`/${community.authorship.author}`}
         >
           <Avatar
             size={12}
-            name={community.authorship.did}
+            name={community.authorship.author}
             value={community.extension?.avatar}
             className={clsx(
               'mt-4 ring-2 ring-offset-2',
-              community.authorship.did === query.entry
+              community.authorship.author === query.entry
                 ? 'ring-indigo-500'
                 : 'ring-transparent hover:ring-gray-300',
             )}

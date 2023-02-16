@@ -101,7 +101,7 @@ export default function CommunityNav(props: { className?: string }) {
           className="absolute right-3 top-3"
         />
         <Avatar
-          name={community?.authorship.did}
+          name={community?.authorship.author}
           value={community?.extension?.avatar}
           size={20}
           className="mt-8"

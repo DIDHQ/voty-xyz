@@ -105,12 +105,12 @@ export const communityRouter = router({
 
       await database.$transaction([
         database.community.create({
-          data: { permalink, ts, entry: community.authorship.did, data },
+          data: { permalink, ts, entry: community.authorship.author, data },
         }),
         database.entry.upsert({
-          where: { did: community.authorship.did },
+          where: { did: community.authorship.author },
           create: {
-            did: community.authorship.did,
+            did: community.authorship.author,
             community: permalink,
             subscribers: 0,
             ts,

@@ -38,7 +38,7 @@ export default async function verifyVote(document: object): Promise<{
 
   const votingPower = await calculateNumber(
     group.permission.voting,
-    vote.authorship.did,
+    vote.authorship.author,
     proposal.snapshots,
   )
   if (votingPower !== vote.power) {

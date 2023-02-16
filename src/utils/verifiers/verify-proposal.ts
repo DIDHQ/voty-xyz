@@ -38,7 +38,7 @@ export default async function verifyProposal(document: object): Promise<{
   if (
     !(await checkBoolean(
       group.permission.proposing,
-      proposal.authorship.did,
+      proposal.authorship.author,
       proposal.snapshots,
     ))
   ) {

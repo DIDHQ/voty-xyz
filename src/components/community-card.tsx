@@ -12,14 +12,14 @@ export default function CommunityCard(props: {
   return (
     <Link
       key={community.permalink}
-      href={`/${community.authorship.did}`}
+      href={`/${community.authorship.author}`}
       className="block rounded-md border border-gray-200 hover:bg-gray-50"
     >
       <div className="flex items-center p-6">
         <div className="shrink-0">
           <Avatar
             size={20}
-            name={community.authorship.did}
+            name={community.authorship.author}
             value={community.extension?.avatar}
           />
         </div>
@@ -28,7 +28,7 @@ export default function CommunityCard(props: {
             {community.name}
           </p>
           <p className="flex items-center text-lg text-gray-500">
-            <span className="truncate">{community.authorship.did}</span>
+            <span className="truncate">{community.authorship.author}</span>
           </p>
         </div>
       </div>
