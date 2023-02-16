@@ -1,29 +1,19 @@
-import { BitNetwork, createInstance, DefaultConfig } from 'dotbit'
 import { getAddress } from 'ethers/lib/utils.js'
-import invariant from 'tiny-invariant'
 
-import { coinTypeToChainId, commonCoinTypes } from '../constants'
-import { isTestnet } from '../testnet'
-import { DidResolver } from '../types'
+import { commonCoinTypes } from '../constants'
+import { snapshotPermissionsInfo } from '../das-database'
+import { DidChecker } from '../types'
 
-const dotbit = createInstance(
-  DefaultConfig[isTestnet ? BitNetwork.testnet : BitNetwork.mainnet],
-)
-
-export const bitResolver: DidResolver<'bit'> = {
-  requiredCoinTypes: [commonCoinTypes.CKB],
-  async resolve(
-    did,
-    snapshots, // TODO: use snapshots
-  ) {
-    const manager = await dotbit.account(did).manager()
-    invariant(manager.coin_type !== undefined)
-    return {
-      coinType: parseInt(manager.coin_type),
-      address:
-        coinTypeToChainId[manager.coin_type] === undefined
-          ? manager.key
-          : getAddress(manager.key),
+export const bitChecker: DidChecker<'bit'> = (did) => ({
+  requiredCoinType: commonCoinTypes.CKB,
+  async check(coinType, snapshot, proof) {
+    if (coinType !== commonCoinTypes.CKB) {
+      throw new Error('coin type mismatch')
     }
+    if (proof.type !== 'eth_personal_sign') {
+      throw new Error(`unsupported proof type ${proof.type}`)
+    }
+    const address = await snapshotPermissionsInfo(did, snapshot)
+    return getAddress(address) === proof.address
   },
-}
+})

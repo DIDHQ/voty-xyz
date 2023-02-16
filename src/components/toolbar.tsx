@@ -6,6 +6,7 @@ import Button from './basic/button'
 import useWallet from '../hooks/use-wallet'
 import Avatar from './basic/avatar'
 import TextButton from './basic/text-button'
+import { isTestnet } from '../utils/testnet'
 
 export default function Toolbar() {
   const { account, avatar, did, displayAddress } = useWallet()
@@ -15,7 +16,9 @@ export default function Toolbar() {
       <div className="flex h-16 max-w-5xl flex-1 items-center justify-between">
         <Link href="/">
           <TextButton>
-            <h1 className="text-lg font-bold">VOTY</h1>
+            <h1 className="text-lg font-bold">
+              VOTY{isTestnet ? ' TESTNET' : null}
+            </h1>
           </TextButton>
         </Link>
         <ConnectButton.Custom>

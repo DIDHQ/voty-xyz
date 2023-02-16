@@ -20,7 +20,7 @@ export default function SubscriptionList(props: { className?: string }) {
   const { data, error } = trpc.subscription.list.useQuery(undefined, {
     refetchOnWindowFocus: false,
   })
-  const handleSignDocument = useSignDocument<Authorization>(0, did)
+  const handleSignDocument = useSignDocument<Authorization>(did)
   useEffect(() => {
     setAuthorizationCurrent(did)
   }, [did])

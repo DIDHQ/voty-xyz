@@ -1,26 +1,29 @@
-import { Account, DID, Snapshots } from '../types'
-import { bitResolver } from './bit'
-import { ethResolver } from './eth'
+import { Author } from '../schemas'
+import { DID } from '../types'
+import { bitChecker } from './bit'
+import { ethChecker } from './eth'
 
-export async function resolveDid(
-  did: string,
-  snapshots: Snapshots,
-): Promise<Account> {
+export async function checkDidAuthor({
+  did,
+  coin_type,
+  snapshot,
+  proof,
+}: Author): Promise<boolean> {
   if (didSuffixIs(did, 'bit')) {
-    return bitResolver.resolve(did, snapshots)
+    return bitChecker(did).check(coin_type, snapshot, proof)
   }
   if (didSuffixIs(did, 'eth')) {
-    return ethResolver.resolve(did, snapshots)
+    return ethChecker(did).check(coin_type, snapshot, proof)
   }
   throw new Error(`unsupported did: ${did}`)
 }
 
-export function requiredCoinTypesOfDidResolver(did: string) {
+export function requiredCoinTypeOfDidChecker(did: string): number {
   if (didSuffixIs(did, 'bit')) {
-    return bitResolver.requiredCoinTypes
+    return bitChecker(did).requiredCoinType
   }
   if (didSuffixIs(did, 'eth')) {
-    return ethResolver.requiredCoinTypes
+    return ethChecker(did).requiredCoinType
   }
   throw new Error(`unsupported did: ${did}`)
 }

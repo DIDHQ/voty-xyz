@@ -4,7 +4,7 @@ import { getCurrentSnapshot } from '../utils/snapshot'
 
 export default function useCurrentSnapshot(coinType?: number) {
   return useQuery(
-    ['current snapshot', coinType],
+    ['currentSnapshot', coinType],
     () => {
       return getCurrentSnapshot(coinType!)
     },

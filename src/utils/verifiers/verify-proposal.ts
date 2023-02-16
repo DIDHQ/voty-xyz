@@ -22,7 +22,7 @@ export default async function verifyProposal(document: object): Promise<{
 
   const proposal = parsed.data
 
-  await verifyAuthor(1, proposal)
+  await verifyAuthor(proposal)
 
   const data = await getArweaveData(proposal.community)
   if (!data) {

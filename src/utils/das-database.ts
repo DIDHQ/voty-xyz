@@ -2,7 +2,7 @@ import { fetchJson } from './fetcher'
 
 export async function snapshotPermissionsInfo(
   did: string,
-  snapshot: number,
+  snapshot: string,
 ): Promise<string> {
   const { data } = await fetchJson<{
     errno: number
@@ -21,16 +21,16 @@ export async function snapshotPermissionsInfo(
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       account: did,
-      block_number: snapshot,
+      block_number: parseInt(snapshot),
     }),
   })
-  return data.owner
+  return data.manager
 }
 
 export async function snapshotAddressAccounts(
   coinType: number,
   address: string,
-  snapshot: number,
+  snapshot: string,
 ): Promise<string[]> {
   const { data } = await fetchJson<{
     errno: number
@@ -46,7 +46,7 @@ export async function snapshotAddressAccounts(
         chain_id: '',
         key: address,
       },
-      block_number: snapshot,
+      block_number: parseInt(snapshot),
       role_type: 'manager',
     }),
   })

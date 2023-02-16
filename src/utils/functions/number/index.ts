@@ -2,8 +2,7 @@ import { max, sum, uniq } from 'lodash-es'
 import pMap from 'p-map'
 
 import { NumberSets, NumberUnit } from '../../schemas'
-import { Snapshots } from '../../types'
-import { NumberFunction } from '../types'
+import { Snapshots, NumberFunction } from '../../types'
 import { prefixes_dot_suffix_fixed_power } from './prefixes-dot-suffix-fixed-power'
 
 export const calculateNumberFunctions: {
