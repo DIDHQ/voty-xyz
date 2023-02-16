@@ -9,11 +9,14 @@ export async function createContext({ req }: CreateNextContextOptions) {
     if (req.headers.authorization) {
       const authorization = parseAuthorization(req.headers.authorization)
       if (verifyAuthorization(authorization)) {
-        const { authorship } = await verifyAuthorshipProof(authorization)
-        return authorship.author
+        try {
+          const { authorship } = await verifyAuthorshipProof(authorization)
+          return authorship.author
+        } catch (err) {
+          console.error(err)
+        }
       }
     }
-    return null
   }
   const did = await getDidFromHeader()
   return { did }
