@@ -13,7 +13,6 @@ import useGroup from '../../../../hooks/use-group'
 import useRouterQuery from '../../../../hooks/use-router-query'
 import { calculateNumber } from '../../../../utils/functions/number'
 import { Vote, voteSchema } from '../../../../utils/schemas'
-import { DID } from '../../../../utils/types'
 import {
   checkChoice,
   choiceIsEmpty,
@@ -77,12 +76,7 @@ export default function ProposalPage() {
   const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
   const { data: votingPower, isFetching } = useQuery(
     ['votingPower', group, did, proposal],
-    () =>
-      calculateNumber(
-        group!.permission.voting,
-        did! as DID,
-        proposal!.snapshots,
-      ),
+    () => calculateNumber(group!.permission.voting, did!, proposal!.snapshots),
     { enabled: !!group && !!did && !!proposal },
   )
   useEffect(() => {

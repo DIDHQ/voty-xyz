@@ -1,3 +1,5 @@
+import { isTestnet } from './testnet'
+
 export const commonCoinTypes = {
   ETH: 60,
   TRX: 195,
@@ -8,26 +10,41 @@ export const commonCoinTypes = {
 
 export const commonChainIds = {
   ETH: 1,
+  ETH_GOERLI: 5,
   BSC: 56,
-  MATIC: 137,
+  BSC_CHAPEL: 97,
+  POLYGON: 137,
+  POLYGON_MUMBAI: 80001,
 }
 
 export const chainIdToRpc: { [chainId: number]: string } = {
   [commonChainIds.ETH]: 'https://rpc.ankr.com/eth',
+  [commonChainIds.ETH_GOERLI]: 'https://rpc.ankr.com/eth_goerli',
   [commonChainIds.BSC]: 'https://rpc.ankr.com/bsc',
-  [commonChainIds.MATIC]: 'https://rpc.ankr.com/polygon',
+  [commonChainIds.BSC_CHAPEL]: 'https://rpc.ankr.com/bsc_testnet_chapel',
+  [commonChainIds.POLYGON]: 'https://rpc.ankr.com/polygon',
+  [commonChainIds.POLYGON_MUMBAI]: 'https://rpc.ankr.com/polygon_mumbai',
 }
 
 export const chainIdToCoinType: { [chainId: number]: number } = {
-  [commonChainIds.ETH]: commonCoinTypes.ETH,
-  [commonChainIds.BSC]: commonCoinTypes.BSC,
-  [commonChainIds.MATIC]: commonCoinTypes.MATIC,
+  [isTestnet ? commonChainIds.ETH_GOERLI : commonChainIds.ETH]:
+    commonCoinTypes.ETH,
+  [isTestnet ? commonChainIds.BSC_CHAPEL : commonChainIds.BSC]:
+    commonCoinTypes.BSC,
+  [isTestnet ? commonChainIds.POLYGON_MUMBAI : commonChainIds.POLYGON]:
+    commonCoinTypes.MATIC,
 }
 
 export const coinTypeToChainId: { [coinType: number]: number } = {
-  [commonCoinTypes.ETH]: commonChainIds.ETH,
-  [commonCoinTypes.MATIC]: commonChainIds.MATIC,
-  [commonCoinTypes.BSC]: commonChainIds.BSC,
+  [commonCoinTypes.ETH]: isTestnet
+    ? commonChainIds.ETH_GOERLI
+    : commonChainIds.ETH,
+  [commonCoinTypes.MATIC]: isTestnet
+    ? commonChainIds.POLYGON_MUMBAI
+    : commonChainIds.POLYGON,
+  [commonCoinTypes.BSC]: isTestnet
+    ? commonChainIds.BSC_CHAPEL
+    : commonChainIds.BSC,
 }
 
 export const coinTypeNames: { [coinType: number]: string } = {

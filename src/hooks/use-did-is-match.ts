@@ -10,7 +10,7 @@ export default function useDidIsMatch(
   snapshots?: Snapshots,
 ) {
   return useQuery(
-    ['matchDid', did, account],
+    ['matchDid', did, account, snapshots],
     async () => {
       const resolved = await resolveDid(
         did!,

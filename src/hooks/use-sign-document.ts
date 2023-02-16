@@ -4,6 +4,7 @@ import { coinTypeToChainId } from '../utils/constants'
 import { Authorized, Author } from '../utils/schemas'
 import { signDocument } from '../utils/signature'
 import { getCurrentSnapshot } from '../utils/snapshot'
+import { isTestnet } from '../utils/testnet'
 import useWallet from './use-wallet'
 
 export default function useSignDocument<T extends object>(
@@ -31,6 +32,7 @@ export default function useSignDocument<T extends object>(
               coin_type: account.coinType,
               address: account.address,
               proof,
+              testnet: isTestnet || undefined,
             } satisfies Author,
           }
         }

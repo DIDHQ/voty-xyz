@@ -2,7 +2,7 @@ import { uniq } from 'lodash-es'
 import pMap from 'p-map'
 
 import { BooleanSets, BooleanUnit } from '../../schemas'
-import { DID, Snapshots } from '../../types'
+import { Snapshots } from '../../types'
 import { BooleanFunction } from '../types'
 import { prefixes_dot_suffix_exact_match } from './prefixes-dot-suffix-exact-match'
 
@@ -14,7 +14,7 @@ export const checkBooleanFunctions: {
 
 export async function checkBoolean(
   data: BooleanSets | BooleanUnit,
-  did: DID,
+  did: string,
   snapshots: Snapshots,
 ): Promise<boolean> {
   if ('operation' in data) {

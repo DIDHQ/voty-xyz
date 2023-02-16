@@ -1,8 +1,15 @@
 import type { AppType } from 'next/app'
 import Head from 'next/head'
-import { configureChains, createClient, WagmiConfig } from 'wagmi'
-import { mainnet, polygon, bsc } from 'wagmi/chains'
-import { publicProvider } from 'wagmi/providers/public'
+import { Chain, configureChains, createClient, WagmiConfig } from 'wagmi'
+import {
+  mainnet,
+  goerli,
+  polygon,
+  polygonMumbai,
+  bsc,
+  bscTestnet,
+} from 'wagmi/chains'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import {
   connectorsForWallets,
   RainbowKitProvider,
@@ -15,11 +22,21 @@ import {
 
 import ShellLayout from '../components/layouts/shell'
 import { trpc } from '../utils/trpc'
+import { isTestnet } from '../utils/testnet'
+import { chainIdToRpc } from '../utils/constants'
 import '../../styles/globals.css'
 
 const { chains, provider } = configureChains(
-  [mainnet, polygon, bsc],
-  [publicProvider()],
+  (isTestnet
+    ? [goerli, polygonMumbai, bscTestnet]
+    : [mainnet, polygon, bsc]) as Chain[],
+  [
+    jsonRpcProvider({
+      rpc(chain) {
+        return { http: chainIdToRpc[chain.id] }
+      },
+    }),
+  ],
 )
 
 const wallets = [

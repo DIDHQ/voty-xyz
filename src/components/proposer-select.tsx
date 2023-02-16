@@ -6,7 +6,7 @@ import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import { Group } from '../utils/schemas'
 import { checkBoolean } from '../utils/functions/boolean'
-import { DID, Snapshots } from '../utils/types'
+import { Snapshots } from '../utils/types'
 import Select from './basic/select'
 
 export default function ProposerSelect(props: {
@@ -27,7 +27,7 @@ export default function ProposerSelect(props: {
         (did) =>
           checkBoolean(
             props.group!.permission.proposing,
-            did as DID,
+            did,
             props.snapshots!,
           ),
         { concurrency: 5 },

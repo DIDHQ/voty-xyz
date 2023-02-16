@@ -3,10 +3,13 @@ import CKB from '@nervosnetwork/ckb-sdk-core'
 import invariant from 'tiny-invariant'
 
 import { chainIdToRpc, coinTypeToChainId, commonCoinTypes } from './constants'
+import { isTestnet } from './testnet'
 
 export async function getCurrentSnapshot(coinType: number): Promise<string> {
   if (coinType === commonCoinTypes.CKB) {
-    const ckb = new CKB('https://mainnet.ckb.dev/')
+    const ckb = new CKB(
+      isTestnet ? 'https://testnet.ckb.dev/' : 'https://mainnet.ckb.dev/',
+    )
     const blockNumber = await ckb.rpc.getTipBlockNumber()
     return blockNumber
   }

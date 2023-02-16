@@ -1,11 +1,11 @@
-import { DID, Snapshots } from '../types'
+import { Snapshots } from '../types'
 
 export type BooleanFunction<T> = (...args: T) => {
   requiredCoinTypes: number[]
-  execute: (did: DID, snapshots: Snapshots) => Promise<boolean> | boolean
+  execute: (did: string, snapshots: Snapshots) => Promise<boolean> | boolean
 }
 
 export type NumberFunction<T> = (...args: T) => {
   requiredCoinTypes: number[]
-  execute: (did: DID, snapshots: Snapshots) => Promise<number> | number
+  execute: (did: string, snapshots: Snapshots) => Promise<number> | number
 }

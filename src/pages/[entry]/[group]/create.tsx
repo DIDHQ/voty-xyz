@@ -76,14 +76,18 @@ export default function CreateProposalPage() {
       setValue('group', query.group)
     }
   }, [query.group, setValue])
+  const [did, setDid] = useState('')
   const { data: requiredCoinTypes } = useQuery(
-    ['requiredCoinTypes', group?.permission.voting],
+    ['requiredCoinTypes', did, group?.permission.voting],
     () =>
       uniq([
-        ...requiredCoinTypesOfDidResolver,
+        ...requiredCoinTypesOfDidResolver(did),
         ...requiredCoinTypesOfNumberSets(group!.permission.voting!),
       ]),
-    { enabled: !!group?.permission.voting, refetchOnWindowFocus: false },
+    {
+      enabled: !!did && !!group?.permission.voting,
+      refetchOnWindowFocus: false,
+    },
   )
   const { data: snapshots } = useQuery(
     ['snapshots', requiredCoinTypes],
@@ -103,7 +107,6 @@ export default function CreateProposalPage() {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
-  const [did, setDid] = useState('')
   const router = useRouter()
   const handleSuccess = useCallback(
     (permalink: string) => {

@@ -7,7 +7,6 @@ import {
   Proposal,
   proposalWithAuthorSchema,
 } from '../schemas'
-import { DID } from '../types'
 import verifyAuthor from './verify-author'
 import verifyCommunity from './verify-community'
 
@@ -41,7 +40,7 @@ export default async function verifyProposal(document: object): Promise<{
   if (
     !(await checkBoolean(
       group.permission.proposing,
-      proposal.author.did as DID,
+      proposal.author.did,
       proposal.snapshots,
     ))
   ) {

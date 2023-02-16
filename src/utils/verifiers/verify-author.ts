@@ -4,6 +4,7 @@ import { coinTypeToChainId } from '../constants'
 import { resolveDid } from '../did'
 import { Author } from '../schemas'
 import { verifyDocument } from '../signature'
+import { isTestnet } from '../testnet'
 
 export default async function verifyAuthor<T extends object>(
   version: 0 | 1,
@@ -13,6 +14,10 @@ export default async function verifyAuthor<T extends object>(
 
   if (coinTypeToChainId[author.coin_type] === undefined) {
     throw new Error(`unsupported author coin type: ${author.coin_type}`)
+  }
+
+  if ((author.testnet || false) !== isTestnet) {
+    throw new Error('mainnet/testnet mismatch')
   }
 
   if (
