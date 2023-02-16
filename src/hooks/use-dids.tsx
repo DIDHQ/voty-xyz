@@ -1,26 +1,17 @@
-import { BitNetwork, CoinType, createInstance, DefaultConfig } from 'dotbit'
 import { useQuery } from '@tanstack/react-query'
 
 import { Account, Snapshots } from '../utils/types'
-import { isTestnet } from '../utils/testnet'
 import { snapshotAddressAccounts } from '../utils/das-database'
-
-const dotbit = createInstance(
-  DefaultConfig[isTestnet ? BitNetwork.testnet : BitNetwork.mainnet],
-)
+import { getCurrentSnapshot } from '../utils/snapshot'
+import { commonCoinTypes } from '../utils/constants'
 
 export default function useDids(account?: Account, snapshots?: Snapshots) {
   return useQuery(
     ['dids', account, snapshots],
     async () => {
-      const snapshot = snapshots?.[account!.coinType]
-      if (snapshot === undefined) {
-        const accounts = await dotbit.accountsOfOwner({
-          key: account!.address,
-          coin_type: account!.coinType.toString() as CoinType,
-        })
-        return accounts.map(({ account }) => account)
-      }
+      const snapshot =
+        snapshots?.[commonCoinTypes.CKB] ||
+        (await getCurrentSnapshot(commonCoinTypes.CKB))
       return snapshotAddressAccounts(
         account!.coinType,
         account!.address,

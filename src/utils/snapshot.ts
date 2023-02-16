@@ -11,7 +11,8 @@ const ckb = new CKB(
 
 export async function getCurrentSnapshot(coinType: number): Promise<string> {
   if (coinType === commonCoinTypes.CKB) {
-    return ckb.rpc.getTipBlockNumber()
+    const blockNumber = await ckb.rpc.getTipBlockNumber()
+    return parseInt(blockNumber).toString()
   }
   const chainId = coinTypeToChainId[coinType]
   invariant(
