@@ -10,10 +10,15 @@ import {
 } from 'wagmi'
 import { useQuery } from '@tanstack/react-query'
 import { KeyInfo } from 'dotbit/lib/fetchers/BitIndexer.type'
-import { createInstance } from 'dotbit'
+import { BitNetwork, createInstance, DefaultConfig } from 'dotbit'
 import { BitPluginAvatar } from '@dotbit/plugin-avatar'
 
 import { chainIdToCoinType, coinTypeToChainId } from '../utils/constants'
+import { isTestnet } from '../utils/testnet'
+
+const dotbit = createInstance(
+  DefaultConfig[isTestnet ? BitNetwork.testnet : BitNetwork.mainnet],
+)
 
 export default function useWallet() {
   const account = useAccount()
@@ -31,7 +36,6 @@ export default function useWallet() {
   const { data } = useQuery(
     ['reverse', coinType, account.address, network.chain?.id],
     async () => {
-      const dotbit = createInstance()
       dotbit.installPlugin(new BitPluginAvatar())
       const bit = await dotbit.reverse({
         coin_type: coinType!.toString(),

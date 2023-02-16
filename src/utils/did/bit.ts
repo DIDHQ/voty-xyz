@@ -1,11 +1,14 @@
-import { createInstance } from 'dotbit'
+import { BitNetwork, createInstance, DefaultConfig } from 'dotbit'
 import { getAddress } from 'ethers/lib/utils.js'
 import invariant from 'tiny-invariant'
 
 import { coinTypeToChainId } from '../constants'
+import { isTestnet } from '../testnet'
 import { DidResolver } from '../types'
 
-const dotbit = createInstance()
+const dotbit = createInstance(
+  DefaultConfig[isTestnet ? BitNetwork.testnet : BitNetwork.mainnet],
+)
 
 export const resolveBit: DidResolver<'bit'> = async (
   did,
