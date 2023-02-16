@@ -8,6 +8,7 @@ export const authorSchema = z.object({
   coin_type: z.number(),
   address: z.string().min(1),
   proof: z.custom<Proof>((val) => /^\d+:.+$/.test(val as string)),
+  testnet: z.literal(true).optional(),
 })
 export type Author = z.infer<typeof authorSchema>
 
