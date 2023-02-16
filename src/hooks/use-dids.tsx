@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query'
 import { Account, Snapshots } from '../utils/types'
 import { isTestnet } from '../utils/testnet'
 import { snapshotAddressAccounts } from '../utils/das-database'
-import { commonCoinTypes } from '../utils/constants'
 
 const dotbit = createInstance(
   DefaultConfig[isTestnet ? BitNetwork.testnet : BitNetwork.mainnet],
@@ -14,9 +13,6 @@ export default function useDids(account?: Account, snapshots?: Snapshots) {
   return useQuery(
     ['dids', account, snapshots],
     async () => {
-      if (account?.coinType !== commonCoinTypes.CKB) {
-        throw new Error('unsupported coin type')
-      }
       const snapshot = snapshots?.[account!.coinType]
       if (snapshot === undefined) {
         const accounts = await dotbit.accountsOfOwner({
