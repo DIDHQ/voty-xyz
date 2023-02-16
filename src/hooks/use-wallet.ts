@@ -20,6 +20,8 @@ const dotbit = createInstance(
   DefaultConfig[isTestnet ? BitNetwork.testnet : BitNetwork.mainnet],
 )
 
+dotbit.installPlugin(new BitPluginAvatar())
+
 export default function useWallet() {
   const account = useAccount()
   const network = useNetwork()
@@ -33,17 +35,16 @@ export default function useWallet() {
     connector: account.connector,
   })
   const { disconnect } = useDisconnect()
-  const { data } = useQuery(
-    ['reverse', coinType, account.address, network.chain?.id],
+  const { data: bit } = useQuery(
+    ['reverse', coinType, account.address],
     async () => {
-      dotbit.installPlugin(new BitPluginAvatar())
       const bit = await dotbit.reverse({
         coin_type: coinType!.toString(),
         key: account.address,
       } as KeyInfo)
       return {
-        avatar: (await bit.avatar())?.url,
-        did: bit.account,
+        avatar: (await bit?.avatar())?.url,
+        did: bit?.account,
       }
     },
     {
@@ -63,8 +64,8 @@ export default function useWallet() {
               address: account.address,
             }
           : undefined,
-      did: data?.did || ensName || undefined,
-      avatar: data?.avatar || ensAvatar || undefined,
+      did: bit?.did || ensName || undefined,
+      avatar: bit?.avatar || ensAvatar || undefined,
       displayAddress: account.address
         ? `${account.address.substring(0, 5)}...${account.address.substring(
             38,
@@ -90,8 +91,8 @@ export default function useWallet() {
     [
       coinType,
       account.address,
-      data?.avatar,
-      data?.did,
+      bit?.avatar,
+      bit?.did,
       ensAvatar,
       ensName,
       signMessageAsync,
