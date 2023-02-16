@@ -1,12 +1,12 @@
 import { getAddress, sha256 } from 'ethers/lib/utils.js'
 
-import { Author } from './schemas'
+import { Authorship } from './schemas/authorship'
 
 export async function signDocument(
   document: object,
   address: string,
   signMessage: (message: string) => Buffer | Promise<Buffer>,
-): Promise<Author['proof']> {
+): Promise<Authorship['proof']> {
   const message = encodeDocument(document)
   const buffer = await signMessage(message)
   return {
@@ -18,7 +18,7 @@ export async function signDocument(
 
 export async function verifyDocument(
   document: object,
-  proof: Author['proof'],
+  proof: Authorship['proof'],
   verifyMessage: (
     message: string,
     signature: Buffer,
@@ -32,7 +32,7 @@ export async function verifyDocument(
   return proof.address === address
 }
 
-function encodeDocument(document: object & { author?: Author }): string {
+function encodeDocument(document: object & { author?: Authorship }): string {
   const { author, ...rest } = document
   const textEncoder = new TextEncoder()
   return `You are signing for Voty Protocol.\n\nhash: ${sha256(

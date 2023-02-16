@@ -1,4 +1,4 @@
-import { Authorized } from './schemas'
+import { Authorized } from './schemas/authorship'
 import { isTestnet } from './testnet'
 
 export const authorizationMessage = 'Welcome to Voty'
@@ -28,7 +28,7 @@ export function setAuthorizationCurrent(did?: string) {
 
 export function setAuthorization(authorization: Authorized<Authorization>) {
   localStorage.setItem(
-    `${isTestnet ? 'testnet.' : ''}voty.${authorization.author.did}`,
+    `${isTestnet ? 'testnet.' : ''}voty.${authorization.authorship.did}`,
     JSON.stringify(authorization),
   )
 }

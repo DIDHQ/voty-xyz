@@ -4,7 +4,7 @@ import pMap from 'p-map'
 
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
-import { Group } from '../utils/schemas'
+import { Group } from '../utils/schemas/group'
 import { checkBoolean } from '../utils/functions/boolean'
 import { Snapshots } from '../utils/types'
 import Select from './basic/select'

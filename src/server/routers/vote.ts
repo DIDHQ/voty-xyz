@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
-import { voteWithAuthorSchema } from '../../utils/schemas'
+import { voteWithAuthorSchema } from '../../utils/schemas/vote'
 import verifyVote from '../../utils/verifiers/verify-vote'
 import { powerOfChoice } from '../../utils/voting'
 import { procedure, router } from '../trpc'
@@ -93,7 +93,7 @@ export const voteRouter = router({
           data: {
             permalink,
             ts,
-            author: vote.author.did,
+            author: vote.authorship.did,
             community: proposal.community,
             group: proposal.group,
             proposal: vote.proposal,

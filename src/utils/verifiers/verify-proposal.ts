@@ -1,13 +1,10 @@
 import { getArweaveData } from '../arweave'
 import { checkBoolean } from '../functions/boolean'
-import {
-  Authorized,
-  Community,
-  Group,
-  Proposal,
-  proposalWithAuthorSchema,
-} from '../schemas'
-import verifyAuthor from './verify-author'
+import { Authorized } from '../schemas/authorship'
+import { Community } from '../schemas/community'
+import { Group } from '../schemas/group'
+import { Proposal, proposalWithAuthorSchema } from '../schemas/proposal'
+import verifyAuthorship from './verify-authorship'
 import verifyCommunity from './verify-community'
 
 export default async function verifyProposal(document: object): Promise<{
@@ -22,7 +19,7 @@ export default async function verifyProposal(document: object): Promise<{
 
   const proposal = parsed.data
 
-  await verifyAuthor(proposal)
+  await verifyAuthorship(proposal)
 
   const data = await getArweaveData(proposal.community)
   if (!data) {
@@ -40,7 +37,7 @@ export default async function verifyProposal(document: object): Promise<{
   if (
     !(await checkBoolean(
       group.permission.proposing,
-      proposal.author.did,
+      proposal.authorship.did,
       proposal.snapshots,
     ))
   ) {

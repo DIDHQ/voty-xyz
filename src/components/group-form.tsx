@@ -12,7 +12,8 @@ import {
   DocumentPlusIcon,
 } from '@heroicons/react/20/solid'
 
-import { Authorized, Community, communitySchema } from '../utils/schemas'
+import { Community, communitySchema } from '../utils/schemas/community'
+import { Authorized } from '../utils/schemas/authorship'
 import DurationInput from './basic/duration-input'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
@@ -145,7 +146,7 @@ export default function GroupForm(props: {
               <FormProvider {...methods}>
                 <BooleanSetsBlock
                   name="proposing"
-                  entry={props.community.author.did}
+                  entry={props.community.authorship.did}
                   groupIndex={groupIndex}
                   disabled={props.disabled}
                 />
@@ -172,7 +173,7 @@ export default function GroupForm(props: {
               <FormProvider {...methods}>
                 <NumberSetsBlock
                   name="voting"
-                  entry={props.community.author.did}
+                  entry={props.community.authorship.did}
                   groupIndex={groupIndex}
                   disabled={props.disabled}
                 />
@@ -252,7 +253,7 @@ export default function GroupForm(props: {
       <FormFooter>
         <FormProvider {...methods}>
           <SigningCommunityButton
-            did={props.community.author.did}
+            did={props.community.authorship.did}
             icon={isNewGroup ? DocumentPlusIcon : DocumentArrowUpIcon}
             onSuccess={onSuccess}
             disabled={props.disabled}

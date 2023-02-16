@@ -1,8 +1,10 @@
 import { getArweaveData, getArweaveTimestamp } from '../arweave'
 import { getPeriod, Period } from '../duration'
 import { calculateNumber } from '../functions/number'
-import { Authorized, Proposal, Vote, voteWithAuthorSchema } from '../schemas'
-import verifyAuthor from './verify-author'
+import { Authorized } from '../schemas/authorship'
+import { Proposal } from '../schemas/proposal'
+import { Vote, voteWithAuthorSchema } from '../schemas/vote'
+import verifyAuthorship from './verify-authorship'
 import verifyProposal from './verify-proposal'
 
 export default async function verifyVote(
@@ -15,7 +17,7 @@ export default async function verifyVote(
 
   const vote = parsed.data
 
-  await verifyAuthor(vote)
+  await verifyAuthorship(vote)
 
   const [timestamp, data] = await Promise.all([
     getArweaveTimestamp(vote.proposal),
@@ -34,7 +36,7 @@ export default async function verifyVote(
 
   const votingPower = await calculateNumber(
     group.permission.voting,
-    vote.author.did,
+    vote.authorship.did,
     proposal.snapshots,
   )
   if (votingPower !== vote.power) {

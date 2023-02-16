@@ -2,7 +2,7 @@ import { ExoticComponent, ReactNode, useCallback, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import useSignDocument from '../../hooks/use-sign-document'
-import { Community } from '../../utils/schemas'
+import { Community } from '../../utils/schemas/community'
 import { trpc } from '../../utils/trpc'
 import Button from '../basic/button'
 import Notification from '../basic/notification'

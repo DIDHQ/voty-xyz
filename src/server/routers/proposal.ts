@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
-import { proposalWithAuthorSchema } from '../../utils/schemas'
+import { proposalWithAuthorSchema } from '../../utils/schemas/proposal'
 import verifyProposal from '../../utils/verifiers/verify-proposal'
 import { procedure, router } from '../trpc'
 
@@ -86,8 +86,8 @@ export const proposalRouter = router({
         data: {
           permalink,
           ts,
-          author: proposal.author.did,
-          entry: community.author.did,
+          author: proposal.authorship.did,
+          entry: community.authorship.did,
           community: proposal.community,
           group: proposal.group,
           data,

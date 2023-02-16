@@ -3,7 +3,7 @@ import { compact, keyBy } from 'lodash-es'
 import { z } from 'zod'
 
 import { database } from '../../utils/database'
-import { communityWithAuthorSchema } from '../../utils/schemas'
+import { communityWithAuthorSchema } from '../../utils/schemas/community'
 import { procedure, router } from '../trpc'
 
 const textDecoder = new TextDecoder()

@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
-import { communityWithAuthorSchema } from '../../utils/schemas'
+import { communityWithAuthorSchema } from '../../utils/schemas/community'
 import verifyCommunity from '../../utils/verifiers/verify-community'
 import { procedure, router } from '../trpc'
 
@@ -113,12 +113,12 @@ export const communityRouter = router({
 
       await database.$transaction([
         database.community.create({
-          data: { permalink, ts, entry: community.author.did, data },
+          data: { permalink, ts, entry: community.authorship.did, data },
         }),
         database.entry.upsert({
-          where: { did: community.author.did },
+          where: { did: community.authorship.did },
           create: {
-            did: community.author.did,
+            did: community.authorship.did,
             community: permalink,
             subscribers: 0,
             ts,

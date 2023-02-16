@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const authorSchema = z.object({
+export const authorshipSchema = z.object({
   did: z.string().min(1),
   coin_type: z.number(),
   snapshot: z.string().min(1),
@@ -11,8 +11,8 @@ export const authorSchema = z.object({
   }),
   testnet: z.literal(true).optional(),
 })
-export type Author = z.infer<typeof authorSchema>
+export type Authorship = z.infer<typeof authorshipSchema>
 
 export type Authorized<T extends object> = T & {
-  author: Author
+  authorship: Authorship
 }

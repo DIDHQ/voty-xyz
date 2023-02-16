@@ -40,22 +40,6 @@ model Proposal {
   @@index([author])
 }
 
-model Option {
-  permalink String
-  ts        DateTime
-  author    String
-
-  community String
-  group     String
-  proposal  String
-
-  data Bytes
-
-  @@id([permalink])
-  @@unique([proposal, author])
-  @@index([author])
-}
-
 model Vote {
   permalink String
   ts        DateTime
