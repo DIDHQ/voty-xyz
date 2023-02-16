@@ -4,7 +4,8 @@ import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
-import { communityWithAuthorSchema } from '../../utils/schemas/community'
+import { authorized } from '../../utils/schemas/authorship'
+import { communitySchema } from '../../utils/schemas/community'
 import verifyCommunity from '../../utils/verifiers/verify-community'
 import { procedure, router } from '../trpc'
 
@@ -14,7 +15,7 @@ export const communityRouter = router({
   getByEntry: procedure
     .input(z.object({ entry: z.string().optional() }))
     .output(
-      communityWithAuthorSchema.extend({ permalink: z.string() }).optional(),
+      authorized(communitySchema).extend({ permalink: z.string() }).optional(),
     )
     .query(async ({ input }) => {
       if (!input.entry) {
@@ -34,14 +35,14 @@ export const communityRouter = router({
       }
       return {
         permalink: community.permalink,
-        ...communityWithAuthorSchema.parse(
+        ...authorized(communitySchema).parse(
           JSON.parse(textDecoder.decode(community.data)),
         ),
       }
     }),
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(communityWithAuthorSchema.optional())
+    .output(authorized(communitySchema).optional())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -52,7 +53,7 @@ export const communityRouter = router({
       if (!community) {
         return
       }
-      return communityWithAuthorSchema.parse(
+      return authorized(communitySchema).parse(
         JSON.parse(textDecoder.decode(community.data)),
       )
     }),
@@ -61,7 +62,7 @@ export const communityRouter = router({
     .output(
       z.object({
         data: z.array(
-          communityWithAuthorSchema.extend({ permalink: z.string() }),
+          authorized(communitySchema).extend({ permalink: z.string() }),
         ),
         next: z.string().optional(),
       }),
@@ -89,7 +90,7 @@ export const communityRouter = router({
               try {
                 return {
                   permalink,
-                  ...communityWithAuthorSchema.parse(
+                  ...authorized(communitySchema).parse(
                     JSON.parse(textDecoder.decode(data)),
                   ),
                 }
@@ -102,7 +103,7 @@ export const communityRouter = router({
       }
     }),
   create: procedure
-    .input(communityWithAuthorSchema)
+    .input(authorized(communitySchema))
     .output(z.string())
     .mutation(async ({ input }) => {
       const { community } = await verifyCommunity(input)

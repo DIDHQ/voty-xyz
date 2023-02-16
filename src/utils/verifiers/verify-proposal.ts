@@ -1,9 +1,9 @@
 import { getArweaveData } from '../arweave'
 import { checkBoolean } from '../functions/boolean'
-import { Authorized } from '../schemas/authorship'
+import { Authorized, authorized } from '../schemas/authorship'
 import { Community } from '../schemas/community'
 import { Group } from '../schemas/group'
-import { Proposal, proposalWithAuthorSchema } from '../schemas/proposal'
+import { Proposal, proposalSchema } from '../schemas/proposal'
 import verifyAuthorship from './verify-authorship'
 import verifyCommunity from './verify-community'
 
@@ -12,7 +12,7 @@ export default async function verifyProposal(document: object): Promise<{
   community: Authorized<Community>
   group: Group
 }> {
-  const parsed = proposalWithAuthorSchema.safeParse(document)
+  const parsed = authorized(proposalSchema).safeParse(document)
   if (!parsed.success) {
     throw new Error(`schema error: ${parsed.error.message}`)
   }

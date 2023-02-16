@@ -1,7 +1,5 @@
 import { z } from 'zod'
 
-import { authorshipSchema } from './authorship'
-
 export const proposalSchema = z.object({
   community: z.string().min(1),
   group: z.string().min(1),
@@ -20,7 +18,3 @@ export const proposalSchema = z.object({
     .optional(),
 })
 export type Proposal = z.infer<typeof proposalSchema>
-
-export const proposalWithAuthorSchema = proposalSchema.extend({
-  authorship: authorshipSchema,
-})

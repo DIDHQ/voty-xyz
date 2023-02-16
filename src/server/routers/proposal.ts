@@ -4,7 +4,8 @@ import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
-import { proposalWithAuthorSchema } from '../../utils/schemas/proposal'
+import { authorized } from '../../utils/schemas/authorship'
+import { proposalSchema } from '../../utils/schemas/proposal'
 import verifyProposal from '../../utils/verifiers/verify-proposal'
 import { procedure, router } from '../trpc'
 
@@ -13,7 +14,7 @@ const textDecoder = new TextDecoder()
 export const proposalRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(proposalWithAuthorSchema.optional())
+    .output(authorized(proposalSchema).optional())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -24,7 +25,7 @@ export const proposalRouter = router({
       if (!proposal) {
         return
       }
-      return proposalWithAuthorSchema.parse(
+      return authorized(proposalSchema).parse(
         JSON.parse(textDecoder.decode(proposal.data)),
       )
     }),
@@ -39,7 +40,7 @@ export const proposalRouter = router({
     .output(
       z.object({
         data: z.array(
-          proposalWithAuthorSchema.extend({ permalink: z.string() }),
+          authorized(proposalSchema).extend({ permalink: z.string() }),
         ),
         next: z.string().optional(),
       }),
@@ -62,7 +63,7 @@ export const proposalRouter = router({
             try {
               return {
                 permalink,
-                ...proposalWithAuthorSchema.parse(
+                ...authorized(proposalSchema).parse(
                   JSON.parse(textDecoder.decode(data)),
                 ),
               }
@@ -75,7 +76,7 @@ export const proposalRouter = router({
       }
     }),
   create: procedure
-    .input(proposalWithAuthorSchema)
+    .input(authorized(proposalSchema))
     .output(z.string())
     .mutation(async ({ input }) => {
       const { proposal, community } = await verifyProposal(input)

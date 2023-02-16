@@ -1,6 +1,5 @@
 import { z } from 'zod'
 
-import { authorshipSchema } from './authorship'
 import { groupSchema } from './group'
 
 export const communitySchema = z.object({
@@ -27,7 +26,3 @@ export const communitySchema = z.object({
     .optional(),
 })
 export type Community = z.infer<typeof communitySchema>
-
-export const communityWithAuthorSchema = communitySchema.extend({
-  authorship: authorshipSchema,
-})

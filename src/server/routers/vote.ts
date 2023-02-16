@@ -4,7 +4,8 @@ import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
-import { voteWithAuthorSchema } from '../../utils/schemas/vote'
+import { authorized } from '../../utils/schemas/authorship'
+import { voteSchema } from '../../utils/schemas/vote'
 import verifyVote from '../../utils/verifiers/verify-vote'
 import { powerOfChoice } from '../../utils/voting'
 import { procedure, router } from '../trpc'
@@ -21,7 +22,7 @@ export const voteRouter = router({
     )
     .output(
       z.object({
-        data: z.array(voteWithAuthorSchema.extend({ permalink: z.string() })),
+        data: z.array(authorized(voteSchema).extend({ permalink: z.string() })),
         next: z.string().optional(),
       }),
     )
@@ -41,7 +42,7 @@ export const voteRouter = router({
             try {
               return {
                 permalink,
-                ...voteWithAuthorSchema.parse(
+                ...authorized(voteSchema).parse(
                   JSON.parse(textDecoder.decode(data)),
                 ),
               }
@@ -74,12 +75,12 @@ export const voteRouter = router({
       return mapValues(
         keyBy(votes, ({ author }) => author),
         ({ data }) =>
-          voteWithAuthorSchema.parse(JSON.parse(textDecoder.decode(data)))
+          authorized(voteSchema).parse(JSON.parse(textDecoder.decode(data)))
             .power,
       )
     }),
   create: procedure
-    .input(voteWithAuthorSchema)
+    .input(authorized(voteSchema))
     .output(z.string())
     .mutation(async ({ input }) => {
       const { vote, proposal } = await verifyVote(input)

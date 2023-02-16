@@ -13,6 +13,10 @@ export const authorshipSchema = z.object({
 })
 export type Authorship = z.infer<typeof authorshipSchema>
 
+export function authorized<T extends Zod.ZodRawShape>(obj: Zod.ZodObject<T>) {
+  return obj.extend({ authorship: authorshipSchema })
+}
+
 export type Authorized<T extends object> = T & {
   authorship: Authorship
 }

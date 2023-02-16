@@ -3,14 +3,15 @@ import { compact, keyBy } from 'lodash-es'
 import { z } from 'zod'
 
 import { database } from '../../utils/database'
-import { communityWithAuthorSchema } from '../../utils/schemas/community'
+import { authorized } from '../../utils/schemas/authorship'
+import { communitySchema } from '../../utils/schemas/community'
 import { procedure, router } from '../trpc'
 
 const textDecoder = new TextDecoder()
 
 export const subscriptionRouter = router({
   list: procedure
-    .output(z.array(communityWithAuthorSchema))
+    .output(z.array(authorized(communitySchema)))
     .query(async ({ ctx }) => {
       if (!ctx.did) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
@@ -45,7 +46,7 @@ export const subscriptionRouter = router({
             try {
               return {
                 permalink,
-                ...communityWithAuthorSchema.parse(
+                ...authorized(communitySchema).parse(
                   JSON.parse(textDecoder.decode(data)),
                 ),
               }
