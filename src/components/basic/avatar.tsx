@@ -8,9 +8,13 @@ export default function Avatar(props: {
   name?: string
   value?: string
   variant?: 'marble' | 'beam' | 'pixel' | 'sunset' | 'ring' | 'bauhaus'
+  square?: boolean
   className?: string
 }) {
   const size = `${props.size / 4}rem`
+  const borderRadius = props.square
+    ? `${props.size / 16}rem`
+    : `${props.size / 8}rem`
 
   return props.value ? (
     <img
@@ -18,21 +22,22 @@ export default function Avatar(props: {
       alt={props.name}
       width={size}
       height={size}
-      style={{ width: size, height: size }}
-      className={clsx('rounded-full object-cover', props.className)}
+      style={{ width: size, height: size, borderRadius }}
+      className={clsx('object-cover', props.className)}
     />
   ) : (
     <div
-      className={clsx(
-        'overflow-hidden rounded-full bg-gray-200',
-        props.className,
-      )}
+      style={{ width: size, height: size, borderRadius }}
+      className={clsx('overflow-hidden bg-gray-200', props.className)}
     >
       {props.name ? (
-        <BoringAvatar size={size} name={props.name} variant={props.variant} />
-      ) : (
-        <div style={{ width: size, height: size }} />
-      )}
+        <BoringAvatar
+          size={size}
+          name={props.name}
+          variant={props.variant}
+          square
+        />
+      ) : null}
     </div>
   )
 }

@@ -19,7 +19,7 @@ export default function CommunityIndexPage() {
 
   return (
     <CommunityLayout>
-      <div className="sticky top-16 -mt-2 flex w-full justify-between border-b border-gray-200 bg-white/80 pl-6 pt-6 pb-4 backdrop-blur">
+      <div className="sticky top-16 flex w-full justify-between border-b border-gray-200 bg-white/80 pb-6 pl-6 backdrop-blur">
         <Select
           options={['All', 'Active', 'Pending', 'Closed']}
           value={order}

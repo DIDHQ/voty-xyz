@@ -15,8 +15,10 @@ export default function ShellLayout(props: { children: ReactNode }) {
     <>
       <Sidebar />
       <Toolbar />
-      <div className="mx-auto w-full p-16 pl-32">
-        <div className="mx-auto w-full max-w-5xl">{props.children}</div>
+      <div className="flex w-full justify-center pl-18">
+        <div className="mx-8 flex w-full max-w-5xl items-start py-18">
+          {props.children}
+        </div>
       </div>
     </>
   )

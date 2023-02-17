@@ -104,6 +104,7 @@ export default function CommunityNav(props: { className?: string }) {
           name={community?.authorship.author}
           value={community?.extension?.avatar}
           size={20}
+          square
           className="mt-8"
         />
         <h3 className="my-4 text-xl font-bold text-gray-900 sm:text-2xl">
