@@ -18,7 +18,7 @@ export async function snapshotPermissionsInfo(
     }
   }>(`https://test-snapshot-api.did.id/v1/snapshot/permissions/info`, {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       account: did,
       block_number: parseInt(snapshot),
@@ -38,7 +38,7 @@ export async function snapshotAddressAccounts(
     data: { accounts: { account: string }[] }
   }>('https://test-snapshot-api.did.id/v1/snapshot/address/accounts', {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       type: 'blockchain',
       key_info: {

@@ -36,32 +36,32 @@ export async function uploadToArweave(
 }
 
 const defaultArweaveTags = {
-  'content-type': 'application/json',
-  'app-name': 'voty',
-  'app-version': `0.0.0${isTestnet ? '-test' : ''}`,
+  'Content-Type': 'application/json',
+  'App-Name': 'Voty',
+  'App-Version': `0.0.0${isTestnet ? '-test' : ''}`,
 }
 
 function getArweaveTags(document: Authorized<Community | Proposal | Vote>) {
   if (isCommunity(document)) {
     return {
       ...defaultArweaveTags,
-      'app-data-type': DataType.COMMUNITY,
-      'app-index-entry': document.authorship.author,
+      'App-Data-Type': DataType.COMMUNITY,
+      'App-Index-Entry': document.authorship.author,
     }
   }
   if (isProposal(document)) {
     return {
       ...defaultArweaveTags,
-      'app-data-type': DataType.PROPOSAL,
-      'app-index-community': document.community,
-      'app-index-group': document.group,
+      'App-Data-Type': DataType.PROPOSAL,
+      'App-Index-Community': document.community,
+      'App-Index-Group': document.group,
     }
   }
   if (isVote(document)) {
     return {
       ...defaultArweaveTags,
-      'app-data-type': DataType.VOTE,
-      'app-index-proposal': document.proposal,
+      'App-Data-Type': DataType.VOTE,
+      'App-Index-Proposal': document.proposal,
     }
   }
   throw new Error('cannot get arweave tags')
