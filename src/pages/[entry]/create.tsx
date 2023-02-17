@@ -14,7 +14,7 @@ export default function CreateGroupPage() {
   const query = useRouterQuery<['entry']>()
   const { account } = useWallet()
   const { data: community, refetch } = trpc.community.getByEntry.useQuery(
-    query,
+    { entry: query.entry },
     { enabled: !!query.entry },
   )
   const { data: dids } = useDids(account)

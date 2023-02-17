@@ -148,7 +148,6 @@ function NumberUnitBlock(props: {
                     options={[
                       { value: props.entry, name: 'SubDID' },
                       { value: 'bit', name: '.bit' },
-                      { value: 'eth', name: 'ENS' },
                     ]}
                     value={value}
                     onChange={onChange}

@@ -58,7 +58,10 @@ export default function ProposalPage() {
   )
   const group = useGroup(community, proposal?.group)
   const { data: choices, refetch: refetchChoices } =
-    trpc.choice.groupByProposal.useQuery(query, { enabled: !!query.proposal })
+    trpc.choice.groupByProposal.useQuery(
+      { proposal: query.proposal },
+      { enabled: !!query.proposal },
+    )
   const [did, setDid] = useState('')
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
@@ -95,7 +98,7 @@ export default function ProposalPage() {
   const disabled = !did
 
   return community && proposal && group ? (
-    <div className="mt-6 flex items-start">
+    <div className="flex flex-1 items-start pt-6">
       <div className="mr-6 flex-1">
         <div className="mb-6 border-b border-gray-200 pb-6">
           <Link href={`/${community.authorship.author}/${proposal.group}`}>
@@ -214,9 +217,9 @@ export default function ProposalPage() {
       <div className="sticky top-24 w-80 shrink-0">
         <StatusIcon
           permalink={query.proposal}
-          className="absolute right-3 top-1"
+          className="absolute right-3 top-3"
         />
-        <div className="-mt-2 space-y-6 rounded-md border border-gray-200 p-6">
+        <div className="space-y-6 rounded-md border border-gray-200 p-6">
           <DetailList title="Information">
             <DetailItem title="Community">{community.name}</DetailItem>
             <DetailItem title="Group">{group.name}</DetailItem>

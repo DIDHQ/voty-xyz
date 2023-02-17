@@ -5,8 +5,10 @@ import CommunityNav from '../community-nav'
 export default function CommunityLayout(props: { children: ReactNode }) {
   return (
     <>
-      <CommunityNav className="fixed top-16 mt-6 w-60" />
-      <div className="pl-60">{props.children}</div>
+      <div className="sticky top-18 shrink-0 pt-6">
+        <CommunityNav className="relative w-60" />
+      </div>
+      <div className="flex-1">{props.children}</div>
     </>
   )
 }

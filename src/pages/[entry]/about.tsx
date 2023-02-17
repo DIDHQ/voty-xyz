@@ -5,9 +5,10 @@ import { trpc } from '../../utils/trpc'
 
 export default function CommunityAboutPage() {
   const query = useRouterQuery<['entry']>()
-  const { data: community } = trpc.community.getByEntry.useQuery(query, {
-    enabled: !!query.entry,
-  })
+  const { data: community } = trpc.community.getByEntry.useQuery(
+    { entry: query.entry },
+    { enabled: !!query.entry },
+  )
 
   return (
     <CommunityLayout>

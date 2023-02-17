@@ -55,9 +55,10 @@ export default function CreateProposalPage() {
     formState: { errors },
   } = methods
   const query = useRouterQuery<['entry', 'group']>()
-  const { data: community } = trpc.community.getByEntry.useQuery(query, {
-    enabled: !!query.entry,
-  })
+  const { data: community } = trpc.community.getByEntry.useQuery(
+    { entry: query.entry },
+    { enabled: !!query.entry },
+  )
   const group = useGroup(community, query.group)
   const handleOptionDelete = useCallback(
     (index: number) => {
@@ -124,7 +125,7 @@ export default function CreateProposalPage() {
   )
 
   return (
-    <div className="mt-6 flex items-start">
+    <div className="flex flex-1 items-start pt-6">
       <div className="mr-6 flex-1">
         <Link href={`/${query.entry}/${query.group}`}>
           <TextButton>
@@ -240,9 +241,9 @@ export default function CreateProposalPage() {
       <div className="sticky top-24 w-80 shrink-0">
         <StatusIcon
           permalink={community?.permalink}
-          className="absolute right-3 top-1"
+          className="absolute right-3 top-3"
         />
-        <div className="-mt-2 space-y-6 rounded-md border border-gray-200 p-6">
+        <div className="space-y-6 rounded-md border border-gray-200 p-6">
           <DetailList title="Information">
             <DetailItem title="Community">{community?.name}</DetailItem>
             <DetailItem title="Group">{group?.name}</DetailItem>
