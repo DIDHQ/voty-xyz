@@ -55,9 +55,10 @@ export default function CreateProposalPage() {
     formState: { errors },
   } = methods
   const query = useRouterQuery<['entry', 'group']>()
-  const { data: community } = trpc.community.getByEntry.useQuery(query, {
-    enabled: !!query.entry,
-  })
+  const { data: community } = trpc.community.getByEntry.useQuery(
+    { entry: query.entry },
+    { enabled: !!query.entry },
+  )
   const group = useGroup(community, query.group)
   const handleOptionDelete = useCallback(
     (index: number) => {

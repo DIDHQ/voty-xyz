@@ -58,7 +58,10 @@ export default function ProposalPage() {
   )
   const group = useGroup(community, proposal?.group)
   const { data: choices, refetch: refetchChoices } =
-    trpc.choice.groupByProposal.useQuery(query, { enabled: !!query.proposal })
+    trpc.choice.groupByProposal.useQuery(
+      { proposal: query.proposal },
+      { enabled: !!query.proposal },
+    )
   const [did, setDid] = useState('')
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
