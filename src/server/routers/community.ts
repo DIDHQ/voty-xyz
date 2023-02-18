@@ -112,6 +112,7 @@ export const communityRouter = router({
           create: {
             did: community.authorship.author,
             community: permalink,
+            proposals: 0,
             subscribers: 0,
             ts,
           },

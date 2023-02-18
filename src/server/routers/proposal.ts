@@ -80,18 +80,24 @@ export const proposalRouter = router({
       const { permalink, data } = await uploadToArweave(proposal)
       const ts = new Date()
 
-      await database.proposal.create({
-        data: {
-          permalink,
-          ts,
-          author: proposal.authorship.author,
-          entry: community.authorship.author,
-          community: proposal.community,
-          group: proposal.group,
-          data,
-          votes: 0,
-        },
-      })
+      await database.$transaction([
+        database.proposal.create({
+          data: {
+            permalink,
+            ts,
+            author: proposal.authorship.author,
+            entry: community.authorship.author,
+            community: proposal.community,
+            group: proposal.group,
+            data,
+            votes: 0,
+          },
+        }),
+        database.entry.update({
+          where: { did: community.authorship.author },
+          data: { proposals: { increment: 1 } },
+        }),
+      ])
 
       return permalink
     }),
