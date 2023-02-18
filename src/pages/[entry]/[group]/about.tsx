@@ -16,8 +16,8 @@ export default function GroupAboutPage() {
   return (
     <CommunityLayout>
       <GroupLayout>
-        <div className="flex w-full flex-col pt-6 pl-6">
-          <article className="prose">
+        <div className="flex w-full flex-col pt-6 sm:pl-6">
+          <article className="prose-sm sm:prose prose-pre:overflow-x-auto prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
             <Markdown>{group?.extension?.about}</Markdown>
           </article>
         </div>

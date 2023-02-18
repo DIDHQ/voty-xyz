@@ -36,7 +36,7 @@ export default function GroupSettingsPage() {
             group={query.group}
             onSuccess={handleSuccess}
             disabled={!isAdmin}
-            className="pl-6"
+            className="sm:pl-6"
           />
         ) : null}
       </GroupLayout>
