@@ -98,8 +98,8 @@ export default function ProposalPage() {
   const disabled = !did
 
   return community && proposal && group ? (
-    <div className="flex flex-1 items-start pt-6">
-      <div className="mr-6 flex-1">
+    <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
+      <div className="w-full flex-1 sm:mr-6">
         <div className="mb-6 border-b border-gray-200 pb-6">
           <Link href={`/${community.authorship.author}/${proposal.group}`}>
             <TextButton>
@@ -214,7 +214,7 @@ export default function ProposalPage() {
           </table>
         ) : null}
       </div>
-      <div className="sticky top-24 w-80 shrink-0">
+      <div className="relative w-full shrink-0 sm:sticky sm:top-24 sm:w-80">
         <StatusIcon
           permalink={query.proposal}
           className="absolute right-3 top-3"

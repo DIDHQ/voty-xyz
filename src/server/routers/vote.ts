@@ -82,7 +82,7 @@ export const voteRouter = router({
     .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
-      const { vote, proposal } = await verifyVote(input)
+      const { vote, proposal, community } = await verifyVote(input)
       const { permalink, data } = await uploadToArweave(vote)
       const ts = new Date()
 
@@ -100,6 +100,10 @@ export const voteRouter = router({
         }),
         database.proposal.update({
           where: { permalink: vote.proposal },
+          data: { votes: { increment: 1 } },
+        }),
+        database.entry.update({
+          where: { did: community.authorship.author },
           data: { votes: { increment: 1 } },
         }),
         ...Object.entries(

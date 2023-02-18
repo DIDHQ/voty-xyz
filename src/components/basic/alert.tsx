@@ -50,7 +50,7 @@ export default function Alert(props: {
             aria-hidden="true"
           />
         </div>
-        <div className="ml-3 flex-1 md:flex md:justify-between">
+        <div className="ml-3 flex-1 sm:flex sm:justify-between">
           <p
             className={clsx('text-sm', {
               'text-blue-700': props.type === 'info',
@@ -65,7 +65,7 @@ export default function Alert(props: {
             <p
               className={clsx(
                 props.onClick ? 'cursor-pointer' : undefined,
-                'mt-3 text-sm md:mt-0 md:ml-6',
+                'mt-3 text-sm sm:mt-0 sm:ml-6',
               )}
               onClick={props.onClick}
             >

@@ -8,11 +8,11 @@ import Avatar from './basic/avatar'
 import TextButton from './basic/text-button'
 import { isTestnet } from '../utils/testnet'
 
-export default function Toolbar() {
+export default function Toolbar(props: { className?: string }) {
   const { account, avatar, name: did, displayAddress } = useWallet()
 
   return (
-    <header className="fixed top-0 z-40 flex h-18 w-full justify-center border-b border-gray-200 bg-white/80 pl-18 backdrop-blur">
+    <header className={props.className}>
       <div className="mx-8 flex h-18 max-w-5xl flex-1 items-center justify-between">
         <Link href="/">
           <TextButton>
@@ -32,7 +32,7 @@ export default function Toolbar() {
                     value={avatar}
                     variant="beam"
                   />
-                  <div className="ml-3">
+                  <div className="ml-3 hidden sm:block">
                     <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
                       {did}
                     </p>

@@ -14,7 +14,7 @@ export default function IndexPage() {
   return (
     <Grid6 className="py-6">
       {communities?.map((community) => (
-        <GridItem2 key={community.permalink}>
+        <GridItem2 key={community.entry.community}>
           <CommunityCard community={community} />
         </GridItem2>
       ))}

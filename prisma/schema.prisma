@@ -63,6 +63,8 @@ model Entry {
   community String
 
   subscribers Int
+  proposals   Int
+  votes       Int
 
   @@id([did])
 }

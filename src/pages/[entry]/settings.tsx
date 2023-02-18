@@ -35,7 +35,7 @@ export default function CommunitySettingsPage() {
             community={community}
             onSuccess={handleSuccess}
             disabled={!isAdmin}
-            className="pl-6"
+            className="sm:pl-6"
           />
         </div>
       ) : null}

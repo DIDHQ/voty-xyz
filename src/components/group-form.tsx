@@ -97,7 +97,7 @@ export default function GroupForm(props: {
   return (
     <Form className={props.className}>
       <FormSection
-        title="Profile"
+        title={isNewGroup ? 'New group' : 'Profile'}
         description="Basic information of the group."
       >
         <Grid6>

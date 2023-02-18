@@ -14,10 +14,19 @@ const textDecoder = new TextDecoder()
 
 const schema = proved(authorized(communitySchema))
 
+const entrySchema = z.object({
+  did: z.string(),
+  ts: z.date(),
+  community: z.string(),
+  subscribers: z.number(),
+  proposals: z.number(),
+  votes: z.number(),
+})
+
 export const communityRouter = router({
   getByEntry: procedure
     .input(z.object({ entry: z.string().optional() }))
-    .output(schema.extend({ permalink: z.string() }).optional())
+    .output(schema.extend({ entry: entrySchema }).optional())
     .query(async ({ input }) => {
       if (!input.entry) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -35,8 +44,8 @@ export const communityRouter = router({
         return
       }
       return {
-        permalink: community.permalink,
         ...schema.parse(JSON.parse(textDecoder.decode(community.data))),
+        entry,
       }
     }),
   getByPermalink: procedure
@@ -58,7 +67,7 @@ export const communityRouter = router({
     .input(z.object({ cursor: z.string().optional() }))
     .output(
       z.object({
-        data: z.array(schema.extend({ permalink: z.string() })),
+        data: z.array(schema.extend({ entry: entrySchema })),
         next: z.string().optional(),
       }),
     )
@@ -79,13 +88,16 @@ export const communityRouter = router({
       return {
         data: compact(
           entries
-            .map(({ community }) => communities[community])
-            .filter((community) => community)
-            .map(({ permalink, data }) => {
+            .filter(({ community }) => communities[community])
+            .map((entry) => {
               try {
                 return {
-                  permalink,
-                  ...schema.parse(JSON.parse(textDecoder.decode(data))),
+                  ...schema.parse(
+                    JSON.parse(
+                      textDecoder.decode(communities[entry.community].data),
+                    ),
+                  ),
+                  entry,
                 }
               } catch {
                 return
@@ -113,6 +125,8 @@ export const communityRouter = router({
             did: community.authorship.author,
             community: permalink,
             subscribers: 0,
+            proposals: 0,
+            votes: 0,
             ts,
           },
           update: {

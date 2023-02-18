@@ -98,14 +98,13 @@ export default function CommunityNav(props: { className?: string }) {
     <aside className={props.className}>
       <div className="flex w-full flex-col items-center rounded-md border border-gray-200 pb-4">
         <StatusIcon
-          permalink={community?.permalink}
+          permalink={community?.entry.community}
           className="absolute right-3 top-3"
         />
         <Avatar
           name={community?.authorship.author}
           value={community?.extension?.avatar}
           size={20}
-          square
           className="mt-8"
         />
         <h3 className="my-4 text-xl font-bold text-gray-900 sm:text-2xl">
