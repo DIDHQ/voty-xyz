@@ -10,8 +10,8 @@ import verifyCommunity from './verify-community'
 
 export default async function verifyProposal(document: object): Promise<{
   proposal: Proved<Authorized<Proposal>>
-  community: Proved<Authorized<Community>>
   group: Group
+  community: Proved<Authorized<Community>>
 }> {
   const parsed = proved(authorized(proposalSchema)).safeParse(document)
   if (!parsed.success) {

@@ -62,8 +62,9 @@ model Entry {
 
   community String
 
-  proposals   Int
   subscribers Int
+  proposals   Int
+  votes       Int
 
   @@id([did])
 }
