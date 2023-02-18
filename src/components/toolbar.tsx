@@ -32,7 +32,7 @@ export default function Toolbar(props: { className?: string }) {
                     value={avatar}
                     variant="beam"
                   />
-                  <div className="ml-3">
+                  <div className="ml-3 hidden md:block">
                     <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
                       {did}
                     </p>

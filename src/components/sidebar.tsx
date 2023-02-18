@@ -5,7 +5,7 @@ import SubscriptionList from './subscription-list'
 
 export default function Sidebar() {
   return (
-    <aside className="fixed left-0 z-50 flex h-screen w-18 flex-col items-center border-r border-gray-200">
+    <aside className="fixed left-0 z-50 hidden h-screen w-18 flex-col items-center border-r border-gray-200 md:flex">
       <Link
         href="/"
         className="flex h-18 w-18 cursor-pointer items-center justify-center border-b border-gray-200"
