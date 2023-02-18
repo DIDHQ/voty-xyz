@@ -1,3 +1,5 @@
+import { Entry } from '@prisma/client'
+import { Serialize } from '@trpc/server/dist/shared/internal/serialize'
 import Link from 'next/link'
 
 import { Authorized } from '../utils/schemas/authorship'
@@ -5,13 +7,13 @@ import { Community } from '../utils/schemas/community'
 import Avatar from './basic/avatar'
 
 export default function CommunityCard(props: {
-  community: Authorized<Community> & { permalink: string }
+  community: Authorized<Community> & Serialize<{ entry: Entry }>
 }) {
   const { community } = props
 
   return (
     <Link
-      key={community.permalink}
+      key={community.entry.community}
       href={`/${community.authorship.author}`}
       className="block rounded-md border border-gray-200 hover:bg-gray-50"
     >

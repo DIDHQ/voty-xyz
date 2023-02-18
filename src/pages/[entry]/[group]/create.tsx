@@ -69,7 +69,7 @@ export default function CreateProposalPage() {
   )
   useEffect(() => {
     if (community) {
-      setValue('community', community.permalink)
+      setValue('community', community.entry.community)
     }
   }, [community, setValue])
   useEffect(() => {
@@ -240,7 +240,7 @@ export default function CreateProposalPage() {
       </div>
       <div className="sticky top-24 w-80 shrink-0">
         <StatusIcon
-          permalink={community?.permalink}
+          permalink={community?.entry.community}
           className="absolute right-3 top-3"
         />
         <div className="space-y-6 rounded-md border border-gray-200 p-6">
