@@ -15,7 +15,7 @@ import { Proposal, proposalSchema } from '../../../utils/schemas/proposal'
 import { getCurrentSnapshot } from '../../../utils/snapshot'
 import TextInput from '../../../components/basic/text-input'
 import Textarea from '../../../components/basic/textarea'
-import useGroup from '../../../hooks/use-group'
+import useWorkgroup from '../../../hooks/use-workgroup'
 import TextButton from '../../../components/basic/text-button'
 import {
   Form,
@@ -59,12 +59,12 @@ export default function CreateProposalPage() {
     control,
     formState: { errors },
   } = methods
-  const query = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['entry', 'workgroup']>()
   const { data: community } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  const group = useGroup(community, query.group)
+  const workgroup = useWorkgroup(community, query.workgroup)
   const handleOptionDelete = useCallback(
     (index: number) => {
       const options = getValues('options')?.filter((_, i) => i !== index)
@@ -78,20 +78,20 @@ export default function CreateProposalPage() {
     }
   }, [community, setValue])
   useEffect(() => {
-    if (query.group) {
-      setValue('group', query.group)
+    if (query.workgroup) {
+      setValue('workgroup', query.workgroup)
     }
-  }, [query.group, setValue])
+  }, [query.workgroup, setValue])
   const [did, setDid] = useState('')
   const { data: requiredCoinTypes } = useQuery(
-    ['requiredCoinTypes', did, group?.permission.voting],
+    ['requiredCoinTypes', did, workgroup?.permission.voting],
     () =>
       uniq([
         requiredCoinTypeOfDidChecker(did),
-        ...requiredCoinTypesOfNumberSets(group!.permission.voting!),
+        ...requiredCoinTypesOfNumberSets(workgroup!.permission.voting!),
       ]),
     {
-      enabled: !!did && !!group?.permission.voting,
+      enabled: !!did && !!workgroup?.permission.voting,
       refetchOnWindowFocus: false,
     },
   )
@@ -116,9 +116,11 @@ export default function CreateProposalPage() {
   const router = useRouter()
   const handleSuccess = useCallback(
     (permalink: string) => {
-      router.push(`/${query.entry}/${query.group}/${permalink2Id(permalink)}`)
+      router.push(
+        `/${query.entry}/${query.workgroup}/${permalink2Id(permalink)}`,
+      )
     },
-    [query.entry, query.group, router],
+    [query.entry, query.workgroup, router],
   )
   const options = useMemo(
     () =>
@@ -132,7 +134,7 @@ export default function CreateProposalPage() {
   return (
     <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
       <Link
-        href={`/${query.entry}/${query.group}`}
+        href={`/${query.entry}/${query.workgroup}`}
         className="inline sm:hidden"
       >
         <TextButton>
@@ -141,7 +143,7 @@ export default function CreateProposalPage() {
       </Link>
       <div className="w-full flex-1 sm:mr-6">
         <Link
-          href={`/${query.entry}/${query.group}`}
+          href={`/${query.entry}/${query.workgroup}`}
           className="hidden sm:inline"
         >
           <TextButton>
@@ -238,7 +240,7 @@ export default function CreateProposalPage() {
           <FormFooter>
             <div className="flex rounded-md">
               <ProposerSelect
-                group={group}
+                workgroup={workgroup}
                 snapshots={snapshots}
                 value={did}
                 onChange={setDid}
@@ -268,23 +270,25 @@ export default function CreateProposalPage() {
           <GridItem6>
             <DetailList title="Information">
               <DetailItem title="Community">{community?.name}</DetailItem>
-              <DetailItem title="Group">{group?.name}</DetailItem>
+              <DetailItem title="Workgroup">{workgroup?.name}</DetailItem>
             </DetailList>
           </GridItem6>
           <GridItem6>
             <DetailList title="Duration">
               <DetailItem title="Announcement">
-                {group ? formatDuration(group.duration.announcement) : null}
+                {workgroup
+                  ? formatDuration(workgroup.duration.announcement)
+                  : null}
               </DetailItem>
               <DetailItem title="Voting">
-                {group ? formatDuration(group.duration.voting) : null}
+                {workgroup ? formatDuration(workgroup.duration.voting) : null}
               </DetailItem>
             </DetailList>
           </GridItem6>
           <GridItem6>
             <DetailList title="Terms and conditions">
               <article className="prose-sm pt-2 prose-pre:overflow-x-auto prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
-                <Markdown>{group?.extension.terms_and_conditions}</Markdown>
+                <Markdown>{workgroup?.extension.terms_and_conditions}</Markdown>
               </article>
             </DetailList>
           </GridItem6>

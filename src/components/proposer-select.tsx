@@ -4,13 +4,13 @@ import pMap from 'p-map'
 
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
-import { Group } from '../utils/schemas/group'
+import { Workgroup } from '../utils/schemas/workgroup'
 import { checkBoolean } from '../utils/functions/boolean'
 import { Snapshots } from '../utils/types'
 import Select from './basic/select'
 
 export default function ProposerSelect(props: {
-  group?: Group
+  workgroup?: Workgroup
   snapshots?: Snapshots
   value: string
   onChange(value: string): void
@@ -20,13 +20,13 @@ export default function ProposerSelect(props: {
   const { account, name } = useWallet()
   const { data: dids } = useDids(account, props.snapshots)
   const { data: disables } = useQuery(
-    [dids, props.group, props.snapshots],
+    [dids, props.workgroup, props.snapshots],
     async () => {
       const booleans = await pMap(
         dids!,
         (did) =>
           checkBoolean(
-            props.group!.permission.proposing,
+            props.workgroup!.permission.proposing,
             did,
             props.snapshots!,
           ),
@@ -38,7 +38,7 @@ export default function ProposerSelect(props: {
       }, {} as { [key: string]: boolean })
     },
     {
-      enabled: !!dids && !!props.group && !!props.snapshots,
+      enabled: !!dids && !!props.workgroup && !!props.snapshots,
       refetchOnWindowFocus: false,
     },
   )

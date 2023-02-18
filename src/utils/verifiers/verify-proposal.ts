@@ -2,7 +2,7 @@ import { getArweaveData } from '../arweave'
 import { checkBoolean } from '../functions/boolean'
 import { Authorized, authorized } from '../schemas/authorship'
 import { Community } from '../schemas/community'
-import { Group } from '../schemas/group'
+import { Workgroup } from '../schemas/workgroup'
 import { proved, Proved } from '../schemas/proof'
 import { Proposal, proposalSchema } from '../schemas/proposal'
 import verifyAuthorshipProof from './verify-authorship-proof'
@@ -10,7 +10,7 @@ import verifyCommunity from './verify-community'
 
 export default async function verifyProposal(document: object): Promise<{
   proposal: Proved<Authorized<Proposal>>
-  group: Group
+  workgroup: Workgroup
   community: Proved<Authorized<Community>>
 }> {
   const parsed = proved(authorized(proposalSchema)).safeParse(document)
@@ -28,16 +28,16 @@ export default async function verifyProposal(document: object): Promise<{
   }
   const { community } = await verifyCommunity(data)
 
-  const group = community.groups?.find(
-    (group) => group.extension.id === proposal.group,
+  const workgroup = community.workgroups?.find(
+    (workgroup) => workgroup.extension.id === proposal.workgroup,
   )
-  if (!group) {
-    throw new Error('group not found')
+  if (!workgroup) {
+    throw new Error('workgroup not found')
   }
 
   if (
     !(await checkBoolean(
-      group.permission.proposing,
+      workgroup.permission.proposing,
       proposal.authorship.author,
       proposal.snapshots,
     ))
@@ -48,6 +48,6 @@ export default async function verifyProposal(document: object): Promise<{
   return {
     proposal,
     community,
-    group,
+    workgroup,
   }
 }

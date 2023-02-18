@@ -3,13 +3,13 @@ import { nanoid } from 'nanoid'
 import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../hooks/use-router-query'
-import GroupForm from '../../components/group-form'
+import WorkgroupForm from '../../components/workgroup-form'
 import CommunityLayout from '../../components/layouts/community'
 import useWallet from '../../hooks/use-wallet'
 import { trpc } from '../../utils/trpc'
 import useDids from '../../hooks/use-dids'
 
-export default function CreateGroupPage() {
+export default function CreateWorkgroupPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry']>()
   const { account } = useWallet()
@@ -22,18 +22,18 @@ export default function CreateGroupPage() {
     () => !!(query.entry && dids?.includes(query.entry)),
     [dids, query.entry],
   )
-  const group = useMemo(() => nanoid(), [])
+  const workgroup = useMemo(() => nanoid(), [])
   const handleSuccess = useCallback(() => {
     refetch()
-    router.push(`/${query.entry}/${group}`)
-  }, [refetch, router, query.entry, group])
+    router.push(`/${query.entry}/${workgroup}`)
+  }, [refetch, router, query.entry, workgroup])
 
   return (
     <CommunityLayout>
       {query.entry && community ? (
-        <GroupForm
+        <WorkgroupForm
           community={community}
-          group={group}
+          workgroup={workgroup}
           onSuccess={handleSuccess}
           disabled={!isAdmin}
           className="sm:pl-6"

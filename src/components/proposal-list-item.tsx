@@ -15,7 +15,7 @@ export default function ProposalListItem(props: {
 }) {
   return (
     <Link
-      href={`/${props.entry}/${props.value.group}/${permalink2Id(
+      href={`/${props.entry}/${props.value.workgroup}/${permalink2Id(
         props.value.permalink,
       )}`}
       className="block hover:bg-gray-100"

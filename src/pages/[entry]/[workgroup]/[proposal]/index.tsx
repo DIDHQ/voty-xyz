@@ -9,7 +9,7 @@ import { startCase } from 'lodash-es'
 import { BoltIcon } from '@heroicons/react/20/solid'
 import type { inferRouterOutputs } from '@trpc/server'
 
-import useGroup from '../../../../hooks/use-group'
+import useWorkgroup from '../../../../hooks/use-workgroup'
 import useRouterQuery from '../../../../hooks/use-router-query'
 import { calculateNumber } from '../../../../utils/functions/number'
 import { Vote, voteSchema } from '../../../../utils/schemas/vote'
@@ -56,7 +56,7 @@ export default function ProposalPage() {
     { permalink: proposal?.community },
     { enabled: !!proposal?.community },
   )
-  const group = useGroup(community, proposal?.group)
+  const workgroup = useWorkgroup(community, proposal?.workgroup)
   const { data: choices, refetch: refetchChoices } =
     trpc.choice.groupByProposal.useQuery(
       { proposal: query.proposal },
@@ -78,9 +78,10 @@ export default function ProposalPage() {
   )
   const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
   const { data: votingPower, isFetching } = useQuery(
-    ['votingPower', group, did, proposal],
-    () => calculateNumber(group!.permission.voting, did!, proposal!.snapshots),
-    { enabled: !!group && !!did && !!proposal },
+    ['votingPower', workgroup, did, proposal],
+    () =>
+      calculateNumber(workgroup!.permission.voting, did!, proposal!.snapshots),
+    { enabled: !!workgroup && !!did && !!proposal },
   )
   useEffect(() => {
     if (votingPower === undefined) {
@@ -97,11 +98,11 @@ export default function ProposalPage() {
   }, [refetchList, refetchChoices, setValue])
   const disabled = !did
 
-  return community && proposal && group ? (
+  return community && proposal && workgroup ? (
     <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
       <div className="w-full flex-1 sm:mr-6">
         <div className="mb-6 border-b border-gray-200 pb-6">
-          <Link href={`/${community.authorship.author}/${proposal.group}`}>
+          <Link href={`/${community.authorship.author}/${proposal.workgroup}`}>
             <TextButton>
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>
@@ -142,7 +143,7 @@ export default function ProposalPage() {
           <div className="flex rounded-md">
             <VoterSelect
               proposal={query.proposal}
-              group={group}
+              workgroup={workgroup}
               snapshots={proposal.snapshots}
               value={did}
               onChange={setDid}
@@ -152,7 +153,7 @@ export default function ProposalPage() {
               <SigningVoteButton
                 did={did}
                 proposal={query.proposal}
-                duration={group.duration}
+                duration={workgroup.duration}
                 icon={BoltIcon}
                 onSuccess={handleSuccess}
                 disabled={
@@ -222,7 +223,7 @@ export default function ProposalPage() {
         <div className="space-y-6 rounded-md border border-gray-200 p-6">
           <DetailList title="Information">
             <DetailItem title="Community">{community.name}</DetailItem>
-            <DetailItem title="Group">{group.name}</DetailItem>
+            <DetailItem title="Workgroup">{workgroup.name}</DetailItem>
             <DetailItem title="Proposer">
               {proposal.authorship.author}
             </DetailItem>
@@ -232,11 +233,11 @@ export default function ProposalPage() {
           </DetailList>
           <ProposalSchedule
             proposal={query.proposal}
-            duration={group.duration}
+            duration={workgroup.duration}
           />
           <DetailList title="Terms and conditions">
             <article className="prose-sm pt-2 prose-pre:overflow-x-auto prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
-              <Markdown>{group?.extension.terms_and_conditions}</Markdown>
+              <Markdown>{workgroup?.extension.terms_and_conditions}</Markdown>
             </article>
           </DetailList>
         </div>

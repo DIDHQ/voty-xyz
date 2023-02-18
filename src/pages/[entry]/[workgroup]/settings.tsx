@@ -2,16 +2,16 @@ import { useCallback, useMemo } from 'react'
 import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../../hooks/use-router-query'
-import GroupForm from '../../../components/group-form'
+import WorkgroupForm from '../../../components/workgroup-form'
 import CommunityLayout from '../../../components/layouts/community'
-import GroupLayout from '../../../components/layouts/group'
+import WorkgroupLayout from '../../../components/layouts/workgroup'
 import useWallet from '../../../hooks/use-wallet'
 import { trpc } from '../../../utils/trpc'
 import useDids from '../../../hooks/use-dids'
 
-export default function GroupSettingsPage() {
+export default function WorkgroupSettingsPage() {
   const router = useRouter()
-  const query = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['entry', 'workgroup']>()
   const { account } = useWallet()
   const { data: community, refetch } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
@@ -24,22 +24,22 @@ export default function GroupSettingsPage() {
   )
   const handleSuccess = useCallback(() => {
     refetch()
-    router.push(`/${query.entry}/${query.group}`)
-  }, [refetch, query.entry, query.group, router])
+    router.push(`/${query.entry}/${query.workgroup}`)
+  }, [refetch, query.entry, query.workgroup, router])
 
   return (
     <CommunityLayout>
-      <GroupLayout>
-        {query.entry && query.group && community ? (
-          <GroupForm
+      <WorkgroupLayout>
+        {query.entry && query.workgroup && community ? (
+          <WorkgroupForm
             community={community}
-            group={query.group}
+            workgroup={query.workgroup}
             onSuccess={handleSuccess}
             disabled={!isAdmin}
             className="sm:pl-6"
           />
         ) : null}
-      </GroupLayout>
+      </WorkgroupLayout>
     </CommunityLayout>
   )
 }

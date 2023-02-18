@@ -1,4 +1,4 @@
-import { Group } from './schemas/group'
+import { Workgroup } from './schemas/workgroup'
 
 export enum Period {
   ANNOUNCING = 'Announcing',
@@ -10,7 +10,7 @@ export enum Period {
 export function getPeriod(
   now: number,
   timestamp: number,
-  duration: Group['duration'],
+  duration: Workgroup['duration'],
 ): Period {
   if (now < timestamp + duration.announcement) {
     return Period.ANNOUNCING

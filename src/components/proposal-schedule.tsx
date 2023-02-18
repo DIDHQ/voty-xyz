@@ -1,12 +1,12 @@
 import useStatus from '../hooks/use-status'
 import { getPeriod } from '../utils/duration'
-import { Group } from '../utils/schemas/group'
+import { Workgroup } from '../utils/schemas/workgroup'
 import { formatTime } from '../utils/time'
 import { DetailList, DetailItem } from './basic/detail'
 
 export default function ProposalSchedule(props: {
   proposal?: string
-  duration: Group['duration']
+  duration: Workgroup['duration']
 }) {
   const { data: status } = useStatus(props.proposal)
   return (

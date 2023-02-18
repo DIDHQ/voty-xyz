@@ -3,7 +3,7 @@ import { getPeriod, Period } from '../duration'
 import { calculateNumber } from '../functions/number'
 import { Authorized, authorized } from '../schemas/authorship'
 import { Community } from '../schemas/community'
-import { Group } from '../schemas/group'
+import { Workgroup } from '../schemas/workgroup'
 import { proved, Proved } from '../schemas/proof'
 import { Proposal } from '../schemas/proposal'
 import { Vote, voteSchema } from '../schemas/vote'
@@ -13,7 +13,7 @@ import verifyProposal from './verify-proposal'
 export default async function verifyVote(document: object): Promise<{
   vote: Proved<Authorized<Vote>>
   proposal: Proved<Authorized<Proposal>>
-  group: Group
+  workgroup: Workgroup
   community: Proved<Authorized<Community>>
 }> {
   const parsed = proved(authorized(voteSchema)).safeParse(document)
@@ -32,16 +32,17 @@ export default async function verifyVote(document: object): Promise<{
   if (!timestamp || !data) {
     throw new Error('proposal not found')
   }
-  const { proposal, group, community } = await verifyProposal(data)
+  const { proposal, workgroup, community } = await verifyProposal(data)
 
   if (
-    getPeriod(Date.now() / 1000, timestamp, group.duration) !== Period.VOTING
+    getPeriod(Date.now() / 1000, timestamp, workgroup.duration) !==
+    Period.VOTING
   ) {
     throw new Error('not in voting period')
   }
 
   const votingPower = await calculateNumber(
-    group.permission.voting,
+    workgroup.permission.voting,
     vote.authorship.author,
     proposal.snapshots,
   )
@@ -49,5 +50,5 @@ export default async function verifyVote(document: object): Promise<{
     throw new Error('voting power not match')
   }
 
-  return { vote, proposal, group, community }
+  return { vote, proposal, workgroup, community }
 }

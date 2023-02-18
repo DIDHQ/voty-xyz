@@ -5,43 +5,46 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
-import useGroup from '../hooks/use-group'
+import useWorkgroup from '../hooks/use-workgroup'
 import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 
-export default function GroupNav(props: { className?: string }) {
-  const query = useRouterQuery<['entry', 'group']>()
+export default function WorkgroupNav(props: { className?: string }) {
+  const query = useRouterQuery<['entry', 'workgroup']>()
   const { data: community } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  const group = useGroup(community, query.group)
+  const workgroup = useWorkgroup(community, query.workgroup)
   const router = useRouter()
   const tabs = useMemo(
     () =>
       compact([
         {
           name: 'Proposals',
-          href: `/${query.entry}/${query.group || 0}`,
-          current: router.pathname === '/[entry]/[group]',
+          href: `/${query.entry}/${query.workgroup}`,
+          current: router.pathname === '/[entry]/[workgroup]',
         },
         {
           name: 'Settings',
-          href: `/${query.entry}/${query.group || 0}/settings`,
-          current: router.pathname === '/[entry]/[group]/settings',
+          href: `/${query.entry}/${query.workgroup}/settings`,
+          current: router.pathname === '/[entry]/[workgroup]/settings',
         },
-        group?.extension.about
+        workgroup?.extension.about
           ? {
               name: 'About',
-              href: `/${query.entry}/${query.group || 0}/about`,
-              current: router.pathname === '/[entry]/[group]/about',
+              href: `/${query.entry}/${query.workgroup}/about`,
+              current: router.pathname === '/[entry]/[workgroup]/about',
             }
           : undefined,
       ]),
-    [group?.extension.about, query.entry, query.group, router.pathname],
+    [workgroup?.extension.about, query.entry, query.workgroup, router.pathname],
   )
-  const emoji = useMemo(() => extractStartEmoji(group?.name), [group?.name])
+  const emoji = useMemo(
+    () => extractStartEmoji(workgroup?.name),
+    [workgroup?.name],
+  )
 
   return (
     <div className={clsx('bg-white/80 backdrop-blur', props.className)}>
@@ -60,7 +63,7 @@ export default function GroupNav(props: { className?: string }) {
           />
         )}
         <h3 className="text-2xl font-medium text-gray-900">
-          {group?.name.replace(emoji || '', '') || '...'}
+          {workgroup?.name.replace(emoji || '', '') || '...'}
         </h3>
       </div>
       <div className="border-b">

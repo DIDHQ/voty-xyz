@@ -34,7 +34,7 @@ export const proposalRouter = router({
     .input(
       z.object({
         entry: z.string().optional(),
-        group: z.string().optional(),
+        workgroup: z.string().optional(),
         cursor: z.string().optional(),
       }),
     )
@@ -50,8 +50,8 @@ export const proposalRouter = router({
       }
       const proposals = await database.proposal.findMany({
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
-        where: input.group
-          ? { entry: input.entry, group: input.group }
+        where: input.workgroup
+          ? { entry: input.entry, workgroup: input.workgroup }
           : { entry: input.entry },
         take: 50,
         orderBy: { ts: 'desc' },
@@ -88,7 +88,7 @@ export const proposalRouter = router({
             author: proposal.authorship.author,
             entry: community.authorship.author,
             community: proposal.community,
-            group: proposal.group,
+            workgroup: proposal.workgroup,
             data,
             votes: 0,
           },

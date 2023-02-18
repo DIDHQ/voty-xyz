@@ -7,7 +7,7 @@ import clsx from 'clsx'
 
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
-import { Group } from '../utils/schemas/group'
+import { Workgroup } from '../utils/schemas/workgroup'
 import { Snapshots } from '../utils/types'
 import Select from './basic/select'
 import { calculateNumber } from '../utils/functions/number'
@@ -15,7 +15,7 @@ import { trpc } from '../utils/trpc'
 
 export default function VoterSelect(props: {
   proposal?: string
-  group?: Group
+  workgroup?: Workgroup
   snapshots?: Snapshots
   value: string
   onChange(value: string): void
@@ -25,13 +25,13 @@ export default function VoterSelect(props: {
   const { account, name } = useWallet()
   const { data: dids } = useDids(account, props.snapshots)
   const { data: votes } = useQuery(
-    [dids, props.group, props.snapshots],
+    [dids, props.workgroup, props.snapshots],
     async () => {
       const numbers = await pMap(
         dids!,
         (did) =>
           calculateNumber(
-            props.group!.permission.voting,
+            props.workgroup!.permission.voting,
             did,
             props.snapshots!,
           ),
@@ -43,7 +43,7 @@ export default function VoterSelect(props: {
       }, {} as { [key: string]: number })
     },
     {
-      enabled: !!dids && !!props.group && !!props.snapshots,
+      enabled: !!dids && !!props.workgroup && !!props.snapshots,
       refetchOnWindowFocus: false,
     },
   )

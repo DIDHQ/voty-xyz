@@ -6,7 +6,7 @@ import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 import TextButton from './basic/text-button'
 
-export default function CreateGroupButton(props: {
+export default function CreateWorkgroupButton(props: {
   entry?: string
   className?: string
 }) {

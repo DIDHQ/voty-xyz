@@ -28,15 +28,15 @@ model Proposal {
   author    String
 
   community String
-  group     String
+  workgroup String
 
   data Bytes
 
   votes Int
 
   @@id([permalink])
-  @@index([entry, group])
-  @@index([community, group])
+  @@index([entry, workgroup])
+  @@index([community, workgroup])
   @@index([author])
 }
 
@@ -46,7 +46,7 @@ model Vote {
   author    String
 
   community String
-  group     String
+  workgroup String
   proposal  String
 
   data Bytes

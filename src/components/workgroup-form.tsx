@@ -31,9 +31,9 @@ const defaultAnnouncementDuration = 3600
 
 const defaultVotingDuration = 86400
 
-export default function GroupForm(props: {
+export default function WorkgroupForm(props: {
   community: Authorized<Community>
-  group: string
+  workgroup: string
   onSuccess: () => void
   disabled?: boolean
   className?: string
@@ -50,26 +50,29 @@ export default function GroupForm(props: {
   } = methods
   const { append } = useFieldArray({
     control,
-    name: 'groups',
+    name: 'workgroups',
   })
   useEffect(() => {
     reset(props.community)
   }, [props.community, reset])
-  const groupIndex = useMemo(() => {
-    const index = props.community?.groups?.findIndex(
-      (g) => g.extension.id === props.group,
+  const workgroupIndex = useMemo(() => {
+    const index = props.community?.workgroups?.findIndex(
+      (g) => g.extension.id === props.workgroup,
     )
     if (index === undefined) {
-      return props.community?.groups?.length || 0
+      return props.community?.workgroups?.length || 0
     }
     return index
-  }, [props.community?.groups, props.group])
-  const isNewGroup = useMemo(
-    () => !props.community?.groups?.find((g) => g.extension.id === props.group),
-    [props.community.groups, props.group],
+  }, [props.community?.workgroups, props.workgroup])
+  const isNewWorkgroup = useMemo(
+    () =>
+      !props.community?.workgroups?.find(
+        (g) => g.extension.id === props.workgroup,
+      ),
+    [props.community.workgroups, props.workgroup],
   )
   useEffect(() => {
-    if (isNewGroup) {
+    if (isNewWorkgroup) {
       append({
         name: '',
         permission: {
@@ -87,28 +90,28 @@ export default function GroupForm(props: {
           voting: defaultVotingDuration,
         },
         extension: {
-          id: props.group,
+          id: props.workgroup,
           terms_and_conditions: '',
         },
       })
     }
-  }, [append, isNewGroup, props.group])
+  }, [append, isNewWorkgroup, props.workgroup])
 
   return (
     <Form className={props.className}>
       <FormSection
-        title={isNewGroup ? 'New group' : 'Profile'}
+        title={isNewWorkgroup ? 'New workgroup' : 'Profile'}
         description="Basic information of the group."
       >
         <Grid6>
           <GridItem6>
             <FormItem
               label="Name"
-              error={errors.groups?.[groupIndex]?.name?.message}
+              error={errors.workgroups?.[workgroupIndex]?.name?.message}
             >
               <TextInput
-                {...register(`groups.${groupIndex}.name`)}
-                error={!!errors.groups?.[groupIndex]?.name?.message}
+                {...register(`workgroups.${workgroupIndex}.name`)}
+                error={!!errors.workgroups?.[workgroupIndex]?.name?.message}
                 disabled={props.disabled}
               />
             </FormItem>
@@ -117,11 +120,16 @@ export default function GroupForm(props: {
             <FormItem
               label="About"
               description="Styling with Markdown is supported"
-              error={errors.groups?.[groupIndex]?.extension?.about?.message}
+              error={
+                errors.workgroups?.[workgroupIndex]?.extension?.about?.message
+              }
             >
               <Textarea
-                {...register(`groups.${groupIndex}.extension.about`)}
-                error={!!errors.groups?.[groupIndex]?.extension?.about?.message}
+                {...register(`workgroups.${workgroupIndex}.extension.about`)}
+                error={
+                  !!errors.workgroups?.[workgroupIndex]?.extension?.about
+                    ?.message
+                }
                 disabled={props.disabled}
               />
             </FormItem>
@@ -136,9 +144,10 @@ export default function GroupForm(props: {
           <GridItem6>
             <FormItem
               error={
-                errors.groups?.[groupIndex]?.permission?.proposing
+                errors.workgroups?.[workgroupIndex]?.permission?.proposing
                   ? JSON.stringify(
-                      errors.groups?.[groupIndex]?.permission?.proposing,
+                      errors.workgroups?.[workgroupIndex]?.permission
+                        ?.proposing,
                     )
                   : undefined
               }
@@ -147,7 +156,7 @@ export default function GroupForm(props: {
                 <BooleanSetsBlock
                   name="proposing"
                   entry={props.community.authorship.author}
-                  groupIndex={groupIndex}
+                  workgroupIndex={workgroupIndex}
                   disabled={props.disabled}
                 />
               </FormProvider>
@@ -163,9 +172,9 @@ export default function GroupForm(props: {
           <GridItem6>
             <FormItem
               error={
-                errors?.groups?.[groupIndex]?.permission?.voting
+                errors?.workgroups?.[workgroupIndex]?.permission?.voting
                   ? JSON.stringify(
-                      errors?.groups?.[groupIndex]?.permission?.voting,
+                      errors?.workgroups?.[workgroupIndex]?.permission?.voting,
                     )
                   : undefined
               }
@@ -174,7 +183,7 @@ export default function GroupForm(props: {
                 <NumberSetsBlock
                   name="voting"
                   entry={props.community.authorship.author}
-                  groupIndex={groupIndex}
+                  workgroupIndex={workgroupIndex}
                   disabled={props.disabled}
                 />
               </FormProvider>
@@ -188,20 +197,22 @@ export default function GroupForm(props: {
             <FormItem
               label="Duration of announcement"
               error={
-                errors?.groups?.[groupIndex]?.duration?.announcement?.message
+                errors?.workgroups?.[workgroupIndex]?.duration?.announcement
+                  ?.message
               }
             >
               <Controller
                 defaultValue={defaultAnnouncementDuration}
                 control={control}
-                name={`groups.${groupIndex}.duration.announcement`}
+                name={`workgroups.${workgroupIndex}.duration.announcement`}
                 render={({ field: { value, onChange } }) => (
                   <DurationInput
                     value={value}
                     onChange={onChange}
                     disabled={props.disabled}
                     error={
-                      !!errors?.groups?.[groupIndex]?.duration?.announcement
+                      !!errors?.workgroups?.[workgroupIndex]?.duration
+                        ?.announcement
                     }
                   />
                 )}
@@ -211,18 +222,22 @@ export default function GroupForm(props: {
           <GridItem2>
             <FormItem
               label="Duration of voting"
-              error={errors?.groups?.[groupIndex]?.duration?.voting?.message}
+              error={
+                errors?.workgroups?.[workgroupIndex]?.duration?.voting?.message
+              }
             >
               <Controller
                 defaultValue={defaultVotingDuration}
                 control={control}
-                name={`groups.${groupIndex}.duration.voting`}
+                name={`workgroups.${workgroupIndex}.duration.voting`}
                 render={({ field: { value, onChange } }) => (
                   <DurationInput
                     value={value}
                     onChange={onChange}
                     disabled={props.disabled}
-                    error={!!errors?.groups?.[groupIndex]?.duration?.voting}
+                    error={
+                      !!errors?.workgroups?.[workgroupIndex]?.duration?.voting
+                    }
                   />
                 )}
               />
@@ -233,16 +248,16 @@ export default function GroupForm(props: {
               label="Terms and conditions"
               description="Styling with Markdown is supported"
               error={
-                errors?.groups?.[groupIndex]?.extension?.terms_and_conditions
-                  ?.message
+                errors?.workgroups?.[workgroupIndex]?.extension
+                  ?.terms_and_conditions?.message
               }
             >
               <Textarea
                 {...register(
-                  `groups.${groupIndex}.extension.terms_and_conditions`,
+                  `workgroups.${workgroupIndex}.extension.terms_and_conditions`,
                 )}
                 error={
-                  !!errors?.groups?.[groupIndex]?.extension
+                  !!errors?.workgroups?.[workgroupIndex]?.extension
                     ?.terms_and_conditions?.message
                 }
               />
@@ -254,11 +269,11 @@ export default function GroupForm(props: {
         <FormProvider {...methods}>
           <SigningCommunityButton
             did={props.community.authorship.author}
-            icon={isNewGroup ? DocumentPlusIcon : DocumentArrowUpIcon}
+            icon={isNewWorkgroup ? DocumentPlusIcon : DocumentArrowUpIcon}
             onSuccess={onSuccess}
             disabled={props.disabled}
           >
-            {isNewGroup ? 'Create' : 'Update'}
+            {isNewWorkgroup ? 'Create' : 'Update'}
           </SigningCommunityButton>
         </FormProvider>
       </FormFooter>

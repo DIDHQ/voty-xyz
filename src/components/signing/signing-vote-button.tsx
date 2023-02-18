@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form'
 import useSignDocument from '../../hooks/use-sign-document'
 import useStatus from '../../hooks/use-status'
 import { getPeriod, Period } from '../../utils/duration'
-import { Group } from '../../utils/schemas/group'
+import { Workgroup } from '../../utils/schemas/workgroup'
 import { Vote } from '../../utils/schemas/vote'
 import { trpc } from '../../utils/trpc'
 import Button from '../basic/button'
@@ -13,7 +13,7 @@ import Notification from '../basic/notification'
 export default function SigningVoteButton(props: {
   did: string
   proposal?: string
-  duration: Group['duration']
+  duration: Workgroup['duration']
   icon?: ExoticComponent<{ className?: string }>
   onSuccess: (permalink: string) => void
   disabled?: boolean
