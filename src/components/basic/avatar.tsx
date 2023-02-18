@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
+import { useMemo } from 'react'
 
 const BoringAvatar = dynamic(() => import('boring-avatars'), { ssr: false })
 
@@ -8,13 +9,18 @@ export default function Avatar(props: {
   name?: string
   value?: string
   variant?: 'marble' | 'beam' | 'pixel' | 'sunset' | 'ring' | 'bauhaus'
-  square?: boolean
   className?: string
 }) {
   const size = `${props.size / 4}rem`
-  const borderRadius = props.square
-    ? `${props.size / 16}rem`
-    : `${props.size / 8}rem`
+  const borderRadius = `${props.size / 8}rem`
+  const style = useMemo(
+    () => ({
+      width: size,
+      height: size,
+      borderRadius,
+    }),
+    [borderRadius, size],
+  )
 
   return props.value ? (
     <img
@@ -22,21 +28,16 @@ export default function Avatar(props: {
       alt={props.name}
       width={size}
       height={size}
-      style={{ width: size, height: size, borderRadius }}
+      style={style}
       className={clsx('object-cover', props.className)}
     />
   ) : (
     <div
-      style={{ width: size, height: size, borderRadius }}
+      style={style}
       className={clsx('overflow-hidden bg-gray-200', props.className)}
     >
       {props.name ? (
-        <BoringAvatar
-          size={size}
-          name={props.name}
-          variant={props.variant}
-          square
-        />
+        <BoringAvatar size={size} name={props.name} variant={props.variant} />
       ) : null}
     </div>
   )

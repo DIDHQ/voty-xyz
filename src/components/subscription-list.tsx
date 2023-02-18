@@ -48,7 +48,6 @@ export default function SubscriptionList(props: { className?: string }) {
             size={12}
             name={community.authorship.author}
             value={community.extension?.avatar}
-            square
             className={clsx(
               'mt-3 ring-2 ring-offset-2',
               community.authorship.author === query.entry
