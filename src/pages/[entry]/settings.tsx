@@ -32,7 +32,7 @@ export default function CommunitySettingsPage() {
         <div className="flex w-full flex-col">
           <CommunityForm
             entry={query.entry}
-            community={community}
+            community={community || undefined}
             onSuccess={handleSuccess}
             disabled={!isAdmin}
             className="sm:pl-6"

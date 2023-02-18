@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { Community } from '../utils/schemas/community'
 
 export default function useWorkgroup(
-  community?: Community,
+  community?: Community | null,
   workgroup?: string,
 ) {
   return useMemo(

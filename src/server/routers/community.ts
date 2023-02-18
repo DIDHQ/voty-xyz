@@ -26,7 +26,7 @@ const entrySchema = z.object({
 export const communityRouter = router({
   getByEntry: procedure
     .input(z.object({ entry: z.string().optional() }))
-    .output(schema.extend({ entry: entrySchema }).optional())
+    .output(schema.extend({ entry: entrySchema }).nullable())
     .query(async ({ input }) => {
       if (!input.entry) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -35,13 +35,13 @@ export const communityRouter = router({
         where: { did: input.entry },
       })
       if (!entry) {
-        return
+        return null
       }
       const community = await database.community.findUnique({
         where: { permalink: entry?.community },
       })
       if (!community) {
-        return
+        return null
       }
       return {
         ...schema.parse(JSON.parse(textDecoder.decode(community.data))),
@@ -50,7 +50,7 @@ export const communityRouter = router({
     }),
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(schema.optional())
+    .output(schema.nullable())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -59,7 +59,7 @@ export const communityRouter = router({
         where: { permalink: input.permalink },
       })
       if (!community) {
-        return
+        return null
       }
       return schema.parse(JSON.parse(textDecoder.decode(community.data)))
     }),

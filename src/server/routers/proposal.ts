@@ -17,7 +17,7 @@ const schema = proved(authorized(proposalSchema))
 export const proposalRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(schema.optional())
+    .output(schema.nullable())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -26,7 +26,7 @@ export const proposalRouter = router({
         where: { permalink: input.permalink },
       })
       if (!proposal) {
-        return
+        return null
       }
       return schema.parse(JSON.parse(textDecoder.decode(proposal.data)))
     }),
