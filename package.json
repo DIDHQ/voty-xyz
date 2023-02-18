@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@dotbit/plugin-avatar": "^0.0.1",
+    "@floating-ui/react": "^0.19.2",
     "@headlessui/react": "^1.7.10",
     "@heroicons/react": "^2.0.15",
     "@hookform/resolvers": "^2.9.11",
