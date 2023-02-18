@@ -18,5 +18,5 @@ export function GridItem3(props: { children: ReactNode }) {
 }
 
 export function GridItem2(props: { children: ReactNode }) {
-  return <div className="col-span-6 sm:col-span-6">{props.children}</div>
+  return <div className="col-span-6 sm:col-span-2">{props.children}</div>
 }
