@@ -15,9 +15,10 @@ export function FormSection(props: {
   title: string
   description?: string
   children: ReactNode
+  className?: string
 }) {
   return (
-    <div>
+    <div className={props.className}>
       <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900">
         {props.title}
       </h3>
