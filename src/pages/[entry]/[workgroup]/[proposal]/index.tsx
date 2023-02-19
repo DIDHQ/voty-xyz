@@ -185,52 +185,65 @@ export default function ProposalPage() {
           )}
         </div>
         {votes?.length ? (
-          <div className="mb-6 overflow-hidden rounded-md border border-gray-200">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900"
+          <table className="mb-6 min-w-full border-separate border-spacing-0 border border-gray-200">
+            <thead>
+              <tr>
+                <th
+                  scope="col"
+                  className="sticky top-18 border-b border-gray-200 bg-white/80 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                >
+                  DID
+                </th>
+                <th
+                  scope="col"
+                  className="sticky top-18 border-x border-b border-gray-200 bg-white/80 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                >
+                  Choice
+                </th>
+                <th
+                  scope="col"
+                  className="sticky top-18 border-b border-gray-200 bg-white/80 py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
+                >
+                  Power
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {votes.map((vote, index) => (
+                <tr key={vote.permalink}>
+                  <td
+                    className={clsx(
+                      index === 0 ? undefined : 'border-t',
+                      'whitespace-nowrap border-gray-200 py-4 pl-4 pr-3 text-sm font-medium text-gray-900',
+                    )}
                   >
-                    DID
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    {vote.authorship.author}
+                  </td>
+                  <td
+                    className={clsx(
+                      index === 0 ? undefined : 'border-t',
+                      'truncate whitespace-nowrap border-x border-gray-200 px-3 py-4 text-sm text-gray-500',
+                    )}
                   >
-                    Choice
-                  </th>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900"
+                    {stringifyChoice(proposal.voting_type, vote.choice)}
+                  </td>
+                  <td
+                    className={clsx(
+                      index === 0 ? undefined : 'border-t',
+                      'whitespace-nowrap border-gray-200 py-4 pl-3 pr-4 text-right text-sm font-medium tabular-nums',
+                    )}
                   >
-                    Power
-                  </th>
+                    <a
+                      href={permalink2Url(vote.permalink)}
+                      className="text-indigo-600 hover:text-indigo-900"
+                    >
+                      {vote.power}
+                    </a>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {votes.map((vote) => (
-                  <tr key={vote.permalink}>
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">
-                      {vote.authorship.author}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {stringifyChoice(proposal.voting_type, vote.choice)}
-                    </td>
-                    <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium tabular-nums">
-                      <a
-                        href={permalink2Url(vote.permalink)}
-                        className="text-indigo-600 hover:text-indigo-900"
-                      >
-                        {vote.power}
-                      </a>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         ) : null}
       </div>
       <div className="relative w-full shrink-0 sm:sticky sm:top-24 sm:w-72">
