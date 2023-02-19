@@ -48,12 +48,13 @@ export default function NumberSetsBlock(props: {
       ) : null}
       {props.disabled ? null : (
         <TextButton
-          onClick={() =>
+          onClick={() => {
             append({
               function: 'prefixes_dot_suffix_fixed_power',
               arguments: [props.entry, [''], defaultPower],
             })
-          }
+            setOpen(fields.length)
+          }}
         >
           Add
         </TextButton>
@@ -88,9 +89,9 @@ function NumberUnitBlock(props: {
 
   return (
     <>
-      <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
+      <li className="flex items-center justify-between py-3 px-4 text-sm">
         <div className="flex w-0 flex-1 items-center">
-          <span className="ml-2 w-0 flex-1 truncate">
+          <span className="w-0 flex-1 truncate">
             {watch(
               `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.alias`,
             ) || `Sets #${props.index + 1}`}
