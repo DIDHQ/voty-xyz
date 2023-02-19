@@ -1,9 +1,14 @@
 import { PlusIcon } from '@heroicons/react/20/solid'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useId } from 'react'
-import { Tooltip } from 'react-tooltip'
 
 import SubscriptionList from './subscription-list'
+
+const Tooltip = dynamic(
+  () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
+  { ssr: false },
+)
 
 export default function Sidebar() {
   const id = useId()

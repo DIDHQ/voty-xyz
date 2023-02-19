@@ -1,10 +1,15 @@
 import { CubeIcon, CubeTransparentIcon } from '@heroicons/react/24/outline'
+import dynamic from 'next/dynamic'
 import { useId, useMemo } from 'react'
-import { Tooltip } from 'react-tooltip'
 
 import useStatus from '../hooks/use-status'
 import { permalink2Explorer, permalink2Url } from '../utils/permalink'
 import TextButton from './basic/text-button'
+
+const Tooltip = dynamic(
+  () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
+  { ssr: false },
+)
 
 export default function StatusIcon(props: {
   permalink?: string
