@@ -20,7 +20,7 @@ export default function ProposalListItem(props: {
       )}`}
       className="block hover:bg-gray-100"
     >
-      <div className="p-4 sm:px-6">
+      <div className="p-6 px-0 sm:p-6">
         <div className="flex items-center justify-between">
           <div>
             <p className="truncate text-sm font-medium text-indigo-600">
