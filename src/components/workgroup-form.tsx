@@ -20,7 +20,7 @@ import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import NumberSetsBlock from './number-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
-import { Grid6, GridItem2, GridItem6 } from './basic/grid'
+import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 
 const SigningCommunityButton = dynamic(
   () => import('./signing/signing-community-button'),
@@ -193,7 +193,7 @@ export default function WorkgroupForm(props: {
       </FormSection>
       <FormSection title="Rules" description="Schedule, terms and conditions.">
         <Grid6>
-          <GridItem2>
+          <GridItem3>
             <FormItem
               label="Duration of announcement"
               error={
@@ -218,8 +218,8 @@ export default function WorkgroupForm(props: {
                 )}
               />
             </FormItem>
-          </GridItem2>
-          <GridItem2>
+          </GridItem3>
+          <GridItem3>
             <FormItem
               label="Duration of voting"
               error={
@@ -242,7 +242,7 @@ export default function WorkgroupForm(props: {
                 )}
               />
             </FormItem>
-          </GridItem2>
+          </GridItem3>
           <GridItem6>
             <FormItem
               label="Terms and conditions"
