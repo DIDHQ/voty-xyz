@@ -21,11 +21,13 @@ import {
   updateChoice,
 } from '../../../../utils/voting'
 import TextButton from '../../../../components/basic/text-button'
-import Markdown from '../../../../components/basic/markdown'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import { permalink2Url } from '../../../../utils/permalink'
 import { trpc } from '../../../../utils/trpc'
 import { ChoiceRouter } from '../../../../server/routers/choice'
+import Article from '../../../../components/basic/article'
+import useStatus from '../../../../hooks/use-status'
+import { getPeriod, Period } from '../../../../utils/duration'
 
 const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
   ssr: false,
@@ -96,7 +98,16 @@ export default function ProposalPage() {
     setValue('choice', '')
     setDid('')
   }, [refetchList, refetchChoices, setValue])
-  const disabled = !did
+  const { data: status } = useStatus(query.proposal)
+  const disabled = useMemo(
+    () =>
+      !status?.timestamp ||
+      !workgroup?.duration ||
+      getPeriod(Date.now() / 1000, status.timestamp, workgroup.duration) !==
+        Period.VOTING ||
+      !did,
+    [status?.timestamp, workgroup?.duration, did],
+  )
 
   return community && proposal && workgroup ? (
     <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
@@ -110,9 +121,7 @@ export default function ProposalPage() {
           <h3 className="mt-2 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
             {proposal.title}
           </h3>
-          <article className="prose mt-8">
-            <Markdown>{proposal.extension?.body}</Markdown>
-          </article>
+          <Article className="mt-8">{proposal.extension?.body}</Article>
         </div>
         <ul
           role="list"
@@ -139,69 +148,91 @@ export default function ProposalPage() {
             )}
           />
         </ul>
-        <div className="flex justify-end py-6">
-          <div className="flex rounded-md">
-            <VoterSelect
-              proposal={query.proposal}
-              workgroup={workgroup}
-              snapshots={proposal.snapshots}
-              value={did}
-              onChange={setDid}
-              className="rounded-r-none focus:z-10 active:z-10"
-            />
-            <FormProvider {...methods}>
-              <SigningVoteButton
-                did={did}
+        <div className="flex items-center justify-between py-6">
+          <h2 className="text-2xl font-bold tabular-nums">
+            {proposal.votes
+              ? proposal.votes === 1
+                ? '1 Vote'
+                : `${proposal.votes} Votes`
+              : null}
+          </h2>
+          {disabled ? null : (
+            <div className="flex rounded-md">
+              <VoterSelect
                 proposal={query.proposal}
-                duration={workgroup.duration}
-                icon={BoltIcon}
-                onSuccess={handleSuccess}
-                disabled={
-                  choiceIsEmpty(proposal.voting_type, watch('choice')) ||
-                  !votingPower ||
-                  isFetching
-                }
-                className="rounded-l-none border-l-0 focus:z-10 active:z-10"
-              >
-                Vote{votingPower ? ` (${votingPower})` : null}
-              </SigningVoteButton>
-            </FormProvider>
-          </div>
+                workgroup={workgroup}
+                snapshots={proposal.snapshots}
+                value={did}
+                onChange={setDid}
+                className="rounded-r-none focus:z-10 active:z-10"
+              />
+              <FormProvider {...methods}>
+                <SigningVoteButton
+                  did={did}
+                  icon={BoltIcon}
+                  onSuccess={handleSuccess}
+                  disabled={
+                    choiceIsEmpty(proposal.voting_type, watch('choice')) ||
+                    !votingPower ||
+                    isFetching
+                  }
+                  className="rounded-l-none border-l-0 tabular-nums focus:z-10 active:z-10"
+                >
+                  Vote{votingPower ? ` (${votingPower})` : null}
+                </SigningVoteButton>
+              </FormProvider>
+            </div>
+          )}
         </div>
         {votes?.length ? (
-          <table className="min-w-full divide-y divide-gray-300">
+          <table className="mb-6 min-w-full border-separate border-spacing-0 border border-gray-200">
             <thead>
               <tr>
                 <th
                   scope="col"
-                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                  className="sticky top-18 border-b border-gray-200 bg-white/80 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                 >
                   DID
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                  className="sticky top-18 border-x border-b border-gray-200 bg-white/80 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                 >
                   Choice
                 </th>
                 <th
                   scope="col"
-                  className="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-6"
+                  className="sticky top-18 border-b border-gray-200 bg-white/80 py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
                 >
                   Power
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {votes.map((vote) => (
+            <tbody className="divide-y divide-gray-200">
+              {votes.map((vote, index) => (
                 <tr key={vote.permalink}>
-                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                  <td
+                    className={clsx(
+                      index === 0 ? undefined : 'border-t',
+                      'whitespace-nowrap border-gray-200 py-4 pl-4 pr-3 text-sm font-medium text-gray-900',
+                    )}
+                  >
                     {vote.authorship.author}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                  <td
+                    className={clsx(
+                      index === 0 ? undefined : 'border-t',
+                      'truncate whitespace-nowrap border-x border-gray-200 px-3 py-4 text-sm text-gray-500',
+                    )}
+                  >
                     {stringifyChoice(proposal.voting_type, vote.choice)}
                   </td>
-                  <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                  <td
+                    className={clsx(
+                      index === 0 ? undefined : 'border-t',
+                      'whitespace-nowrap border-gray-200 py-4 pl-3 pr-4 text-right text-sm font-medium tabular-nums',
+                    )}
+                  >
                     <a
                       href={permalink2Url(vote.permalink)}
                       className="text-indigo-600 hover:text-indigo-900"
@@ -215,7 +246,7 @@ export default function ProposalPage() {
           </table>
         ) : null}
       </div>
-      <div className="relative w-full shrink-0 sm:sticky sm:top-24 sm:w-80">
+      <div className="relative w-full shrink-0 sm:sticky sm:top-24 sm:w-72">
         <StatusIcon
           permalink={query.proposal}
           className="absolute right-4 top-4"
@@ -236,9 +267,9 @@ export default function ProposalPage() {
             duration={workgroup.duration}
           />
           <DetailList title="Terms and conditions">
-            <article className="prose-sm pt-2 prose-pre:overflow-x-auto prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
-              <Markdown>{workgroup?.extension.terms_and_conditions}</Markdown>
-            </article>
+            <Article small className="pt-2">
+              {workgroup?.extension.terms_and_conditions}
+            </Article>
           </DetailList>
         </div>
       </div>

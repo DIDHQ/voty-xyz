@@ -46,12 +46,13 @@ export default function BooleanSetsBlock(props: {
       ) : null}
       {props.disabled ? null : (
         <TextButton
-          onClick={() =>
+          onClick={() => {
             append({
               function: 'prefixes_dot_suffix_exact_match',
               arguments: [props.entry, ['']],
             })
-          }
+            setOpen(fields.length)
+          }}
         >
           Add
         </TextButton>
@@ -86,9 +87,9 @@ function BooleanUnitBlock(props: {
 
   return (
     <>
-      <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
+      <li className="flex items-center justify-between py-3 px-4 text-sm">
         <div className="flex w-0 flex-1 items-center">
-          <span className="ml-2 w-0 flex-1 truncate">
+          <span className="w-0 flex-1 truncate">
             {watch(
               `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.alias`,
             ) || `Sets #${props.index + 1}`}

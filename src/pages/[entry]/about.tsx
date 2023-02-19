@@ -1,6 +1,6 @@
 import useRouterQuery from '../../hooks/use-router-query'
 import CommunityLayout from '../../components/layouts/community'
-import Markdown from '../../components/basic/markdown'
+import Article from '../../components/basic/article'
 import { trpc } from '../../utils/trpc'
 
 export default function CommunityAboutPage() {
@@ -12,11 +12,9 @@ export default function CommunityAboutPage() {
 
   return (
     <CommunityLayout>
-      <div className="flex w-full flex-col pt-6 sm:pl-6">
-        <article className="prose-sm sm:prose prose-pre:overflow-x-auto prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
-          <Markdown>{community?.extension?.about}</Markdown>
-        </article>
-      </div>
+      <Article className="w-full pt-6 sm:pl-6">
+        {community?.extension?.about}
+      </Article>
     </CommunityLayout>
   )
 }

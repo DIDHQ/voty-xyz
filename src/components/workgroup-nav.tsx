@@ -9,6 +9,7 @@ import useWorkgroup from '../hooks/use-workgroup'
 import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
+import Button from './basic/button'
 
 export default function WorkgroupNav(props: { className?: string }) {
   const query = useRouterQuery<['entry', 'workgroup']>()
@@ -62,9 +63,15 @@ export default function WorkgroupNav(props: { className?: string }) {
             aria-hidden="true"
           />
         )}
-        <h3 className="text-2xl font-medium text-gray-900">
+        <h3 className="w-0 flex-1 truncate text-2xl font-medium text-gray-900">
           {workgroup?.name.replace(emoji || '', '') || '...'}
         </h3>
+        <Link
+          href={`/${query.entry}/${query.workgroup}/create`}
+          className="ml-4 shrink-0"
+        >
+          <Button primary>New Proposal</Button>
+        </Link>
       </div>
       <div className="border-b">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">

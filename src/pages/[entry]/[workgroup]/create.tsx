@@ -29,8 +29,8 @@ import RadioGroup from '../../../components/basic/radio-group'
 import { requiredCoinTypeOfDidChecker } from '../../../utils/did'
 import { formatDuration } from '../../../utils/time'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
-import Markdown from '../../../components/basic/markdown'
 import { trpc } from '../../../utils/trpc'
+import Article from '../../../components/basic/article'
 
 const StatusIcon = dynamic(() => import('../../../components/status-icon'), {
   ssr: false,
@@ -261,7 +261,7 @@ export default function CreateProposalPage() {
           </FormFooter>
         </Form>
       </div>
-      <div className="relative mt-6 w-full shrink-0 sm:sticky sm:top-24 sm:mt-0 sm:w-80">
+      <div className="relative mt-6 w-full shrink-0 sm:sticky sm:top-24 sm:mt-0 sm:w-72">
         <StatusIcon
           permalink={community?.entry.community}
           className="absolute right-4 top-4"
@@ -287,9 +287,9 @@ export default function CreateProposalPage() {
           </GridItem6>
           <GridItem6>
             <DetailList title="Terms and conditions">
-              <article className="prose-sm pt-2 prose-pre:overflow-x-auto prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
-                <Markdown>{workgroup?.extension.terms_and_conditions}</Markdown>
-              </article>
+              <Article small className="pt-2">
+                {workgroup?.extension.terms_and_conditions}
+              </Article>
             </DetailList>
           </GridItem6>
         </Grid6>

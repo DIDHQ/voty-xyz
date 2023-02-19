@@ -13,7 +13,7 @@ export default function Toolbar(props: { className?: string }) {
 
   return (
     <header className={props.className}>
-      <div className="mx-8 flex h-18 max-w-5xl flex-1 items-center justify-between">
+      <div className="flex h-18 max-w-5xl flex-1 items-center justify-between px-6">
         <Link href="/">
           <TextButton>
             <h1 className="text-lg font-bold">

@@ -1,6 +1,7 @@
 import { Workgroup } from './schemas/workgroup'
 
 export enum Period {
+  PENDING = 'Pending',
   ANNOUNCING = 'Announcing',
   ADDING_OPTION = 'Adding option',
   VOTING = 'Voting',

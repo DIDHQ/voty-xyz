@@ -16,7 +16,7 @@ export default function ProposalSchedule(props: {
     () =>
       status?.timestamp
         ? getPeriod(Date.now() / 1000, status?.timestamp, props.duration)
-        : undefined,
+        : Period.PENDING,
     [props.duration, status?.timestamp],
   )
 
@@ -28,6 +28,7 @@ export default function ProposalSchedule(props: {
             'my-[-2px] inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium',
             period
               ? {
+                  [Period.PENDING]: 'bg-gray-100 text-gray-800',
                   [Period.ANNOUNCING]: 'bg-yellow-100 text-yellow-800',
                   [Period.ADDING_OPTION]: 'bg-blue-100 text-blue-800',
                   [Period.VOTING]: 'bg-green-100 text-green-800',
@@ -41,6 +42,7 @@ export default function ProposalSchedule(props: {
               '-ml-1 mr-1.5 h-2 w-2',
               period
                 ? {
+                    [Period.PENDING]: 'text-gray-400',
                     [Period.ANNOUNCING]: 'text-yellow-400',
                     [Period.ADDING_OPTION]: 'text-blue-400',
                     [Period.VOTING]: 'text-green-400',
@@ -53,7 +55,7 @@ export default function ProposalSchedule(props: {
           >
             <circle cx={4} cy={4} r={3} />
           </svg>
-          {period || '-'}
+          {period}
         </span>
       </DetailItem>
       <DetailItem title="Start">
