@@ -131,7 +131,11 @@ export default function ProposalPage() {
         />
         <div className="space-y-6 border border-gray-200 p-6">
           <DetailList title="Proposal">
-            <DetailItem title="Community">{community.name}</DetailItem>
+            <DetailItem title="Community">
+              <StatusIcon permalink={proposal.community}>
+                {community.name}
+              </StatusIcon>
+            </DetailItem>
             <DetailItem title="Workgroup">{workgroup.name}</DetailItem>
             <DetailItem title="Proposer">
               {proposal.authorship.author}

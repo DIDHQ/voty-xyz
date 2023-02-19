@@ -1,6 +1,6 @@
 import { CubeIcon, CubeTransparentIcon } from '@heroicons/react/24/outline'
 import dynamic from 'next/dynamic'
-import { useId, useMemo } from 'react'
+import { ReactNode, useId, useMemo } from 'react'
 
 import useStatus from '../hooks/use-status'
 import { permalink2Explorer, permalink2Url } from '../utils/permalink'
@@ -14,16 +14,18 @@ const Tooltip = dynamic(
 export default function StatusIcon(props: {
   permalink?: string
   className?: string
+  children?: ReactNode
 }) {
   const { data: status } = useStatus(props.permalink)
-  const icon = useMemo(
+  const children = useMemo(
     () =>
-      status?.timestamp ? (
+      props.children ??
+      (status?.timestamp ? (
         <CubeIcon className="h-5 w-5" />
       ) : (
         <CubeTransparentIcon className="h-5 w-5" />
-      ),
-    [status?.timestamp],
+      )),
+    [props.children, status?.timestamp],
   )
   const href = useMemo(
     () =>
@@ -44,9 +46,9 @@ export default function StatusIcon(props: {
         data-tooltip-place="left"
         className={props.className}
       >
-        <TextButton>{icon}</TextButton>
+        <TextButton>{children}</TextButton>
       </a>
-      <Tooltip id={id}>
+      <Tooltip id={id} className="rounded-none">
         Transaction {status?.timestamp ? 'confirmed' : 'pending'}
       </Tooltip>
     </>
