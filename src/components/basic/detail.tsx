@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { ReactNode } from 'react'
 
 export function DetailList(props: { title: string; children: ReactNode }) {
@@ -14,8 +15,15 @@ export function DetailList(props: { title: string; children: ReactNode }) {
 export function DetailItem(props: { title: string; children: ReactNode }) {
   return (
     <div className="flex justify-between py-3 text-sm font-medium">
-      <dt className="text-gray-500">{props.title}</dt>
-      <dd className="whitespace-nowrap text-gray-900">{props.children}</dd>
+      <dt className="mr-4 shrink-0 truncate text-gray-500">{props.title}</dt>
+      <dd
+        className={clsx(
+          'whitespace-nowrap text-gray-900',
+          typeof props.children === 'string' ? 'truncate' : undefined,
+        )}
+      >
+        {props.children}
+      </dd>
     </div>
   )
 }

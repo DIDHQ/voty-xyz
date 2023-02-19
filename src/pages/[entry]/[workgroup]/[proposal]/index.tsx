@@ -215,7 +215,7 @@ export default function ProposalPage() {
           </table>
         ) : null}
       </div>
-      <div className="relative w-full shrink-0 sm:sticky sm:top-24 sm:w-80">
+      <div className="relative w-full shrink-0 sm:sticky sm:top-24 sm:w-72">
         <StatusIcon
           permalink={query.proposal}
           className="absolute right-4 top-4"

@@ -261,7 +261,7 @@ export default function CreateProposalPage() {
           </FormFooter>
         </Form>
       </div>
-      <div className="relative mt-6 w-full shrink-0 sm:sticky sm:top-24 sm:mt-0 sm:w-80">
+      <div className="relative mt-6 w-full shrink-0 sm:sticky sm:top-24 sm:mt-0 sm:w-72">
         <StatusIcon
           permalink={community?.entry.community}
           className="absolute right-4 top-4"
