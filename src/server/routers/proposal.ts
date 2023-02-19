@@ -3,12 +3,13 @@ import { compact, last } from 'lodash-es'
 import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
-import { database } from '../../utils/database'
+import { database, getByPermalink } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
 import { proposalSchema } from '../../utils/schemas/proposal'
 import verifyProposal from '../../utils/verifiers/verify-proposal'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
+import { DataType } from '../../utils/constants'
 
 const textDecoder = new TextDecoder()
 
@@ -24,17 +25,14 @@ export const proposalRouter = router({
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
-      const proposal = await database.proposal.findUnique({
-        where: { permalink: input.permalink },
-      })
-      if (!proposal) {
-        return null
-      }
-      return {
-        ...schema.parse(JSON.parse(textDecoder.decode(proposal.data))),
-        permalink: proposal.permalink,
-        votes: proposal.votes,
-      }
+      const proposal = await getByPermalink(DataType.PROPOSAL, input.permalink)
+      return proposal
+        ? {
+            ...schema.parse(proposal.data),
+            permalink: proposal.permalink,
+            votes: proposal.votes,
+          }
+        : null
     }),
   list: procedure
     .input(

@@ -1,4 +1,4 @@
-import { getArweaveData, getArweaveTimestamp } from '../arweave'
+import { getArweaveTimestamp } from '../arweave'
 import { getPeriod, Period } from '../duration'
 import { calculateNumber } from '../functions/number'
 import { Authorized, authorized } from '../schemas/authorship'
@@ -9,6 +9,8 @@ import { Proposal } from '../schemas/proposal'
 import { Vote, voteSchema } from '../schemas/vote'
 import verifyAuthorshipProof from './verify-authorship-proof'
 import verifyProposal from './verify-proposal'
+import { getByPermalink } from '../database'
+import { DataType } from '../constants'
 
 export default async function verifyVote(document: object): Promise<{
   vote: Proved<Authorized<Vote>>
@@ -27,12 +29,12 @@ export default async function verifyVote(document: object): Promise<{
 
   const [timestamp, data] = await Promise.all([
     getArweaveTimestamp(vote.proposal),
-    getArweaveData(vote.proposal),
+    getByPermalink(DataType.PROPOSAL, vote.proposal),
   ])
   if (!timestamp || !data) {
     throw new Error('proposal not found')
   }
-  const { proposal, workgroup, community } = await verifyProposal(data)
+  const { proposal, workgroup, community } = await verifyProposal(data.data)
 
   if (
     getPeriod(Date.now() / 1000, timestamp, workgroup.duration) !==

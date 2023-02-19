@@ -1,4 +1,3 @@
-import { getArweaveData } from '../arweave'
 import { checkBoolean } from '../functions/boolean'
 import { Authorized, authorized } from '../schemas/authorship'
 import { Community } from '../schemas/community'
@@ -7,6 +6,9 @@ import { proved, Proved } from '../schemas/proof'
 import { Proposal, proposalSchema } from '../schemas/proposal'
 import verifyAuthorshipProof from './verify-authorship-proof'
 import verifyCommunity from './verify-community'
+import { getByPermalink } from '../database'
+import { DataType } from '../constants'
+import { getArweaveTimestamp } from '../arweave'
 
 export default async function verifyProposal(document: object): Promise<{
   proposal: Proved<Authorized<Proposal>>
@@ -22,11 +24,14 @@ export default async function verifyProposal(document: object): Promise<{
 
   await verifyAuthorshipProof(proposal)
 
-  const data = await getArweaveData(proposal.community)
-  if (!data) {
+  const [timestamp, data] = await Promise.all([
+    getArweaveTimestamp(proposal.community),
+    getByPermalink(DataType.COMMUNITY, proposal.community),
+  ])
+  if (!timestamp || !data) {
     throw new Error('community not found')
   }
-  const { community } = await verifyCommunity(data)
+  const { community } = await verifyCommunity(data.data)
 
   const workgroup = community.workgroups?.find(
     (workgroup) => workgroup.extension.id === proposal.workgroup,

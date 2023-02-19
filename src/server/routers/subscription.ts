@@ -1,8 +1,9 @@
 import { TRPCError } from '@trpc/server'
 import { compact, keyBy } from 'lodash-es'
 import { z } from 'zod'
+import { DataType } from '../../utils/constants'
 
-import { database } from '../../utils/database'
+import { database, mapByPermalinks } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
 import { communitySchema } from '../../utils/schemas/community'
 import { proved } from '../../utils/schemas/proof'
@@ -28,15 +29,9 @@ export const subscriptionRouter = router({
       }),
       ({ did }) => did,
     )
-    const communities = keyBy(
-      await database.community.findMany({
-        where: {
-          permalink: {
-            in: Object.values(entries).map(({ community }) => community),
-          },
-        },
-      }),
-      ({ permalink }) => permalink,
+    const communities = await mapByPermalinks(
+      DataType.COMMUNITY,
+      Object.values(entries).map(({ community }) => community),
     )
 
     return compact(
@@ -45,10 +40,7 @@ export const subscriptionRouter = router({
         .filter((community) => community)
         .map(({ permalink, data }) => {
           try {
-            return {
-              permalink,
-              ...schema.parse(JSON.parse(textDecoder.decode(data))),
-            }
+            return { permalink, ...schema.parse(data) }
           } catch {
             return
           }

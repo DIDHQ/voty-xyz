@@ -1,16 +1,15 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, last } from 'lodash-es'
+import { compact, last } from 'lodash-es'
 import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
-import { database } from '../../utils/database'
+import { database, getByPermalink, mapByPermalinks } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
 import { communitySchema } from '../../utils/schemas/community'
 import verifyCommunity from '../../utils/verifiers/verify-community'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
-
-const textDecoder = new TextDecoder()
+import { DataType } from '../../utils/constants'
 
 const schema = proved(authorized(communitySchema))
 
@@ -37,16 +36,11 @@ export const communityRouter = router({
       if (!entry) {
         return null
       }
-      const community = await database.community.findUnique({
-        where: { permalink: entry?.community },
-      })
-      if (!community) {
-        return null
-      }
-      return {
-        ...schema.parse(JSON.parse(textDecoder.decode(community.data))),
-        entry,
-      }
+      const community = await getByPermalink(
+        DataType.COMMUNITY,
+        entry.community,
+      )
+      return community ? { ...schema.parse(community.data), entry } : null
     }),
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
@@ -55,13 +49,11 @@ export const communityRouter = router({
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
-      const community = await database.community.findUnique({
-        where: { permalink: input.permalink },
-      })
-      if (!community) {
-        return null
-      }
-      return schema.parse(JSON.parse(textDecoder.decode(community.data)))
+      const community = await getByPermalink(
+        DataType.COMMUNITY,
+        input.permalink,
+      )
+      return community ? schema.parse(community.data) : null
     }),
   list: procedure
     .input(z.object({ cursor: z.string().optional() }))
@@ -77,13 +69,9 @@ export const communityRouter = router({
         take: 50,
         orderBy: { ts: 'desc' },
       })
-      const communities = keyBy(
-        await database.community.findMany({
-          where: {
-            permalink: { in: entries.map(({ community }) => community) },
-          },
-        }),
-        ({ permalink }) => permalink,
+      const communities = await mapByPermalinks(
+        DataType.COMMUNITY,
+        entries.map(({ community }) => community),
       )
       return {
         data: compact(
@@ -92,11 +80,7 @@ export const communityRouter = router({
             .map((entry) => {
               try {
                 return {
-                  ...schema.parse(
-                    JSON.parse(
-                      textDecoder.decode(communities[entry.community].data),
-                    ),
-                  ),
+                  ...schema.parse(communities[entry.community].data),
                   entry,
                 }
               } catch {

@@ -22,12 +22,3 @@ export async function getArweaveTimestamp(
   }
   return undefined
 }
-
-export async function getArweaveData(
-  permalink: string,
-): Promise<object | undefined> {
-  if (!permalink.startsWith('ar://')) {
-    throw new Error('permalink not supported')
-  }
-  return fetchJson<object>(`https://${host}/${permalink2Id(permalink)}`)
-}
