@@ -35,7 +35,7 @@ export default function ProposalListItem(props: {
       )}`}
       className="block hover:bg-gray-100"
     >
-      <div className="py-4 px-0 sm:px-6">
+      <div className="border-b border-gray-200 py-4 px-0 sm:ml-6 sm:pr-6">
         <div className="flex items-center justify-between">
           <div>
             <p className="truncate font-medium text-indigo-600">

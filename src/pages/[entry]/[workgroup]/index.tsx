@@ -21,7 +21,7 @@ export default function GroupIndexPage() {
   return (
     <CommunityLayout>
       <WorkgroupLayout>
-        <ul role="list" className="divide-y divide-gray-200">
+        <ul role="list">
           {proposals?.map((proposal) => (
             <li key={proposal.permalink}>
               {query.entry ? (
