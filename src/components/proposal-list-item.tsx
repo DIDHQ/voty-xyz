@@ -1,5 +1,4 @@
 import { HandRaisedIcon, Square2StackIcon } from '@heroicons/react/20/solid'
-import clsx from 'clsx'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
@@ -10,6 +9,7 @@ import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/authorship'
 import { Proposal } from '../utils/schemas/proposal'
 import { trpc } from '../utils/trpc'
+import ProposalPeriod from './proposal-period'
 
 export default function ProposalListItem(props: {
   entry: string
@@ -39,20 +39,10 @@ export default function ProposalListItem(props: {
         <p className="truncate font-medium text-indigo-600 group-hover:underline">
           {props.proposal.title}
         </p>
-        <p
-          className={clsx(
-            'float-right inline-flex rounded-full px-3 py-0.5 text-sm font-medium',
-            {
-              [Period.PENDING]: 'bg-gray-100 text-gray-800',
-              [Period.ANNOUNCING]: 'bg-yellow-100 text-yellow-800',
-              [Period.ADDING_OPTION]: 'bg-blue-100 text-blue-800',
-              [Period.VOTING]: 'bg-green-100 text-green-800',
-              [Period.ENDED]: 'bg-red-100 text-red-800',
-            }[period],
-          )}
-        >
-          {period}
-        </p>
+        <ProposalPeriod
+          proposal={props.proposal.permalink}
+          duration={workgroup?.duration}
+        />
       </div>
       <p className="text-gray-600 line-clamp-3">
         {props.proposal.extension?.body}
