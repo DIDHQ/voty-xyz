@@ -1,7 +1,7 @@
 import {
+  BookmarkIcon,
   HandRaisedIcon,
   UserGroupIcon,
-  UserIcon,
 } from '@heroicons/react/20/solid'
 import { Entry } from '@prisma/client'
 import { Serialize } from '@trpc/server/dist/shared/internal/serialize'
@@ -28,7 +28,7 @@ export default function CommunityCard(props: {
           name={community.authorship.author}
           value={community.extension?.avatar}
         />
-        <div className="ml-4 space-y-2 text-sm tabular-nums text-gray-500">
+        <div className="ml-4 space-y-2 text-sm text-gray-500">
           <div className="flex items-center">
             <UserGroupIcon className="mr-2 h-4 w-4" />
             {community.workgroups?.length || 0}
@@ -38,7 +38,7 @@ export default function CommunityCard(props: {
             {community.entry.proposals}
           </div>
           <div className="flex items-center">
-            <UserIcon className="mr-2 h-4 w-4" />
+            <BookmarkIcon className="mr-2 h-4 w-4" />
             {community.entry.subscribers}
           </div>
         </div>

@@ -17,7 +17,7 @@ export default function CommunityIndexPage() {
 
   return (
     <CommunityLayout>
-      <ul role="list">
+      <ul role="list" className="sm:pl-6">
         {proposals?.map((proposal) => (
           <li key={proposal.permalink}>
             {query.entry ? (

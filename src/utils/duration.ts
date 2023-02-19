@@ -1,4 +1,4 @@
-import { Workgroup } from './schemas/workgroup'
+import type { Workgroup } from './schemas/workgroup'
 
 export enum Period {
   PENDING = 'Pending',

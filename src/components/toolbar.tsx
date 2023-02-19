@@ -1,16 +1,12 @@
 import Link from 'next/link'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
-import '@rainbow-me/rainbowkit/styles.css'
+import dynamic from 'next/dynamic'
 
-import Button from './basic/button'
-import useWallet from '../hooks/use-wallet'
-import Avatar from './basic/avatar'
 import TextButton from './basic/text-button'
 import { isTestnet } from '../utils/testnet'
 
-export default function Toolbar(props: { className?: string }) {
-  const { account, avatar, name: did, displayAddress } = useWallet()
+const ConnectButton = dynamic(() => import('./connect-button'), { ssr: false })
 
+export default function Toolbar(props: { className?: string }) {
   return (
     <header className={props.className}>
       <div className="flex h-18 max-w-5xl flex-1 items-center justify-between px-6">
@@ -21,38 +17,7 @@ export default function Toolbar(props: { className?: string }) {
             </h1>
           </TextButton>
         </Link>
-        <ConnectButton.Custom>
-          {({ openConnectModal, connectModalOpen }) =>
-            account ? (
-              <Link href="/settings" className="group block shrink-0">
-                <div className="flex items-center overflow-hidden">
-                  <Avatar
-                    size={9}
-                    name={did || account.address}
-                    value={avatar}
-                    variant="beam"
-                  />
-                  <div className="ml-3 hidden sm:block">
-                    <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                      {did}
-                    </p>
-                    <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
-                      {displayAddress}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            ) : (
-              <Button
-                primary
-                loading={connectModalOpen}
-                onClick={openConnectModal}
-              >
-                Connect Wallet
-              </Button>
-            )
-          }
-        </ConnectButton.Custom>
+        <ConnectButton />
       </div>
     </header>
   )
