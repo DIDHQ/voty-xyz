@@ -99,7 +99,7 @@ export default function CommunityNav(props: { className?: string }) {
       <div className="flex w-full flex-col items-center rounded-md border border-gray-200 pb-4">
         <StatusIcon
           permalink={community?.entry.community}
-          className="absolute right-4 top-4"
+          className="absolute right-3 top-3"
         />
         <Avatar
           name={community?.authorship.author}
