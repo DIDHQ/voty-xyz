@@ -1,10 +1,13 @@
 import { PlusIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
+import { useId } from 'react'
+import { Tooltip } from 'react-tooltip'
 
 import SubscriptionList from './subscription-list'
-import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip'
 
 export default function Sidebar() {
+  const id = useId()
+
   return (
     <aside className="fixed left-0 z-50 hidden h-screen w-18 flex-col items-center border-r border-gray-200 sm:flex">
       <Link
@@ -18,19 +21,15 @@ export default function Sidebar() {
         />
       </Link>
       <SubscriptionList className="mb-3" />
-      <Tooltip offset={8} delay={{ open: 200, close: 0 }} placement="right">
-        <TooltipTrigger>
-          <Link
-            href="/create"
-            className="group flex h-12 w-12 items-center justify-center rounded-[0.75rem] border border-gray-200 hover:bg-indigo-600"
-          >
-            <PlusIcon className="h-8 w-8 text-indigo-600 group-hover:text-white" />
-          </Link>
-        </TooltipTrigger>
-        <TooltipContent className="z-50 rounded bg-gray-600 py-2 px-4 text-sm text-white">
-          Create community
-        </TooltipContent>
-      </Tooltip>
+      <Link
+        href="/create"
+        data-tooltip-id={id}
+        data-tooltip-place="right"
+        className="group flex h-12 w-12 items-center justify-center rounded-[0.75rem] border border-gray-200 hover:bg-indigo-600"
+      >
+        <PlusIcon className="h-8 w-8 text-indigo-600 group-hover:text-white" />
+      </Link>
+      <Tooltip id={id}>Create community</Tooltip>
     </aside>
   )
 }
