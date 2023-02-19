@@ -104,9 +104,8 @@ export default function ProposalPage() {
       !status?.timestamp ||
       !workgroup?.duration ||
       getPeriod(Date.now() / 1000, status.timestamp, workgroup.duration) !==
-        Period.VOTING ||
-      !did,
-    [status?.timestamp, workgroup?.duration, did],
+        Period.VOTING,
+    [status?.timestamp, workgroup?.duration],
   )
 
   return community && proposal && workgroup ? (
@@ -139,7 +138,7 @@ export default function ProposalPage() {
                     option={option}
                     votingPower={votingPower}
                     choices={choices}
-                    disabled={disabled}
+                    disabled={disabled || !did}
                     value={value}
                     onChange={onChange}
                   />
@@ -149,7 +148,7 @@ export default function ProposalPage() {
           />
         </ul>
         <div className="flex items-center justify-between py-6">
-          <h2 className="text-2xl font-bold tabular-nums">
+          <h2 className="text-2xl font-bold">
             {proposal.votes
               ? proposal.votes === 1
                 ? '1 Vote'
@@ -174,9 +173,10 @@ export default function ProposalPage() {
                   disabled={
                     choiceIsEmpty(proposal.voting_type, watch('choice')) ||
                     !votingPower ||
-                    isFetching
+                    isFetching ||
+                    !did
                   }
-                  className="rounded-l-none border-l-0 tabular-nums focus:z-10 active:z-10"
+                  className="rounded-l-none border-l-0 focus:z-10 active:z-10"
                 >
                   Vote{votingPower ? ` (${votingPower})` : null}
                 </SigningVoteButton>
@@ -230,7 +230,7 @@ export default function ProposalPage() {
                   <td
                     className={clsx(
                       index === 0 ? undefined : 'border-t',
-                      'whitespace-nowrap border-gray-200 py-4 pl-3 pr-4 text-right text-sm font-medium tabular-nums',
+                      'whitespace-nowrap border-gray-200 py-4 pl-3 pr-4 text-right text-sm font-medium',
                     )}
                   >
                     <a
@@ -312,6 +312,7 @@ export function Option(props: {
       }}
     >
       <span className="ml-2 w-0 flex-1 truncate">{option}</span>
+      <span className="text-xs text-gray-500">{percentage.toFixed(2)}%</span>
       <div className="ml-4 shrink-0 leading-none">
         <input
           type={type === 'single' ? 'radio' : 'checkbox'}

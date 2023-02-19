@@ -4,6 +4,7 @@
 
 * {
   box-sizing: border-box;
+  font-variant-numeric: tabular-nums;
 }
 
 input::-webkit-outer-spin-button,
