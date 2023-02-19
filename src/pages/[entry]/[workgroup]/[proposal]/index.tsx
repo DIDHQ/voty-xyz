@@ -26,6 +26,8 @@ import { permalink2Url } from '../../../../utils/permalink'
 import { trpc } from '../../../../utils/trpc'
 import { ChoiceRouter } from '../../../../server/routers/choice'
 import Article from '../../../../components/basic/article'
+import useStatus from '../../../../hooks/use-status'
+import { getPeriod, Period } from '../../../../utils/duration'
 
 const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
   ssr: false,
@@ -96,7 +98,16 @@ export default function ProposalPage() {
     setValue('choice', '')
     setDid('')
   }, [refetchList, refetchChoices, setValue])
-  const disabled = !did
+  const { data: status } = useStatus(query.proposal)
+  const disabled = useMemo(
+    () =>
+      !status?.timestamp ||
+      !workgroup?.duration ||
+      getPeriod(Date.now() / 1000, status.timestamp, workgroup.duration) !==
+        Period.VOTING ||
+      !did,
+    [status?.timestamp, workgroup?.duration, did],
+  )
 
   return community && proposal && workgroup ? (
     <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
@@ -145,33 +156,33 @@ export default function ProposalPage() {
                 : `${proposal.votes} Votes`
               : null}
           </h2>
-          <div className="flex rounded-md">
-            <VoterSelect
-              proposal={query.proposal}
-              workgroup={workgroup}
-              snapshots={proposal.snapshots}
-              value={did}
-              onChange={setDid}
-              className="rounded-r-none focus:z-10 active:z-10"
-            />
-            <FormProvider {...methods}>
-              <SigningVoteButton
-                did={did}
+          {disabled ? null : (
+            <div className="flex rounded-md">
+              <VoterSelect
                 proposal={query.proposal}
-                duration={workgroup.duration}
-                icon={BoltIcon}
-                onSuccess={handleSuccess}
-                disabled={
-                  choiceIsEmpty(proposal.voting_type, watch('choice')) ||
-                  !votingPower ||
-                  isFetching
-                }
-                className="rounded-l-none border-l-0 tabular-nums focus:z-10 active:z-10"
-              >
-                Vote{votingPower ? ` (${votingPower})` : null}
-              </SigningVoteButton>
-            </FormProvider>
-          </div>
+                workgroup={workgroup}
+                snapshots={proposal.snapshots}
+                value={did}
+                onChange={setDid}
+                className="rounded-r-none focus:z-10 active:z-10"
+              />
+              <FormProvider {...methods}>
+                <SigningVoteButton
+                  did={did}
+                  icon={BoltIcon}
+                  onSuccess={handleSuccess}
+                  disabled={
+                    choiceIsEmpty(proposal.voting_type, watch('choice')) ||
+                    !votingPower ||
+                    isFetching
+                  }
+                  className="rounded-l-none border-l-0 tabular-nums focus:z-10 active:z-10"
+                >
+                  Vote{votingPower ? ` (${votingPower})` : null}
+                </SigningVoteButton>
+              </FormProvider>
+            </div>
+          )}
         </div>
         {votes?.length ? (
           <div className="mb-6 overflow-hidden rounded-md border border-gray-200">
