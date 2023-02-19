@@ -1,9 +1,15 @@
 import { CubeIcon, CubeTransparentIcon } from '@heroicons/react/24/outline'
-import { useMemo } from 'react'
+import dynamic from 'next/dynamic'
+import { useId, useMemo } from 'react'
 
 import useStatus from '../hooks/use-status'
 import { permalink2Explorer, permalink2Url } from '../utils/permalink'
 import TextButton from './basic/text-button'
+
+const Tooltip = dynamic(
+  () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
+  { ssr: false },
+)
 
 export default function StatusIcon(props: {
   permalink?: string
@@ -28,10 +34,21 @@ export default function StatusIcon(props: {
         : undefined,
     [props.permalink, status?.timestamp],
   )
+  const id = useId()
 
   return props.permalink ? (
-    <a href={href} className={props.className}>
-      <TextButton>{icon}</TextButton>
-    </a>
+    <>
+      <a
+        href={href}
+        data-tooltip-id={id}
+        data-tooltip-place="left"
+        className={props.className}
+      >
+        <TextButton>{icon}</TextButton>
+      </a>
+      <Tooltip id={id}>
+        Transaction {status?.timestamp ? 'confirmed' : 'pending'}
+      </Tooltip>
+    </>
   ) : null
 }

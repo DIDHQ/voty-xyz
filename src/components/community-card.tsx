@@ -1,3 +1,8 @@
+import {
+  HandRaisedIcon,
+  UserGroupIcon,
+  UserIcon,
+} from '@heroicons/react/20/solid'
 import { Entry } from '@prisma/client'
 import { Serialize } from '@trpc/server/dist/shared/internal/serialize'
 import Link from 'next/link'
@@ -15,24 +20,34 @@ export default function CommunityCard(props: {
     <Link
       key={community.entry.community}
       href={`/${community.authorship.author}`}
-      className="block rounded-md border border-gray-200 hover:bg-gray-50"
+      className="block rounded-md border border-gray-200 p-4 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400 hover:bg-gray-50"
     >
-      <div className="flex items-center p-6">
-        <div className="shrink-0">
-          <Avatar
-            size={20}
-            name={community.authorship.author}
-            value={community.extension?.avatar}
-          />
+      <div className="flex justify-between">
+        <Avatar
+          size={20}
+          name={community.authorship.author}
+          value={community.extension?.avatar}
+        />
+        <div className="ml-4 space-y-2 text-sm tabular-nums text-gray-500">
+          <div className="flex items-center">
+            <UserGroupIcon className="mr-2 h-4 w-4" />
+            {community.workgroups?.length || 0}
+          </div>
+          <div className="flex items-center">
+            <HandRaisedIcon className="mr-2 h-4 w-4" />
+            {community.entry.proposals}
+          </div>
+          <div className="flex items-center">
+            <UserIcon className="mr-2 h-4 w-4" />
+            {community.entry.subscribers}
+          </div>
         </div>
-        <div className="px-4">
-          <p className="truncate text-xl font-medium text-indigo-600">
-            {community.name}
-          </p>
-          <p className="flex items-center text-lg text-gray-500">
-            <span className="truncate">{community.authorship.author}</span>
-          </p>
-        </div>
+      </div>
+      <div className="pt-4">
+        <h3 className="font-medium text-gray-900">{community.name}</h3>
+        <p className="flex items-center text-sm text-gray-500">
+          <span className="truncate">{community.authorship.author}</span>
+        </p>
       </div>
     </Link>
   )

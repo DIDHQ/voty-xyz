@@ -1,4 +1,10 @@
-import { ExoticComponent, ReactNode, useCallback, useEffect } from 'react'
+import {
+  ExoticComponent,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import useSignDocument from '../../hooks/use-sign-document'
@@ -39,6 +45,13 @@ export default function SigningVoteButton(props: {
       onSuccess(handleCreate.data)
     }
   }, [handleCreate.data, handleCreate.isSuccess, onSuccess])
+  const disabled = useMemo(
+    () =>
+      !status?.timestamp ||
+      getPeriod(Date.now() / 1000, status?.timestamp, props.duration) !==
+        Period.VOTING,
+    [props.duration, status?.timestamp],
+  )
 
   return (
     <>
@@ -49,12 +62,7 @@ export default function SigningVoteButton(props: {
         primary
         icon={props.icon}
         onClick={onSubmit(handleClick, console.error)}
-        disabled={
-          props.disabled ||
-          !status?.timestamp ||
-          getPeriod(Date.now() / 1000, status?.timestamp, props.duration) !==
-            Period.VOTING
-        }
+        disabled={props.disabled || disabled}
         loading={handleCreate.isLoading}
         className={props.className}
       >

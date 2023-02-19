@@ -264,13 +264,13 @@ export default function CreateProposalPage() {
       <div className="relative mt-6 w-full shrink-0 sm:sticky sm:top-24 sm:mt-0 sm:w-80">
         <StatusIcon
           permalink={community?.entry.community}
-          className="absolute right-3 top-3"
+          className="absolute right-4 top-4"
         />
         <Grid6 className="rounded-md border border-gray-200 p-6">
           <GridItem6>
-            <DetailList title="Information">
+            <DetailList title="Workgroup">
+              <DetailItem title="Name">{workgroup?.name}</DetailItem>
               <DetailItem title="Community">{community?.name}</DetailItem>
-              <DetailItem title="Workgroup">{workgroup?.name}</DetailItem>
             </DetailList>
           </GridItem6>
           <GridItem6>

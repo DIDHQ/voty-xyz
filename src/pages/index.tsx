@@ -12,7 +12,7 @@ export default function IndexPage() {
   )
 
   return (
-    <Grid6 className="py-6">
+    <Grid6 className="w-full py-6">
       {communities?.map((community) => (
         <GridItem2 key={community.entry.community}>
           <CommunityCard community={community} />
