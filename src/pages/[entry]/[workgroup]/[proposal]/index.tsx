@@ -21,11 +21,11 @@ import {
   updateChoice,
 } from '../../../../utils/voting'
 import TextButton from '../../../../components/basic/text-button'
-import Markdown from '../../../../components/basic/markdown'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
 import { permalink2Url } from '../../../../utils/permalink'
 import { trpc } from '../../../../utils/trpc'
 import { ChoiceRouter } from '../../../../server/routers/choice'
+import Article from '../../../../components/basic/article'
 
 const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
   ssr: false,
@@ -110,9 +110,7 @@ export default function ProposalPage() {
           <h3 className="mt-2 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
             {proposal.title}
           </h3>
-          <article className="prose mt-8">
-            <Markdown>{proposal.extension?.body}</Markdown>
-          </article>
+          <Article className="mt-8">{proposal.extension?.body}</Article>
         </div>
         <ul
           role="list"
@@ -245,9 +243,9 @@ export default function ProposalPage() {
             duration={workgroup.duration}
           />
           <DetailList title="Terms and conditions">
-            <article className="prose-sm pt-2 prose-pre:overflow-x-auto prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
-              <Markdown>{workgroup?.extension.terms_and_conditions}</Markdown>
-            </article>
+            <Article small className="pt-2">
+              {workgroup?.extension.terms_and_conditions}
+            </Article>
           </DetailList>
         </div>
       </div>

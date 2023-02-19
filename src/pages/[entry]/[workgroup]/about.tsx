@@ -2,8 +2,8 @@ import useRouterQuery from '../../../hooks/use-router-query'
 import useWorkgroup from '../../../hooks/use-workgroup'
 import CommunityLayout from '../../../components/layouts/community'
 import WorkgroupLayout from '../../../components/layouts/workgroup'
-import Markdown from '../../../components/basic/markdown'
 import { trpc } from '../../../utils/trpc'
+import Article from '../../../components/basic/article'
 
 export default function WorkgroupAboutPage() {
   const query = useRouterQuery<['entry', 'workgroup']>()
@@ -16,9 +16,9 @@ export default function WorkgroupAboutPage() {
   return (
     <CommunityLayout>
       <WorkgroupLayout>
-        <article className="prose-sm flex w-full flex-col pt-6 sm:prose prose-pre:overflow-x-auto prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400 sm:pl-6">
-          <Markdown>{workgroup?.extension?.about}</Markdown>
-        </article>
+        <Article className="pt-6 sm:pl-6">
+          {workgroup?.extension?.about}
+        </Article>
       </WorkgroupLayout>
     </CommunityLayout>
   )
