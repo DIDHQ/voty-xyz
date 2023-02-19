@@ -221,7 +221,7 @@ export default function ProposalPage() {
           className="absolute right-3 top-3"
         />
         <div className="space-y-6 rounded-md border border-gray-200 p-6">
-          <DetailList title="Information">
+          <DetailList title="Proposal">
             <DetailItem title="Community">{community.name}</DetailItem>
             <DetailItem title="Workgroup">{workgroup.name}</DetailItem>
             <DetailItem title="Proposer">
