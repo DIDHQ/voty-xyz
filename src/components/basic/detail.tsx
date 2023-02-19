@@ -18,7 +18,7 @@ export function DetailItem(props: { title: string; children: ReactNode }) {
       <dt className="mr-4 shrink-0 truncate text-gray-500">{props.title}</dt>
       <dd
         className={clsx(
-          'whitespace-nowrap text-gray-900',
+          'whitespace-nowrap tabular-nums text-gray-900',
           typeof props.children === 'string' ? 'truncate' : undefined,
         )}
       >

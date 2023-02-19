@@ -139,7 +139,14 @@ export default function ProposalPage() {
             )}
           />
         </ul>
-        <div className="flex justify-end py-6">
+        <div className="flex items-center justify-between py-6">
+          <h2 className="text-2xl font-bold tabular-nums">
+            {proposal.votes
+              ? proposal.votes === 1
+                ? '1 Vote'
+                : `${proposal.votes} Votes`
+              : null}
+          </h2>
           <div className="flex rounded-md">
             <VoterSelect
               proposal={query.proposal}
@@ -161,7 +168,7 @@ export default function ProposalPage() {
                   !votingPower ||
                   isFetching
                 }
-                className="rounded-l-none border-l-0 focus:z-10 active:z-10"
+                className="rounded-l-none border-l-0 tabular-nums focus:z-10 active:z-10"
               >
                 Vote{votingPower ? ` (${votingPower})` : null}
               </SigningVoteButton>
@@ -169,50 +176,52 @@ export default function ProposalPage() {
           </div>
         </div>
         {votes?.length ? (
-          <table className="min-w-full divide-y divide-gray-300">
-            <thead>
-              <tr>
-                <th
-                  scope="col"
-                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                >
-                  DID
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                >
-                  Choice
-                </th>
-                <th
-                  scope="col"
-                  className="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-6"
-                >
-                  Power
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {votes.map((vote) => (
-                <tr key={vote.permalink}>
-                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                    {vote.authorship.author}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {stringifyChoice(proposal.voting_type, vote.choice)}
-                  </td>
-                  <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <a
-                      href={permalink2Url(vote.permalink)}
-                      className="text-indigo-600 hover:text-indigo-900"
-                    >
-                      {vote.power}
-                    </a>
-                  </td>
+          <div className="mb-6 overflow-hidden rounded-md border border-gray-200">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900"
+                  >
+                    DID
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                  >
+                    Choice
+                  </th>
+                  <th
+                    scope="col"
+                    className="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900"
+                  >
+                    Power
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {votes.map((vote) => (
+                  <tr key={vote.permalink}>
+                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">
+                      {vote.authorship.author}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      {stringifyChoice(proposal.voting_type, vote.choice)}
+                    </td>
+                    <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium tabular-nums">
+                      <a
+                        href={permalink2Url(vote.permalink)}
+                        className="text-indigo-600 hover:text-indigo-900"
+                      >
+                        {vote.power}
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : null}
       </div>
       <div className="relative w-full shrink-0 sm:sticky sm:top-24 sm:w-72">
