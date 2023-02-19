@@ -8,11 +8,14 @@ import {
 } from '@heroicons/react/20/solid'
 
 import { Community, communitySchema } from '../utils/schemas/community'
-import AvatarInput from './basic/avatar-input'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
+
+const AvatarInput = dynamic(() => import('./basic/avatar-input'), {
+  ssr: false,
+})
 
 const SigningCommunityButton = dynamic(
   () => import('./signing/signing-community-button'),
