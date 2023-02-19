@@ -46,7 +46,9 @@ export const proposalRouter = router({
     )
     .output(
       z.object({
-        data: z.array(schema.extend({ permalink: z.string() })),
+        data: z.array(
+          schema.extend({ permalink: z.string(), votes: z.number() }),
+        ),
         next: z.string().optional(),
       }),
     )
@@ -64,11 +66,12 @@ export const proposalRouter = router({
       })
       return {
         data: compact(
-          proposals.map(({ permalink, data }) => {
+          proposals.map(({ data, permalink, votes }) => {
             try {
               return {
-                permalink,
                 ...schema.parse(JSON.parse(textDecoder.decode(data))),
+                permalink,
+                votes,
               }
             } catch {
               return

@@ -1,10 +1,11 @@
-import { HandRaisedIcon, Square2StackIcon } from '@heroicons/react/20/solid'
+import {
+  BoltIcon,
+  HandRaisedIcon,
+  Square2StackIcon,
+} from '@heroicons/react/20/solid'
 import Link from 'next/link'
-import { useMemo } from 'react'
 
-import useStatus from '../hooks/use-status'
 import useWorkgroup from '../hooks/use-workgroup'
-import { getPeriod, Period } from '../utils/duration'
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/authorship'
 import { Proposal } from '../utils/schemas/proposal'
@@ -13,20 +14,12 @@ import ProposalPeriod from './proposal-period'
 
 export default function ProposalListItem(props: {
   entry: string
-  proposal: Authorized<Proposal> & { permalink: string }
+  proposal: Authorized<Proposal> & { permalink: string; votes: number }
 }) {
   const { data: community } = trpc.community.getByEntry.useQuery({
     entry: props.entry,
   })
   const workgroup = useWorkgroup(community, props.proposal.workgroup)
-  const { data: status } = useStatus(props.proposal.permalink)
-  const period = useMemo(
-    () =>
-      workgroup?.duration && status?.timestamp
-        ? getPeriod(Date.now() / 1000, status?.timestamp, workgroup?.duration)
-        : Period.PENDING,
-    [status?.timestamp, workgroup?.duration],
-  )
 
   return (
     <Link
@@ -55,6 +48,13 @@ export default function ProposalListItem(props: {
               aria-hidden="true"
             />
             {props.proposal.authorship.author}
+          </p>
+          <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-4">
+            <BoltIcon
+              className="mr-1.5 h-4 w-4 shrink-0 text-gray-400"
+              aria-hidden="true"
+            />
+            {props.proposal.votes}
           </p>
           <p className="mt-2 flex items-center truncate text-sm text-gray-500 sm:mt-0 sm:ml-4">
             <Square2StackIcon
