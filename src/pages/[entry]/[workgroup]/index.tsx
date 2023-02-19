@@ -25,7 +25,7 @@ export default function GroupIndexPage() {
           {proposals?.map((proposal) => (
             <li key={proposal.permalink}>
               {query.entry ? (
-                <ProposalListItem entry={query.entry} value={proposal} />
+                <ProposalListItem entry={query.entry} proposal={proposal} />
               ) : null}
             </li>
           ))}
