@@ -1,11 +1,9 @@
 import { useMemo } from 'react'
-import Link from 'next/link'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import ProposalListItem from '../../../components/proposal-list-item'
 import CommunityLayout from '../../../components/layouts/community'
 import WorkgroupLayout from '../../../components/layouts/workgroup'
-import Button from '../../../components/basic/button'
 import { trpc } from '../../../utils/trpc'
 
 export default function GroupIndexPage() {
