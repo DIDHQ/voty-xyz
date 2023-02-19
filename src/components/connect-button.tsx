@@ -24,7 +24,7 @@ export default function ConnectButton() {
                 variant="beam"
               />
               <div className="ml-3 hidden sm:block">
-                <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
                   {did}
                 </p>
                 <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
