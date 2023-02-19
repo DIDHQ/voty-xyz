@@ -85,7 +85,7 @@ export default function VoteForm(props: {
     <>
       <ul
         role="list"
-        className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
+        className="mt-6 divide-y divide-gray-200 border border-gray-200"
       >
         <Controller
           control={control}
@@ -117,14 +117,14 @@ export default function VoteForm(props: {
             : null}
         </h2>
         {disabled ? null : (
-          <div className="flex rounded-md">
+          <div className="flex">
             <VoterSelect
               proposal={proposal.permalink}
               workgroup={workgroup}
               snapshots={proposal.snapshots}
               value={did}
               onChange={setDid}
-              className="rounded-r-none focus:z-10 active:z-10"
+              className="focus:z-10 active:z-10"
             />
             <FormProvider {...methods}>
               <SigningVoteButton
@@ -137,7 +137,7 @@ export default function VoteForm(props: {
                   isFetching ||
                   !did
                 }
-                className="rounded-l-none border-l-0 focus:z-10 active:z-10"
+                className="border-l-0 focus:z-10 active:z-10"
               >
                 Vote{votingPower ? ` (${votingPower})` : null}
               </SigningVoteButton>

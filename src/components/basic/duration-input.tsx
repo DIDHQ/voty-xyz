@@ -52,7 +52,7 @@ export default function DurationInput(props: {
   }, [props.value])
 
   return (
-    <div className={clsx('relative rounded-md', props.className)}>
+    <div className={clsx('relative', props.className)}>
       <input
         type="number"
         value={value}
@@ -61,7 +61,7 @@ export default function DurationInput(props: {
         disabled={props.disabled}
         aria-invalid={props.error ? 'true' : 'false'}
         className={clsx(
-          'block w-full rounded-md border pl-4 pr-24 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
+          'block w-full border pl-4 pr-24 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
           props.error
             ? 'border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500'
             : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-500',
@@ -73,7 +73,7 @@ export default function DurationInput(props: {
           onChange={handleTypeChange}
           onBlur={handleBlur}
           disabled={props.disabled}
-          className="h-full rounded-md border-transparent bg-transparent py-0 pl-2 pr-7 text-gray-500 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed sm:text-sm"
+          className="h-full border-transparent bg-transparent py-0 pl-2 pr-7 text-gray-500 focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed sm:text-sm"
         >
           <option value={DurationType.HOUR}>Hours</option>
           <option value={DurationType.DAY}>Days</option>

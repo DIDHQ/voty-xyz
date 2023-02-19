@@ -129,7 +129,7 @@ export default function ProposalPage() {
           permalink={query.proposal}
           className="absolute right-3 top-3"
         />
-        <div className="space-y-6 rounded-md border border-gray-200 p-6">
+        <div className="space-y-6 border border-gray-200 p-6">
           <DetailList title="Proposal">
             <DetailItem title="Community">{community.name}</DetailItem>
             <DetailItem title="Workgroup">{workgroup.name}</DetailItem>

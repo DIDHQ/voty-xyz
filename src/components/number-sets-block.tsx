@@ -29,7 +29,7 @@ export default function NumberSetsBlock(props: {
       {fields.length ? (
         <ul
           role="list"
-          className="mb-4 divide-y divide-gray-200 rounded-md border border-gray-200"
+          className="mb-4 divide-y divide-gray-200 border border-gray-200"
         >
           {fields.map((operand, index) => (
             <NumberUnitBlock

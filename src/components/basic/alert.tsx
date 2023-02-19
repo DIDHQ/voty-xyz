@@ -28,7 +28,7 @@ export default function Alert(props: {
   return (
     <div
       className={clsx(
-        'rounded-md p-4',
+        'p-4',
         {
           'bg-blue-100': props.type === 'info',
           'bg-green-100': props.type === 'success',

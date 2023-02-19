@@ -16,7 +16,7 @@ export default function Button(
       {...restProps}
       disabled={loading || disabled}
       className={clsx(
-        'group flex items-center rounded-md border px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500',
+        'group flex items-center border px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500',
         primary
           ? 'border-transparent bg-indigo-600 text-white hover:bg-indigo-700'
           : 'border-gray-200 bg-white hover:bg-gray-50',

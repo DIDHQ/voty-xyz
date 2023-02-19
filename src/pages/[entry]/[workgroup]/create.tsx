@@ -201,7 +201,7 @@ export default function CreateProposalPage() {
                 >
                   <ul
                     role="list"
-                    className="mb-4 divide-y divide-gray-200 rounded-md border border-gray-200"
+                    className="mb-4 divide-y divide-gray-200 border border-gray-200"
                   >
                     {watch('options')?.map((_, index) => (
                       <li
@@ -238,13 +238,13 @@ export default function CreateProposalPage() {
             </Grid6>
           </FormSection>
           <FormFooter>
-            <div className="flex rounded-md">
+            <div className="flex">
               <ProposerSelect
                 workgroup={workgroup}
                 snapshots={snapshots}
                 value={did}
                 onChange={setDid}
-                className="rounded-r-none focus:z-10 active:z-10"
+                className="focus:z-10 active:z-10"
               />
               <FormProvider {...methods}>
                 <SigningProposalButton
@@ -252,7 +252,7 @@ export default function CreateProposalPage() {
                   icon={HandRaisedIcon}
                   disabled={!did || !community || !snapshots}
                   onSuccess={handleSuccess}
-                  className="rounded-l-none border-l-0 focus:z-10 active:z-10"
+                  className="border-l-0 focus:z-10 active:z-10"
                 >
                   Propose
                 </SigningProposalButton>
@@ -266,7 +266,7 @@ export default function CreateProposalPage() {
           permalink={community?.entry.community}
           className="absolute right-3 top-3"
         />
-        <Grid6 className="rounded-md border border-gray-200 p-6">
+        <Grid6 className="border border-gray-200 p-6">
           <GridItem6>
             <DetailList title="Workgroup">
               <DetailItem title="Name">{workgroup?.name}</DetailItem>
