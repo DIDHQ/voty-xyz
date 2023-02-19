@@ -139,7 +139,7 @@ export default function CommunityNav(props: { className?: string }) {
                       item.current
                         ? 'text-indigo-500'
                         : 'text-gray-400 group-hover:text-gray-500',
-                      'mr-3 h-6 w-6 shrink-0',
+                      'mr-2 h-6 w-6 shrink-0',
                     )}
                     aria-hidden="true"
                   />
@@ -212,7 +212,7 @@ function WorkgroupListItem(props: {
     >
       {emoji ? (
         <span
-          className="mr-3 w-6 shrink-0 text-center text-xl"
+          className="mr-2 w-6 shrink-0 text-center text-xl"
           aria-hidden="true"
         >
           {emoji}
@@ -223,7 +223,7 @@ function WorkgroupListItem(props: {
             props.current
               ? 'text-indigo-500'
               : 'text-gray-400 group-hover:text-gray-500',
-            'mr-3 h-6 w-6 shrink-0',
+            'mr-2 h-6 w-6 shrink-0',
           )}
           aria-hidden="true"
         />
