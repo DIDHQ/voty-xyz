@@ -33,7 +33,7 @@ export default function ProposalListItem(props: {
       href={`/${props.entry}/${props.proposal.workgroup}/${permalink2Id(
         props.proposal.permalink,
       )}`}
-      className="group block space-y-2 border-b border-gray-200 py-6 px-0"
+      className="group block space-y-2 py-6 px-0"
     >
       <div className="flex w-full items-center justify-between">
         <p className="truncate font-medium text-indigo-600 group-hover:underline">
