@@ -9,7 +9,7 @@ import Button from './basic/button'
 import Avatar from './basic/avatar'
 
 export default function ConnectButton() {
-  const { account, avatar, name: did, displayAddress, disconnect } = useWallet()
+  const { account, avatar, name, displayAddress, disconnect } = useWallet()
 
   return (
     <RainbowConnectButton.Custom>
@@ -19,13 +19,13 @@ export default function ConnectButton() {
             <Menu.Button className="group flex shrink-0 items-center overflow-hidden">
               <Avatar
                 size={9}
-                name={did || account.address}
+                name={name || account.address}
                 value={avatar}
                 variant="beam"
               />
               <div className="ml-3 hidden sm:block">
                 <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                  {did}
+                  {name}
                 </p>
                 <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
                   {displayAddress}
