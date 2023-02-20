@@ -14,12 +14,7 @@ export default async function verifyProposal(document: object): Promise<{
   workgroup: Workgroup
   community: Proved<Authorized<Community>>
 }> {
-  const parsed = proved(authorized(proposalSchema)).safeParse(document)
-  if (!parsed.success) {
-    throw new Error(`schema error: ${parsed.error.message}`)
-  }
-
-  const proposal = parsed.data
+  const proposal = proved(authorized(proposalSchema)).parse(document)
 
   const [timestamp, data] = await Promise.all([
     getPermalinkSnapshot(proposal.community).then((snapshot) =>

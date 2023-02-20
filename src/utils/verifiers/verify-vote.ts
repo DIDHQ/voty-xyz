@@ -17,12 +17,7 @@ export default async function verifyVote(document: object): Promise<{
   workgroup: Workgroup
   community: Proved<Authorized<Community>>
 }> {
-  const parsed = proved(authorized(voteSchema)).safeParse(document)
-  if (!parsed.success) {
-    throw new Error(`schema error: ${parsed.error.message}`)
-  }
-
-  const vote = parsed.data
+  const vote = proved(authorized(voteSchema)).parse(document)
 
   const [timestamp, data] = await Promise.all([
     getPermalinkSnapshot(vote.proposal).then((snapshot) =>
