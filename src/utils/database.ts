@@ -7,8 +7,10 @@ import {
 import { keyBy } from 'lodash-es'
 
 import { DataType } from './constants'
+import { Authorized } from './schemas/authorship'
 import { Community } from './schemas/community'
 import { Proposal } from './schemas/proposal'
+import { Proved } from './schemas/proof'
 import { Vote } from './schemas/vote'
 
 export const database = new PrismaClient()
@@ -34,11 +36,11 @@ export async function getByPermalink<T extends DataType>(
     ...data,
     data: JSON.parse(textDecoder.decode(data.data)),
   } as T extends DataType.COMMUNITY
-    ? Omit<CommunityModel, 'data'> & { data: Community }
+    ? Omit<CommunityModel, 'data'> & { data: Proved<Authorized<Community>> }
     : T extends DataType.PROPOSAL
-    ? Omit<ProposalModel, 'data'> & { data: Proposal }
+    ? Omit<ProposalModel, 'data'> & { data: Proved<Authorized<Proposal>> }
     : T extends DataType.VOTE
-    ? Omit<VoteModel, 'data'> & { data: Vote }
+    ? Omit<VoteModel, 'data'> & { data: Proved<Authorized<Vote>> }
     : never
 }
 
@@ -68,10 +70,19 @@ export async function mapByPermalinks<T extends DataType>(
     })),
     ({ permalink }) => permalink,
   ) as T extends DataType.COMMUNITY
-    ? Record<string, Omit<CommunityModel, 'data'> & { data: Community }>
+    ? Record<
+        string,
+        Omit<CommunityModel, 'data'> & { data: Proved<Authorized<Community>> }
+      >
     : T extends DataType.PROPOSAL
-    ? Record<string, Omit<ProposalModel, 'data'> & { data: Proposal }>
+    ? Record<
+        string,
+        Omit<ProposalModel, 'data'> & { data: Proved<Authorized<Proposal>> }
+      >
     : T extends DataType.VOTE
-    ? Record<string, Omit<VoteModel, 'data'> & { data: Vote }>
+    ? Record<
+        string,
+        Omit<VoteModel, 'data'> & { data: Proved<Authorized<Vote>> }
+      >
     : never
 }
