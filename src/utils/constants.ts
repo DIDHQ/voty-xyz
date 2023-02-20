@@ -4,6 +4,7 @@ export const commonCoinTypes = {
   ETH: 60,
   TRX: 195,
   CKB: 309,
+  AR: 472,
   MATIC: 966,
   BSC: 9006,
 }
