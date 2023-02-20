@@ -31,6 +31,7 @@ export const communityRouter = router({
       if (!input.entry) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
+
       const entry = await database.entry.findUnique({
         where: { did: input.entry },
       })
@@ -41,6 +42,7 @@ export const communityRouter = router({
         DataType.COMMUNITY,
         entry.community,
       )
+
       return community ? { ...community.data, entry } : null
     }),
   getByPermalink: procedure
@@ -50,10 +52,12 @@ export const communityRouter = router({
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
+
       const community = await getByPermalink(
         DataType.COMMUNITY,
         input.permalink,
       )
+
       return community ? community.data : null
     }),
   list: procedure
@@ -74,6 +78,7 @@ export const communityRouter = router({
         DataType.COMMUNITY,
         entries.map(({ community }) => community),
       )
+
       return {
         data: compact(
           entries

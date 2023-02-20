@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import {
-  Connector,
   useAccount,
   useConnect,
   useDisconnect,
@@ -23,17 +22,8 @@ const dotbit = createInstance(
 
 dotbit.installPlugin(new BitPluginAvatar())
 
-export default function useWallet(
-  onConnect?: ({
-    address,
-    connector,
-  }: {
-    address?: `0x${string}`
-    connector?: Connector
-  }) => void,
-  onDisconnect?: () => void,
-) {
-  const account = useAccount({ onConnect, onDisconnect })
+export default function useWallet() {
+  const account = useAccount()
   const network = useNetwork()
   const { signMessageAsync } = useSignMessage()
   const coinType = useMemo(

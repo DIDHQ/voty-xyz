@@ -15,9 +15,11 @@ export const choiceRouter = router({
       if (!input.proposal) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
+
       const choices = await database.choice.findMany({
         where: { proposal: input.proposal },
       })
+
       return {
         powers: mapValues(
           keyBy(choices, ({ option }) => option),

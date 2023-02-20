@@ -8,13 +8,15 @@ import { getCurrentSnapshot } from '../utils/snapshot'
 import { isTestnet } from '../utils/testnet'
 import useWallet from './use-wallet'
 
-export default function useSignDocument<T extends object>(
+export default function useSignDocument(
   did?: string,
-): (document: T) => Promise<Proved<Authorized<T>> | undefined> {
+): <T extends object>(
+  document: T,
+) => Promise<Proved<Authorized<T>> | undefined> {
   const { account, signMessage } = useWallet()
 
   return useCallback(
-    async (document: T) => {
+    async (document) => {
       if (!did || !account) {
         return
       }

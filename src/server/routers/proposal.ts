@@ -27,7 +27,9 @@ export const proposalRouter = router({
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
+
       const proposal = await getByPermalink(DataType.PROPOSAL, input.permalink)
+
       return proposal
         ? {
             ...proposal.data,
@@ -56,6 +58,7 @@ export const proposalRouter = router({
       if (!input.entry) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
+
       const proposals = await database.proposal.findMany({
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
         where: input.workgroup
@@ -64,6 +67,7 @@ export const proposalRouter = router({
         take: 50,
         orderBy: { ts: 'desc' },
       })
+
       return {
         data: compact(
           proposals.map(({ data, permalink, votes }) => {

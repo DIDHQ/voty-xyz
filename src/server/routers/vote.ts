@@ -35,12 +35,14 @@ export const voteRouter = router({
       if (!input.proposal) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
+
       const votes = await database.vote.findMany({
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
         where: { proposal: input.proposal },
         take: 50,
         orderBy: { ts: 'desc' },
       })
+
       return {
         data: compact(
           votes.map(({ permalink, data }) => {
@@ -69,12 +71,14 @@ export const voteRouter = router({
       if (!input.proposal || !input.authors) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
+
       const votes = await database.vote.findMany({
         where: {
           proposal: input.proposal,
           author: { in: input.authors },
         },
       })
+
       return mapValues(
         keyBy(votes, ({ author }) => author),
         ({ data }) => schema.parse(JSON.parse(textDecoder.decode(data))).power,

@@ -2,6 +2,7 @@ import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/20/solid'
 import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline'
 import { useCallback, useEffect } from 'react'
 
+import useSignDocument from '../hooks/use-sign-document'
 import useWallet from '../hooks/use-wallet'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
@@ -11,34 +12,53 @@ export default function SubscriptionButton(props: {
   entry?: string
   className?: string
 }) {
-  const { account } = useWallet()
-  const { refetch: refetchList } = trpc.subscription.list.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-    retry: false,
-  })
+  const { name, account } = useWallet()
+  const { refetch: refetchList } = trpc.subscription.list.useQuery(
+    { subscriber: name },
+    { enabled: !!name, refetchOnWindowFocus: false },
+  )
   const { data, mutate, isLoading, isSuccess, isError, error } =
     trpc.subscription.set.useMutation()
-  const handleSubscribe = useCallback(
-    () => mutate({ entry: props.entry, subscribe: true }),
-    [mutate, props.entry],
+  const { data: subscribed = data, refetch } = trpc.subscription.get.useQuery(
+    { subscriber: name, entry: props.entry },
+    { enabled: !!name && !!props.entry },
   )
-  const handleUnsubscribe = useCallback(
-    () => mutate({ entry: props.entry, subscribe: false }),
-    [mutate, props.entry],
-  )
+  const handleSignDocument = useSignDocument(name)
+  const handleSubscribe = useCallback(async () => {
+    if (!props.entry) {
+      return
+    }
+    const signed = await handleSignDocument({
+      entry: props.entry,
+      subscribe: true,
+    })
+    if (signed) {
+      mutate(signed)
+    }
+  }, [handleSignDocument, mutate, props.entry])
+  const handleUnsubscribe = useCallback(async () => {
+    if (!props.entry) {
+      return
+    }
+    const signed = await handleSignDocument({
+      entry: props.entry,
+      subscribe: false,
+    })
+    if (signed) {
+      mutate(signed)
+    }
+  }, [handleSignDocument, mutate, props.entry])
   useEffect(() => {
     if (isSuccess) {
+      refetch()
       refetchList()
     }
-  }, [isSuccess, refetchList])
-  useEffect(() => {
-    mutate({ entry: props.entry })
-  }, [mutate, props.entry])
+  }, [isSuccess, refetch, refetchList])
 
   return account ? (
     <>
       <Notification show={isError}>{error?.message}</Notification>
-      {data ? (
+      {subscribed ? (
         <TextButton
           disabled={isLoading}
           onClick={handleUnsubscribe}
