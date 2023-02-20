@@ -11,8 +11,8 @@ export default function Article(props: {
   return (
     <article
       className={clsx(
-        'prose-sm prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400',
-        props.small ? 'sm:prose' : 'prose',
+        'prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400',
+        props.small ? 'prose-sm' : 'prose',
         props.className,
       )}
     >
