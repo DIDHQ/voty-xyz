@@ -1,45 +1,36 @@
-import { getArweaveTimestamp } from '../arweave'
 import { getPeriod, Period } from '../duration'
 import { calculateNumber } from '../functions/number'
-import { Authorized, authorized } from '../schemas/authorship'
+import { Authorized } from '../schemas/authorship'
 import { Community } from '../schemas/community'
 import { Workgroup } from '../schemas/workgroup'
-import { proved, Proved } from '../schemas/proof'
+import { Proved } from '../schemas/proof'
 import { Proposal } from '../schemas/proposal'
-import { Vote, voteSchema } from '../schemas/vote'
-import verifyAuthorshipProof from './verify-authorship-proof'
+import { Vote } from '../schemas/vote'
 import verifyProposal from './verify-proposal'
 import { getByPermalink } from '../database'
-import { DataType } from '../constants'
+import { commonCoinTypes, DataType } from '../constants'
+import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
 
-export default async function verifyVote(document: object): Promise<{
-  vote: Proved<Authorized<Vote>>
+export default async function verifyVote(
+  vote: Proved<Authorized<Vote>>,
+): Promise<{
   proposal: Proved<Authorized<Proposal>>
   workgroup: Workgroup
   community: Proved<Authorized<Community>>
 }> {
-  const parsed = proved(authorized(voteSchema)).safeParse(document)
-  if (!parsed.success) {
-    throw new Error(`schema error: ${parsed.error.message}`)
-  }
-
-  const vote = parsed.data
-
-  await verifyAuthorshipProof(vote)
-
   const [timestamp, data] = await Promise.all([
-    getArweaveTimestamp(vote.proposal),
+    getPermalinkSnapshot(vote.proposal).then((snapshot) =>
+      getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
+    ),
     getByPermalink(DataType.PROPOSAL, vote.proposal),
   ])
   if (!timestamp || !data) {
     throw new Error('proposal not found')
   }
-  const { proposal, workgroup, community } = await verifyProposal(data.data)
+  const proposal = data.data
+  const { community, workgroup } = await verifyProposal(proposal)
 
-  if (
-    getPeriod(Date.now() / 1000, timestamp, workgroup.duration) !==
-    Period.VOTING
-  ) {
+  if (getPeriod(new Date(), timestamp, workgroup.duration) !== Period.VOTING) {
     throw new Error('not in voting period')
   }
 
@@ -52,5 +43,5 @@ export default async function verifyVote(document: object): Promise<{
     throw new Error('voting power not match')
   }
 
-  return { vote, proposal, workgroup, community }
+  return { proposal, workgroup, community }
 }

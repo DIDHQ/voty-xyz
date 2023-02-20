@@ -9,22 +9,27 @@ export enum Period {
 }
 
 export function getPeriod(
-  now: number,
-  timestamp: number,
+  now: Date,
+  timestamp: Date,
   duration: Workgroup['duration'],
 ): Period {
-  if (now < timestamp + duration.announcement) {
+  if (now.getTime() < timestamp.getTime() + duration.announcement * 1000) {
     return Period.ANNOUNCING
   }
-  if (now < timestamp + duration.announcement + (duration.adding_option || 0)) {
+  if (
+    now.getTime() <
+    timestamp.getTime() +
+      (duration.announcement + (duration.adding_option || 0)) * 1000
+  ) {
     return Period.ADDING_OPTION
   }
   if (
-    now <
-    timestamp +
-      duration.announcement +
-      (duration.adding_option || 0) +
-      duration.voting
+    now.getTime() <
+    timestamp.getTime() +
+      (duration.announcement +
+        (duration.adding_option || 0) +
+        duration.voting) *
+        1000
   ) {
     return Period.VOTING
   }
