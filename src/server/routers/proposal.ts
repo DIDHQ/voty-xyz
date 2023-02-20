@@ -30,7 +30,7 @@ export const proposalRouter = router({
       const proposal = await getByPermalink(DataType.PROPOSAL, input.permalink)
       return proposal
         ? {
-            ...schema.parse(proposal.data),
+            ...proposal.data,
             permalink: proposal.permalink,
             votes: proposal.votes,
           }
@@ -87,8 +87,8 @@ export const proposalRouter = router({
     .mutation(async ({ input }) => {
       await verifySnapshot(input.authorship)
       await verifyAuthorshipProof(input)
-      const { proposal, community } = await verifyProposal(input)
-      const { permalink, data } = await uploadToArweave(proposal)
+      const { community } = await verifyProposal(input)
+      const { permalink, data } = await uploadToArweave(input)
       const ts = new Date()
 
       await database.$transaction([
@@ -96,10 +96,10 @@ export const proposalRouter = router({
           data: {
             permalink,
             ts,
-            author: proposal.authorship.author,
+            author: input.authorship.author,
             entry: community.authorship.author,
-            community: proposal.community,
-            workgroup: proposal.workgroup,
+            community: input.community,
+            workgroup: input.workgroup,
             data,
             votes: 0,
           },

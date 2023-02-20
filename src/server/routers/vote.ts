@@ -86,8 +86,8 @@ export const voteRouter = router({
     .mutation(async ({ input }) => {
       await verifySnapshot(input.authorship)
       await verifyAuthorshipProof(input)
-      const { vote, proposal, community } = await verifyVote(input)
-      const { permalink, data } = await uploadToArweave(vote)
+      const { proposal, community } = await verifyVote(input)
+      const { permalink, data } = await uploadToArweave(input)
       const ts = new Date()
 
       await database.$transaction([
@@ -95,15 +95,15 @@ export const voteRouter = router({
           data: {
             permalink,
             ts,
-            author: vote.authorship.author,
+            author: input.authorship.author,
             community: proposal.community,
             workgroup: proposal.workgroup,
-            proposal: vote.proposal,
+            proposal: input.proposal,
             data,
           },
         }),
         database.proposal.update({
-          where: { permalink: vote.proposal },
+          where: { permalink: input.proposal },
           data: { votes: { increment: 1 } },
         }),
         database.entry.update({
@@ -111,14 +111,14 @@ export const voteRouter = router({
           data: { votes: { increment: 1 } },
         }),
         ...Object.entries(
-          powerOfChoice(proposal.voting_type, vote.choice, vote.power),
+          powerOfChoice(proposal.voting_type, input.choice, input.power),
         ).map(([option, power = 0]) =>
           database.choice.upsert({
             where: {
-              proposal_option: { proposal: vote.proposal, option },
+              proposal_option: { proposal: input.proposal, option },
             },
             create: {
-              proposal: vote.proposal,
+              proposal: input.proposal,
               option,
               power,
             },

@@ -40,7 +40,7 @@ export const subscriptionRouter = router({
         .filter((community) => community)
         .map(({ permalink, data }) => {
           try {
-            return { permalink, ...schema.parse(data) }
+            return { ...data, permalink }
           } catch {
             return
           }

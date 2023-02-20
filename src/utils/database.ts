@@ -62,7 +62,6 @@ export async function mapByPermalinks<T extends DataType>(
           where: { permalink: { in: permalinks } },
         })
       : []
-
   return keyBy(
     data.map((item) => ({
       ...item,

@@ -1,24 +1,23 @@
 import { getPeriod, Period } from '../duration'
 import { calculateNumber } from '../functions/number'
-import { Authorized, authorized } from '../schemas/authorship'
+import { Authorized } from '../schemas/authorship'
 import { Community } from '../schemas/community'
 import { Workgroup } from '../schemas/workgroup'
-import { proved, Proved } from '../schemas/proof'
+import { Proved } from '../schemas/proof'
 import { Proposal } from '../schemas/proposal'
-import { Vote, voteSchema } from '../schemas/vote'
+import { Vote } from '../schemas/vote'
 import verifyProposal from './verify-proposal'
 import { getByPermalink } from '../database'
 import { commonCoinTypes, DataType } from '../constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
 
-export default async function verifyVote(document: object): Promise<{
-  vote: Proved<Authorized<Vote>>
+export default async function verifyVote(
+  vote: Proved<Authorized<Vote>>,
+): Promise<{
   proposal: Proved<Authorized<Proposal>>
   workgroup: Workgroup
   community: Proved<Authorized<Community>>
 }> {
-  const vote = proved(authorized(voteSchema)).parse(document)
-
   const [timestamp, data] = await Promise.all([
     getPermalinkSnapshot(vote.proposal).then((snapshot) =>
       getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
@@ -28,7 +27,8 @@ export default async function verifyVote(document: object): Promise<{
   if (!timestamp || !data) {
     throw new Error('proposal not found')
   }
-  const { proposal, workgroup, community } = await verifyProposal(data.data)
+  const proposal = data.data
+  const { community, workgroup } = await verifyProposal(proposal)
 
   if (getPeriod(new Date(), timestamp, workgroup.duration) !== Period.VOTING) {
     throw new Error('not in voting period')
@@ -43,5 +43,5 @@ export default async function verifyVote(document: object): Promise<{
     throw new Error('voting power not match')
   }
 
-  return { vote, proposal, workgroup, community }
+  return { proposal, workgroup, community }
 }
