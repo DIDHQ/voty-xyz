@@ -10,6 +10,8 @@ import verifyProposal from '../../utils/verifiers/verify-proposal'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
 import { DataType } from '../../utils/constants'
+import verifySnapshot from '../../utils/verifiers/verify-snapshot'
+import verifyAuthorshipProof from '../../utils/verifiers/verify-authorship-proof'
 
 const textDecoder = new TextDecoder()
 
@@ -28,7 +30,7 @@ export const proposalRouter = router({
       const proposal = await getByPermalink(DataType.PROPOSAL, input.permalink)
       return proposal
         ? {
-            ...schema.parse(proposal.data),
+            ...proposal.data,
             permalink: proposal.permalink,
             votes: proposal.votes,
           }
@@ -83,8 +85,10 @@ export const proposalRouter = router({
     .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
-      const { proposal, community } = await verifyProposal(input)
-      const { permalink, data } = await uploadToArweave(proposal)
+      await verifySnapshot(input.authorship)
+      await verifyAuthorshipProof(input)
+      const { community } = await verifyProposal(input)
+      const { permalink, data } = await uploadToArweave(input)
       const ts = new Date()
 
       await database.$transaction([
@@ -92,10 +96,10 @@ export const proposalRouter = router({
           data: {
             permalink,
             ts,
-            author: proposal.authorship.author,
+            author: input.authorship.author,
             entry: community.authorship.author,
-            community: proposal.community,
-            workgroup: proposal.workgroup,
+            community: input.community,
+            workgroup: input.workgroup,
             data,
             votes: 0,
           },

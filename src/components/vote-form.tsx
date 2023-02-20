@@ -76,7 +76,7 @@ export default function VoteForm(props: {
     () =>
       !status?.timestamp ||
       !workgroup?.duration ||
-      getPeriod(Date.now() / 1000, status.timestamp, workgroup.duration) !==
+      getPeriod(new Date(), status.timestamp, workgroup.duration) !==
         Period.VOTING,
     [status?.timestamp, workgroup?.duration],
   )

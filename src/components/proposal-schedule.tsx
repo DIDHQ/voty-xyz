@@ -21,17 +21,19 @@ export default function ProposalSchedule(props: {
       </DetailItem>
       <DetailItem title="Start">
         {status?.timestamp
-          ? formatTime((status.timestamp + props.duration.announcement) * 1000)
+          ? formatTime(
+              status.timestamp.getTime() + props.duration.announcement * 1000,
+            )
           : '-'}
       </DetailItem>
       <DetailItem title="End">
         {status?.timestamp
           ? formatTime(
-              (status.timestamp +
-                props.duration.announcement +
-                (props.duration.adding_option || 0) +
-                props.duration.voting) *
-                1000,
+              status.timestamp.getTime() +
+                (props.duration.announcement +
+                  (props.duration.adding_option || 0) +
+                  props.duration.voting) *
+                  1000,
             )
           : '-'}
       </DetailItem>

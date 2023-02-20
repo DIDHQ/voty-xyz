@@ -6,10 +6,11 @@ import { uploadToArweave } from '../../utils/upload'
 import { database, getByPermalink, mapByPermalinks } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
 import { communitySchema } from '../../utils/schemas/community'
-import verifyCommunity from '../../utils/verifiers/verify-community'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
 import { DataType } from '../../utils/constants'
+import verifySnapshot from '../../utils/verifiers/verify-snapshot'
+import verifyAuthorshipProof from '../../utils/verifiers/verify-authorship-proof'
 
 const schema = proved(authorized(communitySchema))
 
@@ -40,7 +41,7 @@ export const communityRouter = router({
         DataType.COMMUNITY,
         entry.community,
       )
-      return community ? { ...schema.parse(community.data), entry } : null
+      return community ? { ...community.data, entry } : null
     }),
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
@@ -53,7 +54,7 @@ export const communityRouter = router({
         DataType.COMMUNITY,
         input.permalink,
       )
-      return community ? schema.parse(community.data) : null
+      return community ? community.data : null
     }),
   list: procedure
     .input(z.object({ cursor: z.string().optional() }))
@@ -80,7 +81,7 @@ export const communityRouter = router({
             .map((entry) => {
               try {
                 return {
-                  ...schema.parse(communities[entry.community].data),
+                  ...communities[entry.community].data,
                   entry,
                 }
               } catch {
@@ -95,18 +96,19 @@ export const communityRouter = router({
     .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
-      const { community } = await verifyCommunity(input)
-      const { permalink, data } = await uploadToArweave(community)
+      await verifySnapshot(input.authorship)
+      await verifyAuthorshipProof(input)
+      const { permalink, data } = await uploadToArweave(input)
       const ts = new Date()
 
       await database.$transaction([
         database.community.create({
-          data: { permalink, ts, entry: community.authorship.author, data },
+          data: { permalink, ts, entry: input.authorship.author, data },
         }),
         database.entry.upsert({
-          where: { did: community.authorship.author },
+          where: { did: input.authorship.author },
           create: {
-            did: community.authorship.author,
+            did: input.authorship.author,
             community: permalink,
             subscribers: 0,
             proposals: 0,

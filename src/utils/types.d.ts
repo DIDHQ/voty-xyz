@@ -29,5 +29,5 @@ export type Account = {
 }
 
 export type Status = {
-  timestamp?: number
+  timestamp?: Date
 }

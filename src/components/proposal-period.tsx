@@ -14,7 +14,7 @@ export default function ProposalPeriod(props: {
   const period = useMemo(
     () =>
       status?.timestamp && props.duration
-        ? getPeriod(Date.now() / 1000, status?.timestamp, props.duration)
+        ? getPeriod(new Date(), status.timestamp, props.duration)
         : Period.PENDING,
     [props.duration, status?.timestamp],
   )
