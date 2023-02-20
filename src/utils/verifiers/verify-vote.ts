@@ -1,4 +1,3 @@
-import { getArweaveTimestamp } from '../arweave'
 import { getPeriod, Period } from '../duration'
 import { calculateNumber } from '../functions/number'
 import { Authorized, authorized } from '../schemas/authorship'
@@ -10,7 +9,8 @@ import { Vote, voteSchema } from '../schemas/vote'
 import verifyAuthorshipProof from './verify-authorship-proof'
 import verifyProposal from './verify-proposal'
 import { getByPermalink } from '../database'
-import { DataType } from '../constants'
+import { commonCoinTypes, DataType } from '../constants'
+import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
 
 export default async function verifyVote(document: object): Promise<{
   vote: Proved<Authorized<Vote>>
@@ -28,7 +28,9 @@ export default async function verifyVote(document: object): Promise<{
   await verifyAuthorshipProof(vote)
 
   const [timestamp, data] = await Promise.all([
-    getArweaveTimestamp(vote.proposal),
+    getPermalinkSnapshot(vote.proposal).then((snapshot) =>
+      getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
+    ),
     getByPermalink(DataType.PROPOSAL, vote.proposal),
   ])
   if (!timestamp || !data) {
@@ -36,10 +38,7 @@ export default async function verifyVote(document: object): Promise<{
   }
   const { proposal, workgroup, community } = await verifyProposal(data.data)
 
-  if (
-    getPeriod(Date.now() / 1000, timestamp, workgroup.duration) !==
-    Period.VOTING
-  ) {
+  if (getPeriod(new Date(), timestamp, workgroup.duration) !== Period.VOTING) {
     throw new Error('not in voting period')
   }
 

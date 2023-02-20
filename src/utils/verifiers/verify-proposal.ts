@@ -7,8 +7,8 @@ import { Proposal, proposalSchema } from '../schemas/proposal'
 import verifyAuthorshipProof from './verify-authorship-proof'
 import verifyCommunity from './verify-community'
 import { getByPermalink } from '../database'
-import { DataType } from '../constants'
-import { getArweaveTimestamp } from '../arweave'
+import { commonCoinTypes, DataType } from '../constants'
+import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
 
 export default async function verifyProposal(document: object): Promise<{
   proposal: Proved<Authorized<Proposal>>
@@ -25,7 +25,9 @@ export default async function verifyProposal(document: object): Promise<{
   await verifyAuthorshipProof(proposal)
 
   const [timestamp, data] = await Promise.all([
-    getArweaveTimestamp(proposal.community),
+    getPermalinkSnapshot(proposal.community).then((snapshot) =>
+      getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
+    ),
     getByPermalink(DataType.COMMUNITY, proposal.community),
   ])
   if (!timestamp || !data) {

@@ -4,6 +4,7 @@ import invariant from 'tiny-invariant'
 
 import { chainIdToRpc, coinTypeToChainId, commonCoinTypes } from './constants'
 import { fetchJson } from './fetcher'
+import { permalink2Id } from './permalink'
 import { isTestnet } from './testnet'
 
 const ckb = new CKB(
@@ -42,4 +43,16 @@ export async function getSnapshotTimestamp(
     return new Date(parseInt(block.header.timestamp))
   }
   throw new Error(`current snapshot coin type unsupported: ${coinType}`)
+}
+
+export async function getPermalinkSnapshot(permalink: string): Promise<string> {
+  if (!permalink.startsWith('ar://')) {
+    throw new Error('permalink not supported')
+  }
+  const status = await fetchJson<{
+    block_indep_hash: string
+    block_height: number
+    number_of_confirmations: number
+  }>(`https://arseed.web3infra.dev/tx/${permalink2Id(permalink)}/status`)
+  return status.block_height.toString()
 }
