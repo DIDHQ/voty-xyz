@@ -13,14 +13,15 @@ const textEncoder = new TextEncoder()
 
 const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
 
+const arweave = Arweave.init({
+  host: 'arseed.web3infra.dev',
+  port: 443,
+  protocol: 'https',
+})
+
 export async function uploadToArweave(
   document: Authorized<Community | Proposal | Vote>,
 ): Promise<{ permalink: string; data: Buffer }> {
-  const arweave = Arweave.init({
-    host: 'arseed.web3infra.dev',
-    port: 443,
-    protocol: 'https',
-  })
   const data = Buffer.from(textEncoder.encode(JSON.stringify(document)))
   const transaction = await arweave.createTransaction({ data })
   const tags = getArweaveTags(document)
