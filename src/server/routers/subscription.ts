@@ -9,18 +9,16 @@ import { communitySchema } from '../../utils/schemas/community'
 import { proved } from '../../utils/schemas/proof'
 import { procedure, router } from '../trpc'
 
-const textDecoder = new TextDecoder()
-
 const schema = proved(authorized(communitySchema))
 
 export const subscriptionRouter = router({
   list: procedure.output(z.array(schema)).query(async ({ ctx }) => {
-    if (!ctx.did) {
+    if (!ctx.user) {
       throw new TRPCError({ code: 'UNAUTHORIZED' })
     }
 
     const subscriptions = await database.subscription.findMany({
-      where: { subscriber: ctx.did },
+      where: { subscriber: ctx.user },
       orderBy: { ts: 'desc' },
     })
     const entries = keyBy(
@@ -56,7 +54,7 @@ export const subscriptionRouter = router({
     )
     .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.did) {
+      if (!ctx.user) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
       }
       if (!input.entry) {
@@ -66,7 +64,7 @@ export const subscriptionRouter = router({
       if (input.subscribe === undefined || input.subscribe === null) {
         const subscription = await database.subscription.findUnique({
           where: {
-            entry_subscriber: { entry: input.entry, subscriber: ctx.did },
+            entry_subscriber: { entry: input.entry, subscriber: ctx.user },
           },
         })
         return !!subscription
@@ -76,7 +74,7 @@ export const subscriptionRouter = router({
           database.subscription.create({
             data: {
               entry: input.entry,
-              subscriber: ctx.did,
+              subscriber: ctx.user,
               ts: new Date(),
             },
           }),
@@ -91,7 +89,7 @@ export const subscriptionRouter = router({
             where: {
               entry_subscriber: {
                 entry: input.entry,
-                subscriber: ctx.did,
+                subscriber: ctx.user,
               },
             },
           }),
