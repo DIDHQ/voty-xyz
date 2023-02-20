@@ -10,6 +10,7 @@ import verifyCommunity from '../../utils/verifiers/verify-community'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
 import { DataType } from '../../utils/constants'
+import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 
 const schema = proved(authorized(communitySchema))
 
@@ -95,6 +96,7 @@ export const communityRouter = router({
     .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
+      await verifySnapshot(input.authorship)
       const { community } = await verifyCommunity(input)
       const { permalink, data } = await uploadToArweave(community)
       const ts = new Date()

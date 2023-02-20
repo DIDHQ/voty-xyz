@@ -10,6 +10,7 @@ import verifyVote from '../../utils/verifiers/verify-vote'
 import { powerOfChoice } from '../../utils/voting'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
+import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 
 const textDecoder = new TextDecoder()
 
@@ -82,6 +83,7 @@ export const voteRouter = router({
     .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
+      await verifySnapshot(input.authorship)
       const { vote, proposal, community } = await verifyVote(input)
       const { permalink, data } = await uploadToArweave(vote)
       const ts = new Date()
