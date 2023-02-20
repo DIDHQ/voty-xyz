@@ -11,6 +11,7 @@ import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
 import { DataType } from '../../utils/constants'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
+import verifyAuthorshipProof from '../../utils/verifiers/verify-authorship-proof'
 
 const textDecoder = new TextDecoder()
 
@@ -85,6 +86,7 @@ export const proposalRouter = router({
     .output(z.string())
     .mutation(async ({ input }) => {
       await verifySnapshot(input.authorship)
+      await verifyAuthorshipProof(input)
       const { proposal, community } = await verifyProposal(input)
       const { permalink, data } = await uploadToArweave(proposal)
       const ts = new Date()

@@ -1,7 +1,6 @@
 import { Authorized, authorized } from '../schemas/authorship'
 import { Community, communitySchema } from '../schemas/community'
 import { proved, Proved } from '../schemas/proof'
-import verifyAuthorshipProof from './verify-authorship-proof'
 
 export default async function verifyCommunity(
   document: object,
@@ -12,8 +11,6 @@ export default async function verifyCommunity(
   }
 
   const community = parsed.data
-
-  await verifyAuthorshipProof(community)
 
   return { community }
 }

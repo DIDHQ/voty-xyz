@@ -4,7 +4,6 @@ import { Community } from '../schemas/community'
 import { Workgroup } from '../schemas/workgroup'
 import { proved, Proved } from '../schemas/proof'
 import { Proposal, proposalSchema } from '../schemas/proposal'
-import verifyAuthorshipProof from './verify-authorship-proof'
 import verifyCommunity from './verify-community'
 import { getByPermalink } from '../database'
 import { commonCoinTypes, DataType } from '../constants'
@@ -21,8 +20,6 @@ export default async function verifyProposal(document: object): Promise<{
   }
 
   const proposal = parsed.data
-
-  await verifyAuthorshipProof(proposal)
 
   const [timestamp, data] = await Promise.all([
     getPermalinkSnapshot(proposal.community).then((snapshot) =>

@@ -6,7 +6,6 @@ import { Workgroup } from '../schemas/workgroup'
 import { proved, Proved } from '../schemas/proof'
 import { Proposal } from '../schemas/proposal'
 import { Vote, voteSchema } from '../schemas/vote'
-import verifyAuthorshipProof from './verify-authorship-proof'
 import verifyProposal from './verify-proposal'
 import { getByPermalink } from '../database'
 import { commonCoinTypes, DataType } from '../constants'
@@ -24,8 +23,6 @@ export default async function verifyVote(document: object): Promise<{
   }
 
   const vote = parsed.data
-
-  await verifyAuthorshipProof(vote)
 
   const [timestamp, data] = await Promise.all([
     getPermalinkSnapshot(vote.proposal).then((snapshot) =>
