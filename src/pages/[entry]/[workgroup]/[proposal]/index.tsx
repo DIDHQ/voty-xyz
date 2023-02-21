@@ -65,16 +65,14 @@ export default function ProposalPage() {
       {community && proposal && workgroup ? (
         <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
           <div className="w-full flex-1 sm:mr-6">
+            <Link
+              href={`/${community.authorship.author}/${proposal.workgroup}`}
+            >
+              <TextButton>
+                <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+              </TextButton>
+            </Link>
             <div className="mb-6 border-b border-gray-200 pb-6">
-              <Link
-                href={`/${community.authorship.author}/${proposal.workgroup}`}
-              >
-                <TextButton>
-                  <h2 className="text-[1rem] font-semibold leading-6">
-                    ← Back
-                  </h2>
-                </TextButton>
-              </Link>
               <h3 className="mt-2 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
                 {proposal.title}
               </h3>

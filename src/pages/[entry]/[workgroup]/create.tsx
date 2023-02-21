@@ -140,19 +140,8 @@ export default function CreateProposalPage() {
   return (
     <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
       <LoadingBar loading={isLoading} />
-      <Link
-        href={`/${query.entry}/${query.workgroup}`}
-        className="inline sm:hidden"
-      >
-        <TextButton>
-          <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
-        </TextButton>
-      </Link>
       <div className="w-full flex-1 sm:mr-6">
-        <Link
-          href={`/${query.entry}/${query.workgroup}`}
-          className="hidden sm:inline"
-        >
+        <Link href={`/${query.entry}/${query.workgroup}`}>
           <TextButton>
             <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
           </TextButton>
