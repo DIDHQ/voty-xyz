@@ -73,7 +73,7 @@ export default function ProposalPage() {
               </TextButton>
             </Link>
             <div className="mb-6 border-b border-gray-200 pb-6">
-              <h3 className="mt-2 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
+              <h3 className="mt-4 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
                 {proposal.title}
               </h3>
               <Article className="mt-8">{proposal.extension?.body}</Article>
