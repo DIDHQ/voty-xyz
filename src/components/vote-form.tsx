@@ -6,6 +6,7 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { BoltIcon } from '@heroicons/react/20/solid'
 import type { inferRouterOutputs } from '@trpc/server'
+import { gray } from 'tailwindcss/colors'
 
 import { calculateNumber } from '../utils/functions/number'
 import { Vote, voteSchema } from '../utils/schemas/vote'
@@ -174,7 +175,7 @@ function Option(props: {
       className="flex items-center justify-between bg-no-repeat py-3 pl-2 pr-4 text-sm"
       style={{
         transition: 'background-size 0.3s ease-out',
-        backgroundImage: `linear-gradient(90deg, #f3f4f6 100%, transparent 100%)`,
+        backgroundImage: `linear-gradient(90deg, ${gray['100']} 100%, transparent 100%)`,
         backgroundSize: `${percentage}% 100%`,
       }}
       onClick={() => {

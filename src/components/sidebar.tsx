@@ -19,11 +19,11 @@ export default function Sidebar(props: { className?: string }) {
         href="/"
         className="flex h-18 w-18 cursor-pointer items-center justify-center border-b border-gray-200"
       >
-        <img
-          src="https://tailwindui.com/img/logos/mark.svg?color=amber&shade=600"
+        {/* <img
+          src="https://tailwindui.com/img/logos/mark.svg?color=sky&shade=600"
           alt="LOGO"
           className="h-8 w-auto"
-        />
+        /> */}
       </Link>
       <SubscriptionList className="mb-3" />
       <Link
