@@ -58,7 +58,7 @@ export default function ConnectButton() {
           </Button>
         ) : (
           <Button primary loading={chainModalOpen} onClick={openChainModal}>
-            Switch chain
+            Switch networks
           </Button>
         )
       }
