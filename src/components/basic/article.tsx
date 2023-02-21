@@ -1,7 +1,6 @@
 import clsx from 'clsx'
-import dynamic from 'next/dynamic'
 
-const Markdown = dynamic(() => import('./markdown'), { ssr: false })
+import Markdown from './markdown'
 
 export default function Article(props: {
   small?: boolean
