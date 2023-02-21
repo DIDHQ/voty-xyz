@@ -1,7 +1,7 @@
 import {
   BookmarkIcon,
   HandRaisedIcon,
-  UserGroupIcon,
+  BriefcaseIcon,
 } from '@heroicons/react/20/solid'
 import { Entry } from '@prisma/client'
 import { Serialize } from '@trpc/server/dist/shared/internal/serialize'
@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { Authorized } from '../utils/schemas/authorship'
 import { Community } from '../utils/schemas/community'
 import Avatar from './basic/avatar'
+import { Grid6 } from './basic/grid'
 
 export default function CommunityCard(props: {
   community: Authorized<Community> & Serialize<{ entry: Entry }>
@@ -37,20 +38,20 @@ export default function CommunityCard(props: {
           </p>
         </div>
       </div>
-      <div className="mt-4 flex justify-between space-x-2 pr-10 text-sm text-gray-500">
-        <div className="flex flex-1 items-center">
-          <UserGroupIcon className="mr-2 h-4 w-4" />
+      <Grid6 className="mt-4 text-sm text-gray-500">
+        <div className="col-span-2 flex items-center">
+          <BriefcaseIcon className="mr-2 h-4 w-4" />
           {community.workgroups?.length || 0}
         </div>
-        <div className="flex flex-1 items-center">
+        <div className="col-span-2 flex items-center">
           <HandRaisedIcon className="mr-2 h-4 w-4" />
           {community.entry.proposals}
         </div>
-        <div className="flex flex-1 items-center">
+        <div className="col-span-2 flex items-center">
           <BookmarkIcon className="mr-2 h-4 w-4" />
           {community.entry.subscribers}
         </div>
-      </div>
+      </Grid6>
     </Link>
   )
 }

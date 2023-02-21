@@ -3,7 +3,7 @@ import {
   CogIcon,
   DocumentTextIcon,
   GlobeAltIcon,
-  UserGroupIcon,
+  BriefcaseIcon,
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
@@ -213,7 +213,7 @@ function WorkgroupListItem(props: {
           {emoji}
         </span>
       ) : (
-        <UserGroupIcon
+        <BriefcaseIcon
           className={clsx(
             props.current
               ? 'text-primary-500'

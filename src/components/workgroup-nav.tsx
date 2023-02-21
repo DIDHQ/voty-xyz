@@ -1,4 +1,4 @@
-import { UserGroupIcon } from '@heroicons/react/24/outline'
+import { BriefcaseIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import Link from 'next/link'
@@ -58,7 +58,7 @@ export default function WorkgroupNav(props: { className?: string }) {
             {emoji}
           </span>
         ) : (
-          <UserGroupIcon
+          <BriefcaseIcon
             className="mr-3 h-8 w-8 shrink-0 text-gray-400"
             aria-hidden="true"
           />
