@@ -55,8 +55,10 @@ export default function VoterSelect(props: {
     { enabled: !!dids && !!props.proposal, refetchOnWindowFocus: false },
   )
   useEffect(() => {
-    refetch()
-  }, [props.value, refetch])
+    if (!!dids && !!props.proposal) {
+      refetch()
+    }
+  }, [dids, props.proposal, props.value, refetch])
   useEffect(() => {
     onChange(
       dids?.find((d) => !powers?.[d] && votes?.[d] && d === currentDid) ||
