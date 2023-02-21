@@ -28,7 +28,7 @@ export default function VoterSelect(props: {
   const currentDid = useAtomValue(currentDidAtom)
   const { data: dids } = useDids(account, props.snapshots)
   const { data: votes } = useQuery(
-    [dids, props.workgroup, props.snapshots],
+    [props.value, dids, props.workgroup, props.snapshots],
     async () => {
       const numbers = await pMap(
         dids!,
@@ -103,7 +103,8 @@ export default function VoterSelect(props: {
                     'ml-2 truncate',
                   )}
                 >
-                  {powers?.[option] ? 'voted' : votes?.[option]}
+                  {votes?.[option]}
+                  {powers?.[option] ? ' voted' : null}
                 </span>
               </div>
               {selected ? (
