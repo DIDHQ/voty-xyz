@@ -23,7 +23,7 @@ export async function getSnapshotTimestamp(
 ): Promise<Date> {
   if (coinType === commonCoinTypes.AR) {
     const block = await fetchJson<{ timestamp: number }>(
-      `https://arseed.web3infra.dev/block/height/${snapshot}`,
+      `https://arweave.net/block/height/${snapshot}`,
     )
     return new Date(block.timestamp * 1000)
   }
@@ -42,6 +42,6 @@ export async function getPermalinkSnapshot(permalink: string): Promise<string> {
     block_indep_hash: string
     block_height: number
     number_of_confirmations: number
-  }>(`https://arseed.web3infra.dev/tx/${permalink2Id(permalink)}/status`)
+  }>(`https://arweave.net/tx/${permalink2Id(permalink)}/status`)
   return status.block_height.toString()
 }
