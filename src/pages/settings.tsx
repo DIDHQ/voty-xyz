@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useAtom } from 'jotai'
 
 import Button from '../components/basic/button'
 import { Form, FormItem, FormSection } from '../components/basic/form'
@@ -6,11 +6,12 @@ import { Grid6, GridItem6 } from '../components/basic/grid'
 import Select from '../components/basic/select'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
+import { currentDidAtom } from '../utils/atoms'
 
 export default function SettingsPage() {
   const { account, disconnect } = useWallet()
   const { data: dids } = useDids(account)
-  const [did, setDid] = useState('')
+  const [currentDid, setCurrentDid] = useAtom(currentDidAtom)
 
   return (
     <Form className="w-full">
@@ -19,10 +20,9 @@ export default function SettingsPage() {
           <GridItem6>
             <FormItem label="Select default DID">
               <Select
-                top
                 options={dids}
-                value={did}
-                onChange={setDid}
+                value={currentDid}
+                onChange={setCurrentDid}
                 className="w-60"
               />
             </FormItem>

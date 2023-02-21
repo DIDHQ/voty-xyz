@@ -9,10 +9,12 @@ import {
   useSignMessage,
 } from 'wagmi'
 import { useQuery } from '@tanstack/react-query'
-import { KeyInfo } from 'dotbit/lib/fetchers/BitIndexer.type'
+import type { KeyInfo } from 'dotbit/lib/fetchers/BitIndexer.type'
+import { useAtomValue } from 'jotai'
 
 import { chainIdToCoinType, coinTypeToChainId } from '../utils/constants'
 import dotbit from '../utils/sdks/dotbit'
+import { currentDidAtom } from '../utils/atoms'
 
 export default function useWallet() {
   const account = useAccount()
@@ -44,6 +46,7 @@ export default function useWallet() {
       refetchOnWindowFocus: false,
     },
   )
+  const currentDid = useAtomValue(currentDidAtom)
   const { data: ensAvatar } = useEnsAvatar(account)
   const { data: ensName } = useEnsName(account)
 
@@ -56,7 +59,7 @@ export default function useWallet() {
               address: account.address,
             }
           : undefined,
-      name: bit?.did || ensName || undefined,
+      name: currentDid || bit?.did || ensName || undefined,
       avatar: bit?.avatar || ensAvatar || undefined,
       displayAddress: account.address
         ? `${account.address.substring(0, 5)}...${account.address.substring(
@@ -83,10 +86,11 @@ export default function useWallet() {
     [
       coinType,
       account.address,
-      bit?.avatar,
+      currentDid,
       bit?.did,
-      ensAvatar,
+      bit?.avatar,
       ensName,
+      ensAvatar,
       signMessageAsync,
       connect,
       disconnect,
