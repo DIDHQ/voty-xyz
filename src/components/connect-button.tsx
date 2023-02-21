@@ -11,6 +11,7 @@ import TextButton from './basic/text-button'
 import useAvatar from '../hooks/use-avatar'
 import { currentDidAtom } from '../utils/atoms'
 import useDids from '../hooks/use-dids'
+import { chainIdToCoinType } from '../utils/constants'
 
 export default function ConnectButton() {
   const { account, displayAddress } = useWallet()
@@ -23,7 +24,13 @@ export default function ConnectButton() {
 
   return (
     <RainbowConnectButton.Custom>
-      {({ openConnectModal, connectModalOpen }) =>
+      {({
+        openConnectModal,
+        openChainModal,
+        connectModalOpen,
+        chainModalOpen,
+        chain,
+      }) =>
         account ? (
           <Link href="/settings">
             <TextButton className="flex items-center">
@@ -45,9 +52,13 @@ export default function ConnectButton() {
               </div>
             </TextButton>
           </Link>
-        ) : (
+        ) : chain && chainIdToCoinType[chain.id] ? (
           <Button primary loading={connectModalOpen} onClick={openConnectModal}>
-            Connect Wallet
+            Connect wallet
+          </Button>
+        ) : (
+          <Button primary loading={chainModalOpen} onClick={openChainModal}>
+            Switch chain
           </Button>
         )
       }
