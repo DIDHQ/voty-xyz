@@ -1,4 +1,5 @@
 import { PlusIcon } from '@heroicons/react/20/solid'
+import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useId } from 'react'
@@ -14,17 +15,7 @@ export default function Sidebar(props: { className?: string }) {
   const id = useId()
 
   return (
-    <aside className={props.className}>
-      <Link
-        href="/"
-        className="flex h-18 w-18 cursor-pointer items-center justify-center border-b border-gray-200"
-      >
-        {/* <img
-          src="https://tailwindui.com/img/logos/mark.svg?color=sky&shade=600"
-          alt="LOGO"
-          className="h-8 w-auto"
-        /> */}
-      </Link>
+    <aside className={clsx('pt-18', props.className)}>
       <SubscriptionList className="mb-3" />
       <Link
         href="/create"

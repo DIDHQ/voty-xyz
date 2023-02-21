@@ -9,7 +9,7 @@ module.exports = {
         18: '4.5rem',
       },
       colors: {
-        primary: colors.sky,
+        primary: colors.blue,
       },
     },
   },

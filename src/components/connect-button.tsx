@@ -52,13 +52,13 @@ export default function ConnectButton() {
               </div>
             </TextButton>
           </Link>
-        ) : chain && chainIdToCoinType[chain.id] ? (
+        ) : !chain || chainIdToCoinType[chain.id] ? (
           <Button primary loading={connectModalOpen} onClick={openConnectModal}>
-            Connect wallet
+            Connect Wallet
           </Button>
         ) : (
           <Button primary loading={chainModalOpen} onClick={openChainModal}>
-            Switch networks
+            Switch Network
           </Button>
         )
       }
