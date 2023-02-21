@@ -5,7 +5,7 @@ import invariant from 'tiny-invariant'
 import { chainIdToRpc, coinTypeToChainId, commonCoinTypes } from './constants'
 import { fetchJson } from './fetcher'
 import { permalink2Id } from './permalink'
-import { isTestnet } from './testnet'
+import { isTestnet } from './constants'
 
 const ckb = new CKB(
   isTestnet ? 'https://testnet.ckb.dev/' : 'https://mainnet.ckb.dev/',

@@ -4,7 +4,7 @@ import { checkDidAuthorshipProof } from '../did'
 import { Authorized, Authorship } from '../schemas/authorship'
 import { Proof, Proved } from '../schemas/proof'
 import { verifyDocument } from '../signature'
-import { isTestnet } from '../testnet'
+import { isTestnet } from '../constants'
 
 export default async function verifyAuthorshipProof<T extends object>(
   document: Proved<Authorized<T>>,

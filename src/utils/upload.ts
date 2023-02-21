@@ -8,7 +8,7 @@ import { Authorized } from './schemas/authorship'
 import { Community } from './schemas/community'
 import { Proposal } from './schemas/proposal'
 import { Vote } from './schemas/vote'
-import { isTestnet } from './testnet'
+import { isTestnet } from './constants'
 
 const textEncoder = new TextEncoder()
 

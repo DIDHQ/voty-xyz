@@ -24,7 +24,7 @@ import '@total-typescript/ts-reset'
 
 import ShellLayout from '../components/layouts/shell'
 import { trpc } from '../utils/trpc'
-import { isTestnet } from '../utils/testnet'
+import { isTestnet } from '../utils/constants'
 import { chainIdToRpc } from '../utils/constants'
 import '../../styles/globals.css'
 

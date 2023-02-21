@@ -14,7 +14,7 @@ import { BitNetwork, createInstance, DefaultConfig } from 'dotbit'
 import { BitPluginAvatar } from '@dotbit/plugin-avatar'
 
 import { chainIdToCoinType, coinTypeToChainId } from '../utils/constants'
-import { isTestnet } from '../utils/testnet'
+import { isTestnet } from '../utils/constants'
 
 const dotbit = createInstance(
   DefaultConfig[isTestnet ? BitNetwork.testnet : BitNetwork.mainnet],

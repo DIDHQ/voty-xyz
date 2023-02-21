@@ -5,7 +5,7 @@ import { Authorized, Authorship } from '../utils/schemas/authorship'
 import { Proved } from '../utils/schemas/proof'
 import { signDocument } from '../utils/signature'
 import { getCurrentSnapshot } from '../utils/snapshot'
-import { isTestnet } from '../utils/testnet'
+import { isTestnet } from '../utils/constants'
 import useWallet from './use-wallet'
 
 export default function useSignDocument(
