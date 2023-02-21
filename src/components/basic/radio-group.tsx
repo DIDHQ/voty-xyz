@@ -15,7 +15,7 @@ export default function RadioGroup(props: {
               type="radio"
               checked={option.value === props.value}
               onChange={() => onChange(option.value)}
-              className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
             />
             <label
               htmlFor={option.value}

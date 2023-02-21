@@ -121,7 +121,7 @@ export default function ProposalPage() {
                       >
                         <a
                           href={permalink2Url(vote.permalink)}
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="text-primary-600 hover:text-primary-900"
                         >
                           {vote.power}
                         </a>

@@ -20,7 +20,7 @@ export default forwardRef<
         'block w-full border disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
         error
           ? 'border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500'
-          : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-500',
+          : 'border-gray-200 focus:border-primary-500 focus:ring-primary-500',
         className,
       )}
       onWheel={handleWheel}

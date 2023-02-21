@@ -81,7 +81,7 @@ export default function WorkgroupNav(props: { className?: string }) {
               href={tab.href}
               className={clsx(
                 tab.current
-                  ? 'border-indigo-500 text-indigo-600'
+                  ? 'border-primary-500 text-primary-600'
                   : 'border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700',
                 'h-14 whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium',
               )}

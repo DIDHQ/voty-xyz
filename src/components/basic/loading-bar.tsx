@@ -14,7 +14,7 @@ export default function LoadingBar(props: { loading?: boolean }) {
   return (
     <ReactTopLoadingBar
       ref={ref}
-      color="#4f46e5"
+      color="#d97706"
       shadow={false}
       height={2}
       containerStyle={{ top: 'calc(4.5rem - 1.5px)' }}

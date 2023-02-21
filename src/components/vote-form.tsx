@@ -194,7 +194,7 @@ function Option(props: {
           className={clsx(
             type === 'single' ? undefined : 'rounded',
             'h-4 w-4 border border-gray-300',
-            'text-indigo-600 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-50',
+            'text-primary-600 focus:ring-primary-500 disabled:cursor-not-allowed disabled:bg-gray-50',
           )}
         />
       </div>

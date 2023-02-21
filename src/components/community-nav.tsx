@@ -130,7 +130,7 @@ export default function CommunityNav(props: { className?: string }) {
                   shallow
                   className={clsx(
                     item.current
-                      ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
+                      ? 'border-primary-600 bg-primary-50 text-primary-600'
                       : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
                     'group flex items-center border-l-4 px-3 py-2 text-sm font-medium',
                   )}
@@ -138,7 +138,7 @@ export default function CommunityNav(props: { className?: string }) {
                   <item.icon
                     className={clsx(
                       item.current
-                        ? 'text-indigo-500'
+                        ? 'text-primary-500'
                         : 'text-gray-400 group-hover:text-gray-500',
                       'mr-2 h-6 w-6 shrink-0',
                     )}
@@ -207,7 +207,7 @@ function WorkgroupListItem(props: {
       shallow
       className={clsx(
         props.current
-          ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
+          ? 'border-primary-600 bg-primary-50 text-primary-600'
           : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
         'group flex w-full items-center border-l-4 px-3 py-2 text-sm font-medium',
       )}
@@ -223,7 +223,7 @@ function WorkgroupListItem(props: {
         <UserGroupIcon
           className={clsx(
             props.current
-              ? 'text-indigo-500'
+              ? 'text-primary-500'
               : 'text-gray-400 group-hover:text-gray-500',
             'mr-2 h-6 w-6 shrink-0',
           )}

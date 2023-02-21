@@ -20,7 +20,7 @@ export default function CommunityCard(props: {
     <Link
       key={community.entry.community}
       href={`/${community.authorship.author}`}
-      className="block border border-gray-200 p-4 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400 hover:bg-gray-50"
+      className="block border border-gray-200 p-4 focus-within:ring-2 focus-within:ring-primary-500 focus-within:ring-offset-2 hover:border-gray-400 hover:bg-gray-50"
     >
       <div className="flex items-start">
         <Avatar
