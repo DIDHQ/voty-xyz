@@ -196,6 +196,19 @@ function BooleanUnitBlock(props: {
                       Array.isArray(value) ? (value as string[]).join('\n') : ''
                     }
                     onChange={(e) => onChange(e.target.value.split('\n'))}
+                    onBlur={(e) => {
+                      const suffix = watch(
+                        `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
+                      )
+                      const regex = new RegExp(
+                        `\\.${suffix.replaceAll('.', '\\.')}\$`,
+                      )
+                      onChange(
+                        e.target.value
+                          .split('\n')
+                          .map((line) => line.replace(regex, '')),
+                      )
+                    }}
                     error={
                       !!errors.workgroups?.[props.workgroupIndex]?.permission?.[
                         props.name
