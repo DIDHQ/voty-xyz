@@ -18,7 +18,6 @@ export default function LoadingBar(props: { loading?: boolean }) {
       color={sky['600']}
       shadow={false}
       height={2}
-      containerStyle={{ top: 'calc(4.5rem - 1.5px)' }}
     />
   )
 }
