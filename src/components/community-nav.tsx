@@ -113,10 +113,7 @@ export default function CommunityNav(props: { className?: string }) {
         {community ? (
           <>
             <div className="mt-4 w-full">
-              <h3
-                className="px-3 text-sm font-medium text-gray-400"
-                id="projects-headline"
-              >
+              <h3 className="mb-1 px-3 text-sm font-medium text-gray-400">
                 Community
                 <SubscriptionButton
                   entry={query.entry}
@@ -149,10 +146,7 @@ export default function CommunityNav(props: { className?: string }) {
               ))}
             </div>
             <div className="mt-4 w-full">
-              <h3
-                className="px-3 text-sm font-medium text-gray-400"
-                id="projects-headline"
-              >
+              <h3 className="mb-1 px-3 text-sm font-medium text-gray-400">
                 Workgroups
                 <CreateGroupButton
                   entry={query.entry}
