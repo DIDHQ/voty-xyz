@@ -32,6 +32,7 @@ import { DetailItem, DetailList } from '../../../components/basic/detail'
 import { trpc } from '../../../utils/trpc'
 import Article from '../../../components/basic/article'
 import LoadingBar from '../../../components/basic/loading-bar'
+import PreviewMarkdown from '../../../components/preview-markdown'
 
 const StatusIcon = dynamic(() => import('../../../components/status-icon'), {
   ssr: false,
@@ -170,7 +171,9 @@ export default function CreateProposalPage() {
               <GridItem6>
                 <FormItem
                   label="Body"
-                  description="Styling with Markdown is supported"
+                  description={
+                    <PreviewMarkdown>{watch('extension.body')}</PreviewMarkdown>
+                  }
                   error={errors.extension?.body?.message}
                 >
                   <Textarea

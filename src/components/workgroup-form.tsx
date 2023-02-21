@@ -21,6 +21,7 @@ import BooleanSetsBlock from './boolean-sets-block'
 import NumberSetsBlock from './number-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem3, GridItem6 } from './basic/grid'
+import PreviewMarkdown from './preview-markdown'
 
 const SigningCommunityButton = dynamic(
   () => import('./signing/signing-community-button'),
@@ -46,6 +47,7 @@ export default function WorkgroupForm(props: {
     control,
     register,
     reset,
+    watch,
     formState: { errors },
   } = methods
   const { append } = useFieldArray({
@@ -119,7 +121,11 @@ export default function WorkgroupForm(props: {
           <GridItem6>
             <FormItem
               label="About"
-              description="Styling with Markdown is supported"
+              description={
+                <PreviewMarkdown>
+                  {watch(`workgroups.${workgroupIndex}.extension.about`)}
+                </PreviewMarkdown>
+              }
               error={
                 errors.workgroups?.[workgroupIndex]?.extension?.about?.message
               }
@@ -246,7 +252,13 @@ export default function WorkgroupForm(props: {
           <GridItem6>
             <FormItem
               label="Terms and conditions"
-              description="Styling with Markdown is supported"
+              description={
+                <PreviewMarkdown>
+                  {watch(
+                    `workgroups.${workgroupIndex}.extension.terms_and_conditions`,
+                  )}
+                </PreviewMarkdown>
+              }
               error={
                 errors?.workgroups?.[workgroupIndex]?.extension
                   ?.terms_and_conditions?.message

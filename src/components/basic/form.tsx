@@ -39,7 +39,7 @@ export function FormFooter(props: { children: ReactNode }) {
 export function FormItem(
   props: {
     label?: string
-    description?: string
+    description?: ReactNode
     error?: string
   } & InputHTMLAttributes<HTMLInputElement>,
 ) {

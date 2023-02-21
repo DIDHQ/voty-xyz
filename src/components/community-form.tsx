@@ -12,6 +12,7 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
+import PreviewMarkdown from './preview-markdown'
 
 const AvatarInput = dynamic(() => import('./basic/avatar-input'), {
   ssr: false,
@@ -37,6 +38,7 @@ export default function CommunityForm(props: {
     control,
     register,
     reset,
+    watch,
     formState: { errors },
   } = methods
   useEffect(() => {
@@ -62,7 +64,9 @@ export default function CommunityForm(props: {
           <GridItem6>
             <FormItem
               label="About"
-              description="Styling with Markdown is supported"
+              description={
+                <PreviewMarkdown>{watch('extension.about')}</PreviewMarkdown>
+              }
               error={errors.extension?.about?.message}
             >
               <Textarea
