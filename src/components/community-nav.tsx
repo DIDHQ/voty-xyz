@@ -124,7 +124,7 @@ export default function CommunityNav(props: { className?: string }) {
                 <Link
                   key={item.name}
                   href={item.href}
-                  shallow
+                  scroll={false}
                   className={clsx(
                     item.current
                       ? 'border-primary-600 bg-primary-50 text-primary-600'
@@ -197,7 +197,7 @@ function WorkgroupListItem(props: {
   return (
     <Link
       href={`/${props.entry}/${props.workgroup.extension.id}`}
-      shallow
+      scroll={false}
       className={clsx(
         props.current
           ? 'border-primary-600 bg-primary-50 text-primary-600'

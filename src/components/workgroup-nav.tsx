@@ -79,6 +79,7 @@ export default function WorkgroupNav(props: { className?: string }) {
             <Link
               key={tab.name}
               href={tab.href}
+              scroll={false}
               className={clsx(
                 tab.current
                   ? 'border-primary-500 text-primary-600'
