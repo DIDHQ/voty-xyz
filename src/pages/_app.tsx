@@ -12,6 +12,7 @@ import {
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import {
   connectorsForWallets,
+  lightTheme,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit'
 import {
@@ -66,7 +67,11 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         />
       </Head>
       <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider chains={chains}>
+        <RainbowKitProvider
+          modalSize="compact"
+          chains={chains}
+          theme={lightTheme({ borderRadius: 'none' })}
+        >
           <ShellLayout>
             <Component {...pageProps} />
           </ShellLayout>

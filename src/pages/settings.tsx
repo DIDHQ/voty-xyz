@@ -15,7 +15,7 @@ export default function SettingsPage() {
 
   return (
     <Form className="w-full">
-      <FormSection title="Account">
+      <FormSection title="Settings">
         <Grid6>
           <GridItem2>
             <FormItem label="Select your default DID">
