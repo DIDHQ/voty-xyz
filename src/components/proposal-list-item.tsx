@@ -40,7 +40,7 @@ export default function ProposalListItem(props: {
       </div>
       {props.proposal.extension?.body ? (
         <p className="text-gray-600 line-clamp-3">
-          {props.proposal.extension?.body}
+          {props.proposal.extension.body}
         </p>
       ) : null}
       <div className="sm:flex sm:justify-between">
