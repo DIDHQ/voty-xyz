@@ -7,7 +7,7 @@ const BoringAvatar = dynamic(() => import('boring-avatars'), { ssr: false })
 export default function Avatar(props: {
   size: number
   name?: string
-  value?: string
+  value?: string | null
   variant?: 'marble' | 'beam' | 'pixel' | 'sunset' | 'ring' | 'bauhaus'
   className?: string
 }) {

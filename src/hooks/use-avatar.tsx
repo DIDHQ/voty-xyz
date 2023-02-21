@@ -9,7 +9,7 @@ export default function useAvatar(did?: string) {
     async () => {
       if (didSuffixIs(did!, 'bit')) {
         const avatar = await dotbit.account(did!).avatar()
-        return avatar?.url
+        return avatar?.url || null
       }
     },
     { enabled: !!did, refetchOnWindowFocus: false },
