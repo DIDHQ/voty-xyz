@@ -8,10 +8,10 @@ import LoadingBar from '../../components/basic/loading-bar'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['entry']>()
-  const { data: list, isLoading } = trpc.proposal.list.useInfiniteQuery(query, {
-    enabled: !!query.entry,
-    refetchOnWindowFocus: false,
-  })
+  const { data: list, isLoading } = trpc.proposal.list.useInfiniteQuery(
+    { entry: query.entry },
+    { enabled: !!query.entry, refetchOnWindowFocus: false },
+  )
   const proposals = useMemo(
     () => list?.pages.flatMap(({ data }) => data),
     [list],

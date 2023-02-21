@@ -39,7 +39,7 @@ export default function ProposalPage() {
   )
   const workgroup = useWorkgroup(community, proposal?.workgroup)
   const { data: list, refetch: refetchList } = trpc.vote.list.useInfiniteQuery(
-    query,
+    { proposal: query.proposal },
     { enabled: !!query.proposal, refetchOnWindowFocus: false },
   )
   const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])

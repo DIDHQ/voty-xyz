@@ -10,7 +10,7 @@ import LoadingBar from '../../../components/basic/loading-bar'
 export default function GroupIndexPage() {
   const query = useRouterQuery<['entry', 'workgroup']>()
   const { data: list, isInitialLoading } = trpc.proposal.list.useInfiniteQuery(
-    query,
+    { entry: query.entry, workgroup: query.workgroup },
     {
       enabled: !!query.entry && !!query.workgroup,
       refetchOnWindowFocus: false,
