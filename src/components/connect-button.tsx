@@ -52,7 +52,7 @@ export default function ConnectButton() {
               </div>
             </TextButton>
           </Link>
-        ) : chain && chainIdToCoinType[chain.id] ? (
+        ) : !chain || chainIdToCoinType[chain.id] ? (
           <Button primary loading={connectModalOpen} onClick={openConnectModal}>
             Connect Wallet
           </Button>
