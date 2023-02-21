@@ -54,9 +54,9 @@ export function FormItem(
       ) : null}
       <div className={props.label ? 'mt-1' : undefined}>{props.children}</div>
       {props.error ? (
-        <p className="mt-2 text-sm text-red-600">{props.error}</p>
+        <p className="mt-1 text-sm text-red-600">{props.error}</p>
       ) : props.description ? (
-        <p className="mt-2 text-sm text-gray-500">{props.description}</p>
+        <p className="mt-1 text-sm text-gray-500">{props.description}</p>
       ) : null}
     </div>
   )
