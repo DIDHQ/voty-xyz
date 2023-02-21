@@ -31,16 +31,16 @@ export default function ProposalPage() {
   const query = useRouterQuery<['proposal']>()
   const { data: proposal, isLoading } = trpc.proposal.getByPermalink.useQuery(
     { permalink: query.proposal },
-    { enabled: !!query.proposal },
+    { enabled: !!query.proposal, refetchOnWindowFocus: false },
   )
   const { data: community } = trpc.community.getByPermalink.useQuery(
     { permalink: proposal?.community },
-    { enabled: !!proposal?.community },
+    { enabled: !!proposal?.community, refetchOnWindowFocus: false },
   )
   const workgroup = useWorkgroup(community, proposal?.workgroup)
   const { data: list, refetch: refetchList } = trpc.vote.list.useInfiniteQuery(
     query,
-    { enabled: !!query.proposal },
+    { enabled: !!query.proposal, refetchOnWindowFocus: false },
   )
   const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
 

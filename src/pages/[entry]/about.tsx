@@ -8,7 +8,7 @@ export default function CommunityAboutPage() {
   const query = useRouterQuery<['entry']>()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
-    { enabled: !!query.entry },
+    { enabled: !!query.entry, refetchOnWindowFocus: false },
   )
 
   return (

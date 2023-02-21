@@ -63,7 +63,7 @@ export default function CreateProposalPage() {
   const query = useRouterQuery<['entry', 'workgroup']>()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
-    { enabled: !!query.entry },
+    { enabled: !!query.entry, refetchOnWindowFocus: false },
   )
   const workgroup = useWorkgroup(community, query.workgroup)
   const handleOptionDelete = useCallback(
@@ -107,7 +107,11 @@ export default function CreateProposalPage() {
         return obj
       }, {} as { [coinType: string]: string })
     },
-    { enabled: !!requiredCoinTypes, refetchInterval: 30000 },
+    {
+      enabled: !!requiredCoinTypes,
+      refetchOnWindowFocus: false,
+      refetchInterval: 30000,
+    },
   )
   useEffect(() => {
     if (snapshots) {

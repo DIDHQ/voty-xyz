@@ -16,9 +16,10 @@ export default function ProposalListItem(props: {
   entry: string
   proposal: Authorized<Proposal> & { permalink: string; votes: number }
 }) {
-  const { data: community } = trpc.community.getByEntry.useQuery({
-    entry: props.entry,
-  })
+  const { data: community } = trpc.community.getByEntry.useQuery(
+    { entry: props.entry },
+    { refetchOnWindowFocus: false },
+  )
   const workgroup = useWorkgroup(community, props.proposal.workgroup)
 
   return (

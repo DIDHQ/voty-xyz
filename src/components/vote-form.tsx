@@ -41,7 +41,7 @@ export default function VoteForm(props: {
   const { data: choices, refetch: refetchChoices } =
     trpc.choice.groupByProposal.useQuery(
       { proposal: proposal.permalink },
-      { enabled: !!proposal.permalink },
+      { enabled: !!proposal.permalink, refetchOnWindowFocus: false },
     )
   const [did, setDid] = useState('')
   const methods = useForm<Vote>({
@@ -57,7 +57,10 @@ export default function VoteForm(props: {
     ['votingPower', workgroup, did, proposal],
     () =>
       calculateNumber(workgroup!.permission.voting, did!, proposal!.snapshots),
-    { enabled: !!workgroup && !!did && !!proposal },
+    {
+      enabled: !!workgroup && !!did && !!proposal,
+      refetchOnWindowFocus: false,
+    },
   )
   useEffect(() => {
     if (votingPower === undefined) {

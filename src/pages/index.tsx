@@ -6,7 +6,10 @@ import CommunityCard from '../components/community-card'
 import { trpc } from '../utils/trpc'
 
 export default function IndexPage() {
-  const { data, isInitialLoading } = trpc.community.list.useInfiniteQuery({})
+  const { data, isInitialLoading } = trpc.community.list.useInfiniteQuery(
+    {},
+    { refetchOnWindowFocus: false },
+  )
   const communities = useMemo(
     () => data?.pages.flatMap(({ data }) => data),
     [data],

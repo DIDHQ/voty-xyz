@@ -20,7 +20,7 @@ export default function CreateWorkgroupPage() {
     refetch,
   } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
-    { enabled: !!query.entry },
+    { enabled: !!query.entry, refetchOnWindowFocus: false },
   )
   const { data: dids } = useDids(account)
   const isAdmin = useMemo(

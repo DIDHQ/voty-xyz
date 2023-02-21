@@ -19,7 +19,7 @@ export default function CreateCommunityPage() {
   const [entry, setEntry] = useState('')
   const { data: community } = trpc.community.getByEntry.useQuery(
     { entry },
-    { enabled: !!entry },
+    { enabled: !!entry, refetchOnWindowFocus: false },
   )
   useEffect(() => {
     setEntry(dids?.find((d) => d === currentDid) || dids?.[0] || '')

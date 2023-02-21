@@ -24,7 +24,7 @@ export default function SubscriptionButton(props: {
     trpc.subscription.set.useMutation()
   const { data: subscribed = data, refetch } = trpc.subscription.get.useQuery(
     { subscriber: currentDid, entry: props.entry },
-    { enabled: !!currentDid && !!props.entry },
+    { enabled: !!currentDid && !!props.entry, refetchOnWindowFocus: false },
   )
   const handleSignDocument = useSignDocument(currentDid)
   const handleSubscribe = useCallback(async () => {

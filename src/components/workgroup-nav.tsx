@@ -15,7 +15,7 @@ export default function WorkgroupNav(props: { className?: string }) {
   const query = useRouterQuery<['entry', 'workgroup']>()
   const { data: community } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
-    { enabled: !!query.entry },
+    { enabled: !!query.entry, refetchOnWindowFocus: false },
   )
   const workgroup = useWorkgroup(community, query.workgroup)
   const router = useRouter()

@@ -10,7 +10,7 @@ export default function WorkgroupAboutPage() {
   const query = useRouterQuery<['entry', 'workgroup']>()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
-    { enabled: !!query.entry },
+    { enabled: !!query.entry, refetchOnWindowFocus: false },
   )
   const workgroup = useWorkgroup(community, query.workgroup)
 
