@@ -149,7 +149,6 @@ export default function CommunityForm(props: {
       <FormFooter>
         <FormProvider {...methods}>
           <SigningCommunityButton
-            primary
             did={props.entry}
             icon={props.community ? DocumentArrowUpIcon : DocumentPlusIcon}
             onSuccess={onSuccess}
