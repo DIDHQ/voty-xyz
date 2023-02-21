@@ -1,4 +1,9 @@
+import { isTestnet } from '../../constants'
 import { fetchJson, postJson } from '../../fetcher'
+
+const endpoint = isTestnet
+  ? 'https://test-snapshot-api.did.id'
+  : 'https://test-snapshot-api.did.id'
 
 export async function snapshotPermissionsInfo(
   did: string,
@@ -17,7 +22,7 @@ export async function snapshotPermissionsInfo(
       manager_algorithm_id: number
     }
   }>(
-    `https://test-snapshot-api.did.id/v1/snapshot/permissions/info`,
+    `${endpoint}/v1/snapshot/permissions/info`,
     postJson({ account: did, block_number: parseInt(snapshot) }),
   )
   return data.manager
@@ -33,7 +38,7 @@ export async function snapshotAddressAccounts(
     errmsg: string
     data: { accounts: { account: string }[] }
   }>(
-    'https://test-snapshot-api.did.id/v1/snapshot/address/accounts',
+    `${endpoint}/v1/snapshot/address/accounts`,
     postJson({
       type: 'blockchain',
       key_info: {
