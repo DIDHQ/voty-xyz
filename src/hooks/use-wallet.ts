@@ -3,7 +3,6 @@ import {
   useAccount,
   useConnect,
   useDisconnect,
-  useEnsAvatar,
   useEnsName,
   useNetwork,
   useSignMessage,
@@ -37,7 +36,6 @@ export default function useWallet() {
         key: account.address,
       } as KeyInfo)
       return {
-        avatar: (await bit?.avatar())?.url,
         did: bit?.account,
       }
     },
@@ -47,7 +45,6 @@ export default function useWallet() {
     },
   )
   const currentDid = useAtomValue(currentDidAtom)
-  const { data: ensAvatar } = useEnsAvatar(account)
   const { data: ensName } = useEnsName(account)
 
   return useMemo(
@@ -60,7 +57,6 @@ export default function useWallet() {
             }
           : undefined,
       name: currentDid || bit?.did || ensName || undefined,
-      avatar: bit?.avatar || ensAvatar || undefined,
       displayAddress: account.address
         ? `${account.address.substring(0, 5)}...${account.address.substring(
             38,
@@ -88,9 +84,7 @@ export default function useWallet() {
       account.address,
       currentDid,
       bit?.did,
-      bit?.avatar,
       ensName,
-      ensAvatar,
       signMessageAsync,
       connect,
       disconnect,

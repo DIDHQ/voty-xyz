@@ -6,9 +6,11 @@ import useWallet from '../hooks/use-wallet'
 import Button from './basic/button'
 import Avatar from './basic/avatar'
 import TextButton from './basic/text-button'
+import useAvatar from '../hooks/use-avatar'
 
 export default function ConnectButton() {
-  const { account, avatar, name, displayAddress } = useWallet()
+  const { account, name, displayAddress } = useWallet()
+  const { data: avatar } = useAvatar(name)
 
   return (
     <RainbowConnectButton.Custom>
