@@ -20,6 +20,7 @@ export default function SettingsPage() {
           <GridItem2>
             <FormItem label="Select your default DID">
               <Select
+                disabled={!account}
                 options={dids}
                 value={currentDid}
                 onChange={setCurrentDid}

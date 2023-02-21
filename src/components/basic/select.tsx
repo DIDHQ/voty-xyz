@@ -6,6 +6,7 @@ import { ReactNode } from 'react'
 export default function Select(props: {
   options?: string[]
   value: string
+  disabled?: boolean
   disables?: { [key: string]: boolean }
   renderItem?: (option: string) => ReactNode
   full?: boolean
@@ -14,13 +15,17 @@ export default function Select(props: {
   className?: string
 }) {
   return (
-    <Listbox value={props.value} onChange={props.onChange}>
+    <Listbox
+      disabled={props.disabled}
+      value={props.value}
+      onChange={props.onChange}
+    >
       {({ open }) => (
         <>
           <div className="relative">
             <Listbox.Button
               className={clsx(
-                'relative w-full cursor-default border border-gray-200 bg-white py-2 pl-3 pr-10 text-left focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-sm',
+                'relative w-full cursor-default border border-gray-200 bg-white py-2 pl-3 pr-10 text-left focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
                 props.className,
               )}
             >
