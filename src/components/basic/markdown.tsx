@@ -44,6 +44,6 @@ const parser = parserFor(rules)
 
 const output = outputFor(rules, 'react' as any)
 
-export default function Markdown(props: { children: string | undefined }) {
+export default function Markdown(props: { children: string }) {
   return <>{output(parser(`${props.children || ''}\n\n`, { inline: false }))}</>
 }

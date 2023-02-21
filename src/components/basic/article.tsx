@@ -8,7 +8,7 @@ export default function Article(props: {
   children?: string
   className?: string
 }) {
-  return (
+  return props.children ? (
     <article
       className={clsx(
         'prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400',
@@ -18,5 +18,5 @@ export default function Article(props: {
     >
       <Markdown>{props.children}</Markdown>
     </article>
-  )
+  ) : null
 }
