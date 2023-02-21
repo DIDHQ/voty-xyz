@@ -1,4 +1,5 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
+import { useInView } from 'react-intersection-observer'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import ProposalListItem from '../../../components/proposal-list-item'
@@ -9,22 +10,30 @@ import LoadingBar from '../../../components/basic/loading-bar'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['entry', 'workgroup']>()
-  const { data: list, isInitialLoading } = trpc.proposal.list.useInfiniteQuery(
-    query,
-    {
-      enabled: !!query.entry && !!query.workgroup,
-      refetchOnWindowFocus: false,
-    },
-  )
+  const { data, fetchNextPage, isLoading } =
+    trpc.proposal.list.useInfiniteQuery(
+      { entry: query.entry, workgroup: query.workgroup },
+      {
+        enabled: !!query.entry && !!query.workgroup,
+        getNextPageParam: ({ next }) => next,
+        refetchOnWindowFocus: false,
+      },
+    )
   const proposals = useMemo(
-    () => list?.pages.flatMap(({ data }) => data),
-    [list],
+    () => data?.pages.flatMap(({ data }) => data),
+    [data],
   )
+  const { ref, inView } = useInView()
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage()
+    }
+  }, [fetchNextPage, inView])
 
   return (
     <CommunityLayout>
       <WorkgroupLayout>
-        <LoadingBar loading={isInitialLoading} />
+        <LoadingBar loading={isLoading} />
         {proposals?.length === 0 ? (
           <p className="mt-6 text-sm text-gray-500 sm:pl-6">No proposals</p>
         ) : (
@@ -38,6 +47,7 @@ export default function GroupIndexPage() {
             ))}
           </ul>
         )}
+        <div ref={ref} />
       </WorkgroupLayout>
     </CommunityLayout>
   )

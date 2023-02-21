@@ -38,9 +38,11 @@ export default function ProposalListItem(props: {
           duration={workgroup?.duration}
         />
       </div>
-      <p className="text-gray-600 line-clamp-3">
-        {props.proposal.extension?.body}
-      </p>
+      {props.proposal.extension?.body ? (
+        <p className="text-gray-600 line-clamp-3">
+          {props.proposal.extension.body}
+        </p>
+      ) : null}
       <div className="sm:flex sm:justify-between">
         <div className="sm:flex">
           <p className="flex items-center text-sm text-gray-500">

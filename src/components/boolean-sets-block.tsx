@@ -27,7 +27,7 @@ export default function BooleanSetsBlock(props: {
       {fields.length ? (
         <ul
           role="list"
-          className="mb-4 divide-y divide-gray-200 border border-gray-200"
+          className="divide-y divide-gray-200 border border-gray-200"
         >
           {fields.map((operand, index) => (
             <BooleanUnitBlock
@@ -53,6 +53,7 @@ export default function BooleanSetsBlock(props: {
             })
             setOpen(fields.length)
           }}
+          className="mt-1"
         >
           Add
         </TextButton>

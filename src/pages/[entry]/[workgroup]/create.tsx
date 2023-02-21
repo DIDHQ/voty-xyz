@@ -203,6 +203,15 @@ export default function CreateProposalPage() {
               <GridItem6>
                 <FormItem
                   label="Options"
+                  description={
+                    <TextButton
+                      onClick={() => {
+                        setValue('options', [...(watch('options') || []), ''])
+                      }}
+                    >
+                      Add
+                    </TextButton>
+                  }
                   error={
                     errors.options?.message ||
                     errors.options?.find?.((option) => option?.message)?.message
@@ -210,7 +219,7 @@ export default function CreateProposalPage() {
                 >
                   <ul
                     role="list"
-                    className="mb-4 divide-y divide-gray-200 border border-gray-200"
+                    className="divide-y divide-gray-200 border border-gray-200"
                   >
                     {watch('options')?.map((_, index) => (
                       <li
@@ -235,13 +244,6 @@ export default function CreateProposalPage() {
                       </li>
                     ))}
                   </ul>
-                  <TextButton
-                    onClick={() => {
-                      setValue('options', [...(watch('options') || []), ''])
-                    }}
-                  >
-                    Add
-                  </TextButton>
                 </FormItem>
               </GridItem6>
             </Grid6>

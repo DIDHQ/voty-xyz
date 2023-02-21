@@ -29,7 +29,7 @@ export default function NumberSetsBlock(props: {
       {fields.length ? (
         <ul
           role="list"
-          className="mb-4 divide-y divide-gray-200 border border-gray-200"
+          className="divide-y divide-gray-200 border border-gray-200"
         >
           {fields.map((operand, index) => (
             <NumberUnitBlock
@@ -55,6 +55,7 @@ export default function NumberSetsBlock(props: {
             })
             setOpen(fields.length)
           }}
+          className="mt-1"
         >
           Add
         </TextButton>
