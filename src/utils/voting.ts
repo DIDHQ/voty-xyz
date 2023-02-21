@@ -48,7 +48,7 @@ export function powerOfChoice(
 ): { [option: string]: number | undefined } {
   try {
     if (type === 'single') {
-      return { [JSON.parse(choice)]: power }
+      return { [JSON.parse(choice) as string]: power }
     }
     if (type === 'multiple') {
       const array = JSON.parse(choice || '[]') as string[]
@@ -79,7 +79,7 @@ export function choiceIsEmpty(
 export function stringifyChoice(type: 'single' | 'multiple', choice: string) {
   try {
     if (type === 'single') {
-      return JSON.parse(choice)
+      return JSON.parse(choice) as string
     }
     if (type === 'multiple') {
       return (JSON.parse(choice || '[]') as string[]).sort().join(', ')

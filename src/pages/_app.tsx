@@ -20,6 +20,7 @@ import {
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
 import 'react-tooltip/dist/react-tooltip.css'
+import '@total-typescript/ts-reset'
 
 import ShellLayout from '../components/layouts/shell'
 import { trpc } from '../utils/trpc'

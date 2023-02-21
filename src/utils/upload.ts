@@ -1,4 +1,5 @@
 import Arweave from 'arweave'
+import { JWKInterface } from 'arweave/node/lib/wallet'
 
 import { DataType } from './constants'
 import { isCommunity, isProposal, isVote } from './data-type'
@@ -11,7 +12,7 @@ import { isTestnet } from './testnet'
 
 const textEncoder = new TextEncoder()
 
-const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!)
+const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!) as JWKInterface
 
 const arweave = Arweave.init({
   host: 'arseed.web3infra.dev',
