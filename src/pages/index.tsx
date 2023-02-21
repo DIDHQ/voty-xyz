@@ -7,7 +7,7 @@ import CommunityCard from '../components/community-card'
 import { trpc } from '../utils/trpc'
 
 export default function IndexPage() {
-  const { data, isLoading, fetchNextPage } =
+  const { data, isLoading, hasNextPage, fetchNextPage } =
     trpc.community.list.useInfiniteQuery(
       {},
       { getNextPageParam: ({ next }) => next, refetchOnWindowFocus: false },
@@ -18,10 +18,10 @@ export default function IndexPage() {
   )
   const { ref, inView } = useInView()
   useEffect(() => {
-    if (inView) {
+    if (inView && hasNextPage) {
       fetchNextPage()
     }
-  }, [fetchNextPage, inView])
+  }, [fetchNextPage, hasNextPage, inView])
 
   return (
     <>

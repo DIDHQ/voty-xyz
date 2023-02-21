@@ -42,6 +42,7 @@ export default function ProposalPage() {
   const {
     data,
     fetchNextPage,
+    hasNextPage,
     refetch: refetchList,
   } = trpc.vote.list.useInfiniteQuery(
     { proposal: query.proposal },
@@ -54,10 +55,10 @@ export default function ProposalPage() {
   const votes = useMemo(() => data?.pages.flatMap(({ data }) => data), [data])
   const { ref, inView } = useInView()
   useEffect(() => {
-    if (inView) {
+    if (inView && hasNextPage) {
       fetchNextPage()
     }
-  }, [fetchNextPage, inView])
+  }, [fetchNextPage, hasNextPage, inView])
 
   return (
     <>
@@ -65,17 +66,15 @@ export default function ProposalPage() {
       {community && proposal && workgroup ? (
         <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
           <div className="w-full flex-1 sm:mr-6">
+            <Link
+              href={`/${community.authorship.author}/${proposal.workgroup}`}
+            >
+              <TextButton>
+                <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+              </TextButton>
+            </Link>
             <div className="mb-6 border-b border-gray-200 pb-6">
-              <Link
-                href={`/${community.authorship.author}/${proposal.workgroup}`}
-              >
-                <TextButton>
-                  <h2 className="text-[1rem] font-semibold leading-6">
-                    ← Back
-                  </h2>
-                </TextButton>
-              </Link>
-              <h3 className="mt-2 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
+              <h3 className="mt-4 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
                 {proposal.title}
               </h3>
               <Article className="mt-8">{proposal.extension?.body}</Article>
@@ -150,7 +149,7 @@ export default function ProposalPage() {
           <div className="relative w-full shrink-0 sm:sticky sm:top-24 sm:w-72">
             <StatusIcon
               permalink={query.proposal}
-              className="absolute right-3 top-3"
+              className="absolute right-4 top-4"
             />
             <div className="space-y-6 border border-gray-200 p-6">
               <DetailList title="Proposal">

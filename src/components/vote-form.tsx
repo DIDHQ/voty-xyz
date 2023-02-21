@@ -22,6 +22,7 @@ import useStatus from '../hooks/use-status'
 import { getPeriod, Period } from '../utils/duration'
 import { Proposal } from '../utils/schemas/proposal'
 import { Workgroup } from '../utils/schemas/workgroup'
+import { FormItem } from './basic/form'
 
 const VoterSelect = dynamic(() => import('./voter-select'), {
   ssr: false,
@@ -47,7 +48,12 @@ export default function VoteForm(props: {
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
   })
-  const { setValue, resetField, control, watch } = methods
+  const {
+    setValue,
+    resetField,
+    control,
+    formState: { errors },
+  } = methods
   useEffect(() => {
     if (proposal.permalink) {
       setValue('proposal', proposal.permalink)
@@ -87,31 +93,33 @@ export default function VoteForm(props: {
 
   return proposal && workgroup ? (
     <>
-      <ul
-        role="list"
-        className="mt-6 divide-y divide-gray-200 border border-gray-200"
-      >
-        <Controller
-          control={control}
-          name="choice"
-          render={({ field: { value, onChange } }) => (
-            <>
-              {proposal.options.map((option) => (
-                <Option
-                  key={option}
-                  type={proposal.voting_type}
-                  option={option}
-                  votingPower={votingPower}
-                  choices={choices}
-                  disabled={disabled || !did}
-                  value={value}
-                  onChange={onChange}
-                />
-              ))}
-            </>
-          )}
-        />
-      </ul>
+      <FormItem error={errors.choice?.message}>
+        <ul
+          role="list"
+          className="mt-6 divide-y divide-gray-200 border border-gray-200"
+        >
+          <Controller
+            control={control}
+            name="choice"
+            render={({ field: { value, onChange } }) => (
+              <>
+                {proposal.options.map((option) => (
+                  <Option
+                    key={option}
+                    type={proposal.voting_type}
+                    option={option}
+                    votingPower={votingPower}
+                    choices={choices}
+                    disabled={disabled || !did}
+                    value={value}
+                    onChange={onChange}
+                  />
+                ))}
+              </>
+            )}
+          />
+        </ul>
+      </FormItem>
       <div className="flex items-center justify-between py-6">
         <h2 className="text-2xl font-bold">
           {proposal.votes
@@ -135,12 +143,7 @@ export default function VoteForm(props: {
                 did={did}
                 icon={BoltIcon}
                 onSuccess={handleSuccess}
-                disabled={
-                  choiceIsEmpty(proposal.voting_type, watch('choice')) ||
-                  !votingPower ||
-                  isFetching ||
-                  !did
-                }
+                disabled={!votingPower || isFetching || !did}
                 className="border-l-0 focus:z-10 active:z-10"
               >
                 Vote{votingPower ? ` (${votingPower})` : null}

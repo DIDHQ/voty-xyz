@@ -99,7 +99,7 @@ export default function CommunityNav(props: { className?: string }) {
       <div className="flex w-full flex-col items-center border border-gray-200 pb-4">
         <StatusIcon
           permalink={community?.entry.community}
-          className="absolute right-3 top-3"
+          className="absolute right-4 top-4"
         />
         <Avatar
           name={community?.authorship.author}
@@ -113,7 +113,7 @@ export default function CommunityNav(props: { className?: string }) {
         {community ? (
           <>
             <div className="mt-4 w-full">
-              <h3 className="mb-1 px-3 text-sm font-medium text-gray-400">
+              <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
                 Community
                 <SubscriptionButton
                   entry={query.entry}
@@ -124,12 +124,12 @@ export default function CommunityNav(props: { className?: string }) {
                 <Link
                   key={item.name}
                   href={item.href}
-                  shallow
+                  scroll={false}
                   className={clsx(
                     item.current
                       ? 'border-primary-600 bg-primary-50 text-primary-600'
                       : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                    'group flex h-10 items-center border-l-4 px-3 py-2 text-sm font-medium',
+                    'group flex h-10 items-center border-l-4 px-4 py-2 text-sm font-medium',
                   )}
                 >
                   <item.icon
@@ -146,7 +146,7 @@ export default function CommunityNav(props: { className?: string }) {
               ))}
             </div>
             <div className="mt-4 w-full">
-              <h3 className="mb-1 px-3 text-sm font-medium text-gray-400">
+              <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
                 Workgroups
                 <CreateGroupButton
                   entry={query.entry}
@@ -197,12 +197,12 @@ function WorkgroupListItem(props: {
   return (
     <Link
       href={`/${props.entry}/${props.workgroup.extension.id}`}
-      shallow
+      scroll={false}
       className={clsx(
         props.current
           ? 'border-primary-600 bg-primary-50 text-primary-600'
           : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-        'group flex h-10 w-full items-center border-l-4 px-3 py-2 text-sm font-medium',
+        'group flex h-10 w-full items-center border-l-4 px-4 py-2 text-sm font-medium',
       )}
     >
       {emoji ? (

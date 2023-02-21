@@ -140,19 +140,8 @@ export default function CreateProposalPage() {
   return (
     <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
       <LoadingBar loading={isLoading} />
-      <Link
-        href={`/${query.entry}/${query.workgroup}`}
-        className="inline sm:hidden"
-      >
-        <TextButton>
-          <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
-        </TextButton>
-      </Link>
       <div className="w-full flex-1 sm:mr-6">
-        <Link
-          href={`/${query.entry}/${query.workgroup}`}
-          className="hidden sm:inline"
-        >
+        <Link href={`/${query.entry}/${query.workgroup}`}>
           <TextButton>
             <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
           </TextButton>
@@ -275,7 +264,7 @@ export default function CreateProposalPage() {
       <div className="relative mt-6 w-full shrink-0 sm:sticky sm:top-24 sm:mt-0 sm:w-72">
         <StatusIcon
           permalink={community?.entry.community}
-          className="absolute right-3 top-3"
+          className="absolute right-4 top-4"
         />
         <Grid6 className="border border-gray-200 p-6">
           <GridItem6>

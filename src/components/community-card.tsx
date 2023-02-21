@@ -21,34 +21,35 @@ export default function CommunityCard(props: {
     <Link
       key={community.entry.community}
       href={`/${community.authorship.author}`}
-      className="block border border-gray-200 p-4 focus-within:ring-2 focus-within:ring-primary-500 focus-within:ring-offset-2 hover:border-gray-400 hover:bg-gray-50"
+      className="block overflow-hidden border border-gray-200 p-4 focus-within:ring-2 focus-within:ring-primary-500 focus-within:ring-offset-2 hover:border-gray-400 hover:bg-gray-50"
     >
-      <div className="flex items-start">
+      <div className="flex items-center">
         <Avatar
           size={20}
           name={community.authorship.author}
           value={community.extension?.avatar}
+          className="shrink-0"
         />
         <div className="ml-4">
-          <h3 className="text-lg font-medium text-gray-900">
+          <h3 className="text-lg font-medium text-gray-900 line-clamp-2">
             {community.name}
           </h3>
-          <p className="flex items-center text-gray-500">
+          <p className="flex items-center text-gray-500 line-clamp-2">
             <span className="truncate">{community.authorship.author}</span>
           </p>
         </div>
       </div>
-      <Grid6 className="mt-4 text-sm text-gray-500">
+      <Grid6 className="mt-4 mr-10 text-sm text-gray-500">
         <div className="col-span-2 flex items-center">
-          <BriefcaseIcon className="mr-2 h-4 w-4" />
+          <BriefcaseIcon className="mr-2 h-4 w-4 shrink-0" />
           {community.workgroups?.length || 0}
         </div>
         <div className="col-span-2 flex items-center">
-          <HandRaisedIcon className="mr-2 h-4 w-4" />
+          <HandRaisedIcon className="mr-2 h-4 w-4 shrink-0" />
           {community.entry.proposals}
         </div>
         <div className="col-span-2 flex items-center">
-          <BookmarkIcon className="mr-2 h-4 w-4" />
+          <BookmarkIcon className="mr-2 h-4 w-4 shrink-0" />
           {community.entry.subscribers}
         </div>
       </Grid6>

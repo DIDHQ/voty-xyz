@@ -5,6 +5,7 @@
 * {
   box-sizing: border-box;
   font-variant-numeric: tabular-nums;
+  -webkit-tap-highlight-color: transparent;
 }
 
 input::-webkit-outer-spin-button,
