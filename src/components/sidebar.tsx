@@ -19,20 +19,20 @@ export default function Sidebar(props: { className?: string }) {
         href="/"
         className="flex h-18 w-18 cursor-pointer items-center justify-center border-b border-gray-200"
       >
-        <img
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+        {/* <img
+          src="https://tailwindui.com/img/logos/mark.svg?color=sky&shade=600"
           alt="LOGO"
           className="h-8 w-auto"
-        />
+        /> */}
       </Link>
       <SubscriptionList className="mb-3" />
       <Link
         href="/create"
         data-tooltip-id={id}
         data-tooltip-place="right"
-        className="group flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 hover:bg-indigo-600"
+        className="group flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 hover:bg-primary-600"
       >
-        <PlusIcon className="h-8 w-8 text-indigo-600 group-hover:text-white" />
+        <PlusIcon className="h-8 w-8 text-primary-600 group-hover:text-white" />
       </Link>
       <Tooltip id={id} className="rounded-none">
         Create community

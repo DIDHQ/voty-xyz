@@ -1,4 +1,4 @@
-import { isTestnet } from './testnet'
+export const isTestnet = !!process.env.NEXT_PUBLIC_TESTNET
 
 export const commonCoinTypes = {
   ETH: 60,

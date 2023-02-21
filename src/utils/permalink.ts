@@ -7,7 +7,7 @@ export function permalink2Id(permalink: string) {
 }
 
 export function permalink2Url(permalink: string) {
-  return `https://arseed.web3infra.dev/${permalink2Id(permalink)}`
+  return `https://arweave.net/${permalink2Id(permalink)}`
 }
 
 export function permalink2Explorer(permalink: string) {

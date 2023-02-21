@@ -31,6 +31,7 @@ import { formatDuration } from '../../../utils/time'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
 import { trpc } from '../../../utils/trpc'
 import Article from '../../../components/basic/article'
+import LoadingBar from '../../../components/basic/loading-bar'
 
 const StatusIcon = dynamic(() => import('../../../components/status-icon'), {
   ssr: false,
@@ -60,7 +61,7 @@ export default function CreateProposalPage() {
     formState: { errors },
   } = methods
   const query = useRouterQuery<['entry', 'workgroup']>()
-  const { data: community } = trpc.community.getByEntry.useQuery(
+  const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
   )
@@ -133,6 +134,7 @@ export default function CreateProposalPage() {
 
   return (
     <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
+      <LoadingBar loading={isLoading} />
       <Link
         href={`/${query.entry}/${query.workgroup}`}
         className="inline sm:hidden"

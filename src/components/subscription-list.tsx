@@ -1,17 +1,18 @@
 import clsx from 'clsx'
+import { useAtomValue } from 'jotai'
 import Link from 'next/link'
 
 import useRouterQuery from '../hooks/use-router-query'
-import useWallet from '../hooks/use-wallet'
+import { currentDidAtom } from '../utils/atoms'
 import { trpc } from '../utils/trpc'
 import Avatar from './basic/avatar'
 
 export default function SubscriptionList(props: { className?: string }) {
   const query = useRouterQuery<['entry']>()
-  const { name } = useWallet()
+  const currentDid = useAtomValue(currentDidAtom)
   const { data } = trpc.subscription.list.useQuery(
-    { subscriber: name },
-    { enabled: !!name, refetchOnWindowFocus: false },
+    { subscriber: currentDid },
+    { enabled: !!currentDid, refetchOnWindowFocus: false },
   )
 
   return (
@@ -28,7 +29,7 @@ export default function SubscriptionList(props: { className?: string }) {
             className={clsx(
               'mt-3 ring-2 ring-offset-2',
               community.authorship.author === query.entry
-                ? 'ring-indigo-500'
+                ? 'ring-primary-500'
                 : 'ring-transparent hover:ring-gray-300',
             )}
           />

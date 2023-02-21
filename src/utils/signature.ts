@@ -1,6 +1,5 @@
-import { getAddress, sha256 } from 'ethers/lib/utils.js'
-
 import { Proof } from './schemas/proof'
+import { getAddress, sha256 } from './sdks/ethers'
 
 export async function signDocument(
   document: object,

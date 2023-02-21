@@ -1,4 +1,9 @@
-import { fetchJson } from './fetcher'
+import { isTestnet } from '../../constants'
+import { fetchJson, postJson } from '../../fetcher'
+
+const endpoint = isTestnet
+  ? 'https://test-snapshot-api.did.id'
+  : 'https://test-snapshot-api.did.id'
 
 export async function snapshotPermissionsInfo(
   did: string,
@@ -16,14 +21,10 @@ export async function snapshotPermissionsInfo(
       manager: string
       manager_algorithm_id: number
     }
-  }>(`https://test-snapshot-api.did.id/v1/snapshot/permissions/info`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      account: did,
-      block_number: parseInt(snapshot),
-    }),
-  })
+  }>(
+    `${endpoint}/v1/snapshot/permissions/info`,
+    postJson({ account: did, block_number: parseInt(snapshot) }),
+  )
   return data.manager
 }
 
@@ -36,10 +37,9 @@ export async function snapshotAddressAccounts(
     errno: number
     errmsg: string
     data: { accounts: { account: string }[] }
-  }>('https://test-snapshot-api.did.id/v1/snapshot/address/accounts', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
+  }>(
+    `${endpoint}/v1/snapshot/address/accounts`,
+    postJson({
       type: 'blockchain',
       key_info: {
         coin_type: coinType.toString(),
@@ -49,6 +49,6 @@ export async function snapshotAddressAccounts(
       block_number: parseInt(snapshot),
       role_type: 'manager',
     }),
-  })
+  )
   return data.accounts.map(({ account }) => account)
 }

@@ -4,10 +4,11 @@ import CommunityLayout from '../../../components/layouts/community'
 import WorkgroupLayout from '../../../components/layouts/workgroup'
 import { trpc } from '../../../utils/trpc'
 import Article from '../../../components/basic/article'
+import LoadingBar from '../../../components/basic/loading-bar'
 
 export default function WorkgroupAboutPage() {
   const query = useRouterQuery<['entry', 'workgroup']>()
-  const { data: community } = trpc.community.getByEntry.useQuery(
+  const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
   )
@@ -16,6 +17,7 @@ export default function WorkgroupAboutPage() {
   return (
     <CommunityLayout>
       <WorkgroupLayout>
+        <LoadingBar loading={isLoading} />
         <Article className="pt-6 sm:pl-6">
           {workgroup?.extension?.about}
         </Article>

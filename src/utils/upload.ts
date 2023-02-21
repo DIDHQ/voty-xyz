@@ -1,6 +1,3 @@
-import Arweave from 'arweave'
-import { JWKInterface } from 'arweave/node/lib/wallet'
-
 import { DataType } from './constants'
 import { isCommunity, isProposal, isVote } from './data-type'
 import { id2Permalink } from './permalink'
@@ -8,17 +5,10 @@ import { Authorized } from './schemas/authorship'
 import { Community } from './schemas/community'
 import { Proposal } from './schemas/proposal'
 import { Vote } from './schemas/vote'
-import { isTestnet } from './testnet'
+import { isTestnet } from './constants'
+import arweave, { jwk } from './sdks/arweave'
 
 const textEncoder = new TextEncoder()
-
-const jwk = JSON.parse(process.env.ARWEAVE_KEY_FILE!) as JWKInterface
-
-const arweave = Arweave.init({
-  host: 'arseed.web3infra.dev',
-  port: 443,
-  protocol: 'https',
-})
 
 export async function uploadToArweave(
   document: Authorized<Community | Proposal | Vote>,

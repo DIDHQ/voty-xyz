@@ -7,12 +7,17 @@ import CommunityLayout from '../../components/layouts/community'
 import useWallet from '../../hooks/use-wallet'
 import { trpc } from '../../utils/trpc'
 import useDids from '../../hooks/use-dids'
+import LoadingBar from '../../components/basic/loading-bar'
 
 export default function CommunitySettingsPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry']>()
   const { account } = useWallet()
-  const { data: community, refetch } = trpc.community.getByEntry.useQuery(
+  const {
+    data: community,
+    isLoading,
+    refetch,
+  } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
   )
@@ -28,6 +33,7 @@ export default function CommunitySettingsPage() {
 
   return (
     <CommunityLayout>
+      <LoadingBar loading={isLoading} />
       {query.entry ? (
         <div className="flex w-full flex-col">
           <CommunityForm

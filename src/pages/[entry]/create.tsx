@@ -8,12 +8,17 @@ import CommunityLayout from '../../components/layouts/community'
 import useWallet from '../../hooks/use-wallet'
 import { trpc } from '../../utils/trpc'
 import useDids from '../../hooks/use-dids'
+import LoadingBar from '../../components/basic/loading-bar'
 
 export default function CreateWorkgroupPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry']>()
   const { account } = useWallet()
-  const { data: community, refetch } = trpc.community.getByEntry.useQuery(
+  const {
+    data: community,
+    isLoading,
+    refetch,
+  } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
   )
@@ -30,6 +35,7 @@ export default function CreateWorkgroupPage() {
 
   return (
     <CommunityLayout>
+      <LoadingBar loading={isLoading} />
       {query.entry && community ? (
         <WorkgroupForm
           community={community}

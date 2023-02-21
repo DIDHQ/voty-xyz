@@ -9,7 +9,7 @@ export default function TextButton(
       type="button"
       {...props}
       className={clsx(
-        'text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-gray-400',
+        'text-sm font-medium text-primary-600 hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-gray-400',
         props.className,
       )}
     >

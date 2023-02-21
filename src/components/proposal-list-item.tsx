@@ -29,7 +29,7 @@ export default function ProposalListItem(props: {
       className="group block space-y-2 py-6 px-0"
     >
       <div className="flex w-full items-center justify-between">
-        <p className="truncate font-medium text-indigo-600 group-hover:underline">
+        <p className="truncate font-medium text-primary-600 group-hover:underline">
           {props.proposal.title}
         </p>
         <ProposalPeriod

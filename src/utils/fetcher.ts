@@ -11,6 +11,14 @@ export async function fetchJson<T>(
   throw new FetchError(response.status, await response.text())
 }
 
+export function postJson(json: object): RequestInit {
+  return {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(json),
+  }
+}
+
 export class FetchError extends Error {
   status: number
 

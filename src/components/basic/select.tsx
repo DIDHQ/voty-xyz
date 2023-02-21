@@ -6,6 +6,7 @@ import { ReactNode } from 'react'
 export default function Select(props: {
   options?: string[]
   value: string
+  disabled?: boolean
   disables?: { [key: string]: boolean }
   renderItem?: (option: string) => ReactNode
   full?: boolean
@@ -14,13 +15,17 @@ export default function Select(props: {
   className?: string
 }) {
   return (
-    <Listbox value={props.value} onChange={props.onChange}>
+    <Listbox
+      disabled={props.disabled}
+      value={props.value}
+      onChange={props.onChange}
+    >
       {({ open }) => (
         <>
           <div className="relative">
             <Listbox.Button
               className={clsx(
-                'relative w-full cursor-default border border-gray-200 bg-white py-2 pl-3 pr-10 text-left focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm',
+                'relative w-full cursor-default border border-gray-200 bg-white py-2 pl-3 pr-10 text-left focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
                 props.className,
               )}
             >
@@ -55,7 +60,7 @@ export default function Select(props: {
                         className={({ active, disabled }) =>
                           clsx(
                             active
-                              ? 'bg-indigo-600 text-white'
+                              ? 'bg-primary-600 text-white'
                               : disabled
                               ? 'cursor-not-allowed text-gray-400'
                               : 'text-gray-900',
@@ -76,7 +81,7 @@ export default function Select(props: {
                             {selected ? (
                               <span
                                 className={clsx(
-                                  active ? 'text-white' : 'text-indigo-600',
+                                  active ? 'text-white' : 'text-primary-600',
                                   'absolute inset-y-0 right-0 flex items-center pr-4',
                                 )}
                               >
