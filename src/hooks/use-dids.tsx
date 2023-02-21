@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { Account, Snapshots } from '../utils/types'
-import { snapshotAddressAccounts } from '../utils/das-database'
+import { snapshotAddressAccounts } from '../utils/sdks/dotbit/snapshot'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import { commonCoinTypes } from '../utils/constants'
 

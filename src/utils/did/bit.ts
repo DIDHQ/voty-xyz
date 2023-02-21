@@ -1,7 +1,6 @@
-import { getAddress } from 'ethers/lib/utils.js'
-
 import { commonCoinTypes } from '../constants'
-import { snapshotPermissionsInfo } from '../das-database'
+import { snapshotPermissionsInfo } from '../sdks/dotbit/snapshot'
+import { getAddress } from '../sdks/ethers'
 import { DidChecker } from '../types'
 
 export const bitChecker: DidChecker<'bit'> = (did) => ({

@@ -10,17 +10,9 @@ import {
 } from 'wagmi'
 import { useQuery } from '@tanstack/react-query'
 import { KeyInfo } from 'dotbit/lib/fetchers/BitIndexer.type'
-import { BitNetwork, createInstance, DefaultConfig } from 'dotbit'
-import { BitPluginAvatar } from '@dotbit/plugin-avatar'
 
 import { chainIdToCoinType, coinTypeToChainId } from '../utils/constants'
-import { isTestnet } from '../utils/constants'
-
-const dotbit = createInstance(
-  DefaultConfig[isTestnet ? BitNetwork.testnet : BitNetwork.mainnet],
-)
-
-dotbit.installPlugin(new BitPluginAvatar())
+import dotbit from '../utils/sdks/dotbit'
 
 export default function useWallet() {
   const account = useAccount()

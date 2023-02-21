@@ -1,4 +1,4 @@
-import { fetchJson } from './fetcher'
+import { fetchJson } from '../../fetcher'
 
 export async function snapshotPermissionsInfo(
   did: string,
