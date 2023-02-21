@@ -1,5 +1,7 @@
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
 import Link from 'next/link'
+import { useAtom } from 'jotai'
+import { useEffect } from 'react'
 import '@rainbow-me/rainbowkit/styles.css'
 
 import useWallet from '../hooks/use-wallet'
@@ -7,10 +9,17 @@ import Button from './basic/button'
 import Avatar from './basic/avatar'
 import TextButton from './basic/text-button'
 import useAvatar from '../hooks/use-avatar'
+import { currentDidAtom } from '../utils/atoms'
+import useDids from '../hooks/use-dids'
 
 export default function ConnectButton() {
-  const { account, name, displayAddress } = useWallet()
-  const { data: avatar } = useAvatar(name)
+  const { account, displayAddress } = useWallet()
+  const [currentDid, setCurrentDid] = useAtom(currentDidAtom)
+  const { data: avatar } = useAvatar(currentDid)
+  const { data: dids } = useDids(account)
+  useEffect(() => {
+    setCurrentDid((old) => old || dids?.[0] || '')
+  }, [dids, setCurrentDid])
 
   return (
     <RainbowConnectButton.Custom>
@@ -20,14 +29,16 @@ export default function ConnectButton() {
             <TextButton className="flex items-center">
               <Avatar
                 size={9}
-                name={name || account.address}
+                name={currentDid}
                 value={avatar}
                 variant="beam"
               />
               <div className="ml-3 hidden sm:block">
-                <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                  {name}
-                </p>
+                {currentDid ? (
+                  <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                    {currentDid}
+                  </p>
+                ) : null}
                 <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
                   {displayAddress}
                 </p>

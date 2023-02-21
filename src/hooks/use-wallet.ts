@@ -3,17 +3,15 @@ import {
   useAccount,
   useConnect,
   useDisconnect,
-  useEnsName,
   useNetwork,
   useSignMessage,
 } from 'wagmi'
-import { useQuery } from '@tanstack/react-query'
-import type { KeyInfo } from 'dotbit/lib/fetchers/BitIndexer.type'
-import { useAtomValue } from 'jotai'
 
-import { chainIdToCoinType, coinTypeToChainId } from '../utils/constants'
-import dotbit from '../utils/sdks/dotbit'
-import { currentDidAtom } from '../utils/atoms'
+import {
+  chainIdToCoinType,
+  coinTypeNames,
+  coinTypeToChainId,
+} from '../utils/constants'
 
 export default function useWallet() {
   const account = useAccount()
@@ -28,24 +26,6 @@ export default function useWallet() {
     connector: account.connector,
   })
   const { disconnect } = useDisconnect()
-  const { data: bit } = useQuery(
-    ['reverse', coinType, account.address],
-    async () => {
-      const bit = await dotbit.reverse({
-        coin_type: coinType!.toString(),
-        key: account.address,
-      } as KeyInfo)
-      return {
-        did: bit?.account,
-      }
-    },
-    {
-      enabled: coinType !== undefined && !!account.address,
-      refetchOnWindowFocus: false,
-    },
-  )
-  const currentDid = useAtomValue(currentDidAtom)
-  const { data: ensName } = useEnsName(account)
 
   return useMemo(
     () => ({
@@ -56,12 +36,13 @@ export default function useWallet() {
               address: account.address,
             }
           : undefined,
-      name: currentDid || bit?.did || ensName || undefined,
-      displayAddress: account.address
-        ? `${account.address.substring(0, 5)}...${account.address.substring(
-            38,
-          )}`
-        : undefined,
+      displayAddress:
+        coinType && account.address
+          ? `${coinTypeNames[coinType]}:${account.address.substring(
+              0,
+              5,
+            )}...${account.address.substring(38)}`
+          : undefined,
       signMessage: async (message: string | Uint8Array) => {
         if (coinType && coinTypeToChainId[coinType]) {
           const signature = Buffer.from(
@@ -79,15 +60,6 @@ export default function useWallet() {
       connect: () => connect(),
       disconnect: () => disconnect(),
     }),
-    [
-      coinType,
-      account.address,
-      currentDid,
-      bit?.did,
-      ensName,
-      signMessageAsync,
-      connect,
-      disconnect,
-    ],
+    [coinType, account.address, signMessageAsync, connect, disconnect],
   )
 }

@@ -1,3 +1,4 @@
+import { useAtomValue } from 'jotai'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
@@ -7,11 +8,13 @@ import { Grid6, GridItem2, GridItem6 } from '../components/basic/grid'
 import Select from '../components/basic/select'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
+import { currentDidAtom } from '../utils/atoms'
 import { trpc } from '../utils/trpc'
 
 export default function CreateCommunityPage() {
   const router = useRouter()
-  const { account, name } = useWallet()
+  const { account } = useWallet()
+  const currentDid = useAtomValue(currentDidAtom)
   const { data: dids } = useDids(account)
   const [entry, setEntry] = useState('')
   const { data: community } = trpc.community.getByEntry.useQuery(
@@ -19,8 +22,8 @@ export default function CreateCommunityPage() {
     { enabled: !!entry },
   )
   useEffect(() => {
-    setEntry(dids?.find((d) => d === name) || dids?.[0] || '')
-  }, [name, dids, setEntry])
+    setEntry(dids?.find((d) => d === currentDid) || dids?.[0] || '')
+  }, [currentDid, dids, setEntry])
 
   return (
     <FormSection
