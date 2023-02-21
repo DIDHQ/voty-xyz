@@ -25,8 +25,9 @@ export default function Select(props: {
           <div className="relative">
             <Listbox.Button
               className={clsx(
-                'relative w-full cursor-default border border-gray-200 bg-white py-2 pl-3 pr-10 text-left focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
+                'relative w-full cursor-default border border-gray-200 bg-white py-2 pl-3 text-left focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
                 props.className,
+                props.value ? 'pr-10' : 'pr-6',
               )}
             >
               <span className="block min-h-[20px] truncate">{props.value}</span>
