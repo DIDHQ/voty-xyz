@@ -28,7 +28,7 @@ export default function VoterSelect(props: {
   const currentDid = useAtomValue(currentDidAtom)
   const { data: dids } = useDids(account, props.snapshots)
   const { data: votes } = useQuery(
-    [props.value, dids, props.workgroup, props.snapshots],
+    [dids, props.workgroup, props.snapshots],
     async () => {
       const numbers = await pMap(
         dids!,
@@ -50,10 +50,13 @@ export default function VoterSelect(props: {
       refetchOnWindowFocus: false,
     },
   )
-  const { data: powers } = trpc.vote.groupByProposal.useQuery(
+  const { data: powers, refetch } = trpc.vote.groupByProposal.useQuery(
     { proposal: props.proposal, authors: dids },
     { enabled: !!dids && !!props.proposal, refetchOnWindowFocus: false },
   )
+  useEffect(() => {
+    refetch()
+  }, [props.value, refetch])
   useEffect(() => {
     onChange(
       dids?.find((d) => !powers?.[d] && votes?.[d] && d === currentDid) ||
