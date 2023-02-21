@@ -1,8 +1,9 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { startCase } from 'lodash-es'
 import Link from 'next/link'
+import { useInView } from 'react-intersection-observer'
 
 import useWorkgroup from '../../../../hooks/use-workgroup'
 import useRouterQuery from '../../../../hooks/use-router-query'
@@ -38,11 +39,25 @@ export default function ProposalPage() {
     { enabled: !!proposal?.community, refetchOnWindowFocus: false },
   )
   const workgroup = useWorkgroup(community, proposal?.workgroup)
-  const { data: list, refetch: refetchList } = trpc.vote.list.useInfiniteQuery(
+  const {
+    data,
+    fetchNextPage,
+    refetch: refetchList,
+  } = trpc.vote.list.useInfiniteQuery(
     { proposal: query.proposal },
-    { enabled: !!query.proposal, refetchOnWindowFocus: false },
+    {
+      enabled: !!query.proposal,
+      getNextPageParam: ({ next }) => next,
+      refetchOnWindowFocus: false,
+    },
   )
-  const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
+  const votes = useMemo(() => data?.pages.flatMap(({ data }) => data), [data])
+  const { ref, inView } = useInView()
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage()
+    }
+  }, [fetchNextPage, inView])
 
   return (
     <>
@@ -165,6 +180,7 @@ export default function ProposalPage() {
           </div>
         </div>
       ) : null}
+      <div ref={ref} />
     </>
   )
 }

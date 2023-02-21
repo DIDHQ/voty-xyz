@@ -37,9 +37,10 @@ export const voteRouter = router({
       }
 
       const votes = await database.vote.findMany({
-        cursor: input.cursor ? { permalink: input.cursor } : undefined,
         where: { proposal: input.proposal },
-        take: 50,
+        cursor: input.cursor ? { permalink: input.cursor } : undefined,
+        take: 20,
+        skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
 

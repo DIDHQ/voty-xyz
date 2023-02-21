@@ -71,7 +71,8 @@ export const communityRouter = router({
     .query(async ({ input }) => {
       const entries = await database.entry.findMany({
         cursor: input.cursor ? { did: input.cursor } : undefined,
-        take: 50,
+        take: 30,
+        skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
       const communities = await mapByPermalinks(

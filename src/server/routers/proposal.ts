@@ -60,11 +60,12 @@ export const proposalRouter = router({
       }
 
       const proposals = await database.proposal.findMany({
-        cursor: input.cursor ? { permalink: input.cursor } : undefined,
         where: input.workgroup
           ? { entry: input.entry, workgroup: input.workgroup }
           : { entry: input.entry },
-        take: 50,
+        cursor: input.cursor ? { permalink: input.cursor } : undefined,
+        take: 20,
+        skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
 

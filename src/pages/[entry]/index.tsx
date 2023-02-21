@@ -1,4 +1,5 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
+import { useInView } from 'react-intersection-observer'
 
 import useRouterQuery from '../../hooks/use-router-query'
 import ProposalListItem from '../../components/proposal-list-item'
@@ -8,14 +9,25 @@ import LoadingBar from '../../components/basic/loading-bar'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['entry']>()
-  const { data: list, isLoading } = trpc.proposal.list.useInfiniteQuery(
-    { entry: query.entry },
-    { enabled: !!query.entry, refetchOnWindowFocus: false },
-  )
+  const { data, fetchNextPage, isLoading } =
+    trpc.proposal.list.useInfiniteQuery(
+      { entry: query.entry },
+      {
+        enabled: !!query.entry,
+        getNextPageParam: ({ next }) => next,
+        refetchOnWindowFocus: false,
+      },
+    )
   const proposals = useMemo(
-    () => list?.pages.flatMap(({ data }) => data),
-    [list],
+    () => data?.pages.flatMap(({ data }) => data),
+    [data],
   )
+  const { ref, inView } = useInView()
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage()
+    }
+  }, [fetchNextPage, inView])
 
   return (
     <CommunityLayout>
@@ -33,6 +45,7 @@ export default function CommunityIndexPage() {
           ))}
         </ul>
       )}
+      <div ref={ref} />
     </CommunityLayout>
   )
 }
