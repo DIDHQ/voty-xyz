@@ -4,10 +4,11 @@ import useRouterQuery from '../../hooks/use-router-query'
 import ProposalListItem from '../../components/proposal-list-item'
 import CommunityLayout from '../../components/layouts/community'
 import { trpc } from '../../utils/trpc'
+import LoadingBar from '../../components/basic/loading-bar'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['entry']>()
-  const { data: list } = trpc.proposal.list.useInfiniteQuery(query, {
+  const { data: list, isLoading } = trpc.proposal.list.useInfiniteQuery(query, {
     enabled: !!query.entry,
   })
   const proposals = useMemo(
@@ -17,6 +18,7 @@ export default function CommunityIndexPage() {
 
   return (
     <CommunityLayout>
+      <LoadingBar loading={isLoading} />
       <ul role="list" className="divide-y divide-gray-200 sm:pl-6">
         {proposals?.map((proposal) => (
           <li key={proposal.permalink}>
