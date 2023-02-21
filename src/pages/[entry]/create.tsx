@@ -27,11 +27,14 @@ export default function CreateWorkgroupPage() {
     () => !!(query.entry && dids?.includes(query.entry)),
     [dids, query.entry],
   )
-  const workgroup = useMemo(() => nanoid(), [])
-  const handleSuccess = useCallback(() => {
-    refetch()
-    router.push(`/${query.entry}/${workgroup}`)
-  }, [refetch, router, query.entry, workgroup])
+  const newWorkgroup = useMemo(() => nanoid(), [])
+  const handleSuccess = useCallback(
+    (workgroup: string) => {
+      refetch()
+      router.push(`/${query.entry}/${workgroup}`)
+    },
+    [refetch, router, query.entry],
+  )
 
   return (
     <CommunityLayout>
@@ -39,7 +42,7 @@ export default function CreateWorkgroupPage() {
       {query.entry && community ? (
         <WorkgroupForm
           community={community}
-          workgroup={workgroup}
+          workgroup={newWorkgroup}
           onSuccess={handleSuccess}
           disabled={!isAdmin}
           className="sm:pl-6"
