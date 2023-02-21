@@ -29,7 +29,7 @@ export default function Avatar(props: {
       width={size}
       height={size}
       style={style}
-      className={clsx('object-cover', props.className)}
+      className={clsx('bg-gray-100 object-cover', props.className)}
     />
   ) : (
     <div
