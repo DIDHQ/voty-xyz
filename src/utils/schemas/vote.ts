@@ -1,9 +1,17 @@
 import { z } from 'zod'
 
-export const voteSchema = z.object({
-  proposal: z.string().min(1),
-  choice: z.string(),
-  power: z.number(),
-})
+import { choiceIsEmpty } from '../voting'
+
+export const voteSchema = z
+  .object({
+    proposal: z.string().min(1),
+    choice: z.string(),
+    power: z.number(),
+  })
+  .refine(
+    (vote) =>
+      !choiceIsEmpty('single', vote.choice) &&
+      !choiceIsEmpty('multiple', vote.choice),
+  )
 
 export type Vote = z.infer<typeof voteSchema>
