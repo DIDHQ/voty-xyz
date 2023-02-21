@@ -25,15 +25,19 @@ export default function GroupIndexPage() {
     <CommunityLayout>
       <WorkgroupLayout>
         <LoadingBar loading={isInitialLoading} />
-        <ul role="list" className="divide-y divide-gray-200 sm:pl-6">
-          {proposals?.map((proposal) => (
-            <li key={proposal.permalink}>
-              {query.entry ? (
-                <ProposalListItem entry={query.entry} proposal={proposal} />
-              ) : null}
-            </li>
-          ))}
-        </ul>
+        {proposals?.length === 0 ? (
+          <p className="mt-6 text-sm text-gray-500 sm:pl-6">No proposals</p>
+        ) : (
+          <ul role="list" className="divide-y divide-gray-200 sm:pl-6">
+            {proposals?.map((proposal) => (
+              <li key={proposal.permalink}>
+                {query.entry ? (
+                  <ProposalListItem entry={query.entry} proposal={proposal} />
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        )}
       </WorkgroupLayout>
     </CommunityLayout>
   )

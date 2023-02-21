@@ -167,17 +167,19 @@ export default function CommunityNav(props: { className?: string }) {
           </>
         ) : null}
       </div>
-      <div className="my-4 flex space-x-4">
-        {externals.map((item) => (
-          <a
-            key={item.href}
-            href={item.href}
-            className="text-gray-400 hover:text-gray-500"
-          >
-            <item.icon className="h-7 w-7" />
-          </a>
-        ))}
-      </div>
+      {externals.length ? (
+        <div className="my-4 flex space-x-4">
+          {externals.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="text-gray-400 hover:text-gray-500"
+            >
+              <item.icon className="h-7 w-7" />
+            </a>
+          ))}
+        </div>
+      ) : null}
     </aside>
   )
 }
