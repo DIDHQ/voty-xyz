@@ -29,9 +29,13 @@ export default function CreateWorkgroupPage() {
   )
   const newWorkgroup = useMemo(() => nanoid(), [])
   const handleSuccess = useCallback(
-    (workgroup: string) => {
+    (workgroup?: string) => {
       refetch()
-      router.push(`/${query.entry}/${workgroup}`)
+      if (workgroup) {
+        router.push(`/${query.entry}/${workgroup}`)
+      } else {
+        router.push(`/${query.entry}`)
+      }
     },
     [refetch, router, query.entry],
   )

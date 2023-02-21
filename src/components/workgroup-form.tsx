@@ -8,6 +8,7 @@ import {
 } from 'react-hook-form'
 import dynamic from 'next/dynamic'
 import {
+  ArchiveBoxIcon,
   DocumentArrowUpIcon,
   DocumentPlusIcon,
 } from '@heroicons/react/20/solid'
@@ -35,7 +36,7 @@ const defaultVotingDuration = 86400
 export default function WorkgroupForm(props: {
   community: Authorized<Community>
   workgroup: string
-  onSuccess: (workgroup: string) => void
+  onSuccess: (workgroup?: string) => void
   disabled?: boolean
   className?: string
 }) {
@@ -95,6 +96,9 @@ export default function WorkgroupForm(props: {
       })
     }
   }, [append, isNewWorkgroup, props.workgroup])
+  const handleArchiveSuccess = useCallback(() => {
+    onSuccess()
+  }, [onSuccess])
   const handleSuccess = useCallback(() => {
     onSuccess(props.workgroup)
   }, [onSuccess, props.workgroup])
@@ -288,6 +292,19 @@ export default function WorkgroupForm(props: {
             {isNewWorkgroup ? 'Create' : 'Update'}
           </SigningCommunityButton>
         </FormProvider>
+        {isNewWorkgroup ? null : (
+          <FormProvider {...methods}>
+            <SigningCommunityButton
+              archive={props.workgroup}
+              did={props.community.authorship.author}
+              icon={ArchiveBoxIcon}
+              onSuccess={handleArchiveSuccess}
+              disabled={props.disabled}
+            >
+              Archive
+            </SigningCommunityButton>
+          </FormProvider>
+        )}
       </FormFooter>
     </Form>
   )
