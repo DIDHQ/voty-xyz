@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import {
   Controller,
   FormProvider,
@@ -8,6 +8,7 @@ import {
 } from 'react-hook-form'
 import dynamic from 'next/dynamic'
 import {
+  ArchiveBoxIcon,
   DocumentArrowUpIcon,
   DocumentPlusIcon,
 } from '@heroicons/react/20/solid'
@@ -35,7 +36,7 @@ const defaultVotingDuration = 86400
 export default function WorkgroupForm(props: {
   community: Authorized<Community>
   workgroup: string
-  onSuccess: () => void
+  onSuccess: (workgroup?: string) => void
   disabled?: boolean
   className?: string
 }) {
@@ -50,10 +51,7 @@ export default function WorkgroupForm(props: {
     watch,
     formState: { errors },
   } = methods
-  const { append } = useFieldArray({
-    control,
-    name: 'workgroups',
-  })
+  const { append } = useFieldArray({ control, name: 'workgroups' })
   useEffect(() => {
     reset(props.community)
   }, [props.community, reset])
@@ -61,7 +59,7 @@ export default function WorkgroupForm(props: {
     const index = props.community?.workgroups?.findIndex(
       (g) => g.extension.id === props.workgroup,
     )
-    if (index === undefined) {
+    if (index === undefined || index === -1) {
       return props.community?.workgroups?.length || 0
     }
     return index
@@ -98,6 +96,12 @@ export default function WorkgroupForm(props: {
       })
     }
   }, [append, isNewWorkgroup, props.workgroup])
+  const handleArchiveSuccess = useCallback(() => {
+    onSuccess()
+  }, [onSuccess])
+  const handleSuccess = useCallback(() => {
+    onSuccess(props.workgroup)
+  }, [onSuccess, props.workgroup])
 
   return (
     <Form className={props.className}>
@@ -282,12 +286,25 @@ export default function WorkgroupForm(props: {
           <SigningCommunityButton
             did={props.community.authorship.author}
             icon={isNewWorkgroup ? DocumentPlusIcon : DocumentArrowUpIcon}
-            onSuccess={onSuccess}
+            onSuccess={handleSuccess}
             disabled={props.disabled}
           >
             {isNewWorkgroup ? 'Create' : 'Update'}
           </SigningCommunityButton>
         </FormProvider>
+        {isNewWorkgroup ? null : (
+          <FormProvider {...methods}>
+            <SigningCommunityButton
+              archive={props.workgroup}
+              did={props.community.authorship.author}
+              icon={ArchiveBoxIcon}
+              onSuccess={handleArchiveSuccess}
+              disabled={props.disabled}
+            >
+              Archive
+            </SigningCommunityButton>
+          </FormProvider>
+        )}
       </FormFooter>
     </Form>
   )

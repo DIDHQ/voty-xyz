@@ -112,7 +112,7 @@ export default function CommunityNav(props: { className?: string }) {
         </h3>
         {community ? (
           <>
-            <div className="mt-4 w-full space-y-1">
+            <div className="mt-4 w-full">
               <h3
                 className="px-3 text-sm font-medium text-gray-400"
                 id="projects-headline"
@@ -132,7 +132,7 @@ export default function CommunityNav(props: { className?: string }) {
                     item.current
                       ? 'border-primary-600 bg-primary-50 text-primary-600'
                       : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                    'group flex items-center border-l-4 px-3 py-2 text-sm font-medium',
+                    'group flex h-10 items-center border-l-4 px-3 py-2 text-sm font-medium',
                   )}
                 >
                   <item.icon
@@ -159,10 +159,7 @@ export default function CommunityNav(props: { className?: string }) {
                   className="float-right"
                 />
               </h3>
-              <div
-                className="mt-1 space-y-1"
-                aria-labelledby="projects-headline"
-              >
+              <div>
                 {community?.workgroups?.map((workgroup, index) => (
                   <WorkgroupListItem
                     key={workgroup.name + index}
@@ -209,7 +206,7 @@ function WorkgroupListItem(props: {
         props.current
           ? 'border-primary-600 bg-primary-50 text-primary-600'
           : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-        'group flex w-full items-center border-l-4 px-3 py-2 text-sm font-medium',
+        'group flex h-10 w-full items-center border-l-4 px-3 py-2 text-sm font-medium',
       )}
     >
       {emoji ? (
