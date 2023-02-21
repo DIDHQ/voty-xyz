@@ -9,7 +9,7 @@ import LoadingBar from '../../components/basic/loading-bar'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['entry']>()
-  const { data, fetchNextPage, isLoading } =
+  const { data, fetchNextPage, hasNextPage, isLoading } =
     trpc.proposal.list.useInfiniteQuery(
       { entry: query.entry },
       {
@@ -24,10 +24,10 @@ export default function CommunityIndexPage() {
   )
   const { ref, inView } = useInView()
   useEffect(() => {
-    if (inView) {
+    if (inView && hasNextPage) {
       fetchNextPage()
     }
-  }, [fetchNextPage, inView])
+  }, [fetchNextPage, hasNextPage, inView])
 
   return (
     <CommunityLayout>

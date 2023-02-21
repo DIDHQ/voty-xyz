@@ -42,6 +42,7 @@ export default function ProposalPage() {
   const {
     data,
     fetchNextPage,
+    hasNextPage,
     refetch: refetchList,
   } = trpc.vote.list.useInfiniteQuery(
     { proposal: query.proposal },
@@ -54,10 +55,10 @@ export default function ProposalPage() {
   const votes = useMemo(() => data?.pages.flatMap(({ data }) => data), [data])
   const { ref, inView } = useInView()
   useEffect(() => {
-    if (inView) {
+    if (inView && hasNextPage) {
       fetchNextPage()
     }
-  }, [fetchNextPage, inView])
+  }, [fetchNextPage, hasNextPage, inView])
 
   return (
     <>
