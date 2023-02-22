@@ -1,14 +1,11 @@
 import clsx from 'clsx'
-import { forwardRef, InputHTMLAttributes, useCallback, WheelEvent } from 'react'
+import { forwardRef, InputHTMLAttributes } from 'react'
 
 export default forwardRef<
   HTMLInputElement,
   InputHTMLAttributes<HTMLInputElement> & { error?: boolean }
 >(function TextInput(props, ref) {
   const { error, children, className, ...restProps } = props
-  const handleWheel = useCallback((e: WheelEvent<HTMLInputElement>) => {
-    e.currentTarget.blur()
-  }, [])
 
   return (
     <input
@@ -23,7 +20,6 @@ export default forwardRef<
           : 'border-gray-200 focus:border-primary-500 focus:ring-primary-500',
         className,
       )}
-      onWheel={handleWheel}
     />
   )
 })

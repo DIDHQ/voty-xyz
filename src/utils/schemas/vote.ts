@@ -11,7 +11,13 @@ export const voteSchema = z.object({
       (choice) =>
         !choiceIsEmpty('single', choice) && !choiceIsEmpty('multiple', choice),
     ),
-  power: z.string().refine((power) => new Decimal(power)),
+  power: z.string().refine((power) => {
+    try {
+      return new Decimal(power).gt(0)
+    } catch {
+      return false
+    }
+  }),
 })
 
 export type Vote = z.infer<typeof voteSchema>

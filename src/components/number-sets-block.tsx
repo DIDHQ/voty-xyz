@@ -237,10 +237,9 @@ function NumberUnitBlock(props: {
                 name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`}
                 render={({ field: { value, onChange } }) => (
                   <TextInput
-                    type="number"
                     value={value}
                     onChange={(e) => {
-                      onChange(e.target.valueAsNumber)
+                      onChange(e.target.value)
                     }}
                     error={
                       !!errors.workgroups?.[props.workgroupIndex]?.permission?.[
