@@ -23,7 +23,7 @@ const rules: ParserRules = {
         <Link
           key={state.key}
           href={href}
-          className="text-primary-600 hover:text-primary-500"
+          className="break-all text-primary-600 hover:text-primary-500"
         >
           {output((node as any).content, state)}
         </Link>
@@ -31,7 +31,7 @@ const rules: ParserRules = {
         <a
           key={state.key}
           href={href}
-          className="text-primary-600 hover:text-primary-500"
+          className="break-all text-primary-600 hover:text-primary-500"
         >
           {output((node as any).content, state)}
         </a>
