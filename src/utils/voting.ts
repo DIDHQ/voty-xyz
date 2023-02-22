@@ -1,3 +1,4 @@
+import Decimal from 'decimal.js'
 import { uniq, without } from 'lodash-es'
 
 export function updateChoice(
@@ -44,8 +45,8 @@ export function checkChoice(
 export function powerOfChoice(
   type: 'single' | 'multiple',
   choice: string,
-  power: number,
-): { [option: string]: number | undefined } {
+  power: Decimal,
+): { [option: string]: Decimal | undefined } {
   try {
     if (type === 'single') {
       return { [JSON.parse(choice) as string]: power }
@@ -53,9 +54,9 @@ export function powerOfChoice(
     if (type === 'multiple') {
       const array = JSON.parse(choice || '[]') as string[]
       return array.reduce((obj, option) => {
-        obj[option] = power / array.length
+        obj[option] = power.dividedBy(array.length)
         return obj
-      }, {} as { [option: string]: number })
+      }, {} as { [option: string]: Decimal })
     }
     return {}
   } catch {

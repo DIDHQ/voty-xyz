@@ -1,3 +1,5 @@
+import Decimal from 'decimal.js'
+
 import type { Authorship } from './schemas'
 
 export type DID<S extends 'bit' | 'eth' = string> = `${string}.${S}`
@@ -20,7 +22,7 @@ export type BooleanFunction<T> = (...args: T) => {
 
 export type NumberFunction<T> = (...args: T) => {
   requiredCoinTypes: number[]
-  execute: (did: string, snapshots: Snapshots) => Promise<number> | number
+  execute: (did: string, snapshots: Snapshots) => Promise<Decimal> | Decimal
 }
 
 export type Account = {

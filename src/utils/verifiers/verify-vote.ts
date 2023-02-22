@@ -39,7 +39,7 @@ export default async function verifyVote(
     vote.authorship.author,
     proposal.snapshots,
   )
-  if (votingPower !== vote.power) {
+  if (!votingPower.eq(vote.power)) {
     throw new Error('voting power not match')
   }
 

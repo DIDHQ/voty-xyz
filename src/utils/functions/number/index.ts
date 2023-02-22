@@ -1,4 +1,5 @@
-import { max, sum, uniq } from 'lodash-es'
+import Decimal from 'decimal.js'
+import { max, maxBy, sum, sumBy, uniq } from 'lodash-es'
 import pMap from 'p-map'
 
 import { NumberSets, NumberUnit } from '../../schemas/sets'
@@ -15,7 +16,7 @@ export async function calculateNumber(
   data: NumberSets | NumberUnit,
   did: string,
   snapshots: Snapshots,
-): Promise<number> {
+): Promise<Decimal> {
   if ('operation' in data) {
     const results = await pMap(
       data.operands,
@@ -23,9 +24,12 @@ export async function calculateNumber(
       { concurrency: 5 },
     )
     if (data.operation === 'max') {
-      return max(results)!
+      return results.reduce(
+        (a, b) => (a.gte(b) ? a : b),
+        new Decimal(-Infinity),
+      )
     } else if (data.operation === 'sum') {
-      return sum(results)
+      return results.reduce((a, b) => a.add(b), new Decimal(0))
     }
     throw new Error(`unsupported operation: ${data.operation}`)
   }

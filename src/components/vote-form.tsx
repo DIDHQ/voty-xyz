@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import { BoltIcon } from '@heroicons/react/20/solid'
 import type { inferRouterOutputs } from '@trpc/server'
 import { gray } from 'tailwindcss/colors'
+import { Decimal } from 'decimal.js'
 
 import { calculateNumber } from '../utils/functions/number'
 import { Vote, voteSchema } from '../utils/schemas/vote'
@@ -72,7 +73,7 @@ export default function VoteForm(props: {
     if (votingPower === undefined) {
       resetField('power')
     } else {
-      setValue('power', votingPower)
+      setValue('power', votingPower.toString())
     }
   }, [resetField, setValue, votingPower])
   const handleSuccess = useCallback(() => {
@@ -159,21 +160,31 @@ export default function VoteForm(props: {
 function Option(props: {
   type: 'single' | 'multiple'
   option: string
-  votingPower?: number
+  votingPower?: Decimal
   choices?: inferRouterOutputs<ChoiceRouter>['groupByProposal']
   disabled?: boolean
   value: string
   onChange(value: string): void
 }) {
-  const { type, option, votingPower = 0, choices, value, onChange } = props
+  const {
+    type,
+    option,
+    votingPower = new Decimal(0),
+    choices,
+    value,
+    onChange,
+  } = props
   const percentage = useMemo(() => {
     const power = powerOfChoice(type, value, votingPower)[option] || 0
-    const denominator =
-      (choices?.total || 0) + (choiceIsEmpty(type, value) ? 0 : votingPower)
-    if (denominator === 0) {
+    const denominator = new Decimal(choices?.total || 0).add(
+      new Decimal(choiceIsEmpty(type, value) ? 0 : votingPower),
+    )
+    if (denominator.isZero()) {
       return 0
     }
-    return (((choices?.powers[option] || 0) + power) / denominator) * 100
+    return new Decimal(new Decimal(choices?.powers[option] || 0).add(power))
+      .mul(100)
+      .dividedBy(denominator)
   }, [option, choices?.powers, choices?.total, type, value, votingPower])
 
   return (
@@ -182,7 +193,7 @@ function Option(props: {
       style={{
         transition: 'background-size 0.3s ease-out',
         backgroundImage: `linear-gradient(90deg, ${gray['100']} 100%, transparent 100%)`,
-        backgroundSize: `${percentage}% 100%`,
+        backgroundSize: `${percentage.toFixed(2)}% 100%`,
       }}
       onClick={() => {
         if (!props.disabled) {

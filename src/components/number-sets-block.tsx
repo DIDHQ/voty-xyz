@@ -9,7 +9,7 @@ import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 
-const defaultPower = 1
+const defaultPower = '1'
 
 export default function NumberSetsBlock(props: {
   name: 'voting'

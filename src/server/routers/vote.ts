@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last, mapValues } from 'lodash-es'
 import { z } from 'zod'
+import Decimal from 'decimal.js'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -67,7 +68,7 @@ export const voteRouter = router({
         authors: z.array(z.string()).optional(),
       }),
     )
-    .output(z.record(z.string(), z.number()))
+    .output(z.record(z.string(), z.string()))
     .query(async ({ input }) => {
       if (!input.proposal || !input.authors) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -116,7 +117,11 @@ export const voteRouter = router({
           data: { votes: { increment: 1 } },
         }),
         ...Object.entries(
-          powerOfChoice(proposal.voting_type, input.choice, input.power),
+          powerOfChoice(
+            proposal.voting_type,
+            input.choice,
+            new Decimal(input.power),
+          ),
         ).map(([option, power = 0]) =>
           database.choice.upsert({
             where: {
