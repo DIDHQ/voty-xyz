@@ -125,7 +125,15 @@ export default function ProposalPage() {
               proposal={proposal}
               workgroup={workgroup}
               onSuccess={refetchList}
+              className="border-b border-gray-200 pb-6"
             />
+            <h2 className="my-6 text-2xl font-bold">
+              {proposal.votes
+                ? proposal.votes === 1
+                  ? '1 Vote'
+                  : `${proposal.votes} Votes`
+                : null}
+            </h2>
             {renderCard('block sm:hidden mb-6')}
             {votes?.length ? (
               <table className="mb-6 min-w-full border-separate border-spacing-0 border border-gray-200">

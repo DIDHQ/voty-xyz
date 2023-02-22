@@ -41,6 +41,7 @@ export default function VoteForm(props: {
   proposal: Proposal & { permalink: string; votes: number }
   workgroup: Workgroup
   onSuccess: () => void
+  className?: string
 }) {
   const { proposal, workgroup, onSuccess } = props
   const { data: choices, refetch: refetchChoices } =
@@ -130,7 +131,7 @@ export default function VoteForm(props: {
   )
 
   return proposal && workgroup ? (
-    <>
+    <div className={props.className}>
       <FormItem error={errors.choice?.message}>
         <ul
           role="list"
@@ -158,93 +159,84 @@ export default function VoteForm(props: {
           />
         </ul>
       </FormItem>
-      <div className="flex items-center justify-between py-6">
-        <h2 className="text-2xl font-bold">
-          {proposal.votes
-            ? proposal.votes === 1
-              ? '1 Vote'
-              : `${proposal.votes} Votes`
-            : null}
-        </h2>
-        {disabled ? null : (
-          <div className="flex">
-            <Select
-              top
-              options={dids}
-              renderItem={(option) => (
-                <Listbox.Option
-                  key={option}
-                  value={option}
-                  disabled={!!voted?.[option] || !votes?.[option]}
-                  className={({ active, disabled }) =>
-                    clsx(
-                      active
-                        ? 'bg-primary-600 text-white'
-                        : disabled
-                        ? 'cursor-not-allowed text-gray-400'
-                        : 'text-gray-900',
-                      'relative cursor-default select-none py-2 pl-3 pr-9',
-                    )
-                  }
-                >
-                  {({ selected, active, disabled }) => (
-                    <>
-                      <div className="flex">
-                        <span
-                          className={clsx(
-                            selected ? 'font-semibold' : 'font-normal',
-                            'truncate',
-                          )}
-                        >
-                          {option}
-                        </span>
-                        <span
-                          className={clsx(
-                            active
-                              ? 'text-primary-200'
-                              : disabled
-                              ? 'text-gray-400'
-                              : 'text-gray-500',
-                            'ml-2 truncate',
-                          )}
-                        >
-                          {votes?.[option].toString()}
-                          {voted?.[option] ? ' voted' : null}
-                        </span>
-                      </div>
-                      {selected ? (
-                        <span
-                          className={clsx(
-                            active ? 'text-white' : 'text-primary-600',
-                            'absolute inset-y-0 right-0 flex items-center pr-4',
-                          )}
-                        >
-                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                        </span>
-                      ) : null}
-                    </>
-                  )}
-                </Listbox.Option>
-              )}
-              value={did}
-              onChange={setDid}
-              className="focus:z-10 active:z-10"
-            />
-            <FormProvider {...methods}>
-              <SigningVoteButton
-                did={did}
-                icon={BoltIcon}
-                onSuccess={handleSuccess}
-                disabled={!!voted?.[did] || !votingPower || isFetching || !did}
-                className="border-l-0 focus:z-10 active:z-10"
+      {disabled ? null : (
+        <div className="mt-6 flex w-full justify-end">
+          <Select
+            top
+            options={dids}
+            renderItem={(option) => (
+              <Listbox.Option
+                key={option}
+                value={option}
+                disabled={!!voted?.[option] || !votes?.[option]}
+                className={({ active, disabled }) =>
+                  clsx(
+                    active
+                      ? 'bg-primary-600 text-white'
+                      : disabled
+                      ? 'cursor-not-allowed text-gray-400'
+                      : 'text-gray-900',
+                    'relative cursor-default select-none py-2 pl-3 pr-9',
+                  )
+                }
               >
-                Vote{votingPower ? ` (${votingPower})` : null}
-              </SigningVoteButton>
-            </FormProvider>
-          </div>
-        )}
-      </div>
-    </>
+                {({ selected, active, disabled }) => (
+                  <>
+                    <div className="flex">
+                      <span
+                        className={clsx(
+                          selected ? 'font-semibold' : 'font-normal',
+                          'truncate',
+                        )}
+                      >
+                        {option}
+                      </span>
+                      <span
+                        className={clsx(
+                          active
+                            ? 'text-primary-200'
+                            : disabled
+                            ? 'text-gray-400'
+                            : 'text-gray-500',
+                          'ml-2 truncate',
+                        )}
+                      >
+                        {votes?.[option].toString()}
+                        {voted?.[option] ? ' voted' : null}
+                      </span>
+                    </div>
+                    {selected ? (
+                      <span
+                        className={clsx(
+                          active ? 'text-white' : 'text-primary-600',
+                          'absolute inset-y-0 right-0 flex items-center pr-4',
+                        )}
+                      >
+                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                      </span>
+                    ) : null}
+                  </>
+                )}
+              </Listbox.Option>
+            )}
+            value={did}
+            onChange={setDid}
+            className="w-0 flex-1 focus:z-10 active:z-10 sm:w-auto sm:flex-none"
+          />
+          <FormProvider {...methods}>
+            <SigningVoteButton
+              did={did}
+              icon={BoltIcon}
+              onSuccess={handleSuccess}
+              disabled={!!voted?.[did] || !votingPower || isFetching || !did}
+              className="border-l-0 focus:z-10 active:z-10"
+            >
+              Vote{votingPower ? ` (${votingPower})` : null}
+            </SigningVoteButton>
+          </FormProvider>
+        </div>
+      )}
+    </div>
   ) : null
 }
 

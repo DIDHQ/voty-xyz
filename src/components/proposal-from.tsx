@@ -16,12 +16,7 @@ import { getCurrentSnapshot } from '../utils/snapshot'
 import TextInput from '../components/basic/text-input'
 import Textarea from '../components/basic/textarea'
 import TextButton from '../components/basic/text-button'
-import {
-  Form,
-  FormFooter,
-  FormItem,
-  FormSection,
-} from '../components/basic/form'
+import { Form, FormItem, FormSection } from '../components/basic/form'
 import { Grid6, GridItem6 } from '../components/basic/grid'
 import RadioGroup from '../components/basic/radio-group'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
@@ -45,6 +40,7 @@ export default function ProposalForm(props: {
   community: Authorized<Community> & Serialize<{ entry: Entry }>
   workgroup: Workgroup
   onSuccess(permalink: string): void
+  className?: string
 }) {
   const { community, workgroup, onSuccess } = props
   const methods = useForm<Proposal>({
@@ -146,7 +142,7 @@ export default function ProposalForm(props: {
   const { data: status } = useStatus(community?.entry.community)
 
   return (
-    <Form>
+    <Form className={props.className}>
       <FormSection title="New proposal">
         <Grid6 className="mt-6">
           <GridItem6>
@@ -234,29 +230,27 @@ export default function ProposalForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormFooter>
-        <div className="flex">
-          <Select
-            top
-            options={dids}
-            disables={disables}
-            value={did}
-            onChange={setDid}
-            className="focus:z-10 active:z-10"
-          />
-          <FormProvider {...methods}>
-            <SigningProposalButton
-              did={did}
-              icon={HandRaisedIcon}
-              disabled={!status?.timestamp || !did || !community || !snapshots}
-              onSuccess={onSuccess}
-              className="border-l-0 focus:z-10 active:z-10"
-            >
-              Propose
-            </SigningProposalButton>
-          </FormProvider>
-        </div>
-      </FormFooter>
+      <div className="flex w-full justify-end">
+        <Select
+          top
+          options={dids}
+          disables={disables}
+          value={did}
+          onChange={setDid}
+          className="w-0 flex-1 focus:z-10 active:z-10 sm:w-auto sm:flex-none"
+        />
+        <FormProvider {...methods}>
+          <SigningProposalButton
+            did={did}
+            icon={HandRaisedIcon}
+            disabled={!status?.timestamp || !did || !community || !snapshots}
+            onSuccess={onSuccess}
+            className="border-l-0 focus:z-10 active:z-10"
+          >
+            Propose
+          </SigningProposalButton>
+        </FormProvider>
+      </div>
     </Form>
   )
 }
