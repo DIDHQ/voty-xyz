@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
-import { startCase } from 'lodash-es'
+import { compact, startCase } from 'lodash-es'
 import Link from 'next/link'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
@@ -15,7 +15,7 @@ import { trpc } from '../../../../utils/trpc'
 import Article from '../../../../components/basic/article'
 import TextButton from '../../../../components/basic/text-button'
 import LoadingBar from '../../../../components/basic/loading-bar'
-import { title } from '../../../../utils/constants'
+import { documentTitle } from '../../../../utils/constants'
 
 const VoteForm = dynamic(() => import('../../../../components/vote-form'), {
   ssr: false,
@@ -103,13 +103,21 @@ export default function ProposalPage() {
       ) : null,
     [community, proposal, query.proposal, workgroup],
   )
+  const title = useMemo(
+    () =>
+      compact([
+        proposal?.title,
+        workgroup?.name,
+        community?.name,
+        documentTitle,
+      ]).join(' - '),
+    [community?.name, proposal?.title, workgroup?.name],
+  )
 
   return (
     <>
       <Head>
-        <title>
-          {proposal?.title} - {workgroup?.name} - {community?.name} - {title}
-        </title>
+        <title>{title}</title>
       </Head>
       <div className="w-full">
         <LoadingBar loading={isLoading} />

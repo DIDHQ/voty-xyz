@@ -19,7 +19,7 @@ import Avatar from './basic/avatar'
 import { extractStartEmoji } from '../utils/emoji'
 import { Workgroup } from '../utils/schemas/workgroup'
 import { trpc } from '../utils/trpc'
-import { title } from '../utils/constants'
+import { documentTitle } from '../utils/constants'
 
 const StatusIcon = dynamic(() => import('./status-icon'), {
   ssr: false,
@@ -95,13 +95,15 @@ export default function CommunityNav(props: { className?: string }) {
         : [],
     [community],
   )
+  const title = useMemo(
+    () => compact([community?.name, documentTitle]).join(' - '),
+    [community?.name],
+  )
 
   return (
     <>
       <Head>
-        <title>
-          {community?.name} - {title}
-        </title>
+        <title>{title}</title>
       </Head>
       <aside className={clsx('relative', props.className)}>
         <div className="flex w-full flex-col items-center border border-gray-200 pb-4">

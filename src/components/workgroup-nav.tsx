@@ -12,7 +12,7 @@ import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 import Button from './basic/button'
 import useStatus from '../hooks/use-status'
-import { title } from '../utils/constants'
+import { documentTitle } from '../utils/constants'
 
 export default function WorkgroupNav(props: { className?: string }) {
   const query = useRouterQuery<['entry', 'workgroup']>()
@@ -50,13 +50,16 @@ export default function WorkgroupNav(props: { className?: string }) {
     [workgroup?.name],
   )
   const { data: status } = useStatus(community?.entry.community)
+  const title = useMemo(
+    () =>
+      compact([workgroup?.name, community?.name, documentTitle]).join(' - '),
+    [community?.name, workgroup?.name],
+  )
 
   return (
     <>
       <Head>
-        <title>
-          {workgroup?.name} - {community?.name} - {title}
-        </title>
+        <title>{title}</title>
       </Head>
       <div className={clsx('bg-white/80 backdrop-blur', props.className)}>
         <div className="flex h-10 items-center">

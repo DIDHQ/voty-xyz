@@ -14,7 +14,7 @@ import Select from '../components/basic/select'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 import { currentDidAtom } from '../utils/atoms'
-import { title } from '../utils/constants'
+import { documentTitle } from '../utils/constants'
 import { trpc } from '../utils/trpc'
 
 export default function CreateCommunityPage() {
@@ -33,7 +33,7 @@ export default function CreateCommunityPage() {
   return (
     <>
       <Head>
-        <title>Create community - {title}</title>
+        <title>{`Create community - ${documentTitle}`}</title>
       </Head>
       <LoadingBar loading={isLoading} />
       <div className="w-full bg-white">
