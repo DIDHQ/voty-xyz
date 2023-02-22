@@ -8,6 +8,7 @@ import { BoltIcon } from '@heroicons/react/20/solid'
 import type { inferRouterOutputs } from '@trpc/server'
 import { gray } from 'tailwindcss/colors'
 import { Decimal } from 'decimal.js'
+import { useAtomValue } from 'jotai'
 
 import { calculateNumber } from '../utils/functions/number'
 import { Vote, voteSchema } from '../utils/schemas/vote'
@@ -24,6 +25,7 @@ import { getPeriod, Period } from '../utils/duration'
 import { Proposal } from '../utils/schemas/proposal'
 import { Workgroup } from '../utils/schemas/workgroup'
 import { FormItem } from './basic/form'
+import { currentDidAtom } from '../utils/atoms'
 
 const VoterSelect = dynamic(() => import('./voter-select'), {
   ssr: false,
@@ -45,7 +47,11 @@ export default function VoteForm(props: {
       { proposal: proposal.permalink },
       { enabled: !!proposal.permalink, refetchOnWindowFocus: false },
     )
+  const currentDid = useAtomValue(currentDidAtom)
   const [did, setDid] = useState('')
+  useEffect(() => {
+    setDid(currentDid)
+  }, [currentDid])
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
   })

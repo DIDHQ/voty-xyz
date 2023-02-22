@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import { startCase, uniq } from 'lodash-es'
 import dynamic from 'next/dynamic'
 import { HandRaisedIcon } from '@heroicons/react/20/solid'
+import { useAtomValue } from 'jotai'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import { requiredCoinTypesOfNumberSets } from '../../../utils/functions/number'
@@ -33,6 +34,7 @@ import { trpc } from '../../../utils/trpc'
 import Article from '../../../components/basic/article'
 import LoadingBar from '../../../components/basic/loading-bar'
 import PreviewMarkdown from '../../../components/preview-markdown'
+import { currentDidAtom } from '../../../utils/atoms'
 
 const StatusIcon = dynamic(() => import('../../../components/status-icon'), {
   ssr: false,
@@ -84,7 +86,11 @@ export default function CreateProposalPage() {
       setValue('workgroup', query.workgroup)
     }
   }, [query.workgroup, setValue])
+  const currentDid = useAtomValue(currentDidAtom)
   const [did, setDid] = useState('')
+  useEffect(() => {
+    setDid(currentDid)
+  }, [currentDid])
   const { data: requiredCoinTypes } = useQuery(
     ['requiredCoinTypes', did, workgroup?.permission.voting],
     () =>

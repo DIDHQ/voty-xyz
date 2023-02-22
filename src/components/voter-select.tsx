@@ -4,7 +4,6 @@ import { Listbox } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/20/solid'
 import pMap from 'p-map'
 import clsx from 'clsx'
-import { useAtomValue } from 'jotai'
 
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
@@ -13,7 +12,6 @@ import { Snapshots } from '../utils/types'
 import Select from './basic/select'
 import { calculateNumber } from '../utils/functions/number'
 import { trpc } from '../utils/trpc'
-import { currentDidAtom } from '../utils/atoms'
 import Decimal from 'decimal.js'
 
 export default function VoterSelect(props: {
@@ -24,9 +22,7 @@ export default function VoterSelect(props: {
   onChange(value: string): void
   className?: string
 }) {
-  const { onChange } = props
   const { account } = useWallet()
-  const currentDid = useAtomValue(currentDidAtom)
   const { data: dids } = useDids(account, props.snapshots)
   const { data: votes } = useQuery(
     [dids, props.workgroup, props.snapshots],
@@ -60,13 +56,6 @@ export default function VoterSelect(props: {
       refetch()
     }
   }, [dids, props.proposal, props.value, refetch])
-  useEffect(() => {
-    onChange(
-      dids?.find((d) => !powers?.[d] && votes?.[d] && d === currentDid) ||
-        dids?.find((d) => !powers?.[d] && votes?.[d]) ||
-        '',
-    )
-  }, [currentDid, dids, votes, onChange, powers])
 
   return (
     <Select
