@@ -2,7 +2,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 
 import TextButton from './basic/text-button'
-import { isTestnet } from '../utils/constants'
+import { isTestnet, title } from '../utils/constants'
 
 const ConnectButton = dynamic(() => import('./connect-button'), { ssr: false })
 
@@ -24,7 +24,8 @@ export default function Toolbar(props: { className?: string }) {
           <Link href="/">
             <TextButton>
               <h1 className="text-lg font-bold">
-                VOTY{isTestnet ? ' TESTNET' : null}
+                {title}
+                {isTestnet ? ' TESTNET' : null}
               </h1>
             </TextButton>
           </Link>

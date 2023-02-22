@@ -4,6 +4,7 @@ import {
   DocumentPlusIcon,
 } from '@heroicons/react/20/solid'
 import { useAtomValue } from 'jotai'
+import Head from 'next/head'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -13,6 +14,7 @@ import Select from '../components/basic/select'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 import { currentDidAtom } from '../utils/atoms'
+import { title } from '../utils/constants'
 import { trpc } from '../utils/trpc'
 
 export default function CreateCommunityPage() {
@@ -30,6 +32,9 @@ export default function CreateCommunityPage() {
 
   return (
     <>
+      <Head>
+        <title>Create community - {title}</title>
+      </Head>
       <LoadingBar loading={isLoading} />
       <div className="w-full bg-white">
         <div className="py-24 sm:px-6 sm:py-32">
