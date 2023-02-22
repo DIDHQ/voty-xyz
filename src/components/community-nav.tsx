@@ -95,7 +95,7 @@ export default function CommunityNav(props: { className?: string }) {
   )
 
   return (
-    <aside className={props.className}>
+    <aside className={clsx('relative', props.className)}>
       <div className="flex w-full flex-col items-center border border-gray-200 pb-4">
         <StatusIcon
           permalink={community?.entry.community}
