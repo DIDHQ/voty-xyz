@@ -1,5 +1,5 @@
 import Decimal from 'decimal.js'
-import { max, maxBy, sum, sumBy, uniq } from 'lodash-es'
+import { uniq } from 'lodash-es'
 import pMap from 'p-map'
 
 import { NumberSets, NumberUnit } from '../../schemas/sets'
