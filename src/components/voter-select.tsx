@@ -14,6 +14,7 @@ import Select from './basic/select'
 import { calculateNumber } from '../utils/functions/number'
 import { trpc } from '../utils/trpc'
 import { currentDidAtom } from '../utils/atoms'
+import Decimal from 'decimal.js'
 
 export default function VoterSelect(props: {
   proposal?: string
@@ -43,7 +44,7 @@ export default function VoterSelect(props: {
       return dids!.reduce((obj, did, index) => {
         obj[did] = numbers[index]
         return obj
-      }, {} as { [key: string]: number })
+      }, {} as { [key: string]: Decimal })
     },
     {
       enabled: !!dids && !!props.workgroup && !!props.snapshots,
@@ -108,7 +109,7 @@ export default function VoterSelect(props: {
                     'ml-2 truncate',
                   )}
                 >
-                  {votes?.[option]}
+                  {votes?.[option].toString()}
                   {powers?.[option] ? ' voted' : null}
                 </span>
               </div>

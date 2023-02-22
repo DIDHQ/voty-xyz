@@ -1,3 +1,4 @@
+import Decimal from 'decimal.js'
 import { z } from 'zod'
 
 export const booleanUnitSchema = z.discriminatedUnion('function', [
@@ -24,7 +25,13 @@ export const numberUnitSchema = z.discriminatedUnion('function', [
     arguments: z.tuple([
       z.string().min(1),
       z.array(z.string().min(1)),
-      z.number().gt(0),
+      z.string().refine((power) => {
+        try {
+          return new Decimal(power).gt(0)
+        } catch {
+          return false
+        }
+      }),
     ]),
   }),
 ])

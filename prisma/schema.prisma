@@ -13,6 +13,7 @@ datasource db {
 model Community {
   permalink String
   ts        DateTime
+  confirmed Boolean?
   entry     String
 
   data Bytes
@@ -24,6 +25,7 @@ model Community {
 model Proposal {
   permalink String
   ts        DateTime
+  confirmed Boolean?
   entry     String
   author    String
 
@@ -43,6 +45,7 @@ model Proposal {
 model Vote {
   permalink String
   ts        DateTime
+  confirmed Boolean?
   author    String
 
   community String
@@ -73,7 +76,7 @@ model Choice {
   proposal String
   option   String
 
-  power Float
+  power Decimal
 
   @@id([proposal, option])
 }
