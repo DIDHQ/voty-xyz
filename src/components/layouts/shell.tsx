@@ -13,7 +13,7 @@ export default function ShellLayout(props: { children: ReactNode }) {
         }
       />
       <div className="flex w-full justify-center sm:pl-18">
-        <div className="flex w-full max-w-5xl flex-col items-start px-6 pb-10 sm:flex-row">
+        <div className="flex w-full max-w-5xl flex-col items-start divide-y px-6 pb-10 sm:flex-row sm:divide-y-0">
           {props.children}
         </div>
       </div>
