@@ -45,7 +45,7 @@ export default function CreateCommunityPage() {
                 options={dids}
                 value={entry}
                 onChange={setEntry}
-                className="focus:z-10 active:z-10"
+                className="border-r-0"
               />
               {dids?.length === 0 ? (
                 isLoading ? (
@@ -53,12 +53,8 @@ export default function CreateCommunityPage() {
                     Register
                   </Button>
                 ) : (
-                  <a href="https://app.did.id/explorer">
-                    <Button
-                      icon={ArrowTopRightOnSquareIcon}
-                      primary
-                      className="border-l-0 focus:z-10 active:z-10"
-                    >
+                  <a href="https://app.did.id/explorer" className="z-10">
+                    <Button icon={ArrowTopRightOnSquareIcon} primary>
                       Register
                     </Button>
                   </a>
@@ -69,13 +65,8 @@ export default function CreateCommunityPage() {
                     View
                   </Button>
                 ) : (
-                  <Link href={`/${entry}`}>
-                    <Button
-                      icon={DocumentCheckIcon}
-                      className="border-l-0 focus:z-10 active:z-10"
-                    >
-                      View
-                    </Button>
+                  <Link href={`/${entry}`} className="z-10">
+                    <Button icon={DocumentCheckIcon}>View</Button>
                   </Link>
                 )
               ) : isLoading ? (
@@ -83,12 +74,8 @@ export default function CreateCommunityPage() {
                   Create
                 </Button>
               ) : (
-                <Link href={`/${entry}/settings`}>
-                  <Button
-                    icon={DocumentPlusIcon}
-                    primary
-                    className="border-l-0 focus:z-10 active:z-10"
-                  >
+                <Link href={`/${entry}/settings`} className="z-10">
+                  <Button icon={DocumentPlusIcon} primary>
                     Create
                   </Button>
                 </Link>
