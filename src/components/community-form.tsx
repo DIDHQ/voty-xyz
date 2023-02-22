@@ -44,11 +44,12 @@ export default function CommunityForm(props: {
   useEffect(() => {
     reset(props.community)
   }, [props.community, reset])
+  const isNewCommunity = !props.community
 
   return (
     <Form className={props.className}>
       <FormSection
-        title="Profile"
+        title={isNewCommunity ? 'New community' : 'Profile'}
         description="Basic information of the community."
       >
         <Grid6>
@@ -150,11 +151,11 @@ export default function CommunityForm(props: {
         <FormProvider {...methods}>
           <SigningCommunityButton
             did={props.entry}
-            icon={props.community ? DocumentArrowUpIcon : DocumentPlusIcon}
+            icon={isNewCommunity ? DocumentPlusIcon : DocumentArrowUpIcon}
             onSuccess={onSuccess}
             disabled={props.disabled}
           >
-            {props.community ? 'Update' : 'Create'}
+            {isNewCommunity ? 'Create' : 'Update'}
           </SigningCommunityButton>
         </FormProvider>
       </FormFooter>
