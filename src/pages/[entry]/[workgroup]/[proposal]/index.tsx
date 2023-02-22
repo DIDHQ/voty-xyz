@@ -133,19 +133,19 @@ export default function ProposalPage() {
                   <tr>
                     <th
                       scope="col"
-                      className="sticky top-18 border-b border-gray-200 bg-white/80 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="sticky top-18 border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       DID
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-18 border-x border-b border-gray-200 bg-white/80 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="sticky top-18 border-x border-b border-gray-200 bg-white/80 px-3 py-2 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       Choice
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-18 border-b border-gray-200 bg-white/80 py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="sticky top-18 border-b border-gray-200 bg-white/80 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       Power
                     </th>
@@ -157,7 +157,7 @@ export default function ProposalPage() {
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'whitespace-nowrap border-gray-200 py-4 pl-4 pr-3 text-sm font-medium text-gray-900',
+                          'whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
                         )}
                       >
                         {vote.authorship.author}
@@ -165,7 +165,7 @@ export default function ProposalPage() {
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-x border-gray-200 px-3 py-4 text-sm text-gray-500',
+                          'truncate whitespace-nowrap border-x border-gray-200 px-3 py-2 text-sm text-gray-500',
                         )}
                       >
                         {stringifyChoice(proposal.voting_type, vote.choice)}
@@ -173,7 +173,7 @@ export default function ProposalPage() {
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'whitespace-nowrap border-gray-200 py-4 pl-3 pr-4 text-right text-sm font-medium',
+                          'whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
                         )}
                       >
                         <a
