@@ -25,7 +25,6 @@ export default function IndexPage() {
 
   return (
     <>
-      <LoadingBar loading={isLoading} />
       <Grid6 className="w-full py-6">
         {communities?.map((community) => (
           <GridItem2 key={community.entry.community}>
@@ -33,6 +32,7 @@ export default function IndexPage() {
           </GridItem2>
         ))}
       </Grid6>
+      <LoadingBar loading={isLoading} />
       <div ref={ref} />
     </>
   )
