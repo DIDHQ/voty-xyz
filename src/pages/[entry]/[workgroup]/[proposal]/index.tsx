@@ -121,6 +121,7 @@ export default function ProposalPage() {
               </h3>
               <Article className="mt-8">{proposal.extension?.body}</Article>
             </div>
+            {renderCard('block sm:hidden mb-6')}
             <VoteForm
               proposal={proposal}
               workgroup={workgroup}
@@ -134,7 +135,6 @@ export default function ProposalPage() {
                   : `${proposal.votes} Votes`
                 : null}
             </h2>
-            {renderCard('block sm:hidden mb-6')}
             {votes?.length ? (
               <table className="mb-6 min-w-full border-separate border-spacing-0 border border-gray-200">
                 <thead>
