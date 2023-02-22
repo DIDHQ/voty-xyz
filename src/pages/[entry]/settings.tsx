@@ -34,11 +34,11 @@ export default function CommunitySettingsPage() {
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
-      {query.entry ? (
+      {query.entry && community !== undefined ? (
         <div className="flex w-full flex-col">
           <CommunityForm
             entry={query.entry}
-            community={community || undefined}
+            community={community}
             onSuccess={handleSuccess}
             disabled={!isAdmin}
             className="sm:pl-6"

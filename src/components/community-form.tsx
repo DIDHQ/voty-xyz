@@ -25,7 +25,7 @@ const SigningCommunityButton = dynamic(
 
 export default function CommunityForm(props: {
   entry: string
-  community?: Community
+  community: Community | null
   onSuccess: () => void
   disabled?: boolean
   className?: string
@@ -42,7 +42,7 @@ export default function CommunityForm(props: {
     formState: { errors },
   } = methods
   useEffect(() => {
-    reset(props.community)
+    reset(props.community || undefined)
   }, [props.community, reset])
   const isNewCommunity = !props.community
 
