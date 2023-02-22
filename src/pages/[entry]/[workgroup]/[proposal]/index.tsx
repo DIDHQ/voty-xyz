@@ -107,7 +107,7 @@ export default function ProposalPage() {
       <LoadingBar loading={isLoading} />
       {community && proposal && workgroup ? (
         <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
-          <div className="w-full flex-1 sm:mr-6">
+          <div className="w-full flex-1 sm:mr-6 sm:w-0">
             <Link
               href={`/${community.authorship.author}/${proposal.workgroup}`}
             >
