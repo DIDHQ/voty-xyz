@@ -31,10 +31,10 @@ import useStatus from '../hooks/use-status'
 import { Community } from '../utils/schemas/community'
 import { Authorized } from '../utils/schemas/authorship'
 import { Workgroup } from '../utils/schemas/workgroup'
-
-const ProposerSelect = dynamic(() => import('../components/proposer-select'), {
-  ssr: false,
-})
+import useWallet from '../hooks/use-wallet'
+import useDids from '../hooks/use-dids'
+import { checkBoolean } from '../utils/functions/boolean'
+import Select from './basic/select'
 
 const SigningProposalButton = dynamic(
   () => import('../components/signing/signing-proposal-button'),
@@ -106,6 +106,27 @@ export default function ProposalForm(props: {
       enabled: !!requiredCoinTypes,
       refetchOnWindowFocus: false,
       refetchInterval: 30000,
+    },
+  )
+  const { account } = useWallet()
+  const { data: dids } = useDids(account, snapshots)
+  const { data: disables } = useQuery(
+    [dids, props.workgroup, snapshots],
+    async () => {
+      const booleans = await pMap(
+        dids!,
+        (did) =>
+          checkBoolean(props.workgroup!.permission.proposing, did, snapshots!),
+        { concurrency: 5 },
+      )
+      return dids!.reduce((obj, did, index) => {
+        obj[did] = !booleans[index]
+        return obj
+      }, {} as { [key: string]: boolean })
+    },
+    {
+      enabled: !!dids && !!props.workgroup && !!snapshots,
+      refetchOnWindowFocus: false,
     },
   )
   useEffect(() => {
@@ -215,9 +236,10 @@ export default function ProposalForm(props: {
       </FormSection>
       <FormFooter>
         <div className="flex">
-          <ProposerSelect
-            workgroup={workgroup}
-            snapshots={snapshots}
+          <Select
+            top
+            options={dids}
+            disables={disables}
             value={did}
             onChange={setDid}
             className="focus:z-10 active:z-10"
