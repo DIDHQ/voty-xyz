@@ -38,7 +38,7 @@ export default function AvatarInput(props: {
   )
 
   return (
-    <div className="flex items-center">
+    <div>
       <span className="h-20 w-20 overflow-hidden rounded-full bg-gray-100">
         <Avatar size={20} name={props.name} value={props.value} />
       </span>
@@ -50,7 +50,7 @@ export default function AvatarInput(props: {
         onChange={handleChange}
       />
       {props.disabled ? null : (
-        <TextButton onClick={handleClick} className="ml-4">
+        <TextButton onClick={handleClick} className="mt-1">
           Change
         </TextButton>
       )}
