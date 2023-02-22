@@ -1,8 +1,8 @@
 import Decimal from 'decimal.js'
 
-import { NumberFunction } from '../../types'
+import { DecimalFunction } from '../../types'
 
-export const prefixes_dot_suffix_fixed_power: NumberFunction<
+export const prefixes_dot_suffix_fixed_power: DecimalFunction<
   [string, string[], string]
 > = (suffix, prefixes, power) => {
   const set = new Set(prefixes.map((prefix) => `${prefix}.${suffix}`))

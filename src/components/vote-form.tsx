@@ -10,7 +10,7 @@ import { gray } from 'tailwindcss/colors'
 import { Decimal } from 'decimal.js'
 import { useAtomValue } from 'jotai'
 
-import { calculateNumber } from '../utils/functions/number'
+import { calculateDecimal } from '../utils/functions/number'
 import { Vote, voteSchema } from '../utils/schemas/vote'
 import {
   checkChoice,
@@ -69,7 +69,7 @@ export default function VoteForm(props: {
   const { data: votingPower, isFetching } = useQuery(
     ['votingPower', workgroup, did, proposal],
     () =>
-      calculateNumber(workgroup!.permission.voting, did!, proposal!.snapshots),
+      calculateDecimal(workgroup!.permission.voting, did!, proposal!.snapshots),
     {
       enabled: !!workgroup && !!did && !!proposal,
       refetchOnWindowFocus: false,

@@ -20,7 +20,7 @@ export type BooleanFunction<T> = (...args: T) => {
   execute: (did: string, snapshots: Snapshots) => Promise<boolean> | boolean
 }
 
-export type NumberFunction<T> = (...args: T) => {
+export type DecimalFunction<T> = (...args: T) => {
   requiredCoinTypes: number[]
   execute: (did: string, snapshots: Snapshots) => Promise<Decimal> | Decimal
 }

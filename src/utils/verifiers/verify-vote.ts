@@ -1,5 +1,5 @@
 import { getPeriod, Period } from '../duration'
-import { calculateNumber } from '../functions/number'
+import { calculateDecimal } from '../functions/number'
 import { Authorized } from '../schemas/authorship'
 import { Community } from '../schemas/community'
 import { Workgroup } from '../schemas/workgroup'
@@ -34,7 +34,7 @@ export default async function verifyVote(
     throw new Error('not in voting period')
   }
 
-  const votingPower = await calculateNumber(
+  const votingPower = await calculateDecimal(
     workgroup.permission.voting,
     vote.authorship.author,
     proposal.snapshots,

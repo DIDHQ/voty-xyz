@@ -11,7 +11,7 @@ import Textarea from './basic/textarea'
 
 const defaultPower = '1'
 
-export default function NumberSetsBlock(props: {
+export default function DecimalSetsBlock(props: {
   name: 'voting'
   entry: string
   workgroupIndex: number

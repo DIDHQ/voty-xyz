@@ -10,7 +10,7 @@ import useDids from '../hooks/use-dids'
 import { Workgroup } from '../utils/schemas/workgroup'
 import { Snapshots } from '../utils/types'
 import Select from './basic/select'
-import { calculateNumber } from '../utils/functions/number'
+import { calculateDecimal } from '../utils/functions/number'
 import { trpc } from '../utils/trpc'
 import Decimal from 'decimal.js'
 
@@ -30,7 +30,7 @@ export default function VoterSelect(props: {
       const numbers = await pMap(
         dids!,
         (did) =>
-          calculateNumber(
+          calculateDecimal(
             props.workgroup!.permission.voting,
             did,
             props.snapshots!,

@@ -18,7 +18,7 @@ export const booleanSetsSchema = z.object({
 
 export type BooleanSets = z.infer<typeof booleanSetsSchema>
 
-export const numberUnitSchema = z.discriminatedUnion('function', [
+export const decimalUnitSchema = z.discriminatedUnion('function', [
   z.object({
     alias: z.string().optional(),
     function: z.literal('prefixes_dot_suffix_fixed_power'),
@@ -36,11 +36,11 @@ export const numberUnitSchema = z.discriminatedUnion('function', [
   }),
 ])
 
-export type NumberUnit = z.infer<typeof numberUnitSchema>
+export type DecimalUnit = z.infer<typeof decimalUnitSchema>
 
-export const numberSetsSchema = z.object({
+export const decimalSetsSchema = z.object({
   operation: z.literal('max'),
-  operands: z.array(numberUnitSchema).min(1),
+  operands: z.array(decimalUnitSchema).min(1),
 })
 
-export type NumberSets = z.infer<typeof numberSetsSchema>
+export type DecimalSets = z.infer<typeof decimalSetsSchema>

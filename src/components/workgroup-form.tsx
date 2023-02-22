@@ -19,7 +19,7 @@ import DurationInput from './basic/duration-input'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
-import NumberSetsBlock from './number-sets-block'
+import DecimalSetsBlock from './decimal-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 import PreviewMarkdown from './preview-markdown'
@@ -188,7 +188,7 @@ export default function WorkgroupForm(props: {
               }
             >
               <FormProvider {...methods}>
-                <NumberSetsBlock
+                <DecimalSetsBlock
                   name="voting"
                   entry={props.community.authorship.author}
                   workgroupIndex={workgroupIndex}

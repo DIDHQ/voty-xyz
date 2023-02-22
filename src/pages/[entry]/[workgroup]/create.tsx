@@ -11,7 +11,7 @@ import { HandRaisedIcon } from '@heroicons/react/20/solid'
 import { useAtomValue } from 'jotai'
 
 import useRouterQuery from '../../../hooks/use-router-query'
-import { requiredCoinTypesOfNumberSets } from '../../../utils/functions/number'
+import { requiredCoinTypesOfDecimalSets } from '../../../utils/functions/number'
 import { Proposal, proposalSchema } from '../../../utils/schemas/proposal'
 import { getCurrentSnapshot } from '../../../utils/snapshot'
 import TextInput from '../../../components/basic/text-input'
@@ -97,7 +97,7 @@ export default function CreateProposalPage() {
     () =>
       uniq([
         requiredCoinTypeOfDidChecker(did),
-        ...requiredCoinTypesOfNumberSets(workgroup!.permission.voting!),
+        ...requiredCoinTypesOfDecimalSets(workgroup!.permission.voting!),
       ]),
     {
       enabled: !!did && !!workgroup?.permission.voting,
