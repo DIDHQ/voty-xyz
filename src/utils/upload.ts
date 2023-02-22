@@ -12,9 +12,10 @@ const textEncoder = new TextEncoder()
 
 export async function uploadToArweave(
   document: Authorized<Community | Proposal | Vote>,
-): Promise<{ permalink: string; data: Buffer }> {
-  const data = Buffer.from(textEncoder.encode(JSON.stringify(document)))
-  const transaction = await arweave.createTransaction({ data })
+): Promise<string> {
+  const transaction = await arweave.createTransaction({
+    data: Buffer.from(textEncoder.encode(JSON.stringify(document))),
+  })
   const tags = getArweaveTags(document)
   Object.entries(tags).forEach(([key, value]) => {
     transaction.addTag(key, value)
@@ -24,7 +25,7 @@ export async function uploadToArweave(
   while (!uploader.isComplete) {
     await uploader.uploadChunk()
   }
-  return { permalink: id2Permalink(transaction.id), data }
+  return id2Permalink(transaction.id)
 }
 
 const defaultArweaveTags = {

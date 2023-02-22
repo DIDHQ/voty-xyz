@@ -126,12 +126,12 @@ export const communityRouter = router({
     .mutation(async ({ input }) => {
       await verifySnapshot(input.authorship)
       await verifyAuthorshipProof(input)
-      const { permalink, data } = await uploadToArweave(input)
+      const permalink = await uploadToArweave(input)
       const ts = new Date()
 
       await database.$transaction([
         database.community.create({
-          data: { permalink, ts, entry: input.authorship.author, data },
+          data: { permalink, ts, entry: input.authorship.author, data: input },
         }),
         database.entry.upsert({
           where: { did: input.authorship.author },

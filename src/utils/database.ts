@@ -15,8 +15,6 @@ import { Vote } from './schemas/vote'
 
 export const database = new PrismaClient()
 
-const textDecoder = new TextDecoder()
-
 export async function getByPermalink<T extends DataType>(
   type: T,
   permalink: string,
@@ -32,10 +30,7 @@ export async function getByPermalink<T extends DataType>(
   if (!data) {
     return
   }
-  return {
-    ...data,
-    data: JSON.parse(textDecoder.decode(data.data)),
-  } as T extends DataType.COMMUNITY
+  return data as T extends DataType.COMMUNITY
     ? Omit<CommunityModel, 'data'> & { data: Proved<Authorized<Community>> }
     : T extends DataType.PROPOSAL
     ? Omit<ProposalModel, 'data'> & { data: Proved<Authorized<Proposal>> }
@@ -48,7 +43,7 @@ export async function mapByPermalinks<T extends DataType>(
   type: T,
   permalinks: string[],
 ) {
-  const data =
+  const data: (CommunityModel | ProposalModel | VoteModel)[] =
     type === DataType.COMMUNITY
       ? await database.community.findMany({
           where: { permalink: { in: permalinks } },
@@ -63,10 +58,7 @@ export async function mapByPermalinks<T extends DataType>(
         })
       : []
   return keyBy(
-    data.map((item) => ({
-      ...item,
-      data: JSON.parse(textDecoder.decode(item.data)),
-    })),
+    data,
     ({ permalink }) => permalink,
   ) as T extends DataType.COMMUNITY
     ? Record<

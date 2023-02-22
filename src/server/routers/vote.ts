@@ -14,8 +14,6 @@ import { proved } from '../../utils/schemas/proof'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorshipProof from '../../utils/verifiers/verify-authorship-proof'
 
-const textDecoder = new TextDecoder()
-
 const schema = proved(authorized(voteSchema))
 
 export const voteRouter = router({
@@ -50,8 +48,8 @@ export const voteRouter = router({
           votes.map(({ permalink, data }) => {
             try {
               return {
+                ...schema.parse(data),
                 permalink,
-                ...schema.parse(JSON.parse(textDecoder.decode(data))),
               }
             } catch {
               return
@@ -83,7 +81,7 @@ export const voteRouter = router({
 
       return mapValues(
         keyBy(votes, ({ author }) => author),
-        ({ data }) => schema.parse(JSON.parse(textDecoder.decode(data))).power,
+        ({ data }) => schema.parse(data).power,
       )
     }),
   create: procedure
@@ -93,7 +91,7 @@ export const voteRouter = router({
       await verifySnapshot(input.authorship)
       await verifyAuthorshipProof(input)
       const { proposal, community } = await verifyVote(input)
-      const { permalink, data } = await uploadToArweave(input)
+      const permalink = await uploadToArweave(input)
       const ts = new Date()
 
       await database.$transaction([
@@ -105,7 +103,7 @@ export const voteRouter = router({
             community: proposal.community,
             workgroup: proposal.workgroup,
             proposal: input.proposal,
-            data,
+            data: input,
           },
         }),
         database.proposal.update({

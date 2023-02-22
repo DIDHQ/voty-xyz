@@ -16,7 +16,7 @@ model Community {
   confirmed Boolean?
   entry     String
 
-  data Bytes
+  data Json
 
   @@id([permalink])
   @@index([entry])
@@ -32,7 +32,7 @@ model Proposal {
   community String
   workgroup String
 
-  data Bytes
+  data Json
 
   votes Int
 
@@ -52,7 +52,7 @@ model Vote {
   workgroup String
   proposal  String
 
-  data Bytes
+  data Json
 
   @@id([permalink])
   @@unique([proposal, author])

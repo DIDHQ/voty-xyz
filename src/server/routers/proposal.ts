@@ -13,8 +13,6 @@ import { DataType } from '../../utils/constants'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorshipProof from '../../utils/verifiers/verify-authorship-proof'
 
-const textDecoder = new TextDecoder()
-
 const schema = proved(authorized(proposalSchema))
 
 export const proposalRouter = router({
@@ -74,7 +72,7 @@ export const proposalRouter = router({
           proposals.map(({ data, permalink, votes }) => {
             try {
               return {
-                ...schema.parse(JSON.parse(textDecoder.decode(data))),
+                ...schema.parse(data),
                 permalink,
                 votes,
               }
@@ -93,7 +91,7 @@ export const proposalRouter = router({
       await verifySnapshot(input.authorship)
       await verifyAuthorshipProof(input)
       const { community } = await verifyProposal(input)
-      const { permalink, data } = await uploadToArweave(input)
+      const permalink = await uploadToArweave(input)
       const ts = new Date()
 
       await database.$transaction([
@@ -105,7 +103,7 @@ export const proposalRouter = router({
             entry: community.authorship.author,
             community: input.community,
             workgroup: input.workgroup,
-            data,
+            data: input,
             votes: 0,
           },
         }),
