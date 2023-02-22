@@ -25,7 +25,7 @@ import '@total-typescript/ts-reset'
 
 import ShellLayout from '../components/layouts/shell'
 import { trpc } from '../utils/trpc'
-import { isTestnet } from '../utils/constants'
+import { isTestnet, documentTitle } from '../utils/constants'
 import { chainIdToRpc } from '../utils/constants'
 import '../../styles/globals.css'
 
@@ -60,7 +60,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
-        <title>VOTY</title>
+        <title>{documentTitle}</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"

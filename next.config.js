@@ -15,6 +15,10 @@ const nextConfig = {
         alias: {
           ...config.resolve.alias,
           'bn.js': path.join(__dirname, 'node_modules/bn.js/lib/bn.js'),
+          '@tanstack/react-query': path.join(
+            __dirname,
+            'node_modules/@tanstack/react-query/build/lib/index.esm.js',
+          ),
         },
       },
     }

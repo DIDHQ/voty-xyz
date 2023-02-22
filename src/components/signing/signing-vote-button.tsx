@@ -28,7 +28,6 @@ export default function SigningVoteButton(props: {
     },
     [handleSignDocument, handleCreate],
   )
-
   useEffect(() => {
     if (handleCreate.isSuccess) {
       onSuccess(handleCreate.data)
