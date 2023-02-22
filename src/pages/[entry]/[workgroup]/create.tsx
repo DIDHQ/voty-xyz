@@ -35,6 +35,7 @@ import Article from '../../../components/basic/article'
 import LoadingBar from '../../../components/basic/loading-bar'
 import PreviewMarkdown from '../../../components/preview-markdown'
 import { currentDidAtom } from '../../../utils/atoms'
+import useStatus from '../../../hooks/use-status'
 
 const StatusIcon = dynamic(() => import('../../../components/status-icon'), {
   ssr: false,
@@ -142,6 +143,7 @@ export default function CreateProposalPage() {
       })),
     [],
   )
+  const { data: status } = useStatus(community?.entry.community)
 
   return (
     <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
@@ -256,7 +258,9 @@ export default function CreateProposalPage() {
                 <SigningProposalButton
                   did={did}
                   icon={HandRaisedIcon}
-                  disabled={!did || !community || !snapshots}
+                  disabled={
+                    !status?.timestamp || !did || !community || !snapshots
+                  }
                   onSuccess={handleSuccess}
                   className="border-l-0 focus:z-10 active:z-10"
                 >
