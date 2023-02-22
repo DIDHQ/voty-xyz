@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { startCase } from 'lodash-es'
@@ -59,12 +59,54 @@ export default function ProposalPage() {
       fetchNextPage()
     }
   }, [fetchNextPage, hasNextPage, inView])
+  const renderCard = useCallback(
+    (className?: string) =>
+      community && workgroup && proposal ? (
+        <div
+          className={clsx(
+            'relative w-full shrink-0 sm:sticky sm:top-24 sm:w-72',
+            className,
+          )}
+        >
+          <StatusIcon
+            permalink={query.proposal}
+            className="absolute right-4 top-4"
+          />
+          <div className="space-y-6 border border-gray-200 p-6">
+            <DetailList title="Proposal">
+              <DetailItem title="Community">
+                <StatusIcon permalink={proposal.community}>
+                  {community.name}
+                </StatusIcon>
+              </DetailItem>
+              <DetailItem title="Workgroup">{workgroup.name}</DetailItem>
+              <DetailItem title="Proposer">
+                {proposal.authorship.author}
+              </DetailItem>
+              <DetailItem title="Voting type">
+                {startCase(proposal.voting_type)}
+              </DetailItem>
+            </DetailList>
+            <ProposalSchedule
+              proposal={query.proposal}
+              duration={workgroup.duration}
+            />
+            <DetailList title="Terms and conditions">
+              <Article small className="pt-2">
+                {workgroup?.extension.terms_and_conditions}
+              </Article>
+            </DetailList>
+          </div>
+        </div>
+      ) : null,
+    [community, proposal, query.proposal, workgroup],
+  )
 
   return (
     <>
-      <LoadingBar loading={isLoading} />
       {community && proposal && workgroup ? (
         <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
+          <LoadingBar loading={isLoading} />
           <div className="w-full flex-1 sm:mr-6">
             <Link
               href={`/${community.authorship.author}/${proposal.workgroup}`}
@@ -84,6 +126,7 @@ export default function ProposalPage() {
               workgroup={workgroup}
               onSuccess={refetchList}
             />
+            {renderCard('block sm:hidden mb-6')}
             {votes?.length ? (
               <table className="mb-6 min-w-full border-separate border-spacing-0 border border-gray-200">
                 <thead>
@@ -146,37 +189,7 @@ export default function ProposalPage() {
               </table>
             ) : null}
           </div>
-          <div className="relative w-full shrink-0 sm:sticky sm:top-24 sm:w-72">
-            <StatusIcon
-              permalink={query.proposal}
-              className="absolute right-4 top-4"
-            />
-            <div className="space-y-6 border border-gray-200 p-6">
-              <DetailList title="Proposal">
-                <DetailItem title="Community">
-                  <StatusIcon permalink={proposal.community}>
-                    {community.name}
-                  </StatusIcon>
-                </DetailItem>
-                <DetailItem title="Workgroup">{workgroup.name}</DetailItem>
-                <DetailItem title="Proposer">
-                  {proposal.authorship.author}
-                </DetailItem>
-                <DetailItem title="Voting type">
-                  {startCase(proposal.voting_type)}
-                </DetailItem>
-              </DetailList>
-              <ProposalSchedule
-                proposal={query.proposal}
-                duration={workgroup.duration}
-              />
-              <DetailList title="Terms and conditions">
-                <Article small className="pt-2">
-                  {workgroup?.extension.terms_and_conditions}
-                </Article>
-              </DetailList>
-            </div>
-          </div>
+          {renderCard('hidden sm:block')}
         </div>
       ) : null}
       <div ref={ref} />

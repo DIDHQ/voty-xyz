@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { booleanSetsSchema, numberSetsSchema } from './sets'
+import { booleanSetsSchema, decimalSetsSchema } from './sets'
 
 export const workgroupSchema = z.object({
   name: z.string().min(1),
@@ -12,7 +12,7 @@ export const workgroupSchema = z.object({
   permission: z.object({
     proposing: booleanSetsSchema,
     adding_option: booleanSetsSchema.optional(),
-    voting: numberSetsSchema,
+    voting: decimalSetsSchema,
   }),
   extension: z.object({
     id: z.string().min(1),

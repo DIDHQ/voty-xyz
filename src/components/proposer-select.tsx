@@ -1,7 +1,5 @@
-import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import pMap from 'p-map'
-import { useAtomValue } from 'jotai'
 
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
@@ -9,7 +7,6 @@ import { Workgroup } from '../utils/schemas/workgroup'
 import { checkBoolean } from '../utils/functions/boolean'
 import { Snapshots } from '../utils/types'
 import Select from './basic/select'
-import { currentDidAtom } from '../utils/atoms'
 
 export default function ProposerSelect(props: {
   workgroup?: Workgroup
@@ -18,9 +15,7 @@ export default function ProposerSelect(props: {
   onChange(value: string): void
   className?: string
 }) {
-  const { onChange } = props
   const { account } = useWallet()
-  const currentDid = useAtomValue(currentDidAtom)
   const { data: dids } = useDids(account, props.snapshots)
   const { data: disables } = useQuery(
     [dids, props.workgroup, props.snapshots],
@@ -45,13 +40,6 @@ export default function ProposerSelect(props: {
       refetchOnWindowFocus: false,
     },
   )
-  useEffect(() => {
-    onChange(
-      dids?.find((d) => !disables?.[d] && d === currentDid) ||
-        dids?.find((d) => !disables?.[d]) ||
-        '',
-    )
-  }, [currentDid, dids, disables, onChange])
 
   return (
     <Select

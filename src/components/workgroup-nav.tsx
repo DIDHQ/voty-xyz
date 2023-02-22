@@ -10,6 +10,7 @@ import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 import Button from './basic/button'
+import useStatus from '../hooks/use-status'
 
 export default function WorkgroupNav(props: { className?: string }) {
   const query = useRouterQuery<['entry', 'workgroup']>()
@@ -46,6 +47,7 @@ export default function WorkgroupNav(props: { className?: string }) {
     () => extractStartEmoji(workgroup?.name),
     [workgroup?.name],
   )
+  const { data: status } = useStatus(community?.entry.community)
 
   return (
     <div className={clsx('bg-white/80 backdrop-blur', props.className)}>
@@ -66,12 +68,18 @@ export default function WorkgroupNav(props: { className?: string }) {
         <h3 className="w-0 flex-1 truncate text-2xl font-medium text-gray-900">
           {workgroup?.name.replace(emoji || '', '') || '...'}
         </h3>
-        <Link
-          href={`/${query.entry}/${query.workgroup}/create`}
-          className="ml-4 shrink-0"
-        >
-          <Button primary>New Proposal</Button>
-        </Link>
+        {status?.timestamp ? (
+          <Link
+            href={`/${query.entry}/${query.workgroup}/create`}
+            className="ml-4 shrink-0"
+          >
+            <Button primary>New Proposal</Button>
+          </Link>
+        ) : (
+          <Button primary disabled>
+            New Proposal
+          </Button>
+        )}
       </div>
       <div className="border-b">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">

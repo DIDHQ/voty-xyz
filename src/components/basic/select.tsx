@@ -25,7 +25,7 @@ export default function Select(props: {
           <div className="relative">
             <Listbox.Button
               className={clsx(
-                'relative w-full cursor-default border border-gray-200 bg-white py-2 pl-3 text-left focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
+                'relative w-full cursor-default border border-gray-200 bg-white py-2 pl-3 text-left text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500',
                 props.className,
                 props.value ? 'pr-10' : 'pr-6',
               )}
@@ -50,7 +50,7 @@ export default function Select(props: {
                 props.full ? 'w-full' : undefined,
               )}
             >
-              <Listbox.Options className="z-10 max-h-60 w-full overflow-auto bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="z-10 max-h-60 w-full overflow-auto bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none">
                 {props.renderItem
                   ? props.options?.map(props.renderItem)
                   : props.options?.map((option) => (

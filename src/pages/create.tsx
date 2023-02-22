@@ -1,10 +1,13 @@
+import {
+  ArrowTopRightOnSquareIcon,
+  DocumentCheckIcon,
+  DocumentPlusIcon,
+} from '@heroicons/react/20/solid'
 import { useAtomValue } from 'jotai'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-import Alert from '../components/basic/alert'
-import { FormItem, FormSection } from '../components/basic/form'
-import { Grid6, GridItem2, GridItem6 } from '../components/basic/grid'
+import Button from '../components/basic/button'
 import LoadingBar from '../components/basic/loading-bar'
 import Select from '../components/basic/select'
 import useDids from '../hooks/use-dids'
@@ -13,7 +16,6 @@ import { currentDidAtom } from '../utils/atoms'
 import { trpc } from '../utils/trpc'
 
 export default function CreateCommunityPage() {
-  const router = useRouter()
   const { account } = useWallet()
   const currentDid = useAtomValue(currentDidAtom)
   const { data: dids } = useDids(account)
@@ -29,57 +31,59 @@ export default function CreateCommunityPage() {
   return (
     <>
       <LoadingBar loading={isLoading} />
-      <FormSection
-        title="Create community"
-        description="select an DID as your community entry"
-        className="w-full"
-      >
-        <Grid6 className="w-full">
-          <GridItem2>
-            <FormItem label="DID">
+      <div className="w-full bg-white">
+        <div className="py-24 sm:px-6 sm:py-32">
+          <div className="mx-auto text-center">
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900">
+              Create community
+            </h2>
+            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">
+              Select a DID as your community entry
+            </p>
+            <div className="mt-10 flex items-center justify-center">
               <Select
                 options={dids}
                 value={entry}
                 onChange={setEntry}
-                className="w-fit"
+                className="border-r-0"
               />
-            </FormItem>
-          </GridItem2>
-          <GridItem6>
-            {dids?.length === 0 ? (
-              <Alert
-                type="info"
-                action="Register"
-                onClick={() => {
-                  window.open('https://app.did.id/explorer')
-                }}
-              >
-                Do not have a DID? Register now!
-              </Alert>
-            ) : community ? (
-              <Alert
-                type="warning"
-                action="View"
-                onClick={() => {
-                  router.push(`/${entry}`)
-                }}
-              >
-                Community of <b>{entry}</b> already exists.
-              </Alert>
-            ) : (
-              <Alert
-                type="success"
-                action="Create"
-                onClick={() => {
-                  router.push(`/${entry}/settings`)
-                }}
-              >
-                <b>{entry}</b> is able to be used as community entry.
-              </Alert>
-            )}
-          </GridItem6>
-        </Grid6>
-      </FormSection>
+              {dids?.length === 0 ? (
+                isLoading ? (
+                  <Button icon={ArrowTopRightOnSquareIcon} primary disabled>
+                    Register
+                  </Button>
+                ) : (
+                  <a href="https://app.did.id/explorer" className="z-10">
+                    <Button icon={ArrowTopRightOnSquareIcon} primary>
+                      Register
+                    </Button>
+                  </a>
+                )
+              ) : community ? (
+                isLoading ? (
+                  <Button icon={DocumentCheckIcon} disabled>
+                    View
+                  </Button>
+                ) : (
+                  <Link href={`/${entry}`} className="z-10">
+                    <Button icon={DocumentCheckIcon}>View</Button>
+                  </Link>
+                )
+              ) : isLoading ? (
+                <Button icon={DocumentPlusIcon} primary disabled>
+                  Create
+                </Button>
+              ) : (
+                <Link href={`/${entry}/settings`} className="z-10">
+                  <Button icon={DocumentPlusIcon} primary>
+                    Create
+                  </Button>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   )
 }

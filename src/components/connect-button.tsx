@@ -19,7 +19,9 @@ export default function ConnectButton() {
   const { data: avatar } = useAvatar(currentDid)
   const { data: dids } = useDids(account)
   useEffect(() => {
-    setCurrentDid((old) => old || dids?.[0] || '')
+    setCurrentDid((old) =>
+      dids ? (dids.includes(old) ? old : dids[0] || '') : old,
+    )
   }, [dids, setCurrentDid])
 
   return (

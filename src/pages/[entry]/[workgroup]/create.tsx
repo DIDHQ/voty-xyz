@@ -8,9 +8,10 @@ import { useRouter } from 'next/router'
 import { startCase, uniq } from 'lodash-es'
 import dynamic from 'next/dynamic'
 import { HandRaisedIcon } from '@heroicons/react/20/solid'
+import { useAtomValue } from 'jotai'
 
 import useRouterQuery from '../../../hooks/use-router-query'
-import { requiredCoinTypesOfNumberSets } from '../../../utils/functions/number'
+import { requiredCoinTypesOfDecimalSets } from '../../../utils/functions/number'
 import { Proposal, proposalSchema } from '../../../utils/schemas/proposal'
 import { getCurrentSnapshot } from '../../../utils/snapshot'
 import TextInput from '../../../components/basic/text-input'
@@ -33,6 +34,8 @@ import { trpc } from '../../../utils/trpc'
 import Article from '../../../components/basic/article'
 import LoadingBar from '../../../components/basic/loading-bar'
 import PreviewMarkdown from '../../../components/preview-markdown'
+import { currentDidAtom } from '../../../utils/atoms'
+import useStatus from '../../../hooks/use-status'
 
 const StatusIcon = dynamic(() => import('../../../components/status-icon'), {
   ssr: false,
@@ -84,13 +87,17 @@ export default function CreateProposalPage() {
       setValue('workgroup', query.workgroup)
     }
   }, [query.workgroup, setValue])
+  const currentDid = useAtomValue(currentDidAtom)
   const [did, setDid] = useState('')
+  useEffect(() => {
+    setDid(currentDid)
+  }, [currentDid])
   const { data: requiredCoinTypes } = useQuery(
     ['requiredCoinTypes', did, workgroup?.permission.voting],
     () =>
       uniq([
         requiredCoinTypeOfDidChecker(did),
-        ...requiredCoinTypesOfNumberSets(workgroup!.permission.voting!),
+        ...requiredCoinTypesOfDecimalSets(workgroup!.permission.voting!),
       ]),
     {
       enabled: !!did && !!workgroup?.permission.voting,
@@ -136,6 +143,7 @@ export default function CreateProposalPage() {
       })),
     [],
   )
+  const { data: status } = useStatus(community?.entry.community)
 
   return (
     <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
@@ -250,7 +258,9 @@ export default function CreateProposalPage() {
                 <SigningProposalButton
                   did={did}
                   icon={HandRaisedIcon}
-                  disabled={!did || !community || !snapshots}
+                  disabled={
+                    !status?.timestamp || !did || !community || !snapshots
+                  }
                   onSuccess={handleSuccess}
                   className="border-l-0 focus:z-10 active:z-10"
                 >

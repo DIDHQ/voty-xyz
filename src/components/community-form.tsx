@@ -25,7 +25,7 @@ const SigningCommunityButton = dynamic(
 
 export default function CommunityForm(props: {
   entry: string
-  community?: Community
+  community: Community | null
   onSuccess: () => void
   disabled?: boolean
   className?: string
@@ -42,13 +42,14 @@ export default function CommunityForm(props: {
     formState: { errors },
   } = methods
   useEffect(() => {
-    reset(props.community)
+    reset(props.community || undefined)
   }, [props.community, reset])
+  const isNewCommunity = !props.community
 
   return (
     <Form className={props.className}>
       <FormSection
-        title="Profile"
+        title={isNewCommunity ? 'New community' : 'Profile'}
         description="Basic information of the community."
       >
         <Grid6>
@@ -150,11 +151,11 @@ export default function CommunityForm(props: {
         <FormProvider {...methods}>
           <SigningCommunityButton
             did={props.entry}
-            icon={props.community ? DocumentArrowUpIcon : DocumentPlusIcon}
+            icon={isNewCommunity ? DocumentPlusIcon : DocumentArrowUpIcon}
             onSuccess={onSuccess}
             disabled={props.disabled}
           >
-            {props.community ? 'Update' : 'Create'}
+            {isNewCommunity ? 'Create' : 'Update'}
           </SigningCommunityButton>
         </FormProvider>
       </FormFooter>
