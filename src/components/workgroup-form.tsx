@@ -51,7 +51,7 @@ export default function WorkgroupForm(props: {
     watch,
     formState: { errors },
   } = methods
-  const { append } = useFieldArray({ control, name: 'workgroups' })
+  const { update } = useFieldArray({ control, name: 'workgroups' })
   useEffect(() => {
     reset(props.community)
   }, [props.community, reset])
@@ -65,15 +65,13 @@ export default function WorkgroupForm(props: {
     return index
   }, [props.community?.workgroups, props.workgroup])
   const isNewWorkgroup = useMemo(
-    () =>
-      !props.community?.workgroups?.find(
-        (g) => g.extension.id === props.workgroup,
-      ),
-    [props.community.workgroups, props.workgroup],
+    () => !props.community?.workgroups?.[workgroupIndex],
+    [props.community?.workgroups, workgroupIndex],
   )
   useEffect(() => {
     if (isNewWorkgroup) {
-      append({
+      console.log('update', workgroupIndex)
+      update(workgroupIndex, {
         name: '',
         permission: {
           proposing: {
@@ -95,7 +93,7 @@ export default function WorkgroupForm(props: {
         },
       })
     }
-  }, [append, isNewWorkgroup, props.workgroup])
+  }, [isNewWorkgroup, props.workgroup, update, workgroupIndex])
   const handleArchiveSuccess = useCallback(() => {
     onSuccess()
   }, [onSuccess])
