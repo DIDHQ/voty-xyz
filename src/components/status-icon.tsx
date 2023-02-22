@@ -16,16 +16,16 @@ export default function StatusIcon(props: {
   className?: string
   children?: ReactNode
 }) {
-  const { data: status, isLoading } = useStatus(props.permalink)
+  const { data: status, isInitialLoading } = useStatus(props.permalink)
   const children = useMemo(
     () =>
       props.children ??
-      (isLoading ? null : status?.timestamp ? (
+      (isInitialLoading ? null : status?.timestamp ? (
         <CubeIcon className="h-5 w-5" />
       ) : (
         <CubeTransparentIcon className="h-5 w-5" />
       )),
-    [isLoading, props.children, status?.timestamp],
+    [isInitialLoading, props.children, status?.timestamp],
   )
   const href = useMemo(
     () =>
