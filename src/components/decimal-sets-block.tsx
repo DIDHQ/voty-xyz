@@ -32,7 +32,7 @@ export default function DecimalSetsBlock(props: {
           className="divide-y divide-gray-200 border border-gray-200"
         >
           {fields.map((operand, index) => (
-            <NumberUnitBlock
+            <DecimalUnitBlock
               key={operand.id}
               name={props.name}
               entry={props.entry}
@@ -64,7 +64,7 @@ export default function DecimalSetsBlock(props: {
   )
 }
 
-function NumberUnitBlock(props: {
+function DecimalUnitBlock(props: {
   name: 'voting'
   entry: string
   workgroupIndex: number
