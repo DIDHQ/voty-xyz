@@ -4,11 +4,13 @@ import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
-import { BoltIcon } from '@heroicons/react/20/solid'
+import { BoltIcon, CheckIcon } from '@heroicons/react/20/solid'
 import type { inferRouterOutputs } from '@trpc/server'
 import { gray } from 'tailwindcss/colors'
 import { Decimal } from 'decimal.js'
 import { useAtomValue } from 'jotai'
+import pMap from 'p-map'
+import { Listbox } from '@headlessui/react'
 
 import { calculateDecimal } from '../utils/functions/number'
 import { Vote, voteSchema } from '../utils/schemas/vote'
@@ -26,10 +28,9 @@ import { Proposal } from '../utils/schemas/proposal'
 import { Workgroup } from '../utils/schemas/workgroup'
 import { FormItem } from './basic/form'
 import { currentDidAtom } from '../utils/atoms'
-
-const VoterSelect = dynamic(() => import('./voter-select'), {
-  ssr: false,
-})
+import Select from './basic/select'
+import useWallet from '../hooks/use-wallet'
+import useDids from '../hooks/use-dids'
 
 const SigningVoteButton = dynamic(
   () => import('./signing/signing-vote-button'),
@@ -49,6 +50,35 @@ export default function VoteForm(props: {
     )
   const currentDid = useAtomValue(currentDidAtom)
   const [did, setDid] = useState('')
+  const { account } = useWallet()
+  const { data: dids } = useDids(account, proposal.snapshots)
+  const { data: votes } = useQuery(
+    [dids, props.workgroup, proposal.snapshots],
+    async () => {
+      const numbers = await pMap(
+        dids!,
+        (did) =>
+          calculateDecimal(
+            props.workgroup!.permission.voting,
+            did,
+            proposal.snapshots!,
+          ),
+        { concurrency: 5 },
+      )
+      return dids!.reduce((obj, did, index) => {
+        obj[did] = numbers[index]
+        return obj
+      }, {} as { [key: string]: Decimal })
+    },
+    {
+      enabled: !!dids && !!props.workgroup && !!proposal.snapshots,
+      refetchOnWindowFocus: false,
+    },
+  )
+  const { data: voted, refetch } = trpc.vote.groupByProposal.useQuery(
+    { proposal: proposal.permalink, authors: dids },
+    { enabled: !!dids && !!proposal.permalink, refetchOnWindowFocus: false },
+  )
   useEffect(() => {
     setDid(currentDid)
   }, [currentDid])
@@ -85,9 +115,10 @@ export default function VoteForm(props: {
   const handleSuccess = useCallback(() => {
     onSuccess()
     refetchChoices()
+    refetch()
     setValue('choice', '')
     setDid('')
-  }, [onSuccess, refetchChoices, setValue])
+  }, [onSuccess, refetch, refetchChoices, setValue])
   const { data: status } = useStatus(proposal.permalink)
   const disabled = useMemo(
     () =>
@@ -137,10 +168,64 @@ export default function VoteForm(props: {
         </h2>
         {disabled ? null : (
           <div className="flex">
-            <VoterSelect
-              proposal={proposal.permalink}
-              workgroup={workgroup}
-              snapshots={proposal.snapshots}
+            <Select
+              top
+              options={dids}
+              renderItem={(option) => (
+                <Listbox.Option
+                  key={option}
+                  value={option}
+                  disabled={!!voted?.[option] || !votes?.[option]}
+                  className={({ active, disabled }) =>
+                    clsx(
+                      active
+                        ? 'bg-primary-600 text-white'
+                        : disabled
+                        ? 'cursor-not-allowed text-gray-400'
+                        : 'text-gray-900',
+                      'relative cursor-default select-none py-2 pl-3 pr-9',
+                    )
+                  }
+                >
+                  {({ selected, active, disabled }) => (
+                    <>
+                      <div className="flex">
+                        <span
+                          className={clsx(
+                            selected ? 'font-semibold' : 'font-normal',
+                            'truncate',
+                          )}
+                        >
+                          {option}
+                        </span>
+                        <span
+                          className={clsx(
+                            active
+                              ? 'text-primary-200'
+                              : disabled
+                              ? 'text-gray-400'
+                              : 'text-gray-500',
+                            'ml-2 truncate',
+                          )}
+                        >
+                          {votes?.[option].toString()}
+                          {voted?.[option] ? ' voted' : null}
+                        </span>
+                      </div>
+                      {selected ? (
+                        <span
+                          className={clsx(
+                            active ? 'text-white' : 'text-primary-600',
+                            'absolute inset-y-0 right-0 flex items-center pr-4',
+                          )}
+                        >
+                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                        </span>
+                      ) : null}
+                    </>
+                  )}
+                </Listbox.Option>
+              )}
               value={did}
               onChange={setDid}
               className="focus:z-10 active:z-10"
@@ -150,7 +235,7 @@ export default function VoteForm(props: {
                 did={did}
                 icon={BoltIcon}
                 onSuccess={handleSuccess}
-                disabled={!votingPower || isFetching || !did}
+                disabled={!!voted?.[did] || !votingPower || isFetching || !did}
                 className="border-l-0 focus:z-10 active:z-10"
               >
                 Vote{votingPower ? ` (${votingPower})` : null}
