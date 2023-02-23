@@ -8,7 +8,8 @@ export default function RadioGroup(props: {
 
   return (
     <fieldset className={props.className}>
-      <div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-6">
+      {/* <div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-6"> */}
+      <div className="flex items-center space-y-0 space-x-6">
         {props.options.map((option) => (
           <div key={option.value} className="flex items-center">
             <input
