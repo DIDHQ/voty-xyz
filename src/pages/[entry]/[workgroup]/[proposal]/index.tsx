@@ -49,10 +49,11 @@ export default function ProposalPage(
     { permalink: props.proposal },
     { enabled: !!props.proposal, refetchOnWindowFocus: false },
   )
-  const { data: community } = trpc.community.getByPermalink.useQuery(
-    { permalink: proposal?.community },
-    { enabled: !!proposal?.community, refetchOnWindowFocus: false },
-  )
+  const { data: community, isLoading: isCommunityLoading } =
+    trpc.community.getByPermalink.useQuery(
+      { permalink: proposal?.community },
+      { enabled: !!proposal?.community, refetchOnWindowFocus: false },
+    )
   const workgroup = useWorkgroup(community, proposal?.workgroup)
   const {
     data,
@@ -134,7 +135,7 @@ export default function ProposalPage(
         <title>{title}</title>
       </Head>
       <div className="w-full">
-        <LoadingBar loading={isLoading} />
+        <LoadingBar loading={isLoading || isCommunityLoading} />
         <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
           <div className="w-full flex-1 sm:mr-6 sm:w-0">
             <TextButton
@@ -158,16 +159,13 @@ export default function ProposalPage(
                 proposal={proposal}
                 workgroup={workgroup}
                 onSuccess={refetchList}
-                className="border-b border-gray-200 pb-6"
               />
             ) : null}
-            <h2 className="my-6 text-2xl font-bold">
-              {proposal?.votes
-                ? proposal.votes === 1
-                  ? '1 Vote'
-                  : `${proposal.votes} Votes`
-                : null}
-            </h2>
+            {proposal?.votes ? (
+              <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
+                {proposal.votes === 1 ? '1 Vote' : `${proposal.votes} Votes`}
+              </h2>
+            ) : null}
             {votes?.length ? (
               <table className="mb-6 min-w-full border-separate border-spacing-0 border border-gray-200">
                 <thead>
