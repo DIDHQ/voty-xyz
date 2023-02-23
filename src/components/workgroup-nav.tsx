@@ -49,17 +49,26 @@ export default function WorkgroupNav(props: { className?: string }) {
     () => extractStartEmoji(workgroup?.name),
     [workgroup?.name],
   )
+  const name = useMemo(
+    () => workgroup?.name.replace(emoji || '', ''),
+    [emoji, workgroup?.name],
+  )
   const { data: status } = useStatus(community?.entry.community)
   const title = useMemo(
-    () =>
-      compact([workgroup?.name, community?.name, documentTitle]).join(' - '),
-    [community?.name, workgroup?.name],
+    () => compact([name, community?.name, documentTitle]).join(' - '),
+    [community?.name, name],
   )
 
   return (
     <>
       <Head>
         <title>{title}</title>
+        {emoji ? (
+          <link
+            rel="icon"
+            href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${emoji}</text></svg>`}
+          />
+        ) : null}
       </Head>
       <div className={clsx('bg-white/80 backdrop-blur', props.className)}>
         <div className="flex h-10 items-center">
@@ -77,7 +86,7 @@ export default function WorkgroupNav(props: { className?: string }) {
             />
           )}
           <h3 className="w-0 flex-1 truncate text-2xl font-medium text-gray-900">
-            {workgroup?.name.replace(emoji || '', '') || '...'}
+            {name || '...'}
           </h3>
           {status?.timestamp ? (
             <Link
