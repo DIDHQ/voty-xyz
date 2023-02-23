@@ -10,7 +10,7 @@ export default function ProposalPeriod(props: {
   duration?: Workgroup['duration']
   className?: string
 }) {
-  const { data: status, isInitialLoading } = useStatus(props.proposal)
+  const { data: status, isLoading } = useStatus(props.proposal)
   const period = useMemo(
     () =>
       status?.timestamp && props.duration
@@ -19,7 +19,7 @@ export default function ProposalPeriod(props: {
     [props.duration, status?.timestamp],
   )
 
-  return isInitialLoading ? null : (
+  return isLoading ? null : (
     <span
       className={clsx(
         'inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium',
