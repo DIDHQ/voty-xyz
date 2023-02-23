@@ -127,7 +127,7 @@ export default function CommunityNav(props: { className?: string }) {
             size={20}
             className="mt-8"
           />
-          <h3 className="my-4 w-full break-words px-4 text-xl font-bold text-gray-900 line-clamp-3 sm:text-2xl">
+          <h3 className="my-4 w-full break-words px-4 text-center text-xl font-bold text-gray-900 line-clamp-3 sm:text-2xl">
             {community?.name || '...'}
           </h3>
           {community ? (

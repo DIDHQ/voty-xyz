@@ -36,6 +36,7 @@ export default function ProposalListItem(props: {
         <ProposalPeriod
           proposal={props.proposal.permalink}
           duration={workgroup?.duration}
+          className="ml-4"
         />
       </div>
       {props.proposal.extension?.body ? (
