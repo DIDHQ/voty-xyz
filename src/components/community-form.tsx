@@ -147,18 +147,19 @@ export default function CommunityForm(props: {
           </GridItem2>
         </Grid6>
       </FormSection>
-      <FormFooter>
-        <FormProvider {...methods}>
-          <SigningCommunityButton
-            did={props.entry}
-            icon={isNewCommunity ? DocumentPlusIcon : DocumentArrowUpIcon}
-            onSuccess={onSuccess}
-            disabled={props.disabled}
-          >
-            {isNewCommunity ? 'Create' : 'Update'}
-          </SigningCommunityButton>
-        </FormProvider>
-      </FormFooter>
+      {props.disabled ? null : (
+        <FormFooter>
+          <FormProvider {...methods}>
+            <SigningCommunityButton
+              did={props.entry}
+              icon={isNewCommunity ? DocumentPlusIcon : DocumentArrowUpIcon}
+              onSuccess={onSuccess}
+            >
+              {isNewCommunity ? 'Create' : 'Update'}
+            </SigningCommunityButton>
+          </FormProvider>
+        </FormFooter>
+      )}
     </Form>
   )
 }

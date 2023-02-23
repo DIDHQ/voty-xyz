@@ -130,7 +130,6 @@ export default function ProposalForm(props: {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
-
   const options = useMemo(
     () =>
       proposalSchema.shape.voting_type.options.map((option) => ({
@@ -230,7 +229,7 @@ export default function ProposalForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <div className="flex w-full justify-end">
+      <div className="flex w-full justify-end pt-6">
         <Select
           top
           options={dids}

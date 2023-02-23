@@ -278,31 +278,31 @@ export default function WorkgroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormFooter>
-        <FormProvider {...methods}>
-          <SigningCommunityButton
-            did={props.community.authorship.author}
-            icon={isNewWorkgroup ? DocumentPlusIcon : DocumentArrowUpIcon}
-            onSuccess={handleSuccess}
-            disabled={props.disabled}
-          >
-            {isNewWorkgroup ? 'Create' : 'Update'}
-          </SigningCommunityButton>
-        </FormProvider>
-        {isNewWorkgroup ? null : (
+      {props.disabled ? null : (
+        <FormFooter>
           <FormProvider {...methods}>
             <SigningCommunityButton
-              archive={props.workgroup}
               did={props.community.authorship.author}
-              icon={ArchiveBoxIcon}
-              onSuccess={handleArchiveSuccess}
-              disabled={props.disabled}
+              icon={isNewWorkgroup ? DocumentPlusIcon : DocumentArrowUpIcon}
+              onSuccess={handleSuccess}
             >
-              Archive
+              {isNewWorkgroup ? 'Create' : 'Update'}
             </SigningCommunityButton>
           </FormProvider>
-        )}
-      </FormFooter>
+          {isNewWorkgroup ? null : (
+            <FormProvider {...methods}>
+              <SigningCommunityButton
+                archive={props.workgroup}
+                did={props.community.authorship.author}
+                icon={ArchiveBoxIcon}
+                onSuccess={handleArchiveSuccess}
+              >
+                Archive
+              </SigningCommunityButton>
+            </FormProvider>
+          )}
+        </FormFooter>
+      )}
     </Form>
   )
 }

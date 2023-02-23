@@ -29,9 +29,10 @@ const SubscriptionButton = dynamic(() => import('./subscription-button'), {
   ssr: false,
 })
 
-const CreateGroupButton = dynamic(() => import('./create-workgroup-button'), {
-  ssr: false,
-})
+const CreateWorkgroupButton = dynamic(
+  () => import('./create-workgroup-button'),
+  { ssr: false },
+)
 
 export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
@@ -158,7 +159,7 @@ export default function CommunityNav(props: { className?: string }) {
               <div className="mt-4 w-full">
                 <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
                   Workgroups
-                  <CreateGroupButton
+                  <CreateWorkgroupButton
                     entry={query.entry}
                     className="float-right"
                   />
