@@ -20,18 +20,13 @@ export function ChoiceListItem(props: {
   value: string
   onChange(value: string): void
 }) {
-  const {
-    type,
-    option,
-    votingPower = new Decimal(0),
-    choices,
-    value,
-    onChange,
-  } = props
+  const { type, option, votingPower, choices, value, onChange } = props
   const percentage = useMemo(() => {
-    const power = powerOfChoice(type, value, votingPower)[option] || 0
+    const power = votingPower
+      ? powerOfChoice(type, value, votingPower)[option] || new Decimal(0)
+      : new Decimal(0)
     const denominator = new Decimal(choices?.total || 0).add(
-      new Decimal(choiceIsEmpty(type, value) ? 0 : votingPower),
+      new Decimal(choiceIsEmpty(type, value) ? 0 : votingPower || 0),
     )
     if (denominator.isZero()) {
       return new Decimal(0)
