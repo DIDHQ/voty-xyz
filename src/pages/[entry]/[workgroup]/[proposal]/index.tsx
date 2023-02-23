@@ -154,13 +154,11 @@ export default function ProposalPage(
               <Article className="mt-8">{proposal?.extension?.body}</Article>
             </div>
             {renderCard('block sm:hidden mb-6')}
-            {proposal && workgroup ? (
-              <VoteForm
-                proposal={proposal}
-                workgroup={workgroup}
-                onSuccess={refetchList}
-              />
-            ) : null}
+            <VoteForm
+              proposal={proposal || undefined}
+              workgroup={workgroup}
+              onSuccess={refetchList}
+            />
             {proposal?.votes ? (
               <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
                 {proposal.votes === 1 ? '1 Vote' : `${proposal.votes} Votes`}
