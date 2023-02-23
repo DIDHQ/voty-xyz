@@ -173,9 +173,9 @@ export default function ProposalPage(
             {votes?.length ? (
               <table className="mb-6 w-full border-separate border-spacing-0 border border-gray-200">
                 <colgroup>
-                  <col width="0%" />
-                  <col width="100%" />
-                  <col width="0%" />
+                  <col width="40%" />
+                  <col width="50%" />
+                  <col width="10%" />
                 </colgroup>
                 <thead>
                   <tr>
@@ -205,7 +205,7 @@ export default function ProposalPage(
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
+                          'max-w-0 truncate whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
                         )}
                       >
                         {vote.authorship.author}
@@ -223,7 +223,7 @@ export default function ProposalPage(
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
+                          'max-w-0 truncate whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
                         )}
                       >
                         <a
