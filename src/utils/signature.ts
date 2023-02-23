@@ -5,12 +5,14 @@ export async function signDocument(
   document: object,
   address: string,
   signMessage: (message: string) => Buffer | Promise<Buffer>,
+  template?: string,
 ): Promise<Proof> {
-  const message = encodeDocument(document)
+  const message = encodeDocument(document, template)
   const buffer = await signMessage(message)
   return {
     type: 'eth_personal_sign',
     address: getAddress(address),
+    template,
     signature: buffer.toString('base64'),
   }
 }
@@ -26,7 +28,7 @@ export async function verifyDocument(
   if (proof.type !== 'eth_personal_sign') {
     return false
   }
-  const message = encodeDocument(document)
+  const message = encodeDocument(document, proof.template)
   const address = await verifyMessage(
     message,
     Buffer.from(proof.signature, 'base64'),
@@ -34,10 +36,16 @@ export async function verifyDocument(
   return proof.address === address
 }
 
-function encodeDocument(document: object & { proof?: Proof }): string {
+function encodeDocument(
+  document: object & { proof?: Proof },
+  template?: string,
+): string {
   const { proof, ...rest } = document
   const textEncoder = new TextEncoder()
-  return `You are signing for Voty Protocol.\n\nhash: ${sha256(
-    textEncoder.encode(JSON.stringify(rest)),
-  )}`
+  return template
+    ? template.replace(
+        '{sha256}',
+        sha256(textEncoder.encode(JSON.stringify(rest))),
+      )
+    : JSON.stringify(rest)
 }

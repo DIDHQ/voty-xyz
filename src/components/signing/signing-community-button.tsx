@@ -18,7 +18,10 @@ export default function SigningCommunityButton(props: {
 }) {
   const { onSuccess } = props
   const { handleSubmit: onSubmit } = useFormContext<Community>()
-  const handleSignDocument = useSignDocument(props.did)
+  const handleSignDocument = useSignDocument(
+    props.did,
+    `You are updating community settings of Voty\n\nhash:\n{sha256}`,
+  )
   const handleCreate = trpc.community.create.useMutation()
   const handleSign = useAsync(
     useCallback(

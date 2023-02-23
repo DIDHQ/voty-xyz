@@ -28,7 +28,7 @@ export default function SubscriptionButton(props: {
     { enabled: !!currentDid && !!props.entry, refetchOnWindowFocus: false },
   )
   const handleSignDocument = useSignDocument(currentDid)
-  const handleSubscribe = useAsync(
+  const handleSignSubscribe = useAsync(
     useCallback(async () => {
       if (!props.entry) {
         return
@@ -42,7 +42,7 @@ export default function SubscriptionButton(props: {
       }
     }, [handleSignDocument, mutate, props.entry]),
   )
-  const handleUnsubscribe = useAsync(
+  const handleSignUnsubscribe = useAsync(
     useCallback(async () => {
       if (!props.entry) {
         return
@@ -66,24 +66,24 @@ export default function SubscriptionButton(props: {
   return account ? (
     <>
       <Notification show={isError}>{error?.message}</Notification>
-      <Notification show={handleUnsubscribe.status === 'error'}>
-        {handleUnsubscribe.error?.message}
+      <Notification show={handleSignUnsubscribe.status === 'error'}>
+        {handleSignUnsubscribe.error?.message}
       </Notification>
-      <Notification show={handleSubscribe.status === 'error'}>
-        {handleSubscribe.error?.message}
+      <Notification show={handleSignSubscribe.status === 'error'}>
+        {handleSignSubscribe.error?.message}
       </Notification>
       {subscribed ? (
         <TextButton
-          disabled={isLoading || handleUnsubscribe.status === 'pending'}
-          onClick={handleUnsubscribe.execute}
+          disabled={isLoading || handleSignUnsubscribe.status === 'pending'}
+          onClick={handleSignUnsubscribe.execute}
           className={props.className}
         >
           <BookmarkSolidIcon className="h-5 w-5" />
         </TextButton>
       ) : (
         <TextButton
-          disabled={isLoading || handleSubscribe.status === 'pending'}
-          onClick={handleSubscribe.execute}
+          disabled={isLoading || handleSignSubscribe.status === 'pending'}
+          onClick={handleSignSubscribe.execute}
           className={props.className}
         >
           <BookmarkOutlineIcon className="h-5 w-5" />
