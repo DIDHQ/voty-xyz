@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
@@ -109,6 +109,13 @@ export default function VoteForm(props: {
     setValue('choice', '')
   }, [onSuccess, refetch, refetchChoices, setValue])
   const { data: status } = useStatus(proposal?.permalink)
+  const period = useMemo(
+    () =>
+      status?.timestamp && workgroup?.duration
+        ? getPeriod(new Date(), status.timestamp, workgroup.duration)
+        : Period.PENDING,
+    [workgroup?.duration, status?.timestamp],
+  )
   const disabled = useCallback(
     (did?: string) =>
       !did ||
@@ -116,11 +123,8 @@ export default function VoteForm(props: {
       !powers ||
       !!voted[did] ||
       !!powers[did] ||
-      !status?.timestamp ||
-      !workgroup?.duration ||
-      getPeriod(new Date(), status.timestamp, workgroup.duration) !==
-        Period.VOTING,
-    [status?.timestamp, powers, voted, workgroup?.duration],
+      period !== Period.VOTING,
+    [voted, powers, period],
   )
 
   return (
@@ -150,23 +154,25 @@ export default function VoteForm(props: {
           )}
         />
       </FormItem>
-      <div className="mt-6 flex w-full justify-end">
-        <FormProvider {...methods}>
-          <SigningVoteButton
-            value={did}
-            onChange={setDid}
-            snapshots={proposal?.snapshots}
-            proposal={proposal?.permalink}
-            workgroup={workgroup}
-            icon={BoltIcon}
-            onSuccess={handleSuccess}
-            disabled={disabled(did)}
-            className="border-l-0 focus:z-10 active:z-10"
-          >
-            Vote{votingPower ? ` (${votingPower})` : null}
-          </SigningVoteButton>
-        </FormProvider>
-      </div>
+      {period === Period.ENDED ? null : (
+        <div className="mt-6 flex w-full justify-end">
+          <FormProvider {...methods}>
+            <SigningVoteButton
+              value={did}
+              onChange={setDid}
+              snapshots={proposal?.snapshots}
+              proposal={proposal?.permalink}
+              workgroup={workgroup}
+              icon={BoltIcon}
+              onSuccess={handleSuccess}
+              disabled={disabled(did)}
+              className="border-l-0 focus:z-10 active:z-10"
+            >
+              Vote{votingPower ? ` (${votingPower})` : null}
+            </SigningVoteButton>
+          </FormProvider>
+        </div>
+      )}
     </div>
   )
 }
