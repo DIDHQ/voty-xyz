@@ -68,8 +68,15 @@ export default function CreateProposalPage() {
         <Grid6 className="border border-gray-200 p-6">
           <GridItem6>
             <DetailList title="Workgroup">
-              <DetailItem title="Name">{workgroup?.name}</DetailItem>
-              <DetailItem title="Community">{community?.name}</DetailItem>
+              <DetailItem title="Name" className="truncate whitespace-nowrap">
+                {workgroup?.name}
+              </DetailItem>
+              <DetailItem
+                title="Community"
+                className="truncate whitespace-nowrap"
+              >
+                {community?.name}
+              </DetailItem>
             </DetailList>
           </GridItem6>
           <GridItem6>

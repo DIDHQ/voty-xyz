@@ -95,7 +95,10 @@ export default function ProposalPage(
         />
         <div className="space-y-6 border border-gray-200 p-6">
           <DetailList title="Proposal">
-            <DetailItem title="Community">
+            <DetailItem
+              title="Community"
+              className="truncate whitespace-nowrap"
+            >
               {community ? (
                 <StatusIcon permalink={proposal?.community}>
                   {community.name}
@@ -104,7 +107,10 @@ export default function ProposalPage(
                 '...'
               )}
             </DetailItem>
-            <DetailItem title="Workgroup">
+            <DetailItem
+              title="Workgroup"
+              className="truncate whitespace-nowrap"
+            >
               {workgroup?.name || '...'}
             </DetailItem>
             <DetailItem title="Proposer">

@@ -12,7 +12,7 @@ export default function ProposalSchedule(props: {
 
   return (
     <DetailList title="Schedule">
-      <DetailItem title="Period">
+      <DetailItem title="Period" className="overflow-y-visible">
         <ProposalPeriod
           proposal={props.proposal}
           duration={props.duration}
