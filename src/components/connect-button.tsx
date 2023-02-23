@@ -38,7 +38,7 @@ export default function ConnectButton() {
             <TextButton className="flex items-center">
               <Avatar
                 size={9}
-                name={currentDid}
+                name={currentDid || account.address}
                 value={avatar}
                 variant="beam"
               />
