@@ -16,7 +16,7 @@ export default function ProposalSchedule(props: {
         <ProposalPeriod
           proposal={props.proposal}
           duration={props.duration}
-          className="my-[-2px]"
+          className="my-[-3px] translate-y-[-1px]"
         />
       </DetailItem>
       <DetailItem title="Start">
@@ -24,7 +24,7 @@ export default function ProposalSchedule(props: {
           ? formatTime(
               status.timestamp.getTime() + props.duration.announcement * 1000,
             )
-          : '-'}
+          : '...'}
       </DetailItem>
       <DetailItem title="End">
         {status?.timestamp && props.duration
@@ -35,7 +35,7 @@ export default function ProposalSchedule(props: {
                   props.duration.voting) *
                   1000,
             )
-          : '-'}
+          : '...'}
       </DetailItem>
     </DetailList>
   )

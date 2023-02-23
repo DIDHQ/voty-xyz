@@ -29,7 +29,7 @@ const ProposalSchedule = dynamic(
     ssr: false,
     loading: () => (
       <DetailList title="Schedule">
-        <DetailItem title="Period">...</DetailItem>
+        <DetailItem title="Period">{null}</DetailItem>
         <DetailItem title="Start">...</DetailItem>
         <DetailItem title="End">...</DetailItem>
       </DetailList>
