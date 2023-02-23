@@ -105,6 +105,9 @@ export default function CommunityNav(props: { className?: string }) {
     <>
       <Head>
         <title>{title}</title>
+        {community?.extension?.avatar ? (
+          <link rel="icon" href={community?.extension?.avatar} />
+        ) : null}
       </Head>
       <aside className={clsx('relative', props.className)}>
         <div className="flex w-full flex-col items-center border border-gray-200 pb-4">
