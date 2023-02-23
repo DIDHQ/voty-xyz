@@ -96,9 +96,13 @@ export default function ProposalPage(
         <div className="space-y-6 border border-gray-200 p-6">
           <DetailList title="Proposal">
             <DetailItem title="Community">
-              <StatusIcon permalink={proposal?.community}>
-                {community?.name || '...'}
-              </StatusIcon>
+              {community ? (
+                <StatusIcon permalink={proposal?.community}>
+                  {community.name}
+                </StatusIcon>
+              ) : (
+                '...'
+              )}
             </DetailItem>
             <DetailItem title="Workgroup">
               {workgroup?.name || '...'}

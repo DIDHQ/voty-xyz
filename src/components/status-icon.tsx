@@ -46,7 +46,7 @@ export default function StatusIcon(props: {
         data-tooltip-place="left"
         className={props.className}
       >
-        <TextButton>{children}</TextButton>
+        <TextButton className="w-full truncate">{children}</TextButton>
       </a>
       <Tooltip id={id} className="rounded-none">
         Transaction {status?.timestamp ? 'confirmed' : 'pending'}
