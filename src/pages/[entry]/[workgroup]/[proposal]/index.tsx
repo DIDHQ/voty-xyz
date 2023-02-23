@@ -5,17 +5,20 @@ import { compact, startCase } from 'lodash-es'
 import Link from 'next/link'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
+import { createProxySSGHelpers } from '@trpc/react-query/ssg'
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import SuperJSON from 'superjson'
 
 import useWorkgroup from '../../../../hooks/use-workgroup'
-import useRouterQuery from '../../../../hooks/use-router-query'
 import { stringifyChoice } from '../../../../utils/voting'
 import { DetailItem, DetailList } from '../../../../components/basic/detail'
-import { permalink2Url } from '../../../../utils/permalink'
+import { id2Permalink, permalink2Url } from '../../../../utils/permalink'
 import { trpc } from '../../../../utils/trpc'
 import Article from '../../../../components/basic/article'
 import TextButton from '../../../../components/basic/text-button'
 import LoadingBar from '../../../../components/basic/loading-bar'
 import { documentTitle } from '../../../../utils/constants'
+import { appRouter } from '../../../../server/routers/_app'
 
 const VoteForm = dynamic(() => import('../../../../components/vote-form'), {
   ssr: false,
@@ -30,11 +33,25 @@ const ProposalSchedule = dynamic(
   { ssr: false },
 )
 
-export default function ProposalPage() {
-  const query = useRouterQuery<['proposal']>()
+export const getServerSideProps: GetServerSideProps<{
+  proposal: string
+}> = async (context) => {
+  const ssg = createProxySSGHelpers({
+    router: appRouter,
+    ctx: {},
+    transformer: SuperJSON,
+  })
+  const proposal = id2Permalink(context.params!.proposal as string)
+  await ssg.proposal.getByPermalink.prefetch({ permalink: proposal })
+  return { props: { trpcState: ssg.dehydrate(), proposal } }
+}
+
+export default function ProposalPage(
+  props: InferGetServerSidePropsType<typeof getServerSideProps>,
+) {
   const { data: proposal, isLoading } = trpc.proposal.getByPermalink.useQuery(
-    { permalink: query.proposal },
-    { enabled: !!query.proposal, refetchOnWindowFocus: false },
+    { permalink: props.proposal },
+    { enabled: !!props.proposal, refetchOnWindowFocus: false },
   )
   const { data: community } = trpc.community.getByPermalink.useQuery(
     { permalink: proposal?.community },
@@ -47,9 +64,9 @@ export default function ProposalPage() {
     hasNextPage,
     refetch: refetchList,
   } = trpc.vote.list.useInfiniteQuery(
-    { proposal: query.proposal },
+    { proposal: props.proposal },
     {
-      enabled: !!query.proposal,
+      enabled: !!props.proposal,
       getNextPageParam: ({ next }) => next,
       refetchOnWindowFocus: false,
     },
@@ -71,7 +88,7 @@ export default function ProposalPage() {
           )}
         >
           <StatusIcon
-            permalink={query.proposal}
+            permalink={props.proposal}
             className="absolute right-4 top-4"
           />
           <div className="space-y-6 border border-gray-200 p-6">
@@ -90,7 +107,7 @@ export default function ProposalPage() {
               </DetailItem>
             </DetailList>
             <ProposalSchedule
-              proposal={query.proposal}
+              proposal={props.proposal}
               duration={workgroup.duration}
             />
             <DetailList title="Terms and conditions">
@@ -101,7 +118,7 @@ export default function ProposalPage() {
           </div>
         </div>
       ) : null,
-    [community, proposal, query.proposal, workgroup],
+    [community, proposal, props.proposal, workgroup],
   )
   const title = useMemo(
     () =>

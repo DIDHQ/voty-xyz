@@ -1,18 +1,38 @@
-import useRouterQuery from '../../../hooks/use-router-query'
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import { createProxySSGHelpers } from '@trpc/react-query/ssg'
+import SuperJSON from 'superjson'
+
 import useWorkgroup from '../../../hooks/use-workgroup'
 import CommunityLayout from '../../../components/layouts/community'
 import WorkgroupLayout from '../../../components/layouts/workgroup'
 import { trpc } from '../../../utils/trpc'
 import Article from '../../../components/basic/article'
 import LoadingBar from '../../../components/basic/loading-bar'
+import { appRouter } from '../../../server/routers/_app'
 
-export default function WorkgroupAboutPage() {
-  const query = useRouterQuery<['entry', 'workgroup']>()
+export const getServerSideProps: GetServerSideProps<{
+  entry: string
+  workgroup: string
+}> = async (context) => {
+  const ssg = createProxySSGHelpers({
+    router: appRouter,
+    ctx: {},
+    transformer: SuperJSON,
+  })
+  const entry = context.params!.entry as string
+  const workgroup = context.params!.workgroup as string
+  await ssg.community.getByEntry.prefetch({ entry })
+  return { props: { trpcState: ssg.dehydrate(), entry, workgroup } }
+}
+
+export default function WorkgroupAboutPage(
+  props: InferGetServerSidePropsType<typeof getServerSideProps>,
+) {
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
-    { enabled: !!query.entry, refetchOnWindowFocus: false },
+    { entry: props.entry },
+    { enabled: !!props.entry, refetchOnWindowFocus: false },
   )
-  const workgroup = useWorkgroup(community, query.workgroup)
+  const workgroup = useWorkgroup(community, props.workgroup)
 
   return (
     <CommunityLayout>
