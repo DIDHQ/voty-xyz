@@ -109,7 +109,13 @@ export default function CommunityNav(props: { className?: string }) {
           <link rel="icon" href={community?.extension?.avatar} />
         ) : null}
       </Head>
-      <aside className={clsx('relative', props.className)}>
+      <aside
+        className={clsx(
+          'relative border-gray-200 sm:border-b-0',
+          externals.length ? 'border-b' : undefined,
+          props.className,
+        )}
+      >
         <div className="flex w-full flex-col items-center border border-gray-200 pb-4">
           <StatusIcon
             permalink={community?.entry.community}
@@ -182,7 +188,7 @@ export default function CommunityNav(props: { className?: string }) {
           ) : null}
         </div>
         {externals.length ? (
-          <div className="my-4 flex space-x-4">
+          <div className="mt-4 mb-6 flex space-x-4">
             {externals.map((item) => (
               <a
                 key={item.href}
