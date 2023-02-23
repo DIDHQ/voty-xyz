@@ -70,7 +70,6 @@ export default function WorkgroupForm(props: {
   )
   useEffect(() => {
     if (isNewWorkgroup) {
-      console.log('update', workgroupIndex)
       update(workgroupIndex, {
         id: props.workgroup,
         name: '',
