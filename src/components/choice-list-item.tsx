@@ -2,8 +2,8 @@ import { inferRouterOutputs } from '@trpc/server'
 import clsx from 'clsx'
 import Decimal from 'decimal.js'
 import { useMemo } from 'react'
-
 import { gray } from 'tailwindcss/colors'
+
 import { ChoiceRouter } from '../server/routers/choice'
 import {
   powerOfChoice,
