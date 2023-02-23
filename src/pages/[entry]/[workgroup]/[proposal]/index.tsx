@@ -74,45 +74,46 @@ export default function ProposalPage(
     }
   }, [fetchNextPage, hasNextPage, inView])
   const renderCard = useCallback(
-    (className?: string) =>
-      community && workgroup && proposal ? (
-        <div
-          className={clsx(
-            'relative w-full shrink-0 sm:sticky sm:top-24 sm:w-72',
-            className,
-          )}
-        >
-          <StatusIcon
-            permalink={props.proposal}
-            className="absolute right-4 top-4"
+    (className?: string) => (
+      <div
+        className={clsx(
+          'relative w-full shrink-0 sm:sticky sm:top-24 sm:w-72',
+          className,
+        )}
+      >
+        <StatusIcon
+          permalink={props.proposal}
+          className="absolute right-4 top-4"
+        />
+        <div className="space-y-6 border border-gray-200 p-6">
+          <DetailList title="Proposal">
+            <DetailItem title="Community">
+              <StatusIcon permalink={proposal?.community}>
+                {community?.name || '...'}
+              </StatusIcon>
+            </DetailItem>
+            <DetailItem title="Workgroup">
+              {workgroup?.name || '...'}
+            </DetailItem>
+            <DetailItem title="Proposer">
+              {proposal?.authorship.author}
+            </DetailItem>
+            <DetailItem title="Voting type">
+              {startCase(proposal?.voting_type)}
+            </DetailItem>
+          </DetailList>
+          <ProposalSchedule
+            proposal={props.proposal}
+            duration={workgroup?.duration}
           />
-          <div className="space-y-6 border border-gray-200 p-6">
-            <DetailList title="Proposal">
-              <DetailItem title="Community">
-                <StatusIcon permalink={proposal.community}>
-                  {community.name}
-                </StatusIcon>
-              </DetailItem>
-              <DetailItem title="Workgroup">{workgroup.name}</DetailItem>
-              <DetailItem title="Proposer">
-                {proposal.authorship.author}
-              </DetailItem>
-              <DetailItem title="Voting type">
-                {startCase(proposal.voting_type)}
-              </DetailItem>
-            </DetailList>
-            <ProposalSchedule
-              proposal={props.proposal}
-              duration={workgroup.duration}
-            />
-            <DetailList title="Terms and conditions">
-              <Article small className="pt-2">
-                {workgroup?.extension.terms_and_conditions}
-              </Article>
-            </DetailList>
-          </div>
+          <DetailList title="Terms and conditions">
+            <Article small className="pt-2">
+              {workgroup?.extension.terms_and_conditions}
+            </Article>
+          </DetailList>
         </div>
-      ) : null,
+      </div>
+    ),
     [community, proposal, props.proposal, workgroup],
   )
   const title = useMemo(

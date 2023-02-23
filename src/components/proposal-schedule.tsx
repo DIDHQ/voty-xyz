@@ -6,7 +6,7 @@ import ProposalPeriod from './proposal-period'
 
 export default function ProposalSchedule(props: {
   proposal?: string
-  duration: Workgroup['duration']
+  duration?: Workgroup['duration']
 }) {
   const { data: status } = useStatus(props.proposal)
 
@@ -20,14 +20,14 @@ export default function ProposalSchedule(props: {
         />
       </DetailItem>
       <DetailItem title="Start">
-        {status?.timestamp
+        {status?.timestamp && props.duration
           ? formatTime(
               status.timestamp.getTime() + props.duration.announcement * 1000,
             )
           : '-'}
       </DetailItem>
       <DetailItem title="End">
-        {status?.timestamp
+        {status?.timestamp && props.duration
           ? formatTime(
               status.timestamp.getTime() +
                 (props.duration.announcement +
