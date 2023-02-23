@@ -44,9 +44,7 @@ export default function CommunityIndexPage() {
     <CommunityLayout>
       <LoadingBar loading={isLoading || isListLoading} />
       {proposals?.length === 0 ? (
-        community?.workgroups?.length ? (
-          <p className="mt-6 text-sm text-gray-500 sm:pl-6">No events</p>
-        ) : (
+        community?.workgroups?.length === 0 ? (
           <div className="mx-auto mt-6 py-20 text-center">
             <h2 className="text-4xl font-bold tracking-tight text-gray-900">
               Create workgroup
@@ -62,6 +60,8 @@ export default function CommunityIndexPage() {
               </Link>
             </div>
           </div>
+        ) : (
+          <p className="mt-6 text-sm text-gray-500 sm:pl-6">No events</p>
         )
       ) : (
         <ul role="list" className="divide-y divide-gray-200 sm:pl-6">
