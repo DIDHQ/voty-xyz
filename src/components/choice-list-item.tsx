@@ -1,5 +1,4 @@
 import { inferRouterOutputs } from '@trpc/server'
-import clsx from 'clsx'
 import Decimal from 'decimal.js'
 import { useMemo } from 'react'
 import { gray } from 'tailwindcss/colors'
@@ -66,11 +65,9 @@ export function ChoiceListItem(props: {
           checked={checkChoice(type, value, option)}
           disabled={props.disabled}
           onChange={() => null}
-          className={clsx(
-            type === 'single' ? undefined : 'rounded',
-            'h-4 w-4 border border-gray-300',
-            'text-primary-600 focus:ring-primary-500 disabled:cursor-not-allowed disabled:bg-gray-50',
-          )}
+          className={
+            'h-4 w-4 border border-gray-300 text-primary-600 focus:ring-primary-500 disabled:cursor-not-allowed disabled:bg-gray-50'
+          }
         />
       </div>
     </li>
