@@ -3,7 +3,7 @@ import { fetchJson, postJson } from '../../fetcher'
 
 const endpoint = isTestnet
   ? 'https://test-snapshot-api.did.id'
-  : 'https://test-snapshot-api.did.id'
+  : 'https://snapshot-api.did.id'
 
 export async function snapshotPermissionsInfo(
   did: string,
