@@ -152,11 +152,7 @@ export default function WorkgroupForm(props: {
             <FormItem
               error={
                 errors.workgroups?.[workgroupIndex]?.permission?.proposing
-                  ? JSON.stringify(
-                      errors.workgroups?.[workgroupIndex]?.permission
-                        ?.proposing,
-                    )
-                  : undefined
+                  ?.operands?.message
               }
             >
               <FormProvider {...methods}>
@@ -180,10 +176,7 @@ export default function WorkgroupForm(props: {
             <FormItem
               error={
                 errors?.workgroups?.[workgroupIndex]?.permission?.voting
-                  ? JSON.stringify(
-                      errors?.workgroups?.[workgroupIndex]?.permission?.voting,
-                    )
-                  : undefined
+                  ?.operands?.message
               }
             >
               <FormProvider {...methods}>
