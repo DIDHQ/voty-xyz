@@ -35,7 +35,7 @@ export function ChoiceListItem(props: {
       new Decimal(choiceIsEmpty(type, value) ? 0 : votingPower),
     )
     if (denominator.isZero()) {
-      return 0
+      return new Decimal(0)
     }
     return new Decimal(new Decimal(choices?.powers[option] || 0).add(power))
       .mul(100)
@@ -57,7 +57,9 @@ export function ChoiceListItem(props: {
       }}
     >
       <span className="w-0 flex-1 truncate">{option}</span>
-      <span className="text-xs text-gray-500">{percentage.toFixed(2)}%</span>
+      {percentage.gt(0) ? (
+        <span className="text-xs text-gray-500">{percentage.toFixed(2)}%</span>
+      ) : null}
       <div className="ml-4 shrink-0 leading-none">
         <input
           type={type === 'single' ? 'radio' : 'checkbox'}
