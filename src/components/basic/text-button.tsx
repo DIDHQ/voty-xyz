@@ -1,19 +1,34 @@
 import clsx from 'clsx'
-import { ButtonHTMLAttributes } from 'react'
+import Link from 'next/link'
+import { ButtonHTMLAttributes, useMemo } from 'react'
 
 export default function TextButton(
-  props: ButtonHTMLAttributes<HTMLButtonElement>,
+  props: ButtonHTMLAttributes<HTMLButtonElement> & { href?: string },
 ) {
-  return (
-    <button
-      type="button"
-      {...props}
-      className={clsx(
-        'text-sm font-medium text-primary-600 hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-gray-400',
-        props.className,
-      )}
-    >
-      {props.children}
-    </button>
+  const { href, ...restProps } = props
+  const renderButton = useMemo(
+    () => (
+      <button
+        type="button"
+        {...restProps}
+        className={clsx(
+          'text-sm font-medium text-primary-600 hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-gray-400',
+          restProps.className,
+        )}
+      >
+        {restProps.children}
+      </button>
+    ),
+    [restProps],
+  )
+
+  return href ? (
+    href.startsWith('/') || href.startsWith('#') ? (
+      <Link href={href}>{renderButton}</Link>
+    ) : (
+      <a href={href}>{renderButton}</a>
+    )
+  ) : (
+    renderButton
   )
 }

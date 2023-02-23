@@ -21,14 +21,12 @@ export default function Toolbar(props: { className?: string }) {
       </Link>
       <div className="flex-1">
         <div className="mx-auto flex h-18 max-w-5xl items-center justify-between px-6">
-          <Link href="/">
-            <TextButton>
-              <h1 className="text-lg font-bold">
-                {documentTitle}
-                {isTestnet ? ' TESTNET' : null}
-              </h1>
-            </TextButton>
-          </Link>
+          <TextButton href="/">
+            <h1 className="text-lg font-bold">
+              {documentTitle}
+              {isTestnet ? ' TESTNET' : null}
+            </h1>
+          </TextButton>
           <ConnectButton />
         </div>
       </div>

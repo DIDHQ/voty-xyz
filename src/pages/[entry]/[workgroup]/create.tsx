@@ -1,5 +1,4 @@
 import { useCallback } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 
@@ -44,11 +43,15 @@ export default function CreateProposalPage() {
     <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
       <LoadingBar loading={isLoading} />
       <div className="w-full flex-1 sm:mr-6 sm:w-0">
-        <Link href={`/${query.entry}/${query.workgroup}`}>
-          <TextButton>
-            <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
-          </TextButton>
-        </Link>
+        <TextButton
+          href={
+            query.entry && query.workgroup
+              ? `/${query.entry}/${query.workgroup}`
+              : undefined
+          }
+        >
+          <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+        </TextButton>
         {community && workgroup ? (
           <ProposalForm
             community={community}

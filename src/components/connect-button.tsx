@@ -1,5 +1,4 @@
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
-import Link from 'next/link'
 import { useAtom } from 'jotai'
 import { useEffect } from 'react'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -34,26 +33,24 @@ export default function ConnectButton() {
         chain,
       }) =>
         account ? (
-          <Link href="/settings">
-            <TextButton className="flex items-center">
-              <Avatar
-                size={9}
-                name={currentDid || account.address}
-                value={avatar}
-                variant="beam"
-              />
-              <div className="ml-3 hidden sm:block">
-                {currentDid ? (
-                  <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                    {currentDid}
-                  </p>
-                ) : null}
-                <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
-                  {displayAddress}
+          <TextButton href="/settings" className="flex items-center">
+            <Avatar
+              size={9}
+              name={currentDid || account.address}
+              value={avatar}
+              variant="beam"
+            />
+            <div className="ml-3 hidden sm:block">
+              {currentDid ? (
+                <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                  {currentDid}
                 </p>
-              </div>
-            </TextButton>
-          </Link>
+              ) : null}
+              <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
+                {displayAddress}
+              </p>
+            </div>
+          </TextButton>
         ) : !chain || chainIdToCoinType[chain.id] ? (
           <Button primary loading={connectModalOpen} onClick={openConnectModal}>
             Connect Wallet

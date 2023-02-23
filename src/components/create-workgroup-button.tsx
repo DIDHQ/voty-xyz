@@ -1,5 +1,4 @@
 import { PlusIcon } from '@heroicons/react/20/solid'
-import Link from 'next/link'
 import { useMemo } from 'react'
 
 import useDids from '../hooks/use-dids'
@@ -18,10 +17,8 @@ export default function CreateWorkgroupButton(props: {
   )
 
   return isAdmin ? (
-    <Link href={`/${props.entry}/create`} className={props.className}>
-      <TextButton>
-        <PlusIcon className="h-5 w-5" />
-      </TextButton>
-    </Link>
+    <TextButton href={`/${props.entry}/create`} className={props.className}>
+      <PlusIcon className="h-5 w-5" />
+    </TextButton>
   ) : null
 }

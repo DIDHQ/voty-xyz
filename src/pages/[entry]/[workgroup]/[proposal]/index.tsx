@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo } from 'react'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { compact, startCase } from 'lodash-es'
-import Link from 'next/link'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { createProxySSGHelpers } from '@trpc/react-query/ssg'
@@ -138,13 +137,15 @@ export default function ProposalPage(
         <LoadingBar loading={isLoading} />
         <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
           <div className="w-full flex-1 sm:mr-6 sm:w-0">
-            <Link
-              href={`/${community?.authorship.author}/${proposal?.workgroup}`}
+            <TextButton
+              href={
+                community && proposal
+                  ? `/${community.authorship.author}/${proposal.workgroup}`
+                  : undefined
+              }
             >
-              <TextButton>
-                <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
-              </TextButton>
-            </Link>
+              <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+            </TextButton>
             <div className="mb-6 border-b border-gray-200 pb-6">
               <h3 className="mt-4 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
                 {proposal?.title}
