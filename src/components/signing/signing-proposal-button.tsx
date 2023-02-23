@@ -20,7 +20,7 @@ export default function SigningProposalButton(props: {
   const { handleSubmit: onSubmit } = useFormContext<Proposal>()
   const handleSignDocument = useSignDocument(
     props.did,
-    `You are proposing of Voty\n\nhash:\n{sha256}`,
+    `You are creating proposal of Voty\n\nhash:\n{sha256}`,
   )
   const handleCreate = trpc.proposal.create.useMutation()
   const handleSign = useAsync(
