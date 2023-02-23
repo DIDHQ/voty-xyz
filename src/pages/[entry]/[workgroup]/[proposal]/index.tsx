@@ -35,9 +35,11 @@ const ProposalSchedule = dynamic(
 export const getServerSideProps: GetServerSideProps<{
   proposal: string
 }> = async (context) => {
-  const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
   const proposal = id2Permalink(context.params!.proposal as string)
+
+  const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
   await ssg.proposal.getByPermalink.prefetch({ permalink: proposal })
+
   return { props: { trpcState: ssg.dehydrate(), proposal } }
 }
 

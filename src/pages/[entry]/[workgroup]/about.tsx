@@ -13,10 +13,12 @@ export const getServerSideProps: GetServerSideProps<{
   entry: string
   workgroup: string
 }> = async (context) => {
-  const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
   const entry = context.params!.entry as string
   const workgroup = context.params!.workgroup as string
+
+  const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
   await ssg.community.getByEntry.prefetch({ entry })
+
   return { props: { trpcState: ssg.dehydrate(), entry, workgroup } }
 }
 
