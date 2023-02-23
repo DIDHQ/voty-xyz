@@ -1,6 +1,7 @@
 import { ExoticComponent, ReactNode, useCallback, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
+import useAsync from '../../hooks/use-async'
 import useSignDocument from '../../hooks/use-sign-document'
 import { Proposal } from '../../utils/schemas/proposal'
 import { trpc } from '../../utils/trpc'
@@ -19,14 +20,16 @@ export default function SigningProposalButton(props: {
   const { handleSubmit: onSubmit } = useFormContext<Proposal>()
   const handleSignDocument = useSignDocument(props.did)
   const handleCreate = trpc.proposal.create.useMutation()
-  const handleClick = useCallback(
-    async (proposal: Proposal) => {
-      const signed = await handleSignDocument(proposal)
-      if (signed) {
-        return handleCreate.mutate(signed)
-      }
-    },
-    [handleSignDocument, handleCreate],
+  const handleSign = useAsync(
+    useCallback(
+      async (proposal: Proposal) => {
+        const signed = await handleSignDocument(proposal)
+        if (signed) {
+          return handleCreate.mutate(signed)
+        }
+      },
+      [handleSignDocument, handleCreate],
+    ),
   )
   useEffect(() => {
     if (handleCreate.isSuccess) {
@@ -39,12 +42,15 @@ export default function SigningProposalButton(props: {
       <Notification show={handleCreate.isError}>
         {handleCreate.error?.message}
       </Notification>
+      <Notification show={handleSign.status === 'error'}>
+        {handleSign.error?.message}
+      </Notification>
       <Button
         primary
         icon={props.icon}
-        onClick={onSubmit(handleClick, console.error)}
+        onClick={onSubmit(handleSign.execute, console.error)}
         disabled={props.disabled}
-        loading={handleCreate.isLoading}
+        loading={handleCreate.isLoading || handleSign.status === 'pending'}
         className={props.className}
       >
         {props.children}

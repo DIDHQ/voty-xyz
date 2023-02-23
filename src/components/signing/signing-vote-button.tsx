@@ -1,6 +1,7 @@
 import { ExoticComponent, ReactNode, useCallback, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
+import useAsync from '../../hooks/use-async'
 import useSignDocument from '../../hooks/use-sign-document'
 import { Vote } from '../../utils/schemas/vote'
 import { trpc } from '../../utils/trpc'
@@ -19,14 +20,16 @@ export default function SigningVoteButton(props: {
   const { handleSubmit: onSubmit } = useFormContext<Vote>()
   const handleSignDocument = useSignDocument(props.did)
   const handleCreate = trpc.vote.create.useMutation()
-  const handleClick = useCallback(
-    async (vote: Vote) => {
-      const signed = await handleSignDocument(vote)
-      if (signed) {
-        return handleCreate.mutate(signed)
-      }
-    },
-    [handleSignDocument, handleCreate],
+  const handleSign = useAsync(
+    useCallback(
+      async (vote: Vote) => {
+        const signed = await handleSignDocument(vote)
+        if (signed) {
+          return handleCreate.mutate(signed)
+        }
+      },
+      [handleSignDocument, handleCreate],
+    ),
   )
   useEffect(() => {
     if (handleCreate.isSuccess) {
@@ -39,12 +42,15 @@ export default function SigningVoteButton(props: {
       <Notification show={handleCreate.isError}>
         {handleCreate.error?.message}
       </Notification>
+      <Notification show={handleSign.status === 'error'}>
+        {handleSign.error?.message}
+      </Notification>
       <Button
         primary
         icon={props.icon}
-        onClick={onSubmit(handleClick, console.error)}
+        onClick={onSubmit(handleSign.execute, console.error)}
         disabled={props.disabled}
-        loading={handleCreate.isLoading}
+        loading={handleCreate.isLoading || handleSign.status === 'pending'}
         className={props.className}
       >
         {props.children}

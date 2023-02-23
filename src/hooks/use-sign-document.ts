@@ -20,24 +20,20 @@ export default function useSignDocument(
       if (!did || !account) {
         return
       }
-      try {
-        const coinType = requiredCoinTypeOfDidChecker(did)
-        const snapshot = await getCurrentSnapshot(coinType)
-        const authorship = {
-          author: did,
-          coin_type: coinType,
-          snapshot,
-          testnet: isTestnet || undefined,
-        } satisfies Authorship
-        const proof = await signDocument(
-          { ...document, authorship },
-          account.address,
-          signMessage,
-        )
-        return { ...document, authorship, proof }
-      } catch (err) {
-        console.error(err)
-      }
+      const coinType = requiredCoinTypeOfDidChecker(did)
+      const snapshot = await getCurrentSnapshot(coinType)
+      const authorship = {
+        author: did,
+        coin_type: coinType,
+        snapshot,
+        testnet: isTestnet || undefined,
+      } satisfies Authorship
+      const proof = await signDocument(
+        { ...document, authorship },
+        account.address,
+        signMessage,
+      )
+      return { ...document, authorship, proof }
     },
     [did, account, signMessage],
   )
