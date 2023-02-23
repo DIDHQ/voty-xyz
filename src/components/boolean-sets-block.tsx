@@ -214,9 +214,10 @@ function BooleanUnitBlock(props: {
                           ? (value as string[]).join('\n')
                           : ''
                       }
-                      onChange={(e) =>
-                        onChange(compact(e.target.value.split(/[\t\n, ]/)))
-                      }
+                      onChange={(e) => {
+                        const array = compact(e.target.value.split(/[\t\n, ]/))
+                        onChange(array.length ? array : [''])
+                      }}
                       onBlur={(e) => {
                         const suffix = watch(
                           `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
