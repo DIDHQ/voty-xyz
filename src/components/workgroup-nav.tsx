@@ -96,7 +96,7 @@ export default function WorkgroupNav(props: { className?: string }) {
               <Button primary>New Proposal</Button>
             </Link>
           ) : (
-            <Button primary disabled>
+            <Button primary disabled className="ml-4 shrink-0">
               New Proposal
             </Button>
           )}

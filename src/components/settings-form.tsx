@@ -7,6 +7,7 @@ import Select from '../components/basic/select'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 import { currentDidAtom } from '../utils/atoms'
+import TextButton from './basic/text-button'
 
 export default function SettingsForm() {
   const { account, disconnect } = useWallet()
@@ -18,7 +19,16 @@ export default function SettingsForm() {
       <FormSection title="Settings">
         <Grid6>
           <GridItem2>
-            <FormItem label="Select your default DID">
+            <FormItem
+              label="Select your default DID"
+              description={
+                dids?.length === 0 ? (
+                  <TextButton href="https://app.did.id/explorer">
+                    Register now!
+                  </TextButton>
+                ) : undefined
+              }
+            >
               <Select
                 disabled={!account}
                 options={dids}

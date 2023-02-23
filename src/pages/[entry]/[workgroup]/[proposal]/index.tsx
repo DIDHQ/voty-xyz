@@ -17,10 +17,7 @@ import TextButton from '../../../../components/basic/text-button'
 import LoadingBar from '../../../../components/basic/loading-bar'
 import { documentTitle } from '../../../../utils/constants'
 import { appRouter } from '../../../../server/routers/_app'
-
-const VoteForm = dynamic(() => import('../../../../components/vote-form'), {
-  ssr: false,
-})
+import VoteForm from '../../../../components/vote-form'
 
 const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
   ssr: false,
@@ -28,7 +25,16 @@ const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
 
 const ProposalSchedule = dynamic(
   () => import('../../../../components/proposal-schedule'),
-  { ssr: false },
+  {
+    ssr: false,
+    loading: () => (
+      <DetailList title="Schedule">
+        <DetailItem title="Period">{null}</DetailItem>
+        <DetailItem title="Start">...</DetailItem>
+        <DetailItem title="End">...</DetailItem>
+      </DetailList>
+    ),
+  },
 )
 
 export const getServerSideProps: GetServerSideProps<{
@@ -49,10 +55,11 @@ export default function ProposalPage(
     { permalink: props.proposal },
     { enabled: !!props.proposal, refetchOnWindowFocus: false },
   )
-  const { data: community } = trpc.community.getByPermalink.useQuery(
-    { permalink: proposal?.community },
-    { enabled: !!proposal?.community, refetchOnWindowFocus: false },
-  )
+  const { data: community, isLoading: isCommunityLoading } =
+    trpc.community.getByPermalink.useQuery(
+      { permalink: proposal?.community },
+      { enabled: !!proposal?.community, refetchOnWindowFocus: false },
+    )
   const workgroup = useWorkgroup(community, proposal?.workgroup)
   const {
     data,
@@ -134,7 +141,7 @@ export default function ProposalPage(
         <title>{title}</title>
       </Head>
       <div className="w-full">
-        <LoadingBar loading={isLoading} />
+        <LoadingBar loading={isLoading || isCommunityLoading} />
         <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
           <div className="w-full flex-1 sm:mr-6 sm:w-0">
             <TextButton
@@ -147,29 +154,29 @@ export default function ProposalPage(
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>
             <div className="mb-6 border-b border-gray-200 pb-6">
-              <h3 className="mt-4 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
+              <h3 className="mt-4 break-words text-3xl font-bold leading-8 tracking-tight text-gray-900 line-clamp-2 sm:text-4xl">
                 {proposal?.title}
               </h3>
               <Article className="mt-8">{proposal?.extension?.body}</Article>
             </div>
             {renderCard('block sm:hidden mb-6')}
-            {proposal && workgroup ? (
-              <VoteForm
-                proposal={proposal}
-                workgroup={workgroup}
-                onSuccess={refetchList}
-                className="border-b border-gray-200 pb-6"
-              />
+            <VoteForm
+              proposal={proposal || undefined}
+              workgroup={workgroup}
+              onSuccess={refetchList}
+            />
+            {proposal?.votes ? (
+              <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
+                {proposal.votes === 1 ? '1 Vote' : `${proposal.votes} Votes`}
+              </h2>
             ) : null}
-            <h2 className="my-6 text-2xl font-bold">
-              {proposal?.votes
-                ? proposal.votes === 1
-                  ? '1 Vote'
-                  : `${proposal.votes} Votes`
-                : null}
-            </h2>
             {votes?.length ? (
-              <table className="mb-6 min-w-full border-separate border-spacing-0 border border-gray-200">
+              <table className="mb-6 w-full border-separate border-spacing-0 border border-gray-200">
+                <colgroup>
+                  <col width="0%" />
+                  <col width="100%" />
+                  <col width="0%" />
+                </colgroup>
                 <thead>
                   <tr>
                     <th
@@ -206,7 +213,7 @@ export default function ProposalPage(
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-x border-gray-200 px-3 py-2 text-sm text-gray-500',
+                          'max-w-0 truncate whitespace-nowrap border-x border-gray-200 px-3 py-2 text-sm text-gray-500',
                         )}
                       >
                         {proposal
