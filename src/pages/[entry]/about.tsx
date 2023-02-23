@@ -1,14 +1,29 @@
-import useRouterQuery from '../../hooks/use-router-query'
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import { createProxySSGHelpers } from '@trpc/react-query/ssg'
+
 import CommunityLayout from '../../components/layouts/community'
 import Article from '../../components/basic/article'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
+import { appRouter } from '../../server/routers/_app'
 
-export default function CommunityAboutPage() {
-  const query = useRouterQuery<['entry']>()
+export const getServerSideProps: GetServerSideProps<{ entry: string }> = async (
+  context,
+) => {
+  const entry = context.params!.entry as string
+
+  const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
+  await ssg.community.getByEntry.prefetch({ entry })
+
+  return { props: { trpcState: ssg.dehydrate(), entry } }
+}
+
+export default function CommunityAboutPage(
+  props: InferGetServerSidePropsType<typeof getServerSideProps>,
+) {
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
-    { enabled: !!query.entry, refetchOnWindowFocus: false },
+    { entry: props.entry },
+    { enabled: !!props.entry, refetchOnWindowFocus: false },
   )
 
   return (
