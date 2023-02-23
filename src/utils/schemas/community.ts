@@ -11,7 +11,7 @@ export const communitySchema = z.object({
       (workgroups) =>
         !workgroups?.length ||
         new Set(workgroups.map(({ id }) => id)).size === workgroups.length,
-      { message: 'workgroups name are not unique' },
+      { message: 'workgroup ids are not unique' },
     ),
   extension: z
     .object({

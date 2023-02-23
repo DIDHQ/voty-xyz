@@ -10,14 +10,18 @@ export const voteSchema = z.object({
     .refine(
       (choice) =>
         !choiceIsEmpty('single', choice) && !choiceIsEmpty('multiple', choice),
+      { message: 'empty choice' },
     ),
-  power: z.string().refine((power) => {
-    try {
-      return new Decimal(power).gt(0)
-    } catch {
-      return false
-    }
-  }),
+  power: z.string().refine(
+    (power) => {
+      try {
+        return new Decimal(power).gt(0)
+      } catch {
+        return false
+      }
+    },
+    { message: 'negative power' },
+  ),
 })
 
 export type Vote = z.infer<typeof voteSchema>

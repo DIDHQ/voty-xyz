@@ -25,13 +25,16 @@ export const decimalUnitSchema = z.discriminatedUnion('function', [
     arguments: z.tuple([
       z.string().min(1),
       z.array(z.string().min(1)),
-      z.string().refine((power) => {
-        try {
-          return new Decimal(power).gt(0)
-        } catch {
-          return false
-        }
-      }),
+      z.string().refine(
+        (power) => {
+          try {
+            return new Decimal(power).gt(0)
+          } catch {
+            return false
+          }
+        },
+        { message: 'power is not decimal' },
+      ),
     ]),
   }),
 ])

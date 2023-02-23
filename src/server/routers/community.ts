@@ -100,18 +100,25 @@ export const communityRouter = router({
     }),
   create: procedure
     .input(
-      schema.refine(
-        (community) =>
-          !community.workgroups ||
-          community.workgroups.every(
-            (workgroup) =>
+      schema
+        .refine(
+          (community) =>
+            !community.workgroups ||
+            community.workgroups.every((workgroup) =>
               workgroup.permission.proposing.operands.every((operand) => {
                 return (
                   operand.function === 'prefixes_dot_suffix_exact_match' &&
                   (operand.arguments[0] === 'bit' ||
                     operand.arguments[0] === community.authorship.author)
                 )
-              }) &&
+              }),
+            ),
+          { message: 'invalid proposing permission' },
+        )
+        .refine(
+          (community) =>
+            !community.workgroups ||
+            community.workgroups.every((workgroup) =>
               workgroup.permission.voting.operands.every((operand) => {
                 return (
                   operand.function === 'prefixes_dot_suffix_fixed_power' &&
@@ -119,8 +126,9 @@ export const communityRouter = router({
                     operand.arguments[0] === community.authorship.author)
                 )
               }),
-          ),
-      ),
+            ),
+          { message: 'invalid voting permission' },
+        ),
     )
     .output(z.string())
     .mutation(async ({ input }) => {
