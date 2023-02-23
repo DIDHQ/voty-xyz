@@ -171,7 +171,12 @@ export default function ProposalPage(
               </h2>
             ) : null}
             {votes?.length ? (
-              <table className="mb-6 min-w-full border-separate border-spacing-0 border border-gray-200">
+              <table className="mb-6 w-full border-separate border-spacing-0 border border-gray-200">
+                <colgroup>
+                  <col width="0%" />
+                  <col width="100%" />
+                  <col width="0%" />
+                </colgroup>
                 <thead>
                   <tr>
                     <th
@@ -208,7 +213,7 @@ export default function ProposalPage(
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-x border-gray-200 px-3 py-2 text-sm text-gray-500',
+                          'max-w-0 truncate whitespace-nowrap border-x border-gray-200 px-3 py-2 text-sm text-gray-500',
                         )}
                       >
                         {proposal
