@@ -68,7 +68,7 @@ export default function ProposalForm(props: {
     }
   }, [community, setValue])
   useEffect(() => {
-    setValue('workgroup', workgroup.extension.id)
+    setValue('workgroup', workgroup.id)
   }, [workgroup, setValue])
   const currentDid = useAtomValue(currentDidAtom)
   const [did, setDid] = useState('')

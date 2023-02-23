@@ -26,7 +26,7 @@ export default async function verifyProposal(
   const community = data.data
 
   const workgroup = community.workgroups?.find(
-    (workgroup) => workgroup.extension.id === proposal.workgroup,
+    ({ id }) => id === proposal.workgroup,
   )
   if (!workgroup) {
     throw new Error('workgroup not found')

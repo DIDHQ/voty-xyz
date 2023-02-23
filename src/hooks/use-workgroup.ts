@@ -7,7 +7,7 @@ export default function useWorkgroup(
   workgroup?: string,
 ) {
   return useMemo(
-    () => community?.workgroups?.find((g) => g.extension.id === workgroup),
+    () => community?.workgroups?.find(({ id }) => id === workgroup),
     [community?.workgroups, workgroup],
   )
 }

@@ -169,7 +169,7 @@ export default function CommunityNav(props: { className?: string }) {
                       key={workgroup.name + index}
                       entry={query.entry}
                       workgroup={workgroup}
-                      current={query.workgroup === workgroup.extension.id}
+                      current={query.workgroup === workgroup.id}
                     />
                   ))}
                 </div>
@@ -207,7 +207,7 @@ function WorkgroupListItem(props: {
 
   return (
     <Link
-      href={`/${props.entry}/${props.workgroup.extension.id}`}
+      href={`/${props.entry}/${props.workgroup.id}`}
       scroll={false}
       className={clsx(
         props.current

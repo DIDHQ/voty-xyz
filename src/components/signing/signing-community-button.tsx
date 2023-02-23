@@ -25,7 +25,7 @@ export default function SigningCommunityButton(props: {
       const signed = await handleSignDocument({
         ...community,
         workgroups: community.workgroups?.filter(
-          (workgroup) => workgroup.extension.id !== props.archive,
+          (workgroup) => workgroup.id !== props.archive,
         ),
       })
       if (signed) {

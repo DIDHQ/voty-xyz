@@ -57,7 +57,7 @@ export default function WorkgroupForm(props: {
   }, [props.community, reset])
   const workgroupIndex = useMemo(() => {
     const index = props.community?.workgroups?.findIndex(
-      (g) => g.extension.id === props.workgroup,
+      ({ id }) => id === props.workgroup,
     )
     if (index === undefined || index === -1) {
       return props.community?.workgroups?.length || 0
@@ -72,6 +72,7 @@ export default function WorkgroupForm(props: {
     if (isNewWorkgroup) {
       console.log('update', workgroupIndex)
       update(workgroupIndex, {
+        id: props.workgroup,
         name: '',
         permission: {
           proposing: {
@@ -88,7 +89,6 @@ export default function WorkgroupForm(props: {
           voting: defaultVotingDuration,
         },
         extension: {
-          id: props.workgroup,
           terms_and_conditions: '',
         },
       })
