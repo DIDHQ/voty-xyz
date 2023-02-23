@@ -2,9 +2,11 @@ name: build
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   build:
@@ -33,5 +35,3 @@ jobs:
 
       - name: Build
         run: yarn build
-        env:
-          DATABASE_URL: mysql://localhost:3306/voty
