@@ -16,7 +16,7 @@ const schema = proved(authorized(communitySchema))
 
 const entrySchema = z.object({
   did: z.string(),
-  ts: z.date(),
+  ts: z.string(),
   community: z.string(),
   subscribers: z.number(),
   proposals: z.number(),
@@ -43,7 +43,9 @@ export const communityRouter = router({
         entry.community,
       )
 
-      return community ? { ...community.data, entry } : null
+      return community
+        ? { ...community.data, entry: { ...entry, ts: entry.ts.toString() } }
+        : null
     }),
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
@@ -88,7 +90,7 @@ export const communityRouter = router({
               try {
                 return {
                   ...communities[entry.community].data,
-                  entry,
+                  entry: { ...entry, ts: entry.ts.toString() },
                 }
               } catch {
                 return

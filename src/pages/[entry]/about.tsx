@@ -1,6 +1,5 @@
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { createProxySSGHelpers } from '@trpc/react-query/ssg'
-import SuperJSON from 'superjson'
 
 import CommunityLayout from '../../components/layouts/community'
 import Article from '../../components/basic/article'
@@ -11,11 +10,7 @@ import { appRouter } from '../../server/routers/_app'
 export const getServerSideProps: GetServerSideProps<{ entry: string }> = async (
   context,
 ) => {
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: {},
-    transformer: SuperJSON,
-  })
+  const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
   const entry = context.params!.entry as string
   await ssg.community.getByEntry.prefetch({ entry })
   return { props: { trpcState: ssg.dehydrate(), entry } }

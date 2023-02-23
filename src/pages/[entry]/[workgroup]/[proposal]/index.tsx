@@ -7,7 +7,6 @@ import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { createProxySSGHelpers } from '@trpc/react-query/ssg'
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import SuperJSON from 'superjson'
 
 import useWorkgroup from '../../../../hooks/use-workgroup'
 import { stringifyChoice } from '../../../../utils/voting'
@@ -36,11 +35,7 @@ const ProposalSchedule = dynamic(
 export const getServerSideProps: GetServerSideProps<{
   proposal: string
 }> = async (context) => {
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: {},
-    transformer: SuperJSON,
-  })
+  const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
   const proposal = id2Permalink(context.params!.proposal as string)
   await ssg.proposal.getByPermalink.prefetch({ permalink: proposal })
   return { props: { trpcState: ssg.dehydrate(), proposal } }

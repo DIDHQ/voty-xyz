@@ -1,6 +1,5 @@
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { createProxySSGHelpers } from '@trpc/react-query/ssg'
-import SuperJSON from 'superjson'
 
 import useWorkgroup from '../../../hooks/use-workgroup'
 import CommunityLayout from '../../../components/layouts/community'
@@ -14,11 +13,7 @@ export const getServerSideProps: GetServerSideProps<{
   entry: string
   workgroup: string
 }> = async (context) => {
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: {},
-    transformer: SuperJSON,
-  })
+  const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
   const entry = context.params!.entry as string
   const workgroup = context.params!.workgroup as string
   await ssg.community.getByEntry.prefetch({ entry })
