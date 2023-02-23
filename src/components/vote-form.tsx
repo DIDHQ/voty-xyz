@@ -53,10 +53,10 @@ export default function VoteForm(props: {
   const [did, setDid] = useState('')
   const { account } = useWallet()
   const { data: dids } = useDids(account, proposal.snapshots)
-  const { data: votes } = useQuery(
+  const { data: powers } = useQuery(
     [dids, props.workgroup, proposal.snapshots],
     async () => {
-      const numbers = await pMap(
+      const decimals = await pMap(
         dids!,
         (did) =>
           calculateDecimal(
@@ -67,7 +67,7 @@ export default function VoteForm(props: {
         { concurrency: 5 },
       )
       return dids!.reduce((obj, did, index) => {
-        obj[did] = numbers[index]
+        obj[did] = decimals[index]
         return obj
       }, {} as { [key: string]: Decimal })
     },
@@ -168,7 +168,7 @@ export default function VoteForm(props: {
               <Listbox.Option
                 key={option}
                 value={option}
-                disabled={!!voted?.[option] || !votes?.[option]}
+                disabled={!!voted?.[option] || !powers?.[option]}
                 className={({ active, disabled }) =>
                   clsx(
                     active
@@ -201,7 +201,7 @@ export default function VoteForm(props: {
                           'ml-2 truncate',
                         )}
                       >
-                        {votes?.[option].toString()}
+                        {powers?.[option].toString()}
                         {voted?.[option] ? ' voted' : null}
                       </span>
                     </div>
