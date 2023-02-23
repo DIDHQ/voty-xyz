@@ -13,7 +13,6 @@ export default function SigningCommunityButton(props: {
   archive?: string
   icon?: ExoticComponent<{ className?: string }>
   onSuccess: (permalink: string) => void
-  disabled?: boolean
   children: ReactNode
   className?: string
 }) {
@@ -55,7 +54,6 @@ export default function SigningCommunityButton(props: {
         primary={!props.archive}
         icon={props.icon}
         onClick={onSubmit(handleSign.execute, console.error)}
-        disabled={props.disabled}
         loading={handleCreate.isLoading || handleSign.status === 'pending'}
         className={props.className}
       >

@@ -1,3 +1,4 @@
+import { compact } from 'lodash-es'
 import { useCallback, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
@@ -188,39 +189,52 @@ function BooleanUnitBlock(props: {
             `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`,
           )?.length ? (
             <GridItem6>
-              <Controller
-                control={control}
-                name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
-                render={({ field: { value, onChange } }) => (
-                  <Textarea
-                    autoCorrect="false"
-                    autoCapitalize="false"
-                    autoComplete="false"
-                    value={
-                      Array.isArray(value) ? (value as string[]).join('\n') : ''
-                    }
-                    onChange={(e) => onChange(e.target.value.split(/[\n, ]/))}
-                    onBlur={(e) => {
-                      const suffix = watch(
-                        `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
-                      )
-                      const regex = new RegExp(
-                        `\\.${suffix.replaceAll('.', '\\.')}\$`,
-                      )
-                      onChange(
-                        e.target.value
-                          .split('\n')
-                          .map((line) => line.replace(regex, '')),
-                      )
-                    }}
-                    error={
-                      !!errors.workgroups?.[props.workgroupIndex]?.permission?.[
-                        props.name
-                      ]?.operands?.[props.index]?.arguments?.[1]?.message
-                    }
-                  />
-                )}
-              />
+              <FormItem
+                label="Allowlist"
+                error={
+                  errors.workgroups?.[props.workgroupIndex]?.permission?.[
+                    props.name
+                  ]?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
+                }
+              >
+                <Controller
+                  control={control}
+                  name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
+                  render={({ field: { value, onChange } }) => (
+                    <Textarea
+                      autoCorrect="false"
+                      autoCapitalize="false"
+                      autoComplete="false"
+                      value={
+                        Array.isArray(value)
+                          ? (value as string[]).join('\n')
+                          : ''
+                      }
+                      onChange={(e) =>
+                        onChange(compact(e.target.value.split(/[\t\n, ]/)))
+                      }
+                      onBlur={(e) => {
+                        const suffix = watch(
+                          `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
+                        )
+                        const regex = new RegExp(
+                          `\\.${suffix.replaceAll('.', '\\.')}\$`,
+                        )
+                        onChange(
+                          e.target.value
+                            .split('\n')
+                            .map((line) => line.replace(regex, '')),
+                        )
+                      }}
+                      error={
+                        !!errors.workgroups?.[props.workgroupIndex]
+                          ?.permission?.[props.name]?.operands?.[props.index]
+                          ?.arguments?.[1]?.[0]?.message
+                      }
+                    />
+                  )}
+                />
+              </FormItem>
             </GridItem6>
           ) : null}
         </Grid6>

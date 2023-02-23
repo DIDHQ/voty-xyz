@@ -39,6 +39,7 @@ export default function CommunityForm(props: {
     register,
     reset,
     watch,
+    setValue,
     formState: { errors },
   } = methods
   useEffect(() => {
@@ -119,6 +120,12 @@ export default function CommunityForm(props: {
             >
               <TextInput
                 {...register('extension.twitter')}
+                onBlur={(e) =>
+                  setValue(
+                    'extension.twitter',
+                    e.target.value.replace(/^.*twitter\.com\//, ''),
+                  )
+                }
                 error={!!errors.extension?.twitter?.message}
                 disabled={props.disabled}
               />
@@ -131,6 +138,14 @@ export default function CommunityForm(props: {
             >
               <TextInput
                 {...register('extension.discord')}
+                onBlur={(e) =>
+                  setValue(
+                    'extension.discord',
+                    e.target.value
+                      .replace(/^.*discord\.gg\//, '')
+                      .replace(/^.*discord\.com\/invite\//, ''),
+                  )
+                }
                 error={!!errors.extension?.discord?.message}
                 disabled={props.disabled}
               />
@@ -140,6 +155,12 @@ export default function CommunityForm(props: {
             <FormItem label="GitHub" error={errors.extension?.github?.message}>
               <TextInput
                 {...register('extension.github')}
+                onBlur={(e) =>
+                  setValue(
+                    'extension.github',
+                    e.target.value.replace(/^.*github\.com\//, ''),
+                  )
+                }
                 error={!!errors.extension?.github?.message}
                 disabled={props.disabled}
               />
@@ -147,18 +168,19 @@ export default function CommunityForm(props: {
           </GridItem2>
         </Grid6>
       </FormSection>
-      <FormFooter>
-        <FormProvider {...methods}>
-          <SigningCommunityButton
-            did={props.entry}
-            icon={isNewCommunity ? DocumentPlusIcon : DocumentArrowUpIcon}
-            onSuccess={onSuccess}
-            disabled={props.disabled}
-          >
-            {isNewCommunity ? 'Create' : 'Update'}
-          </SigningCommunityButton>
-        </FormProvider>
-      </FormFooter>
+      {props.disabled ? null : (
+        <FormFooter>
+          <FormProvider {...methods}>
+            <SigningCommunityButton
+              did={props.entry}
+              icon={isNewCommunity ? DocumentPlusIcon : DocumentArrowUpIcon}
+              onSuccess={onSuccess}
+            >
+              {isNewCommunity ? 'Create' : 'Update'}
+            </SigningCommunityButton>
+          </FormProvider>
+        </FormFooter>
+      )}
     </Form>
   )
 }
