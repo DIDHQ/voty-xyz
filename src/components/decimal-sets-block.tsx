@@ -195,10 +195,13 @@ function DecimalUnitBlock(props: {
                 name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
                 render={({ field: { value, onChange } }) => (
                   <Textarea
+                    autoCorrect="false"
+                    autoCapitalize="false"
+                    autoComplete="false"
                     value={
                       Array.isArray(value) ? (value as string[]).join('\n') : ''
                     }
-                    onChange={(e) => onChange(e.target.value.split('\n'))}
+                    onChange={(e) => onChange(e.target.value.split(/[\n, ]/))}
                     onBlur={(e) => {
                       const suffix = watch(
                         `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
