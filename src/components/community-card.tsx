@@ -30,8 +30,8 @@ export default function CommunityCard(props: {
           value={community.extension?.avatar}
           className="shrink-0"
         />
-        <div className="ml-4">
-          <h3 className="text-lg font-medium text-gray-900 line-clamp-2">
+        <div className="ml-4 w-0 flex-1">
+          <h3 className="w-full break-words text-lg font-medium text-gray-900 line-clamp-2">
             {community.name}
           </h3>
           <p className="flex items-center text-gray-500 line-clamp-2">

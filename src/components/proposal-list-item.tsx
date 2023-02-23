@@ -43,30 +43,26 @@ export default function ProposalListItem(props: {
           {props.proposal.extension.body}
         </p>
       ) : null}
-      <div className="sm:flex sm:justify-between">
-        <div className="sm:flex">
-          <p className="flex items-center text-sm text-gray-500">
-            <HandRaisedIcon
-              className="mr-1.5 h-4 w-4 shrink-0 text-gray-400"
-              aria-hidden="true"
-            />
-            {props.proposal.authorship.author}
-          </p>
-          <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-4">
-            <BoltIcon
-              className="mr-1.5 h-4 w-4 shrink-0 text-gray-400"
-              aria-hidden="true"
-            />
-            {props.proposal.votes}
-          </p>
-          <p className="mt-2 flex items-center truncate text-sm text-gray-500 sm:mt-0 sm:ml-4">
-            <Square2StackIcon
-              className="mr-1.5 h-4 w-4 shrink-0 text-gray-400"
-              aria-hidden="true"
-            />
-            {props.proposal.options.join(', ')}
-          </p>
-        </div>
+      <div className="flex w-full items-center justify-start">
+        <HandRaisedIcon
+          className="mr-1.5 h-4 w-4 shrink-0 text-gray-400"
+          aria-hidden="true"
+        />
+        <p className="text-sm text-gray-500">
+          {props.proposal.authorship.author}
+        </p>
+        <BoltIcon
+          className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
+          aria-hidden="true"
+        />
+        <p className="text-sm text-gray-500">{props.proposal.votes}</p>
+        <Square2StackIcon
+          className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
+          aria-hidden="true"
+        />
+        <p className="truncate text-sm text-gray-500">
+          {props.proposal.options.join(', ')}
+        </p>
       </div>
     </Link>
   )
