@@ -118,7 +118,6 @@ export default function VoteForm(props: {
     refetchChoices()
     refetch()
     setValue('choice', '')
-    setDid('')
   }, [onSuccess, refetch, refetchChoices, setValue])
   const { data: status } = useStatus(proposal.permalink)
   const disabled = useMemo(
