@@ -133,103 +133,103 @@ export default function ProposalPage(
       </Head>
       <div className="w-full">
         <LoadingBar loading={isLoading} />
-        {community && proposal && workgroup ? (
-          <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
-            <div className="w-full flex-1 sm:mr-6 sm:w-0">
-              <Link
-                href={`/${community.authorship.author}/${proposal.workgroup}`}
-              >
-                <TextButton>
-                  <h2 className="text-[1rem] font-semibold leading-6">
-                    ← Back
-                  </h2>
-                </TextButton>
-              </Link>
-              <div className="mb-6 border-b border-gray-200 pb-6">
-                <h3 className="mt-4 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
-                  {proposal.title}
-                </h3>
-                <Article className="mt-8">{proposal.extension?.body}</Article>
-              </div>
-              {renderCard('block sm:hidden mb-6')}
+        <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
+          <div className="w-full flex-1 sm:mr-6 sm:w-0">
+            <Link
+              href={`/${community?.authorship.author}/${proposal?.workgroup}`}
+            >
+              <TextButton>
+                <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+              </TextButton>
+            </Link>
+            <div className="mb-6 border-b border-gray-200 pb-6">
+              <h3 className="mt-4 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
+                {proposal?.title}
+              </h3>
+              <Article className="mt-8">{proposal?.extension?.body}</Article>
+            </div>
+            {renderCard('block sm:hidden mb-6')}
+            {proposal && workgroup ? (
               <VoteForm
                 proposal={proposal}
                 workgroup={workgroup}
                 onSuccess={refetchList}
                 className="border-b border-gray-200 pb-6"
               />
-              <h2 className="my-6 text-2xl font-bold">
-                {proposal.votes
-                  ? proposal.votes === 1
-                    ? '1 Vote'
-                    : `${proposal.votes} Votes`
-                  : null}
-              </h2>
-              {votes?.length ? (
-                <table className="mb-6 min-w-full border-separate border-spacing-0 border border-gray-200">
-                  <thead>
-                    <tr>
-                      <th
-                        scope="col"
-                        className="sticky top-18 border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+            ) : null}
+            <h2 className="my-6 text-2xl font-bold">
+              {proposal?.votes
+                ? proposal.votes === 1
+                  ? '1 Vote'
+                  : `${proposal.votes} Votes`
+                : null}
+            </h2>
+            {votes?.length ? (
+              <table className="mb-6 min-w-full border-separate border-spacing-0 border border-gray-200">
+                <thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      className="sticky top-18 border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                    >
+                      DID
+                    </th>
+                    <th
+                      scope="col"
+                      className="sticky top-18 border-x border-b border-gray-200 bg-white/80 px-3 py-2 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                    >
+                      Choice
+                    </th>
+                    <th
+                      scope="col"
+                      className="sticky top-18 border-b border-gray-200 bg-white/80 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
+                    >
+                      Power
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {votes.map((vote, index) => (
+                    <tr key={vote.permalink}>
+                      <td
+                        className={clsx(
+                          index === 0 ? undefined : 'border-t',
+                          'whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
+                        )}
                       >
-                        DID
-                      </th>
-                      <th
-                        scope="col"
-                        className="sticky top-18 border-x border-b border-gray-200 bg-white/80 px-3 py-2 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                        {vote.authorship.author}
+                      </td>
+                      <td
+                        className={clsx(
+                          index === 0 ? undefined : 'border-t',
+                          'truncate whitespace-nowrap border-x border-gray-200 px-3 py-2 text-sm text-gray-500',
+                        )}
                       >
-                        Choice
-                      </th>
-                      <th
-                        scope="col"
-                        className="sticky top-18 border-b border-gray-200 bg-white/80 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
+                        {proposal
+                          ? stringifyChoice(proposal.voting_type, vote.choice)
+                          : vote.choice}
+                      </td>
+                      <td
+                        className={clsx(
+                          index === 0 ? undefined : 'border-t',
+                          'whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
+                        )}
                       >
-                        Power
-                      </th>
+                        <a
+                          href={permalink2Url(vote.permalink)}
+                          className="text-primary-600 hover:text-primary-900"
+                        >
+                          {vote.power}
+                        </a>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {votes.map((vote, index) => (
-                      <tr key={vote.permalink}>
-                        <td
-                          className={clsx(
-                            index === 0 ? undefined : 'border-t',
-                            'whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
-                          )}
-                        >
-                          {vote.authorship.author}
-                        </td>
-                        <td
-                          className={clsx(
-                            index === 0 ? undefined : 'border-t',
-                            'truncate whitespace-nowrap border-x border-gray-200 px-3 py-2 text-sm text-gray-500',
-                          )}
-                        >
-                          {stringifyChoice(proposal.voting_type, vote.choice)}
-                        </td>
-                        <td
-                          className={clsx(
-                            index === 0 ? undefined : 'border-t',
-                            'whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
-                          )}
-                        >
-                          <a
-                            href={permalink2Url(vote.permalink)}
-                            className="text-primary-600 hover:text-primary-900"
-                          >
-                            {vote.power}
-                          </a>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : null}
-            </div>
-            {renderCard('hidden sm:block')}
+                  ))}
+                </tbody>
+              </table>
+            ) : null}
           </div>
-        ) : null}
+          {renderCard('hidden sm:block')}
+        </div>
         <div ref={ref} />
       </div>
     </>
