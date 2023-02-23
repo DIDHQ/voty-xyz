@@ -123,6 +123,7 @@ function BooleanUnitBlock(props: {
               }
             >
               <TextInput
+                disabled={props.disabled}
                 {...register(
                   `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.alias`,
                 )}
@@ -149,6 +150,7 @@ function BooleanUnitBlock(props: {
                 name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
                 render={({ field: { value, onChange } }) => (
                   <RadioGroup
+                    disabled={props.disabled}
                     options={[
                       { value: props.entry, name: 'SubDID' },
                       { value: 'bit', name: '.bit' },
@@ -174,6 +176,7 @@ function BooleanUnitBlock(props: {
                 name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
                 render={({ field: { value, onChange } }) => (
                   <RadioGroup
+                    disabled={props.disabled}
                     options={[
                       { value: 'allowlist', name: 'Allowlist' },
                       { value: 'all', name: 'All' },
@@ -205,6 +208,7 @@ function BooleanUnitBlock(props: {
                       autoCorrect="false"
                       autoCapitalize="false"
                       autoComplete="false"
+                      disabled={props.disabled}
                       value={
                         Array.isArray(value)
                           ? (value as string[]).join('\n')

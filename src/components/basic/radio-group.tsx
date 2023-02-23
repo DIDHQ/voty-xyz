@@ -1,5 +1,6 @@
 export default function RadioGroup(props: {
   options: { value: string; name: string }[]
+  disabled?: boolean
   value: string
   onChange(value: string): void
   className?: string
@@ -14,9 +15,10 @@ export default function RadioGroup(props: {
           <div key={option.value} className="flex items-center">
             <input
               type="radio"
+              disabled={props.disabled}
               checked={option.value === props.value}
               onChange={() => onChange(option.value)}
-              className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+              className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500 disabled:cursor-not-allowed"
             />
             <label
               htmlFor={option.value}

@@ -125,6 +125,7 @@ function DecimalUnitBlock(props: {
               }
             >
               <TextInput
+                disabled={props.disabled}
                 {...register(
                   `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.alias`,
                 )}
@@ -151,6 +152,7 @@ function DecimalUnitBlock(props: {
                 name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
                 render={({ field: { value, onChange } }) => (
                   <RadioGroup
+                    disabled={props.disabled}
                     options={[
                       { value: props.entry, name: 'SubDID' },
                       { value: 'bit', name: '.bit' },
@@ -176,6 +178,7 @@ function DecimalUnitBlock(props: {
                 name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
                 render={({ field: { value, onChange } }) => (
                   <RadioGroup
+                    disabled={props.disabled}
                     options={[
                       { value: 'allowlist', name: 'Allowlist' },
                       { value: 'all', name: 'All' },
@@ -207,6 +210,7 @@ function DecimalUnitBlock(props: {
                       autoCorrect="false"
                       autoCapitalize="false"
                       autoComplete="false"
+                      disabled={props.disabled}
                       value={
                         Array.isArray(value)
                           ? (value as string[]).join('\n')
@@ -256,6 +260,7 @@ function DecimalUnitBlock(props: {
                 name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`}
                 render={({ field: { value, onChange } }) => (
                   <TextInput
+                    disabled={props.disabled}
                     value={value}
                     onChange={(e) => {
                       onChange(e.target.value)

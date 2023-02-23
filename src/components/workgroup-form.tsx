@@ -259,6 +259,7 @@ export default function WorkgroupForm(props: {
               }
             >
               <Textarea
+                disabled={props.disabled}
                 {...register(
                   `workgroups.${workgroupIndex}.extension.terms_and_conditions`,
                 )}
