@@ -12,6 +12,6 @@ export default function useStatus(permalink?: string) {
       const timestamp = await getSnapshotTimestamp(commonCoinTypes.AR, snapshot)
       return { timestamp }
     },
-    { enabled: !!permalink },
+    { enabled: !!permalink, retry: false },
   )
 }
