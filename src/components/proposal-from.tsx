@@ -216,12 +216,14 @@ export default function ProposalForm(props: {
                         />
                       </span>
                     </div>
-                    <div className="ml-4 flex shrink-0 space-x-4">
-                      <OptionDelete
-                        index={index}
-                        onDelete={handleOptionDelete}
-                      />
-                    </div>
+                    {watch('options')?.length > 1 ? (
+                      <div className="ml-4 flex shrink-0 space-x-4">
+                        <OptionDelete
+                          index={index}
+                          onDelete={handleOptionDelete}
+                        />
+                      </div>
+                    ) : null}
                   </li>
                 ))}
               </ul>
