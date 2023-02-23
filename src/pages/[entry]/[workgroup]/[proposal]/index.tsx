@@ -17,10 +17,7 @@ import TextButton from '../../../../components/basic/text-button'
 import LoadingBar from '../../../../components/basic/loading-bar'
 import { documentTitle } from '../../../../utils/constants'
 import { appRouter } from '../../../../server/routers/_app'
-
-const VoteForm = dynamic(() => import('../../../../components/vote-form'), {
-  ssr: false,
-})
+import VoteForm from '../../../../components/vote-form'
 
 const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
   ssr: false,
@@ -28,7 +25,16 @@ const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
 
 const ProposalSchedule = dynamic(
   () => import('../../../../components/proposal-schedule'),
-  { ssr: false },
+  {
+    ssr: false,
+    loading: () => (
+      <DetailList title="Schedule">
+        <DetailItem title="Period">...</DetailItem>
+        <DetailItem title="Start">...</DetailItem>
+        <DetailItem title="End">...</DetailItem>
+      </DetailList>
+    ),
+  },
 )
 
 export const getServerSideProps: GetServerSideProps<{

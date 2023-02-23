@@ -2,13 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
-import clsx from 'clsx'
 import dynamic from 'next/dynamic'
-import { BoltIcon, CheckIcon } from '@heroicons/react/20/solid'
+import { BoltIcon } from '@heroicons/react/20/solid'
 import { Decimal } from 'decimal.js'
 import { useAtomValue } from 'jotai'
 import pMap from 'p-map'
-import { Listbox } from '@headlessui/react'
 
 import { calculateDecimal } from '../utils/functions/number'
 import { Vote, voteSchema } from '../utils/schemas/vote'
@@ -19,7 +17,6 @@ import { Proposal } from '../utils/schemas/proposal'
 import { Workgroup } from '../utils/schemas/workgroup'
 import { FormItem } from './basic/form'
 import { currentDidAtom } from '../utils/atoms'
-import Select from './basic/select'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import { ChoiceListItem } from './choice-list-item'
@@ -154,71 +151,13 @@ export default function VoteForm(props: {
         />
       </FormItem>
       <div className="mt-6 flex w-full justify-end">
-        <Select
-          top
-          options={dids}
-          renderItem={(option) => (
-            <Listbox.Option
-              key={option}
-              value={option}
-              disabled={!!voted?.[option] || !powers?.[option]}
-              className={({ active, disabled }) =>
-                clsx(
-                  active
-                    ? 'bg-primary-600 text-white'
-                    : disabled
-                    ? 'cursor-not-allowed text-gray-400'
-                    : 'text-gray-900',
-                  'relative cursor-default select-none py-2 pl-3 pr-9',
-                )
-              }
-            >
-              {({ selected, active, disabled }) => (
-                <>
-                  <div className="flex">
-                    <span
-                      className={clsx(
-                        selected ? 'font-semibold' : 'font-normal',
-                        'truncate',
-                      )}
-                    >
-                      {option}
-                    </span>
-                    <span
-                      className={clsx(
-                        active
-                          ? 'text-primary-200'
-                          : disabled
-                          ? 'text-gray-400'
-                          : 'text-gray-500',
-                        'ml-2 truncate',
-                      )}
-                    >
-                      {powers?.[option].toString()}
-                      {voted?.[option] ? ' voted' : null}
-                    </span>
-                  </div>
-                  {selected ? (
-                    <span
-                      className={clsx(
-                        active ? 'text-white' : 'text-primary-600',
-                        'absolute inset-y-0 right-0 flex items-center pr-4',
-                      )}
-                    >
-                      <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                  ) : null}
-                </>
-              )}
-            </Listbox.Option>
-          )}
-          value={did}
-          onChange={setDid}
-          className="w-0 flex-1 focus:z-10 active:z-10 sm:w-auto sm:flex-none"
-        />
         <FormProvider {...methods}>
           <SigningVoteButton
-            did={did}
+            value={did}
+            onChange={setDid}
+            snapshots={proposal?.snapshots}
+            proposal={proposal?.permalink}
+            workgroup={workgroup}
             icon={BoltIcon}
             onSuccess={handleSuccess}
             disabled={disabled(did)}
