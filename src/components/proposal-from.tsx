@@ -8,7 +8,8 @@ import dynamic from 'next/dynamic'
 import { HandRaisedIcon } from '@heroicons/react/20/solid'
 import { useAtomValue } from 'jotai'
 import { Entry } from '@prisma/client'
-import { Serialize } from '@trpc/server/dist/shared/internal/serialize'
+import type { Serialize } from '@trpc/server/dist/shared/internal/serialize'
+import clsx from 'clsx'
 
 import { requiredCoinTypesOfDecimalSets } from '../utils/functions/number'
 import { Proposal, proposalSchema } from '../utils/schemas/proposal'
@@ -198,35 +199,31 @@ export default function ProposalForm(props: {
                 errors.options?.find?.((option) => option?.message)?.message
               }
             >
-              <ul
-                role="list"
-                className="divide-y divide-gray-200 border border-gray-200"
-              >
+              <div className="space-y-[-1px]">
                 {watch('options')?.map((_, index) => (
-                  <li
+                  <div
                     key={index}
-                    className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
+                    className="relative flex items-center justify-between text-sm"
                   >
-                    <div className="flex w-0 flex-1 items-center">
-                      <span className="ml-2 w-0 flex-1 truncate">
-                        <input
-                          {...register(`options.${index}`)}
-                          placeholder={`Option ${index + 1}`}
-                          className="w-full outline-none"
-                        />
-                      </span>
-                    </div>
-                    {watch('options')?.length > 1 ? (
-                      <div className="ml-4 flex shrink-0 space-x-4">
+                    <input
+                      type="text"
+                      {...register(`options.${index}`)}
+                      className={clsx(
+                        'peer block w-full border-gray-300 py-3 pl-3 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm',
+                        watch('options')?.length > 1 ? 'pr-20' : 'pr-3',
+                      )}
+                    />
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
+                      {watch('options')?.length > 1 ? (
                         <OptionDelete
                           index={index}
                           onDelete={handleOptionDelete}
                         />
-                      </div>
-                    ) : null}
-                  </li>
+                      ) : null}
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </FormItem>
           </GridItem6>
         </Grid6>
