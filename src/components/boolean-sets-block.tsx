@@ -29,7 +29,7 @@ export default function BooleanSetsBlock(props: {
       {fields.length ? (
         <ul
           role="list"
-          className="divide-y divide-gray-200 border border-gray-200"
+          className="divide-y divide-gray-200 overflow-hidden rounded border border-gray-200"
         >
           {fields.map((operand, index) => (
             <BooleanUnitBlock

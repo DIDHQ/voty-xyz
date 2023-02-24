@@ -93,7 +93,7 @@ export default function ProposalPage(
           permalink={props.proposal}
           className="absolute right-4 top-4"
         />
-        <div className="space-y-6 border border-gray-200 p-6">
+        <div className="space-y-6 rounded border border-gray-200 p-6">
           <DetailList title="Proposal">
             <DetailItem
               title="Community"
@@ -181,7 +181,7 @@ export default function ProposalPage(
               </h2>
             ) : null}
             {votes?.length ? (
-              <table className="mb-6 w-full border-separate border-spacing-0 border border-gray-200">
+              <table className="my-6 w-full border-separate border-spacing-0 rounded border border-gray-200">
                 <colgroup>
                   <col width="40%" />
                   <col width="50%" />
@@ -191,7 +191,7 @@ export default function ProposalPage(
                   <tr>
                     <th
                       scope="col"
-                      className="sticky top-18 border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="sticky top-18 rounded-t border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       DID
                     </th>
@@ -203,7 +203,7 @@ export default function ProposalPage(
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-18 border-b border-gray-200 bg-white/80 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="sticky top-18 rounded-t border-b border-gray-200 bg-white/80 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       Power
                     </th>

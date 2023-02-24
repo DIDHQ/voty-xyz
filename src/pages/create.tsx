@@ -47,14 +47,9 @@ export default function CreateCommunityPage() {
                 ? 'You need a DID to create community'
                 : 'Select a DID as your community entry'}
             </p>
-            <div className="mt-10 flex items-center justify-center">
+            <div className="mt-10 flex flex-col items-center space-y-6">
               {dids?.length === 0 ? null : (
-                <Select
-                  options={dids}
-                  value={entry}
-                  onChange={setEntry}
-                  className="hover:z-10 active:z-10"
-                />
+                <Select options={dids} value={entry} onChange={setEntry} />
               )}
               {dids?.length === 0 ? (
                 <a
@@ -63,7 +58,6 @@ export default function CreateCommunityPage() {
                       ? 'https://test2f7a872b.did.id/explorer'
                       : 'https://app.did.id/explorer'
                   }
-                  className="hover:z-10 active:z-10"
                 >
                   <Button icon={ArrowTopRightOnSquareIcon} primary>
                     Register
@@ -71,37 +65,20 @@ export default function CreateCommunityPage() {
                 </a>
               ) : community ? (
                 isLoading ? (
-                  <Button
-                    icon={DocumentCheckIcon}
-                    disabled
-                    className="border-l-0 hover:z-10 active:z-10"
-                  >
+                  <Button icon={DocumentCheckIcon} disabled>
                     View
                   </Button>
                 ) : (
-                  <Link href={`/${entry}`} className="hover:z-10 active:z-10">
-                    <Button
-                      icon={DocumentCheckIcon}
-                      className="border-l-0 hover:z-10 active:z-10"
-                    >
-                      View
-                    </Button>
+                  <Link href={`/${entry}`}>
+                    <Button icon={DocumentCheckIcon}>View</Button>
                   </Link>
                 )
               ) : isLoading ? (
-                <Button
-                  icon={DocumentPlusIcon}
-                  primary
-                  disabled
-                  className="border-l-0 hover:z-10 active:z-10"
-                >
+                <Button icon={DocumentPlusIcon} primary disabled>
                   Create
                 </Button>
               ) : (
-                <Link
-                  href={`/${entry}/settings`}
-                  className="hover:z-10 active:z-10"
-                >
+                <Link href={`/${entry}/settings`}>
                   <Button icon={DocumentPlusIcon} primary>
                     Create
                   </Button>
