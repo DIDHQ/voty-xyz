@@ -59,7 +59,7 @@ const wagmiClient = createClient({
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const theme = useMemo(
-    () => lightTheme({ borderRadius: 'none', fontStack: 'system' }),
+    () => lightTheme({ borderRadius: 'small', fontStack: 'system' }),
     [],
   )
 
