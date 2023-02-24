@@ -29,12 +29,18 @@ export default function Avatar(props: {
       width={size}
       height={size}
       style={style}
-      className={clsx('bg-gray-100 object-cover', props.className)}
+      className={clsx(
+        'bg-gray-50 object-cover ring-1 ring-gray-200',
+        props.className,
+      )}
     />
   ) : (
     <div
       style={style}
-      className={clsx('overflow-hidden bg-gray-200', props.className)}
+      className={clsx(
+        'overflow-hidden bg-gray-50 ring-1 ring-gray-200',
+        props.className,
+      )}
     >
       {props.name ? (
         <BoringAvatar size={size} name={props.name} variant={props.variant} />
