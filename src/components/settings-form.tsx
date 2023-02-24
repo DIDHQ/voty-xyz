@@ -24,7 +24,7 @@ export default function SettingsForm() {
               description={
                 dids?.length === 0 ? (
                   <TextButton href="https://app.did.id/explorer">
-                    Register now!
+                    Do not have a DID? Register now!
                   </TextButton>
                 ) : undefined
               }
