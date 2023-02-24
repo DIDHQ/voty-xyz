@@ -46,12 +46,14 @@ export default function CreateCommunityPage() {
               Select a DID as your community entry
             </p>
             <div className="mt-10 flex items-center justify-center">
-              <Select
-                options={dids}
-                value={entry}
-                onChange={setEntry}
-                className="hover:z-10 active:z-10"
-              />
+              {dids?.length === 0 ? null : (
+                <Select
+                  options={dids}
+                  value={entry}
+                  onChange={setEntry}
+                  className="hover:z-10 active:z-10"
+                />
+              )}
               {dids?.length === 0 ? (
                 <a
                   href={
