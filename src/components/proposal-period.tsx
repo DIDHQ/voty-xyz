@@ -15,7 +15,7 @@ export default function ProposalPeriod(props: {
     () =>
       status?.timestamp && props.duration
         ? getPeriod(new Date(), status.timestamp, props.duration)
-        : Period.PENDING,
+        : undefined,
     [props.duration, status?.timestamp],
   )
 
@@ -51,7 +51,7 @@ export default function ProposalPeriod(props: {
         fill="currentColor"
         viewBox="0 0 8 8"
       >
-        <circle cx={4} cy={4} r={3} />
+        {period ? <circle cx={4} cy={4} r={3} /> : null}
       </svg>
       {period}
     </span>

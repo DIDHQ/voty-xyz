@@ -113,7 +113,7 @@ export default function VoteForm(props: {
     () =>
       status?.timestamp && workgroup?.duration
         ? getPeriod(new Date(), status.timestamp, workgroup.duration)
-        : Period.PENDING,
+        : undefined,
     [workgroup?.duration, status?.timestamp],
   )
   const disabled = useCallback(
