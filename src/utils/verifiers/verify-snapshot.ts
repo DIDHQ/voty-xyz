@@ -1,3 +1,5 @@
+import { TRPCError } from '@trpc/server'
+
 import { Authorship } from '../schemas/authorship'
 import { getSnapshotTimestamp } from '../snapshot'
 
@@ -7,6 +9,6 @@ export default async function verifySnapshot(authorship: Authorship) {
     authorship.snapshot,
   )
   if (Date.now() - timestamp.getTime() > 30 * 60 * 1000) {
-    throw new Error('snapshot too old')
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'snapshot too old' })
   }
 }
