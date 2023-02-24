@@ -112,7 +112,7 @@ export default function WorkgroupNav(props: { className?: string }) {
                     New Proposal
                   </Button>
                 </div>
-                <Tooltip id={id} className="rounded-none">
+                <Tooltip id={id} className="rounded">
                   Waiting for workgroup transaction confirmation
                 </Tooltip>
               </>

@@ -4,8 +4,15 @@ import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import Decimal from 'decimal.js'
 import pMap from 'p-map'
-import { ExoticComponent, ReactNode, useCallback, useEffect } from 'react'
+import {
+  ExoticComponent,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useId,
+} from 'react'
 import { useFormContext } from 'react-hook-form'
+import { Tooltip } from 'react-tooltip'
 
 import useAsync from '../../hooks/use-async'
 import useDids from '../../hooks/use-dids'
@@ -29,8 +36,8 @@ export default function SigningVoteButton(props: {
   icon?: ExoticComponent<{ className?: string }>
   onSuccess: (permalink: string) => void
   disabled?: boolean
+  waiting?: boolean
   children: ReactNode
-  className?: string
 }) {
   const { onSuccess } = props
   const { account } = useWallet()
@@ -85,6 +92,7 @@ export default function SigningVoteButton(props: {
       onSuccess(handleCreate.data)
     }
   }, [handleCreate.data, handleCreate.isSuccess, onSuccess, refetch])
+  const id = useId()
 
   return (
     <>
@@ -156,16 +164,36 @@ export default function SigningVoteButton(props: {
         onChange={props.onChange}
         className="w-0 flex-1 focus:z-10 active:z-10 sm:w-auto sm:flex-none"
       />
-      <Button
-        primary
-        icon={props.icon}
-        onClick={onSubmit(handleSign.execute, console.error)}
-        disabled={props.disabled}
-        loading={handleCreate.isLoading || handleSign.status === 'pending'}
-        className={props.className}
-      >
-        {props.children}
-      </Button>
+      {props.waiting ? (
+        <>
+          <div data-tooltip-id={id} data-tooltip-place="top" className="mt-6">
+            <Button
+              primary
+              icon={props.icon}
+              onClick={onSubmit(handleSign.execute, console.error)}
+              disabled={props.disabled}
+              loading={
+                handleCreate.isLoading || handleSign.status === 'pending'
+              }
+            >
+              {props.children}
+            </Button>
+          </div>
+          <Tooltip id={id} className="rounded">
+            Waiting for proposal
+          </Tooltip>
+        </>
+      ) : (
+        <Button
+          primary
+          icon={props.icon}
+          onClick={onSubmit(handleSign.execute, console.error)}
+          disabled={props.disabled}
+          loading={handleCreate.isLoading || handleSign.status === 'pending'}
+        >
+          {props.children}
+        </Button>
+      )}
     </>
   )
 }

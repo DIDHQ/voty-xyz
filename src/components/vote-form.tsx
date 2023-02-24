@@ -155,7 +155,7 @@ export default function VoteForm(props: {
         />
       </FormItem>
       {period === Period.ENDED || !currentDid ? null : (
-        <div className="mt-6 flex w-full flex-col items-end space-y-6">
+        <div className="mt-6 flex w-full flex-col items-end">
           <FormProvider {...methods}>
             <SigningVoteButton
               value={did}
@@ -164,6 +164,7 @@ export default function VoteForm(props: {
               proposal={proposal?.permalink}
               workgroup={workgroup}
               icon={BoltIcon}
+              waiting={period !== Period.VOTING}
               onSuccess={handleSuccess}
               disabled={disabled(did)}
             >

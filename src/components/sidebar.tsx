@@ -30,7 +30,7 @@ export default function Sidebar(props: { className?: string }) {
           >
             <PlusIcon className="h-8 w-8 text-primary-600 group-hover:text-white" />
           </Link>
-          <Tooltip id={id} className="rounded-none">
+          <Tooltip id={id} className="rounded">
             Create community
           </Tooltip>
         </>
