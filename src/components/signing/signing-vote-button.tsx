@@ -190,6 +190,7 @@ export default function SigningVoteButton(props: {
           onClick={onSubmit(handleSign.execute, console.error)}
           disabled={props.disabled}
           loading={handleCreate.isLoading || handleSign.status === 'pending'}
+          className="mt-6"
         >
           {props.children}
         </Button>
