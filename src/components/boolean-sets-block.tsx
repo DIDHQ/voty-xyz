@@ -121,7 +121,7 @@ function BooleanUnitBlock(props: {
         <Grid6 className="p-6">
           <GridItem6>
             <FormItem
-              label="Alias"
+              label="Name"
               error={
                 errors.workgroups?.[props.workgroupIndex]?.permission?.[
                   props.name
