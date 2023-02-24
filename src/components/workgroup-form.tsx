@@ -29,9 +29,7 @@ const SigningCommunityButton = dynamic(
   { ssr: false },
 )
 
-const defaultAnnouncementDuration = 3600
-
-const defaultVotingDuration = 86400
+const defaultDuration = 86400
 
 export default function WorkgroupForm(props: {
   community: Authorized<Community>
@@ -84,8 +82,8 @@ export default function WorkgroupForm(props: {
           },
         },
         duration: {
-          announcement: defaultAnnouncementDuration,
-          voting: defaultVotingDuration,
+          announcement: defaultDuration,
+          voting: defaultDuration,
         },
         extension: {
           terms_and_conditions: '',
@@ -202,7 +200,7 @@ export default function WorkgroupForm(props: {
               }
             >
               <Controller
-                defaultValue={defaultAnnouncementDuration}
+                defaultValue={defaultDuration}
                 control={control}
                 name={`workgroups.${workgroupIndex}.duration.announcement`}
                 render={({ field: { value, onChange } }) => (
@@ -227,7 +225,7 @@ export default function WorkgroupForm(props: {
               }
             >
               <Controller
-                defaultValue={defaultVotingDuration}
+                defaultValue={defaultDuration}
                 control={control}
                 name={`workgroups.${workgroupIndex}.duration.voting`}
                 render={({ field: { value, onChange } }) => (
