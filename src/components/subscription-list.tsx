@@ -28,10 +28,10 @@ export default function SubscriptionList(props: { className?: string }) {
             value={community.extension?.avatar}
             noRing
             className={clsx(
-              'mt-3 ring-2 ring-offset-2',
+              'mt-3',
               community.authorship.author === query.entry
-                ? 'ring-primary-500'
-                : 'ring-transparent hover:ring-gray-300',
+                ? 'ring-2 ring-primary-500 ring-offset-2'
+                : 'ring-1 ring-gray-200 hover:ring-2 hover:ring-gray-300 hover:ring-offset-2',
             )}
           />
         </Link>
