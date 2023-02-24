@@ -18,10 +18,14 @@ export default function ConnectButton() {
   const { data: avatar } = useAvatar(currentDid)
   const { data: dids } = useDids(account)
   useEffect(() => {
-    setCurrentDid((old) =>
-      dids ? (dids.includes(old) ? old : dids[0] || '') : old,
-    )
-  }, [dids, setCurrentDid])
+    if (account) {
+      setCurrentDid((old) =>
+        dids ? (dids.includes(old) ? old : dids[0] || '') : old,
+      )
+    } else {
+      setCurrentDid('')
+    }
+  }, [account, dids, setCurrentDid])
 
   return (
     <RainbowConnectButton.Custom>
