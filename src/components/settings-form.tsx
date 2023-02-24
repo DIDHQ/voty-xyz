@@ -7,6 +7,7 @@ import Select from '../components/basic/select'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 import { currentDidAtom } from '../utils/atoms'
+import { isTestnet } from '../utils/constants'
 import TextButton from './basic/text-button'
 
 export default function SettingsForm() {
@@ -23,7 +24,13 @@ export default function SettingsForm() {
               label="Select your default DID"
               description={
                 dids?.length === 0 ? (
-                  <TextButton href="https://app.did.id/explorer">
+                  <TextButton
+                    href={
+                      isTestnet
+                        ? 'https://test2f7a872b.did.id/explorer'
+                        : 'https://app.did.id/explorer'
+                    }
+                  >
                     Do not have a DID? Register now!
                   </TextButton>
                 ) : undefined
