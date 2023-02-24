@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../utils/schemas/community'
@@ -87,6 +87,20 @@ function BooleanUnitBlock(props: {
   const handleRemove = useCallback(() => {
     onRemove(props.index)
   }, [onRemove, props.index])
+  useEffect(() => {
+    if (
+      errors.workgroups?.[props.workgroupIndex]?.permission?.[props.name]
+        ?.operands?.[props.index]
+    ) {
+      setOpen(props.index)
+    }
+  }, [
+    errors.workgroups,
+    props.index,
+    props.name,
+    props.workgroupIndex,
+    setOpen,
+  ])
 
   return (
     <>
@@ -231,13 +245,12 @@ function BooleanUnitBlock(props: {
                         const regex = new RegExp(
                           `\\.${suffix.replaceAll('.', '\\.')}\$`,
                         )
-                        onChange(
-                          compact(
-                            e.target.value
-                              .split('\n')
-                              .map((line) => line.replace(regex, '')),
-                          ),
+                        const array = compact(
+                          e.target.value
+                            .split('\n')
+                            .map((line) => line.replace(regex, '')),
                         )
+                        onChange(array.length ? array : [''])
                       }}
                       error={
                         !!errors.workgroups?.[props.workgroupIndex]
