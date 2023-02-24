@@ -25,34 +25,41 @@ export default function SubscriptionButton(props: {
     { subscriber: currentDid, entry: props.entry },
     { enabled: !!currentDid && !!props.entry, refetchOnWindowFocus: false },
   )
-  const handleSignDocument = useSignDocument(currentDid)
+  const signSubscribe = useSignDocument(
+    currentDid,
+    `You are subscribing community of Voty\n\nhash:\n{sha256}`,
+  )
+  const signUnsubscribe = useSignDocument(
+    currentDid,
+    `You are unsubscribing community of Voty\n\nhash:\n{sha256}`,
+  )
   const handleSignSubscribe = useAsync(
     useCallback(async () => {
       if (!props.entry) {
         return
       }
-      const signed = await handleSignDocument({
+      const signed = await signSubscribe({
         entry: props.entry,
         subscribe: true,
       })
       if (signed) {
         mutate(signed)
       }
-    }, [handleSignDocument, mutate, props.entry]),
+    }, [signSubscribe, mutate, props.entry]),
   )
   const handleSignUnsubscribe = useAsync(
     useCallback(async () => {
       if (!props.entry) {
         return
       }
-      const signed = await handleSignDocument({
+      const signed = await signUnsubscribe({
         entry: props.entry,
         subscribe: false,
       })
       if (signed) {
         mutate(signed)
       }
-    }, [handleSignDocument, mutate, props.entry]),
+    }, [signUnsubscribe, mutate, props.entry]),
   )
   useEffect(() => {
     if (isSuccess) {
