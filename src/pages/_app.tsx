@@ -20,6 +20,7 @@ import {
   metaMaskWallet,
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
+import { useMemo } from 'react'
 import 'react-tooltip/dist/react-tooltip.css'
 import '@total-typescript/ts-reset'
 
@@ -57,6 +58,11 @@ const wagmiClient = createClient({
 })
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+  const theme = useMemo(
+    () => lightTheme({ borderRadius: 'none', fontStack: 'system' }),
+    [],
+  )
+
   return (
     <>
       <Head>
@@ -67,11 +73,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         />
       </Head>
       <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider
-          modalSize="compact"
-          chains={chains}
-          theme={lightTheme({ borderRadius: 'none' })}
-        >
+        <RainbowKitProvider modalSize="compact" chains={chains} theme={theme}>
           <ShellLayout>
             <Component {...pageProps} />
           </ShellLayout>

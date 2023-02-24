@@ -113,7 +113,7 @@ export default function ProposalPage(
             >
               {workgroup?.name || '...'}
             </DetailItem>
-            <DetailItem title="Proposer">
+            <DetailItem title="Proposer" className="truncate whitespace-nowrap">
               {proposal?.authorship.author}
             </DetailItem>
             <DetailItem title="Voting type">

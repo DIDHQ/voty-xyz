@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import { useCallback, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
@@ -91,7 +92,12 @@ function DecimalUnitBlock(props: {
 
   return (
     <>
-      <li className="flex items-center justify-between py-3 px-4 text-sm">
+      <li
+        className={clsx(
+          'flex items-center justify-between py-3 px-4 text-sm',
+          props.open ? 'bg-gray-50' : undefined,
+        )}
+      >
         <div className="flex w-0 flex-1 items-center">
           <span className="w-0 flex-1 truncate">
             {watch(
@@ -114,7 +120,7 @@ function DecimalUnitBlock(props: {
         </div>
       </li>
       {props.open ? (
-        <Grid6 className="bg-gray-50 p-6">
+        <Grid6 className="p-6">
           <GridItem6>
             <FormItem
               label="Alias"
