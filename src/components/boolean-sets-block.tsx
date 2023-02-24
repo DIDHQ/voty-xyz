@@ -221,7 +221,7 @@ function BooleanUnitBlock(props: {
                           : ''
                       }
                       onChange={(e) => {
-                        const array = compact(e.target.value.split(/[\t\n, ]/))
+                        const array = e.target.value.split(/[\t\n, ]/)
                         onChange(array.length ? array : [''])
                       }}
                       onBlur={(e) => {
@@ -232,9 +232,11 @@ function BooleanUnitBlock(props: {
                           `\\.${suffix.replaceAll('.', '\\.')}\$`,
                         )
                         onChange(
-                          e.target.value
-                            .split('\n')
-                            .map((line) => line.replace(regex, '')),
+                          compact(
+                            e.target.value
+                              .split('\n')
+                              .map((line) => line.replace(regex, '')),
+                          ),
                         )
                       }}
                       error={
