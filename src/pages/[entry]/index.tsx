@@ -43,6 +43,9 @@ export default function CommunityIndexPage() {
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading || isListLoading} />
+      <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:pl-6">
+        Timeline
+      </h3>
       {proposals?.length === 0 ? (
         community?.workgroups?.length === 0 ? (
           <div className="mx-auto mt-6 py-20 text-center">

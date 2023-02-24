@@ -29,6 +29,9 @@ export default function CommunityAboutPage(
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
+      <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:pl-6">
+        About
+      </h3>
       <Article className="w-full pt-6 sm:pl-6">
         {community?.extension?.about}
       </Article>
