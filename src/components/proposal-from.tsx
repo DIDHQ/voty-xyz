@@ -209,8 +209,12 @@ export default function ProposalForm(props: {
                       type="text"
                       {...register(`options.${index}`)}
                       className={clsx(
-                        'peer block w-full border-gray-300 py-3 pl-3 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm',
+                        'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-500 sm:text-sm',
                         watch('options')?.length > 1 ? 'pr-20' : 'pr-3',
+                        index === 0 ? 'rounded-t' : undefined,
+                        index === watch('options')?.length - 1
+                          ? 'rounded-b'
+                          : undefined,
                       )}
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
@@ -229,14 +233,14 @@ export default function ProposalForm(props: {
         </Grid6>
       </FormSection>
       {currentDid ? (
-        <div className="flex w-full justify-end pt-6">
+        <div className="flex w-full flex-col items-end space-y-6 pt-6">
           <Select
             top
             options={dids}
             disables={disables}
             value={did}
             onChange={setDid}
-            className="w-0 flex-1 focus:z-10 active:z-10 sm:w-auto sm:flex-none"
+            className="w-0 flex-1 sm:w-auto sm:flex-none"
           />
           <FormProvider {...methods}>
             <SigningProposalButton
@@ -244,7 +248,6 @@ export default function ProposalForm(props: {
               icon={HandRaisedIcon}
               disabled={!status?.timestamp || !did || !community || !snapshots}
               onSuccess={onSuccess}
-              className="border-l-0 focus:z-10 active:z-10"
             >
               Propose
             </SigningProposalButton>

@@ -1,3 +1,5 @@
+import { TRPCError } from '@trpc/server'
+
 import { getPeriod, Period } from '../duration'
 import { calculateDecimal } from '../functions/number'
 import { Authorized } from '../schemas/authorship'
@@ -25,13 +27,16 @@ export default async function verifyVote(
     getByPermalink(DataType.PROPOSAL, vote.proposal),
   ])
   if (!timestamp || !data) {
-    throw new Error('proposal not found')
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'proposal not found' })
   }
   const proposal = data.data
   const { community, workgroup } = await verifyProposal(proposal)
 
   if (getPeriod(new Date(), timestamp, workgroup.duration) !== Period.VOTING) {
-    throw new Error('not in voting period')
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'not in voting period',
+    })
   }
 
   const votingPower = await calculateDecimal(
@@ -40,7 +45,10 @@ export default async function verifyVote(
     proposal.snapshots,
   )
   if (!votingPower.eq(vote.power)) {
-    throw new Error('voting power not match')
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'voting power not match',
+    })
   }
 
   return { proposal, workgroup, community }

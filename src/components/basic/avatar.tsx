@@ -9,6 +9,7 @@ export default function Avatar(props: {
   name?: string
   value?: string | null
   variant?: 'marble' | 'beam' | 'pixel' | 'sunset' | 'ring' | 'bauhaus'
+  noRing?: boolean
   className?: string
 }) {
   const size = `${props.size / 4}rem`
@@ -21,6 +22,11 @@ export default function Avatar(props: {
     }),
     [borderRadius, size],
   )
+  const className = clsx(
+    'overflow-hidden bg-gray-50 object-cover',
+    props.noRing ? undefined : 'ring-1 ring-gray-200',
+    props.className,
+  )
 
   return props.value ? (
     <img
@@ -29,13 +35,10 @@ export default function Avatar(props: {
       width={size}
       height={size}
       style={style}
-      className={clsx('bg-gray-100 object-cover', props.className)}
+      className={className}
     />
   ) : (
-    <div
-      style={style}
-      className={clsx('overflow-hidden bg-gray-200', props.className)}
-    >
+    <div style={style} className={className}>
       {props.name ? (
         <BoringAvatar size={size} name={props.name} variant={props.variant} />
       ) : null}

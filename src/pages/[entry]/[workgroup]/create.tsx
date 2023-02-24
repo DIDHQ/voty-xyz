@@ -65,7 +65,7 @@ export default function CreateProposalPage() {
           permalink={community?.entry.community}
           className="absolute right-4 top-4"
         />
-        <Grid6 className="border border-gray-200 p-6">
+        <Grid6 className="rounded border border-gray-200 p-6">
           <GridItem6>
             <DetailList title="Workgroup">
               <DetailItem title="Name" className="truncate whitespace-nowrap">

@@ -36,7 +36,7 @@ export default function SigningVoteButton(props: {
   const { account } = useWallet()
   const { data: dids } = useDids(account, props.snapshots)
   const { handleSubmit: onSubmit } = useFormContext<Vote>()
-  const handleSignDocument = useSignDocument(
+  const signDocument = useSignDocument(
     props.value,
     `You are creating vote of Voty\n\nhash:\n{sha256}`,
   )
@@ -44,12 +44,12 @@ export default function SigningVoteButton(props: {
   const handleSign = useAsync(
     useCallback(
       async (vote: Vote) => {
-        const signed = await handleSignDocument(vote)
+        const signed = await signDocument(vote)
         if (signed) {
           return handleCreate.mutate(signed)
         }
       },
-      [handleSignDocument, handleCreate],
+      [signDocument, handleCreate],
     ),
   )
   const { data: powers } = useQuery(

@@ -116,7 +116,7 @@ export default function CommunityNav(props: { className?: string }) {
           props.className,
         )}
       >
-        <div className="flex w-full flex-col items-center border border-gray-200 pb-4">
+        <div className="flex w-full flex-col items-center rounded border border-gray-200 pb-4">
           <StatusIcon
             permalink={community?.entry.community}
             className="absolute right-4 top-4"

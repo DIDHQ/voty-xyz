@@ -26,6 +26,7 @@ export default function SubscriptionList(props: { className?: string }) {
             size={12}
             name={community.authorship.author}
             value={community.extension?.avatar}
+            noRing
             className={clsx(
               'mt-3 ring-2 ring-offset-2',
               community.authorship.author === query.entry

@@ -44,8 +44,8 @@ const { chains, provider } = configureChains(
 )
 
 const wallets = [
-  injectedWallet({ chains }),
-  metaMaskWallet({ chains }),
+  injectedWallet({ chains, shimDisconnect: true }),
+  metaMaskWallet({ chains, shimDisconnect: true }),
   walletConnectWallet({ chains }),
 ]
 

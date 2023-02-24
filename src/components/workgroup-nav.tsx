@@ -103,8 +103,12 @@ export default function WorkgroupNav(props: { className?: string }) {
               </Link>
             ) : (
               <>
-                <div data-tooltip-id={id} data-tooltip-place="left">
-                  <Button primary disabled className="ml-4 shrink-0">
+                <div
+                  data-tooltip-id={id}
+                  data-tooltip-place="left"
+                  className="ml-4 shrink-0"
+                >
+                  <Button primary disabled>
                     New Proposal
                   </Button>
                 </div>

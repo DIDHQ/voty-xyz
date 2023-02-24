@@ -1,11 +1,11 @@
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../utils/schemas/community'
 import { FormItem } from './basic/form'
-import { Grid6, GridItem3, GridItem6 } from './basic/grid'
+import { Grid6, GridItem6 } from './basic/grid'
 import RadioGroup from './basic/radio-group'
 import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
@@ -29,7 +29,7 @@ export default function BooleanSetsBlock(props: {
       {fields.length ? (
         <ul
           role="list"
-          className="divide-y divide-gray-200 border border-gray-200"
+          className="divide-y divide-gray-200 overflow-hidden rounded border border-gray-200"
         >
           {fields.map((operand, index) => (
             <BooleanUnitBlock
@@ -87,6 +87,20 @@ function BooleanUnitBlock(props: {
   const handleRemove = useCallback(() => {
     onRemove(props.index)
   }, [onRemove, props.index])
+  useEffect(() => {
+    if (
+      errors.workgroups?.[props.workgroupIndex]?.permission?.[props.name]
+        ?.operands?.[props.index]
+    ) {
+      setOpen(props.index)
+    }
+  }, [
+    errors.workgroups,
+    props.index,
+    props.name,
+    props.workgroupIndex,
+    setOpen,
+  ])
 
   return (
     <>
@@ -100,7 +114,7 @@ function BooleanUnitBlock(props: {
           <span className="w-0 flex-1 truncate">
             {watch(
               `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.alias`,
-            ) || `Sets #${props.index + 1}`}
+            ) || `Group #${props.index + 1}`}
           </span>
         </div>
         <div className="ml-4 flex shrink-0 space-x-4">
@@ -121,7 +135,7 @@ function BooleanUnitBlock(props: {
         <Grid6 className="p-6">
           <GridItem6>
             <FormItem
-              label="Alias"
+              label="Name"
               error={
                 errors.workgroups?.[props.workgroupIndex]?.permission?.[
                   props.name
@@ -138,11 +152,11 @@ function BooleanUnitBlock(props: {
                     props.name
                   ]?.operands?.[props.index]?.alias?.message
                 }
-                placeholder={`Sets #${props.index + 1}`}
+                placeholder={`Group #${props.index + 1}`}
               />
             </FormItem>
           </GridItem6>
-          <GridItem3>
+          <GridItem6>
             <FormItem
               label="Base on"
               error={
@@ -167,8 +181,8 @@ function BooleanUnitBlock(props: {
                 )}
               />
             </FormItem>
-          </GridItem3>
-          <GridItem3>
+          </GridItem6>
+          <GridItem6>
             <FormItem
               label="Filter"
               error={
@@ -193,7 +207,7 @@ function BooleanUnitBlock(props: {
                 )}
               />
             </FormItem>
-          </GridItem3>
+          </GridItem6>
           {watch(
             `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`,
           )?.length ? (
@@ -231,13 +245,12 @@ function BooleanUnitBlock(props: {
                         const regex = new RegExp(
                           `\\.${suffix.replaceAll('.', '\\.')}\$`,
                         )
-                        onChange(
-                          compact(
-                            e.target.value
-                              .split('\n')
-                              .map((line) => line.replace(regex, '')),
-                          ),
+                        const array = compact(
+                          e.target.value
+                            .split('\n')
+                            .map((line) => line.replace(regex, '')),
                         )
+                        onChange(array.length ? array : [''])
                       }}
                       error={
                         !!errors.workgroups?.[props.workgroupIndex]

@@ -1,3 +1,5 @@
+import { TRPCError } from '@trpc/server'
+
 import { checkDidAuthorshipProof } from '../did'
 import { Authorized, Authorship } from '../schemas/authorship'
 import { Proof, Proved } from '../schemas/proof'
@@ -11,15 +13,18 @@ export default async function verifyAuthorshipProof<T extends object>(
   const { proof, ...rest } = document
 
   if ((rest.authorship.testnet || false) !== isTestnet) {
-    throw new Error('mainnet testnet mismatch')
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'mainnet testnet mismatch',
+    })
   }
 
   if (!(await verifyDocument(rest, proof, verifyMessage))) {
-    throw new Error('invalid proof')
+    throw new TRPCError({ code: 'FORBIDDEN', message: 'invalid proof' })
   }
 
   if (!(await checkDidAuthorshipProof(rest.authorship, proof))) {
-    throw new Error('invalid authorship')
+    throw new TRPCError({ code: 'FORBIDDEN', message: 'invalid authorship' })
   }
 
   return { authorship: rest.authorship, proof }

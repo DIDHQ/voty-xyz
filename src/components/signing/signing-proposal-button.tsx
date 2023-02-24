@@ -18,7 +18,7 @@ export default function SigningProposalButton(props: {
 }) {
   const { onSuccess } = props
   const { handleSubmit: onSubmit } = useFormContext<Proposal>()
-  const handleSignDocument = useSignDocument(
+  const signDocument = useSignDocument(
     props.did,
     `You are creating proposal of Voty\n\nhash:\n{sha256}`,
   )
@@ -26,12 +26,12 @@ export default function SigningProposalButton(props: {
   const handleSign = useAsync(
     useCallback(
       async (proposal: Proposal) => {
-        const signed = await handleSignDocument(proposal)
+        const signed = await signDocument(proposal)
         if (signed) {
           return handleCreate.mutate(signed)
         }
       },
-      [handleSignDocument, handleCreate],
+      [signDocument, handleCreate],
     ),
   )
   useEffect(() => {

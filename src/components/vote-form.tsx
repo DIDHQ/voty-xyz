@@ -136,7 +136,7 @@ export default function VoteForm(props: {
           render={({ field: { value, onChange } }) => (
             <ul
               role="list"
-              className="mt-6 divide-y divide-gray-200 border border-gray-200"
+              className="mt-6 divide-y divide-gray-200 rounded border border-gray-200"
             >
               {proposal?.options.map((option) => (
                 <ChoiceListItem
@@ -155,7 +155,7 @@ export default function VoteForm(props: {
         />
       </FormItem>
       {period === Period.ENDED || !currentDid ? null : (
-        <div className="mt-6 flex w-full justify-end">
+        <div className="mt-6 flex w-full flex-col items-end space-y-6">
           <FormProvider {...methods}>
             <SigningVoteButton
               value={did}
@@ -166,7 +166,6 @@ export default function VoteForm(props: {
               icon={BoltIcon}
               onSuccess={handleSuccess}
               disabled={disabled(did)}
-              className="border-l-0 focus:z-10 active:z-10"
             >
               Vote{votingPower ? ` (${votingPower})` : null}
             </SigningVoteButton>

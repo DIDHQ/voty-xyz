@@ -18,7 +18,7 @@ export default function SigningCommunityButton(props: {
 }) {
   const { onSuccess } = props
   const { handleSubmit: onSubmit } = useFormContext<Community>()
-  const handleSignDocument = useSignDocument(
+  const signDocument = useSignDocument(
     props.did,
     `You are updating community of Voty\n\nhash:\n{sha256}`,
   )
@@ -26,7 +26,7 @@ export default function SigningCommunityButton(props: {
   const handleSign = useAsync(
     useCallback(
       async (community: Community) => {
-        const signed = await handleSignDocument({
+        const signed = await signDocument({
           ...community,
           workgroups: community.workgroups?.filter(
             (workgroup) => workgroup.id !== props.archive,
@@ -36,7 +36,7 @@ export default function SigningCommunityButton(props: {
           return handleCreate.mutate(signed)
         }
       },
-      [handleSignDocument, props.archive, handleCreate],
+      [signDocument, props.archive, handleCreate],
     ),
   )
   useEffect(() => {

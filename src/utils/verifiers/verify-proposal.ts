@@ -1,3 +1,5 @@
+import { TRPCError } from '@trpc/server'
+
 import { checkBoolean } from '../functions/boolean'
 import { Authorized } from '../schemas/authorship'
 import { Community } from '../schemas/community'
@@ -21,7 +23,7 @@ export default async function verifyProposal(
     getByPermalink(DataType.COMMUNITY, proposal.community),
   ])
   if (!timestamp || !data) {
-    throw new Error('community not found')
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'community not found' })
   }
   const community = data.data
 
@@ -29,7 +31,7 @@ export default async function verifyProposal(
     ({ id }) => id === proposal.workgroup,
   )
   if (!workgroup) {
-    throw new Error('workgroup not found')
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'workgroup not found' })
   }
 
   if (
@@ -39,7 +41,10 @@ export default async function verifyProposal(
       proposal.snapshots,
     ))
   ) {
-    throw new Error('does not have proposing permission')
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'does not have proposing permission',
+    })
   }
 
   return { community, workgroup }

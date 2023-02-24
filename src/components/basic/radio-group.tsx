@@ -22,6 +22,7 @@ export default function RadioGroup(props: {
             />
             <label
               htmlFor={option.value}
+              onClick={() => onChange(option.value)}
               className="ml-3 block text-sm text-gray-700"
             >
               {option.name}
