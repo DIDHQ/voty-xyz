@@ -5,7 +5,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../utils/schemas/community'
 import { FormItem } from './basic/form'
-import { Grid6, GridItem2, GridItem3, GridItem6 } from './basic/grid'
+import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 import RadioGroup from './basic/radio-group'
 import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
@@ -102,7 +102,7 @@ function DecimalUnitBlock(props: {
           <span className="w-0 flex-1 truncate">
             {watch(
               `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.alias`,
-            ) || `Sets #${props.index + 1}`}
+            ) || `Group #${props.index + 1}`}
           </span>
         </div>
         <div className="ml-4 flex shrink-0 space-x-4">
@@ -140,11 +140,11 @@ function DecimalUnitBlock(props: {
                     props.name
                   ]?.operands?.[props.index]?.alias?.message
                 }
-                placeholder={`Sets #${props.index + 1}`}
+                placeholder={`Group #${props.index + 1}`}
               />
             </FormItem>
           </GridItem6>
-          <GridItem3>
+          <GridItem6>
             <FormItem
               label="Base on"
               error={
@@ -169,8 +169,8 @@ function DecimalUnitBlock(props: {
                 )}
               />
             </FormItem>
-          </GridItem3>
-          <GridItem3>
+          </GridItem6>
+          <GridItem6>
             <FormItem
               label="Filter"
               error={
@@ -195,7 +195,7 @@ function DecimalUnitBlock(props: {
                 )}
               />
             </FormItem>
-          </GridItem3>
+          </GridItem6>
           {watch(
             `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`,
           )?.length ? (
