@@ -154,7 +154,7 @@ export default function VoteForm(props: {
           )}
         />
       </FormItem>
-      {period === Period.ENDED ? null : (
+      {period === Period.ENDED || !currentDid ? null : (
         <div className="mt-6 flex w-full justify-end">
           <FormProvider {...methods}>
             <SigningVoteButton

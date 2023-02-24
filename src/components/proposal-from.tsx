@@ -228,27 +228,29 @@ export default function ProposalForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <div className="flex w-full justify-end pt-6">
-        <Select
-          top
-          options={dids}
-          disables={disables}
-          value={did}
-          onChange={setDid}
-          className="w-0 flex-1 focus:z-10 active:z-10 sm:w-auto sm:flex-none"
-        />
-        <FormProvider {...methods}>
-          <SigningProposalButton
-            did={did}
-            icon={HandRaisedIcon}
-            disabled={!status?.timestamp || !did || !community || !snapshots}
-            onSuccess={onSuccess}
-            className="border-l-0 focus:z-10 active:z-10"
-          >
-            Propose
-          </SigningProposalButton>
-        </FormProvider>
-      </div>
+      {currentDid ? (
+        <div className="flex w-full justify-end pt-6">
+          <Select
+            top
+            options={dids}
+            disables={disables}
+            value={did}
+            onChange={setDid}
+            className="w-0 flex-1 focus:z-10 active:z-10 sm:w-auto sm:flex-none"
+          />
+          <FormProvider {...methods}>
+            <SigningProposalButton
+              did={did}
+              icon={HandRaisedIcon}
+              disabled={!status?.timestamp || !did || !community || !snapshots}
+              onSuccess={onSuccess}
+              className="border-l-0 focus:z-10 active:z-10"
+            >
+              Propose
+            </SigningProposalButton>
+          </FormProvider>
+        </div>
+      ) : null}
     </Form>
   )
 }

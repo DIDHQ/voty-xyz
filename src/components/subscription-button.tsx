@@ -5,7 +5,6 @@ import { useCallback, useEffect } from 'react'
 
 import useAsync from '../hooks/use-async'
 import useSignDocument from '../hooks/use-sign-document'
-import useWallet from '../hooks/use-wallet'
 import { currentDidAtom } from '../utils/atoms'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
@@ -15,7 +14,6 @@ export default function SubscriptionButton(props: {
   entry?: string
   className?: string
 }) {
-  const { account } = useWallet()
   const currentDid = useAtomValue(currentDidAtom)
   const { refetch: refetchList } = trpc.subscription.list.useQuery(
     { subscriber: currentDid },
@@ -63,7 +61,7 @@ export default function SubscriptionButton(props: {
     }
   }, [isSuccess, refetch, refetchList])
 
-  return account ? (
+  return currentDid ? (
     <>
       <Notification show={isError}>{error?.message}</Notification>
       <Notification show={handleSignUnsubscribe.status === 'error'}>
