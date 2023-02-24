@@ -3,9 +3,10 @@ import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useMemo } from 'react'
+import { useId, useMemo } from 'react'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
+import { Tooltip } from 'react-tooltip'
 
 import useWorkgroup from '../hooks/use-workgroup'
 import useRouterQuery from '../hooks/use-router-query'
@@ -61,6 +62,7 @@ export default function WorkgroupNav(props: { className?: string }) {
     () => compact([name, community?.name, documentTitle]).join(' - '),
     [community?.name, name],
   )
+  const id = useId()
 
   return (
     <>
@@ -100,9 +102,16 @@ export default function WorkgroupNav(props: { className?: string }) {
                 <Button primary>New Proposal</Button>
               </Link>
             ) : (
-              <Button primary disabled className="ml-4 shrink-0">
-                New Proposal
-              </Button>
+              <>
+                <div data-tooltip-id={id} data-tooltip-place="left">
+                  <Button primary disabled className="ml-4 shrink-0">
+                    New Proposal
+                  </Button>
+                </div>
+                <Tooltip id={id} className="rounded-none">
+                  Waiting for workgroup transaction confirmation
+                </Tooltip>
+              </>
             )
           ) : null}
         </div>
