@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const proposalSchema = z.object({
   community: z.string().min(1),
   workgroup: z.string().min(1),
-  title: z.string().min(1),
+  title: z.string().min(1, 'required'),
   voting_type: z.enum(['single', 'multiple']),
   options: z
     .array(z.string().min(1))

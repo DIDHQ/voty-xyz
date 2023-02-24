@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { workgroupSchema } from './workgroup'
 
 export const communitySchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1, 'required'),
   workgroups: z
     .array(workgroupSchema)
     .optional()

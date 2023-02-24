@@ -20,7 +20,7 @@ export const voteSchema = z.object({
         return false
       }
     },
-    { message: 'negative power' },
+    { message: 'negative power not allowed' },
   ),
 })
 
