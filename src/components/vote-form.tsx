@@ -122,7 +122,7 @@ export default function VoteForm(props: {
       !voted ||
       !powers ||
       !!voted[did] ||
-      !!powers[did] ||
+      !powers[did] ||
       period !== Period.VOTING,
     [voted, powers, period],
   )
