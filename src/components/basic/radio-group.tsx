@@ -9,7 +9,6 @@ export default function RadioGroup(props: {
 
   return (
     <fieldset className={props.className}>
-      {/* <div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-6"> */}
       <div className="flex items-center space-y-0 space-x-6">
         {props.options.map((option) => (
           <div key={option.value} className="flex items-center">
@@ -22,7 +21,9 @@ export default function RadioGroup(props: {
             />
             <label
               htmlFor={option.value}
-              onClick={() => onChange(option.value)}
+              onClick={
+                props.disabled ? undefined : () => onChange(option.value)
+              }
               className="ml-3 block text-sm text-gray-700"
             >
               {option.name}

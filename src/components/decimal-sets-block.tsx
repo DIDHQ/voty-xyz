@@ -250,7 +250,7 @@ function DecimalUnitBlock(props: {
                         const array = compact(
                           e.target.value
                             .split('\n')
-                            .map((line) => line.replace(regex, '')),
+                            .map((line) => line.replace(regex, '').trim()),
                         )
                         onChange(array.length ? array : [''])
                       }}

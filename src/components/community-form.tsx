@@ -2,10 +2,7 @@ import { useEffect } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dynamic from 'next/dynamic'
-import {
-  DocumentArrowUpIcon,
-  DocumentPlusIcon,
-} from '@heroicons/react/20/solid'
+import { ArrowPathIcon, DocumentPlusIcon } from '@heroicons/react/20/solid'
 
 import { Community, communitySchema } from '../utils/schemas/community'
 import TextInput from './basic/text-input'
@@ -173,7 +170,7 @@ export default function CommunityForm(props: {
           <FormProvider {...methods}>
             <SigningCommunityButton
               did={props.entry}
-              icon={isNewCommunity ? DocumentPlusIcon : DocumentArrowUpIcon}
+              icon={isNewCommunity ? DocumentPlusIcon : ArrowPathIcon}
               onSuccess={onSuccess}
             >
               {isNewCommunity ? 'Create' : 'Update'}
