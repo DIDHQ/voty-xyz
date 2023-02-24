@@ -18,6 +18,7 @@ import LoadingBar from '../../../../components/basic/loading-bar'
 import { documentTitle } from '../../../../utils/constants'
 import { appRouter } from '../../../../server/routers/_app'
 import VoteForm from '../../../../components/vote-form'
+import useRouterQuery from '../../../../hooks/use-router-query'
 
 const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
   ssr: false,
@@ -51,6 +52,7 @@ export const getServerSideProps: GetServerSideProps<{
 export default function ProposalPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
+  const query = useRouterQuery<['entry', 'workgroup']>()
   const { data: proposal, isLoading } = trpc.proposal.getByPermalink.useQuery(
     { permalink: props.proposal },
     { enabled: !!props.proposal, refetchOnWindowFocus: false },
@@ -144,6 +146,16 @@ export default function ProposalPage(
       ]).join(' - '),
     [community?.name, proposal?.title, workgroup?.name],
   )
+  useEffect(() => {
+    if (community && community.authorship.author !== query.entry) {
+      throw new Error('community mismatch')
+    }
+  }, [community, query.entry])
+  useEffect(() => {
+    if (workgroup && workgroup.id !== query.workgroup) {
+      throw new Error('workgroup mismatch')
+    }
+  }, [workgroup, query.workgroup])
 
   return (
     <>
