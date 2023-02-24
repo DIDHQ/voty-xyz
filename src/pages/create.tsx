@@ -43,7 +43,9 @@ export default function CreateCommunityPage() {
               Create community
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">
-              Select a DID as your community entry
+              {dids?.length === 0
+                ? 'You need a DID to create community'
+                : 'Select a DID as your community entry'}
             </p>
             <div className="mt-10 flex items-center justify-center">
               {dids?.length === 0 ? null : (
