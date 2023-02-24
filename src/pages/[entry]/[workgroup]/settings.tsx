@@ -10,7 +10,7 @@ import { trpc } from '../../../utils/trpc'
 import useDids from '../../../hooks/use-dids'
 import LoadingBar from '../../../components/basic/loading-bar'
 
-export default function WorkgroupProfilePage() {
+export default function WorkgroupSettingsPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry', 'workgroup']>()
   const { account } = useWallet()

@@ -78,7 +78,7 @@ export default function CreateCommunityPage() {
                   Create
                 </Button>
               ) : (
-                <Link href={`/${entry}/settings`}>
+                <Link href={`/${entry}/profile`}>
                   <Button icon={DocumentPlusIcon} primary>
                     Create
                   </Button>
