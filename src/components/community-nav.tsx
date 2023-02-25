@@ -116,76 +116,71 @@ export default function CommunityNav(props: { className?: string }) {
           props.className,
         )}
       >
+        <StatusIcon
+          permalink={community?.entry.community}
+          className="absolute right-4 top-4"
+        />
         <div className="flex w-full flex-col items-center rounded border border-gray-200 pb-4">
-          <StatusIcon
-            permalink={community?.entry.community}
-            className="absolute right-4 top-4"
-          />
-          <Avatar
-            name={community?.authorship.author}
-            value={community?.extension?.avatar}
-            size={20}
-            className="mt-8"
-          />
-          <h3 className="my-4 w-full break-words px-4 text-center text-xl font-bold text-gray-900 line-clamp-3 sm:text-2xl">
-            {community?.name || '...'}
-          </h3>
-          {community ? (
-            <>
-              <div className="mt-4 w-full">
-                <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
-                  Community
-                  <SubscriptionButton
-                    entry={query.entry}
-                    className="float-right"
-                  />
-                </h3>
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    scroll={false}
-                    className={clsx(
-                      item.current
-                        ? 'border-primary-600 bg-primary-50 text-primary-600'
-                        : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                      'group flex h-10 items-center border-l-4 px-4 py-2 text-sm font-medium',
-                    )}
-                  >
-                    <item.icon
-                      className={clsx(
-                        item.current
-                          ? 'text-primary-500'
-                          : 'text-gray-400 group-hover:text-gray-500',
-                        'mr-2 h-6 w-6 shrink-0',
-                      )}
-                      aria-hidden="true"
-                    />
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
-              <div className="mt-4 w-full">
-                <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
-                  Workgroups
-                  <CreateWorkgroupButton
-                    entry={query.entry}
-                    className="float-right"
-                  />
-                </h3>
-                <div>
-                  {community?.workgroups?.map((workgroup, index) => (
-                    <WorkgroupListItem
-                      key={workgroup.name + index}
-                      entry={query.entry}
-                      workgroup={workgroup}
-                      current={query.workgroup === workgroup.id}
-                    />
-                  ))}
-                </div>
-              </div>
-            </>
-          ) : null}
+          <div className="flex w-full items-center space-x-4 p-6 sm:flex-col sm:space-y-4 sm:py-8">
+            <Avatar
+              name={community?.authorship.author}
+              value={community?.extension?.avatar}
+              size={20}
+              className="shrink-0"
+            />
+            <h3 className="w-full break-words text-xl font-bold text-gray-900 line-clamp-2 sm:text-center sm:text-2xl">
+              {community?.name || '...'}
+            </h3>
+          </div>
+          <div className="w-full">
+            <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
+              Community
+              <SubscriptionButton entry={query.entry} className="float-right" />
+            </h3>
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                scroll={false}
+                className={clsx(
+                  item.current
+                    ? 'border-primary-600 bg-primary-50 text-primary-600'
+                    : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                  'group flex h-10 items-center border-l-4 px-4 py-2 text-sm font-medium',
+                )}
+              >
+                <item.icon
+                  className={clsx(
+                    item.current
+                      ? 'text-primary-500'
+                      : 'text-gray-400 group-hover:text-gray-500',
+                    'mr-2 h-6 w-6 shrink-0',
+                  )}
+                  aria-hidden="true"
+                />
+                {item.name}
+              </Link>
+            ))}
+          </div>
+          <div className="mt-4 w-full">
+            <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
+              Workgroups
+              <CreateWorkgroupButton
+                entry={query.entry}
+                className="float-right"
+              />
+            </h3>
+            <div>
+              {community?.workgroups?.map((workgroup, index) => (
+                <WorkgroupListItem
+                  key={workgroup.name + index}
+                  entry={query.entry}
+                  workgroup={workgroup}
+                  current={query.workgroup === workgroup.id}
+                />
+              ))}
+            </div>
+          </div>
         </div>
         {externals.length ? (
           <div className="mt-4 mb-6 flex space-x-4">
