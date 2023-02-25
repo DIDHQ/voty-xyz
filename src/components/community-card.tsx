@@ -34,8 +34,8 @@ export default function CommunityCard(props: {
           <h3 className="w-full break-words text-lg font-medium text-gray-900 line-clamp-2">
             {community.name}
           </h3>
-          <p className="flex items-center text-sm text-gray-500 line-clamp-2">
-            <span className="truncate">{community.authorship.author}</span>
+          <p className="w-full items-center truncate text-sm text-gray-500">
+            {community.authorship.author}
           </p>
         </div>
       </div>
