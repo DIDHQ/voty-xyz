@@ -49,7 +49,7 @@ export default function Select(props: {
                 props.full ? 'w-full' : undefined,
               )}
             >
-              <Listbox.Options className="z-10 max-h-60 w-full overflow-auto bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none">
+              <Listbox.Options className="z-10 max-h-60 w-full overflow-auto rounded bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none">
                 {props.renderItem
                   ? props.options?.map(props.renderItem)
                   : props.options?.map((option) => (
