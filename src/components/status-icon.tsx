@@ -1,4 +1,5 @@
 import { CubeIcon, CubeTransparentIcon } from '@heroicons/react/24/outline'
+import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { ReactNode, useId, useMemo } from 'react'
 
@@ -44,7 +45,7 @@ export default function StatusIcon(props: {
         href={href}
         data-tooltip-id={id}
         data-tooltip-place="left"
-        className={props.className}
+        className={clsx('leading-[0px]', props.className)}
       >
         <TextButton className="w-full truncate">{children}</TextButton>
       </a>

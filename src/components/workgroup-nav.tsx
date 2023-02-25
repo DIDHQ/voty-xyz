@@ -90,14 +90,14 @@ export default function WorkgroupNav(props: { className?: string }) {
               aria-hidden="true"
             />
           )}
-          <h3 className="w-0 flex-1 truncate text-2xl font-medium text-gray-900">
+          <h3 className="mr-4 w-0 flex-1 truncate text-2xl font-medium text-gray-900">
             {name || '...'}
           </h3>
           {currentDid ? (
             status?.timestamp ? (
               <Link
                 href={`/${query.entry}/${query.workgroup}/create`}
-                className="ml-4 shrink-0"
+                className="shrink-0"
               >
                 <Button primary>New Proposal</Button>
               </Link>
@@ -106,7 +106,7 @@ export default function WorkgroupNav(props: { className?: string }) {
                 <div
                   data-tooltip-id={id}
                   data-tooltip-place="left"
-                  className="ml-4 shrink-0"
+                  className="shrink-0"
                 >
                   <Button primary disabled>
                     New Proposal
