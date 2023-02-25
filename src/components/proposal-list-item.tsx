@@ -56,9 +56,7 @@ export default function ProposalListItem(props: {
           className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
           aria-hidden="true"
         />
-        <p className="truncate text-sm text-gray-500">
-          {props.proposal.options.length}
-        </p>
+        <p className="text-sm text-gray-500">{props.proposal.options.length}</p>
         <BoltIcon
           className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
           aria-hidden="true"
