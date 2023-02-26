@@ -41,7 +41,6 @@ export default function CommunityProfilePage() {
             community={community}
             onSuccess={handleSuccess}
             disabled={!isAdmin}
-            className="sm:pl-6"
           />
         </div>
       ) : null}
