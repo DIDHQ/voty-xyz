@@ -165,7 +165,7 @@ export default function ProposalPage(
       <div className="w-full">
         <LoadingBar loading={isLoading || isCommunityLoading} />
         <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
-          <div className="w-full flex-1 sm:mr-6 sm:w-0">
+          <div className="w-full flex-1 sm:mr-8 sm:w-0">
             <TextButton
               href={
                 community && proposal

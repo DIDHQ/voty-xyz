@@ -42,7 +42,7 @@ export default function CreateProposalPage() {
   return (
     <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
       <LoadingBar loading={isLoading} />
-      <div className="w-full flex-1 sm:mr-6 sm:w-0">
+      <div className="w-full flex-1 sm:mr-8 sm:w-0">
         <TextButton
           href={
             query.entry && query.workgroup
