@@ -31,11 +31,11 @@ export default function CommunityCard(props: {
           className="shrink-0"
         />
         <div className="ml-4 w-0 flex-1">
-          <h3 className="w-full break-words text-lg font-medium text-gray-900 line-clamp-2">
+          <h3 className="w-full truncate break-words text-lg font-medium text-gray-900">
             {community.name}
           </h3>
-          <p className="w-full items-center truncate text-sm text-gray-500">
-            {community.authorship.author}
+          <p className="w-full items-center text-sm text-gray-500 line-clamp-2">
+            {community.extension?.about}
           </p>
         </div>
       </div>
