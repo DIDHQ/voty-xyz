@@ -134,6 +134,12 @@ export const communityRouter = router({
     )
     .output(z.string())
     .mutation(async ({ input }) => {
+      if (
+        input.authorship.author.indexOf('.') !==
+        input.authorship.author.lastIndexOf('.')
+      ) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
+      }
       await verifySnapshot(input.authorship)
       await verifyAuthorshipProof(input)
       const permalink = await uploadToArweave(input)
