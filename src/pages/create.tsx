@@ -6,7 +6,7 @@ import {
 import { useAtomValue } from 'jotai'
 import Head from 'next/head'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import Button from '../components/basic/button'
 import LoadingBar from '../components/basic/loading-bar'
@@ -20,11 +20,15 @@ import { trpc } from '../utils/trpc'
 export default function CreateCommunityPage() {
   const { account } = useWallet()
   const currentDid = useAtomValue(currentDidAtom)
-  const { data: dids } = useDids(account)
+  const { data } = useDids(account)
   const [entry, setEntry] = useState('')
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry },
     { enabled: !!entry, refetchOnWindowFocus: false },
+  )
+  const dids = useMemo(
+    () => data?.filter((did) => did.indexOf('.') === did.lastIndexOf('.')),
+    [data],
   )
   useEffect(() => {
     setEntry(dids?.find((d) => d === currentDid) || dids?.[0] || '')

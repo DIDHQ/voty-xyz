@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { useMemo } from 'react'
 
 import useStatus from '../hooks/use-status'
-import { getPeriod, Period } from '../utils/duration'
+import { getPeriod, Period } from '../utils/period'
 import type { Workgroup } from '../utils/schemas/workgroup'
 
 export default function ProposalPeriod(props: {

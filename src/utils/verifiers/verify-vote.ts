@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 
-import { getPeriod, Period } from '../duration'
+import { getPeriod, Period } from '../period'
 import { calculateDecimal } from '../functions/number'
 import { Authorized } from '../schemas/authorship'
 import { Community } from '../schemas/community'
