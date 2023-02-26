@@ -7,7 +7,7 @@ import { currentDidAtom } from '../utils/atoms'
 import { trpc } from '../utils/trpc'
 import Avatar from './basic/avatar'
 
-export default function SubscriptionList(props: { className?: string }) {
+export default function SubscriptionList() {
   const query = useRouterQuery<['entry']>()
   const currentDid = useAtomValue(currentDidAtom)
   const { data } = trpc.subscription.list.useQuery(
@@ -16,7 +16,7 @@ export default function SubscriptionList(props: { className?: string }) {
   )
 
   return (
-    <div className={props.className}>
+    <div className="flex w-full flex-col items-center overflow-y-auto">
       {data?.map((community) => (
         <Link
           key={community.authorship.author}
