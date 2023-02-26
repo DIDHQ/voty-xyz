@@ -44,7 +44,7 @@ export default function ConnectButton() {
               value={avatar}
               variant="beam"
             />
-            <div className="ml-3 hidden text-start sm:block">
+            <div className="ml-2 hidden text-start sm:block">
               {currentDid ? (
                 <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
                   {currentDid}
