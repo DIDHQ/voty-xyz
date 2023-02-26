@@ -201,6 +201,7 @@ export default function ProposalForm(props: {
                   >
                     <input
                       type="text"
+                      placeholder={`Option ${index + 1}`}
                       {...register(`options.${index}`)}
                       className={clsx(
                         'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-500 sm:text-sm',
@@ -213,7 +214,7 @@ export default function ProposalForm(props: {
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
                       {watch('options')?.length > 1 ? (
-                        <OptionDelete
+                        <OptionRemove
                           index={index}
                           onDelete={handleOptionDelete}
                         />
@@ -250,7 +251,7 @@ export default function ProposalForm(props: {
   )
 }
 
-function OptionDelete(props: {
+function OptionRemove(props: {
   index: number
   onDelete: (index: number) => void
 }) {
