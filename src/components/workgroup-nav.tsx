@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useId, useMemo } from 'react'
 import Head from 'next/head'
-import { useAtomValue } from 'jotai'
 import { Tooltip } from 'react-tooltip'
 
 import useWorkgroup from '../hooks/use-workgroup'
@@ -15,7 +14,6 @@ import { trpc } from '../utils/trpc'
 import Button from './basic/button'
 import useStatus from '../hooks/use-status'
 import { documentTitle } from '../utils/constants'
-import { currentDidAtom } from '../utils/atoms'
 
 export default function WorkgroupNav(props: { className?: string }) {
   const query = useRouterQuery<['entry', 'workgroup']>()
@@ -23,7 +21,6 @@ export default function WorkgroupNav(props: { className?: string }) {
     { entry: query.entry },
     { enabled: !!query.entry, refetchOnWindowFocus: false },
   )
-  const currentDid = useAtomValue(currentDidAtom)
   const workgroup = useWorkgroup(community, query.workgroup)
   const router = useRouter()
   const tabs = useMemo(
@@ -93,31 +90,29 @@ export default function WorkgroupNav(props: { className?: string }) {
           <h3 className="mr-4 w-0 flex-1 truncate text-2xl font-medium text-gray-900">
             {name || '...'}
           </h3>
-          {currentDid ? (
-            status?.timestamp ? (
-              <Link
-                href={`/${query.entry}/${query.workgroup}/create`}
+          {status?.timestamp ? (
+            <Link
+              href={`/${query.entry}/${query.workgroup}/create`}
+              className="shrink-0"
+            >
+              <Button primary>New Proposal</Button>
+            </Link>
+          ) : (
+            <>
+              <div
+                data-tooltip-id={id}
+                data-tooltip-place="left"
                 className="shrink-0"
               >
-                <Button primary>New Proposal</Button>
-              </Link>
-            ) : (
-              <>
-                <div
-                  data-tooltip-id={id}
-                  data-tooltip-place="left"
-                  className="shrink-0"
-                >
-                  <Button primary disabled>
-                    New Proposal
-                  </Button>
-                </div>
-                <Tooltip id={id} className="rounded">
-                  Waiting for workgroup transaction confirmation
-                </Tooltip>
-              </>
-            )
-          ) : null}
+                <Button primary disabled>
+                  New Proposal
+                </Button>
+              </div>
+              <Tooltip id={id} className="rounded">
+                Waiting for workgroup transaction confirmation
+              </Tooltip>
+            </>
+          )}
         </div>
         <div className="border-b">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">

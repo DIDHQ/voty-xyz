@@ -1,31 +1,14 @@
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
-import { useAtom } from 'jotai'
-import { useEffect } from 'react'
 import '@rainbow-me/rainbowkit/styles.css'
 
 import useWallet from '../hooks/use-wallet'
 import Button from './basic/button'
 import Avatar from './basic/avatar'
 import TextButton from './basic/text-button'
-import useAvatar from '../hooks/use-avatar'
-import { currentDidAtom } from '../utils/atoms'
-import useDids from '../hooks/use-dids'
 import { chainIdToCoinType, coinTypeNames } from '../utils/constants'
 
 export default function ConnectButton() {
   const { account, displayAddress } = useWallet()
-  const [currentDid, setCurrentDid] = useAtom(currentDidAtom)
-  const { data: avatar } = useAvatar(currentDid)
-  const { data: dids } = useDids(account)
-  useEffect(() => {
-    if (account) {
-      setCurrentDid((old) =>
-        dids ? (dids.includes(old) ? old : dids[0] || '') : old,
-      )
-    } else {
-      setCurrentDid('')
-    }
-  }, [account, dids, setCurrentDid])
 
   return (
     <RainbowConnectButton.Custom>
@@ -38,12 +21,7 @@ export default function ConnectButton() {
       }) =>
         account ? (
           <TextButton href="/settings" className="flex items-center">
-            <Avatar
-              size={9}
-              name={currentDid || account.address}
-              value={avatar}
-              variant="beam"
-            />
+            <Avatar size={9} name={account.address} variant="beam" />
             <div className="ml-2 hidden text-start sm:block">
               <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
                 {coinTypeNames[account.coinType]}

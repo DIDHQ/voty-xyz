@@ -6,7 +6,6 @@ import { useQuery } from '@tanstack/react-query'
 import { startCase, uniq } from 'lodash-es'
 import dynamic from 'next/dynamic'
 import { HandRaisedIcon } from '@heroicons/react/20/solid'
-import { useAtomValue } from 'jotai'
 import { Entry } from '@prisma/client'
 import type { Serialize } from '@trpc/server/dist/shared/internal/serialize'
 import clsx from 'clsx'
@@ -22,7 +21,6 @@ import { Grid6, GridItem6 } from '../components/basic/grid'
 import RadioGroup from '../components/basic/radio-group'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import PreviewMarkdown from '../components/preview-markdown'
-import { currentDidAtom } from '../utils/atoms'
 import useStatus from '../hooks/use-status'
 import { Community } from '../utils/schemas/community'
 import { Authorized } from '../utils/schemas/authorship'
@@ -71,11 +69,7 @@ export default function ProposalForm(props: {
   useEffect(() => {
     setValue('workgroup', workgroup.id)
   }, [workgroup, setValue])
-  const currentDid = useAtomValue(currentDidAtom)
   const [did, setDid] = useState('')
-  useEffect(() => {
-    setDid(currentDid)
-  }, [currentDid])
   const { data: requiredCoinTypes } = useQuery(
     ['requiredCoinTypes', did, workgroup?.permission.voting],
     () =>
@@ -232,28 +226,26 @@ export default function ProposalForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      {currentDid ? (
-        <div className="flex w-full flex-col items-end space-y-6 pt-6">
-          <Select
-            top
-            options={dids}
-            disables={disables}
-            value={did}
-            onChange={setDid}
-            className="w-0 flex-1 sm:w-auto sm:flex-none"
-          />
-          <FormProvider {...methods}>
-            <SigningProposalButton
-              did={did}
-              icon={HandRaisedIcon}
-              disabled={!status?.timestamp || !did || !community || !snapshots}
-              onSuccess={onSuccess}
-            >
-              Propose
-            </SigningProposalButton>
-          </FormProvider>
-        </div>
-      ) : null}
+      <div className="flex w-full flex-col items-end space-y-6 pt-6">
+        <Select
+          top
+          options={dids}
+          disables={disables}
+          value={did}
+          onChange={setDid}
+          className="w-0 flex-1 sm:w-auto sm:flex-none"
+        />
+        <FormProvider {...methods}>
+          <SigningProposalButton
+            did={did}
+            icon={HandRaisedIcon}
+            disabled={!status?.timestamp || !did || !community || !snapshots}
+            onSuccess={onSuccess}
+          >
+            Propose
+          </SigningProposalButton>
+        </FormProvider>
+      </div>
     </Form>
   )
 }

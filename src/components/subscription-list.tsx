@@ -1,10 +1,10 @@
-import { useAtomValue } from 'jotai'
 import Link from 'next/link'
 import { useId } from 'react'
 import { Tooltip } from 'react-tooltip'
 
+import useDids from '../hooks/use-dids'
 import useRouterQuery from '../hooks/use-router-query'
-import { currentDidAtom } from '../utils/atoms'
+import useWallet from '../hooks/use-wallet'
 import { Authorized } from '../utils/schemas/authorship'
 import { Community } from '../utils/schemas/community'
 import { trpc } from '../utils/trpc'
@@ -12,7 +12,9 @@ import Avatar from './basic/avatar'
 
 export default function SubscriptionList() {
   const query = useRouterQuery<['entry']>()
-  const currentDid = useAtomValue(currentDidAtom)
+  const { account } = useWallet()
+  const { data: dids } = useDids(account)
+  const currentDid = dids?.[0]
   const { data } = trpc.subscription.list.useQuery(
     { subscriber: currentDid },
     { enabled: !!currentDid, refetchOnWindowFocus: false },
