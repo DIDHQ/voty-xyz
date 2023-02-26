@@ -35,9 +35,9 @@ export default function GroupIndexPage() {
       <WorkgroupLayout>
         <LoadingBar loading={isLoading} />
         {proposals?.length === 0 ? (
-          <p className="mt-6 text-sm text-gray-500 sm:pl-6">No proposals</p>
+          <p className="mt-6 text-sm text-gray-500">No proposals</p>
         ) : (
-          <ul role="list" className="divide-y divide-gray-200 sm:pl-6">
+          <ul role="list" className="divide-y divide-gray-200">
             {proposals?.map((proposal) => (
               <li key={proposal.permalink}>
                 {query.entry ? (

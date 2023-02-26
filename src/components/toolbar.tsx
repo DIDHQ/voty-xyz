@@ -14,7 +14,7 @@ export default function Toolbar(props: { className?: string }) {
         className="hidden h-18 w-18 shrink-0 cursor-pointer items-center justify-center border-r border-gray-200 sm:flex"
       >
         <img
-          src="https://tailwindui.com/img/logos/mark.svg?color=blue&shade=600"
+          src="https://tailwindui.com/img/logos/mark.svg?color=green&shade=600"
           alt="LOGO"
           className="h-8 w-auto"
         />

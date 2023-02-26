@@ -35,9 +35,7 @@ export default function WorkgroupAboutPage(
     <CommunityLayout>
       <WorkgroupLayout>
         <LoadingBar loading={isLoading} />
-        <Article className="pt-6 sm:pl-6">
-          {workgroup?.extension?.about}
-        </Article>
+        <Article className="pt-6">{workgroup?.extension?.about}</Article>
       </WorkgroupLayout>
     </CommunityLayout>
   )

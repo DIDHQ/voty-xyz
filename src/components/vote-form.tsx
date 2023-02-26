@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
 import { BoltIcon } from '@heroicons/react/20/solid'
 import { Decimal } from 'decimal.js'
-import { useAtomValue } from 'jotai'
 import pMap from 'p-map'
 
 import { calculateDecimal } from '../utils/functions/number'
@@ -16,7 +15,6 @@ import { getPeriod, Period } from '../utils/period'
 import { Proposal } from '../utils/schemas/proposal'
 import { Workgroup } from '../utils/schemas/workgroup'
 import { FormItem } from './basic/form'
-import { currentDidAtom } from '../utils/atoms'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import { ChoiceListItem } from './choice-list-item'
@@ -38,7 +36,6 @@ export default function VoteForm(props: {
       { proposal: proposal?.permalink },
       { enabled: !!proposal?.permalink, refetchOnWindowFocus: false },
     )
-  const currentDid = useAtomValue(currentDidAtom)
   const [did, setDid] = useState('')
   const { account } = useWallet()
   const { data: dids } = useDids(account, proposal?.snapshots)
@@ -69,9 +66,6 @@ export default function VoteForm(props: {
     { proposal: proposal?.permalink, authors: dids },
     { enabled: !!dids && !!proposal?.permalink, refetchOnWindowFocus: false },
   )
-  useEffect(() => {
-    setDid(currentDid)
-  }, [currentDid])
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
   })
@@ -154,7 +148,7 @@ export default function VoteForm(props: {
           )}
         />
       </FormItem>
-      {period === Period.ENDED || !currentDid ? null : (
+      {period === Period.ENDED ? null : (
         <div className="mt-6 flex w-full flex-col items-end">
           <FormProvider {...methods}>
             <SigningVoteButton

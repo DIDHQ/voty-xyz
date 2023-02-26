@@ -3,23 +3,20 @@ import {
   DocumentCheckIcon,
   DocumentPlusIcon,
 } from '@heroicons/react/20/solid'
-import { useAtomValue } from 'jotai'
 import Head from 'next/head'
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import Button from '../components/basic/button'
 import LoadingBar from '../components/basic/loading-bar'
 import Select from '../components/basic/select'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
-import { currentDidAtom } from '../utils/atoms'
 import { documentTitle, isTestnet } from '../utils/constants'
 import { trpc } from '../utils/trpc'
 
 export default function CreateCommunityPage() {
   const { account } = useWallet()
-  const currentDid = useAtomValue(currentDidAtom)
   const { data } = useDids(account)
   const [entry, setEntry] = useState('')
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
@@ -30,9 +27,6 @@ export default function CreateCommunityPage() {
     () => data?.filter((did) => did.indexOf('.') === did.lastIndexOf('.')),
     [data],
   )
-  useEffect(() => {
-    setEntry(dids?.find((d) => d === currentDid) || dids?.[0] || '')
-  }, [currentDid, dids, setEntry])
 
   return (
     <>

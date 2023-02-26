@@ -4428,11 +4428,6 @@ jest-util@^29.4.3:
     graceful-fs "^4.2.9"
     picomatch "^2.2.3"
 
-jotai@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/jotai/-/jotai-2.0.2.tgz#52728e91de61742263e40fda79a367ab4649506c"
-  integrity sha512-0yOked08Swa84LUbBjtj7ZLZrE05n3u50rHeZ+bsT86thUjcy0kFgQz9GmEWhYbQDFoT1G8Ww6edSj/MBJHO4A==
-
 js-crc@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/js-crc/-/js-crc-0.2.0.tgz#f72c5c7618176bff75cc812a1cedbde3d8eb6839"

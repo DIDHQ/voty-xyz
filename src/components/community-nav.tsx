@@ -153,7 +153,7 @@ export default function CommunityNav(props: { className?: string }) {
                   className={clsx(
                     item.current
                       ? 'text-primary-500'
-                      : 'text-gray-400 group-hover:text-gray-500',
+                      : 'text-gray-300 group-hover:text-gray-400',
                     'mr-2 h-6 w-6 shrink-0',
                   )}
                   aria-hidden="true"
@@ -188,7 +188,7 @@ export default function CommunityNav(props: { className?: string }) {
               <a
                 key={item.href}
                 href={item.href}
-                className="text-gray-400 hover:text-gray-500"
+                className="text-gray-300 hover:text-gray-400"
               >
                 <item.icon className="h-7 w-7" />
               </a>
@@ -233,7 +233,7 @@ function WorkgroupListItem(props: {
           className={clsx(
             props.current
               ? 'text-primary-500'
-              : 'text-gray-400 group-hover:text-gray-500',
+              : 'text-gray-300 group-hover:text-gray-400',
             'mr-2 h-6 w-6 shrink-0',
           )}
           aria-hidden="true"

@@ -1,11 +1,11 @@
 import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/20/solid'
 import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline'
-import { useAtomValue } from 'jotai'
 import { useCallback, useEffect } from 'react'
 
 import useAsync from '../hooks/use-async'
+import useDids from '../hooks/use-dids'
 import useSignDocument from '../hooks/use-sign-document'
-import { currentDidAtom } from '../utils/atoms'
+import useWallet from '../hooks/use-wallet'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
 import TextButton from './basic/text-button'
@@ -14,7 +14,9 @@ export default function SubscriptionButton(props: {
   entry?: string
   className?: string
 }) {
-  const currentDid = useAtomValue(currentDidAtom)
+  const { account } = useWallet()
+  const { data: dids } = useDids(account)
+  const currentDid = dids?.[0]
   const { refetch: refetchList } = trpc.subscription.list.useQuery(
     { subscriber: currentDid },
     { enabled: !!currentDid, refetchOnWindowFocus: false },
