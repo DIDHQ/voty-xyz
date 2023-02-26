@@ -10,7 +10,7 @@ import TextButton from './basic/text-button'
 import useAvatar from '../hooks/use-avatar'
 import { currentDidAtom } from '../utils/atoms'
 import useDids from '../hooks/use-dids'
-import { chainIdToCoinType } from '../utils/constants'
+import { chainIdToCoinType, coinTypeNames } from '../utils/constants'
 
 export default function ConnectButton() {
   const { account, displayAddress } = useWallet()
@@ -45,11 +45,9 @@ export default function ConnectButton() {
               variant="beam"
             />
             <div className="ml-2 hidden text-start sm:block">
-              {currentDid ? (
-                <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                  {currentDid}
-                </p>
-              ) : null}
+              <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                {coinTypeNames[account.coinType]}
+              </p>
               <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
                 {displayAddress}
               </p>

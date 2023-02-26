@@ -7,11 +7,7 @@ import {
   useSignMessage,
 } from 'wagmi'
 
-import {
-  chainIdToCoinType,
-  coinTypeNames,
-  coinTypeToChainId,
-} from '../utils/constants'
+import { chainIdToCoinType, coinTypeToChainId } from '../utils/constants'
 
 export default function useWallet() {
   const account = useAccount()
@@ -31,17 +27,13 @@ export default function useWallet() {
     () => ({
       account:
         coinType && account.address
-          ? {
-              coinType,
-              address: account.address,
-            }
+          ? { coinType, address: account.address }
           : undefined,
       displayAddress:
         coinType && account.address
-          ? `${coinTypeNames[coinType]}:${account.address.substring(
-              0,
-              5,
-            )}...${account.address.substring(38)}`
+          ? `${account.address.substring(0, 5)}...${account.address.substring(
+              38,
+            )}`
           : undefined,
       signMessage: async (message: string | Uint8Array) => {
         if (coinType && coinTypeToChainId[coinType]) {
