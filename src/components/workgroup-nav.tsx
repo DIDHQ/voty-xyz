@@ -24,27 +24,19 @@ export default function WorkgroupNav(props: { className?: string }) {
   const workgroup = useWorkgroup(community, query.workgroup)
   const router = useRouter()
   const tabs = useMemo(
-    () =>
-      compact([
-        {
-          name: 'Proposals',
-          href: `/${query.entry}/${query.workgroup}`,
-          current: router.pathname === '/[entry]/[workgroup]',
-        },
-        {
-          name: 'Settings',
-          href: `/${query.entry}/${query.workgroup}/settings`,
-          current: router.pathname === '/[entry]/[workgroup]/settings',
-        },
-        workgroup?.extension.about
-          ? {
-              name: 'About',
-              href: `/${query.entry}/${query.workgroup}/about`,
-              current: router.pathname === '/[entry]/[workgroup]/about',
-            }
-          : undefined,
-      ]),
-    [workgroup?.extension.about, query.entry, query.workgroup, router.pathname],
+    () => [
+      {
+        name: 'Proposals',
+        href: `/${query.entry}/${query.workgroup}`,
+        current: router.pathname === '/[entry]/[workgroup]',
+      },
+      {
+        name: 'About',
+        href: `/${query.entry}/${query.workgroup}/about`,
+        current: router.pathname === '/[entry]/[workgroup]/about',
+      },
+    ],
+    [query.entry, query.workgroup, router.pathname],
   )
   const emoji = useMemo(
     () => extractStartEmoji(workgroup?.name),

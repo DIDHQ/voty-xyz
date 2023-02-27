@@ -46,7 +46,7 @@ export default function CommunityAboutPage(
       </h3>
       <Article className="w-full pt-6">{community?.extension?.about}</Article>
       {isAdmin ? (
-        <div className="mt-12 flex w-full justify-end">
+        <div className="mt-8">
           <Link href={`/${props.entry}/settings`}>
             <Button icon={PencilIcon} primary>
               Edit
