@@ -62,21 +62,26 @@ export default function CreateProposalPage() {
         ) : null}
       </div>
       <div className="relative mt-6 w-full shrink-0 sm:sticky sm:top-24 sm:mt-0 sm:w-72">
-        <StatusIcon
-          permalink={community?.entry.community}
-          className="absolute right-4 top-4"
-        />
         <Grid6 className="rounded border border-gray-200 p-6">
           <GridItem6>
-            <DetailList title="Workgroup">
-              <DetailItem title="Name" className="truncate whitespace-nowrap">
-                {workgroup?.name}
-              </DetailItem>
+            <DetailList title="Information">
               <DetailItem
                 title="Community"
                 className="truncate whitespace-nowrap"
               >
-                {community?.name}
+                {community ? (
+                  <StatusIcon permalink={community?.entry.community}>
+                    {community.name}
+                  </StatusIcon>
+                ) : (
+                  '...'
+                )}
+              </DetailItem>
+              <DetailItem
+                title="Workgroup"
+                className="truncate whitespace-nowrap"
+              >
+                {workgroup?.name}
               </DetailItem>
             </DetailList>
           </GridItem6>
