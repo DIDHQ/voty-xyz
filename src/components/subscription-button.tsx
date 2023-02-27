@@ -3,8 +3,7 @@ import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline
 import { useCallback, useEffect } from 'react'
 
 import useAsync from '../hooks/use-async'
-import useDids from '../hooks/use-dids'
-import useSignDocument from '../hooks/use-sign-document'
+import useSignDocument2 from '../hooks/use-sign-document-2'
 import useWallet from '../hooks/use-wallet'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
@@ -15,24 +14,26 @@ export default function SubscriptionButton(props: {
   className?: string
 }) {
   const { account } = useWallet()
-  const { data: dids } = useDids(account)
-  const currentDid = dids?.[0]
   const { refetch: refetchList } = trpc.subscription.list.useQuery(
-    { subscriber: currentDid },
-    { enabled: !!currentDid, refetchOnWindowFocus: false },
+    { subscriber: { type: 'eth_personal_sign', address: account!.address } },
+    { enabled: !!account?.address, refetchOnWindowFocus: false },
   )
   const { data, mutate, isLoading, isSuccess, isError, error } =
     trpc.subscription.set.useMutation()
   const { data: subscribed = data, refetch } = trpc.subscription.get.useQuery(
-    { subscriber: currentDid, entry: props.entry },
-    { enabled: !!currentDid && !!props.entry, refetchOnWindowFocus: false },
+    {
+      subscriber: { type: 'eth_personal_sign', address: account!.address },
+      entry: props.entry,
+    },
+    {
+      enabled: !!account?.address && !!props.entry,
+      refetchOnWindowFocus: false,
+    },
   )
-  const signSubscribe = useSignDocument(
-    currentDid,
+  const signSubscribe = useSignDocument2(
     `You are subscribing community of Voty\n\nhash:\n{sha256}`,
   )
-  const signUnsubscribe = useSignDocument(
-    currentDid,
+  const signUnsubscribe = useSignDocument2(
     `You are unsubscribing community of Voty\n\nhash:\n{sha256}`,
   )
   const handleSignSubscribe = useAsync(
@@ -70,7 +71,7 @@ export default function SubscriptionButton(props: {
     }
   }, [isSuccess, refetch, refetchList])
 
-  return currentDid ? (
+  return (
     <>
       <Notification show={isError}>{error?.message}</Notification>
       <Notification show={handleSignUnsubscribe.status === 'error'}>
@@ -97,5 +98,5 @@ export default function SubscriptionButton(props: {
         </TextButton>
       )}
     </>
-  ) : null
+  )
 }
