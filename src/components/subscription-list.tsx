@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { useId } from 'react'
 import { Tooltip } from 'react-tooltip'
 
-import useDids from '../hooks/use-dids'
 import useRouterQuery from '../hooks/use-router-query'
 import useWallet from '../hooks/use-wallet'
 import { Authorized } from '../utils/schemas/authorship'
@@ -13,11 +12,9 @@ import Avatar from './basic/avatar'
 export default function SubscriptionList() {
   const query = useRouterQuery<['entry']>()
   const { account } = useWallet()
-  const { data: dids } = useDids(account)
-  const currentDid = dids?.[0]
   const { data } = trpc.subscription.list.useQuery(
-    { subscriber: currentDid },
-    { enabled: !!currentDid, refetchOnWindowFocus: false },
+    { subscriber: { type: 'eth_personal_sign', address: account!.address } },
+    { enabled: !!account?.address, refetchOnWindowFocus: false },
   )
 
   return (

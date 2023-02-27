@@ -10,7 +10,8 @@ import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
 import { DataType } from '../../utils/constants'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
-import verifyAuthorshipProof from '../../utils/verifiers/verify-authorship-proof'
+import verifyAuthorship from '../../utils/verifiers/verify-authorship'
+import verifyProof from '../../utils/verifiers/verify-proof'
 
 const schema = proved(authorized(communitySchema))
 
@@ -141,7 +142,9 @@ export const communityRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
       await verifySnapshot(input.authorship)
-      await verifyAuthorshipProof(input)
+      await verifyProof(input)
+      await verifyAuthorship(input.authorship, input.proof)
+
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 

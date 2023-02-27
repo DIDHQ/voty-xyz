@@ -1,24 +1,25 @@
 import { TRPCError } from '@trpc/server'
 import { compact, keyBy } from 'lodash-es'
 import { z } from 'zod'
-import { DataType } from '../../utils/constants'
 
+import { DataType } from '../../utils/constants'
 import { database, mapByPermalinks } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
 import { communitySchema } from '../../utils/schemas/community'
-import { proved } from '../../utils/schemas/proof'
+import { proofSchema, proved } from '../../utils/schemas/proof'
 import { procedure, router } from '../trpc'
-import verifyAuthorshipProof from '../../utils/verifiers/verify-authorship-proof'
-import verifySnapshot from '../../utils/verifiers/verify-snapshot'
+import verifyProof from '../../utils/verifiers/verify-proof'
 
 const schema = proved(authorized(communitySchema))
+
+const subscriberSchema = proofSchema.pick({ type: true, address: true })
 
 export const subscriptionRouter = router({
   get: procedure
     .input(
       z.object({
         entry: z.string().optional(),
-        subscriber: z.string().optional(),
+        subscriber: subscriberSchema.optional(),
       }),
     )
     .output(z.boolean())
@@ -31,7 +32,7 @@ export const subscriptionRouter = router({
         where: {
           entry_subscriber: {
             entry: input.entry,
-            subscriber: input.subscriber,
+            subscriber: JSON.stringify(input.subscriber),
           },
         },
       })
@@ -39,7 +40,7 @@ export const subscriptionRouter = router({
       return !!subscription
     }),
   list: procedure
-    .input(z.object({ subscriber: z.string().optional() }))
+    .input(z.object({ subscriber: subscriberSchema }))
     .output(z.array(schema))
     .query(async ({ input }) => {
       if (!input.subscriber) {
@@ -47,7 +48,7 @@ export const subscriptionRouter = router({
       }
 
       const subscriptions = await database.subscription.findMany({
-        where: { subscriber: input.subscriber },
+        where: { subscriber: JSON.stringify(input.subscriber) },
         orderBy: { ts: 'desc' },
       })
       const entries = keyBy(
@@ -77,9 +78,7 @@ export const subscriptionRouter = router({
   set: procedure
     .input(
       proved(
-        authorized(
-          z.object({ entry: z.string().optional(), subscribe: z.boolean() }),
-        ),
+        z.object({ entry: z.string().optional(), subscribe: z.boolean() }),
       ),
     )
     .output(z.boolean())
@@ -87,10 +86,12 @@ export const subscriptionRouter = router({
       if (!input.entry) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
-      await verifySnapshot(input.authorship)
-      await verifyAuthorshipProof(input)
+      await verifyProof(input)
 
-      const subscriber = input.authorship.author
+      const subscriber = JSON.stringify({
+        type: input.proof.type,
+        address: input.proof.address,
+      })
       if (input.subscribe === true) {
         await database.$transaction([
           database.subscription.create({

@@ -3,7 +3,9 @@ import { TRPCError } from '@trpc/server'
 import { Authorship } from '../schemas/authorship'
 import { getSnapshotTimestamp } from '../snapshot'
 
-export default async function verifySnapshot(authorship: Authorship) {
+export default async function verifySnapshot(
+  authorship: Authorship,
+): Promise<void> {
   const timestamp = await getSnapshotTimestamp(
     authorship.coin_type,
     authorship.snapshot,

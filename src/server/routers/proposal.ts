@@ -11,7 +11,8 @@ import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
 import { DataType } from '../../utils/constants'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
-import verifyAuthorshipProof from '../../utils/verifiers/verify-authorship-proof'
+import verifyAuthorship from '../../utils/verifiers/verify-authorship'
+import verifyProof from '../../utils/verifiers/verify-proof'
 
 const schema = proved(authorized(proposalSchema))
 
@@ -89,8 +90,10 @@ export const proposalRouter = router({
     .output(z.string())
     .mutation(async ({ input }) => {
       await verifySnapshot(input.authorship)
-      await verifyAuthorshipProof(input)
+      await verifyProof(input)
+      await verifyAuthorship(input.authorship, input.proof)
       const { community } = await verifyProposal(input)
+
       const entry = await database.entry.findFirst({
         where: { did: community.authorship.author },
         orderBy: { ts: 'desc' },
