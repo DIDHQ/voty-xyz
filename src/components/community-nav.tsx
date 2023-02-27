@@ -2,7 +2,7 @@ import {
   ClockIcon,
   GlobeAltIcon,
   BriefcaseIcon,
-  InformationCircleIcon,
+  DocumentTextIcon,
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
@@ -51,7 +51,7 @@ export default function CommunityNav(props: { className?: string }) {
       {
         name: 'About',
         href: `/${query.entry}/about`,
-        icon: InformationCircleIcon,
+        icon: DocumentTextIcon,
         current: router.pathname === '/[entry]/about',
       },
     ],
