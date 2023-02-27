@@ -31,9 +31,9 @@ export default function WorkgroupNav(props: { className?: string }) {
         current: router.pathname === '/[entry]/[workgroup]',
       },
       {
-        name: 'About',
-        href: `/${query.entry}/${query.workgroup}/about`,
-        current: router.pathname === '/[entry]/[workgroup]/about',
+        name: 'Settings',
+        href: `/${query.entry}/${query.workgroup}/settings`,
+        current: router.pathname === '/[entry]/[workgroup]/settings',
       },
     ],
     [query.entry, query.workgroup, router.pathname],

@@ -102,7 +102,7 @@ export default function WorkgroupForm(props: {
     <Form className={props.className}>
       <FormSection
         title={isNewWorkgroup ? 'New workgroup' : 'Basic information'}
-        description="name & about"
+        description="name"
       >
         <Grid6>
           <GridItem6>
@@ -113,28 +113,6 @@ export default function WorkgroupForm(props: {
               <TextInput
                 {...register(`workgroups.${workgroupIndex}.name`)}
                 error={!!errors.workgroups?.[workgroupIndex]?.name?.message}
-                disabled={props.disabled}
-              />
-            </FormItem>
-          </GridItem6>
-          <GridItem6>
-            <FormItem
-              label="About"
-              description={
-                <PreviewMarkdown>
-                  {watch(`workgroups.${workgroupIndex}.extension.about`)}
-                </PreviewMarkdown>
-              }
-              error={
-                errors.workgroups?.[workgroupIndex]?.extension?.about?.message
-              }
-            >
-              <Textarea
-                {...register(`workgroups.${workgroupIndex}.extension.about`)}
-                error={
-                  !!errors.workgroups?.[workgroupIndex]?.extension?.about
-                    ?.message
-                }
                 disabled={props.disabled}
               />
             </FormItem>
