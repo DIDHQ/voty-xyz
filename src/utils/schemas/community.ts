@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { workgroupSchema } from './workgroup'
 
 export const communitySchema = z.object({
-  name: z.string().min(1, 'required'),
+  name: z.string().min(1, 'required').max(32, 'maximum 32 characters'),
   workgroups: z
     .array(workgroupSchema)
     .optional()
@@ -16,6 +16,7 @@ export const communitySchema = z.object({
   extension: z
     .object({
       avatar: z.string().optional(),
+      slogan: z.string().max(256, 'maximum 256 characters').optional(),
       about: z.string().optional(),
       website: z.string().optional(),
       twitter: z.string().optional(),

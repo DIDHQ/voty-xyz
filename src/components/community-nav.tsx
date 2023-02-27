@@ -1,9 +1,8 @@
 import {
   ClockIcon,
-  DocumentTextIcon,
   GlobeAltIcon,
   BriefcaseIcon,
-  InformationCircleIcon,
+  DocumentTextIcon,
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
@@ -42,30 +41,21 @@ export default function CommunityNav(props: { className?: string }) {
     { enabled: !!query.entry, refetchOnWindowFocus: false },
   )
   const navigation = useMemo(
-    () =>
-      compact([
-        {
-          name: 'Activities',
-          href: `/${query.entry}`,
-          icon: ClockIcon,
-          current: router.pathname === '/[entry]',
-        },
-        {
-          name: 'Profile',
-          href: `/${query.entry}/profile`,
-          icon: DocumentTextIcon,
-          current: router.pathname === '/[entry]/profile',
-        },
-        community?.extension?.about
-          ? {
-              name: 'About',
-              href: `/${query.entry}/about`,
-              icon: InformationCircleIcon,
-              current: router.pathname === '/[entry]/about',
-            }
-          : undefined,
-      ]),
-    [community?.extension?.about, query.entry, router.pathname],
+    () => [
+      {
+        name: 'Timeline',
+        href: `/${query.entry}`,
+        icon: ClockIcon,
+        current: router.pathname === '/[entry]',
+      },
+      {
+        name: 'About',
+        href: `/${query.entry}/about`,
+        icon: DocumentTextIcon,
+        current: router.pathname === '/[entry]/about',
+      },
+    ],
+    [query.entry, router.pathname],
   )
   const externals = useMemo(
     () =>
@@ -128,9 +118,16 @@ export default function CommunityNav(props: { className?: string }) {
               size={20}
               className="shrink-0"
             />
-            <h3 className="w-full break-words text-xl font-bold text-gray-900 line-clamp-2 sm:text-center sm:text-2xl">
-              {community?.name || '...'}
-            </h3>
+            <div className="sm:space-y-2">
+              <h3 className="w-full break-words text-xl font-bold text-gray-900 line-clamp-2 sm:text-center sm:text-2xl">
+                {community?.name || '...'}
+              </h3>
+              {community?.extension?.slogan ? (
+                <p className="w-full text-center text-sm text-gray-500 line-clamp-2">
+                  {community.extension.slogan}
+                </p>
+              ) : null}
+            </div>
           </div>
           <div className="w-full">
             <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">

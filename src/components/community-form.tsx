@@ -48,8 +48,8 @@ export default function CommunityForm(props: {
   return (
     <Form className={clsx('pt-6', props.className)}>
       <FormSection
-        title={isNewCommunity ? 'New community' : 'Profile'}
-        description="Basic information of the community."
+        title={isNewCommunity ? 'New community' : 'Basic Information'}
+        description="logo, name, slogan & about"
       >
         <Grid6>
           <GridItem6>
@@ -78,6 +78,15 @@ export default function CommunityForm(props: {
             </FormItem>
           </GridItem6>
           <GridItem6>
+            <FormItem label="Slogan" error={errors.extension?.slogan?.message}>
+              <TextInput
+                {...register('extension.slogan')}
+                error={!!errors.extension?.slogan?.message}
+                disabled={props.disabled}
+              />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
             <FormItem
               label="About"
               description={
@@ -96,7 +105,7 @@ export default function CommunityForm(props: {
       </FormSection>
       <FormSection
         title="Links"
-        description="Social relationship of the community."
+        description="website, twitter, discord & github"
       >
         <Grid6>
           <GridItem6>

@@ -10,7 +10,7 @@ export default function Article(props: {
   return props.children ? (
     <article
       className={clsx(
-        'prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400',
+        'max-w-none prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400',
         props.small ? 'prose-sm' : 'prose',
         props.className,
       )}

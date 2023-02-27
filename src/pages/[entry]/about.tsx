@@ -1,11 +1,17 @@
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { createProxySSGHelpers } from '@trpc/react-query/ssg'
+import { useMemo } from 'react'
+import Link from 'next/link'
+import { PencilIcon } from '@heroicons/react/20/solid'
 
 import CommunityLayout from '../../components/layouts/community'
 import Article from '../../components/basic/article'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
 import { appRouter } from '../../server/routers/_app'
+import useWallet from '../../hooks/use-wallet'
+import useDids from '../../hooks/use-dids'
+import Button from '../../components/basic/button'
 
 export const getServerSideProps: GetServerSideProps<{ entry: string }> = async (
   context,
@@ -25,6 +31,12 @@ export default function CommunityAboutPage(
     { entry: props.entry },
     { enabled: !!props.entry, refetchOnWindowFocus: false },
   )
+  const { account } = useWallet()
+  const { data: dids } = useDids(account)
+  const isAdmin = useMemo(
+    () => !!(props.entry && dids?.includes(props.entry)),
+    [dids, props.entry],
+  )
 
   return (
     <CommunityLayout>
@@ -33,6 +45,15 @@ export default function CommunityAboutPage(
         About
       </h3>
       <Article className="w-full pt-6">{community?.extension?.about}</Article>
+      {isAdmin ? (
+        <div className="mt-8">
+          <Link href={`/${props.entry}/settings`}>
+            <Button icon={PencilIcon} primary>
+              Edit
+            </Button>
+          </Link>
+        </div>
+      ) : null}
     </CommunityLayout>
   )
 }

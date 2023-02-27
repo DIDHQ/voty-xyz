@@ -8,8 +8,9 @@ import useWallet from '../../hooks/use-wallet'
 import { trpc } from '../../utils/trpc'
 import useDids from '../../hooks/use-dids'
 import LoadingBar from '../../components/basic/loading-bar'
+import TextButton from '../../components/basic/text-button'
 
-export default function CommunityProfilePage() {
+export default function CommunitySettingsPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry']>()
   const { account } = useWallet()
@@ -34,6 +35,9 @@ export default function CommunityProfilePage() {
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
+      <TextButton href="/create" className="mt-6">
+        <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+      </TextButton>
       {query.entry && community !== undefined ? (
         <div className="flex w-full flex-col">
           <CommunityForm
