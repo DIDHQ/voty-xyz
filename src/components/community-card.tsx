@@ -34,9 +34,11 @@ export default function CommunityCard(props: {
           <h3 className="w-full truncate break-words text-lg font-medium text-gray-900">
             {community.name}
           </h3>
-          <p className="w-full items-center text-sm text-gray-500 line-clamp-2">
-            {community.extension?.about}
-          </p>
+          {community.extension?.slogan ? (
+            <p className="w-full text-sm text-gray-500 line-clamp-2">
+              {community.extension.slogan}
+            </p>
+          ) : null}
         </div>
       </div>
       <Grid6 className="mt-4 mr-10 text-sm text-gray-500">

@@ -118,9 +118,16 @@ export default function CommunityNav(props: { className?: string }) {
               size={20}
               className="shrink-0"
             />
-            <h3 className="w-full break-words text-xl font-bold text-gray-900 line-clamp-2 sm:text-center sm:text-2xl">
-              {community?.name || '...'}
-            </h3>
+            <div className="sm:space-y-2">
+              <h3 className="w-full break-words text-xl font-bold text-gray-900 line-clamp-2 sm:text-center sm:text-2xl">
+                {community?.name || '...'}
+              </h3>
+              {community?.extension?.slogan ? (
+                <p className="w-full text-center text-sm text-gray-500 line-clamp-2">
+                  {community.extension.slogan}
+                </p>
+              ) : null}
+            </div>
           </div>
           <div className="w-full">
             <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
