@@ -44,7 +44,7 @@ export default function CommunityIndexPage() {
     <CommunityLayout>
       <LoadingBar loading={isLoading || isListLoading} />
       <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900">
-        Timeline
+        Activities
       </h3>
       {proposals?.length === 0 ? (
         community?.workgroups?.length === 0 ? (
