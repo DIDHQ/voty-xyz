@@ -58,11 +58,15 @@ export default function ProposalListItem(props: {
         <p className="text-sm text-gray-500">
           {props.proposal.authorship.author}
         </p>
-        <BoltIcon
-          className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
-          aria-hidden="true"
-        />
-        <p className="text-sm text-gray-500">{props.proposal.votes}</p>
+        {period === Period.PENDING || period === Period.ANNOUNCING ? null : (
+          <>
+            <BoltIcon
+              className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
+              aria-hidden="true"
+            />
+            <p className="text-sm text-gray-500">{props.proposal.votes}</p>
+          </>
+        )}
         {period === Period.ANNOUNCING && status?.timestamp && workgroup ? (
           <>
             <ClockIcon
@@ -70,7 +74,7 @@ export default function ProposalListItem(props: {
               aria-hidden="true"
             />
             <p className="text-sm text-gray-500">
-              voting start in{' '}
+              start in{' '}
               {formatDuration(
                 status.timestamp.getTime() / 1000 +
                   workgroup.duration.announcement -
@@ -86,7 +90,7 @@ export default function ProposalListItem(props: {
               aria-hidden="true"
             />
             <p className="text-sm text-gray-500">
-              voting end in{' '}
+              end in{' '}
               {formatDuration(
                 status.timestamp.getTime() / 1000 +
                   workgroup.duration.announcement +
