@@ -134,14 +134,19 @@ export default function ProposalPage(
                   {() => (
                     <DetailList title={operand.alias || `Group ${index}`}>
                       <DetailItem title="Base on">
-                        {operand.arguments[0] === '.bit' ? '.bit' : 'SubDID'}
+                        {operand.arguments[0] === 'bit' ? '.bit' : 'SubDID'}
                       </DetailItem>
                       <DetailItem title="Filter">
                         {operand.arguments[1].length ? 'Allowlist' : 'All'}
                       </DetailItem>
                       {operand.arguments[1].length ? (
                         <DetailItem title="Allowlist">
-                          {operand.arguments[1].join('\n')}
+                          {operand.arguments[1]
+                            .map(
+                              (argument) =>
+                                `${argument}.${operand.arguments[0]}`,
+                            )
+                            .join('\n')}
                         </DetailItem>
                       ) : null}
                       <DetailItem title="Power">
