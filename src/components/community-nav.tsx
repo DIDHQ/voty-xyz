@@ -127,7 +127,7 @@ export default function CommunityNav(props: { className?: string }) {
             <div className="w-full border-t" />
           </div>
           <div className="w-full">
-            <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
+            <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
               Community
               <SubscriptionButton entry={query.entry} className="float-right" />
             </h3>
@@ -148,7 +148,7 @@ export default function CommunityNav(props: { className?: string }) {
                     item.current
                       ? 'text-primary-500'
                       : 'text-gray-300 group-hover:text-gray-400',
-                    'mr-2 h-6 w-6 shrink-0',
+                    'mr-2 h-5 w-5 shrink-0',
                   )}
                   aria-hidden="true"
                 />
@@ -156,8 +156,8 @@ export default function CommunityNav(props: { className?: string }) {
               </Link>
             ))}
           </div>
-          <div className="mt-4 w-full">
-            <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
+          <div className="mt-6 w-full">
+            <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
               Workgroups
               <CreateWorkgroupButton
                 entry={query.entry}
@@ -177,10 +177,10 @@ export default function CommunityNav(props: { className?: string }) {
           </div>
           {externals.length ? (
             <>
-              <div className="my-4 w-full px-6">
+              <div className="my-6 w-full px-6">
                 <div className="w-full border-t" />
               </div>
-              <div className="flex space-x-4">
+              <div className="mb-2 flex space-x-4">
                 {externals.map((item) => (
                   <a
                     key={item.href}
@@ -222,7 +222,7 @@ function WorkgroupListItem(props: {
     >
       {emoji ? (
         <span
-          className="mr-2 w-6 shrink-0 text-center text-xl"
+          className="mr-2 w-5 shrink-0 text-center text-lg"
           aria-hidden="true"
         >
           {emoji}
@@ -233,7 +233,7 @@ function WorkgroupListItem(props: {
             props.current
               ? 'text-primary-500'
               : 'text-gray-300 group-hover:text-gray-400',
-            'mr-2 h-6 w-6 shrink-0',
+            'mr-2 h-5 w-5 shrink-0',
           )}
           aria-hidden="true"
         />
