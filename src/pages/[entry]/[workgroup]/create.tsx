@@ -5,17 +5,13 @@ import dynamic from 'next/dynamic'
 import useRouterQuery from '../../../hooks/use-router-query'
 import useWorkgroup from '../../../hooks/use-workgroup'
 import TextButton from '../../../components/basic/text-button'
-import { Grid6, GridItem6 } from '../../../components/basic/grid'
 import { permalink2Id } from '../../../utils/permalink'
 import { formatDuration } from '../../../utils/time'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
 import { trpc } from '../../../utils/trpc'
 import Article from '../../../components/basic/article'
 import LoadingBar from '../../../components/basic/loading-bar'
-
-const StatusIcon = dynamic(() => import('../../../components/status-icon'), {
-  ssr: false,
-})
+import Slide from '../../../components/basic/slide'
 
 const ProposalForm = dynamic(
   () => import('../../../components/proposal-from'),
@@ -62,49 +58,70 @@ export default function CreateProposalPage() {
         ) : null}
       </div>
       <div className="relative mt-6 w-full shrink-0 sm:sticky sm:top-24 sm:mt-0 sm:w-72">
-        <Grid6 className="rounded border border-gray-200 p-6">
-          <GridItem6>
-            <DetailList title="Information">
+        <div className="space-y-6 rounded border border-gray-200 p-6">
+          <DetailList title="Belong to">
+            <DetailItem
+              title="Community"
+              className="truncate whitespace-nowrap"
+            >
+              {community?.name || '...'}
+            </DetailItem>
+            <DetailItem
+              title="Workgroup"
+              className="truncate whitespace-nowrap"
+            >
+              {workgroup?.name || '...'}
+            </DetailItem>
+          </DetailList>
+          <DetailList title="Proposers">
+            {workgroup?.permission.proposing.operands.map((operand, index) => (
               <DetailItem
-                title="Community"
+                key={operand.function + index}
+                title={operand.alias || `Group ${index}`}
                 className="truncate whitespace-nowrap"
               >
-                {community ? (
-                  <StatusIcon permalink={community?.entry.community}>
-                    {community.name}
-                  </StatusIcon>
-                ) : (
-                  '...'
-                )}
+                <Slide
+                  title="Proposers"
+                  trigger={({ handleOpen }) => (
+                    <TextButton onClick={handleOpen}>View</TextButton>
+                  )}
+                  small
+                >
+                  {() => (
+                    <DetailList title={operand.alias || `Group ${index}`}>
+                      <DetailItem title="Base on">
+                        {operand.arguments[0] === '.bit' ? '.bit' : 'SubDID'}
+                      </DetailItem>
+                      <DetailItem title="Filter">
+                        {operand.arguments[1].length ? 'Allowlist' : 'All'}
+                      </DetailItem>
+                      {operand.arguments[1].length ? (
+                        <DetailItem title="Allowlist">
+                          {operand.arguments[1].join('\n')}
+                        </DetailItem>
+                      ) : null}
+                    </DetailList>
+                  )}
+                </Slide>
               </DetailItem>
-              <DetailItem
-                title="Workgroup"
-                className="truncate whitespace-nowrap"
-              >
-                {workgroup?.name}
-              </DetailItem>
-            </DetailList>
-          </GridItem6>
-          <GridItem6>
-            <DetailList title="Duration">
-              <DetailItem title="Announcement">
-                {workgroup
-                  ? formatDuration(workgroup.duration.announcement)
-                  : null}
-              </DetailItem>
-              <DetailItem title="Voting">
-                {workgroup ? formatDuration(workgroup.duration.voting) : null}
-              </DetailItem>
-            </DetailList>
-          </GridItem6>
-          <GridItem6>
-            <DetailList title="Terms and conditions">
-              <Article small className="pt-2">
-                {workgroup?.extension.terms_and_conditions}
-              </Article>
-            </DetailList>
-          </GridItem6>
-        </Grid6>
+            ))}
+          </DetailList>
+          <DetailList title="Duration">
+            <DetailItem title="Announcement">
+              {workgroup
+                ? formatDuration(workgroup.duration.announcement)
+                : null}
+            </DetailItem>
+            <DetailItem title="Voting">
+              {workgroup ? formatDuration(workgroup.duration.voting) : null}
+            </DetailItem>
+          </DetailList>
+          <DetailList title="Terms and conditions">
+            <Article small className="pt-2">
+              {workgroup?.extension.terms_and_conditions}
+            </Article>
+          </DetailList>
+        </div>
       </div>
     </div>
   )

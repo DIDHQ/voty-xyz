@@ -19,6 +19,7 @@ import { documentTitle } from '../../../../utils/constants'
 import { appRouter } from '../../../../server/routers/_app'
 import VoteForm from '../../../../components/vote-form'
 import useRouterQuery from '../../../../hooks/use-router-query'
+import Slide from '../../../../components/basic/slide'
 
 const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
   ssr: false,
@@ -101,13 +102,7 @@ export default function ProposalPage(
               title="Community"
               className="truncate whitespace-nowrap"
             >
-              {community ? (
-                <StatusIcon permalink={proposal?.community}>
-                  {community.name}
-                </StatusIcon>
-              ) : (
-                '...'
-              )}
+              {community?.name || '...'}
             </DetailItem>
             <DetailItem
               title="Workgroup"
@@ -121,6 +116,42 @@ export default function ProposalPage(
             <DetailItem title="Voting type">
               {startCase(proposal?.voting_type)}
             </DetailItem>
+          </DetailList>
+          <DetailList title="Voters">
+            {workgroup?.permission.voting.operands.map((operand, index) => (
+              <DetailItem
+                key={operand.function + index}
+                title={operand.alias || `Group ${index}`}
+                className="truncate whitespace-nowrap"
+              >
+                <Slide
+                  title="Voters"
+                  trigger={({ handleOpen }) => (
+                    <TextButton onClick={handleOpen}>View</TextButton>
+                  )}
+                  small
+                >
+                  {() => (
+                    <DetailList title={operand.alias || `Group ${index}`}>
+                      <DetailItem title="Base on">
+                        {operand.arguments[0] === '.bit' ? '.bit' : 'SubDID'}
+                      </DetailItem>
+                      <DetailItem title="Filter">
+                        {operand.arguments[1].length ? 'Allowlist' : 'All'}
+                      </DetailItem>
+                      {operand.arguments[1].length ? (
+                        <DetailItem title="Allowlist">
+                          {operand.arguments[1].join('\n')}
+                        </DetailItem>
+                      ) : null}
+                      <DetailItem title="Power">
+                        {operand.arguments[2]}
+                      </DetailItem>
+                    </DetailList>
+                  )}
+                </Slide>
+              </DetailItem>
+            ))}
           </DetailList>
           <ProposalSchedule
             proposal={props.proposal}
