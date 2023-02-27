@@ -234,7 +234,7 @@ export default function ProposalForm(props: {
           disables={disables}
           value={did}
           onChange={setDid}
-          className="w-0 flex-1 sm:w-auto sm:flex-none"
+          className="w-full flex-1 sm:w-auto sm:flex-none"
         />
         <FormProvider {...methods}>
           <SigningProposalButton

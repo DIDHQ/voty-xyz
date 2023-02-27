@@ -162,7 +162,7 @@ export default function SigningVoteButton(props: {
         )}
         value={props.value}
         onChange={props.onChange}
-        className="w-0 flex-1 focus:z-10 active:z-10 sm:w-auto sm:flex-none"
+        className="w-full flex-1 sm:w-auto sm:flex-none"
       />
       {props.waiting ? (
         <>
