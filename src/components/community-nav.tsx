@@ -99,19 +99,13 @@ export default function CommunityNav(props: { className?: string }) {
           <link rel="icon" href={community?.extension?.avatar} />
         ) : null}
       </Head>
-      <aside
-        className={clsx(
-          'relative border-gray-200 sm:border-b-0',
-          externals.length ? 'border-b' : undefined,
-          props.className,
-        )}
-      >
+      <aside className={clsx('relative', props.className)}>
         <StatusIcon
           permalink={community?.entry.community}
           className="absolute right-4 top-4"
         />
         <div className="flex w-full flex-col items-center rounded border border-gray-200 pb-4">
-          <div className="flex w-full items-center space-x-4 p-6 sm:flex-col sm:space-y-4 sm:space-x-0 sm:py-8">
+          <div className="flex w-full items-center space-x-4 p-6 pb-0 sm:flex-col sm:space-y-4 sm:space-x-0 sm:pt-8">
             <Avatar
               name={community?.authorship.author}
               value={community?.extension?.avatar}
@@ -128,6 +122,9 @@ export default function CommunityNav(props: { className?: string }) {
                 </p>
               ) : null}
             </div>
+          </div>
+          <div className="my-6 w-full px-6">
+            <div className="w-full border-t" />
           </div>
           <div className="w-full">
             <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
@@ -178,20 +175,25 @@ export default function CommunityNav(props: { className?: string }) {
               ))}
             </div>
           </div>
+          {externals.length ? (
+            <>
+              <div className="my-4 w-full px-6">
+                <div className="w-full border-t" />
+              </div>
+              <div className="flex space-x-4">
+                {externals.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="text-gray-300 hover:text-gray-400"
+                  >
+                    <item.icon className="h-7 w-7" />
+                  </a>
+                ))}
+              </div>
+            </>
+          ) : null}
         </div>
-        {externals.length ? (
-          <div className="mt-4 mb-6 flex space-x-4">
-            {externals.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="text-gray-300 hover:text-gray-400"
-              >
-                <item.icon className="h-7 w-7" />
-              </a>
-            ))}
-          </div>
-        ) : null}
       </aside>
     </>
   )
