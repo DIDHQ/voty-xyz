@@ -33,10 +33,10 @@ export default function ProposalListItem(props: {
       href={`/${props.entry}/${props.proposal.workgroup}/${permalink2Id(
         props.proposal.permalink,
       )}`}
-      className="group block space-y-2 py-6 px-0"
+      className="-mx-4 block space-y-2 rounded-lg p-4 transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:bg-gray-100"
     >
       <div className="flex w-full items-center justify-between">
-        <p className="truncate font-medium text-primary-600 group-hover:underline group-focus:underline">
+        <p className="truncate font-medium text-gray-800">
           {props.proposal.title}
         </p>
         <ProposalPeriod

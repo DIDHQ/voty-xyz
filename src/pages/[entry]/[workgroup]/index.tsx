@@ -37,7 +37,7 @@ export default function GroupIndexPage() {
         {proposals?.length === 0 ? (
           <p className="mt-6 text-sm text-gray-500">No proposals</p>
         ) : (
-          <ul role="list" className="divide-y divide-gray-200">
+          <ul role="list" className="mt-1 space-y-1">
             {proposals?.map((proposal) => (
               <li key={proposal.permalink}>
                 {query.entry ? (
