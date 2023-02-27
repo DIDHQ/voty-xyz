@@ -88,15 +88,15 @@ export default function ProposalPage(
     (className?: string) => (
       <div
         className={clsx(
-          'relative w-full shrink-0 sm:sticky sm:top-24 sm:w-72',
+          'w-full shrink-0 pt-6 sm:sticky sm:top-18 sm:w-72 sm:pt-8',
           className,
         )}
       >
-        <StatusIcon
-          permalink={props.proposal}
-          className="absolute right-4 top-4"
-        />
-        <div className="space-y-6 rounded border border-gray-200 p-6">
+        <div className="relative space-y-6 rounded border border-gray-200 p-6 pt-0">
+          <StatusIcon
+            permalink={props.proposal}
+            className="absolute right-4 top-4"
+          />
           <DetailList title="Proposal">
             <DetailItem
               title="Community"
@@ -200,8 +200,8 @@ export default function ProposalPage(
       </Head>
       <div className="w-full">
         <LoadingBar loading={isLoading || isCommunityLoading} />
-        <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
-          <div className="w-full flex-1 sm:mr-8 sm:w-0">
+        <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
+          <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
             <TextButton
               href={
                 community && proposal

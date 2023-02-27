@@ -43,7 +43,7 @@ export default function CommunityIndexPage() {
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading || isListLoading} />
-      <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900">
+      <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8">
         Timeline
       </h3>
       {proposals?.length === 0 ? (

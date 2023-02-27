@@ -34,7 +34,7 @@ export default function CommunityCard(props: {
           </p>
         ) : null}
         <div className="h-0 flex-1" />
-        <div className="col-span-2 flex items-center">
+        <div className="col-span-2 flex items-center text-gray-600">
           <BookmarkIcon className="mr-1 h-4 w-4 shrink-0 text-gray-400" />
           {community.entry.subscribers}
         </div>

@@ -36,9 +36,9 @@ export default function CreateProposalPage() {
   )
 
   return (
-    <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
+    <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
       <LoadingBar loading={isLoading} />
-      <div className="w-full flex-1 sm:mr-8 sm:w-0">
+      <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
         <TextButton
           href={
             query.entry && query.workgroup
@@ -57,7 +57,7 @@ export default function CreateProposalPage() {
           />
         ) : null}
       </div>
-      <div className="relative mt-6 w-full shrink-0 sm:sticky sm:top-24 sm:mt-0 sm:w-72">
+      <div className="relative w-full shrink-0 pt-6 sm:sticky sm:top-18 sm:w-72 sm:pt-8">
         <div className="space-y-6 rounded border border-gray-200 p-6">
           <DetailList title="Belong to">
             <DetailItem
