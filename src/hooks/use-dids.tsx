@@ -13,11 +13,11 @@ export default function useDids(account?: Account, snapshots?: Snapshots) {
       if (snapshot) {
         return snapshotAddressAccounts(
           account!.coinType,
-          account!.address,
+          account?.address!,
           snapshot,
         )
       }
-      return getAccountList(account!.coinType, account!.address)
+      return getAccountList(account!.coinType, account?.address!)
     },
     { enabled: !!account, refetchOnWindowFocus: false },
   )

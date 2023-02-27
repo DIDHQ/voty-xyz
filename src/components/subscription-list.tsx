@@ -13,7 +13,7 @@ export default function SubscriptionList() {
   const query = useRouterQuery<['entry']>()
   const { account } = useWallet()
   const { data } = trpc.subscription.list.useQuery(
-    { subscriber: { type: 'eth_personal_sign', address: account!.address } },
+    { subscriber: { type: 'eth_personal_sign', address: account?.address! } },
     { enabled: !!account?.address, refetchOnWindowFocus: false },
   )
 
