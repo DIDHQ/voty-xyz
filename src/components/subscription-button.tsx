@@ -3,7 +3,7 @@ import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline
 import { useCallback, useEffect } from 'react'
 
 import useAsync from '../hooks/use-async'
-import useSignDocument2 from '../hooks/use-sign-document-2'
+import useSignDocumentWithoutAuthorship from '../hooks/use-sign-document-without-authorship'
 import useWallet from '../hooks/use-wallet'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
@@ -30,10 +30,10 @@ export default function SubscriptionButton(props: {
       refetchOnWindowFocus: false,
     },
   )
-  const signSubscribe = useSignDocument2(
+  const signSubscribe = useSignDocumentWithoutAuthorship(
     `You are subscribing community of Voty\n\nhash:\n{sha256}`,
   )
-  const signUnsubscribe = useSignDocument2(
+  const signUnsubscribe = useSignDocumentWithoutAuthorship(
     `You are unsubscribing community of Voty\n\nhash:\n{sha256}`,
   )
   const handleSignSubscribe = useAsync(

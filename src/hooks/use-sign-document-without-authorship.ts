@@ -4,7 +4,7 @@ import { Proved } from '../utils/schemas/proof'
 import { signDocument } from '../utils/signature'
 import useWallet from './use-wallet'
 
-export default function useSignDocument2(
+export default function useSignDocumentWithoutAuthorship(
   template?: string,
 ): <T extends object>(document: T) => Promise<Proved<T> | undefined> {
   const { account, signMessage } = useWallet()
