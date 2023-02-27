@@ -45,7 +45,7 @@ export default function CommunityNav(props: { className?: string }) {
     () =>
       compact([
         {
-          name: 'Timeline',
+          name: 'Activities',
           href: `/${query.entry}`,
           icon: ClockIcon,
           current: router.pathname === '/[entry]',
