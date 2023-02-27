@@ -9,7 +9,7 @@ import { trpc } from '../../utils/trpc'
 import useDids from '../../hooks/use-dids'
 import LoadingBar from '../../components/basic/loading-bar'
 
-export default function CommunityProfilePage() {
+export default function CommunitySettingsPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry']>()
   const { account } = useWallet()

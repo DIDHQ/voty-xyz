@@ -1,6 +1,5 @@
 import {
   ClockIcon,
-  DocumentTextIcon,
   GlobeAltIcon,
   BriefcaseIcon,
   InformationCircleIcon,
@@ -42,30 +41,21 @@ export default function CommunityNav(props: { className?: string }) {
     { enabled: !!query.entry, refetchOnWindowFocus: false },
   )
   const navigation = useMemo(
-    () =>
-      compact([
-        {
-          name: 'Activities',
-          href: `/${query.entry}`,
-          icon: ClockIcon,
-          current: router.pathname === '/[entry]',
-        },
-        {
-          name: 'Profile',
-          href: `/${query.entry}/profile`,
-          icon: DocumentTextIcon,
-          current: router.pathname === '/[entry]/profile',
-        },
-        community?.extension?.about
-          ? {
-              name: 'About',
-              href: `/${query.entry}/about`,
-              icon: InformationCircleIcon,
-              current: router.pathname === '/[entry]/about',
-            }
-          : undefined,
-      ]),
-    [community?.extension?.about, query.entry, router.pathname],
+    () => [
+      {
+        name: 'Timeline',
+        href: `/${query.entry}`,
+        icon: ClockIcon,
+        current: router.pathname === '/[entry]',
+      },
+      {
+        name: 'About',
+        href: `/${query.entry}/about`,
+        icon: InformationCircleIcon,
+        current: router.pathname === '/[entry]/about',
+      },
+    ],
+    [query.entry, router.pathname],
   )
   const externals = useMemo(
     () =>
