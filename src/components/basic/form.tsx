@@ -15,7 +15,7 @@ export function FormSection(props: {
 }) {
   return (
     <div className={props.className}>
-      <h3 className="text-lg font-medium leading-6 text-gray-900">
+      <h3 className="text-xl font-semibold leading-6 text-gray-900">
         {props.title}
       </h3>
       <p className="mt-1 mb-6 text-sm text-gray-500">{props.description}</p>
