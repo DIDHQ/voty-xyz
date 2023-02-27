@@ -48,7 +48,7 @@ export default function CommunityForm(props: {
   return (
     <Form className={clsx('pt-6', props.className)}>
       <FormSection
-        title={isNewCommunity ? 'Create community' : 'Basic Information'}
+        title={isNewCommunity ? 'New community' : 'Basic Information'}
         description="logo, name, slogan & about"
       >
         <Grid6>

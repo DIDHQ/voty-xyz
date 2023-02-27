@@ -101,8 +101,8 @@ export default function WorkgroupForm(props: {
   return (
     <Form className={props.className}>
       <FormSection
-        title={isNewWorkgroup ? 'New workgroup' : 'Profile'}
-        description="Basic information of the group."
+        title={isNewWorkgroup ? 'New workgroup' : 'Basic information'}
+        description="name & about"
       >
         <Grid6>
           <GridItem6>
@@ -141,10 +141,7 @@ export default function WorkgroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection
-        title="Proposers"
-        description="Filters for proposal validation."
-      >
+      <FormSection title="Proposers" description="defines who can propose">
         <Grid6>
           <GridItem6>
             <FormItem
@@ -165,10 +162,7 @@ export default function WorkgroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection
-        title="Voters"
-        description="Voting power is calculated as maximum."
-      >
+      <FormSection title="Voters" description="defines who can vote">
         <Grid6>
           <GridItem6>
             <FormItem
@@ -189,7 +183,7 @@ export default function WorkgroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Rules" description="Schedule, terms and conditions.">
+      <FormSection title="Rules" description="schedule, terms & conditions">
         <Grid6>
           <GridItem3>
             <FormItem
