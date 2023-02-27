@@ -138,9 +138,9 @@ export default function CommunityNav(props: { className?: string }) {
                 scroll={false}
                 className={clsx(
                   item.current
-                    ? 'border-primary-600 bg-primary-50 text-primary-600'
+                    ? 'text-primary-600'
                     : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                  'group flex h-10 items-center border-l-4 px-4 py-2 text-sm font-medium',
+                  'group flex h-10 items-center px-6 py-2 text-sm font-medium',
                 )}
               >
                 <item.icon
@@ -215,9 +215,9 @@ function WorkgroupListItem(props: {
       scroll={false}
       className={clsx(
         props.current
-          ? 'border-primary-600 bg-primary-50 text-primary-600'
+          ? 'text-primary-600'
           : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-        'group flex h-10 w-full items-center border-l-4 px-4 py-2 text-sm font-medium',
+        'group flex h-10 w-full items-center px-6 py-2 text-sm font-medium',
       )}
     >
       {emoji ? (
