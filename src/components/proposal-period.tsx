@@ -12,10 +12,7 @@ export default function ProposalPeriod(props: {
 }) {
   const { data: status, isLoading } = useStatus(props.proposal)
   const period = useMemo(
-    () =>
-      status?.timestamp && props.duration
-        ? getPeriod(new Date(), status.timestamp, props.duration)
-        : undefined,
+    () => getPeriod(new Date(), status?.timestamp, props.duration),
     [props.duration, status?.timestamp],
   )
 

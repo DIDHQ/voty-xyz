@@ -10,9 +10,12 @@ export enum Period {
 
 export function getPeriod(
   now: Date,
-  timestamp: Date,
-  duration: Workgroup['duration'],
+  timestamp?: Date,
+  duration?: Workgroup['duration'],
 ): Period {
+  if (!timestamp || !duration) {
+    return Period.PENDING
+  }
   if (now.getTime() < timestamp.getTime() + duration.announcement * 1000) {
     return Period.ANNOUNCING
   }
