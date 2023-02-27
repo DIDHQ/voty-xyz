@@ -227,7 +227,7 @@ export default function ProposalForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <div className="flex w-full flex-col items-end space-y-6 pt-6">
+      <div className="flex w-full flex-col items-end space-y-6">
         <Select
           top
           options={dids}

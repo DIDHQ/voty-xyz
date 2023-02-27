@@ -3,11 +3,7 @@ import { InputHTMLAttributes, ReactNode } from 'react'
 
 export function Form(props: { className?: string; children: ReactNode }) {
   return (
-    <div
-      className={clsx('space-y-8 divide-y divide-gray-200', props.className)}
-    >
-      {props.children}
-    </div>
+    <div className={clsx('space-y-12', props.className)}>{props.children}</div>
   )
 }
 
@@ -19,7 +15,7 @@ export function FormSection(props: {
 }) {
   return (
     <div className={props.className}>
-      <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900">
+      <h3 className="text-lg font-medium leading-6 text-gray-900">
         {props.title}
       </h3>
       <p className="mt-1 mb-6 text-sm text-gray-500">{props.description}</p>
@@ -30,7 +26,7 @@ export function FormSection(props: {
 
 export function FormFooter(props: { children: ReactNode }) {
   return (
-    <div className="flex flex-row-reverse justify-between pt-6">
+    <div className="flex flex-row-reverse justify-between">
       {props.children}
     </div>
   )

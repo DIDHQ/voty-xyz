@@ -10,6 +10,7 @@ import Textarea from './basic/textarea'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 import PreviewMarkdown from './preview-markdown'
+import clsx from 'clsx'
 
 const AvatarInput = dynamic(() => import('./basic/avatar-input'), {
   ssr: false,
@@ -45,12 +46,28 @@ export default function CommunityForm(props: {
   const isNewCommunity = !props.community
 
   return (
-    <Form className={props.className}>
+    <Form className={clsx('pt-6', props.className)}>
       <FormSection
         title={isNewCommunity ? 'New community' : 'Profile'}
         description="Basic information of the community."
       >
         <Grid6>
+          <GridItem6>
+            <FormItem label="Logo" error={errors.extension?.avatar?.message}>
+              <Controller
+                control={control}
+                name="extension.avatar"
+                render={({ field: { value, onChange } }) => (
+                  <AvatarInput
+                    name={props.entry}
+                    value={value}
+                    onChange={onChange}
+                    disabled={props.disabled}
+                  />
+                )}
+              />
+            </FormItem>
+          </GridItem6>
           <GridItem6>
             <FormItem label="Name" error={errors.name?.message}>
               <TextInput
@@ -75,22 +92,13 @@ export default function CommunityForm(props: {
               />
             </FormItem>
           </GridItem6>
-          <GridItem6>
-            <FormItem label="Avatar" error={errors.extension?.avatar?.message}>
-              <Controller
-                control={control}
-                name="extension.avatar"
-                render={({ field: { value, onChange } }) => (
-                  <AvatarInput
-                    name={props.entry}
-                    value={value}
-                    onChange={onChange}
-                    disabled={props.disabled}
-                  />
-                )}
-              />
-            </FormItem>
-          </GridItem6>
+        </Grid6>
+      </FormSection>
+      <FormSection
+        title="Social accounts"
+        description="Social relationship of the community."
+      >
+        <Grid6>
           <GridItem6>
             <FormItem
               label="Website"
@@ -103,13 +111,6 @@ export default function CommunityForm(props: {
               />
             </FormItem>
           </GridItem6>
-        </Grid6>
-      </FormSection>
-      <FormSection
-        title="Social accounts"
-        description="Social relationship of the community."
-      >
-        <Grid6>
           <GridItem2>
             <FormItem
               label="Twitter"

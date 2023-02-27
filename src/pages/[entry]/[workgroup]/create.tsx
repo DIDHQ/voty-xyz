@@ -57,6 +57,7 @@ export default function CreateProposalPage() {
             community={community}
             workgroup={workgroup}
             onSuccess={handleSuccess}
+            className="pt-6"
           />
         ) : null}
       </div>
