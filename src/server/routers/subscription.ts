@@ -8,8 +8,9 @@ import { authorized } from '../../utils/schemas/authorship'
 import { communitySchema } from '../../utils/schemas/community'
 import { proved } from '../../utils/schemas/proof'
 import { procedure, router } from '../trpc'
-import verifyAuthorshipProof from '../../utils/verifiers/verify-authorship-proof'
+import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
+import verifyProof from '../../utils/verifiers/verify-proof'
 
 const schema = proved(authorized(communitySchema))
 
@@ -88,7 +89,8 @@ export const subscriptionRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
       await verifySnapshot(input.authorship)
-      await verifyAuthorshipProof(input)
+      await verifyProof(input)
+      await verifyAuthorship(input.authorship, input.proof)
 
       const subscriber = input.authorship.author
       if (input.subscribe === true) {
