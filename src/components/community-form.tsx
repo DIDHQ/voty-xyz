@@ -95,7 +95,7 @@ export default function CommunityForm(props: {
         </Grid6>
       </FormSection>
       <FormSection
-        title="Social accounts"
+        title="Links"
         description="Social relationship of the community."
       >
         <Grid6>
