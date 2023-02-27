@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useId, useMemo } from 'react'
 import Head from 'next/head'
-import { Tooltip } from 'react-tooltip'
+import dynamic from 'next/dynamic'
 
 import useWorkgroup from '../hooks/use-workgroup'
 import useRouterQuery from '../hooks/use-router-query'
@@ -14,6 +14,11 @@ import { trpc } from '../utils/trpc'
 import Button from './basic/button'
 import useStatus from '../hooks/use-status'
 import { documentTitle } from '../utils/constants'
+
+const Tooltip = dynamic(
+  () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
+  { ssr: false },
+)
 
 export default function WorkgroupNav(props: { className?: string }) {
   const query = useRouterQuery<['entry', 'workgroup']>()

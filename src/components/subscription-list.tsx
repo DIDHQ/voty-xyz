@@ -1,6 +1,6 @@
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useId } from 'react'
-import { Tooltip } from 'react-tooltip'
 
 import useRouterQuery from '../hooks/use-router-query'
 import useWallet from '../hooks/use-wallet'
@@ -8,6 +8,11 @@ import { Authorized } from '../utils/schemas/authorship'
 import { Community } from '../utils/schemas/community'
 import { trpc } from '../utils/trpc'
 import Avatar from './basic/avatar'
+
+const Tooltip = dynamic(
+  () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
+  { ssr: false },
+)
 
 export default function SubscriptionList() {
   const query = useRouterQuery<['entry']>()
