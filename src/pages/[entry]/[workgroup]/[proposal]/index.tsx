@@ -88,15 +88,15 @@ export default function ProposalPage(
     (className?: string) => (
       <div
         className={clsx(
-          'w-full shrink-0 pt-6 sm:sticky sm:top-18 sm:w-72 sm:pt-8',
+          'relative w-full shrink-0 pt-6 sm:sticky sm:top-18 sm:w-72 sm:pt-8',
           className,
         )}
       >
-        <div className="relative space-y-6 rounded border border-gray-200 p-6 pt-0">
-          <StatusIcon
-            permalink={props.proposal}
-            className="absolute right-4 top-4"
-          />
+        <StatusIcon
+          permalink={props.proposal}
+          className="absolute right-4 top-10 sm:top-12"
+        />
+        <div className="space-y-6 rounded border border-gray-200 p-6">
           <DetailList title="Proposal">
             <DetailItem
               title="Community"

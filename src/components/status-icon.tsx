@@ -1,5 +1,4 @@
 import { CubeIcon, CubeTransparentIcon } from '@heroicons/react/24/outline'
-import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { ReactNode, useId, useMemo } from 'react'
 
@@ -15,18 +14,16 @@ const Tooltip = dynamic(
 export default function StatusIcon(props: {
   permalink?: string
   className?: string
-  children?: ReactNode
 }) {
   const { data: status, isLoading } = useStatus(props.permalink)
   const children = useMemo(
     () =>
-      props.children ??
-      (isLoading ? null : status?.timestamp ? (
+      isLoading ? null : status?.timestamp ? (
         <CubeIcon className="h-5 w-5" />
       ) : (
         <CubeTransparentIcon className="h-5 w-5" />
-      )),
-    [isLoading, props.children, status?.timestamp],
+      ),
+    [isLoading, status?.timestamp],
   )
   const href = useMemo(
     () =>
@@ -44,8 +41,8 @@ export default function StatusIcon(props: {
       <a
         href={href}
         data-tooltip-id={id}
-        data-tooltip-place="left"
-        className={clsx('leading-[0px]', props.className)}
+        data-tooltip-place="top"
+        className={props.className}
       >
         <TextButton className="w-full truncate">{children}</TextButton>
       </a>
