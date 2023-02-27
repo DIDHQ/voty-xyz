@@ -99,19 +99,13 @@ export default function CommunityNav(props: { className?: string }) {
           <link rel="icon" href={community?.extension?.avatar} />
         ) : null}
       </Head>
-      <aside
-        className={clsx(
-          'relative border-gray-200 sm:border-b-0',
-          externals.length ? 'border-b' : undefined,
-          props.className,
-        )}
-      >
+      <aside className={clsx('relative', props.className)}>
         <StatusIcon
           permalink={community?.entry.community}
           className="absolute right-4 top-4"
         />
         <div className="flex w-full flex-col items-center rounded border border-gray-200 pb-4">
-          <div className="flex w-full items-center space-x-4 p-6 sm:flex-col sm:space-y-4 sm:space-x-0 sm:py-8">
+          <div className="flex w-full items-center space-x-4 p-6 pb-0 sm:flex-col sm:space-y-4 sm:space-x-0 sm:pt-8">
             <Avatar
               name={community?.authorship.author}
               value={community?.extension?.avatar}
@@ -129,8 +123,11 @@ export default function CommunityNav(props: { className?: string }) {
               ) : null}
             </div>
           </div>
+          <div className="my-6 w-full px-6">
+            <div className="w-full border-t" />
+          </div>
           <div className="w-full">
-            <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
+            <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
               Community
               <SubscriptionButton entry={query.entry} className="float-right" />
             </h3>
@@ -141,9 +138,9 @@ export default function CommunityNav(props: { className?: string }) {
                 scroll={false}
                 className={clsx(
                   item.current
-                    ? 'border-primary-600 bg-primary-50 text-primary-600'
+                    ? 'text-primary-600'
                     : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                  'group flex h-10 items-center border-l-4 px-4 py-2 text-sm font-medium',
+                  'group flex h-10 items-center px-6 py-2 text-sm font-medium',
                 )}
               >
                 <item.icon
@@ -151,7 +148,7 @@ export default function CommunityNav(props: { className?: string }) {
                     item.current
                       ? 'text-primary-500'
                       : 'text-gray-300 group-hover:text-gray-400',
-                    'mr-2 h-6 w-6 shrink-0',
+                    'mr-2 h-5 w-5 shrink-0',
                   )}
                   aria-hidden="true"
                 />
@@ -159,8 +156,8 @@ export default function CommunityNav(props: { className?: string }) {
               </Link>
             ))}
           </div>
-          <div className="mt-4 w-full">
-            <h3 className="mb-1 px-4 text-sm font-medium text-gray-400">
+          <div className="mt-6 w-full">
+            <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
               Workgroups
               <CreateWorkgroupButton
                 entry={query.entry}
@@ -178,20 +175,25 @@ export default function CommunityNav(props: { className?: string }) {
               ))}
             </div>
           </div>
+          {externals.length ? (
+            <>
+              <div className="my-6 w-full px-6">
+                <div className="w-full border-t" />
+              </div>
+              <div className="mb-2 flex space-x-4">
+                {externals.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="text-gray-300 hover:text-gray-400"
+                  >
+                    <item.icon className="h-7 w-7" />
+                  </a>
+                ))}
+              </div>
+            </>
+          ) : null}
         </div>
-        {externals.length ? (
-          <div className="mt-4 mb-6 flex space-x-4">
-            {externals.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="text-gray-300 hover:text-gray-400"
-              >
-                <item.icon className="h-7 w-7" />
-              </a>
-            ))}
-          </div>
-        ) : null}
       </aside>
     </>
   )
@@ -213,14 +215,14 @@ function WorkgroupListItem(props: {
       scroll={false}
       className={clsx(
         props.current
-          ? 'border-primary-600 bg-primary-50 text-primary-600'
+          ? 'text-primary-600'
           : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-        'group flex h-10 w-full items-center border-l-4 px-4 py-2 text-sm font-medium',
+        'group flex h-10 w-full items-center px-6 py-2 text-sm font-medium',
       )}
     >
       {emoji ? (
         <span
-          className="mr-2 w-6 shrink-0 text-center text-xl"
+          className="mr-2 w-5 shrink-0 text-center text-lg"
           aria-hidden="true"
         >
           {emoji}
@@ -231,7 +233,7 @@ function WorkgroupListItem(props: {
             props.current
               ? 'text-primary-500'
               : 'text-gray-300 group-hover:text-gray-400',
-            'mr-2 h-6 w-6 shrink-0',
+            'mr-2 h-5 w-5 shrink-0',
           )}
           aria-hidden="true"
         />

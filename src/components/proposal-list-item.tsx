@@ -1,14 +1,14 @@
-import {
-  BoltIcon,
-  HandRaisedIcon,
-  Square2StackIcon,
-} from '@heroicons/react/20/solid'
+import { BoltIcon, ClockIcon, HandRaisedIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
+import { useMemo } from 'react'
 
+import useStatus from '../hooks/use-status'
 import useWorkgroup from '../hooks/use-workgroup'
+import { getPeriod, Period } from '../utils/period'
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/authorship'
 import { Proposal } from '../utils/schemas/proposal'
+import { formatDuration } from '../utils/time'
 import { trpc } from '../utils/trpc'
 import ProposalPeriod from './proposal-period'
 
@@ -21,6 +21,12 @@ export default function ProposalListItem(props: {
     { refetchOnWindowFocus: false },
   )
   const workgroup = useWorkgroup(community, props.proposal.workgroup)
+  const { data: status } = useStatus(props.proposal.permalink)
+  const now = useMemo(() => new Date(), [])
+  const period = useMemo(
+    () => getPeriod(now, status?.timestamp, workgroup?.duration),
+    [status?.timestamp, workgroup?.duration, now],
+  )
 
   return (
     <Link
@@ -52,16 +58,48 @@ export default function ProposalListItem(props: {
         <p className="text-sm text-gray-500">
           {props.proposal.authorship.author}
         </p>
-        <Square2StackIcon
-          className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
-          aria-hidden="true"
-        />
-        <p className="text-sm text-gray-500">{props.proposal.options.length}</p>
-        <BoltIcon
-          className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
-          aria-hidden="true"
-        />
-        <p className="text-sm text-gray-500">{props.proposal.votes}</p>
+        {period === Period.PENDING || period === Period.ANNOUNCING ? null : (
+          <>
+            <BoltIcon
+              className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
+              aria-hidden="true"
+            />
+            <p className="text-sm text-gray-500">{props.proposal.votes}</p>
+          </>
+        )}
+        {period === Period.ANNOUNCING && status?.timestamp && workgroup ? (
+          <>
+            <ClockIcon
+              className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
+              aria-hidden="true"
+            />
+            <p className="text-sm text-gray-500">
+              start in{' '}
+              {formatDuration(
+                status.timestamp.getTime() / 1000 +
+                  workgroup.duration.announcement -
+                  now.getTime() / 1000,
+              )}
+            </p>
+          </>
+        ) : null}
+        {period === Period.VOTING && status?.timestamp && workgroup ? (
+          <>
+            <ClockIcon
+              className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
+              aria-hidden="true"
+            />
+            <p className="text-sm text-gray-500">
+              end in{' '}
+              {formatDuration(
+                status.timestamp.getTime() / 1000 +
+                  workgroup.duration.announcement +
+                  workgroup.duration.voting -
+                  now.getTime() / 1000,
+              )}
+            </p>
+          </>
+        ) : null}
       </div>
     </Link>
   )

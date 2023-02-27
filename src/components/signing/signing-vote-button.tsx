@@ -3,6 +3,7 @@ import { CheckIcon } from '@heroicons/react/20/solid'
 import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import Decimal from 'decimal.js'
+import dynamic from 'next/dynamic'
 import pMap from 'p-map'
 import {
   ExoticComponent,
@@ -12,7 +13,6 @@ import {
   useId,
 } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { Tooltip } from 'react-tooltip'
 
 import useAsync from '../../hooks/use-async'
 import useDids from '../../hooks/use-dids'
@@ -26,6 +26,11 @@ import { Snapshots } from '../../utils/types'
 import Button from '../basic/button'
 import Notification from '../basic/notification'
 import Select from '../basic/select'
+
+const Tooltip = dynamic(
+  () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
+  { ssr: false },
+)
 
 export default function SigningVoteButton(props: {
   value: string
@@ -162,7 +167,7 @@ export default function SigningVoteButton(props: {
         )}
         value={props.value}
         onChange={props.onChange}
-        className="w-0 flex-1 focus:z-10 active:z-10 sm:w-auto sm:flex-none"
+        className="w-full flex-1 sm:w-auto sm:flex-none"
       />
       {props.waiting ? (
         <>

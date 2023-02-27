@@ -104,10 +104,7 @@ export default function VoteForm(props: {
   }, [onSuccess, refetch, refetchChoices, setValue])
   const { data: status } = useStatus(proposal?.permalink)
   const period = useMemo(
-    () =>
-      status?.timestamp && workgroup?.duration
-        ? getPeriod(new Date(), status.timestamp, workgroup.duration)
-        : undefined,
+    () => getPeriod(new Date(), status?.timestamp, workgroup?.duration),
     [workgroup?.duration, status?.timestamp],
   )
   const disabled = useCallback(
