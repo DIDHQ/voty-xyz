@@ -185,7 +185,7 @@ export default function CommunityNav(props: { className?: string }) {
                   <a
                     key={item.href}
                     href={item.href}
-                    className="text-gray-300 hover:text-gray-400"
+                    className="text-gray-500 hover:text-gray-600"
                   >
                     <item.icon className="h-7 w-7" />
                   </a>
