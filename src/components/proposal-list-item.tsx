@@ -33,10 +33,10 @@ export default function ProposalListItem(props: {
       href={`/${props.entry}/${props.proposal.workgroup}/${permalink2Id(
         props.proposal.permalink,
       )}`}
-      className="group block space-y-2 py-6 px-0"
+      className="-mx-4 block space-y-2 rounded p-4 transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:bg-gray-100"
     >
       <div className="flex w-full items-center justify-between">
-        <p className="truncate font-medium text-primary-600 group-hover:underline group-focus:underline">
+        <p className="truncate text-lg font-medium text-gray-800">
           {props.proposal.title}
         </p>
         <ProposalPeriod
@@ -50,30 +50,28 @@ export default function ProposalListItem(props: {
           {props.proposal.extension.body}
         </p>
       ) : null}
-      <div className="flex w-full items-center justify-start">
+      <div className="flex w-full items-center justify-start text-sm text-gray-400">
         <HandRaisedIcon
-          className="mr-1.5 h-4 w-4 shrink-0 text-gray-400"
+          className="mr-1.5 h-4 w-4 shrink-0"
           aria-hidden="true"
         />
-        <p className="text-sm text-gray-500">
-          {props.proposal.authorship.author}
-        </p>
+        <p>{props.proposal.authorship.author}</p>
         {period === Period.PENDING || period === Period.ANNOUNCING ? null : (
           <>
             <BoltIcon
-              className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
+              className="ml-4 mr-1.5 h-4 w-4 shrink-0"
               aria-hidden="true"
             />
-            <p className="text-sm text-gray-500">{props.proposal.votes}</p>
+            <p>{props.proposal.votes}</p>
           </>
         )}
         {period === Period.ANNOUNCING && status?.timestamp && workgroup ? (
           <>
             <ClockIcon
-              className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
+              className="ml-4 mr-1.5 h-4 w-4 shrink-0"
               aria-hidden="true"
             />
-            <p className="text-sm text-gray-500">
+            <p>
               start in{' '}
               {formatDuration(
                 status.timestamp.getTime() / 1000 +
@@ -86,10 +84,10 @@ export default function ProposalListItem(props: {
         {period === Period.VOTING && status?.timestamp && workgroup ? (
           <>
             <ClockIcon
-              className="ml-4 mr-1.5 h-4 w-4 shrink-0 text-gray-400"
+              className="ml-4 mr-1.5 h-4 w-4 shrink-0"
               aria-hidden="true"
             />
-            <p className="text-sm text-gray-500">
+            <p>
               end in{' '}
               {formatDuration(
                 status.timestamp.getTime() / 1000 +

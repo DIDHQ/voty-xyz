@@ -43,7 +43,7 @@ export default function CommunityIndexPage() {
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading || isListLoading} />
-      <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900">
+      <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8">
         Timeline
       </h3>
       {proposals?.length === 0 ? (
@@ -67,7 +67,7 @@ export default function CommunityIndexPage() {
           <p className="mt-6 text-sm text-gray-500">No events</p>
         )
       ) : (
-        <ul role="list" className="divide-y divide-gray-200">
+        <ul role="list" className="mt-1 space-y-1">
           {proposals?.map((proposal) => (
             <li key={proposal.permalink}>
               {query.entry ? (

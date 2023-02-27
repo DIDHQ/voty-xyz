@@ -42,7 +42,7 @@ export default function WorkgroupSettingsPage() {
             workgroup={query.workgroup}
             onSuccess={handleSuccess}
             disabled={!isAdmin}
-            className="pt-6"
+            className="pt-6 sm:pt-8"
           />
         ) : null}
       </WorkgroupLayout>

@@ -49,7 +49,7 @@ export default function CreateWorkgroupPage() {
           workgroup={newWorkgroup}
           onSuccess={handleSuccess}
           disabled={!isAdmin}
-          className="pt-6"
+          className="pt-6 sm:pt-8"
         />
       ) : null}
     </CommunityLayout>

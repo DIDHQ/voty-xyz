@@ -88,13 +88,13 @@ export default function ProposalPage(
     (className?: string) => (
       <div
         className={clsx(
-          'relative w-full shrink-0 sm:sticky sm:top-24 sm:w-72',
+          'relative w-full shrink-0 pt-6 sm:sticky sm:top-18 sm:w-72 sm:pt-8',
           className,
         )}
       >
         <StatusIcon
           permalink={props.proposal}
-          className="absolute right-4 top-4"
+          className="absolute right-4 top-10 sm:top-12"
         />
         <div className="space-y-6 rounded border border-gray-200 p-6">
           <DetailList title="Proposal">
@@ -134,14 +134,19 @@ export default function ProposalPage(
                   {() => (
                     <DetailList title={operand.alias || `Group ${index}`}>
                       <DetailItem title="Base on">
-                        {operand.arguments[0] === '.bit' ? '.bit' : 'SubDID'}
+                        {operand.arguments[0] === 'bit' ? '.bit' : 'SubDID'}
                       </DetailItem>
                       <DetailItem title="Filter">
                         {operand.arguments[1].length ? 'Allowlist' : 'All'}
                       </DetailItem>
                       {operand.arguments[1].length ? (
                         <DetailItem title="Allowlist">
-                          {operand.arguments[1].join('\n')}
+                          {operand.arguments[1]
+                            .map(
+                              (argument) =>
+                                `${argument}.${operand.arguments[0]}`,
+                            )
+                            .join('\n')}
                         </DetailItem>
                       ) : null}
                       <DetailItem title="Power">
@@ -195,8 +200,8 @@ export default function ProposalPage(
       </Head>
       <div className="w-full">
         <LoadingBar loading={isLoading || isCommunityLoading} />
-        <div className="flex w-full flex-1 flex-col items-start pt-6 sm:flex-row">
-          <div className="w-full flex-1 sm:mr-8 sm:w-0">
+        <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
+          <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
             <TextButton
               href={
                 community && proposal
