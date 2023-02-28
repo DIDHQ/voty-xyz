@@ -181,6 +181,7 @@ export default function ProposalForm(props: {
               label="Options"
               description={
                 <TextButton
+                  secondary
                   onClick={() => {
                     setValue('options', [...(watch('options') || []), ''])
                   }}
@@ -204,7 +205,7 @@ export default function ProposalForm(props: {
                       placeholder={`Option ${index + 1}`}
                       {...register(`options.${index}`)}
                       className={clsx(
-                        'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-500 sm:text-sm',
+                        'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 sm:text-sm',
                         watch('options')?.length > 1 ? 'pr-20' : 'pr-3',
                         index === 0 ? 'rounded-t' : undefined,
                         index === watch('options')?.length - 1
@@ -260,5 +261,9 @@ function OptionRemove(props: {
     onDelete(props.index)
   }, [onDelete, props.index])
 
-  return <TextButton onClick={handleDelete}>Remove</TextButton>
+  return (
+    <TextButton secondary onClick={handleDelete}>
+      Remove
+    </TextButton>
+  )
 }

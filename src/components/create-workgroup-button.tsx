@@ -17,7 +17,11 @@ export default function CreateWorkgroupButton(props: {
   )
 
   return isAdmin ? (
-    <TextButton href={`/${props.entry}/create`} className={props.className}>
+    <TextButton
+      primary
+      href={`/${props.entry}/create`}
+      className={props.className}
+    >
       <PlusIcon className="h-5 w-5" />
     </TextButton>
   ) : null

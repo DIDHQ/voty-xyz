@@ -19,14 +19,16 @@ export default function ProposalPeriod(props: {
   return isLoading ? null : (
     <span
       className={clsx(
-        'inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium',
+        'inline-flex items-center rounded-full border px-3 py-0.5 text-sm font-medium',
         period
           ? {
-              [Period.PENDING]: 'bg-gray-100 text-gray-800',
-              [Period.ANNOUNCING]: 'bg-yellow-100 text-yellow-800',
-              [Period.ADDING_OPTION]: 'bg-blue-100 text-blue-800',
-              [Period.VOTING]: 'bg-green-100 text-green-800',
-              [Period.ENDED]: 'bg-red-100 text-red-800',
+              [Period.PENDING]: 'border-gray-200 bg-gray-100 text-gray-800',
+              [Period.ANNOUNCING]:
+                'border-yellow-200 bg-yellow-100 text-yellow-800',
+              [Period.ADDING_OPTION]:
+                'border-blue-200 bg-blue-100 text-blue-800',
+              [Period.VOTING]: 'border-green-200 bg-green-100 text-green-800',
+              [Period.ENDED]: 'border-red-200 bg-red-100 text-red-800',
             }[period]
           : undefined,
         props.className,

@@ -127,7 +127,9 @@ export default function ProposalPage(
                 <Slide
                   title="Voters"
                   trigger={({ handleOpen }) => (
-                    <TextButton onClick={handleOpen}>View</TextButton>
+                    <TextButton secondary onClick={handleOpen}>
+                      View
+                    </TextButton>
                   )}
                   small
                 >
@@ -286,7 +288,7 @@ export default function ProposalPage(
                       >
                         <a
                           href={permalink2Url(vote.permalink)}
-                          className="text-primary-600 hover:text-primary-900"
+                          className="hover:text-primary-900 text-primary-600"
                         >
                           {vote.power}
                         </a>

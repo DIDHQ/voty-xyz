@@ -50,7 +50,7 @@ export default function AvatarInput(props: {
         onChange={handleChange}
       />
       {props.disabled ? null : (
-        <TextButton onClick={handleClick} className="mt-1">
+        <TextButton secondary onClick={handleClick} className="mt-1">
           Change
         </TextButton>
       )}

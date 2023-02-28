@@ -1,6 +1,6 @@
 import { CubeIcon, CubeTransparentIcon } from '@heroicons/react/24/outline'
 import dynamic from 'next/dynamic'
-import { ReactNode, useId, useMemo } from 'react'
+import { useId, useMemo } from 'react'
 
 import useStatus from '../hooks/use-status'
 import { permalink2Explorer, permalink2Url } from '../utils/permalink'
@@ -41,10 +41,12 @@ export default function StatusIcon(props: {
       <a
         href={href}
         data-tooltip-id={id}
-        data-tooltip-place="top"
+        data-tooltip-place="left"
         className={props.className}
       >
-        <TextButton className="w-full truncate">{children}</TextButton>
+        <TextButton primary className="w-full truncate">
+          {children}
+        </TextButton>
       </a>
       <Tooltip id={id} className="rounded">
         Transaction {status?.timestamp ? 'confirmed' : 'pending'}

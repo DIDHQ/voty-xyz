@@ -50,6 +50,7 @@ export default function DecimalSetsBlock(props: {
       ) : null}
       {props.disabled ? null : (
         <TextButton
+          secondary
           onClick={() => {
             append({
               function: 'prefixes_dot_suffix_fixed_power',
@@ -120,7 +121,7 @@ function DecimalUnitBlock(props: {
           </span>
         </div>
         <div className="ml-4 flex shrink-0 space-x-4">
-          <TextButton onClick={handleOpen}>
+          <TextButton secondary onClick={handleOpen}>
             {props.open ? 'Hide' : props.disabled ? 'View' : 'Edit'}
           </TextButton>
           {props.disabled ? null : (
@@ -128,7 +129,9 @@ function DecimalUnitBlock(props: {
               <span className="text-gray-300" aria-hidden="true">
                 |
               </span>
-              <TextButton onClick={handleRemove}>Remove</TextButton>
+              <TextButton secondary onClick={handleRemove}>
+                Remove
+              </TextButton>
             </>
           )}
         </div>

@@ -83,7 +83,9 @@ export default function CreateProposalPage() {
                 <Slide
                   title="Proposers"
                   trigger={({ handleOpen }) => (
-                    <TextButton onClick={handleOpen}>View</TextButton>
+                    <TextButton secondary onClick={handleOpen}>
+                      View
+                    </TextButton>
                   )}
                   small
                 >

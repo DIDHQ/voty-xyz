@@ -10,7 +10,9 @@ export default function PreviewMarkdown(props: { children?: string }) {
     <Slide
       title="Preview markdown"
       trigger={({ handleOpen }) => (
-        <TextButton onClick={handleOpen}>Preview markdown</TextButton>
+        <TextButton secondary onClick={handleOpen}>
+          Preview markdown
+        </TextButton>
       )}
     >
       {() => <Article>{props.children}</Article>}

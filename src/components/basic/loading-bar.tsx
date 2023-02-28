@@ -1,6 +1,5 @@
 import { useRef, useEffect } from 'react'
 import ReactTopLoadingBar, { LoadingBarRef } from 'react-top-loading-bar'
-import { green } from 'tailwindcss/colors'
 
 export default function LoadingBar(props: { loading?: boolean }) {
   const ref = useRef<LoadingBarRef>(null)
@@ -13,11 +12,6 @@ export default function LoadingBar(props: { loading?: boolean }) {
   }, [props.loading])
 
   return (
-    <ReactTopLoadingBar
-      ref={ref}
-      color={green['600']}
-      shadow={false}
-      height={2}
-    />
+    <ReactTopLoadingBar ref={ref} color="#22C493" shadow={false} height={2} />
   )
 }

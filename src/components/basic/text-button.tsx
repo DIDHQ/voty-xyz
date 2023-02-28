@@ -3,7 +3,11 @@ import Link from 'next/link'
 import { ButtonHTMLAttributes, useMemo } from 'react'
 
 export default function TextButton(
-  props: ButtonHTMLAttributes<HTMLButtonElement> & { href?: string },
+  props: ButtonHTMLAttributes<HTMLButtonElement> & {
+    href?: string
+    primary?: boolean
+    secondary?: boolean
+  },
 ) {
   const { href, ...restProps } = props
   const renderButton = useMemo(
@@ -12,14 +16,19 @@ export default function TextButton(
         type="button"
         {...restProps}
         className={clsx(
-          'rounded text-sm font-medium text-primary-600 hover:text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-gray-400',
+          'rounded text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-gray-400',
+          props.primary
+            ? 'text-primary-600 hover:text-primary-700 focus:ring-primary-300'
+            : props.secondary
+            ? 'text-secondary-600 hover:text-secondary-700 focus:ring-secondary-300'
+            : 'text-gray-600 hover:text-gray-700 focus:ring-gray-300',
           restProps.className,
         )}
       >
         {restProps.children}
       </button>
     ),
-    [restProps],
+    [props.primary, props.secondary, restProps],
   )
 
   return href ? (

@@ -82,6 +82,7 @@ export default function SubscriptionButton(props: {
       </Notification>
       {subscribed ? (
         <TextButton
+          primary
           disabled={isLoading || handleSignUnsubscribe.status === 'pending'}
           onClick={handleSignUnsubscribe.execute}
           className={props.className}
@@ -90,6 +91,7 @@ export default function SubscriptionButton(props: {
         </TextButton>
       ) : (
         <TextButton
+          primary
           disabled={isLoading || handleSignSubscribe.status === 'pending'}
           onClick={handleSignSubscribe.execute}
           className={props.className}
