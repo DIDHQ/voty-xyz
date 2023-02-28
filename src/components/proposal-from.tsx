@@ -36,19 +36,6 @@ const SigningProposalButton = dynamic(
   { ssr: false },
 )
 
-const options = [
-  {
-    id: 'single',
-    name: 'Single choice',
-    description: 'Choose only one option',
-  },
-  {
-    id: 'approval',
-    name: 'Approval',
-    description: 'Approve a certain number of options',
-  },
-]
-
 export default function ProposalForm(props: {
   community: Authorized<Community> & Serialize<{ entry: Entry }>
   workgroup: Workgroup
@@ -155,6 +142,7 @@ export default function ProposalForm(props: {
     () => didOptions?.filter(({ disabled }) => !disabled).length === 0,
     [didOptions],
   )
+  const options = watch('options') || []
 
   return (
     <Form className={props.className}>
@@ -189,7 +177,18 @@ export default function ProposalForm(props: {
                 name="voting_type"
                 render={({ field: { value, onChange } }) => (
                   <div className="space-y-4">
-                    {options.map((plan) => (
+                    {[
+                      {
+                        id: 'single',
+                        name: 'Single choice',
+                        description: 'Choose only one option',
+                      },
+                      {
+                        id: 'approval',
+                        name: 'Approval',
+                        description: 'Approve a certain number of options',
+                      },
+                    ].map((plan) => (
                       <div key={plan.id} className="relative flex items-start">
                         <div className="flex h-5 items-center">
                           <input
@@ -230,7 +229,7 @@ export default function ProposalForm(props: {
                 <TextButton
                   secondary
                   onClick={() => {
-                    setValue('options', [...(watch('options') || []), ''])
+                    setValue('options', [...options, ''])
                   }}
                 >
                   Add
@@ -242,7 +241,7 @@ export default function ProposalForm(props: {
               }
             >
               <div className="space-y-[-1px]">
-                {watch('options')?.map((_, index) => (
+                {options.map((_, index) => (
                   <div
                     key={index}
                     className="relative flex items-center justify-between text-sm"
@@ -253,15 +252,13 @@ export default function ProposalForm(props: {
                       {...register(`options.${index}`)}
                       className={clsx(
                         'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 sm:text-sm',
-                        watch('options')?.length > 1 ? 'pr-20' : 'pr-3',
+                        options.length > 1 ? 'pr-20' : 'pr-3',
                         index === 0 ? 'rounded-t' : undefined,
-                        index === watch('options')?.length - 1
-                          ? 'rounded-b'
-                          : undefined,
+                        index === options.length - 1 ? 'rounded-b' : undefined,
                       )}
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
-                      {watch('options')?.length > 2 ? (
+                      {options.length > 2 ? (
                         <OptionRemove
                           index={index}
                           onDelete={handleOptionDelete}
