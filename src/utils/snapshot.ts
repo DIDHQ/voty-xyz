@@ -1,18 +1,18 @@
-import { commonCoinTypes } from './constants'
+import { coinTypeToChainId, commonCoinTypes } from './constants'
 import { fetchJson } from './fetcher'
 import { permalink2Id } from './permalink'
-import ckb from './sdks/ckb'
-import { providers } from './sdks/ethers'
 
 export async function getCurrentSnapshot(coinType: number): Promise<string> {
   if (coinType === commonCoinTypes.CKB) {
+    const { default: ckb } = await import('./sdks/ckb')
     const blockNumber = await ckb.rpc.getTipBlockNumber()
     return parseInt(blockNumber).toString()
   }
-  const provider = providers[coinType]
-  if (!provider) {
+  if (!coinTypeToChainId[coinType]) {
     throw new Error('no provider')
   }
+  const { providers } = await import('./sdks/ethers')
+  const provider = providers[coinType]!
   const blockNumber = await provider.getBlockNumber()
   return BigInt(blockNumber).toString()
 }
@@ -28,6 +28,7 @@ export async function getSnapshotTimestamp(
     return new Date(block.timestamp * 1000)
   }
   if (coinType === commonCoinTypes.CKB) {
+    const { default: ckb } = await import('./sdks/ckb')
     const block = await ckb.rpc.getBlockByNumber(BigInt(snapshot))
     return new Date(parseInt(block.header.timestamp))
   }

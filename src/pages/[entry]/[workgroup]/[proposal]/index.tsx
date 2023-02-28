@@ -16,14 +16,14 @@ import Article from '../../../../components/basic/article'
 import TextButton from '../../../../components/basic/text-button'
 import LoadingBar from '../../../../components/basic/loading-bar'
 import {
+  cacheControl,
   coinTypeExplorers,
   coinTypeNames,
   documentTitle,
 } from '../../../../utils/constants'
 import { appRouter } from '../../../../server/routers/_app'
-import VoteForm from '../../../../components/vote-form'
 import useRouterQuery from '../../../../hooks/use-router-query'
-import Slide from '../../../../components/basic/slide'
+import VoteForm from '../../../../components/vote-form'
 
 const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
   ssr: false,
@@ -43,14 +43,19 @@ const ProposalSchedule = dynamic(
   },
 )
 
+const Slide = dynamic(() => import('../../../../components/basic/slide'), {
+  ssr: false,
+})
+
 export const getServerSideProps: GetServerSideProps<{
   proposal: string
-}> = async (context) => {
-  const proposal = id2Permalink(context.params!.proposal as string)
+}> = async ({ params, res }) => {
+  const proposal = id2Permalink(params!.proposal as string)
 
   const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
   await ssg.proposal.getByPermalink.prefetch({ permalink: proposal })
 
+  res.setHeader(...cacheControl)
   return { props: { trpcState: ssg.dehydrate(), proposal } }
 }
 

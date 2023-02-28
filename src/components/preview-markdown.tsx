@@ -1,9 +1,10 @@
 import dynamic from 'next/dynamic'
 
-import Slide from './basic/slide'
 import TextButton from './basic/text-button'
 
 const Article = dynamic(() => import('./basic/article'), { ssr: false })
+
+const Slide = dynamic(() => import('./basic/slide'), { ssr: false })
 
 export default function PreviewMarkdown(props: { children?: string }) {
   return (

@@ -11,12 +11,11 @@ import { DetailItem, DetailList } from '../../../components/basic/detail'
 import { trpc } from '../../../utils/trpc'
 import Article from '../../../components/basic/article'
 import LoadingBar from '../../../components/basic/loading-bar'
-import Slide from '../../../components/basic/slide'
+import ProposalForm from '../../../components/proposal-from'
 
-const ProposalForm = dynamic(
-  () => import('../../../components/proposal-from'),
-  { ssr: false },
-)
+const Slide = dynamic(() => import('../../../components/basic/slide'), {
+  ssr: false,
+})
 
 export default function CreateProposalPage() {
   const router = useRouter()

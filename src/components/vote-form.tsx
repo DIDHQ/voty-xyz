@@ -4,7 +4,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
 import { BoltIcon } from '@heroicons/react/20/solid'
-import { Decimal } from 'decimal.js'
+import type { Decimal } from 'decimal.js'
 import pMap from 'p-map'
 
 import { calculateDecimal } from '../utils/functions/number'
