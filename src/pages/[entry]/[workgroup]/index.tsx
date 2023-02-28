@@ -7,6 +7,7 @@ import CommunityLayout from '../../../components/layouts/community'
 import WorkgroupLayout from '../../../components/layouts/workgroup'
 import { trpc } from '../../../utils/trpc'
 import LoadingBar from '../../../components/basic/loading-bar'
+import EmptyState from '../../../components/empty-state'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['entry', 'workgroup']>()
@@ -35,7 +36,7 @@ export default function GroupIndexPage() {
       <WorkgroupLayout>
         <LoadingBar loading={isLoading} />
         {proposals?.length === 0 ? (
-          <p className="mt-6 text-sm text-gray-500">No proposals</p>
+          <EmptyState title="No proposals" className="mt-24" />
         ) : (
           <ul role="list" className="mt-1 space-y-1">
             {proposals?.map((proposal) => (

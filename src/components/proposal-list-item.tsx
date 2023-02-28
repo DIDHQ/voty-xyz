@@ -39,11 +39,7 @@ export default function ProposalListItem(props: {
         <p className="truncate text-lg font-medium text-gray-800">
           {props.proposal.title}
         </p>
-        <ProposalPeriodTag
-          proposal={props.proposal.permalink}
-          duration={workgroup?.duration}
-          className="ml-4"
-        />
+        <ProposalPeriodTag proposal={props.proposal} className="ml-4" />
       </div>
       {props.proposal.extension?.body ? (
         <p className="text-gray-600 line-clamp-3">

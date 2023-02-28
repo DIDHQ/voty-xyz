@@ -97,7 +97,7 @@ export default function ProposalPage(
     (className?: string) => (
       <div
         className={clsx(
-          'relative w-full shrink-0 pt-6 sm:sticky sm:top-18 sm:w-72 sm:pt-8',
+          'relative mt-[-1px] w-full shrink-0 pt-6 sm:sticky sm:top-18 sm:w-72 sm:pt-8',
           className,
         )}
       >
@@ -233,13 +233,7 @@ export default function ProposalPage(
         <LoadingBar loading={isLoading || isCommunityLoading} />
         <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
           <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
-            <TextButton
-              href={
-                community && proposal
-                  ? `/${community.authorship.author}/${proposal.workgroup}`
-                  : undefined
-              }
-            >
+            <TextButton href={`/${query.entry}/${query.workgroup}`}>
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>
             <div className="mb-6 border-b border-gray-200 pb-6">

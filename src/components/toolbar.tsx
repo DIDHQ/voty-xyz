@@ -6,6 +6,8 @@ import { isTestnet } from '../utils/constants'
 
 const ConnectButton = dynamic(() => import('./connect-button'), { ssr: false })
 
+const InfoButton = dynamic(() => import('./info-button'), { ssr: false })
+
 export default function Toolbar(props: { className?: string }) {
   return (
     <header className={props.className}>
@@ -28,7 +30,7 @@ export default function Toolbar(props: { className?: string }) {
         </svg>
       </Link>
       <div className="flex-1">
-        <div className="mx-auto flex h-18 max-w-5xl items-center justify-between px-6">
+        <div className="mx-auto flex h-18 max-w-5xl items-center px-6">
           <TextButton primary href="/" className="flex items-end">
             <h1 className="text-lg font-bold">
               <svg
@@ -55,6 +57,8 @@ export default function Toolbar(props: { className?: string }) {
             </h1>
             {isTestnet ? <span className="ml-2 italic">Testnet</span> : null}
           </TextButton>
+          <div className="w-0 flex-1" />
+          <InfoButton className="mr-4" />
           <ConnectButton />
         </div>
       </div>
