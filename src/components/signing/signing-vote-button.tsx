@@ -22,7 +22,7 @@ import { Workgroup } from '../../utils/schemas/workgroup'
 import { trpc } from '../../utils/trpc'
 import { Snapshots } from '../../utils/types'
 import Button from '../basic/button'
-import Combobox from '../basic/combobox'
+import DidCombobox from '../did-combobox'
 import Notification from '../basic/notification'
 
 const Tooltip = dynamic(
@@ -43,7 +43,7 @@ export default function SigningVoteButton(props: {
   children: ReactNode
 }) {
   const { onSuccess, onChange } = props
-  const { account } = useWallet()
+  const { account, connect } = useWallet()
   const { data: dids } = useDids(account, props.snapshots)
   const { handleSubmit: onSubmit } = useFormContext<Vote>()
   const signDocument = useSignDocument(
@@ -112,10 +112,12 @@ export default function SigningVoteButton(props: {
     [didOptions],
   )
   useEffect(() => {
-    if (defaultDid) {
-      onChange(defaultDid)
-    }
+    onChange(defaultDid || '')
   }, [defaultDid, onChange])
+  const disabled = useMemo(
+    () => didOptions?.filter(({ disabled }) => !disabled).length === 0,
+    [didOptions],
+  )
 
   return (
     <>
@@ -125,12 +127,15 @@ export default function SigningVoteButton(props: {
       <Notification show={handleSign.status === 'error'}>
         {handleSign.error?.message}
       </Notification>
-      <Combobox
+      <DidCombobox
         label="Select a DID as voter"
         top
         options={didOptions}
         value={props.value}
         onChange={props.onChange}
+        disabled={disabled}
+        onClick={connect}
+        placeholder={disabled ? 'No available DIDs' : undefined}
         className="w-full flex-1 sm:w-auto sm:flex-none"
       />
       {props.waiting ? (
@@ -150,7 +155,7 @@ export default function SigningVoteButton(props: {
             </Button>
           </div>
           <Tooltip id={id} className="rounded">
-            Waiting for proposal
+            Waiting for voting
           </Tooltip>
         </>
       ) : (

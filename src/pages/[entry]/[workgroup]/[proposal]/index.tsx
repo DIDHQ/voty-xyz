@@ -15,7 +15,11 @@ import { trpc } from '../../../../utils/trpc'
 import Article from '../../../../components/basic/article'
 import TextButton from '../../../../components/basic/text-button'
 import LoadingBar from '../../../../components/basic/loading-bar'
-import { documentTitle } from '../../../../utils/constants'
+import {
+  coinTypeExplorers,
+  coinTypeNames,
+  documentTitle,
+} from '../../../../utils/constants'
 import { appRouter } from '../../../../server/routers/_app'
 import VoteForm from '../../../../components/vote-form'
 import useRouterQuery from '../../../../hooks/use-router-query'
@@ -121,7 +125,7 @@ export default function ProposalPage(
             {workgroup?.permission.voting.operands.map((operand, index) => (
               <DetailItem
                 key={operand.function + index}
-                title={operand.alias || `Group ${index}`}
+                title={operand.name || `Group ${index}`}
                 className="truncate whitespace-nowrap"
               >
                 <Slide
@@ -134,7 +138,7 @@ export default function ProposalPage(
                   small
                 >
                   {() => (
-                    <DetailList title={operand.alias || `Group ${index}`}>
+                    <DetailList title={operand.name || `Group ${index}`}>
                       <DetailItem title="Base on">
                         {operand.arguments[0] === 'bit' ? '.bit' : 'SubDID'}
                       </DetailItem>
@@ -164,6 +168,26 @@ export default function ProposalPage(
             proposal={props.proposal}
             duration={workgroup?.duration}
           />
+          {proposal?.snapshots ? (
+            <DetailList title="Snapshots">
+              {Object.entries(proposal.snapshots).map(
+                ([coinType, snapshot]) => (
+                  <DetailItem
+                    key={coinType}
+                    title={coinTypeNames[parseInt(coinType)]}
+                  >
+                    <TextButton
+                      href={`${
+                        coinTypeExplorers[parseInt(coinType)]
+                      }${snapshot}`}
+                    >
+                      {snapshot}
+                    </TextButton>
+                  </DetailItem>
+                ),
+              )}
+            </DetailList>
+          ) : null}
           <DetailList title="Terms and conditions">
             <Article small className="pt-2">
               {workgroup?.extension.terms_and_conditions}

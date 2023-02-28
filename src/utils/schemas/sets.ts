@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 export const booleanUnitSchema = z.discriminatedUnion('function', [
   z.object({
-    alias: z.string().optional(),
+    name: z.string().optional(),
     function: z.literal('prefixes_dot_suffix_exact_match'),
     arguments: z.tuple([
       z.string().min(1),
@@ -23,7 +23,7 @@ export type BooleanSets = z.infer<typeof booleanSetsSchema>
 
 export const decimalUnitSchema = z.discriminatedUnion('function', [
   z.object({
-    alias: z.string().optional(),
+    name: z.string().optional(),
     function: z.literal('prefixes_dot_suffix_fixed_power'),
     arguments: z.tuple([
       z.string().min(1),

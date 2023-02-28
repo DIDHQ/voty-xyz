@@ -29,10 +29,7 @@ export default function ProposalSchedule(props: {
         {status?.timestamp && props.duration
           ? formatTime(
               status.timestamp.getTime() +
-                (props.duration.announcement +
-                  (props.duration.adding_option || 0) +
-                  props.duration.voting) *
-                  1000,
+                (props.duration.announcement + props.duration.voting) * 1000,
             )
           : '...'}
       </DetailItem>

@@ -38,3 +38,7 @@ next-env.d.ts
 .vscode/
 
 types/
+
+# PWA
+public/*.js
+public/*.js.map

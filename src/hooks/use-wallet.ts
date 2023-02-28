@@ -1,11 +1,6 @@
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { useMemo } from 'react'
-import {
-  useAccount,
-  useConnect,
-  useDisconnect,
-  useNetwork,
-  useSignMessage,
-} from 'wagmi'
+import { useAccount, useDisconnect, useNetwork, useSignMessage } from 'wagmi'
 
 import { chainIdToCoinType, coinTypeToChainId } from '../utils/constants'
 
@@ -17,10 +12,7 @@ export default function useWallet() {
     () => (network.chain?.id ? chainIdToCoinType[network.chain.id] : undefined),
     [network.chain?.id],
   )
-  const { connect } = useConnect({
-    chainId: network.chain?.id,
-    connector: account.connector,
-  })
+  const { openConnectModal } = useConnectModal()
   const { disconnect } = useDisconnect()
 
   return useMemo(
@@ -49,9 +41,9 @@ export default function useWallet() {
         }
         throw new Error(`sign message unsupported coin type: ${coinType}`)
       },
-      connect: () => connect(),
+      connect: () => openConnectModal?.(),
       disconnect: () => disconnect(),
     }),
-    [coinType, account.address, signMessageAsync, connect, disconnect],
+    [coinType, account.address, signMessageAsync, openConnectModal, disconnect],
   )
 }

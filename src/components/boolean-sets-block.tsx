@@ -12,7 +12,7 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 
 export default function BooleanSetsBlock(props: {
-  name: 'proposing' | 'adding_option'
+  name: 'proposing'
   entry: string
   workgroupIndex: number
   disabled?: boolean
@@ -66,7 +66,7 @@ export default function BooleanSetsBlock(props: {
 }
 
 function BooleanUnitBlock(props: {
-  name: 'proposing' | 'adding_option'
+  name: 'proposing'
   entry: string
   workgroupIndex: number
   index: number
@@ -114,7 +114,7 @@ function BooleanUnitBlock(props: {
         <div className="flex w-0 flex-1 items-center">
           <span className="w-0 flex-1 truncate">
             {watch(
-              `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.alias`,
+              `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.name`,
             ) || `Group #${props.index + 1}`}
           </span>
         </div>
@@ -142,18 +142,18 @@ function BooleanUnitBlock(props: {
               error={
                 errors.workgroups?.[props.workgroupIndex]?.permission?.[
                   props.name
-                ]?.operands?.[props.index]?.alias?.message
+                ]?.operands?.[props.index]?.name?.message
               }
             >
               <TextInput
                 disabled={props.disabled}
                 {...register(
-                  `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.alias`,
+                  `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.name`,
                 )}
                 error={
                   !!errors.workgroups?.[props.workgroupIndex]?.permission?.[
                     props.name
-                  ]?.operands?.[props.index]?.alias?.message
+                  ]?.operands?.[props.index]?.name?.message
                 }
                 placeholder={`Group #${props.index + 1}`}
               />

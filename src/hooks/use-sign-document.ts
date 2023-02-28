@@ -14,11 +14,15 @@ export default function useSignDocument(
 ): <T extends object>(
   document: T,
 ) => Promise<Proved<Authorized<T>> | undefined> {
-  const { account, signMessage } = useWallet()
+  const { account, connect, signMessage } = useWallet()
 
   return useCallback(
     async (document) => {
-      if (!did || !account?.address) {
+      if (!did) {
+        return
+      }
+      if (!account?.address) {
+        connect()
         return
       }
       const coinType = requiredCoinTypeOfDidChecker(did)
@@ -37,6 +41,6 @@ export default function useSignDocument(
       )
       return { ...document, authorship, proof }
     },
-    [did, account?.address, signMessage, template],
+    [did, connect, account?.address, signMessage, template],
   )
 }

@@ -52,7 +52,7 @@ function SubscriptionListItem(props: {
         <Avatar
           size={12}
           name={props.value.authorship.author}
-          value={props.value.extension?.avatar}
+          value={props.value.extension?.logo}
           noRing
           className={
             props.selected

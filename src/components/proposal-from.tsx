@@ -26,7 +26,7 @@ import { Authorized } from '../utils/schemas/authorship'
 import { Workgroup } from '../utils/schemas/workgroup'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
-import Combobox from './basic/combobox'
+import DidCombobox from './did-combobox'
 import {
   checkBoolean,
   requiredCoinTypesOfBooleanSets,
@@ -93,7 +93,7 @@ export default function ProposalForm(props: {
       refetchInterval: 30000,
     },
   )
-  const { account } = useWallet()
+  const { account, connect } = useWallet()
   const { data: dids } = useDids(account, snapshots)
   const { data: disables } = useQuery(
     [dids, props.workgroup?.permission.proposing, snapshots],
@@ -126,6 +126,9 @@ export default function ProposalForm(props: {
     [didOptions],
   )
   useEffect(() => {
+    setDid('')
+  }, [account])
+  useEffect(() => {
     if (defaultDid) {
       setDid(defaultDid)
     }
@@ -144,6 +147,10 @@ export default function ProposalForm(props: {
     [],
   )
   const { data: status } = useStatus(community?.entry.community)
+  const disabled = useMemo(
+    () => didOptions?.filter(({ disabled }) => !disabled).length === 0,
+    [didOptions],
+  )
 
   return (
     <Form className={props.className}>
@@ -239,11 +246,14 @@ export default function ProposalForm(props: {
         </Grid6>
       </FormSection>
       <div className="flex w-full flex-col items-end space-y-6">
-        <Combobox
+        <DidCombobox
           label="Select a DID as proposer"
           options={didOptions}
           value={did}
           onChange={setDid}
+          disabled={disabled}
+          onClick={connect}
+          placeholder={disabled ? 'No available DIDs' : undefined}
           className="w-full flex-1 sm:w-auto sm:flex-none"
         />
         <FormProvider {...methods}>
