@@ -1,5 +1,6 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid'
 import Head from 'next/head'
+import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 
 import Button from '../components/basic/button'
@@ -13,13 +14,13 @@ import { trpc } from '../utils/trpc'
 
 export default function CreateCommunityPage() {
   const { account } = useWallet()
-  const { data } = useDids(account)
+  const { data, isLoading } = useDids(account)
   const [entry, setEntry] = useState('')
   const dids = useMemo(
     () => data?.filter((did) => did.indexOf('.') === did.lastIndexOf('.')),
     [data],
   )
-  const { data: existences, isLoading } =
+  const { data: existences, isLoading: isExistencesLoading } =
     trpc.community.checkExistences.useQuery(
       { entries: dids },
       { enabled: !!dids?.length, refetchOnWindowFocus: false },
@@ -40,7 +41,7 @@ export default function CreateCommunityPage() {
       <Head>
         <title>{`Create community - ${documentTitle}`}</title>
       </Head>
-      <LoadingBar loading={isLoading} />
+      <LoadingBar loading={isLoading || isExistencesLoading} />
       <div className="w-full bg-white">
         <div className="py-24 sm:px-6 sm:py-32">
           <div className="mx-auto text-center">
@@ -73,14 +74,13 @@ export default function CreateCommunityPage() {
                     value={entry}
                     onChange={setEntry}
                   />
-
-                  <TextButton
-                    href={`/${entry}/settings`}
-                    primary
-                    disabled={isLoading}
-                  >
-                    Next →
-                  </TextButton>
+                  {entry ? (
+                    <Link href={`/${entry}/settings`}>
+                      <Button large primary>
+                        Next →
+                      </Button>
+                    </Link>
+                  ) : null}
                 </>
               )}
             </div>
