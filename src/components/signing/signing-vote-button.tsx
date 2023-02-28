@@ -22,7 +22,7 @@ import { Workgroup } from '../../utils/schemas/workgroup'
 import { trpc } from '../../utils/trpc'
 import { Snapshots } from '../../utils/types'
 import Button from '../basic/button'
-import Combobox from '../basic/combobox'
+import DidCombobox from '../did-combobox'
 import Notification from '../basic/notification'
 
 const Tooltip = dynamic(
@@ -125,7 +125,7 @@ export default function SigningVoteButton(props: {
       <Notification show={handleSign.status === 'error'}>
         {handleSign.error?.message}
       </Notification>
-      <Combobox
+      <DidCombobox
         label="Select a DID as voter"
         top
         options={didOptions}

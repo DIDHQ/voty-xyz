@@ -26,7 +26,7 @@ import { Authorized } from '../utils/schemas/authorship'
 import { Workgroup } from '../utils/schemas/workgroup'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
-import Combobox from './basic/combobox'
+import DidCombobox from './did-combobox'
 import {
   checkBoolean,
   requiredCoinTypesOfBooleanSets,
@@ -239,7 +239,7 @@ export default function ProposalForm(props: {
         </Grid6>
       </FormSection>
       <div className="flex w-full flex-col items-end space-y-6">
-        <Combobox
+        <DidCombobox
           label="Select a DID as proposer"
           options={didOptions}
           value={did}

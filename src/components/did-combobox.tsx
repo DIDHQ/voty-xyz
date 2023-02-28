@@ -9,7 +9,7 @@ type Option = {
   disabled?: boolean
 }
 
-export default function Combobox(props: {
+export default function DidCombobox(props: {
   top?: boolean
   options?: Option[]
   label?: string
@@ -39,8 +39,9 @@ export default function Combobox(props: {
       </HeadlessCombobox.Label>
       <div className="relative mt-1">
         <HeadlessCombobox.Input
-          className="w-full rounded border border-gray-300 bg-white py-2 pl-3 pr-10 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-sm"
+          placeholder="No DID found"
           onChange={(event) => setQuery(event.target.value)}
+          className="w-full rounded border border-gray-300 bg-white py-2 pl-3 pr-10 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-sm"
         />
         <HeadlessCombobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r px-2 focus:outline-none">
           <ChevronUpDownIcon
@@ -56,7 +57,7 @@ export default function Combobox(props: {
         >
           {filteredOptions?.length === 0 && query !== '' ? (
             <div className="relative cursor-default select-none py-2 px-4 text-start text-gray-700">
-              Nothing found
+              No DID found
             </div>
           ) : (
             filteredOptions?.map((option) => (

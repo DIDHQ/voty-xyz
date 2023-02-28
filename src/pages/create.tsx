@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 
 import Button from '../components/basic/button'
-import Combobox from '../components/basic/combobox'
+import DidCombobox from '../components/did-combobox'
 import LoadingBar from '../components/basic/loading-bar'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
@@ -66,7 +66,7 @@ export default function CreateCommunityPage() {
                 </a>
               ) : (
                 <>
-                  <Combobox
+                  <DidCombobox
                     label="Select a DID as your community entry"
                     options={didOptions}
                     value={entry}
