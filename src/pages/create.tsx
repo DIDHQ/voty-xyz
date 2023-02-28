@@ -8,8 +8,8 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 
 import Button from '../components/basic/button'
+import Combobox from '../components/basic/combobox'
 import LoadingBar from '../components/basic/loading-bar'
-import Select from '../components/basic/select'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 import { documentTitle, isTestnet } from '../utils/constants'
@@ -24,7 +24,10 @@ export default function CreateCommunityPage() {
     { enabled: !!entry, refetchOnWindowFocus: false },
   )
   const dids = useMemo(
-    () => data?.filter((did) => did.indexOf('.') === did.lastIndexOf('.')),
+    () =>
+      data
+        ?.filter((did) => did.indexOf('.') === did.lastIndexOf('.'))
+        .map((did) => ({ did })) || [],
     [data],
   )
 
@@ -38,16 +41,21 @@ export default function CreateCommunityPage() {
         <div className="py-24 sm:px-6 sm:py-32">
           <div className="mx-auto text-center">
             <h2 className="text-4xl font-bold tracking-tight text-gray-900">
-              Create community
+              Create a community
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">
               {dids?.length === 0
                 ? 'You need a DID to create community'
-                : 'Select a DID as your community entry'}
+                : 'to hear valuable voices from your community members'}
             </p>
             <div className="mt-10 flex flex-col items-center space-y-6">
               {dids?.length === 0 ? null : (
-                <Select options={dids} value={entry} onChange={setEntry} />
+                <Combobox
+                  label="Select a DID as your community entry"
+                  options={dids}
+                  value={entry}
+                  onChange={setEntry}
+                />
               )}
               {dids?.length === 0 ? (
                 <a
