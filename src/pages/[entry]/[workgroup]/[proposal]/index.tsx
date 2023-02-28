@@ -16,6 +16,7 @@ import Article from '../../../../components/basic/article'
 import TextButton from '../../../../components/basic/text-button'
 import LoadingBar from '../../../../components/basic/loading-bar'
 import {
+  cacheControl,
   coinTypeExplorers,
   coinTypeNames,
   documentTitle,
@@ -45,12 +46,13 @@ const ProposalSchedule = dynamic(
 
 export const getServerSideProps: GetServerSideProps<{
   proposal: string
-}> = async (context) => {
-  const proposal = id2Permalink(context.params!.proposal as string)
+}> = async ({ params, res }) => {
+  const proposal = id2Permalink(params!.proposal as string)
 
   const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
   await ssg.proposal.getByPermalink.prefetch({ permalink: proposal })
 
+  res.setHeader('Cache-Control', cacheControl)
   return { props: { trpcState: ssg.dehydrate(), proposal } }
 }
 

@@ -12,15 +12,17 @@ import { appRouter } from '../../server/routers/_app'
 import useWallet from '../../hooks/use-wallet'
 import useDids from '../../hooks/use-dids'
 import Button from '../../components/basic/button'
+import { cacheControl } from '../../utils/constants'
 
-export const getServerSideProps: GetServerSideProps<{ entry: string }> = async (
-  context,
-) => {
-  const entry = context.params!.entry as string
+export const getServerSideProps: GetServerSideProps<{
+  entry: string
+}> = async ({ params, res }) => {
+  const entry = params!.entry as string
 
   const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
   await ssg.community.getByEntry.prefetch({ entry })
 
+  res.setHeader('Cache-Control', cacheControl)
   return { props: { trpcState: ssg.dehydrate(), entry } }
 }
 

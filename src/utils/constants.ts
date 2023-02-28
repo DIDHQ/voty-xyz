@@ -74,3 +74,7 @@ export enum DataType {
   PROPOSAL = 'proposal',
   VOTE = 'vote',
 }
+
+export const cacheControl = `public, s-maxage=10, stale-while-revalidate=${
+  24 * 60 * 60
+}`
