@@ -147,6 +147,10 @@ export default function ProposalForm(props: {
     [],
   )
   const { data: status } = useStatus(community?.entry.community)
+  const disabled = useMemo(
+    () => didOptions?.filter(({ disabled }) => !disabled).length === 0,
+    [didOptions],
+  )
 
   return (
     <Form className={props.className}>
@@ -247,11 +251,9 @@ export default function ProposalForm(props: {
           options={didOptions}
           value={did}
           onChange={setDid}
-          disabled={didOptions?.length === 0}
+          disabled={disabled}
           onClick={connect}
-          placeholder={
-            didOptions?.length === 0 ? 'No available DIDs' : undefined
-          }
+          placeholder={disabled ? 'No available DIDs' : undefined}
           className="w-full flex-1 sm:w-auto sm:flex-none"
         />
         <FormProvider {...methods}>
