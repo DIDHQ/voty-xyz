@@ -9,7 +9,7 @@ type Option = {
 }
 
 export default function Combobox(props: {
-  options: Option[]
+  options?: Option[]
   label?: string
   value: string
   onChange(value: string): void
@@ -19,7 +19,7 @@ export default function Combobox(props: {
   const filteredOptions =
     query === ''
       ? props.options
-      : props.options.filter((option) => {
+      : props.options?.filter((option) => {
           return option.did.toLowerCase().includes(query.toLowerCase())
         })
 
@@ -44,7 +44,7 @@ export default function Combobox(props: {
             aria-hidden="true"
           />
         </HeadlessCombobox.Button>
-        {filteredOptions.length > 0 && (
+        {filteredOptions?.length ? (
           <HeadlessCombobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
             {filteredOptions.map((option) => (
               <HeadlessCombobox.Option
@@ -54,17 +54,26 @@ export default function Combobox(props: {
                 className={({ active }) =>
                   clsx(
                     'relative cursor-default select-none py-2 pl-3 pr-9',
-                    active ? 'bg-primary-600 text-white' : 'text-gray-900',
+                    active
+                      ? 'bg-primary-600 text-white'
+                      : option.disabled
+                      ? 'text-gray-400'
+                      : 'text-gray-900',
                   )
                 }
               >
-                {({ active, selected }) => (
+                {({ active, selected, disabled }) => (
                   <>
-                    <div className="flex items-center">
+                    <div
+                      className={clsx(
+                        'flex items-center',
+                        disabled ? 'cursor-not-allowed' : undefined,
+                      )}
+                    >
                       <span
                         className={clsx(
                           'inline-block h-2 w-2 shrink-0 rounded-full',
-                          option.disabled ? 'bg-gray-200' : 'bg-green-400',
+                          disabled ? 'bg-gray-200' : 'bg-green-400',
                         )}
                         aria-hidden="true"
                       />
@@ -77,7 +86,7 @@ export default function Combobox(props: {
                         {option.did}
                         <span className="sr-only">
                           {' '}
-                          is {option.disabled ? 'offline' : 'online'}
+                          is {disabled ? 'offline' : 'online'}
                         </span>
                       </span>
                     </div>
@@ -96,7 +105,7 @@ export default function Combobox(props: {
               </HeadlessCombobox.Option>
             ))}
           </HeadlessCombobox.Options>
-        )}
+        ) : null}
       </div>
     </HeadlessCombobox>
   )

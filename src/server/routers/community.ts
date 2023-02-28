@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, last } from 'lodash-es'
+import { compact, keyBy, last, mapValues } from 'lodash-es'
 import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
@@ -47,6 +47,24 @@ export const communityRouter = router({
       return community
         ? { ...community.data, entry: { ...entry, ts: entry.ts.toString() } }
         : null
+    }),
+  checkExistences: procedure
+    .input(z.object({ entries: z.array(z.string()).optional() }))
+    .output(z.record(z.string(), z.boolean()))
+    .query(async ({ input }) => {
+      if (!input.entries?.length) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
+      }
+
+      const entries = await database.entry.findMany({
+        where: { did: { in: input.entries } },
+        select: { did: true },
+      })
+
+      return mapValues(
+        keyBy(entries, ({ did }) => did),
+        (entry) => !!entry,
+      )
     }),
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
