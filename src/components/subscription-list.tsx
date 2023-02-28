@@ -44,7 +44,6 @@ function SubscriptionListItem(props: {
   return (
     <>
       <Link
-        key={props.value.authorship.author}
         data-tooltip-id={id}
         data-tooltip-place="right"
         href={`/${props.value.authorship.author}`}
