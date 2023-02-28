@@ -10,7 +10,7 @@ import dynamic from 'next/dynamic'
 import {
   ArchiveBoxIcon,
   ArrowPathIcon,
-  DocumentPlusIcon,
+  PlusIcon,
 } from '@heroicons/react/20/solid'
 
 import { Community, communitySchema } from '../utils/schemas/community'
@@ -247,7 +247,7 @@ export default function WorkgroupForm(props: {
           <FormProvider {...methods}>
             <SigningCommunityButton
               did={props.community.authorship.author}
-              icon={isNewWorkgroup ? DocumentPlusIcon : ArrowPathIcon}
+              icon={isNewWorkgroup ? PlusIcon : ArrowPathIcon}
               onSuccess={handleSuccess}
             >
               {isNewWorkgroup ? 'Create' : 'Update'}

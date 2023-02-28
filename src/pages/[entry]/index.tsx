@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 import Link from 'next/link'
-import { DocumentPlusIcon } from '@heroicons/react/20/solid'
+import { PlusIcon } from '@heroicons/react/20/solid'
 
 import useRouterQuery from '../../hooks/use-router-query'
 import ProposalListItem from '../../components/proposal-list-item'
@@ -57,7 +57,7 @@ export default function CommunityIndexPage() {
             </p>
             <div className="mt-10 flex items-center justify-center">
               <Link href={`/${query.entry}/create`}>
-                <Button primary icon={DocumentPlusIcon}>
+                <Button primary icon={PlusIcon}>
                   Create
                 </Button>
               </Link>

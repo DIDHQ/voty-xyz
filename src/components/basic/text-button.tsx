@@ -9,7 +9,7 @@ export default function TextButton(
     secondary?: boolean
   },
 ) {
-  const { href, ...restProps } = props
+  const { href, primary, secondary, ...restProps } = props
   const renderButton = useMemo(
     () => (
       <button
@@ -17,9 +17,9 @@ export default function TextButton(
         {...restProps}
         className={clsx(
           'rounded text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-gray-400',
-          props.primary
+          primary
             ? 'text-primary-600 hover:text-primary-700 focus:ring-primary-300'
-            : props.secondary
+            : secondary
             ? 'text-secondary-600 hover:text-secondary-700 focus:ring-secondary-300'
             : 'text-gray-600 hover:text-gray-700 focus:ring-gray-300',
           restProps.className,
@@ -28,7 +28,7 @@ export default function TextButton(
         {restProps.children}
       </button>
     ),
-    [props.primary, props.secondary, restProps],
+    [primary, secondary, restProps],
   )
 
   return href ? (

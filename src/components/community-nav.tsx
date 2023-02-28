@@ -19,6 +19,7 @@ import { extractStartEmoji } from '../utils/emoji'
 import { Workgroup } from '../utils/schemas/workgroup'
 import { trpc } from '../utils/trpc'
 import { documentTitle } from '../utils/constants'
+import TextButton from './basic/text-button'
 
 const StatusIcon = dynamic(() => import('./status-icon'), {
   ssr: false,
@@ -177,15 +178,11 @@ export default function CommunityNav(props: { className?: string }) {
               <div className="my-6 w-full px-6">
                 <div className="w-full border-t" />
               </div>
-              <div className="mb-2 flex space-x-4">
+              <div className="flex space-x-4">
                 {externals.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="text-gray-500 hover:text-gray-600"
-                  >
+                  <TextButton key={item.href} href={item.href}>
                     <item.icon className="h-7 w-7" />
-                  </a>
+                  </TextButton>
                 ))}
               </div>
             </>

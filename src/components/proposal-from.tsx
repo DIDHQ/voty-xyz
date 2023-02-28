@@ -10,7 +10,6 @@ import { Entry } from '@prisma/client'
 import type { Serialize } from '@trpc/server/dist/shared/internal/serialize'
 import clsx from 'clsx'
 
-import { requiredCoinTypesOfDecimalSets } from '../utils/functions/number'
 import { Proposal, proposalSchema } from '../utils/schemas/proposal'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import TextInput from '../components/basic/text-input'
@@ -27,8 +26,11 @@ import { Authorized } from '../utils/schemas/authorship'
 import { Workgroup } from '../utils/schemas/workgroup'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
-import { checkBoolean } from '../utils/functions/boolean'
-import Select from './basic/select'
+import Combobox from './basic/combobox'
+import {
+  checkBoolean,
+  requiredCoinTypesOfBooleanSets,
+} from '../utils/functions/boolean'
 
 const SigningProposalButton = dynamic(
   () => import('../components/signing/signing-proposal-button'),
@@ -70,21 +72,13 @@ export default function ProposalForm(props: {
     setValue('workgroup', workgroup.id)
   }, [workgroup, setValue])
   const [did, setDid] = useState('')
-  const { data: requiredCoinTypes } = useQuery(
-    ['requiredCoinTypes', did, workgroup?.permission.voting],
-    () =>
-      uniq([
-        requiredCoinTypeOfDidChecker(did),
-        ...requiredCoinTypesOfDecimalSets(workgroup!.permission.voting!),
-      ]),
-    {
-      enabled: !!did && !!workgroup?.permission.voting,
-      refetchOnWindowFocus: false,
-    },
-  )
   const { data: snapshots } = useQuery(
-    ['snapshots', requiredCoinTypes],
+    ['snapshots', did, workgroup?.permission.proposing],
     async () => {
+      const requiredCoinTypes = uniq([
+        ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
+        ...requiredCoinTypesOfBooleanSets(workgroup!.permission.proposing!),
+      ])
       const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
         concurrency: 5,
       })
@@ -94,7 +88,7 @@ export default function ProposalForm(props: {
       }, {} as { [coinType: string]: string })
     },
     {
-      enabled: !!requiredCoinTypes,
+      enabled: !!workgroup?.permission.proposing,
       refetchOnWindowFocus: false,
       refetchInterval: 30000,
     },
@@ -102,7 +96,7 @@ export default function ProposalForm(props: {
   const { account } = useWallet()
   const { data: dids } = useDids(account, snapshots)
   const { data: disables } = useQuery(
-    [dids, props.workgroup, snapshots],
+    [dids, props.workgroup?.permission.proposing, snapshots],
     async () => {
       const booleans = await pMap(
         dids!,
@@ -120,6 +114,22 @@ export default function ProposalForm(props: {
       refetchOnWindowFocus: false,
     },
   )
+  const didOptions = useMemo(
+    () =>
+      disables && dids
+        ? dids.map((did) => ({ did, disabled: disables[did] }))
+        : undefined,
+    [dids, disables],
+  )
+  const defaultDid = useMemo(
+    () => didOptions?.find(({ disabled }) => !disabled)?.did,
+    [didOptions],
+  )
+  useEffect(() => {
+    if (defaultDid) {
+      setDid(defaultDid)
+    }
+  }, [defaultDid])
   useEffect(() => {
     if (snapshots) {
       setValue('snapshots', snapshots)
@@ -229,10 +239,9 @@ export default function ProposalForm(props: {
         </Grid6>
       </FormSection>
       <div className="flex w-full flex-col items-end space-y-6">
-        <Select
-          top
-          options={dids}
-          disables={disables}
+        <Combobox
+          label="Select a DID as proposer"
+          options={didOptions}
           value={did}
           onChange={setDid}
           className="w-full flex-1 sm:w-auto sm:flex-none"

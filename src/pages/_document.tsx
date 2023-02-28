@@ -2,7 +2,7 @@ import { Html, Head, Main, NextScript } from 'next/document'
 
 import { documentTitle, isTestnet } from '../utils/constants'
 
-const description = 'Voice for your community'
+const description = 'Voice of your community'
 
 const domain = isTestnet ? 'https://votyxyz.vercel.app' : 'https://voty.xyz'
 

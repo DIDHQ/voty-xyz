@@ -49,6 +49,7 @@ export default function SigningProposalButton(props: {
         {handleSign.error?.message}
       </Notification>
       <Button
+        large
         primary
         icon={props.icon}
         onClick={onSubmit(handleSign.execute, console.error)}

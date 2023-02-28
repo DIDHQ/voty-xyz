@@ -59,7 +59,7 @@ export default function CreateProposalPage() {
       </div>
       <div className="relative w-full shrink-0 pt-6 sm:sticky sm:top-18 sm:w-72 sm:pt-8">
         <div className="space-y-6 rounded border border-gray-200 p-6">
-          <DetailList title="Belong to">
+          <DetailList title="Information">
             <DetailItem
               title="Community"
               className="truncate whitespace-nowrap"

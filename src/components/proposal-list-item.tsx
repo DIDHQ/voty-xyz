@@ -10,7 +10,7 @@ import { Authorized } from '../utils/schemas/authorship'
 import { Proposal } from '../utils/schemas/proposal'
 import { formatDuration } from '../utils/time'
 import { trpc } from '../utils/trpc'
-import ProposalPeriod from './proposal-period'
+import ProposalPeriodTag from './proposal-period-tag'
 
 export default function ProposalListItem(props: {
   entry: string
@@ -39,7 +39,7 @@ export default function ProposalListItem(props: {
         <p className="truncate text-lg font-medium text-gray-800">
           {props.proposal.title}
         </p>
-        <ProposalPeriod
+        <ProposalPeriodTag
           proposal={props.proposal.permalink}
           duration={workgroup?.duration}
           className="ml-4"

@@ -97,7 +97,7 @@ export default function ProposalPage(
           className="absolute right-4 top-10 sm:top-12"
         />
         <div className="space-y-6 rounded border border-gray-200 p-6">
-          <DetailList title="Proposal">
+          <DetailList title="Information">
             <DetailItem
               title="Community"
               className="truncate whitespace-nowrap"

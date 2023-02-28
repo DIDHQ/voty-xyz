@@ -5,7 +5,7 @@ import useStatus from '../hooks/use-status'
 import { getPeriod, Period } from '../utils/period'
 import type { Workgroup } from '../utils/schemas/workgroup'
 
-export default function ProposalPeriod(props: {
+export default function ProposalPeriodTag(props: {
   proposal?: string
   duration?: Workgroup['duration']
   className?: string
