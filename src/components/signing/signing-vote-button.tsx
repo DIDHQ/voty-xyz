@@ -150,7 +150,7 @@ export default function SigningVoteButton(props: {
             </Button>
           </div>
           <Tooltip id={id} className="rounded">
-            Waiting for proposal
+            Waiting for voting
           </Tooltip>
         </>
       ) : (
