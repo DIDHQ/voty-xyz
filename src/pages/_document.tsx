@@ -1,10 +1,10 @@
 import { Html, Head, Main, NextScript } from 'next/document'
 
-import { documentTitle } from '../utils/constants'
+import { documentTitle, isTestnet } from '../utils/constants'
 
 const description = 'Voice for your community'
 
-const domain = 'https://voty.xyz'
+const domain = isTestnet ? 'https://votyxyz.vercel.app' : 'https://voty.xyz'
 
 export default function MyDocument() {
   return (
@@ -20,7 +20,6 @@ export default function MyDocument() {
         <meta name="description" content={description} />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#22C493" />
 
         <link rel="apple-touch-icon" href="/icons/touch-icon-iphone.png" />
         <link
