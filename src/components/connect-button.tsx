@@ -49,19 +49,21 @@ export default function ConnectButton() {
               </>
             }
           >
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  onClick={disconnect}
-                  className={clsx(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block w-full px-4 py-2 text-start text-sm',
-                  )}
-                >
-                  Disconnect
-                </button>
-              )}
-            </Menu.Item>
+            <div className="py-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    onClick={disconnect}
+                    className={clsx(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'block w-full px-4 py-2 text-start text-sm',
+                    )}
+                  >
+                    Disconnect
+                  </button>
+                )}
+              </Menu.Item>
+            </div>
           </Dropdown>
         ) : !chain || chainIdToCoinType[chain.id] ? (
           <Button primary loading={connectModalOpen} onClick={openConnectModal}>
