@@ -9,6 +9,7 @@ import CommunityLayout from '../../components/layouts/community'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
 import Button from '../../components/basic/button'
+import EmptyState from '../../components/empty-state'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['entry']>()
@@ -47,25 +48,19 @@ export default function CommunityIndexPage() {
         Timeline
       </h3>
       {proposals?.length === 0 ? (
-        community?.workgroups?.length === 0 ? (
-          <div className="mx-auto mt-6 py-20 text-center">
-            <h2 className="text-4xl font-bold tracking-tight text-gray-900">
-              Create workgroup
-            </h2>
-            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">
-              Workgroup is the hub of proposals
-            </p>
-            <div className="mt-10 flex items-center justify-center">
+        <EmptyState
+          title="No events"
+          className="mt-24"
+          footer={
+            community?.workgroups?.length === 0 ? (
               <Link href={`/${query.entry}/create`}>
                 <Button primary icon={PlusIcon}>
-                  Create
+                  New Workgroup
                 </Button>
               </Link>
-            </div>
-          </div>
-        ) : (
-          <p className="mt-6 text-sm text-gray-500">No events</p>
-        )
+            ) : undefined
+          }
+        />
       ) : (
         <ul role="list" className="mt-1 space-y-1">
           {proposals?.map((proposal) => (
