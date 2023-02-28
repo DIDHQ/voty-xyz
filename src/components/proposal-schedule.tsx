@@ -2,7 +2,7 @@ import useStatus from '../hooks/use-status'
 import { Workgroup } from '../utils/schemas/workgroup'
 import { formatTime } from '../utils/time'
 import { DetailList, DetailItem } from './basic/detail'
-import ProposalPeriod from './proposal-period'
+import ProposalPeriodText from './proposal-period-text'
 
 export default function ProposalSchedule(props: {
   proposal?: string
@@ -13,10 +13,9 @@ export default function ProposalSchedule(props: {
   return (
     <DetailList title="Schedule">
       <DetailItem title="Period" className="overflow-y-visible">
-        <ProposalPeriod
+        <ProposalPeriodText
           proposal={props.proposal}
           duration={props.duration}
-          className="my-[-3px] translate-y-[-1px]"
         />
       </DetailItem>
       <DetailItem title="Start">
