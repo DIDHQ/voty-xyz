@@ -1,5 +1,3 @@
-import fetch from 'isomorphic-unfetch'
-
 export async function fetchJson<T>(
   input: RequestInfo | URL,
   init?: RequestInit,
