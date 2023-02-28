@@ -21,7 +21,6 @@ export default function ProposalPeriodText(props: {
           ? {
               [Period.PENDING]: 'text-gray-600',
               [Period.ANNOUNCING]: 'text-yellow-600',
-              [Period.ADDING_OPTION]: 'text-blue-600',
               [Period.VOTING]: 'text-green-600',
               [Period.ENDED]: 'text-red-600',
             }[period]

@@ -121,7 +121,7 @@ export default function ProposalPage(
             {workgroup?.permission.voting.operands.map((operand, index) => (
               <DetailItem
                 key={operand.function + index}
-                title={operand.alias || `Group ${index}`}
+                title={operand.name || `Group ${index}`}
                 className="truncate whitespace-nowrap"
               >
                 <Slide
@@ -134,7 +134,7 @@ export default function ProposalPage(
                   small
                 >
                   {() => (
-                    <DetailList title={operand.alias || `Group ${index}`}>
+                    <DetailList title={operand.name || `Group ${index}`}>
                       <DetailItem title="Base on">
                         {operand.arguments[0] === 'bit' ? '.bit' : 'SubDID'}
                       </DetailItem>

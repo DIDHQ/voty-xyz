@@ -53,10 +53,10 @@ export default function CommunityForm(props: {
       >
         <Grid6>
           <GridItem6>
-            <FormItem label="Logo" error={errors.extension?.avatar?.message}>
+            <FormItem label="Logo" error={errors.extension?.logo?.message}>
               <Controller
                 control={control}
-                name="extension.avatar"
+                name="extension.logo"
                 render={({ field: { value, onChange } }) => (
                   <AvatarInput
                     name={props.entry}
