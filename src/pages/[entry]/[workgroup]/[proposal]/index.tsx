@@ -286,12 +286,9 @@ export default function ProposalPage(
                           'max-w-0 truncate whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
                         )}
                       >
-                        <a
-                          href={permalink2Url(vote.permalink)}
-                          className="hover:text-primary-900 text-primary-600"
-                        >
+                        <TextButton href={permalink2Url(vote.permalink)}>
                           {vote.power}
-                        </a>
+                        </TextButton>
                       </td>
                     </tr>
                   ))}
