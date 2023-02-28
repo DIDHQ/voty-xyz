@@ -9,8 +9,16 @@ export default function Button(
     large?: boolean
   },
 ) {
-  const { primary, loading, disabled, children, className, ...restProps } =
-    props
+  const {
+    icon: Icon,
+    primary,
+    loading,
+    large,
+    disabled,
+    children,
+    className,
+    ...restProps
+  } = props
 
   return (
     <button
@@ -18,7 +26,7 @@ export default function Button(
       disabled={loading || disabled}
       className={clsx(
         'group flex items-center rounded border font-medium focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500',
-        props.large ? 'px-6 py-3 text-base' : 'px-4 py-2 text-sm',
+        large ? 'px-6 py-3 text-base' : 'px-4 py-2 text-sm',
         primary
           ? 'border-transparent bg-primary-600 text-white hover:bg-primary-700'
           : 'border-gray-200 bg-white hover:bg-gray-50',
@@ -46,8 +54,8 @@ export default function Button(
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           />
         </svg>
-      ) : props.icon ? (
-        <props.icon
+      ) : Icon ? (
+        <Icon
           className={clsx(children ? '-ml-1 mr-3' : undefined, 'h-5 w-5')}
         />
       ) : null}
