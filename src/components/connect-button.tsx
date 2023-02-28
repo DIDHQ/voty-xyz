@@ -38,7 +38,7 @@ export default function ConnectButton() {
                 ) : (
                   <Avatar size={9} name={account.address} variant="beam" />
                 )}
-                <div className="ml-2 hidden text-start sm:block">
+                <div className="group ml-2 hidden text-start sm:block">
                   <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
                     {coinTypeNames[account.coinType]}
                   </p>
