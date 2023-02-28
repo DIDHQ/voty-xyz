@@ -1,7 +1,4 @@
-import { Listbox } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/20/solid'
 import { useQuery } from '@tanstack/react-query'
-import clsx from 'clsx'
 import Decimal from 'decimal.js'
 import dynamic from 'next/dynamic'
 import pMap from 'p-map'
@@ -11,6 +8,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useMemo,
 } from 'react'
 import { useFormContext } from 'react-hook-form'
 
@@ -24,8 +22,8 @@ import { Workgroup } from '../../utils/schemas/workgroup'
 import { trpc } from '../../utils/trpc'
 import { Snapshots } from '../../utils/types'
 import Button from '../basic/button'
+import Combobox from '../basic/combobox'
 import Notification from '../basic/notification'
-import Select from '../basic/select'
 
 const Tooltip = dynamic(
   () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
@@ -44,7 +42,7 @@ export default function SigningVoteButton(props: {
   waiting?: boolean
   children: ReactNode
 }) {
-  const { onSuccess } = props
+  const { onSuccess, onChange } = props
   const { account } = useWallet()
   const { data: dids } = useDids(account, props.snapshots)
   const { handleSubmit: onSubmit } = useFormContext<Vote>()
@@ -98,6 +96,26 @@ export default function SigningVoteButton(props: {
     }
   }, [handleCreate.data, handleCreate.isSuccess, onSuccess, refetch])
   const id = useId()
+  const didOptions = useMemo(
+    () =>
+      voted && powers && dids
+        ? dids.map((did) => ({
+            did,
+            label: `${powers[did]}${voted[did] ? ' (voted)' : ''}`,
+            disabled: !!voted[did] || !powers[did],
+          }))
+        : undefined,
+    [dids, powers, voted],
+  )
+  const defaultDid = useMemo(
+    () => didOptions?.find(({ disabled }) => !disabled)?.did,
+    [didOptions],
+  )
+  useEffect(() => {
+    if (defaultDid) {
+      onChange(defaultDid)
+    }
+  }, [defaultDid, onChange])
 
   return (
     <>
@@ -107,64 +125,10 @@ export default function SigningVoteButton(props: {
       <Notification show={handleSign.status === 'error'}>
         {handleSign.error?.message}
       </Notification>
-      <Select
+      <Combobox
+        label="Select a DID as voter"
         top
-        options={dids}
-        renderItem={(option) => (
-          <Listbox.Option
-            key={option}
-            value={option}
-            disabled={!!voted?.[option] || !powers?.[option]}
-            className={({ active, disabled }) =>
-              clsx(
-                active
-                  ? 'bg-primary-600 text-white'
-                  : disabled
-                  ? 'cursor-not-allowed text-gray-400'
-                  : 'text-gray-900',
-                'relative cursor-default select-none py-2 pl-3 pr-9',
-              )
-            }
-          >
-            {({ selected, active, disabled }) => (
-              <>
-                <div className="flex">
-                  <span
-                    className={clsx(
-                      selected ? 'font-semibold' : 'font-normal',
-                      'truncate',
-                    )}
-                  >
-                    {option}
-                  </span>
-                  <span
-                    className={clsx(
-                      active
-                        ? 'text-primary-200'
-                        : disabled
-                        ? 'text-gray-400'
-                        : 'text-gray-500',
-                      'ml-2 truncate',
-                    )}
-                  >
-                    {powers?.[option].toString()}
-                    {voted?.[option] ? ' voted' : null}
-                  </span>
-                </div>
-                {selected ? (
-                  <span
-                    className={clsx(
-                      active ? 'text-white' : 'text-primary-600',
-                      'absolute inset-y-0 right-0 flex items-center pr-4',
-                    )}
-                  >
-                    <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                ) : null}
-              </>
-            )}
-          </Listbox.Option>
-        )}
+        options={didOptions}
         value={props.value}
         onChange={props.onChange}
         className="w-full flex-1 sm:w-auto sm:flex-none"
@@ -173,6 +137,7 @@ export default function SigningVoteButton(props: {
         <>
           <div data-tooltip-id={id} data-tooltip-place="top" className="mt-6">
             <Button
+              large
               primary
               icon={props.icon}
               onClick={onSubmit(handleSign.execute, console.error)}
@@ -190,6 +155,7 @@ export default function SigningVoteButton(props: {
         </>
       ) : (
         <Button
+          large
           primary
           icon={props.icon}
           onClick={onSubmit(handleSign.execute, console.error)}

@@ -5,6 +5,7 @@ import clsx from 'clsx'
 
 type Option = {
   did: string
+  label?: string
   disabled?: boolean
 }
 
@@ -101,6 +102,16 @@ export default function Combobox(props: {
                           is {disabled ? 'offline' : 'online'}
                         </span>
                       </span>
+                      {option.label ? (
+                        <span
+                          className={clsx(
+                            'mx-2 truncate text-gray-500',
+                            active ? 'text-indigo-200' : 'text-gray-500',
+                          )}
+                        >
+                          {option.label}
+                        </span>
+                      ) : null}
                     </div>
                     {selected && (
                       <span
