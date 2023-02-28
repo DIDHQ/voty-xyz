@@ -22,9 +22,8 @@ import {
   documentTitle,
 } from '../../../../utils/constants'
 import { appRouter } from '../../../../server/routers/_app'
-import VoteForm from '../../../../components/vote-form'
 import useRouterQuery from '../../../../hooks/use-router-query'
-import Slide from '../../../../components/basic/slide'
+import VoteForm from '../../../../components/vote-form'
 
 const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
   ssr: false,
@@ -43,6 +42,10 @@ const ProposalSchedule = dynamic(
     ),
   },
 )
+
+const Slide = dynamic(() => import('../../../../components/basic/slide'), {
+  ssr: false,
+})
 
 export const getServerSideProps: GetServerSideProps<{
   proposal: string
