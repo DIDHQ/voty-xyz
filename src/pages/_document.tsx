@@ -37,6 +37,10 @@ export default function MyDocument() {
           sizes="167x167"
           href="/icons/touch-icon-ipad-retina.png"
         />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
 
         <link
           rel="icon"
