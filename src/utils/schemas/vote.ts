@@ -9,7 +9,7 @@ export const voteSchema = z.object({
     .string()
     .refine(
       (choice) =>
-        !choiceIsEmpty('single', choice) && !choiceIsEmpty('multiple', choice),
+        !choiceIsEmpty('single', choice) && !choiceIsEmpty('approval', choice),
       { message: 'Empty choice' },
     ),
   power: z.string().refine(

@@ -1,8 +1,10 @@
 import Decimal from 'decimal.js'
 import { uniq, without } from 'lodash-es'
 
+import { Proposal } from './schemas/proposal'
+
 export function updateChoice(
-  type: 'single' | 'multiple',
+  type: Proposal['voting_type'],
   choice: string,
   option: string,
 ): string {
@@ -10,7 +12,7 @@ export function updateChoice(
     if (type === 'single') {
       return JSON.stringify(option)
     }
-    if (type === 'multiple') {
+    if (type === 'approval') {
       const array = JSON.parse(choice || '[]') as string[]
       return JSON.stringify(
         array.includes(option)
@@ -25,7 +27,7 @@ export function updateChoice(
 }
 
 export function checkChoice(
-  type: 'single' | 'multiple',
+  type: Proposal['voting_type'],
   choice: string,
   option: string,
 ): boolean {
@@ -33,7 +35,7 @@ export function checkChoice(
     if (type === 'single') {
       return JSON.parse(choice) === option
     }
-    if (type === 'multiple') {
+    if (type === 'approval') {
       return (JSON.parse(choice || '[]') as string[]).includes(option)
     }
     return false
@@ -43,7 +45,7 @@ export function checkChoice(
 }
 
 export function powerOfChoice(
-  type: 'single' | 'multiple',
+  type: Proposal['voting_type'],
   choice: string,
   power: Decimal,
 ): { [option: string]: Decimal | undefined } {
@@ -51,7 +53,7 @@ export function powerOfChoice(
     if (type === 'single') {
       return { [JSON.parse(choice) as string]: power }
     }
-    if (type === 'multiple') {
+    if (type === 'approval') {
       const array = JSON.parse(choice || '[]') as string[]
       return array.reduce((obj, option) => {
         obj[option] = power.dividedBy(array.length)
@@ -65,24 +67,24 @@ export function powerOfChoice(
 }
 
 export function choiceIsEmpty(
-  type: 'single' | 'multiple',
+  type: Proposal['voting_type'],
   choice: string,
 ): boolean {
   if (type === 'single') {
     return !choice
   }
-  if (type === 'multiple') {
+  if (type === 'approval') {
     return !choice || choice === '[]'
   }
   return true
 }
 
-export function stringifyChoice(type: 'single' | 'multiple', choice: string) {
+export function stringifyChoice(type: Proposal['voting_type'], choice: string) {
   try {
     if (type === 'single') {
       return JSON.parse(choice) as string
     }
-    if (type === 'multiple') {
+    if (type === 'approval') {
       return (JSON.parse(choice || '[]') as string[]).sort().join(', ')
     }
     return ''

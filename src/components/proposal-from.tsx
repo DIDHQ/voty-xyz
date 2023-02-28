@@ -3,7 +3,7 @@ import pMap from 'p-map'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
-import { startCase, uniq } from 'lodash-es'
+import { uniq } from 'lodash-es'
 import dynamic from 'next/dynamic'
 import { HandRaisedIcon } from '@heroicons/react/20/solid'
 import { Entry } from '@prisma/client'
@@ -17,7 +17,6 @@ import Textarea from '../components/basic/textarea'
 import TextButton from '../components/basic/text-button'
 import { Form, FormItem, FormSection } from '../components/basic/form'
 import { Grid6, GridItem6 } from '../components/basic/grid'
-import RadioGroup from '../components/basic/radio-group'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import PreviewMarkdown from '../components/preview-markdown'
 import useStatus from '../hooks/use-status'
@@ -36,6 +35,19 @@ const SigningProposalButton = dynamic(
   () => import('../components/signing/signing-proposal-button'),
   { ssr: false },
 )
+
+const options = [
+  {
+    id: 'single',
+    name: 'Single choice',
+    description: 'Choose only one option',
+  },
+  {
+    id: 'approval',
+    name: 'Approval',
+    description: 'Approve a certain number of options',
+  },
+]
 
 export default function ProposalForm(props: {
   community: Authorized<Community> & Serialize<{ entry: Entry }>
@@ -138,14 +150,6 @@ export default function ProposalForm(props: {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
-  const options = useMemo(
-    () =>
-      proposalSchema.shape.voting_type.options.map((option) => ({
-        value: option,
-        name: startCase(option),
-      })),
-    [],
-  )
   const { data: status } = useStatus(community?.entry.community)
   const disabled = useMemo(
     () => didOptions?.filter(({ disabled }) => !disabled).length === 0,
@@ -184,11 +188,37 @@ export default function ProposalForm(props: {
                 control={control}
                 name="voting_type"
                 render={({ field: { value, onChange } }) => (
-                  <RadioGroup
-                    options={options}
-                    value={value}
-                    onChange={onChange}
-                  />
+                  <div className="space-y-4">
+                    {options.map((plan) => (
+                      <div key={plan.id} className="relative flex items-start">
+                        <div className="flex h-5 items-center">
+                          <input
+                            id={plan.id}
+                            aria-describedby={`${plan.id}-description`}
+                            name="plan"
+                            type="radio"
+                            checked={value === plan.id}
+                            onClick={() => onChange(plan.id)}
+                            className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                          />
+                        </div>
+                        <div className="ml-3 text-sm">
+                          <label
+                            htmlFor={plan.id}
+                            className="font-medium text-gray-700"
+                          >
+                            {plan.name}
+                          </label>
+                          <p
+                            id={`${plan.id}-description`}
+                            className="text-gray-500"
+                          >
+                            {plan.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               />
             </FormItem>
