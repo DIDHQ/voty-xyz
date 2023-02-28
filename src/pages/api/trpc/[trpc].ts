@@ -7,7 +7,7 @@ export default createNextApiHandler({
   router: appRouter,
   responseMeta({ type, errors }) {
     if (errors.length === 0 && type === 'query') {
-      return { headers: { 'Cache-Control': cacheControl } }
+      return { headers: { [cacheControl[0]]: cacheControl[1] } }
     }
     return {}
   },

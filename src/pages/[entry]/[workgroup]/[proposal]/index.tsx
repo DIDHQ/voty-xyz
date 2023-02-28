@@ -52,7 +52,7 @@ export const getServerSideProps: GetServerSideProps<{
   const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
   await ssg.proposal.getByPermalink.prefetch({ permalink: proposal })
 
-  res.setHeader('Cache-Control', cacheControl)
+  res.setHeader(...cacheControl)
   return { props: { trpcState: ssg.dehydrate(), proposal } }
 }
 
