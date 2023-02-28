@@ -87,7 +87,7 @@ export default function DidCombobox(props: {
                       <span
                         className={clsx(
                           'inline-block h-2 w-2 shrink-0 rounded-full',
-                          disabled ? 'bg-gray-200' : 'bg-green-400',
+                          disabled ? 'bg-gray-200' : 'bg-primary-400',
                         )}
                         aria-hidden="true"
                       />
