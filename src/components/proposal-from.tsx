@@ -58,7 +58,7 @@ export default function ProposalForm(props: {
   const { community, workgroup, onSuccess } = props
   const methods = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
-    defaultValues: { options: [''], voting_type: 'single' },
+    defaultValues: { options: ['', ''], voting_type: 'single' },
   })
   const {
     register,
@@ -261,7 +261,7 @@ export default function ProposalForm(props: {
                       )}
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
-                      {watch('options')?.length > 1 ? (
+                      {watch('options')?.length > 2 ? (
                         <OptionRemove
                           index={index}
                           onDelete={handleOptionDelete}
