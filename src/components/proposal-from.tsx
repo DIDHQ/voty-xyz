@@ -93,7 +93,7 @@ export default function ProposalForm(props: {
       refetchInterval: 30000,
     },
   )
-  const { account } = useWallet()
+  const { account, connect } = useWallet()
   const { data: dids } = useDids(account, snapshots)
   const { data: disables } = useQuery(
     [dids, props.workgroup?.permission.proposing, snapshots],
@@ -125,6 +125,9 @@ export default function ProposalForm(props: {
     () => didOptions?.find(({ disabled }) => !disabled)?.did,
     [didOptions],
   )
+  useEffect(() => {
+    setDid('')
+  }, [account])
   useEffect(() => {
     if (defaultDid) {
       setDid(defaultDid)
@@ -244,6 +247,11 @@ export default function ProposalForm(props: {
           options={didOptions}
           value={did}
           onChange={setDid}
+          disabled={didOptions?.length === 0}
+          onClick={connect}
+          placeholder={
+            didOptions?.length === 0 ? 'No available DIDs' : undefined
+          }
           className="w-full flex-1 sm:w-auto sm:flex-none"
         />
         <FormProvider {...methods}>

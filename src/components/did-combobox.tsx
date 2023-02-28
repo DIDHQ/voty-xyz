@@ -16,6 +16,8 @@ export default function DidCombobox(props: {
   value: string
   onChange(value: string): void
   disabled?: boolean
+  placeholder?: string
+  onClick?: () => void
   className?: string
 }) {
   const [query, setQuery] = useState('')
@@ -39,9 +41,11 @@ export default function DidCombobox(props: {
       </HeadlessCombobox.Label>
       <div className="relative mt-1">
         <HeadlessCombobox.Input
-          placeholder="No DID found"
+          placeholder={props.placeholder}
+          onClick={props.onClick}
+          disabled={props.disabled}
           onChange={(event) => setQuery(event.target.value)}
-          className="w-full rounded border border-gray-300 bg-white py-2 pl-3 pr-10 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-sm"
+          className="w-full rounded border border-gray-300 bg-white py-2 pl-3 pr-10 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed sm:text-sm"
         />
         <HeadlessCombobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r px-2 focus:outline-none">
           <ChevronUpDownIcon

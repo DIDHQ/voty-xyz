@@ -43,7 +43,7 @@ export default function SigningVoteButton(props: {
   children: ReactNode
 }) {
   const { onSuccess, onChange } = props
-  const { account } = useWallet()
+  const { account, connect } = useWallet()
   const { data: dids } = useDids(account, props.snapshots)
   const { handleSubmit: onSubmit } = useFormContext<Vote>()
   const signDocument = useSignDocument(
@@ -112,9 +112,7 @@ export default function SigningVoteButton(props: {
     [didOptions],
   )
   useEffect(() => {
-    if (defaultDid) {
-      onChange(defaultDid)
-    }
+    onChange(defaultDid || '')
   }, [defaultDid, onChange])
 
   return (
@@ -131,6 +129,9 @@ export default function SigningVoteButton(props: {
         options={didOptions}
         value={props.value}
         onChange={props.onChange}
+        disabled={didOptions?.length === 0}
+        onClick={connect}
+        placeholder={didOptions?.length === 0 ? 'No available DIDs' : undefined}
         className="w-full flex-1 sm:w-auto sm:flex-none"
       />
       {props.waiting ? (
