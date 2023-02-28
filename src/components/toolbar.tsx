@@ -2,7 +2,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 
 import TextButton from './basic/text-button'
-import { isTestnet, documentTitle } from '../utils/constants'
+import { isTestnet } from '../utils/constants'
 
 const ConnectButton = dynamic(() => import('./connect-button'), { ssr: false })
 

@@ -95,9 +95,6 @@ export default function CommunityNav(props: { className?: string }) {
     <>
       <Head>
         <title>{title}</title>
-        {community?.extension?.avatar ? (
-          <link rel="icon" href={community?.extension?.avatar} />
-        ) : null}
       </Head>
       <aside className={clsx('relative', props.className)}>
         <StatusIcon
