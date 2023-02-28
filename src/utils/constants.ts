@@ -53,9 +53,17 @@ export const coinTypeToChainId: { [coinType: number]: number } = {
 export const coinTypeNames: { [coinType: number]: string } = {
   [commonCoinTypes.ETH]: 'Ethereum',
   [commonCoinTypes.TRX]: 'Tron',
-  [commonCoinTypes.CKB]: 'Nervos',
+  [commonCoinTypes.CKB]: 'Nervos CKB',
   [commonCoinTypes.MATIC]: 'Polygon',
   [commonCoinTypes.BSC]: 'BNB Chain',
+}
+
+export const coinTypeExplorers: { [coinType: number]: string } = {
+  [commonCoinTypes.ETH]: 'https://etherscan.io/block/',
+  [commonCoinTypes.TRX]: 'https://tronscan.org/#/block/',
+  [commonCoinTypes.CKB]: 'https://explorer.nervos.org/block/',
+  [commonCoinTypes.MATIC]: 'https://polygonscan.com/block/',
+  [commonCoinTypes.BSC]: 'https://bscscan.com/block/',
 }
 
 export enum DataType {
