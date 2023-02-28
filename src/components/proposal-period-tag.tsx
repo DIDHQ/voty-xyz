@@ -2,21 +2,28 @@ import clsx from 'clsx'
 import { useMemo } from 'react'
 
 import useStatus from '../hooks/use-status'
+import useWorkgroup from '../hooks/use-workgroup'
 import { getPeriod, Period } from '../utils/period'
-import type { Workgroup } from '../utils/schemas/workgroup'
+import { Proposal } from '../utils/schemas/proposal'
+import { trpc } from '../utils/trpc'
 
 export default function ProposalPeriodTag(props: {
-  proposal?: string
-  duration?: Workgroup['duration']
+  proposal?: Proposal & { permalink: string }
   className?: string
 }) {
-  const { data: status, isLoading } = useStatus(props.proposal)
+  const { data: status, isLoading } = useStatus(props.proposal?.permalink)
+  const { data: community, isLoading: isCommunityLoading } =
+    trpc.community.getByPermalink.useQuery(
+      { permalink: props.proposal?.community },
+      { enabled: !!props.proposal?.community, refetchOnWindowFocus: false },
+    )
+  const workgroup = useWorkgroup(community, props.proposal?.workgroup)
   const period = useMemo(
-    () => getPeriod(new Date(), status?.timestamp, props.duration),
-    [props.duration, status?.timestamp],
+    () => getPeriod(new Date(), status?.timestamp, workgroup?.duration),
+    [workgroup?.duration, status?.timestamp],
   )
 
-  return isLoading ? null : (
+  return isLoading || isCommunityLoading ? null : (
     <span
       className={clsx(
         'inline-flex items-center rounded-full border px-3 py-0.5 text-sm font-medium',
