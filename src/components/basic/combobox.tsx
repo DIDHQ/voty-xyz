@@ -9,11 +9,13 @@ type Option = {
 }
 
 export default function Combobox(props: {
+  top?: boolean
   options?: Option[]
   label?: string
   value: string
   onChange(value: string): void
   disabled?: boolean
+  className?: string
 }) {
   const [query, setQuery] = useState('')
   const filteredOptions =
@@ -29,22 +31,28 @@ export default function Combobox(props: {
       value={props.value}
       onChange={props.onChange}
       disabled={props.disabled}
+      className={props.className}
     >
       <HeadlessCombobox.Label className="block text-sm font-medium text-gray-700">
         {props.label}
       </HeadlessCombobox.Label>
       <div className="relative mt-1">
         <HeadlessCombobox.Input
-          className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-sm"
+          className="w-full rounded border border-gray-300 bg-white py-2 pl-3 pr-10 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-sm"
           onChange={(event) => setQuery(event.target.value)}
         />
-        <HeadlessCombobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+        <HeadlessCombobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r px-2 focus:outline-none">
           <ChevronUpDownIcon
             className="h-5 w-5 text-gray-400"
             aria-hidden="true"
           />
         </HeadlessCombobox.Button>
-        <HeadlessCombobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+        <HeadlessCombobox.Options
+          className={clsx(
+            'absolute z-10 max-h-60 w-full overflow-auto rounded bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm',
+            props.top ? 'bottom-full mb-1' : 'top-full mt-1',
+          )}
+        >
           {filteredOptions?.length === 0 && query !== '' ? (
             <div className="relative cursor-default select-none py-2 px-4 text-start text-gray-700">
               Nothing found
