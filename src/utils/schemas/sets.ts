@@ -7,7 +7,7 @@ export const booleanUnitSchema = z.discriminatedUnion('function', [
     function: z.literal('prefixes_dot_suffix_exact_match'),
     arguments: z.tuple([
       z.string().min(1),
-      z.array(z.string().min(1, 'required')),
+      z.array(z.string().min(1, 'Required')),
     ]),
   }),
 ])
@@ -27,7 +27,7 @@ export const decimalUnitSchema = z.discriminatedUnion('function', [
     function: z.literal('prefixes_dot_suffix_fixed_power'),
     arguments: z.tuple([
       z.string().min(1),
-      z.array(z.string().min(1, 'required')),
+      z.array(z.string().min(1, 'Required')),
       z.string().refine(
         (power) => {
           try {
@@ -36,7 +36,7 @@ export const decimalUnitSchema = z.discriminatedUnion('function', [
             return false
           }
         },
-        { message: 'power is not decimal' },
+        { message: 'Power is not decimal' },
       ),
     ]),
   }),

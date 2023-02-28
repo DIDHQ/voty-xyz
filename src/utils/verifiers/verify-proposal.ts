@@ -23,7 +23,7 @@ export default async function verifyProposal(
     getByPermalink(DataType.COMMUNITY, proposal.community),
   ])
   if (!timestamp || !data) {
-    throw new TRPCError({ code: 'BAD_REQUEST', message: 'community not found' })
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Community not found' })
   }
   const community = data.data
 
@@ -31,7 +31,7 @@ export default async function verifyProposal(
     ({ id }) => id === proposal.workgroup,
   )
   if (!workgroup) {
-    throw new TRPCError({ code: 'BAD_REQUEST', message: 'workgroup not found' })
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Workgroup not found' })
   }
 
   if (
@@ -43,7 +43,7 @@ export default async function verifyProposal(
   ) {
     throw new TRPCError({
       code: 'FORBIDDEN',
-      message: 'does not have proposing permission',
+      message: 'Proposing permission denied',
     })
   }
 

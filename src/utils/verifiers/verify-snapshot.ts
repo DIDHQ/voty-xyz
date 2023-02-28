@@ -11,6 +11,6 @@ export default async function verifySnapshot(
     authorship.snapshot,
   )
   if (Date.now() - timestamp.getTime() > 30 * 60 * 1000) {
-    throw new TRPCError({ code: 'BAD_REQUEST', message: 'snapshot too old' })
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Stale snapshot' })
   }
 }

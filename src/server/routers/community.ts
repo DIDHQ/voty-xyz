@@ -134,7 +134,7 @@ export const communityRouter = router({
                 )
               }),
             ),
-          { message: 'invalid proposing permission' },
+          { message: 'Invalid proposing permission' },
         )
         .refine(
           (community) =>
@@ -148,7 +148,7 @@ export const communityRouter = router({
                 )
               }),
             ),
-          { message: 'invalid voting permission' },
+          { message: 'Invalid voting permission' },
         ),
     )
     .output(z.string())

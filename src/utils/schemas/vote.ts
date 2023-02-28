@@ -10,7 +10,7 @@ export const voteSchema = z.object({
     .refine(
       (choice) =>
         !choiceIsEmpty('single', choice) && !choiceIsEmpty('multiple', choice),
-      { message: 'empty choice' },
+      { message: 'Empty choice' },
     ),
   power: z.string().refine(
     (power) => {
@@ -20,7 +20,7 @@ export const voteSchema = z.object({
         return false
       }
     },
-    { message: 'negative power not allowed' },
+    { message: 'Negative power not allowed' },
   ),
 })
 

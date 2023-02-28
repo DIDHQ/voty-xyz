@@ -27,7 +27,7 @@ export default async function verifyVote(
     getByPermalink(DataType.PROPOSAL, vote.proposal),
   ])
   if (!timestamp || !data) {
-    throw new TRPCError({ code: 'BAD_REQUEST', message: 'proposal not found' })
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Proposal not found' })
   }
   const proposal = data.data
   const { community, workgroup } = await verifyProposal(proposal)
@@ -35,7 +35,7 @@ export default async function verifyVote(
   if (getPeriod(new Date(), timestamp, workgroup.duration) !== Period.VOTING) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
-      message: 'not in voting period',
+      message: 'Not in voting period',
     })
   }
 
@@ -47,7 +47,7 @@ export default async function verifyVote(
   if (!votingPower.eq(vote.power)) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
-      message: 'voting power not match',
+      message: 'Voting power not match',
     })
   }
 

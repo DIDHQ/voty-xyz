@@ -12,11 +12,11 @@ export default async function verifyAuthorship(
   if ((authorship.testnet || false) !== isTestnet) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
-      message: 'mainnet testnet mismatch',
+      message: 'Mainnet testnet mismatch',
     })
   }
 
   if (!(await checkDidAuthorshipProof(authorship, proof))) {
-    throw new TRPCError({ code: 'FORBIDDEN', message: 'invalid authorship' })
+    throw new TRPCError({ code: 'FORBIDDEN', message: 'Invalid authorship' })
   }
 }

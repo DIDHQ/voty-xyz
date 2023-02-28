@@ -10,6 +10,6 @@ export default async function verifyProof<T extends object>(
   const { proof, ...rest } = document
 
   if (!(await verifyDocument(rest, proof, verifyMessage))) {
-    throw new TRPCError({ code: 'FORBIDDEN', message: 'invalid proof' })
+    throw new TRPCError({ code: 'FORBIDDEN', message: 'Invalid proof' })
   }
 }
