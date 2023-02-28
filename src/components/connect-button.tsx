@@ -7,7 +7,11 @@ import '@rainbow-me/rainbowkit/styles.css'
 import useWallet from '../hooks/use-wallet'
 import Button from './basic/button'
 import Avatar from './basic/avatar'
-import { chainIdToCoinType, coinTypeNames } from '../utils/constants'
+import {
+  chainIdToCoinType,
+  coinTypeLogos,
+  coinTypeNames,
+} from '../utils/constants'
 
 export default function ConnectButton() {
   const { account, displayAddress, disconnect } = useWallet()
@@ -24,7 +28,15 @@ export default function ConnectButton() {
         account ? (
           <Menu as="div" className="relative inline-block text-left">
             <Menu.Button className="flex items-center">
-              <Avatar size={9} name={account.address} variant="beam" />
+              {coinTypeLogos[account.coinType] ? (
+                <img
+                  src={coinTypeLogos[account.coinType]}
+                  alt="logo"
+                  className="h-9 w-9"
+                />
+              ) : (
+                <Avatar size={9} name={account.address} variant="beam" />
+              )}
               <div className="ml-2 hidden text-start sm:block">
                 <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
                   {coinTypeNames[account.coinType]}

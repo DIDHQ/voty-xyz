@@ -174,7 +174,7 @@ export default function ProposalPage(
                 ([coinType, snapshot]) => (
                   <DetailItem
                     key={coinType}
-                    title={coinTypeNames[parseInt(coinType)]}
+                    title={coinTypeNames[parseInt(coinType)] || coinType}
                   >
                     <TextButton
                       href={`${

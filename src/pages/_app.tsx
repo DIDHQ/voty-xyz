@@ -37,8 +37,9 @@ const { chains, provider } = configureChains(
   [
     jsonRpcProvider({
       rpc(chain) {
-        return { http: chainIdToRpc[chain.id] }
+        return { http: chainIdToRpc[chain.id] || '' }
       },
+      static: true,
     }),
   ],
 )

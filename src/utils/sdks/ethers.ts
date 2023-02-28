@@ -5,7 +5,7 @@ import { verifyMessage, getAddress, sha256 } from 'ethers/lib/utils.js'
 import { chainIdToRpc, coinTypeToChainId } from '../constants'
 
 export const providers = mapValues(coinTypeToChainId, (chainId) => {
-  const rpc = chainIdToRpc[chainId]
+  const rpc = chainIdToRpc[chainId!]
   return rpc ? new StaticJsonRpcProvider(rpc, chainId) : undefined
 })
 

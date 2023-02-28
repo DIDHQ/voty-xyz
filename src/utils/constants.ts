@@ -4,7 +4,6 @@ export const documentTitle = 'Voty'
 
 export const commonCoinTypes = {
   ETH: 60,
-  TRX: 195,
   CKB: 309,
   AR: 472,
   MATIC: 966,
@@ -20,7 +19,7 @@ export const commonChainIds = {
   POLYGON_MUMBAI: 80001,
 }
 
-export const chainIdToRpc: { [chainId: number]: string } = {
+export const chainIdToRpc: { [chainId: number]: string | undefined } = {
   [commonChainIds.ETH]: 'https://rpc.ankr.com/eth',
   [commonChainIds.ETH_GOERLI]: 'https://rpc.ankr.com/eth_goerli',
   [commonChainIds.BSC]: 'https://rpc.ankr.com/bsc',
@@ -29,7 +28,7 @@ export const chainIdToRpc: { [chainId: number]: string } = {
   [commonChainIds.POLYGON_MUMBAI]: 'https://rpc.ankr.com/polygon_mumbai',
 }
 
-export const chainIdToCoinType: { [chainId: number]: number } = {
+export const chainIdToCoinType: { [chainId: number]: number | undefined } = {
   [isTestnet ? commonChainIds.ETH_GOERLI : commonChainIds.ETH]:
     commonCoinTypes.ETH,
   [isTestnet ? commonChainIds.BSC_CHAPEL : commonChainIds.BSC]:
@@ -38,7 +37,7 @@ export const chainIdToCoinType: { [chainId: number]: number } = {
     commonCoinTypes.MATIC,
 }
 
-export const coinTypeToChainId: { [coinType: number]: number } = {
+export const coinTypeToChainId: { [coinType: number]: number | undefined } = {
   [commonCoinTypes.ETH]: isTestnet
     ? commonChainIds.ETH_GOERLI
     : commonChainIds.ETH,
@@ -50,20 +49,24 @@ export const coinTypeToChainId: { [coinType: number]: number } = {
     : commonChainIds.BSC,
 }
 
-export const coinTypeNames: { [coinType: number]: string } = {
+export const coinTypeNames: { [coinType: number]: string | undefined } = {
   [commonCoinTypes.ETH]: 'Ethereum',
-  [commonCoinTypes.TRX]: 'Tron',
   [commonCoinTypes.CKB]: 'Nervos CKB',
   [commonCoinTypes.MATIC]: 'Polygon',
   [commonCoinTypes.BSC]: 'BNB Chain',
 }
 
-export const coinTypeExplorers: { [coinType: number]: string } = {
+export const coinTypeExplorers: { [coinType: number]: string | undefined } = {
   [commonCoinTypes.ETH]: 'https://etherscan.io/block/',
-  [commonCoinTypes.TRX]: 'https://tronscan.org/#/block/',
   [commonCoinTypes.CKB]: 'https://explorer.nervos.org/block/',
   [commonCoinTypes.MATIC]: 'https://polygonscan.com/block/',
   [commonCoinTypes.BSC]: 'https://bscscan.com/block/',
+}
+
+export const coinTypeLogos: { [coinType: number]: string | undefined } = {
+  [commonCoinTypes.ETH]: `/chains/${commonCoinTypes.ETH}.svg`,
+  [commonCoinTypes.MATIC]: `/chains/${commonCoinTypes.MATIC}.svg`,
+  [commonCoinTypes.BSC]: `/chains/${commonCoinTypes.BSC}.svg`,
 }
 
 export enum DataType {
