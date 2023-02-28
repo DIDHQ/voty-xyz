@@ -27,7 +27,6 @@
     "@trpc/react-query": "^10.13.0",
     "@trpc/server": "^10.13.0",
     "arweave": "^1.13.0",
-    "boring-avatars": "^1.7.0",
     "browser-image-compression": "^2.0.0",
     "clsx": "^1.2.1",
     "dayjs": "^1.11.7",

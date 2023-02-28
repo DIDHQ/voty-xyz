@@ -1,8 +1,5 @@
 import clsx from 'clsx'
-import dynamic from 'next/dynamic'
 import { useMemo } from 'react'
-
-const BoringAvatar = dynamic(() => import('boring-avatars'), { ssr: false })
 
 export default function Avatar(props: {
   size: number
@@ -38,10 +35,6 @@ export default function Avatar(props: {
       className={className}
     />
   ) : (
-    <div style={style} className={className}>
-      {props.name ? (
-        <BoringAvatar size={size} name={props.name} variant={props.variant} />
-      ) : null}
-    </div>
+    <div style={style} className={className} />
   )
 }
