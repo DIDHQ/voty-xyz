@@ -3,8 +3,10 @@ import { useMemo } from 'react'
 import { useAccount, useDisconnect, useNetwork, useSignMessage } from 'wagmi'
 
 import { chainIdToCoinType, coinTypeToChainId } from '../utils/constants'
+import useIsMounted from './use-is-mounted'
 
 export default function useWallet() {
+  const isMounted = useIsMounted()
   const account = useAccount()
   const network = useNetwork()
   const { signMessageAsync } = useSignMessage()
@@ -18,11 +20,11 @@ export default function useWallet() {
   return useMemo(
     () => ({
       account:
-        coinType && account.address
+        isMounted && coinType && account.address
           ? { coinType, address: account.address }
           : undefined,
       displayAddress:
-        coinType && account.address
+        isMounted && coinType && account.address
           ? `${account.address.substring(0, 5)}...${account.address.substring(
               38,
             )}`
@@ -44,6 +46,13 @@ export default function useWallet() {
       connect: () => openConnectModal?.(),
       disconnect: () => disconnect(),
     }),
-    [coinType, account.address, signMessageAsync, openConnectModal, disconnect],
+    [
+      isMounted,
+      coinType,
+      account.address,
+      signMessageAsync,
+      openConnectModal,
+      disconnect,
+    ],
   )
 }
