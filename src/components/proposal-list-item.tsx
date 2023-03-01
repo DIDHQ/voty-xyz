@@ -40,9 +40,9 @@ export default function ProposalListItem(props: {
         </p>
         <ProposalPeriodTag proposal={props.proposal} className="ml-4" />
       </div>
-      {props.proposal.extension?.body ? (
+      {props.proposal.extension?.content ? (
         <p className="text-gray-600 line-clamp-3">
-          {props.proposal.extension.body}
+          {props.proposal.extension.content}
         </p>
       ) : null}
       <div className="flex w-full items-center justify-start text-sm text-gray-400">

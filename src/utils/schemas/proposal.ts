@@ -14,7 +14,7 @@ export const proposalSchema = z.object({
   snapshots: z.record(z.string(), z.string()),
   extension: z
     .object({
-      body: z.string().optional(),
+      content: z.string().optional(),
     })
     .optional(),
 })

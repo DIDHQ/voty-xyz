@@ -235,7 +235,7 @@ export default function ProposalPage(
               <h3 className="mt-4 break-words text-3xl font-bold leading-8 tracking-tight text-gray-900 line-clamp-2 sm:text-4xl">
                 {proposal?.title}
               </h3>
-              <Article className="mt-8">{proposal?.extension?.body}</Article>
+              <Article className="mt-8">{proposal?.extension?.content}</Article>
             </div>
             {renderCard('block sm:hidden mb-6')}
             <VoteForm

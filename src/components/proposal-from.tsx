@@ -158,15 +158,15 @@ export default function ProposalForm(props: {
           </GridItem6>
           <GridItem6>
             <FormItem
-              label="Body"
+              label="Content"
               description={
-                <PreviewMarkdown>{watch('extension.body')}</PreviewMarkdown>
+                <PreviewMarkdown>{watch('extension.content')}</PreviewMarkdown>
               }
-              error={errors.extension?.body?.message}
+              error={errors.extension?.content?.message}
             >
               <Textarea
-                {...register('extension.body')}
-                error={!!errors.extension?.body?.message}
+                {...register('extension.content')}
+                error={!!errors.extension?.content?.message}
               />
             </FormItem>
           </GridItem6>
