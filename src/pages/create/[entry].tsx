@@ -28,7 +28,7 @@ export default function CreateEntryPage() {
         <title>{`New community - ${documentTitle}`}</title>
       </Head>
       <div className="w-full">
-        <TextButton href="/create" className="mt-8">
+        <TextButton href="/create" className="mt-6 sm:mt-8">
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
         {query.entry ? (

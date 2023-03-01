@@ -43,19 +43,20 @@ export default function CommunityAboutPage(
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
+      {isAdmin ? (
+        <Link
+          href={`/${props.entry}/settings`}
+          className="float-right mt-6 sm:mt-8"
+        >
+          <Button icon={PencilIcon} primary>
+            Edit
+          </Button>
+        </Link>
+      ) : null}
       <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8">
         About
       </h3>
       <Article className="w-full pt-6">{community?.extension?.about}</Article>
-      {isAdmin ? (
-        <div className="mt-8">
-          <Link href={`/${props.entry}/settings`}>
-            <Button icon={PencilIcon} primary>
-              Edit
-            </Button>
-          </Link>
-        </div>
-      ) : null}
     </CommunityLayout>
   )
 }
