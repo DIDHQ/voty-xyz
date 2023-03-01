@@ -55,7 +55,11 @@ export default function Toolbar(props: { className?: string }) {
                 />
               </svg>
             </h1>
-            {isTestnet ? <span className="ml-2 italic">Testnet</span> : null}
+            {isTestnet ? (
+              <span className="ml-2 italic">Testnet</span>
+            ) : (
+              <span className="ml-2 italic">Alpha</span>
+            )}
           </TextButton>
           <div className="w-0 flex-1" />
           <InfoButton className="mr-4" />
