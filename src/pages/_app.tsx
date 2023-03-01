@@ -21,6 +21,7 @@ import {
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
 import { useMemo } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import 'react-tooltip/dist/react-tooltip.css'
 import '@total-typescript/ts-reset'
 
@@ -80,6 +81,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           </ShellLayout>
         </RainbowKitProvider>
       </WagmiConfig>
+      <Analytics />
     </>
   )
 }
