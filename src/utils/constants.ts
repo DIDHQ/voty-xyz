@@ -1,6 +1,6 @@
 export const isTestnet = !!process.env.NEXT_PUBLIC_TESTNET
 
-export const documentTitle = 'Voty'
+export const documentTitle = 'Voty Alpha'
 
 export const commonCoinTypes = {
   ETH: 60,
