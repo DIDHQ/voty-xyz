@@ -197,7 +197,7 @@ export default function ProposalForm(props: {
                             name="plan"
                             type="radio"
                             checked={value === plan.id}
-                            onClick={() => onChange(plan.id)}
+                            onChange={() => onChange(plan.id)}
                             className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
                           />
                         </div>

@@ -30,6 +30,7 @@ export default function ProposalListItem(props: {
 
   return (
     <Link
+      shallow
       href={`/${props.entry}/${props.proposal.workgroup}/${permalink2Id(
         props.proposal.permalink,
       )}`}

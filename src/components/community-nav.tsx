@@ -134,6 +134,7 @@ export default function CommunityNav(props: { className?: string }) {
                 key={item.name}
                 href={item.href}
                 scroll={false}
+                shallow
                 className={clsx(
                   item.current
                     ? 'text-primary-600'
