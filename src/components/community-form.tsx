@@ -46,7 +46,7 @@ export default function CommunityForm(props: {
   const isNewCommunity = !props.community
 
   return (
-    <Form className={clsx('pt-6', props.className)}>
+    <Form className={clsx('pt-8', props.className)}>
       <FormSection
         title={isNewCommunity ? 'New community' : 'Basic Information'}
         description="logo, name, slogan & about"

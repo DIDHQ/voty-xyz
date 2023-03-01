@@ -12,7 +12,7 @@ import TextButton from '../../components/basic/text-button'
 
 export default function CommunitySettingsPage() {
   const router = useRouter()
-  const query = useRouterQuery<['entry']>()
+  const query = useRouterQuery<['entry', 'create']>()
   const { account } = useWallet()
   const {
     data: community,
@@ -35,9 +35,11 @@ export default function CommunitySettingsPage() {
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
-      <TextButton href="/create" className="mt-6">
-        <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
-      </TextButton>
+      {query.create ? (
+        <TextButton href="/create" className="mt-8">
+          <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+        </TextButton>
+      ) : null}
       {query.entry && community !== undefined ? (
         <div className="flex w-full flex-col">
           <CommunityForm

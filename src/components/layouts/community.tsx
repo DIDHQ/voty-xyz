@@ -5,13 +5,13 @@ import { trpc } from '../../utils/trpc'
 import CommunityNav from '../community-nav'
 
 export default function CommunityLayout(props: { children: ReactNode }) {
-  const query = useRouterQuery<['entry', 'workgroup']>()
+  const query = useRouterQuery<['entry', 'workgroup', 'create']>()
   const { data: community } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry, refetchOnWindowFocus: false },
   )
 
-  return community === null ? (
+  return community === null || query.create ? (
     <div className="w-full flex-1 sm:w-0">{props.children}</div>
   ) : (
     <>
