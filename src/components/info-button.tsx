@@ -1,11 +1,11 @@
 import { Menu } from '@headlessui/react'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
-import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { CubeIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import Link from 'next/link'
 
 import Dropdown from './basic/dropdown'
-import { GitHubIcon, TwitterIcon } from './icons'
+import { DotbitIcon, GitHubIcon, TwitterIcon } from './icons'
 
 export default function InfoButton(props: { className?: string }) {
   return (
@@ -17,7 +17,7 @@ export default function InfoButton(props: { className?: string }) {
             props.className,
           )}
         >
-          <EllipsisVerticalIcon className="h-6 w-6" />
+          <EllipsisVerticalIcon className="h-6 w-6 text-gray-600 hover:text-gray-700" />
         </div>
       }
     >
@@ -39,8 +39,42 @@ export default function InfoButton(props: { className?: string }) {
             </Link>
           )}
         </Menu.Item>
+        <Menu.Item>
+          {({ active }) => (
+            <a
+              href="https://github.com/VotyXYZ/protocol/"
+              className={clsx(
+                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                'group flex items-center px-4 py-2 text-sm',
+              )}
+            >
+              <CubeIcon
+                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                aria-hidden="true"
+              />
+              Voty Protocol
+            </a>
+          )}
+        </Menu.Item>
       </div>
       <div className="py-1">
+        <Menu.Item>
+          {({ active }) => (
+            <a
+              href="https://www.did.id/"
+              className={clsx(
+                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                'group flex items-center px-4 py-2 text-sm',
+              )}
+            >
+              <DotbitIcon
+                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                aria-hidden="true"
+              />
+              .bit
+            </a>
+          )}
+        </Menu.Item>
         <Menu.Item>
           {({ active }) => (
             <a
