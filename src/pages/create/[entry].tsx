@@ -1,11 +1,13 @@
 import { useCallback, useMemo } from 'react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 import CommunityForm from '../../components/community-form'
 import useRouterQuery from '../../hooks/use-router-query'
 import useWallet from '../../hooks/use-wallet'
 import useDids from '../../hooks/use-dids'
 import TextButton from '../../components/basic/text-button'
+import { documentTitle } from '../../utils/constants'
 
 export default function CreateEntryPage() {
   const router = useRouter()
@@ -21,19 +23,24 @@ export default function CreateEntryPage() {
   }, [query.entry, router])
 
   return (
-    <div className="w-full">
-      <TextButton href="/create" className="mt-8">
-        <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
-      </TextButton>
-      {query.entry ? (
-        <div className="flex w-full flex-col">
-          <CommunityForm
-            entry={query.entry}
-            onSuccess={handleSuccess}
-            disabled={!isAdmin}
-          />
-        </div>
-      ) : null}
-    </div>
+    <>
+      <Head>
+        <title>{`New community - ${documentTitle}`}</title>
+      </Head>
+      <div className="w-full">
+        <TextButton href="/create" className="mt-8">
+          <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+        </TextButton>
+        {query.entry ? (
+          <div className="flex w-full flex-col">
+            <CommunityForm
+              entry={query.entry}
+              onSuccess={handleSuccess}
+              disabled={!isAdmin}
+            />
+          </div>
+        ) : null}
+      </div>
+    </>
   )
 }

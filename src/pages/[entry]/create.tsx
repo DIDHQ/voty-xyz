@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { nanoid } from 'nanoid'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 import useRouterQuery from '../../hooks/use-router-query'
 import WorkgroupForm from '../../components/workgroup-form'
@@ -9,6 +10,7 @@ import useWallet from '../../hooks/use-wallet'
 import { trpc } from '../../utils/trpc'
 import useDids from '../../hooks/use-dids'
 import LoadingBar from '../../components/basic/loading-bar'
+import { documentTitle } from '../../utils/constants'
 
 export default function CreateWorkgroupPage() {
   const router = useRouter()
@@ -42,6 +44,9 @@ export default function CreateWorkgroupPage() {
 
   return (
     <CommunityLayout>
+      <Head>
+        <title>{`New workgroup - ${documentTitle}`}</title>
+      </Head>
       <LoadingBar loading={isLoading} />
       {query.entry && community ? (
         <WorkgroupForm

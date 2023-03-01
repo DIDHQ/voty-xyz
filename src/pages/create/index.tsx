@@ -38,7 +38,7 @@ export default function CreateCommunityPage() {
   return (
     <>
       <Head>
-        <title>{`Create community - ${documentTitle}`}</title>
+        <title>{`New community - ${documentTitle}`}</title>
       </Head>
       <LoadingBar loading={isLoading || isExistencesLoading} />
       <div className="w-full bg-white">
