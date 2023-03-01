@@ -9,6 +9,7 @@ import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 import { documentTitle, isTestnet } from '../utils/constants'
 import { trpc } from '../utils/trpc'
+import ConnectButton from '../components/connect-button'
 
 export default function CreateCommunityPage() {
   const { account } = useWallet()
@@ -52,34 +53,38 @@ export default function CreateCommunityPage() {
                 : 'to hear valuable voices from your community members'}
             </p>
             <div className="mt-10 flex flex-col items-center space-y-6">
-              {didOptions?.length === 0 ? (
-                <a
-                  href={
-                    isTestnet
-                      ? 'https://test2f7a872b.did.id/explorer'
-                      : 'https://app.did.id/explorer'
-                  }
-                >
-                  <Button large primary>
-                    Register →
-                  </Button>
-                </a>
+              {account ? (
+                didOptions?.length === 0 ? (
+                  <a
+                    href={
+                      isTestnet
+                        ? 'https://test2f7a872b.did.id/explorer'
+                        : 'https://app.did.id/explorer'
+                    }
+                  >
+                    <Button large primary>
+                      Register →
+                    </Button>
+                  </a>
+                ) : (
+                  <>
+                    <DidCombobox
+                      label="Select a DID as your community entry"
+                      options={didOptions}
+                      value={entry}
+                      onChange={setEntry}
+                    />
+                    {entry ? (
+                      <Link href={`/${entry}/settings`}>
+                        <Button large primary>
+                          Next →
+                        </Button>
+                      </Link>
+                    ) : null}
+                  </>
+                )
               ) : (
-                <>
-                  <DidCombobox
-                    label="Select a DID as your community entry"
-                    options={didOptions}
-                    value={entry}
-                    onChange={setEntry}
-                  />
-                  {entry ? (
-                    <Link href={`/${entry}/settings`}>
-                      <Button large primary>
-                        Next →
-                      </Button>
-                    </Link>
-                  ) : null}
-                </>
+                <ConnectButton />
               )}
             </div>
           </div>
