@@ -74,11 +74,21 @@ export default function WorkgroupForm(props: {
         permission: {
           proposing: {
             operation: 'or',
-            operands: [],
+            operands: [
+              {
+                function: 'prefixes_dot_suffix_exact_match',
+                arguments: [props.community.authorship.author, ['']],
+              },
+            ],
           },
           voting: {
             operation: 'max',
-            operands: [],
+            operands: [
+              {
+                function: 'prefixes_dot_suffix_fixed_power',
+                arguments: [props.community.authorship.author, [''], '1'],
+              },
+            ],
           },
         },
         duration: {
@@ -90,7 +100,13 @@ export default function WorkgroupForm(props: {
         },
       })
     }
-  }, [isNewWorkgroup, props.workgroup, update, workgroupIndex])
+  }, [
+    isNewWorkgroup,
+    props.community.authorship.author,
+    props.workgroup,
+    update,
+    workgroupIndex,
+  ])
   const handleArchiveSuccess = useCallback(() => {
     onSuccess()
   }, [onSuccess])
@@ -138,7 +154,10 @@ export default function WorkgroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Proposers">
+      <FormSection
+        title="Proposers"
+        description="Defines who has rights to propose"
+      >
         <Grid6>
           <GridItem6>
             <FormItem
@@ -159,7 +178,7 @@ export default function WorkgroupForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Voters">
+      <FormSection title="Voters" description="Defines who has power of voting">
         <Grid6>
           <GridItem6>
             <FormItem

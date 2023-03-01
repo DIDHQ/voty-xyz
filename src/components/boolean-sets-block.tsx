@@ -17,23 +17,31 @@ export default function BooleanSetsBlock(props: {
   workgroupIndex: number
   disabled?: boolean
 }) {
-  const { control } = useFormContext<Community>()
+  const { watch, control } = useFormContext<Community>()
   const { fields, append, remove } = useFieldArray({
     control,
     name: `workgroups.${props.workgroupIndex}.permission.${props.name}.operands`,
   })
-  const [open, setOpen] = useState<number>()
+  const [open, setOpen] = useState<number | undefined>(0)
+  const operands = watch(
+    `workgroups.${props.workgroupIndex}.permission.${props.name}.operands`,
+    fields,
+  )
 
   return (
     <>
-      {fields.length ? (
+      {operands.length ? (
         <ul
           role="list"
           className="divide-y divide-gray-200 overflow-hidden rounded border border-gray-200"
         >
-          {fields.map((operand, index) => (
+          {operands.map((operand, index) => (
             <BooleanUnitBlock
-              key={operand.id}
+              key={
+                'id' in operand && typeof operand.id === 'string'
+                  ? operand.id
+                  : index
+              }
               name={props.name}
               entry={props.entry}
               workgroupIndex={props.workgroupIndex}
@@ -54,7 +62,7 @@ export default function BooleanSetsBlock(props: {
               function: 'prefixes_dot_suffix_exact_match',
               arguments: [props.entry, ['']],
             })
-            setOpen(fields.length)
+            setOpen(operands.length)
           }}
           className="mt-1"
         >
@@ -115,7 +123,7 @@ function BooleanUnitBlock(props: {
           <span className="w-0 flex-1 truncate">
             {watch(
               `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.name`,
-            ) || `Group #${props.index + 1}`}
+            ) || `Filter ${props.index + 1}`}
           </span>
         </div>
         <div className="ml-4 flex shrink-0 space-x-4">
@@ -155,7 +163,7 @@ function BooleanUnitBlock(props: {
                     props.name
                   ]?.operands?.[props.index]?.name?.message
                 }
-                placeholder={`Group #${props.index + 1}`}
+                placeholder={`Filter ${props.index + 1}`}
               />
             </FormItem>
           </GridItem6>

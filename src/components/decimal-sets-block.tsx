@@ -11,31 +11,37 @@ import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 
-const defaultPower = '1'
-
 export default function DecimalSetsBlock(props: {
   name: 'voting'
   entry: string
   workgroupIndex: number
   disabled?: boolean
 }) {
-  const { control } = useFormContext<Community>()
+  const { watch, control } = useFormContext<Community>()
   const { fields, append, remove } = useFieldArray({
     control,
     name: `workgroups.${props.workgroupIndex}.permission.${props.name}.operands`,
   })
-  const [open, setOpen] = useState<number>()
+  const [open, setOpen] = useState<number | undefined>(0)
+  const operands = watch(
+    `workgroups.${props.workgroupIndex}.permission.${props.name}.operands`,
+    fields,
+  )
 
   return (
     <>
-      {fields.length ? (
+      {operands.length ? (
         <ul
           role="list"
           className="divide-y divide-gray-200 overflow-hidden rounded border border-gray-200"
         >
-          {fields.map((operand, index) => (
+          {operands.map((operand, index) => (
             <DecimalUnitBlock
-              key={operand.id}
+              key={
+                'id' in operand && typeof operand.id === 'string'
+                  ? operand.id
+                  : index
+              }
               name={props.name}
               entry={props.entry}
               workgroupIndex={props.workgroupIndex}
@@ -54,9 +60,9 @@ export default function DecimalSetsBlock(props: {
           onClick={() => {
             append({
               function: 'prefixes_dot_suffix_fixed_power',
-              arguments: [props.entry, [''], defaultPower],
+              arguments: [props.entry, [''], '1'],
             })
-            setOpen(fields.length)
+            setOpen(operands.length)
           }}
           className="mt-1"
         >
@@ -117,7 +123,7 @@ function DecimalUnitBlock(props: {
           <span className="w-0 flex-1 truncate">
             {watch(
               `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.name`,
-            ) || `Group #${props.index + 1}`}
+            ) || `Filter ${props.index + 1}`}
           </span>
         </div>
         <div className="ml-4 flex shrink-0 space-x-4">
@@ -157,7 +163,7 @@ function DecimalUnitBlock(props: {
                     props.name
                   ]?.operands?.[props.index]?.name?.message
                 }
-                placeholder={`Group #${props.index + 1}`}
+                placeholder={`Filter ${props.index + 1}`}
               />
             </FormItem>
           </GridItem6>
@@ -278,7 +284,6 @@ function DecimalUnitBlock(props: {
               }
             >
               <Controller
-                defaultValue={defaultPower}
                 control={control}
                 name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`}
                 render={({ field: { value, onChange } }) => (
