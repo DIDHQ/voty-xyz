@@ -61,7 +61,7 @@ export default function MyDocument() {
           href="/icons/safari-pinned-tab.svg"
           color="#22C493"
         />
-        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="shortcut icon" href="/icons/favicon.ico" />
 
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:url" content={domain} />
