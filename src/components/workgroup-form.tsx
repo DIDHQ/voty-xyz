@@ -116,6 +116,26 @@ export default function WorkgroupForm(props: {
               />
             </FormItem>
           </GridItem6>
+          <GridItem6>
+            <FormItem
+              label="Introduction"
+              error={
+                errors.workgroups?.[workgroupIndex]?.extension?.introduction
+                  ?.message
+              }
+            >
+              <TextInput
+                {...register(
+                  `workgroups.${workgroupIndex}.extension.introduction`,
+                )}
+                error={
+                  !!errors.workgroups?.[workgroupIndex]?.extension?.introduction
+                    ?.message
+                }
+                disabled={props.disabled}
+              />
+            </FormItem>
+          </GridItem6>
         </Grid6>
       </FormSection>
       <FormSection title="Proposers">

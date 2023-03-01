@@ -14,6 +14,7 @@ export const workgroupSchema = z.object({
     voting: decimalSetsSchema,
   }),
   extension: z.object({
+    introduction: z.string().max(160, 'Maximum 160 characters').optional(),
     terms_and_conditions: z.string().min(1, 'Required'),
   }),
 })

@@ -105,6 +105,11 @@ export default function WorkgroupNav(props: { className?: string }) {
             </>
           )}
         </div>
+        {workgroup?.extension.introduction ? (
+          <p className="mt-1 text-sm text-gray-500 line-clamp-1">
+            {workgroup.extension.introduction}
+          </p>
+        ) : null}
         <div className="border-b">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">
             {tabs.map((tab) => (
