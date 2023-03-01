@@ -75,7 +75,7 @@ export default function CreateCommunityPage() {
                       onChange={setEntry}
                     />
                     {entry ? (
-                      <Link href={`/${entry}/settings`}>
+                      <Link href={`/${entry}/settings?create=1`}>
                         <Button large primary>
                           Next →
                         </Button>
