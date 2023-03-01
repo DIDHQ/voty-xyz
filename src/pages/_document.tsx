@@ -4,7 +4,9 @@ import { documentTitle, isTestnet } from '../utils/constants'
 
 const description = 'Voice of your community'
 
-const domain = isTestnet ? 'https://votyxyz.vercel.app' : 'https://voty.xyz'
+const domain = isTestnet
+  ? 'https://votyxyz.vercel.app'
+  : 'https://alpha.voty.xyz'
 
 export default function MyDocument() {
   return (
