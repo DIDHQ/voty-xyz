@@ -23,7 +23,7 @@ const SigningCommunityButton = dynamic(
 
 export default function CommunityForm(props: {
   entry: string
-  community: Community | null
+  community?: Community
   onSuccess: () => void
   disabled?: boolean
   className?: string

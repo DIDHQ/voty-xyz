@@ -2,14 +2,14 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 
-import Button from '../components/basic/button'
-import DidCombobox from '../components/did-combobox'
-import LoadingBar from '../components/basic/loading-bar'
-import useDids from '../hooks/use-dids'
-import useWallet from '../hooks/use-wallet'
-import { documentTitle, isTestnet } from '../utils/constants'
-import { trpc } from '../utils/trpc'
-import ConnectButton from '../components/connect-button'
+import Button from '../../components/basic/button'
+import DidCombobox from '../../components/did-combobox'
+import LoadingBar from '../../components/basic/loading-bar'
+import useDids from '../../hooks/use-dids'
+import useWallet from '../../hooks/use-wallet'
+import { documentTitle, isTestnet } from '../../utils/constants'
+import { trpc } from '../../utils/trpc'
+import ConnectButton from '../../components/connect-button'
 
 export default function CreateCommunityPage() {
   const { account } = useWallet()
@@ -75,7 +75,7 @@ export default function CreateCommunityPage() {
                       onChange={setEntry}
                     />
                     {entry ? (
-                      <Link href={`/${entry}/settings?create=1`}>
+                      <Link href={`/create/${entry}`}>
                         <Button large primary>
                           Next →
                         </Button>
