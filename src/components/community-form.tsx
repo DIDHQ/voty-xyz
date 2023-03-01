@@ -49,7 +49,6 @@ export default function CommunityForm(props: {
     <Form className={clsx('pt-8', props.className)}>
       <FormSection
         title={isNewCommunity ? 'New community' : 'Basic Information'}
-        description="logo, name, slogan & about"
       >
         <Grid6>
           <GridItem6>
@@ -103,10 +102,7 @@ export default function CommunityForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection
-        title="Links"
-        description="website, twitter, discord & github"
-      >
+      <FormSection title="Links">
         <Grid6>
           <GridItem6>
             <FormItem
