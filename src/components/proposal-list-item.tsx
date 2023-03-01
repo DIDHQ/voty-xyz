@@ -31,9 +31,7 @@ export default function ProposalListItem(props: {
   return (
     <Link
       shallow
-      href={`/${props.entry}/${props.proposal.workgroup}/${permalink2Id(
-        props.proposal.permalink,
-      )}`}
+      href={`/proposal/${permalink2Id(props.proposal.permalink)}`}
       className="-mx-4 block space-y-2 rounded p-4 transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:bg-gray-100"
     >
       <div className="flex w-full items-center justify-between">

@@ -31,7 +31,7 @@ export default function TextButton(
     [primary, secondary, restProps],
   )
 
-  return href ? (
+  return href && !props.disabled ? (
     href.startsWith('/') || href.startsWith('#') ? (
       <Link href={href}>{renderButton}</Link>
     ) : (

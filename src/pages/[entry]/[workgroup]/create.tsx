@@ -27,11 +27,9 @@ export default function CreateProposalPage() {
   const workgroup = useWorkgroup(community, query.workgroup)
   const handleSuccess = useCallback(
     (permalink: string) => {
-      router.push(
-        `/${query.entry}/${query.workgroup}/${permalink2Id(permalink)}`,
-      )
+      router.push(`/proposal/${permalink2Id(permalink)}`)
     },
-    [query.entry, query.workgroup, router],
+    [router],
   )
 
   return (
@@ -39,11 +37,8 @@ export default function CreateProposalPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
         <TextButton
-          href={
-            query.entry && query.workgroup
-              ? `/${query.entry}/${query.workgroup}`
-              : undefined
-          }
+          disabled={!query.entry || !query.workgroup}
+          href={`/${query.entry}/${query.workgroup}`}
         >
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>

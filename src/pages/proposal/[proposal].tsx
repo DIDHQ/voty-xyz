@@ -7,30 +7,29 @@ import Head from 'next/head'
 import { createProxySSGHelpers } from '@trpc/react-query/ssg'
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 
-import useWorkgroup from '../../../../hooks/use-workgroup'
-import { stringifyChoice } from '../../../../utils/voting'
-import { DetailItem, DetailList } from '../../../../components/basic/detail'
-import { id2Permalink, permalink2Url } from '../../../../utils/permalink'
-import { trpc } from '../../../../utils/trpc'
-import Article from '../../../../components/basic/article'
-import TextButton from '../../../../components/basic/text-button'
-import LoadingBar from '../../../../components/basic/loading-bar'
+import useWorkgroup from '../../hooks/use-workgroup'
+import { stringifyChoice } from '../../utils/voting'
+import { DetailItem, DetailList } from '../../components/basic/detail'
+import { id2Permalink, permalink2Url } from '../../utils/permalink'
+import { trpc } from '../../utils/trpc'
+import Article from '../../components/basic/article'
+import TextButton from '../../components/basic/text-button'
+import LoadingBar from '../../components/basic/loading-bar'
 import {
   cacheControl,
   coinTypeExplorers,
   coinTypeNames,
   documentTitle,
-} from '../../../../utils/constants'
-import { appRouter } from '../../../../server/routers/_app'
-import useRouterQuery from '../../../../hooks/use-router-query'
-import VoteForm from '../../../../components/vote-form'
+} from '../../utils/constants'
+import { appRouter } from '../../server/routers/_app'
+import VoteForm from '../../components/vote-form'
 
-const StatusIcon = dynamic(() => import('../../../../components/status-icon'), {
+const StatusIcon = dynamic(() => import('../../components/status-icon'), {
   ssr: false,
 })
 
 const ProposalSchedule = dynamic(
-  () => import('../../../../components/proposal-schedule'),
+  () => import('../../components/proposal-schedule'),
   {
     ssr: false,
     loading: () => (
@@ -43,7 +42,7 @@ const ProposalSchedule = dynamic(
   },
 )
 
-const Slide = dynamic(() => import('../../../../components/basic/slide'), {
+const Slide = dynamic(() => import('../../components/basic/slide'), {
   ssr: false,
 })
 
@@ -62,7 +61,6 @@ export const getServerSideProps: GetServerSideProps<{
 export default function ProposalPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
-  const query = useRouterQuery<['entry', 'workgroup']>()
   const { data: proposal, isLoading } = trpc.proposal.getByPermalink.useQuery(
     { permalink: props.proposal },
     { enabled: !!props.proposal, refetchOnWindowFocus: false },
@@ -217,16 +215,6 @@ export default function ProposalPage(
       ]).join(' - '),
     [community?.name, proposal?.title, workgroup?.name],
   )
-  useEffect(() => {
-    if (community && community.authorship.author !== query.entry) {
-      throw new Error('community mismatch')
-    }
-  }, [community, query.entry])
-  useEffect(() => {
-    if (workgroup && workgroup.id !== query.workgroup) {
-      throw new Error('workgroup mismatch')
-    }
-  }, [workgroup, query.workgroup])
 
   return (
     <>
@@ -237,7 +225,10 @@ export default function ProposalPage(
         <LoadingBar loading={isLoading || isCommunityLoading} />
         <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
           <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
-            <TextButton href={`/${query.entry}/${query.workgroup}`}>
+            <TextButton
+              disabled={!community || !workgroup}
+              href={`/${community?.authorship.author}/${workgroup?.id}`}
+            >
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>
             <div className="mb-6 border-b border-gray-200 pb-6">
