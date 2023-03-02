@@ -11,4 +11,7 @@ export default createNextApiHandler({
     }
     return {}
   },
+  onError({ type, path, input, error }) {
+    console.error('TRPC Error:', type, path, input, error)
+  },
 })
