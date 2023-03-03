@@ -6,9 +6,9 @@ function ErrorPage() {
   return (
     <main className="flex w-full grow flex-col">
       <div className="my-auto shrink-0 py-16">
-        <p className="text-base font-semibold text-primary-600">404</p>
+        <p className="text-base font-semibold text-primary-600">Error</p>
         <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          Error
+          Client Error
         </h1>
         <p className="mt-2 text-base text-gray-500">
           An exception has occurred
