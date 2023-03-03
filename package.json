@@ -19,6 +19,7 @@
     "@nervosnetwork/ckb-sdk-core": "^0.103.1",
     "@prisma/client": "^4.11.0",
     "@rainbow-me/rainbowkit": "^0.11.0",
+    "@sentry/nextjs": "^7.40.0",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tanstack/react-query": "^4.24.10",
     "@total-typescript/ts-reset": "^0.3.7",

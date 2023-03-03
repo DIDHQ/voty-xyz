@@ -42,3 +42,7 @@ types/
 # PWA
 public/*.js
 public/*.js.map
+
+# Sentry
+.sentryclirc
+sentry.properties

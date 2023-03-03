@@ -1,6 +1,8 @@
+import * as Sentry from '@sentry/nextjs'
+import { NextPageContext } from 'next'
 import Link from 'next/link'
 
-export default function ErrorPage() {
+function ErrorPage() {
   return (
     <main className="flex w-full grow flex-col">
       <div className="my-auto shrink-0 py-16">
@@ -9,7 +11,7 @@ export default function ErrorPage() {
           Error
         </h1>
         <p className="mt-2 text-base text-gray-500">
-          A client-side exception has occurred
+          An exception has occurred
         </p>
         <div className="mt-6">
           <Link
@@ -24,3 +26,11 @@ export default function ErrorPage() {
     </main>
   )
 }
+
+ErrorPage.getInitialProps = async (contextData: NextPageContext) => {
+  await Sentry.captureUnderscoreErrorException(contextData)
+
+  return {}
+}
+
+export default ErrorPage
