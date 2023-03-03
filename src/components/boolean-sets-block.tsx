@@ -110,6 +110,10 @@ function BooleanUnitBlock(props: {
     props.workgroupIndex,
     setOpen,
   ])
+  const suffix = watch(
+    `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
+  )
+  const regex = new RegExp(`\\.${suffix.replaceAll('.', '\\.')}\$`)
 
   return (
     <>
@@ -240,6 +244,7 @@ function BooleanUnitBlock(props: {
                       autoCapitalize="false"
                       autoComplete="false"
                       disabled={props.disabled}
+                      placeholder={`.${suffix}`}
                       value={
                         Array.isArray(value)
                           ? (value as string[]).join('\n')
@@ -250,12 +255,6 @@ function BooleanUnitBlock(props: {
                         onChange(array.length ? array : [''])
                       }}
                       onBlur={(e) => {
-                        const suffix = watch(
-                          `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
-                        )
-                        const regex = new RegExp(
-                          `\\.${suffix.replaceAll('.', '\\.')}\$`,
-                        )
                         const array = compact(
                           e.target.value
                             .split('\n')
