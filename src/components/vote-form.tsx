@@ -63,7 +63,7 @@ export default function VoteForm(props: {
     },
   )
   const { data: voted, refetch } = trpc.vote.groupByProposal.useQuery(
-    { proposal: proposal?.permalink, authors: dids },
+    { proposal: proposal?.permalink },
     { enabled: !!dids && !!proposal?.permalink, refetchOnWindowFocus: false },
   )
   const methods = useForm<Vote>({

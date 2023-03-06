@@ -139,7 +139,7 @@ export default function ProposalForm(props: {
   }, [setValue, snapshots])
   const { data: status } = useStatus(community?.entry.community)
   const disabled = useMemo(
-    () => didOptions?.filter(({ disabled }) => !disabled).length === 0,
+    () => !didOptions?.filter(({ disabled }) => !disabled).length,
     [didOptions],
   )
   const options = watch('options') || []

@@ -61,23 +61,15 @@ export const voteRouter = router({
       }
     }),
   groupByProposal: procedure
-    .input(
-      z.object({
-        proposal: z.string().optional(),
-        authors: z.array(z.string()).optional(),
-      }),
-    )
+    .input(z.object({ proposal: z.string().optional() }))
     .output(z.record(z.string(), z.string()))
     .query(async ({ input }) => {
-      if (!input.proposal || !input.authors) {
+      if (!input.proposal) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
       const votes = await database.vote.findMany({
-        where: {
-          proposal: input.proposal,
-          author: { in: input.authors },
-        },
+        where: { proposal: input.proposal },
       })
 
       return mapValues(

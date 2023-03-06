@@ -86,7 +86,7 @@ export default function SigningVoteButton(props: {
     },
   )
   const { data: voted, refetch } = trpc.vote.groupByProposal.useQuery(
-    { proposal: props.proposal, authors: dids },
+    { proposal: props.proposal },
     { enabled: !!dids && !!props.proposal, refetchOnWindowFocus: false },
   )
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function SigningVoteButton(props: {
     onChange(defaultDid || '')
   }, [defaultDid, onChange])
   const disabled = useMemo(
-    () => didOptions?.filter(({ disabled }) => !disabled).length === 0,
+    () => !didOptions?.filter(({ disabled }) => !disabled).length,
     [didOptions],
   )
 
