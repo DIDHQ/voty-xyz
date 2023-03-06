@@ -13,11 +13,10 @@ import { trpc } from '../utils/trpc'
 import ProposalPeriodTag from './proposal-period-tag'
 
 export default function ProposalListItem(props: {
-  entry: string
   proposal: Authorized<Proposal> & { permalink: string; votes: number }
 }) {
-  const { data: community } = trpc.community.getByEntry.useQuery(
-    { entry: props.entry },
+  const { data: community } = trpc.community.getByPermalink.useQuery(
+    { permalink: props.proposal.community },
     { refetchOnWindowFocus: false },
   )
   const workgroup = useWorkgroup(community, props.proposal.workgroup)
