@@ -280,7 +280,9 @@ export default function ProposalForm(props: {
           onChange={setDid}
           disabled={disabled}
           onClick={connect}
-          placeholder={disabled ? 'No available DIDs' : undefined}
+          placeholder={
+            didOptions?.length === 0 ? 'No available DIDs' : undefined
+          }
           className="w-full flex-1 sm:w-auto sm:flex-none"
         />
         <FormProvider {...methods}>
