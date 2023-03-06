@@ -33,22 +33,32 @@ export async function snapshotAddressAccounts(
   address: string,
   snapshot: string,
 ): Promise<string[]> {
-  const { data } = await fetchJson<{
-    errno: number
-    errmsg: string
-    data: { accounts: { account: string }[] }
-  }>(
-    `${endpoint}/v1/snapshot/address/accounts`,
-    postJson({
-      type: 'blockchain',
-      key_info: {
-        coin_type: coinType.toString(),
-        chain_id: '',
-        key: address,
-      },
-      block_number: parseInt(snapshot),
-      role_type: 'manager',
-    }),
-  )
-  return data.accounts.map(({ account }) => account)
+  const result: string[] = []
+  let page = 1
+  while (true) {
+    const { data } = await fetchJson<{
+      errno: number
+      errmsg: string
+      data: { total: number; accounts: { account: string }[] }
+    }>(
+      `${endpoint}/v1/snapshot/address/accounts`,
+      postJson({
+        type: 'blockchain',
+        key_info: {
+          coin_type: coinType.toString(),
+          chain_id: '',
+          key: address,
+        },
+        block_number: parseInt(snapshot),
+        role_type: 'manager',
+        page,
+      }),
+    )
+    if (data.accounts.length === 0) {
+      break
+    }
+    page++
+    result.push(...data.accounts.map(({ account }) => account))
+  }
+  return result
 }
