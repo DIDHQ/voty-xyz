@@ -3359,10 +3359,10 @@ array.prototype.tosorted@^1.1.1:
     es-shim-unscopables "^1.0.0"
     get-intrinsic "^1.1.3"
 
-arweave@^1.10.13, arweave@^1.13.0:
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/arweave/-/arweave-1.13.0.tgz#046d1b74efe5b157ad85279473f3729e8c7a47a9"
-  integrity sha512-pir1s0Lg7MzAxmFsPqht1SGOq8Hoj1fhf44/8PVjBd6T8l6JRrFN23UvKp7N+MXBYM5SqrLYB8KrgvxAaczGFg==
+arweave@^1.10.13, arweave@^1.13.1:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/arweave/-/arweave-1.13.1.tgz#acc70c07cb8505ddaa84548332c82fb45aa8f7c5"
+  integrity sha512-B6+N/5Ngvm0w1XTcboRbHGhyJkLmneqz8F5FaoVtd8KHVrzJ8cGq/dBAToP+QL4QJXlRudjLMxX7Mm9tzJt2xQ==
   dependencies:
     arconnect "^0.4.2"
     asn1.js "^5.4.1"
