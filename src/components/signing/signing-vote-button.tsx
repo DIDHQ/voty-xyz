@@ -99,11 +99,13 @@ export default function SigningVoteButton(props: {
   const didOptions = useMemo(
     () =>
       voted && powers && dids
-        ? dids.map((did) => ({
-            did,
-            label: `${powers[did]}${voted[did] ? ' (voted)' : ''}`,
-            disabled: !!voted[did] || !powers[did],
-          }))
+        ? dids
+            .filter((did) => powers[did].gt(0))
+            .map((did) => ({
+              did,
+              label: `${powers[did]}${voted[did] ? ' (voted)' : ''}`,
+              disabled: !!voted[did],
+            }))
         : undefined,
     [dids, powers, voted],
   )
