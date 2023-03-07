@@ -43,7 +43,6 @@ export default function DidCombobox(props: {
         <HeadlessCombobox.Input
           placeholder={props.placeholder}
           onClick={props.onClick}
-          disabled={props.disabled}
           onChange={(event) => setQuery(event.target.value)}
           className="w-full rounded border border-gray-300 bg-white py-2 pl-3 pr-10 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm"
         />
