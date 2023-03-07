@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dynamic from 'next/dynamic'
-import { ArrowPathIcon, PlusIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 
 import { Community, communitySchema } from '../utils/schemas/community'
@@ -11,24 +10,19 @@ import Textarea from './basic/textarea'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 import PreviewMarkdown from './preview-markdown'
+import Button from './basic/button'
 
 const AvatarInput = dynamic(() => import('./basic/avatar-input'), {
   ssr: false,
 })
 
-const SigningCommunityButton = dynamic(
-  () => import('./signing/signing-community-button'),
-  { ssr: false },
-)
-
 export default function CommunityForm(props: {
-  entry: string
-  community?: Community
-  onSuccess: () => void
+  initialValue?: Community
+  isLoading: boolean
+  onSubmit: (value: Community) => void
   disabled?: boolean
   className?: string
 }) {
-  const { onSuccess } = props
   const methods = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
@@ -39,11 +33,12 @@ export default function CommunityForm(props: {
     watch,
     setValue,
     formState: { errors },
+    handleSubmit,
   } = methods
   useEffect(() => {
-    reset(props.community || undefined)
-  }, [props.community, reset])
-  const isNewCommunity = !props.community
+    reset(props.initialValue || undefined)
+  }, [props.initialValue, reset])
+  const isNewCommunity = !props.initialValue
 
   return (
     <Form className={clsx('pt-8', props.className)}>
@@ -172,15 +167,13 @@ export default function CommunityForm(props: {
       </FormSection>
       {props.disabled ? null : (
         <FormFooter>
-          <FormProvider {...methods}>
-            <SigningCommunityButton
-              did={props.entry}
-              icon={isNewCommunity ? PlusIcon : ArrowPathIcon}
-              onSuccess={onSuccess}
-            >
-              {isNewCommunity ? 'Create' : 'Update'}
-            </SigningCommunityButton>
-          </FormProvider>
+          <Button
+            primary
+            loading={props.isLoading}
+            onClick={handleSubmit(props.onSubmit)}
+          >
+            {isNewCommunity ? 'Create' : 'Update'}
+          </Button>
         </FormFooter>
       )}
     </Form>
