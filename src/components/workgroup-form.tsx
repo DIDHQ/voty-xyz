@@ -50,9 +50,6 @@ export default function WorkgroupForm(props: {
     formState: { errors },
   } = methods
   const { update } = useFieldArray({ control, name: 'workgroups' })
-  useEffect(() => {
-    reset(props.community)
-  }, [props.community, reset])
   const workgroupIndex = useMemo(() => {
     const index = props.community?.workgroups?.findIndex(
       ({ id }) => id === props.workgroup,
@@ -67,6 +64,7 @@ export default function WorkgroupForm(props: {
     [props.community?.workgroups, workgroupIndex],
   )
   useEffect(() => {
+    reset(props.community)
     if (isNewWorkgroup) {
       update(workgroupIndex, {
         id: props.workgroup,
