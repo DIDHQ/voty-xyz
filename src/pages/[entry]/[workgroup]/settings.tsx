@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
+import { useMutation } from '@tanstack/react-query'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import WorkgroupForm from '../../../components/workgroup-form'
@@ -10,7 +11,6 @@ import { trpc } from '../../../utils/trpc'
 import useDids from '../../../hooks/use-dids'
 import LoadingBar from '../../../components/basic/loading-bar'
 import useSignDocument from '../../../hooks/use-sign-document'
-import useAsync from '../../../hooks/use-async'
 import { Community } from '../../../utils/schemas/community'
 import Notification from '../../../components/basic/notification'
 
@@ -36,53 +36,47 @@ export default function WorkgroupSettingsPage() {
     `You are updating community of Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.community.create.useMutation()
-  const handleSubmit = useAsync(
-    useCallback(
-      async (community: Community) => {
-        const signed = await signDocument(community)
-        if (signed) {
-          return mutateAsync(signed)
-        }
-      },
-      [signDocument, mutateAsync],
-    ),
+  const handleSubmit = useMutation<void, Error, Community>(
+    async (community) => {
+      const signed = await signDocument(community)
+      if (signed) {
+        await mutateAsync(signed)
+      }
+    },
   )
   useEffect(() => {
-    if (handleSubmit.status === 'success') {
+    if (handleSubmit.isSuccess) {
       refetch()
       router.push(`/${query.entry}/${query.workgroup}`)
     }
-  }, [handleSubmit.status, query.entry, query.workgroup, refetch, router])
-  const handleArchive = useAsync(
-    useCallback(
-      async (community: Community) => {
-        const signed = await signDocument({
-          ...community,
-          workgroups: community.workgroups?.filter(
-            ({ id }) => id !== query.workgroup,
-          ),
-        })
-        if (signed) {
-          return mutateAsync(signed)
-        }
-      },
-      [signDocument, query.workgroup, mutateAsync],
-    ),
+  }, [handleSubmit.isSuccess, query.entry, query.workgroup, refetch, router])
+  const handleArchive = useMutation<void, Error, Community>(
+    async (community) => {
+      const signed = await signDocument({
+        ...community,
+        workgroups: community.workgroups?.filter(
+          ({ id }) => id !== query.workgroup,
+        ),
+      })
+      if (signed) {
+        await mutateAsync(signed)
+      }
+    },
   )
   useEffect(() => {
-    if (handleArchive.status === 'success') {
+    if (handleArchive.isSuccess) {
       refetch()
       router.push(`/${query.entry}`)
     }
-  }, [handleArchive.status, query.entry, refetch, router])
+  }, [handleArchive.isSuccess, query.entry, refetch, router])
 
   return (
     <>
       <LoadingBar loading={isLoading} />
-      <Notification show={handleSubmit.status === 'error'}>
+      <Notification show={handleSubmit.isError}>
         {handleSubmit.error?.message}
       </Notification>
-      <Notification show={handleArchive.status === 'error'}>
+      <Notification show={handleArchive.isError}>
         {handleArchive.error?.message}
       </Notification>
       <CommunityLayout>
@@ -91,10 +85,10 @@ export default function WorkgroupSettingsPage() {
             initialValue={community || undefined}
             entry={query.entry || ''}
             workgroup={query.workgroup || ''}
-            onSubmit={handleSubmit.execute}
-            isLoading={handleSubmit.status === 'pending'}
-            onArchive={handleArchive.execute}
-            isArchiving={handleArchive.status === 'pending'}
+            onSubmit={handleSubmit.mutate}
+            isLoading={handleSubmit.isLoading}
+            onArchive={handleArchive.mutate}
+            isArchiving={handleArchive.isLoading}
             disabled={!isAdmin}
             className="pt-6 sm:pt-8"
           />

@@ -1,8 +1,8 @@
 import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/20/solid'
 import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline'
-import { useCallback, useEffect } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { MouseEvent as ReactMouseEvent, useEffect } from 'react'
 
-import useAsync from '../hooks/use-async'
 import useSignDocumentWithoutAuthorship from '../hooks/use-sign-document-without-authorship'
 import useWallet from '../hooks/use-wallet'
 import { trpc } from '../utils/trpc'
@@ -18,7 +18,7 @@ export default function SubscriptionButton(props: {
     { subscriber: { type: 'eth_personal_sign', address: account?.address! } },
     { enabled: !!account?.address, refetchOnWindowFocus: false },
   )
-  const { data, mutate, isLoading, isSuccess, isError, error } =
+  const { data, mutateAsync, isLoading, isSuccess, isError, error } =
     trpc.subscription.set.useMutation()
   const { data: subscribed = data, refetch } = trpc.subscription.get.useQuery(
     {
@@ -36,34 +36,38 @@ export default function SubscriptionButton(props: {
   const signUnsubscribe = useSignDocumentWithoutAuthorship(
     `You are unsubscribing community of Voty\n\nhash:\n{sha256}`,
   )
-  const handleSignSubscribe = useAsync(
-    useCallback(async () => {
-      if (!props.entry) {
-        return
-      }
-      const signed = await signSubscribe({
-        entry: props.entry,
-        subscribe: true,
-      })
-      if (signed) {
-        mutate(signed)
-      }
-    }, [signSubscribe, mutate, props.entry]),
-  )
-  const handleSignUnsubscribe = useAsync(
-    useCallback(async () => {
-      if (!props.entry) {
-        return
-      }
-      const signed = await signUnsubscribe({
-        entry: props.entry,
-        subscribe: false,
-      })
-      if (signed) {
-        mutate(signed)
-      }
-    }, [signUnsubscribe, mutate, props.entry]),
-  )
+  const handleSignSubscribe = useMutation<
+    void,
+    Error,
+    ReactMouseEvent<HTMLButtonElement, MouseEvent>
+  >(async () => {
+    if (!props.entry) {
+      return
+    }
+    const signed = await signSubscribe({
+      entry: props.entry,
+      subscribe: true,
+    })
+    if (signed) {
+      await mutateAsync(signed)
+    }
+  })
+  const handleSignUnsubscribe = useMutation<
+    void,
+    Error,
+    ReactMouseEvent<HTMLButtonElement, MouseEvent>
+  >(async () => {
+    if (!props.entry) {
+      return
+    }
+    const signed = await signUnsubscribe({
+      entry: props.entry,
+      subscribe: false,
+    })
+    if (signed) {
+      await mutateAsync(signed)
+    }
+  })
   useEffect(() => {
     if (isSuccess) {
       refetch()
@@ -74,17 +78,17 @@ export default function SubscriptionButton(props: {
   return (
     <>
       <Notification show={isError}>{error?.message}</Notification>
-      <Notification show={handleSignUnsubscribe.status === 'error'}>
+      <Notification show={handleSignUnsubscribe.isError}>
         {handleSignUnsubscribe.error?.message}
       </Notification>
-      <Notification show={handleSignSubscribe.status === 'error'}>
+      <Notification show={handleSignSubscribe.isError}>
         {handleSignSubscribe.error?.message}
       </Notification>
       {subscribed ? (
         <TextButton
           primary
-          disabled={isLoading || handleSignUnsubscribe.status === 'pending'}
-          onClick={handleSignUnsubscribe.execute}
+          disabled={isLoading || handleSignUnsubscribe.isLoading}
+          onClick={handleSignUnsubscribe.mutate}
           className={props.className}
         >
           <BookmarkSolidIcon className="h-5 w-5" />
@@ -92,8 +96,8 @@ export default function SubscriptionButton(props: {
       ) : (
         <TextButton
           primary
-          disabled={isLoading || handleSignSubscribe.status === 'pending'}
-          onClick={handleSignSubscribe.execute}
+          disabled={isLoading || handleSignSubscribe.isLoading}
+          onClick={handleSignSubscribe.mutate}
           className={props.className}
         >
           <BookmarkOutlineIcon className="h-5 w-5" />

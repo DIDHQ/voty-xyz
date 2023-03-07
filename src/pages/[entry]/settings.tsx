@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
+import { useMutation } from '@tanstack/react-query'
 
 import CommunityForm from '../../components/community-form'
 import useRouterQuery from '../../hooks/use-router-query'
@@ -10,7 +11,6 @@ import useDids from '../../hooks/use-dids'
 import LoadingBar from '../../components/basic/loading-bar'
 import Notification from '../../components/basic/notification'
 import useSignDocument from '../../hooks/use-sign-document'
-import useAsync from '../../hooks/use-async'
 import { Community } from '../../utils/schemas/community'
 
 export default function CommunitySettingsPage() {
@@ -35,34 +35,27 @@ export default function CommunitySettingsPage() {
     `You are updating community of Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.community.create.useMutation()
-  const handleSubmit = useAsync(
-    useCallback(
-      async (community: Community) => {
-        const signed = await signDocument(community)
-        if (signed) {
-          return mutateAsync(signed)
-        }
-      },
-      [signDocument, mutateAsync],
-    ),
-  )
+  const submit = useMutation<void, Error, Community>(async (community) => {
+    const signed = await signDocument(community)
+    if (signed) {
+      await mutateAsync(signed)
+    }
+  })
   useEffect(() => {
-    if (handleSubmit.status === 'success') {
+    if (submit.isSuccess) {
       refetch()
       router.push(`/${query.entry}`)
     }
-  }, [handleSubmit.status, query.entry, refetch, router])
+  }, [submit.isSuccess, query.entry, refetch, router])
 
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
-      <Notification show={handleSubmit.status === 'error'}>
-        {handleSubmit.error?.message}
-      </Notification>
+      <Notification show={submit.isError}>{submit.error?.message}</Notification>
       <CommunityForm
         initialValue={community || undefined}
-        isLoading={handleSubmit.status === 'pending'}
-        onSubmit={handleSubmit.execute}
+        isLoading={submit.isLoading}
+        onSubmit={submit.mutate}
         disabled={!isAdmin}
         className="flex w-full flex-col"
       />
