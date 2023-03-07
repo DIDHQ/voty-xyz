@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { nanoid } from 'nanoid'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
@@ -11,6 +11,10 @@ import { trpc } from '../../utils/trpc'
 import useDids from '../../hooks/use-dids'
 import LoadingBar from '../../components/basic/loading-bar'
 import { documentTitle } from '../../utils/constants'
+import useSignDocument from '../../hooks/use-sign-document'
+import useAsync from '../../hooks/use-async'
+import { Community } from '../../utils/schemas/community'
+import Notification from '../../components/basic/notification'
 
 export default function CreateWorkgroupPage() {
   const router = useRouter()
@@ -30,33 +34,49 @@ export default function CreateWorkgroupPage() {
     [dids, query.entry],
   )
   const newWorkgroup = useMemo(() => nanoid(), [])
-  const handleSuccess = useCallback(
-    (workgroup?: string) => {
-      refetch()
-      if (workgroup) {
-        router.push(`/${query.entry}/${workgroup}`)
-      } else {
-        router.push(`/${query.entry}`)
-      }
-    },
-    [refetch, router, query.entry],
+  const signDocument = useSignDocument(
+    query.entry,
+    `You are updating community of Voty\n\nhash:\n{sha256}`,
   )
+  const { mutateAsync } = trpc.community.create.useMutation()
+  const handleSubmit = useAsync(
+    useCallback(
+      async (community: Community) => {
+        const signed = await signDocument(community)
+        if (signed) {
+          return mutateAsync(signed)
+        }
+      },
+      [signDocument, mutateAsync],
+    ),
+  )
+  useEffect(() => {
+    if (handleSubmit.status === 'success') {
+      refetch()
+      router.push(`/${query.entry}/${newWorkgroup}`)
+    }
+  }, [handleSubmit.status, newWorkgroup, query.entry, refetch, router])
 
   return (
-    <CommunityLayout>
+    <>
       <Head>
         <title>{`New workgroup - ${documentTitle}`}</title>
       </Head>
       <LoadingBar loading={isLoading} />
-      {community ? (
+      <Notification show={handleSubmit.status === 'error'}>
+        {handleSubmit.error?.message}
+      </Notification>
+      <CommunityLayout>
         <WorkgroupForm
-          community={community}
+          initialValue={community || undefined}
+          entry={query.entry || ''}
           workgroup={newWorkgroup}
-          onSuccess={handleSuccess}
+          onSubmit={handleSubmit.execute}
+          isLoading={handleSubmit.status === 'pending'}
           disabled={!isAdmin}
           className="pt-6 sm:pt-8"
         />
-      ) : null}
-    </CommunityLayout>
+      </CommunityLayout>
+    </>
   )
 }

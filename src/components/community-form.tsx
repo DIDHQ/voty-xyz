@@ -3,6 +3,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dynamic from 'next/dynamic'
 import clsx from 'clsx'
+import { ArrowPathIcon, PlusIcon } from '@heroicons/react/20/solid'
 
 import { Community, communitySchema } from '../utils/schemas/community'
 import TextInput from './basic/text-input'
@@ -169,6 +170,7 @@ export default function CommunityForm(props: {
         <FormFooter>
           <Button
             primary
+            icon={isNewCommunity ? PlusIcon : ArrowPathIcon}
             loading={props.isLoading}
             onClick={handleSubmit(props.onSubmit)}
           >

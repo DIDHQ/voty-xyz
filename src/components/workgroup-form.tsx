@@ -1,12 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useEffect, useMemo } from 'react'
-import {
-  Controller,
-  FormProvider,
-  useFieldArray,
-  useForm,
-} from 'react-hook-form'
-import dynamic from 'next/dynamic'
+import { useEffect, useMemo } from 'react'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 import {
   ArchiveBoxIcon,
   ArrowPathIcon,
@@ -14,7 +8,6 @@ import {
 } from '@heroicons/react/20/solid'
 
 import { Community, communitySchema } from '../utils/schemas/community'
-import { Authorized } from '../utils/schemas/authorship'
 import DurationInput from './basic/duration-input'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
@@ -23,22 +16,21 @@ import DecimalSetsBlock from './decimal-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 import PreviewMarkdown from './preview-markdown'
-
-const SigningCommunityButton = dynamic(
-  () => import('./signing/signing-community-button'),
-  { ssr: false },
-)
+import Button from './basic/button'
 
 const defaultDuration = 86400
 
 export default function WorkgroupForm(props: {
-  community: Authorized<Community>
+  initialValue?: Community
+  entry: string
   workgroup: string
-  onSuccess: (workgroup?: string) => void
+  onSubmit: (value: Community) => void
+  isLoading: boolean
+  onArchive?: (value: Community) => void
+  isArchiving?: boolean
   disabled?: boolean
   className?: string
 }) {
-  const { onSuccess } = props
   const methods = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
@@ -48,70 +40,24 @@ export default function WorkgroupForm(props: {
     reset,
     watch,
     formState: { errors },
+    handleSubmit,
   } = methods
-  const { update } = useFieldArray({ control, name: 'workgroups' })
   const workgroupIndex = useMemo(() => {
-    const index = props.community?.workgroups?.findIndex(
+    const index = props.initialValue?.workgroups?.findIndex(
       ({ id }) => id === props.workgroup,
     )
     if (index === undefined || index === -1) {
-      return props.community?.workgroups?.length || 0
+      return props.initialValue?.workgroups?.length || 0
     }
     return index
-  }, [props.community?.workgroups, props.workgroup])
+  }, [props.initialValue?.workgroups, props.workgroup])
   const isNewWorkgroup = useMemo(
-    () => !props.community?.workgroups?.[workgroupIndex],
-    [props.community?.workgroups, workgroupIndex],
+    () => !props.initialValue?.workgroups?.[workgroupIndex],
+    [props.initialValue?.workgroups, workgroupIndex],
   )
   useEffect(() => {
-    reset(props.community)
-    if (isNewWorkgroup) {
-      update(workgroupIndex, {
-        id: props.workgroup,
-        name: '',
-        permission: {
-          proposing: {
-            operation: 'or',
-            operands: [
-              {
-                function: 'prefixes_dot_suffix_exact_match',
-                arguments: [props.community.authorship.author, ['']],
-              },
-            ],
-          },
-          voting: {
-            operation: 'max',
-            operands: [
-              {
-                function: 'prefixes_dot_suffix_fixed_power',
-                arguments: [props.community.authorship.author, [''], '1'],
-              },
-            ],
-          },
-        },
-        duration: {
-          announcement: defaultDuration,
-          voting: defaultDuration,
-        },
-        extension: {
-          terms_and_conditions: '',
-        },
-      })
-    }
-  }, [
-    isNewWorkgroup,
-    props.community,
-    props.workgroup,
-    reset,
-    update,
-    workgroupIndex,
-  ])
-  const handleArchiveSuccess = useCallback(() => {
-    onSuccess()
-  }, [onSuccess])
-  const handleSuccess = useCallback(() => {
-    onSuccess(props.workgroup)
-  }, [onSuccess, props.workgroup])
+    reset(props.initialValue)
+  }, [props.initialValue, reset])
 
   return (
     <Form className={props.className}>
@@ -168,7 +114,7 @@ export default function WorkgroupForm(props: {
               <FormProvider {...methods}>
                 <BooleanSetsBlock
                   name="proposing"
-                  entry={props.community.authorship.author}
+                  entry={props.entry}
                   workgroupIndex={workgroupIndex}
                   disabled={props.disabled}
                 />
@@ -189,7 +135,7 @@ export default function WorkgroupForm(props: {
               <FormProvider {...methods}>
                 <DecimalSetsBlock
                   name="voting"
-                  entry={props.community.authorship.author}
+                  entry={props.entry}
                   workgroupIndex={workgroupIndex}
                   disabled={props.disabled}
                 />
@@ -281,26 +227,22 @@ export default function WorkgroupForm(props: {
       </FormSection>
       {props.disabled ? null : (
         <FormFooter>
-          <FormProvider {...methods}>
-            <SigningCommunityButton
-              did={props.community.authorship.author}
-              icon={isNewWorkgroup ? PlusIcon : ArrowPathIcon}
-              onSuccess={handleSuccess}
+          <Button
+            primary
+            icon={isNewWorkgroup ? PlusIcon : ArrowPathIcon}
+            loading={props.isLoading}
+            onClick={handleSubmit(props.onSubmit)}
+          >
+            {isNewWorkgroup ? 'Create' : 'Update'}
+          </Button>
+          {isNewWorkgroup || !props.onArchive ? null : (
+            <Button
+              icon={ArchiveBoxIcon}
+              loading={props.isArchiving}
+              onClick={handleSubmit(props.onArchive)}
             >
-              {isNewWorkgroup ? 'Create' : 'Update'}
-            </SigningCommunityButton>
-          </FormProvider>
-          {isNewWorkgroup ? null : (
-            <FormProvider {...methods}>
-              <SigningCommunityButton
-                archive={props.workgroup}
-                did={props.community.authorship.author}
-                icon={ArchiveBoxIcon}
-                onSuccess={handleArchiveSuccess}
-              >
-                Archive
-              </SigningCommunityButton>
-            </FormProvider>
+              Archive
+            </Button>
           )}
         </FormFooter>
       )}
