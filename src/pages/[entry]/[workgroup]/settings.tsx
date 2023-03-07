@@ -36,7 +36,7 @@ export default function WorkgroupSettingsPage() {
     <CommunityLayout>
       <WorkgroupLayout>
         <LoadingBar loading={isLoading} />
-        {query.workgroup && community ? (
+        {query.entry && query.workgroup && community ? (
           <WorkgroupForm
             community={community}
             workgroup={query.workgroup}
