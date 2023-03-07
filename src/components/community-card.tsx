@@ -20,7 +20,6 @@ export default function CommunityCard(props: {
     >
       <Avatar
         size={24}
-        name={community.authorship.author}
         value={community.extension?.logo}
         className="shrink-0"
       />

@@ -40,7 +40,7 @@ export default function AvatarInput(props: {
   return (
     <div>
       <span className="h-20 w-20 overflow-hidden rounded-full bg-gray-100">
-        <Avatar size={20} name={props.name} value={props.value} />
+        <Avatar size={20} value={props.value} />
       </span>
       <input
         ref={inputRef}

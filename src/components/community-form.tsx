@@ -58,7 +58,6 @@ export default function CommunityForm(props: {
                 name="extension.logo"
                 render={({ field: { value, onChange } }) => (
                   <AvatarInput
-                    name={props.entry}
                     value={value}
                     onChange={onChange}
                     disabled={props.disabled}

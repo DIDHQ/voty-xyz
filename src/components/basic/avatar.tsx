@@ -3,7 +3,6 @@ import { useMemo } from 'react'
 
 export default function Avatar(props: {
   size: number
-  name?: string
   value?: string | null
   variant?: 'marble' | 'beam' | 'pixel' | 'sunset' | 'ring' | 'bauhaus'
   noRing?: boolean
@@ -28,7 +27,7 @@ export default function Avatar(props: {
   return props.value ? (
     <img
       src={props.value}
-      alt={props.name}
+      alt={props.value}
       width={size}
       height={size}
       style={style}
