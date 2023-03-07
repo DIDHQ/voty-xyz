@@ -18,8 +18,6 @@ import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 import PreviewMarkdown from './preview-markdown'
 import Button from './basic/button'
 
-const defaultDuration = 86400
-
 export default function WorkgroupForm(props: {
   initialValue?: Community
   entry: string
@@ -155,7 +153,6 @@ export default function WorkgroupForm(props: {
               }
             >
               <Controller
-                defaultValue={defaultDuration}
                 control={control}
                 name={`workgroups.${workgroupIndex}.duration.announcement`}
                 render={({ field: { value, onChange } }) => (
@@ -180,7 +177,6 @@ export default function WorkgroupForm(props: {
               }
             >
               <Controller
-                defaultValue={defaultDuration}
                 control={control}
                 name={`workgroups.${workgroupIndex}.duration.voting`}
                 render={({ field: { value, onChange } }) => (
