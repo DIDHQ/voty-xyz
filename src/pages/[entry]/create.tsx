@@ -56,6 +56,49 @@ export default function CreateWorkgroupPage() {
       router.push(`/${query.entry}/${newWorkgroup}`)
     }
   }, [handleSubmit.status, newWorkgroup, query.entry, refetch, router])
+  const initialValue = useMemo(
+    () =>
+      community && query.entry
+        ? ({
+            ...community,
+            workgroups: [
+              ...(community.workgroups || []),
+              {
+                id: newWorkgroup,
+                name: '',
+                permission: {
+                  proposing: {
+                    operation: 'or',
+                    operands: [
+                      {
+                        function: 'prefixes_dot_suffix_exact_match',
+                        arguments: [query.entry, ['']],
+                      },
+                    ],
+                  },
+                  voting: {
+                    operation: 'max',
+                    operands: [
+                      {
+                        function: 'prefixes_dot_suffix_fixed_power',
+                        arguments: [query.entry, [''], '1'],
+                      },
+                    ],
+                  },
+                },
+                duration: {
+                  announcement: 86400,
+                  voting: 86400,
+                },
+                extension: {
+                  terms_and_conditions: '',
+                },
+              },
+            ],
+          } satisfies Community)
+        : undefined,
+    [community, newWorkgroup, query.entry],
+  )
 
   return (
     <>
@@ -68,7 +111,7 @@ export default function CreateWorkgroupPage() {
       </Notification>
       <CommunityLayout>
         <WorkgroupForm
-          initialValue={community || undefined}
+          initialValue={initialValue}
           entry={query.entry || ''}
           workgroup={newWorkgroup}
           onSubmit={handleSubmit.execute}
