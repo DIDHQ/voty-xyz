@@ -100,8 +100,9 @@ export default function WorkgroupForm(props: {
     }
   }, [
     isNewWorkgroup,
-    props.community.authorship.author,
+    props.community,
     props.workgroup,
+    reset,
     update,
     workgroupIndex,
   ])
