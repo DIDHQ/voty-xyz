@@ -62,7 +62,8 @@ export default function Toolbar(props: { className?: string }) {
             )}
           </TextButton>
           <div className="w-0 flex-1" />
-          <InfoButton className="mr-4" />
+          <InfoButton />
+          <div className="w-4"></div>
           <ConnectButton />
         </div>
       </div>
