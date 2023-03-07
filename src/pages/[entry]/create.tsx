@@ -48,7 +48,7 @@ export default function CreateWorkgroupPage() {
         <title>{`New workgroup - ${documentTitle}`}</title>
       </Head>
       <LoadingBar loading={isLoading} />
-      {community ? (
+      {query.entry && community ? (
         <WorkgroupForm
           community={community}
           workgroup={newWorkgroup}

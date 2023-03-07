@@ -63,9 +63,7 @@ export default function WorkgroupForm(props: {
     return index
   }, [props.community?.workgroups, props.workgroup])
   const isNewWorkgroup = useMemo(
-    () =>
-      props.community?.workgroups &&
-      !props.community.workgroups[workgroupIndex],
+    () => !props.community?.workgroups?.[workgroupIndex],
     [props.community?.workgroups, workgroupIndex],
   )
   useEffect(() => {
