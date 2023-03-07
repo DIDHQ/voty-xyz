@@ -48,14 +48,12 @@ export default function CreateProposalPage() {
           >
             <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
           </TextButton>
-          {community && workgroup ? (
-            <ProposalForm
-              community={community}
-              workgroup={workgroup}
-              onSuccess={handleSuccess}
-              className="pt-6"
-            />
-          ) : null}
+          <ProposalForm
+            community={community || undefined}
+            workgroup={workgroup}
+            onSuccess={handleSuccess}
+            className="pt-6"
+          />
         </div>
         <div className="relative mt-[-1px] w-full shrink-0 pt-6 sm:sticky sm:top-18 sm:w-72 sm:pt-8">
           <div className="space-y-6 rounded border border-gray-200 p-6">

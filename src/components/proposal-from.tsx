@@ -37,8 +37,8 @@ const SigningProposalButton = dynamic(
 )
 
 export default function ProposalForm(props: {
-  community: Authorized<Community> & Serialize<{ entry: Entry }>
-  workgroup: Workgroup
+  community?: Authorized<Community> & Serialize<{ entry: Entry }>
+  workgroup?: Workgroup
   onSuccess(permalink: string): void
   className?: string
 }) {
@@ -68,7 +68,9 @@ export default function ProposalForm(props: {
     }
   }, [community, setValue])
   useEffect(() => {
-    setValue('workgroup', workgroup.id)
+    if (workgroup) {
+      setValue('workgroup', workgroup.id)
+    }
   }, [workgroup, setValue])
   const [did, setDid] = useState('')
   const { data: snapshots } = useQuery(
