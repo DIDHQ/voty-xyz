@@ -3,6 +3,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dynamic from 'next/dynamic'
 import { ArrowPathIcon, PlusIcon } from '@heroicons/react/20/solid'
+import clsx from 'clsx'
 
 import { Community, communitySchema } from '../utils/schemas/community'
 import TextInput from './basic/text-input'
@@ -10,7 +11,6 @@ import Textarea from './basic/textarea'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 import PreviewMarkdown from './preview-markdown'
-import clsx from 'clsx'
 
 const AvatarInput = dynamic(() => import('./basic/avatar-input'), {
   ssr: false,
