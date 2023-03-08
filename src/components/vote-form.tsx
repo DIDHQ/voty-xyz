@@ -155,10 +155,6 @@ export default function VoteForm(props: {
       handleSuccess()
     }
   })
-  const disabled = useMemo(
-    () => !didOptions?.filter(({ disabled }) => !disabled).length,
-    [didOptions],
-  )
 
   return (
     <div className={props.className}>
@@ -190,16 +186,12 @@ export default function VoteForm(props: {
       {period === Period.ENDED ? null : (
         <div className="mt-6 flex w-full flex-col items-end">
           <DidCombobox
-            label="Select a DID as voter"
             top
+            label="Select a DID as voter"
             options={didOptions}
             value={did}
             onChange={setDid}
-            disabled={disabled}
             onClick={connect}
-            placeholder={
-              didOptions?.length === 0 ? 'No available DIDs' : undefined
-            }
             className="w-full flex-1 sm:w-auto sm:flex-none"
           />
           {period !== Period.VOTING ? (
