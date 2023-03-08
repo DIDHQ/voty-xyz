@@ -10,6 +10,8 @@ import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
 import Button from '../../components/basic/button'
 import EmptyState from '../../components/empty-state'
+import useDids from '../../hooks/use-dids'
+import useWallet from '../../hooks/use-wallet'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['entry']>()
@@ -40,6 +42,12 @@ export default function CommunityIndexPage() {
       fetchNextPage()
     }
   }, [fetchNextPage, hasNextPage, inView])
+  const { account } = useWallet()
+  const { data: dids } = useDids(account)
+  const disabled = useMemo(
+    () => !(query.entry && dids?.includes(query.entry)),
+    [dids, query.entry],
+  )
 
   return (
     <CommunityLayout>
@@ -52,7 +60,7 @@ export default function CommunityIndexPage() {
           title="No events"
           className="mt-24"
           footer={
-            community && !community?.workgroups?.length ? (
+            community && !community?.workgroups?.length && !disabled ? (
               <Link href={`/${query.entry}/create`}>
                 <Button primary icon={PlusIcon}>
                   New Workgroup

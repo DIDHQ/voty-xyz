@@ -11,12 +11,12 @@ export default function CreateWorkgroupButton(props: {
 }) {
   const { account } = useWallet()
   const { data: dids } = useDids(account)
-  const isAdmin = useMemo(
-    () => !!(props.entry && dids?.includes(props.entry)),
+  const disabled = useMemo(
+    () => !(props.entry && dids?.includes(props.entry)),
     [dids, props.entry],
   )
 
-  return isAdmin ? (
+  return disabled ? null : (
     <TextButton
       primary
       href={`/${props.entry}/create`}
@@ -24,5 +24,5 @@ export default function CreateWorkgroupButton(props: {
     >
       <PlusIcon className="h-5 w-5" />
     </TextButton>
-  ) : null
+  )
 }

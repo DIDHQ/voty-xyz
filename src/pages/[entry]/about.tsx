@@ -19,15 +19,15 @@ export default function CommunityAboutPage() {
   )
   const { account } = useWallet()
   const { data: dids } = useDids(account)
-  const isAdmin = useMemo(
-    () => !!(query.entry && dids?.includes(query.entry)),
+  const disabled = useMemo(
+    () => !(query.entry && dids?.includes(query.entry)),
     [dids, query.entry],
   )
 
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
-      {isAdmin ? (
+      {disabled ? null : (
         <Link
           href={`/${query.entry}/settings`}
           className="float-right mt-6 sm:mt-8"
@@ -36,7 +36,7 @@ export default function CommunityAboutPage() {
             Edit
           </Button>
         </Link>
-      ) : null}
+      )}
       <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8">
         About
       </h3>
