@@ -52,7 +52,7 @@ export default function CommunityIndexPage() {
           title="No events"
           className="mt-24"
           footer={
-            community?.workgroups?.length === 0 ? (
+            community && !community?.workgroups?.length ? (
               <Link href={`/${query.entry}/create`}>
                 <Button primary icon={PlusIcon}>
                   New Workgroup
