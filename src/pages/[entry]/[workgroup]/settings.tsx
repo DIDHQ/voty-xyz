@@ -1,19 +1,16 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import WorkgroupForm from '../../../components/workgroup-form'
 import CommunityLayout from '../../../components/layouts/community'
 import WorkgroupLayout from '../../../components/layouts/workgroup'
-import useWallet from '../../../hooks/use-wallet'
 import { trpc } from '../../../utils/trpc'
-import useDids from '../../../hooks/use-dids'
 import LoadingBar from '../../../components/basic/loading-bar'
 
 export default function WorkgroupSettingsPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry', 'workgroup']>()
-  const { account } = useWallet()
   const {
     data: community,
     isLoading,
@@ -22,30 +19,32 @@ export default function WorkgroupSettingsPage() {
     { entry: query.entry },
     { enabled: !!query.entry, refetchOnWindowFocus: false },
   )
-  const { data: dids } = useDids(account)
-  const isAdmin = useMemo(
-    () => !!(query.entry && dids?.includes(query.entry)),
-    [dids, query.entry],
+  const handleSuccess = useCallback(
+    (isArchive: boolean) => {
+      refetch()
+      router.push(
+        isArchive
+          ? `/${query.entry}`
+          : `/${query.entry}/${query.workgroup}/settings`,
+      )
+    },
+    [query.entry, query.workgroup, refetch, router],
   )
-  const handleSuccess = useCallback(() => {
-    refetch()
-    router.push(`/${query.entry}/${query.workgroup}`)
-  }, [refetch, query.entry, query.workgroup, router])
 
   return (
-    <CommunityLayout>
-      <WorkgroupLayout>
-        <LoadingBar loading={isLoading} />
-        {query.entry && query.workgroup && community ? (
+    <>
+      <LoadingBar loading={isLoading} />
+      <CommunityLayout>
+        <WorkgroupLayout>
           <WorkgroupForm
-            community={community}
-            workgroup={query.workgroup}
+            author={query.entry || ''}
+            initialValue={community || undefined}
+            workgroup={query.workgroup || ''}
             onSuccess={handleSuccess}
-            disabled={!isAdmin}
             className="pt-6 sm:pt-8"
           />
-        ) : null}
-      </WorkgroupLayout>
-    </CommunityLayout>
+        </WorkgroupLayout>
+      </CommunityLayout>
+    </>
   )
 }

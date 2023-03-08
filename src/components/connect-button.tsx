@@ -36,7 +36,7 @@ export default function ConnectButton() {
                     className="h-9 w-9"
                   />
                 ) : (
-                  <Avatar size={9} name={account.address} variant="beam" />
+                  <Avatar size={9} variant="beam" />
                 )}
                 <div className="group ml-2 hidden text-start sm:block">
                   <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">

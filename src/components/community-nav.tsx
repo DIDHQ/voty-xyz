@@ -105,7 +105,6 @@ export default function CommunityNav(props: { className?: string }) {
         <div className="flex w-full flex-col items-center rounded border border-gray-200 pb-4">
           <div className="flex w-full items-center space-x-4 p-6 pb-0 sm:flex-col sm:space-y-4 sm:space-x-0 sm:pt-8">
             <Avatar
-              name={community?.authorship.author}
               value={community?.extension?.logo}
               size={20}
               className="shrink-0"

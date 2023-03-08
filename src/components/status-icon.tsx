@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import { useId, useMemo } from 'react'
 
 import useStatus from '../hooks/use-status'
-import { permalink2Explorer, permalink2Url } from '../utils/permalink'
+import { permalink2Explorer } from '../utils/permalink'
 import TextButton from './basic/text-button'
 
 const Tooltip = dynamic(
@@ -25,21 +25,12 @@ export default function StatusIcon(props: {
       ),
     [isLoading, status?.timestamp],
   )
-  const href = useMemo(
-    () =>
-      props.permalink
-        ? status?.timestamp
-          ? permalink2Explorer(props.permalink)
-          : permalink2Url(props.permalink)
-        : undefined,
-    [props.permalink, status?.timestamp],
-  )
   const id = useId()
 
   return props.permalink ? (
     <>
       <a
-        href={href}
+        href={permalink2Explorer(props.permalink)}
         data-tooltip-id={id}
         data-tooltip-place="left"
         className={props.className}

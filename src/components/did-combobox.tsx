@@ -54,7 +54,7 @@ export default function DidCombobox(props: {
         </HeadlessCombobox.Button>
         <HeadlessCombobox.Options
           className={clsx(
-            'absolute z-10 max-h-60 w-full overflow-auto rounded bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm',
+            'absolute z-10 max-h-60 w-fit overflow-auto rounded bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm',
             props.top ? 'bottom-full mb-1' : 'top-full mt-1',
           )}
         >
