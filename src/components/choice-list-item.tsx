@@ -57,9 +57,9 @@ export function ChoiceListItem(props: {
       }}
     >
       <span className="w-0 flex-1 truncate">{option}</span>
-      {choices?.powers[option] ? (
+      {choices?.powers[option] || newPower.gt(0) ? (
         <span className="text-xs text-gray-500">
-          {choices.powers[option]}
+          {choices?.powers[option] || 0}
           {newPower.gt(0) ? ` + ${newPower.toString()}` : ''}&nbsp;(
           {percentage.toFixed(1)}%)
         </span>
