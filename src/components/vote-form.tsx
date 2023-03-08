@@ -65,7 +65,7 @@ export default function VoteForm(props: {
   const { data: voted, refetch: refetchVoted } =
     trpc.vote.groupByProposal.useQuery(
       { proposal: props.proposal?.permalink },
-      { enabled: !!dids && !!props.proposal?.permalink },
+      { enabled: !!props.proposal?.permalink },
     )
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
