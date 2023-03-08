@@ -37,7 +37,7 @@ export default function VoteForm(props: {
   const { data: choices, refetch: refetchChoices } =
     trpc.choice.groupByProposal.useQuery(
       { proposal: props.proposal?.permalink },
-      { enabled: !!props.proposal?.permalink, refetchOnWindowFocus: false },
+      { enabled: !!props.proposal?.permalink },
     )
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
@@ -60,18 +60,12 @@ export default function VoteForm(props: {
         return obj
       }, {} as { [key: string]: Decimal })
     },
-    {
-      enabled: !!dids && !!props.workgroup && !!props.proposal?.snapshots,
-      refetchOnWindowFocus: false,
-    },
+    { enabled: !!dids && !!props.workgroup && !!props.proposal?.snapshots },
   )
   const { data: voted, refetch: refetchVoted } =
     trpc.vote.groupByProposal.useQuery(
       { proposal: props.proposal?.permalink },
-      {
-        enabled: !!dids && !!props.proposal?.permalink,
-        refetchOnWindowFocus: false,
-      },
+      { enabled: !!dids && !!props.proposal?.permalink },
     )
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
@@ -96,10 +90,7 @@ export default function VoteForm(props: {
         did!,
         props.proposal!.snapshots,
       ),
-    {
-      enabled: !!props.workgroup && !!did && !!props.proposal,
-      refetchOnWindowFocus: false,
-    },
+    { enabled: !!props.workgroup && !!did && !!props.proposal },
   )
   useEffect(() => {
     if (votingPower === undefined) {
@@ -155,10 +146,6 @@ export default function VoteForm(props: {
       handleSuccess()
     }
   })
-  const disabled = useMemo(
-    () => !didOptions?.filter(({ disabled }) => !disabled).length,
-    [didOptions],
-  )
 
   return (
     <div className={props.className}>
@@ -190,16 +177,12 @@ export default function VoteForm(props: {
       {period === Period.ENDED ? null : (
         <div className="mt-6 flex w-full flex-col items-end">
           <DidCombobox
-            label="Select a DID as voter"
             top
+            label="Select a DID as voter"
             options={didOptions}
             value={did}
             onChange={setDid}
-            disabled={disabled}
             onClick={connect}
-            placeholder={
-              didOptions?.length === 0 ? 'No available DIDs' : undefined
-            }
             className="w-full flex-1 sm:w-auto sm:flex-none"
           />
           {period !== Period.VOTING ? (

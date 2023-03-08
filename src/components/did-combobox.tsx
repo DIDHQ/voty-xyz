@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
-import { Combobox as HeadlessCombobox } from '@headlessui/react'
+import { Combobox } from '@headlessui/react'
 import clsx from 'clsx'
 
 type Option = {
@@ -15,8 +15,6 @@ export default function DidCombobox(props: {
   label?: string
   value: string
   onChange(value: string): void
-  disabled?: boolean
-  placeholder?: string
   onClick?: () => void
   className?: string
 }) {
@@ -27,32 +25,42 @@ export default function DidCombobox(props: {
       : props.options?.filter((option) => {
           return option.did.toLowerCase().includes(query.toLowerCase())
         })
+  const disabled = useMemo(
+    () => props.options?.filter(({ disabled }) => !disabled).length === 0,
+    [props.options],
+  )
 
   return (
-    <HeadlessCombobox
+    <Combobox
       as="div"
       value={props.value}
       onChange={props.onChange}
-      disabled={props.disabled}
+      onClick={props.onClick}
+      disabled={disabled}
       className={props.className}
     >
-      <HeadlessCombobox.Label className="block text-sm font-medium text-gray-700">
+      <Combobox.Label className="block text-sm font-medium text-gray-700">
         {props.label}
-      </HeadlessCombobox.Label>
+      </Combobox.Label>
       <div className="relative mt-1">
-        <HeadlessCombobox.Input
-          placeholder={props.placeholder}
-          onClick={props.onClick}
+        <Combobox.Input
+          placeholder={
+            props.options
+              ? props.options.length === 0
+                ? 'No available DID'
+                : undefined
+              : 'Loading...'
+          }
           onChange={(event) => setQuery(event.target.value)}
           className="w-full rounded border border-gray-300 bg-white py-2 pl-3 pr-10 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm"
         />
-        <HeadlessCombobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r px-2 focus:outline-none">
+        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r px-2 focus:outline-none">
           <ChevronUpDownIcon
             className="h-5 w-5 text-gray-400"
             aria-hidden="true"
           />
-        </HeadlessCombobox.Button>
-        <HeadlessCombobox.Options
+        </Combobox.Button>
+        <Combobox.Options
           className={clsx(
             'absolute z-10 max-h-60 w-fit overflow-auto rounded bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm',
             props.top ? 'bottom-full mb-1' : 'top-full mt-1',
@@ -64,7 +72,7 @@ export default function DidCombobox(props: {
             </div>
           ) : (
             filteredOptions?.map((option) => (
-              <HeadlessCombobox.Option
+              <Combobox.Option
                 key={option.did}
                 value={option.did}
                 disabled={option.disabled}
@@ -129,11 +137,11 @@ export default function DidCombobox(props: {
                     )}
                   </>
                 )}
-              </HeadlessCombobox.Option>
+              </Combobox.Option>
             ))
           )}
-        </HeadlessCombobox.Options>
+        </Combobox.Options>
       </div>
-    </HeadlessCombobox>
+    </Combobox>
   )
 }

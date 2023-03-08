@@ -16,7 +16,7 @@ export default function SubscriptionButton(props: {
   const { account } = useWallet()
   const { refetch: refetchList } = trpc.subscription.list.useQuery(
     { subscriber: { type: 'eth_personal_sign', address: account?.address! } },
-    { enabled: !!account?.address, refetchOnWindowFocus: false },
+    { enabled: !!account?.address },
   )
   const { data, mutateAsync, isLoading, isSuccess, isError, error } =
     trpc.subscription.set.useMutation()
@@ -25,10 +25,7 @@ export default function SubscriptionButton(props: {
       subscriber: { type: 'eth_personal_sign', address: account?.address! },
       entry: props.entry,
     },
-    {
-      enabled: !!account?.address && !!props.entry,
-      refetchOnWindowFocus: false,
-    },
+    { enabled: !!account?.address && !!props.entry },
   )
   const signSubscribe = useSignDocumentWithoutAuthorship(
     `You are subscribing community on Voty\n\nhash:\n{sha256}`,

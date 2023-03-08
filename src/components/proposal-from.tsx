@@ -89,7 +89,6 @@ export default function ProposalForm(props: {
     },
     {
       enabled: !!workgroup?.permission.proposing,
-      refetchOnWindowFocus: false,
       refetchInterval: 30000,
     },
   )
@@ -111,7 +110,6 @@ export default function ProposalForm(props: {
     },
     {
       enabled: !!dids && !!props.workgroup && !!snapshots,
-      refetchOnWindowFocus: false,
     },
   )
   const didOptions = useMemo(
@@ -139,10 +137,6 @@ export default function ProposalForm(props: {
     }
   }, [setValue, snapshots])
   const { data: status } = useStatus(community?.entry.community)
-  const disabled = useMemo(
-    () => !didOptions?.filter(({ disabled }) => !disabled).length,
-    [didOptions],
-  )
   const options = watch('options') || []
   const signDocument = useSignDocument(
     did,
@@ -297,15 +291,12 @@ export default function ProposalForm(props: {
         </FormSection>
         <div className="flex w-full flex-col items-end space-y-6">
           <DidCombobox
+            top
             label="Select a DID as proposer"
             options={didOptions}
             value={did}
             onChange={setDid}
-            disabled={disabled}
             onClick={connect}
-            placeholder={
-              didOptions?.length === 0 ? 'No available DIDs' : undefined
-            }
             className="w-full flex-1 sm:w-auto sm:flex-none"
           />
           <Button

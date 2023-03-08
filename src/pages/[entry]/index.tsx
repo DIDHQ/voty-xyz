@@ -16,7 +16,7 @@ export default function CommunityIndexPage() {
   const query = useRouterQuery<['entry']>()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
-    { enabled: !!query.entry, refetchOnWindowFocus: false },
+    { enabled: !!query.entry },
   )
   const {
     data,
@@ -25,11 +25,7 @@ export default function CommunityIndexPage() {
     isLoading: isListLoading,
   } = trpc.proposal.list.useInfiniteQuery(
     { entry: query.entry },
-    {
-      enabled: !!query.entry,
-      getNextPageParam: ({ next }) => next,
-      refetchOnWindowFocus: false,
-    },
+    { enabled: !!query.entry, getNextPageParam: ({ next }) => next },
   )
   const proposals = useMemo(
     () => data?.pages.flatMap(({ data }) => data),
@@ -57,7 +53,7 @@ export default function CommunityIndexPage() {
             community && !community?.workgroups?.length && isManager ? (
               <Link href={`/${query.entry}/create`}>
                 <Button primary icon={PlusIcon}>
-                  New Workgroup
+                  Workgroup
                 </Button>
               </Link>
             ) : undefined
