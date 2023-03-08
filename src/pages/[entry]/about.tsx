@@ -1,5 +1,3 @@
-import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import { createProxySSGHelpers } from '@trpc/react-query/ssg'
 import { useMemo } from 'react'
 import Link from 'next/link'
 import { PencilIcon } from '@heroicons/react/20/solid'
@@ -8,36 +6,22 @@ import CommunityLayout from '../../components/layouts/community'
 import Article from '../../components/basic/article'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
-import { appRouter } from '../../server/routers/_app'
 import useWallet from '../../hooks/use-wallet'
 import useDids from '../../hooks/use-dids'
 import Button from '../../components/basic/button'
-import { cacheControl } from '../../utils/constants'
+import useRouterQuery from '../../hooks/use-router-query'
 
-export const getServerSideProps: GetServerSideProps<{
-  entry: string
-}> = async ({ params, res }) => {
-  const entry = params!.entry as string
-
-  const ssg = createProxySSGHelpers({ router: appRouter, ctx: {} })
-  await ssg.community.getByEntry.prefetch({ entry })
-
-  res.setHeader(...cacheControl)
-  return { props: { trpcState: ssg.dehydrate(), entry } }
-}
-
-export default function CommunityAboutPage(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>,
-) {
+export default function CommunityAboutPage() {
+  const query = useRouterQuery<['entry']>()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
-    { entry: props.entry },
-    { enabled: !!props.entry, refetchOnWindowFocus: false },
+    { entry: query.entry },
+    { enabled: !!query.entry, refetchOnWindowFocus: false },
   )
   const { account } = useWallet()
   const { data: dids } = useDids(account)
   const isAdmin = useMemo(
-    () => !!(props.entry && dids?.includes(props.entry)),
-    [dids, props.entry],
+    () => !!(query.entry && dids?.includes(query.entry)),
+    [dids, query.entry],
   )
 
   return (
@@ -45,7 +29,7 @@ export default function CommunityAboutPage(
       <LoadingBar loading={isLoading} />
       {isAdmin ? (
         <Link
-          href={`/${props.entry}/settings`}
+          href={`/${query.entry}/settings`}
           className="float-right mt-6 sm:mt-8"
         >
           <Button icon={PencilIcon} primary>
