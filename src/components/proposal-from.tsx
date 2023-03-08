@@ -121,7 +121,6 @@ export default function ProposalForm(props: {
     },
     { enabled: !!dids && !!props.workgroup },
   )
-  console.log(disables)
   const didOptions = useMemo(
     () =>
       disables && dids
