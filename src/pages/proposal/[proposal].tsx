@@ -81,7 +81,7 @@ export default function ProposalPage() {
       >
         <StatusIcon
           permalink={query.proposal}
-          className="absolute right-4 top-10 sm:top-12"
+          className="absolute right-4 top-4 sm:top-12"
         />
         <div className="space-y-6 rounded border border-gray-200 p-6">
           <DetailList title="Information">
