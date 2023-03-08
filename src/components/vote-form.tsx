@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Controller, FormProvider, useForm } from 'react-hook-form'
-import { useQuery } from '@tanstack/react-query'
+import { useCallback, useEffect, useId, useMemo, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
 import { BoltIcon } from '@heroicons/react/20/solid'
 import type { Decimal } from 'decimal.js'
@@ -18,10 +18,14 @@ import { FormItem } from './basic/form'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import { ChoiceListItem } from './choice-list-item'
+import DidCombobox from './did-combobox'
+import Button from './basic/button'
+import useSignDocument from '../hooks/use-sign-document'
 
-const SigningVoteButton = dynamic(() => import('./signing-vote-button'), {
-  ssr: false,
-})
+const Tooltip = dynamic(
+  () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
+  { ssr: false },
+)
 
 export default function VoteForm(props: {
   proposal?: Proposal & { permalink: string; votes: number }
@@ -36,7 +40,7 @@ export default function VoteForm(props: {
       { enabled: !!proposal?.permalink, refetchOnWindowFocus: false },
     )
   const [did, setDid] = useState('')
-  const { account } = useWallet()
+  const { account, connect } = useWallet()
   const { data: dids } = useDids(account, proposal?.snapshots)
   const { data: powers } = useQuery(
     [dids, props.workgroup, proposal?.snapshots],
@@ -61,10 +65,11 @@ export default function VoteForm(props: {
       refetchOnWindowFocus: false,
     },
   )
-  const { data: voted, refetch } = trpc.vote.groupByProposal.useQuery(
-    { proposal: proposal?.permalink },
-    { enabled: !!dids && !!proposal?.permalink, refetchOnWindowFocus: false },
-  )
+  const { data: voted, refetch: refetchVoted } =
+    trpc.vote.groupByProposal.useQuery(
+      { proposal: proposal?.permalink },
+      { enabled: !!dids && !!proposal?.permalink, refetchOnWindowFocus: false },
+    )
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
   })
@@ -73,6 +78,7 @@ export default function VoteForm(props: {
     resetField,
     control,
     formState: { errors },
+    handleSubmit: onSubmit,
   } = methods
   useEffect(() => {
     if (proposal?.permalink) {
@@ -96,17 +102,17 @@ export default function VoteForm(props: {
     }
   }, [resetField, setValue, votingPower])
   const handleSuccess = useCallback(() => {
-    onSuccess()
     refetchChoices()
-    refetch()
+    refetchVoted()
     setValue('choice', '')
-  }, [onSuccess, refetch, refetchChoices, setValue])
+    onSuccess()
+  }, [onSuccess, refetchVoted, refetchChoices, setValue])
   const { data: status } = useStatus(proposal?.permalink)
   const period = useMemo(
     () => getPeriod(new Date(), status?.timestamp, workgroup?.duration),
     [workgroup?.duration, status?.timestamp],
   )
-  const disabled = useCallback(
+  const disables = useCallback(
     (did?: string) =>
       !did ||
       !voted ||
@@ -115,6 +121,36 @@ export default function VoteForm(props: {
       !powers[did] ||
       period !== Period.VOTING,
     [voted, powers, period],
+  )
+  const id = useId()
+  const didOptions = useMemo(
+    () =>
+      voted && powers && dids
+        ? dids
+            .filter((did) => powers[did].gt(0))
+            .map((did) => ({
+              did,
+              label: `${powers[did]}${voted[did] ? ' (voted)' : ''}`,
+              disabled: !!voted[did],
+            }))
+        : undefined,
+    [dids, powers, voted],
+  )
+  const { mutateAsync } = trpc.vote.create.useMutation()
+  const signDocument = useSignDocument(
+    did,
+    `You are voting on Voty\n\nhash:\n{sha256}`,
+  )
+  const handleSign = useMutation<void, Error, Vote>(async (vote) => {
+    const signed = await signDocument(vote)
+    if (signed) {
+      await mutateAsync(signed)
+      handleSuccess()
+    }
+  })
+  const disabled = useMemo(
+    () => !didOptions?.filter(({ disabled }) => !disabled).length,
+    [didOptions],
   )
 
   return (
@@ -135,7 +171,7 @@ export default function VoteForm(props: {
                   option={option}
                   votingPower={votingPower}
                   choices={choices}
-                  disabled={disabled(did)}
+                  disabled={disables(did)}
                   value={value}
                   onChange={onChange}
                 />
@@ -146,21 +182,60 @@ export default function VoteForm(props: {
       </FormItem>
       {period === Period.ENDED ? null : (
         <div className="mt-6 flex w-full flex-col items-end">
-          <FormProvider {...methods}>
-            <SigningVoteButton
-              value={did}
-              onChange={setDid}
-              snapshots={proposal?.snapshots}
-              proposal={proposal?.permalink}
-              workgroup={workgroup}
+          <DidCombobox
+            label="Select a DID as voter"
+            top
+            options={didOptions}
+            value={did}
+            onChange={setDid}
+            disabled={disabled}
+            onClick={connect}
+            placeholder={
+              didOptions?.length === 0 ? 'No available DIDs' : undefined
+            }
+            className="w-full flex-1 sm:w-auto sm:flex-none"
+          />
+          {period !== Period.VOTING ? (
+            <>
+              <div
+                data-tooltip-id={id}
+                data-tooltip-place="top"
+                className="mt-6"
+              >
+                <Button
+                  large
+                  primary
+                  icon={BoltIcon}
+                  onClick={onSubmit(
+                    (value) => handleSign.mutate(value),
+                    console.error,
+                  )}
+                  disabled={disables(did)}
+                  loading={handleSign.isLoading}
+                >
+                  Vote{votingPower ? ` (${votingPower})` : null}
+                </Button>
+              </div>
+              <Tooltip id={id} className="rounded">
+                Waiting for voting
+              </Tooltip>
+            </>
+          ) : (
+            <Button
+              large
+              primary
               icon={BoltIcon}
-              waiting={period !== Period.VOTING}
-              onSuccess={handleSuccess}
-              disabled={disabled(did)}
+              onClick={onSubmit(
+                (value) => handleSign.mutate(value),
+                console.error,
+              )}
+              disabled={disables(did)}
+              loading={handleSign.isLoading}
+              className="mt-6"
             >
               Vote{votingPower ? ` (${votingPower})` : null}
-            </SigningVoteButton>
-          </FormProvider>
+            </Button>
+          )}
         </div>
       )}
     </div>
