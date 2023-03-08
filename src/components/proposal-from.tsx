@@ -149,6 +149,10 @@ export default function ProposalForm(props: {
       onSuccess(await mutateAsync(signed))
     }
   })
+  const disabled = useMemo(
+    () => !status?.timestamp || !did || !community || !snapshots,
+    [community, did, snapshots, status?.timestamp],
+  )
 
   return (
     <>
@@ -162,6 +166,7 @@ export default function ProposalForm(props: {
               <FormItem label="Title" error={errors.title?.message}>
                 <TextInput
                   {...register('title')}
+                  disabled={disabled}
                   error={!!errors.title?.message}
                 />
               </FormItem>
@@ -178,6 +183,7 @@ export default function ProposalForm(props: {
               >
                 <Textarea
                   {...register('extension.content')}
+                  disabled={disabled}
                   error={!!errors.extension?.content?.message}
                 />
               </FormItem>
@@ -211,15 +217,19 @@ export default function ProposalForm(props: {
                               aria-describedby={`${plan.id}-description`}
                               name="plan"
                               type="radio"
+                              disabled={disabled}
                               checked={value === plan.id}
                               onChange={() => onChange(plan.id)}
-                              className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                              className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600"
                             />
                           </div>
                           <div className="ml-3 text-sm">
                             <label
                               htmlFor={plan.id}
-                              className="font-medium text-gray-700"
+                              className={clsx(
+                                'font-medium text-gray-700',
+                                disabled ? 'cursor-not-allowed' : undefined,
+                              )}
                             >
                               {plan.name}
                             </label>
@@ -243,6 +253,7 @@ export default function ProposalForm(props: {
                 description={
                   <TextButton
                     secondary
+                    disabled={disabled}
                     onClick={() => {
                       setValue('options', [...options, ''])
                     }}
@@ -265,8 +276,9 @@ export default function ProposalForm(props: {
                         type="text"
                         placeholder={`Option ${index + 1}`}
                         {...register(`options.${index}`)}
+                        disabled={disabled}
                         className={clsx(
-                          'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 sm:text-sm',
+                          'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600 sm:text-sm',
                           options.length > 1 ? 'pr-20' : 'pr-3',
                           index === 0 ? 'rounded-t' : undefined,
                           index === options.length - 1
@@ -303,7 +315,7 @@ export default function ProposalForm(props: {
             primary
             large
             icon={HandRaisedIcon}
-            disabled={!status?.timestamp || !did || !community || !snapshots}
+            disabled={disabled}
             loading={handleSign.isLoading}
             onClick={handleSubmit(
               (values) => handleSign.mutate(values),
