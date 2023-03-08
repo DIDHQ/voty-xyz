@@ -214,7 +214,7 @@ export default function VoteForm(props: {
                 </Button>
               </div>
               <Tooltip id={id} className="rounded">
-                Waiting for voting
+                Waiting for proposal transaction (in about 5 minutes)
               </Tooltip>
             </>
           ) : (

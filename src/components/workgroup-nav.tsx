@@ -103,7 +103,7 @@ export default function WorkgroupNav(props: { className?: string }) {
                 </Button>
               </div>
               <Tooltip id={id} className="rounded">
-                Waiting for workgroup transaction confirmation
+                Waiting for workgroup transaction (in about 5 minutes)
               </Tooltip>
             </>
           )}
