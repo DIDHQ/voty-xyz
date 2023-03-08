@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dynamic from 'next/dynamic'
@@ -16,8 +16,7 @@ import Button from './basic/button'
 import useSignDocument from '../hooks/use-sign-document'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
-import useWallet from '../hooks/use-wallet'
-import useDids from '../hooks/use-dids'
+import useIsManager from '../hooks/use-is-manager'
 
 const AvatarInput = dynamic(() => import('./basic/avatar-input'), {
   ssr: false,
@@ -62,12 +61,7 @@ export default function CommunityForm(props: {
       }
     },
   )
-  const { account } = useWallet()
-  const { data: dids } = useDids(account)
-  const disabled = useMemo(
-    () => !(props.author && dids?.includes(props.author)),
-    [dids, props.author],
-  )
+  const isManager = useIsManager(props.author)
 
   return (
     <>
@@ -88,7 +82,7 @@ export default function CommunityForm(props: {
                     <AvatarInput
                       value={value}
                       onChange={onChange}
-                      disabled={disabled}
+                      disabled={!isManager}
                     />
                   )}
                 />
@@ -99,7 +93,7 @@ export default function CommunityForm(props: {
                 <TextInput
                   {...register('name')}
                   error={!!errors.name?.message}
-                  disabled={disabled}
+                  disabled={!isManager}
                 />
               </FormItem>
             </GridItem6>
@@ -111,7 +105,7 @@ export default function CommunityForm(props: {
                 <TextInput
                   {...register('extension.slogan')}
                   error={!!errors.extension?.slogan?.message}
-                  disabled={disabled}
+                  disabled={!isManager}
                 />
               </FormItem>
             </GridItem6>
@@ -126,7 +120,7 @@ export default function CommunityForm(props: {
                 <Textarea
                   {...register('extension.about')}
                   error={!!errors.extension?.about?.message}
-                  disabled={disabled}
+                  disabled={!isManager}
                 />
               </FormItem>
             </GridItem6>
@@ -142,7 +136,7 @@ export default function CommunityForm(props: {
                 <TextInput
                   {...register('extension.website')}
                   error={!!errors.extension?.website?.message}
-                  disabled={disabled}
+                  disabled={!isManager}
                 />
               </FormItem>
             </GridItem6>
@@ -160,7 +154,7 @@ export default function CommunityForm(props: {
                     )
                   }
                   error={!!errors.extension?.twitter?.message}
-                  disabled={disabled}
+                  disabled={!isManager}
                 />
               </FormItem>
             </GridItem2>
@@ -180,7 +174,7 @@ export default function CommunityForm(props: {
                     )
                   }
                   error={!!errors.extension?.discord?.message}
-                  disabled={disabled}
+                  disabled={!isManager}
                 />
               </FormItem>
             </GridItem2>
@@ -198,13 +192,13 @@ export default function CommunityForm(props: {
                     )
                   }
                   error={!!errors.extension?.github?.message}
-                  disabled={disabled}
+                  disabled={!isManager}
                 />
               </FormItem>
             </GridItem2>
           </Grid6>
         </FormSection>
-        {disabled ? null : (
+        {isManager ? (
           <FormFooter>
             <Button
               primary
@@ -218,7 +212,7 @@ export default function CommunityForm(props: {
               {isNewCommunity ? 'Create' : 'Update'}
             </Button>
           </FormFooter>
-        )}
+        ) : null}
       </Form>
     </>
   )

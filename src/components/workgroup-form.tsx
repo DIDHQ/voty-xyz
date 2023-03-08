@@ -20,9 +20,8 @@ import PreviewMarkdown from './preview-markdown'
 import Button from './basic/button'
 import useSignDocument from '../hooks/use-sign-document'
 import { trpc } from '../utils/trpc'
-import useWallet from '../hooks/use-wallet'
-import useDids from '../hooks/use-dids'
 import Notification from './basic/notification'
+import useIsManager from '../hooks/use-is-manager'
 
 export default function WorkgroupForm(props: {
   author: string
@@ -89,12 +88,7 @@ export default function WorkgroupForm(props: {
       }
     },
   )
-  const { account } = useWallet()
-  const { data: dids } = useDids(account)
-  const disabled = useMemo(
-    () => !(props.author && dids?.includes(props.author)),
-    [dids, props.author],
-  )
+  const isManager = useIsManager(props.author)
 
   return (
     <>
@@ -117,7 +111,7 @@ export default function WorkgroupForm(props: {
                 <TextInput
                   {...register(`workgroups.${workgroupIndex}.name`)}
                   error={!!errors.workgroups?.[workgroupIndex]?.name?.message}
-                  disabled={disabled}
+                  disabled={!isManager}
                 />
               </FormItem>
             </GridItem6>
@@ -137,7 +131,7 @@ export default function WorkgroupForm(props: {
                     !!errors.workgroups?.[workgroupIndex]?.extension
                       ?.introduction?.message
                   }
-                  disabled={disabled}
+                  disabled={!isManager}
                 />
               </FormItem>
             </GridItem6>
@@ -160,7 +154,7 @@ export default function WorkgroupForm(props: {
                     name="proposing"
                     entry={props.author}
                     workgroupIndex={workgroupIndex}
-                    disabled={disabled}
+                    disabled={!isManager}
                   />
                 </FormProvider>
               </FormItem>
@@ -184,7 +178,7 @@ export default function WorkgroupForm(props: {
                     name="voting"
                     entry={props.author}
                     workgroupIndex={workgroupIndex}
-                    disabled={disabled}
+                    disabled={!isManager}
                   />
                 </FormProvider>
               </FormItem>
@@ -208,7 +202,7 @@ export default function WorkgroupForm(props: {
                     <DurationInput
                       value={value}
                       onChange={onChange}
-                      disabled={disabled}
+                      disabled={!isManager}
                       error={
                         !!errors?.workgroups?.[workgroupIndex]?.duration
                           ?.announcement
@@ -233,7 +227,7 @@ export default function WorkgroupForm(props: {
                     <DurationInput
                       value={value}
                       onChange={onChange}
-                      disabled={disabled}
+                      disabled={!isManager}
                       error={
                         !!errors?.workgroups?.[workgroupIndex]?.duration?.voting
                       }
@@ -258,7 +252,7 @@ export default function WorkgroupForm(props: {
                 }
               >
                 <Textarea
-                  disabled={disabled}
+                  disabled={!isManager}
                   {...register(
                     `workgroups.${workgroupIndex}.extension.terms_and_conditions`,
                   )}
@@ -271,7 +265,7 @@ export default function WorkgroupForm(props: {
             </GridItem6>
           </Grid6>
         </FormSection>
-        {disabled ? null : (
+        {isManager ? (
           <FormFooter>
             <Button
               primary
@@ -297,7 +291,7 @@ export default function WorkgroupForm(props: {
               </Button>
             )}
           </FormFooter>
-        )}
+        ) : null}
       </Form>
     </>
   )
