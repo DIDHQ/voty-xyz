@@ -120,7 +120,7 @@ export default function DidCombobox(props: {
                       />
                       <span
                         className={clsx(
-                          'ml-3 flex-1 truncate',
+                          'ml-3 flex-1 truncate text-start',
                           selected && 'font-semibold',
                         )}
                       >
