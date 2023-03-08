@@ -211,14 +211,16 @@ export default function ProposalPage() {
             >
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>
-            <div className="mb-6 border-b border-gray-200 pb-6">
-              <h3 className="mt-4 break-words text-3xl font-bold leading-8 tracking-tight text-gray-900 line-clamp-2 sm:text-4xl">
-                {proposal?.title}
-              </h3>
-              <Article className="mt-6 sm:mt-8">
-                {proposal?.extension?.content}
-              </Article>
-            </div>
+            {proposal ? (
+              <div className="mb-6 border-b border-gray-200 pb-6">
+                <h3 className="mt-4 break-words text-3xl font-bold leading-8 tracking-tight text-gray-900 line-clamp-2 sm:text-4xl">
+                  {proposal?.title}
+                </h3>
+                <Article className="mt-6 sm:mt-8">
+                  {proposal?.extension?.content}
+                </Article>
+              </div>
+            ) : null}
             {renderCard('block sm:hidden mb-6')}
             <VoteForm
               proposal={proposal || undefined}
