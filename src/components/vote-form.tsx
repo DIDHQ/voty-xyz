@@ -160,25 +160,29 @@ export default function VoteForm(props: {
         <Controller
           control={control}
           name="choice"
-          render={({ field: { value, onChange } }) => (
-            <ul
-              role="list"
-              className="mt-6 divide-y divide-gray-200 rounded border border-gray-200"
-            >
-              {props.proposal?.options.map((option) => (
-                <ChoiceListItem
-                  key={option}
-                  type={props.proposal!.voting_type}
-                  option={option}
-                  votingPower={votingPower}
-                  choices={choices}
-                  disabled={disables(did)}
-                  value={value}
-                  onChange={onChange}
-                />
-              ))}
-            </ul>
-          )}
+          render={({ field: { value, onChange } }) =>
+            props.proposal?.options.length ? (
+              <ul
+                role="list"
+                className="mt-6 divide-y divide-gray-200 rounded border border-gray-200"
+              >
+                {props.proposal?.options.map((option) => (
+                  <ChoiceListItem
+                    key={option}
+                    type={props.proposal!.voting_type}
+                    option={option}
+                    votingPower={votingPower}
+                    choices={choices}
+                    disabled={disables(did)}
+                    value={value}
+                    onChange={onChange}
+                  />
+                ))}
+              </ul>
+            ) : (
+              <></>
+            )
+          }
         />
       </FormItem>
       {period === Period.ENDED ? null : (
