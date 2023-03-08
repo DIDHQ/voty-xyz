@@ -172,7 +172,7 @@ export default function CommunityForm(props: {
             primary
             icon={isNewCommunity ? PlusIcon : ArrowPathIcon}
             loading={props.isLoading}
-            onClick={handleSubmit(props.onSubmit)}
+            onClick={handleSubmit(props.onSubmit, console.error)}
           >
             {isNewCommunity ? 'Create' : 'Update'}
           </Button>

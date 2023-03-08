@@ -227,7 +227,7 @@ export default function WorkgroupForm(props: {
             primary
             icon={isNewWorkgroup ? PlusIcon : ArrowPathIcon}
             loading={props.isLoading}
-            onClick={handleSubmit(props.onSubmit)}
+            onClick={handleSubmit(props.onSubmit, console.error)}
           >
             {isNewWorkgroup ? 'Create' : 'Update'}
           </Button>
@@ -235,7 +235,7 @@ export default function WorkgroupForm(props: {
             <Button
               icon={ArchiveBoxIcon}
               loading={props.isArchiving}
-              onClick={handleSubmit(props.onArchive)}
+              onClick={handleSubmit(props.onArchive, console.error)}
             >
               Archive
             </Button>
