@@ -27,6 +27,7 @@ export default function WorkgroupForm(props: {
   author: string
   initialValue?: Community
   workgroup?: string
+  isNewWorkgroup?: boolean
   onSuccess: (isArchive: boolean) => void
   className?: string
 }) {
@@ -51,14 +52,13 @@ export default function WorkgroupForm(props: {
     }
     return index
   }, [props.initialValue?.workgroups, props.workgroup])
-  const isNewWorkgroup = !props.workgroup
   useEffect(() => {
     reset(props.initialValue)
   }, [props.initialValue, reset])
   const signDocument = useSignDocument(
     props.author,
     `You are ${
-      isNewWorkgroup ? 'creating' : 'updating'
+      props.isNewWorkgroup ? 'creating' : 'updating'
     } workgroup on Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.community.create.useMutation()
@@ -97,7 +97,7 @@ export default function WorkgroupForm(props: {
       </Notification>
       <Form className={props.className}>
         <FormSection
-          title={isNewWorkgroup ? 'New workgroup' : 'Basic information'}
+          title={props.isNewWorkgroup ? 'New workgroup' : 'Basic information'}
         >
           <Grid6>
             <GridItem6>
@@ -266,16 +266,16 @@ export default function WorkgroupForm(props: {
           <FormFooter>
             <Button
               primary
-              icon={isNewWorkgroup ? PlusIcon : ArrowPathIcon}
+              icon={props.isNewWorkgroup ? PlusIcon : ArrowPathIcon}
               loading={handleSubmit.isLoading}
               onClick={onSubmit(
                 (value) => handleSubmit.mutate(value),
                 console.error,
               )}
             >
-              {isNewWorkgroup ? 'Create' : 'Update'}
+              {props.isNewWorkgroup ? 'Create' : 'Update'}
             </Button>
-            {isNewWorkgroup ? null : (
+            {props.isNewWorkgroup ? null : (
               <Button
                 icon={ArchiveBoxIcon}
                 loading={handleArchive.isLoading}

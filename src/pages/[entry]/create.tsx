@@ -81,6 +81,8 @@ export default function CreateWorkgroupPage() {
         <WorkgroupForm
           author={query.entry || ''}
           initialValue={initialValue}
+          workgroup={newWorkgroup}
+          isNewWorkgroup
           onSuccess={handleSuccess}
           className="pt-6 sm:pt-8"
         />
