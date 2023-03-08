@@ -23,7 +23,9 @@ export default function WorkgroupSettingsPage() {
     (isArchive: boolean) => {
       refetch()
       router.push(
-        isArchive ? `/${query.entry}` : `/${query.entry}/${query.workgroup}`,
+        isArchive
+          ? `/${query.entry}`
+          : `/${query.entry}/${query.workgroup}/settings`,
       )
     },
     [query.entry, query.workgroup, refetch, router],
