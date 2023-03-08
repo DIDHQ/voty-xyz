@@ -232,11 +232,6 @@ export default function ProposalPage() {
             ) : null}
             {votes?.length ? (
               <table className="my-6 w-full border-separate border-spacing-0 rounded border border-gray-200">
-                <colgroup>
-                  <col width="40%" />
-                  <col width="50%" />
-                  <col width="10%" />
-                </colgroup>
                 <thead>
                   <tr>
                     <th
@@ -265,7 +260,7 @@ export default function ProposalPage() {
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'max-w-0 truncate whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
+                          'truncate whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
                         )}
                       >
                         {vote.authorship.author}
@@ -273,7 +268,7 @@ export default function ProposalPage() {
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'max-w-0 truncate whitespace-nowrap border-x border-gray-200 px-3 py-2 text-sm text-gray-500',
+                          'truncate whitespace-nowrap border-x border-gray-200 px-3 py-2 text-sm text-gray-500',
                         )}
                       >
                         {proposal
@@ -283,7 +278,7 @@ export default function ProposalPage() {
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'max-w-0 truncate whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
+                          'truncate whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
                         )}
                       >
                         <TextButton
