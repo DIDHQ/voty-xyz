@@ -8,6 +8,7 @@ import { Grid6, GridItem2 } from '../components/basic/grid'
 import LoadingBar from '../components/basic/loading-bar'
 import CommunityCard from '../components/community-card'
 import SubscriptionList from '../components/subscription-list'
+import useWallet from '../hooks/use-wallet'
 import { trpc } from '../utils/trpc'
 
 export default function IndexPage() {
@@ -26,15 +27,18 @@ export default function IndexPage() {
       fetchNextPage()
     }
   }, [fetchNextPage, hasNextPage, inView])
+  const { account } = useWallet()
 
   return (
     <div className="w-full">
       <SubscriptionList />
-      <Link href="/create" className="float-right mt-6 sm:mt-8">
-        <Button primary icon={PlusIcon}>
-          Community
-        </Button>
-      </Link>
+      {account ? (
+        <Link href="/create" className="float-right mt-6 sm:mt-8">
+          <Button primary icon={PlusIcon}>
+            Community
+          </Button>
+        </Link>
+      ) : null}
       <h2 className="mt-7 text-xl font-semibold sm:mt-9">Communities</h2>
       <Grid6 className="w-full py-6">
         {communities?.map((community) => (

@@ -20,7 +20,7 @@ export default function SubscriptionList(props: { className?: string }) {
     { enabled: !!account?.address, refetchOnWindowFocus: false },
   )
 
-  return (
+  return account ? (
     <div className={props.className}>
       <h2 className="my-6 text-xl font-semibold sm:mt-8">Subscribed</h2>
       <ul className="-m-1 flex w-full items-center space-x-4 overflow-x-auto p-1">
@@ -42,7 +42,7 @@ export default function SubscriptionList(props: { className?: string }) {
         )}
       </ul>
     </div>
-  )
+  ) : null
 }
 
 function SubscriptionListItem(props: { value: Authorized<Community> }) {
