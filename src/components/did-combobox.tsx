@@ -53,7 +53,7 @@ export default function DidCombobox(props: {
         <Combobox.Input
           placeholder={
             props.options
-              ? props.options.length === 0
+              ? disabled
                 ? 'No available DID'
                 : undefined
               : 'Loading...'
