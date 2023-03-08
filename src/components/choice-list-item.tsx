@@ -23,20 +23,24 @@ export function ChoiceListItem(props: {
   onChange(value: string): void
 }) {
   const { type, option, votingPower, choices, value, onChange } = props
+  const newPower = useMemo(
+    () =>
+      votingPower
+        ? powerOfChoice(type, value, votingPower)[option] || new Decimal(0)
+        : new Decimal(0),
+    [option, type, value, votingPower],
+  )
   const percentage = useMemo(() => {
-    const power = votingPower
-      ? powerOfChoice(type, value, votingPower)[option] || new Decimal(0)
-      : new Decimal(0)
     const denominator = new Decimal(choices?.total || 0).add(
       new Decimal(choiceIsEmpty(type, value) ? 0 : votingPower || 0),
     )
     if (denominator.isZero()) {
       return new Decimal(0)
     }
-    return new Decimal(new Decimal(choices?.powers[option] || 0).add(power))
+    return new Decimal(new Decimal(choices?.powers[option] || 0).add(newPower))
       .mul(100)
       .dividedBy(denominator)
-  }, [option, choices?.powers, choices?.total, type, value, votingPower])
+  }, [choices, newPower, option, type, value, votingPower])
 
   return (
     <li
@@ -55,7 +59,9 @@ export function ChoiceListItem(props: {
       <span className="w-0 flex-1 truncate">{option}</span>
       {choices?.powers[option] ? (
         <span className="text-xs text-gray-500">
-          {choices.powers[option]}&nbsp;({percentage.toFixed(1)}%)
+          {choices.powers[option]}
+          {newPower.gt(0) ? ` + ${newPower.toString()}` : ''}&nbsp;(
+          {percentage.toFixed(1)}%)
         </span>
       ) : null}
       <div className="ml-4 shrink-0 leading-none">
