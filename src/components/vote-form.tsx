@@ -128,7 +128,7 @@ export default function VoteForm(props: {
             .filter((did) => powers[did].gt(0))
             .map((did) => ({
               did,
-              label: `${powers[did]}${voted[did] ? ' (voted)' : ''}`,
+              label: `${voted[did] ? '(voted) ' : ''}${powers[did]}`,
               disabled: !!voted[did],
             }))
         : undefined,
@@ -190,7 +190,7 @@ export default function VoteForm(props: {
             value={did}
             onChange={setDid}
             onClick={connect}
-            className="w-full flex-1 sm:w-auto sm:flex-none"
+            className="w-full flex-1 sm:w-64 sm:flex-none"
           />
           {period !== Period.VOTING ? (
             <>

@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import { useMemo, useRef, useState } from 'react'
+import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { Combobox } from '@headlessui/react'
 import clsx from 'clsx'
+import { useVirtualizer } from '@tanstack/react-virtual'
 
 type Option = {
   did: string
@@ -29,6 +30,12 @@ export default function DidCombobox(props: {
     () => props.options?.filter(({ disabled }) => !disabled).length === 0,
     [props.options],
   )
+  const parentRef = useRef<HTMLUListElement>(null)
+  const rowVirtualizer = useVirtualizer({
+    count: props.options?.length || 0,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 36,
+  })
 
   return (
     <Combobox
@@ -61,8 +68,10 @@ export default function DidCombobox(props: {
           />
         </Combobox.Button>
         <Combobox.Options
+          ref={parentRef}
+          unmount={false}
           className={clsx(
-            'absolute z-10 max-h-60 w-fit overflow-auto rounded bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm',
+            'absolute z-10 max-h-60 min-w-full overflow-auto rounded bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm',
             props.top ? 'bottom-full mb-1' : 'top-full mt-1',
           )}
         >
@@ -71,24 +80,31 @@ export default function DidCombobox(props: {
               No DID found
             </div>
           ) : (
-            filteredOptions?.map((option) => (
-              <Combobox.Option
-                key={option.did}
-                value={option.did}
-                disabled={option.disabled}
-                className={({ active }) =>
-                  clsx(
-                    'relative cursor-default select-none py-2 pl-3 pr-9',
-                    active
-                      ? 'bg-primary-600 text-white'
-                      : option.disabled
-                      ? 'text-gray-400'
-                      : 'text-gray-900',
-                  )
-                }
-              >
-                {({ active, selected, disabled }) => (
-                  <>
+            <div
+              className="relative w-full"
+              style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
+            >
+              {rowVirtualizer.getVirtualItems().map((virtualItem) => (
+                <Combobox.Option
+                  key={virtualItem.key}
+                  value={props.options?.[virtualItem.index]?.did}
+                  disabled={props.options?.[virtualItem.index]?.disabled}
+                  className={({ active }) =>
+                    clsx(
+                      'absolute top-0 left-0 w-full cursor-default select-none py-2 px-3',
+                      active
+                        ? 'bg-primary-600 text-white'
+                        : props.options?.[virtualItem.index]?.disabled
+                        ? 'text-gray-400'
+                        : 'text-gray-900',
+                    )
+                  }
+                  style={{
+                    height: `${virtualItem.size}px`,
+                    transform: `translateY(${virtualItem.start}px)`,
+                  }}
+                >
+                  {({ active, selected, disabled }) => (
                     <div
                       className={clsx(
                         'flex items-center',
@@ -104,41 +120,31 @@ export default function DidCombobox(props: {
                       />
                       <span
                         className={clsx(
-                          'ml-3 truncate',
+                          'ml-3 flex-1 truncate',
                           selected && 'font-semibold',
                         )}
                       >
-                        {option.did}
+                        {props.options?.[virtualItem.index]?.did}
                         <span className="sr-only">
                           {' '}
                           is {disabled ? 'offline' : 'online'}
                         </span>
                       </span>
-                      {option.label ? (
+                      {props.options?.[virtualItem.index]?.label ? (
                         <span
                           className={clsx(
-                            'mx-2 truncate text-gray-500',
+                            'mx-2 shrink-0 truncate text-gray-500',
                             active ? 'text-indigo-200' : 'text-gray-500',
                           )}
                         >
-                          {option.label}
+                          {props.options?.[virtualItem.index]?.label}
                         </span>
                       ) : null}
                     </div>
-                    {selected && (
-                      <span
-                        className={clsx(
-                          'absolute inset-y-0 right-0 flex items-center pr-4',
-                          active ? 'text-white' : 'text-primary-600',
-                        )}
-                      >
-                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                      </span>
-                    )}
-                  </>
-                )}
-              </Combobox.Option>
-            ))
+                  )}
+                </Combobox.Option>
+              ))}
+            </div>
           )}
         </Combobox.Options>
       </div>

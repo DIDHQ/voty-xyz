@@ -313,7 +313,7 @@ export default function ProposalForm(props: {
             value={did}
             onChange={setDid}
             onClick={connect}
-            className="w-full flex-1 sm:w-auto sm:flex-none"
+            className="w-full flex-1 sm:w-64 sm:flex-none"
           />
           <Button
             primary
