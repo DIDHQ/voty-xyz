@@ -50,7 +50,7 @@ export default function CommunityForm(props: {
     props.author,
     `You are ${
       isNewCommunity ? 'creating' : 'updating'
-    } community of Voty\n\nhash:\n{sha256}`,
+    } community on Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.community.create.useMutation()
   const handleSubmit = useMutation<void, Error, Community>(

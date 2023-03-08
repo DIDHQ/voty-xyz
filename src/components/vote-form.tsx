@@ -19,10 +19,9 @@ import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import { ChoiceListItem } from './choice-list-item'
 
-const SigningVoteButton = dynamic(
-  () => import('./signing/signing-vote-button'),
-  { ssr: false },
-)
+const SigningVoteButton = dynamic(() => import('./signing-vote-button'), {
+  ssr: false,
+})
 
 export default function VoteForm(props: {
   proposal?: Proposal & { permalink: string; votes: number }

@@ -31,10 +31,10 @@ export default function SubscriptionButton(props: {
     },
   )
   const signSubscribe = useSignDocumentWithoutAuthorship(
-    `You are subscribing community of Voty\n\nhash:\n{sha256}`,
+    `You are subscribing community on Voty\n\nhash:\n{sha256}`,
   )
   const signUnsubscribe = useSignDocumentWithoutAuthorship(
-    `You are unsubscribing community of Voty\n\nhash:\n{sha256}`,
+    `You are unsubscribing community on Voty\n\nhash:\n{sha256}`,
   )
   const handleSignSubscribe = useMutation<
     void,

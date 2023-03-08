@@ -1,29 +1,21 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import Decimal from 'decimal.js'
 import dynamic from 'next/dynamic'
 import pMap from 'p-map'
-import {
-  ExoticComponent,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useId,
-  useMemo,
-} from 'react'
+import { ExoticComponent, ReactNode, useEffect, useId, useMemo } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import useAsync from '../../hooks/use-async'
-import useDids from '../../hooks/use-dids'
-import useSignDocument from '../../hooks/use-sign-document'
-import useWallet from '../../hooks/use-wallet'
-import { calculateDecimal } from '../../utils/functions/number'
-import { Vote } from '../../utils/schemas/vote'
-import { Workgroup } from '../../utils/schemas/workgroup'
-import { trpc } from '../../utils/trpc'
-import { Snapshots } from '../../utils/types'
-import Button from '../basic/button'
-import DidCombobox from '../did-combobox'
-import Notification from '../basic/notification'
+import useDids from '../hooks/use-dids'
+import useSignDocument from '../hooks/use-sign-document'
+import useWallet from '../hooks/use-wallet'
+import { calculateDecimal } from '../utils/functions/number'
+import { Vote } from '../utils/schemas/vote'
+import { Workgroup } from '../utils/schemas/workgroup'
+import { trpc } from '../utils/trpc'
+import { Snapshots } from '../utils/types'
+import Button from './basic/button'
+import DidCombobox from './did-combobox'
+import Notification from './basic/notification'
 
 const Tooltip = dynamic(
   () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
@@ -48,20 +40,15 @@ export default function SigningVoteButton(props: {
   const { handleSubmit: onSubmit } = useFormContext<Vote>()
   const signDocument = useSignDocument(
     props.value,
-    `You are creating vote of Voty\n\nhash:\n{sha256}`,
+    `You are voting on Voty\n\nhash:\n{sha256}`,
   )
-  const handleCreate = trpc.vote.create.useMutation()
-  const handleSign = useAsync(
-    useCallback(
-      async (vote: Vote) => {
-        const signed = await signDocument(vote)
-        if (signed) {
-          return handleCreate.mutate(signed)
-        }
-      },
-      [signDocument, handleCreate],
-    ),
-  )
+  const { mutateAsync } = trpc.vote.create.useMutation()
+  const handleSign = useMutation<void, Error, Vote>(async (vote) => {
+    const signed = await signDocument(vote)
+    if (signed) {
+      onSuccess(await mutateAsync(signed))
+    }
+  })
   const { data: powers } = useQuery(
     [dids, props.workgroup, props?.snapshots],
     async () => {
@@ -90,11 +77,10 @@ export default function SigningVoteButton(props: {
     { enabled: !!dids && !!props.proposal, refetchOnWindowFocus: false },
   )
   useEffect(() => {
-    if (handleCreate.isSuccess) {
+    if (handleSign.isSuccess) {
       refetch()
-      onSuccess(handleCreate.data)
     }
-  }, [handleCreate.data, handleCreate.isSuccess, onSuccess, refetch])
+  }, [handleSign.isSuccess, refetch])
   const id = useId()
   const didOptions = useMemo(
     () =>
@@ -123,9 +109,6 @@ export default function SigningVoteButton(props: {
 
   return (
     <>
-      <Notification show={handleCreate.isError}>
-        {handleCreate.error?.message}
-      </Notification>
       <Notification show={handleSign.status === 'error'}>
         {handleSign.error?.message}
       </Notification>
@@ -147,11 +130,12 @@ export default function SigningVoteButton(props: {
               large
               primary
               icon={props.icon}
-              onClick={onSubmit(handleSign.execute, console.error)}
+              onClick={onSubmit(
+                (value) => handleSign.mutate(value),
+                console.error,
+              )}
               disabled={props.disabled}
-              loading={
-                handleCreate.isLoading || handleSign.status === 'pending'
-              }
+              loading={handleSign.isLoading}
             >
               {props.children}
             </Button>
@@ -165,9 +149,9 @@ export default function SigningVoteButton(props: {
           large
           primary
           icon={props.icon}
-          onClick={onSubmit(handleSign.execute, console.error)}
+          onClick={onSubmit((value) => handleSign.mutate(value), console.error)}
           disabled={props.disabled}
-          loading={handleCreate.isLoading || handleSign.status === 'pending'}
+          loading={handleSign.isLoading}
           className="mt-6"
         >
           {props.children}

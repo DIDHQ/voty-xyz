@@ -63,7 +63,7 @@ export default function WorkgroupForm(props: {
     props.author,
     `You are ${
       isNewWorkgroup ? 'creating' : 'updating'
-    } workgroup of Voty\n\nhash:\n{sha256}`,
+    } workgroup on Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.community.create.useMutation()
   const handleSubmit = useMutation<void, Error, Community>(

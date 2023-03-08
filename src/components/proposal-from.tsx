@@ -146,7 +146,7 @@ export default function ProposalForm(props: {
   const options = watch('options') || []
   const signDocument = useSignDocument(
     did,
-    `You are creating proposal of Voty\n\nhash:\n{sha256}`,
+    `You are creating proposal on Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.proposal.create.useMutation()
   const handleSign = useMutation<void, Error, Proposal>(async (proposal) => {
