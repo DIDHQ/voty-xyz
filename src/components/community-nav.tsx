@@ -114,7 +114,7 @@ export default function CommunityNav(props: { className?: string }) {
                 {community?.name || '...'}
               </h3>
               {community?.extension?.slogan ? (
-                <p className="w-full text-center text-sm text-gray-500 line-clamp-2">
+                <p className="w-full text-sm text-gray-500 line-clamp-2 sm:text-center">
                   {community.extension.slogan}
                 </p>
               ) : null}
