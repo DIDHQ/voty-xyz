@@ -26,7 +26,7 @@ import useIsManager from '../hooks/use-is-manager'
 export default function WorkgroupForm(props: {
   author: string
   initialValue?: Community
-  workgroup: string
+  workgroup?: string
   onSuccess: (isArchive: boolean) => void
   className?: string
 }) {
@@ -51,10 +51,7 @@ export default function WorkgroupForm(props: {
     }
     return index
   }, [props.initialValue?.workgroups, props.workgroup])
-  const isNewWorkgroup = useMemo(
-    () => !props.initialValue?.workgroups?.[workgroupIndex],
-    [props.initialValue?.workgroups, workgroupIndex],
-  )
+  const isNewWorkgroup = !props.workgroup
   useEffect(() => {
     reset(props.initialValue)
   }, [props.initialValue, reset])
