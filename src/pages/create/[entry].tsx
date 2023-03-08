@@ -28,31 +28,35 @@ export default function CreateEntryPage() {
     `You are updating community of Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.community.create.useMutation()
-  const submit = useMutation<void, Error, Community>(async (community) => {
-    const signed = await signDocument(community)
-    if (signed) {
-      await mutateAsync(signed)
-    }
-  })
+  const handleSubmit = useMutation<void, Error, Community>(
+    async (community) => {
+      const signed = await signDocument(community)
+      if (signed) {
+        await mutateAsync(signed)
+      }
+    },
+  )
   useEffect(() => {
-    if (submit.isSuccess) {
+    if (handleSubmit.isSuccess) {
       router.push(`/${query.entry}`)
     }
-  }, [submit.isSuccess, query.entry, router])
+  }, [handleSubmit.isSuccess, query.entry, router])
 
   return (
     <>
       <Head>
         <title>{`New community - ${documentTitle}`}</title>
       </Head>
-      <Notification show={submit.isError}>{submit.error?.message}</Notification>
+      <Notification show={handleSubmit.isError}>
+        {handleSubmit.error?.message}
+      </Notification>
       <div className="w-full">
         <TextButton href="/create" className="mt-6 sm:mt-8">
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
         <CommunityForm
-          isLoading={submit.isLoading}
-          onSubmit={submit.mutate}
+          isLoading={handleSubmit.isLoading}
+          onSubmit={handleSubmit.mutate}
           disabled={!isAdmin}
           className="flex w-full flex-col"
         />

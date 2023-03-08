@@ -35,27 +35,31 @@ export default function CommunitySettingsPage() {
     `You are updating community of Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.community.create.useMutation()
-  const submit = useMutation<void, Error, Community>(async (community) => {
-    const signed = await signDocument(community)
-    if (signed) {
-      await mutateAsync(signed)
-    }
-  })
+  const handleSubmit = useMutation<void, Error, Community>(
+    async (community) => {
+      const signed = await signDocument(community)
+      if (signed) {
+        await mutateAsync(signed)
+      }
+    },
+  )
   useEffect(() => {
-    if (submit.isSuccess) {
+    if (handleSubmit.isSuccess) {
       refetch()
       router.push(`/${query.entry}`)
     }
-  }, [submit.isSuccess, query.entry, refetch, router])
+  }, [handleSubmit.isSuccess, query.entry, refetch, router])
 
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
-      <Notification show={submit.isError}>{submit.error?.message}</Notification>
+      <Notification show={handleSubmit.isError}>
+        {handleSubmit.error?.message}
+      </Notification>
       <CommunityForm
         initialValue={community || undefined}
-        isLoading={submit.isLoading}
-        onSubmit={submit.mutate}
+        isLoading={handleSubmit.isLoading}
+        onSubmit={handleSubmit.mutate}
         disabled={!isAdmin}
         className="flex w-full flex-col"
       />
