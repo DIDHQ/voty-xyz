@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { Combobox } from '@headlessui/react'
 import clsx from 'clsx'
 import { useVirtualizer } from '@tanstack/react-virtual'
