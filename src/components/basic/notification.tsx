@@ -12,7 +12,7 @@ export default function Notification(props: {
     setShow(!!props.show)
     const timer = setTimeout(() => {
       setShow(false)
-    }, 5000)
+    }, 30000)
     return () => {
       clearTimeout(timer)
     }
@@ -35,7 +35,7 @@ export default function Notification(props: {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="pointer-events-auto w-full max-w-sm overflow-hidden bg-white shadow-lg ring-1 ring-black/5">
+            <div className="pointer-events-auto w-full max-w-sm overflow-hidden rounded bg-white shadow-lg ring-1 ring-black/5">
               <div className="p-4">
                 <div className="flex items-start">
                   <div className="shrink-0">
