@@ -33,17 +33,17 @@ export default function VoteForm(props: {
   onSuccess: () => void
   className?: string
 }) {
-  const { proposal, workgroup, onSuccess } = props
+  const { onSuccess } = props
   const { data: choices, refetch: refetchChoices } =
     trpc.choice.groupByProposal.useQuery(
-      { proposal: proposal?.permalink },
-      { enabled: !!proposal?.permalink, refetchOnWindowFocus: false },
+      { proposal: props.proposal?.permalink },
+      { enabled: !!props.proposal?.permalink, refetchOnWindowFocus: false },
     )
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
-  const { data: dids } = useDids(account, proposal?.snapshots)
+  const { data: dids } = useDids(account, props.proposal?.snapshots)
   const { data: powers } = useQuery(
-    [dids, props.workgroup, proposal?.snapshots],
+    [dids, props.workgroup, props.proposal?.snapshots],
     async () => {
       const decimals = await pMap(
         dids!,
@@ -51,7 +51,7 @@ export default function VoteForm(props: {
           calculateDecimal(
             props.workgroup!.permission.voting,
             did,
-            proposal?.snapshots!,
+            props.proposal?.snapshots!,
           ),
         { concurrency: 5 },
       )
@@ -61,14 +61,17 @@ export default function VoteForm(props: {
       }, {} as { [key: string]: Decimal })
     },
     {
-      enabled: !!dids && !!props.workgroup && !!proposal?.snapshots,
+      enabled: !!dids && !!props.workgroup && !!props.proposal?.snapshots,
       refetchOnWindowFocus: false,
     },
   )
   const { data: voted, refetch: refetchVoted } =
     trpc.vote.groupByProposal.useQuery(
-      { proposal: proposal?.permalink },
-      { enabled: !!dids && !!proposal?.permalink, refetchOnWindowFocus: false },
+      { proposal: props.proposal?.permalink },
+      {
+        enabled: !!dids && !!props.proposal?.permalink,
+        refetchOnWindowFocus: false,
+      },
     )
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
@@ -81,16 +84,20 @@ export default function VoteForm(props: {
     handleSubmit: onSubmit,
   } = methods
   useEffect(() => {
-    if (proposal?.permalink) {
-      setValue('proposal', proposal.permalink)
+    if (props.proposal?.permalink) {
+      setValue('proposal', props.proposal.permalink)
     }
-  }, [proposal?.permalink, setValue])
+  }, [props.proposal?.permalink, setValue])
   const { data: votingPower } = useQuery(
-    ['votingPower', workgroup, did, proposal],
+    ['votingPower', props.workgroup, did, props.proposal],
     () =>
-      calculateDecimal(workgroup!.permission.voting, did!, proposal!.snapshots),
+      calculateDecimal(
+        props.workgroup!.permission.voting,
+        did!,
+        props.proposal!.snapshots,
+      ),
     {
-      enabled: !!workgroup && !!did && !!proposal,
+      enabled: !!props.workgroup && !!did && !!props.proposal,
       refetchOnWindowFocus: false,
     },
   )
@@ -107,10 +114,10 @@ export default function VoteForm(props: {
     setValue('choice', '')
     onSuccess()
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
-  const { data: status } = useStatus(proposal?.permalink)
+  const { data: status } = useStatus(props.proposal?.permalink)
   const period = useMemo(
-    () => getPeriod(new Date(), status?.timestamp, workgroup?.duration),
-    [workgroup?.duration, status?.timestamp],
+    () => getPeriod(new Date(), status?.timestamp, props.workgroup?.duration),
+    [props.workgroup?.duration, status?.timestamp],
   )
   const disables = useCallback(
     (did?: string) =>
@@ -164,10 +171,10 @@ export default function VoteForm(props: {
               role="list"
               className="mt-6 divide-y divide-gray-200 rounded border border-gray-200"
             >
-              {proposal?.options.map((option) => (
+              {props.proposal?.options.map((option) => (
                 <ChoiceListItem
                   key={option}
-                  type={proposal.voting_type}
+                  type={props.proposal!.voting_type}
                   option={option}
                   votingPower={votingPower}
                   choices={choices}
