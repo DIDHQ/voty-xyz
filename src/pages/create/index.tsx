@@ -76,7 +76,19 @@ export default function CreateCommunityPage() {
                         Next →
                       </Button>
                     </Link>
-                  ) : null}
+                  ) : (
+                    <a
+                      href={
+                        isTestnet
+                          ? 'https://test2f7a872b.did.id/explorer'
+                          : 'https://app.did.id/explorer'
+                      }
+                    >
+                      <Button large primary>
+                        Register →
+                      </Button>
+                    </a>
+                  )}
                 </>
               )}
             </div>
