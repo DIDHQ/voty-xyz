@@ -146,6 +146,13 @@ export default function VoteForm(props: {
       handleSuccess()
     }
   })
+  const defaultDid = useMemo(
+    () => didOptions?.find(({ disabled }) => !disabled)?.did,
+    [didOptions],
+  )
+  useEffect(() => {
+    setDid(defaultDid || '')
+  }, [defaultDid])
 
   return (
     <div className={props.className}>

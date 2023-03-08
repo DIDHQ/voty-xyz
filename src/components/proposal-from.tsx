@@ -40,7 +40,7 @@ export default function ProposalForm(props: {
   onSuccess(permalink: string): void
   className?: string
 }) {
-  const { community, workgroup, onSuccess } = props
+  const { onSuccess } = props
   const methods = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
     defaultValues: { options: ['', ''], voting_type: 'single' },
@@ -62,22 +62,24 @@ export default function ProposalForm(props: {
     [setValue, getValues],
   )
   useEffect(() => {
-    if (community) {
-      setValue('community', community.entry.community)
+    if (props.community) {
+      setValue('community', props.community.entry.community)
     }
-  }, [community, setValue])
+  }, [props.community, setValue])
   useEffect(() => {
-    if (workgroup) {
-      setValue('workgroup', workgroup.id)
+    if (props.workgroup) {
+      setValue('workgroup', props.workgroup.id)
     }
-  }, [workgroup, setValue])
+  }, [props.workgroup, setValue])
   const [did, setDid] = useState('')
   const { data: snapshots } = useQuery(
-    ['snapshots', did, workgroup?.permission.proposing],
+    ['snapshots', did, props.workgroup?.permission.proposing],
     async () => {
       const requiredCoinTypes = uniq([
         ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
-        ...requiredCoinTypesOfBooleanSets(workgroup!.permission.proposing!),
+        ...requiredCoinTypesOfBooleanSets(
+          props.workgroup!.permission.proposing!,
+        ),
       ])
       const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
         concurrency: 5,
@@ -88,15 +90,24 @@ export default function ProposalForm(props: {
       }, {} as { [coinType: string]: string })
     },
     {
-      enabled: !!workgroup?.permission.proposing,
+      enabled: !!props.workgroup?.permission.proposing,
       refetchInterval: 30000,
     },
   )
   const { account, connect } = useWallet()
-  const { data: dids } = useDids(account, snapshots)
+  const { data: dids } = useDids(account)
   const { data: disables } = useQuery(
-    [dids, props.workgroup?.permission.proposing, snapshots],
+    [dids, props.workgroup?.permission.proposing],
     async () => {
+      const requiredCoinTypes = uniq([
+        ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
+        ...requiredCoinTypesOfBooleanSets(
+          props.workgroup!.permission.proposing!,
+        ),
+      ])
+      const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
+        concurrency: 5,
+      })
       const booleans = await pMap(
         dids!,
         (did) =>
@@ -108,9 +119,7 @@ export default function ProposalForm(props: {
         return obj
       }, {} as { [key: string]: boolean })
     },
-    {
-      enabled: !!dids && !!props.workgroup && !!snapshots,
-    },
+    { enabled: !!dids && !!props.workgroup },
   )
   const didOptions = useMemo(
     () =>
@@ -124,19 +133,14 @@ export default function ProposalForm(props: {
     [didOptions],
   )
   useEffect(() => {
-    setDid('')
-  }, [account])
-  useEffect(() => {
-    if (defaultDid) {
-      setDid(defaultDid)
-    }
+    setDid(defaultDid || '')
   }, [defaultDid])
   useEffect(() => {
     if (snapshots) {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
-  const { data: status } = useStatus(community?.entry.community)
+  const { data: status } = useStatus(props.community?.entry.community)
   const options = watch('options') || []
   const signDocument = useSignDocument(
     did,
@@ -149,6 +153,10 @@ export default function ProposalForm(props: {
       onSuccess(await mutateAsync(signed))
     }
   })
+  const disabled = useMemo(
+    () => !status?.timestamp || !did || !props.community || !snapshots,
+    [props.community, did, snapshots, status?.timestamp],
+  )
 
   return (
     <>
@@ -162,6 +170,7 @@ export default function ProposalForm(props: {
               <FormItem label="Title" error={errors.title?.message}>
                 <TextInput
                   {...register('title')}
+                  disabled={disabled}
                   error={!!errors.title?.message}
                 />
               </FormItem>
@@ -178,6 +187,7 @@ export default function ProposalForm(props: {
               >
                 <Textarea
                   {...register('extension.content')}
+                  disabled={disabled}
                   error={!!errors.extension?.content?.message}
                 />
               </FormItem>
@@ -211,15 +221,19 @@ export default function ProposalForm(props: {
                               aria-describedby={`${plan.id}-description`}
                               name="plan"
                               type="radio"
+                              disabled={disabled}
                               checked={value === plan.id}
                               onChange={() => onChange(plan.id)}
-                              className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                              className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600"
                             />
                           </div>
                           <div className="ml-3 text-sm">
                             <label
                               htmlFor={plan.id}
-                              className="font-medium text-gray-700"
+                              className={clsx(
+                                'font-medium text-gray-700',
+                                disabled ? 'cursor-not-allowed' : undefined,
+                              )}
                             >
                               {plan.name}
                             </label>
@@ -243,6 +257,7 @@ export default function ProposalForm(props: {
                 description={
                   <TextButton
                     secondary
+                    disabled={disabled}
                     onClick={() => {
                       setValue('options', [...options, ''])
                     }}
@@ -265,8 +280,9 @@ export default function ProposalForm(props: {
                         type="text"
                         placeholder={`Option ${index + 1}`}
                         {...register(`options.${index}`)}
+                        disabled={disabled}
                         className={clsx(
-                          'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 sm:text-sm',
+                          'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600 sm:text-sm',
                           options.length > 1 ? 'pr-20' : 'pr-3',
                           index === 0 ? 'rounded-t' : undefined,
                           index === options.length - 1
@@ -303,7 +319,7 @@ export default function ProposalForm(props: {
             primary
             large
             icon={HandRaisedIcon}
-            disabled={!status?.timestamp || !did || !community || !snapshots}
+            disabled={disabled}
             loading={handleSign.isLoading}
             onClick={handleSubmit(
               (values) => handleSign.mutate(values),
