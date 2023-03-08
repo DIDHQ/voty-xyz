@@ -75,7 +75,7 @@ export default function ProposalPage() {
     (className?: string) => (
       <div
         className={clsx(
-          'relative mt-[-1px] w-full shrink-0 pt-6 sm:sticky sm:top-18 sm:w-72 sm:pt-8',
+          'relative mt-[-1px] w-full shrink-0 sm:sticky sm:top-18 sm:w-72 sm:pt-8',
           className,
         )}
       >
