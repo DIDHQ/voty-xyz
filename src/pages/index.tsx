@@ -30,12 +30,12 @@ export default function IndexPage() {
   return (
     <div className="w-full">
       <SubscriptionList />
-      <Link href="/create" className="float-right mt-5 sm:mt-7">
+      <Link href="/create" className="float-right mt-6 sm:mt-8">
         <Button primary icon={PlusIcon}>
           New Community
         </Button>
       </Link>
-      <h2 className="mt-6 text-xl font-semibold sm:mt-8">Communities</h2>
+      <h2 className="mt-7 text-xl font-semibold sm:mt-9">Communities</h2>
       <Grid6 className="w-full py-6">
         {communities?.map((community) => (
           <GridItem2 key={community.entry.community}>
