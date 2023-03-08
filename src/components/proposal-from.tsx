@@ -40,7 +40,7 @@ export default function ProposalForm(props: {
   onSuccess(permalink: string): void
   className?: string
 }) {
-  const { community, workgroup, onSuccess } = props
+  const { onSuccess } = props
   const methods = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
     defaultValues: { options: ['', ''], voting_type: 'single' },
@@ -62,22 +62,24 @@ export default function ProposalForm(props: {
     [setValue, getValues],
   )
   useEffect(() => {
-    if (community) {
-      setValue('community', community.entry.community)
+    if (props.community) {
+      setValue('community', props.community.entry.community)
     }
-  }, [community, setValue])
+  }, [props.community, setValue])
   useEffect(() => {
-    if (workgroup) {
-      setValue('workgroup', workgroup.id)
+    if (props.workgroup) {
+      setValue('workgroup', props.workgroup.id)
     }
-  }, [workgroup, setValue])
+  }, [props.workgroup, setValue])
   const [did, setDid] = useState('')
   const { data: snapshots } = useQuery(
-    ['snapshots', did, workgroup?.permission.proposing],
+    ['snapshots', did, props.workgroup?.permission.proposing],
     async () => {
       const requiredCoinTypes = uniq([
         ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
-        ...requiredCoinTypesOfBooleanSets(workgroup!.permission.proposing!),
+        ...requiredCoinTypesOfBooleanSets(
+          props.workgroup!.permission.proposing!,
+        ),
       ])
       const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
         concurrency: 5,
@@ -88,15 +90,24 @@ export default function ProposalForm(props: {
       }, {} as { [coinType: string]: string })
     },
     {
-      enabled: !!workgroup?.permission.proposing,
+      enabled: !!props.workgroup?.permission.proposing,
       refetchInterval: 30000,
     },
   )
   const { account, connect } = useWallet()
-  const { data: dids } = useDids(account, snapshots)
+  const { data: dids } = useDids(account)
   const { data: disables } = useQuery(
-    [dids, props.workgroup?.permission.proposing, snapshots],
+    [dids, props.workgroup?.permission.proposing],
     async () => {
+      const requiredCoinTypes = uniq([
+        ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
+        ...requiredCoinTypesOfBooleanSets(
+          props.workgroup!.permission.proposing!,
+        ),
+      ])
+      const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
+        concurrency: 5,
+      })
       const booleans = await pMap(
         dids!,
         (did) =>
@@ -108,10 +119,9 @@ export default function ProposalForm(props: {
         return obj
       }, {} as { [key: string]: boolean })
     },
-    {
-      enabled: !!dids && !!props.workgroup && !!snapshots,
-    },
+    { enabled: !!dids && !!props.workgroup },
   )
+  console.log(disables)
   const didOptions = useMemo(
     () =>
       disables && dids
@@ -124,19 +134,14 @@ export default function ProposalForm(props: {
     [didOptions],
   )
   useEffect(() => {
-    setDid('')
-  }, [account])
-  useEffect(() => {
-    if (defaultDid) {
-      setDid(defaultDid)
-    }
+    setDid(defaultDid || '')
   }, [defaultDid])
   useEffect(() => {
     if (snapshots) {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
-  const { data: status } = useStatus(community?.entry.community)
+  const { data: status } = useStatus(props.community?.entry.community)
   const options = watch('options') || []
   const signDocument = useSignDocument(
     did,
@@ -150,8 +155,8 @@ export default function ProposalForm(props: {
     }
   })
   const disabled = useMemo(
-    () => !status?.timestamp || !did || !community || !snapshots,
-    [community, did, snapshots, status?.timestamp],
+    () => !status?.timestamp || !did || !props.community || !snapshots,
+    [props.community, did, snapshots, status?.timestamp],
   )
 
   return (
