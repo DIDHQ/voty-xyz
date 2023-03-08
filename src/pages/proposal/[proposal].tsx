@@ -10,7 +10,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import useWorkgroup from '../../hooks/use-workgroup'
 import { stringifyChoice } from '../../utils/voting'
 import { DetailItem, DetailList } from '../../components/basic/detail'
-import { id2Permalink, permalink2Url } from '../../utils/permalink'
+import { id2Permalink, permalink2Explorer } from '../../utils/permalink'
 import { trpc } from '../../utils/trpc'
 import Article from '../../components/basic/article'
 import TextButton from '../../components/basic/text-button'
@@ -308,7 +308,7 @@ export default function ProposalPage(
                       >
                         <TextButton
                           primary
-                          href={permalink2Url(vote.permalink)}
+                          href={permalink2Explorer(vote.permalink)}
                         >
                           {vote.power}
                         </TextButton>
