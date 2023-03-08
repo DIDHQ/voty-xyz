@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { useId, useMemo } from 'react'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
+import { PlusIcon } from '@heroicons/react/20/solid'
 
 import useWorkgroup from '../hooks/use-workgroup'
 import useRouterQuery from '../hooks/use-router-query'
@@ -86,7 +87,9 @@ export default function WorkgroupNav(props: { className?: string }) {
               href={`/${query.entry}/${query.workgroup}/create`}
               className="shrink-0"
             >
-              <Button primary>New Proposal</Button>
+              <Button primary icon={PlusIcon}>
+                Proposal
+              </Button>
             </Link>
           ) : (
             <>
@@ -95,8 +98,8 @@ export default function WorkgroupNav(props: { className?: string }) {
                 data-tooltip-place="left"
                 className="shrink-0"
               >
-                <Button primary disabled>
-                  New Proposal
+                <Button primary disabled icon={PlusIcon}>
+                  Proposal
                 </Button>
               </div>
               <Tooltip id={id} className="rounded">

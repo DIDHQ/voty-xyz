@@ -57,7 +57,7 @@ export default function CommunityIndexPage() {
             community && !community?.workgroups?.length && isManager ? (
               <Link href={`/${query.entry}/create`}>
                 <Button primary icon={PlusIcon}>
-                  New Workgroup
+                  Workgroup
                 </Button>
               </Link>
             ) : undefined

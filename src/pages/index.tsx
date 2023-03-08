@@ -32,7 +32,7 @@ export default function IndexPage() {
       <SubscriptionList />
       <Link href="/create" className="float-right mt-6 sm:mt-8">
         <Button primary icon={PlusIcon}>
-          New Community
+          Community
         </Button>
       </Link>
       <h2 className="mt-7 text-xl font-semibold sm:mt-9">Communities</h2>
