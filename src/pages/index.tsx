@@ -15,7 +15,7 @@ export default function IndexPage() {
   const { data, isLoading, hasNextPage, fetchNextPage } =
     trpc.community.list.useInfiniteQuery(
       {},
-      { getNextPageParam: ({ next }) => next, refetchOnWindowFocus: false },
+      { getNextPageParam: ({ next }) => next },
     )
   const communities = useMemo(
     () => data?.pages.flatMap(({ data }) => data),

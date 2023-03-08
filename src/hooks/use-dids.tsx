@@ -21,6 +21,6 @@ export default function useDids(account?: Account, snapshots?: Snapshots) {
       const { getAccountList } = await import('../utils/sdks/dotbit/indexer')
       return getAccountList(account!.coinType, account?.address!)
     },
-    { enabled: !!account, refetchOnWindowFocus: false },
+    { enabled: !!account, refetchOnWindowFocus: !snapshots },
   )
 }

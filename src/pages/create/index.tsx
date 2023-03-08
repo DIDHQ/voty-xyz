@@ -21,7 +21,7 @@ export default function CreateCommunityPage() {
   const { data: existences, isLoading: isExistencesLoading } =
     trpc.community.checkExistences.useQuery(
       { entries: dids },
-      { enabled: !!dids?.length, refetchOnWindowFocus: false },
+      { enabled: !!dids?.length },
     )
   const didOptions = useMemo(
     () =>

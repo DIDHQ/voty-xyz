@@ -17,7 +17,7 @@ export default function WorkgroupSettingsPage() {
     refetch,
   } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
-    { enabled: !!query.entry, refetchOnWindowFocus: false },
+    { enabled: !!query.entry },
   )
   const handleSuccess = useCallback(
     (isArchive: boolean) => {

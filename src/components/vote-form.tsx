@@ -37,7 +37,7 @@ export default function VoteForm(props: {
   const { data: choices, refetch: refetchChoices } =
     trpc.choice.groupByProposal.useQuery(
       { proposal: props.proposal?.permalink },
-      { enabled: !!props.proposal?.permalink, refetchOnWindowFocus: false },
+      { enabled: !!props.proposal?.permalink },
     )
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
@@ -60,18 +60,12 @@ export default function VoteForm(props: {
         return obj
       }, {} as { [key: string]: Decimal })
     },
-    {
-      enabled: !!dids && !!props.workgroup && !!props.proposal?.snapshots,
-      refetchOnWindowFocus: false,
-    },
+    { enabled: !!dids && !!props.workgroup && !!props.proposal?.snapshots },
   )
   const { data: voted, refetch: refetchVoted } =
     trpc.vote.groupByProposal.useQuery(
       { proposal: props.proposal?.permalink },
-      {
-        enabled: !!dids && !!props.proposal?.permalink,
-        refetchOnWindowFocus: false,
-      },
+      { enabled: !!dids && !!props.proposal?.permalink },
     )
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
@@ -96,10 +90,7 @@ export default function VoteForm(props: {
         did!,
         props.proposal!.snapshots,
       ),
-    {
-      enabled: !!props.workgroup && !!did && !!props.proposal,
-      refetchOnWindowFocus: false,
-    },
+    { enabled: !!props.workgroup && !!did && !!props.proposal },
   )
   useEffect(() => {
     if (votingPower === undefined) {

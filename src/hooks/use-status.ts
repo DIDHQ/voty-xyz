@@ -19,6 +19,6 @@ export default function useStatus(permalink?: string) {
         return { timestamp: undefined }
       }
     },
-    { enabled: !!permalink },
+    { enabled: !!permalink, refetchInterval: 60 * 1000 },
   )
 }

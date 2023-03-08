@@ -62,11 +62,7 @@ export default function ProposalPage() {
     refetch: refetchList,
   } = trpc.vote.list.useInfiniteQuery(
     { proposal: query.proposal },
-    {
-      enabled: !!query.proposal,
-      getNextPageParam: ({ next }) => next,
-      refetchOnWindowFocus: false,
-    },
+    { enabled: !!query.proposal, getNextPageParam: ({ next }) => next },
   )
   const votes = useMemo(() => data?.pages.flatMap(({ data }) => data), [data])
   const { ref, inView } = useInView()

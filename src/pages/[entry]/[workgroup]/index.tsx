@@ -17,7 +17,6 @@ export default function GroupIndexPage() {
       {
         enabled: !!query.entry && !!query.workgroup,
         getNextPageParam: ({ next }) => next,
-        refetchOnWindowFocus: false,
       },
     )
   const proposals = useMemo(

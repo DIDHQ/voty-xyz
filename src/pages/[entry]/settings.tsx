@@ -16,7 +16,7 @@ export default function CommunitySettingsPage() {
     refetch,
   } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
-    { enabled: !!query.entry, refetchOnWindowFocus: false },
+    { enabled: !!query.entry },
   )
   const handleSuccess = useCallback(() => {
     refetch()

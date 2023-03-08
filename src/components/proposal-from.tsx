@@ -89,7 +89,6 @@ export default function ProposalForm(props: {
     },
     {
       enabled: !!workgroup?.permission.proposing,
-      refetchOnWindowFocus: false,
       refetchInterval: 30000,
     },
   )
@@ -111,7 +110,6 @@ export default function ProposalForm(props: {
     },
     {
       enabled: !!dids && !!props.workgroup && !!snapshots,
-      refetchOnWindowFocus: false,
     },
   )
   const didOptions = useMemo(

@@ -24,7 +24,7 @@ export default function CreateProposalPage() {
   const query = useRouterQuery<['entry', 'workgroup']>()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
-    { enabled: !!query.entry, refetchOnWindowFocus: false },
+    { enabled: !!query.entry },
   )
   const workgroup = useWorkgroup(community, query.workgroup)
   const handleSuccess = useCallback(
