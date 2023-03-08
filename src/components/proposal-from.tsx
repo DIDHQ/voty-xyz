@@ -149,19 +149,12 @@ export default function ProposalForm(props: {
     `You are creating proposal of Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.proposal.create.useMutation()
-  const handleSign = useMutation<string | undefined, Error, Proposal>(
-    async (proposal) => {
-      const signed = await signDocument(proposal)
-      if (signed) {
-        return mutateAsync(signed)
-      }
-    },
-  )
-  useEffect(() => {
-    if (handleSign.isSuccess && handleSign.data) {
-      onSuccess(handleSign.data)
+  const handleSign = useMutation<void, Error, Proposal>(async (proposal) => {
+    const signed = await signDocument(proposal)
+    if (signed) {
+      onSuccess(await mutateAsync(signed))
     }
-  }, [handleSign.data, handleSign.isSuccess, onSuccess])
+  })
 
   return (
     <>
