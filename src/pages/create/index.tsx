@@ -42,7 +42,7 @@ export default function CreateCommunityPage() {
   const rowVirtualizer = useVirtualizer({
     count: filteredOptions?.length || 0,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 36,
+    estimateSize: () => 40,
   })
   const register = useMemo(
     () => (
@@ -117,10 +117,10 @@ export default function CreateCommunityPage() {
                                   }
                                 }}
                                 className={clsx(
-                                  'absolute top-0 left-0 w-full py-2 px-3 hover:bg-gray-100',
+                                  'absolute top-0 left-0 flex w-full items-center py-2 px-3',
                                   filteredOptions?.[virtualItem.index]?.disabled
                                     ? 'cursor-not-allowed'
-                                    : 'cursor-pointer',
+                                    : 'cursor-pointer hover:bg-gray-100',
                                 )}
                                 style={{
                                   height: `${virtualItem.size}px`,

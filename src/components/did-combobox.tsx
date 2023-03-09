@@ -34,7 +34,7 @@ export default function DidCombobox(props: {
   const rowVirtualizer = useVirtualizer({
     count: props.options?.length || 0,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 36,
+    estimateSize: () => 40,
   })
 
   return (
@@ -91,12 +91,8 @@ export default function DidCombobox(props: {
                   disabled={props.options?.[virtualItem.index]?.disabled}
                   className={({ active }) =>
                     clsx(
-                      'absolute top-0 left-0 w-full cursor-default select-none py-2 px-3',
-                      active
-                        ? 'bg-primary-600 text-white'
-                        : disabled
-                        ? 'text-gray-400'
-                        : 'text-gray-900',
+                      'absolute top-0 left-0 flex w-full cursor-default select-none items-center py-2 px-3',
+                      active ? 'bg-primary-600' : undefined,
                     )
                   }
                   style={{
@@ -133,7 +129,7 @@ export function DidOption(props: {
   return (
     <div
       className={clsx(
-        'flex items-center',
+        'flex w-full items-center',
         props.disabled ? 'cursor-not-allowed' : undefined,
       )}
     >
@@ -148,7 +144,11 @@ export function DidOption(props: {
         className={clsx(
           'ml-3 flex-1 truncate text-start',
           props.selected && 'font-semibold',
-          props.disabled ? 'text-gray-400' : 'text-gray-800',
+          props.active
+            ? 'text-white'
+            : props.disabled
+            ? 'text-gray-400'
+            : 'text-gray-800',
         )}
       >
         {props.text}
@@ -158,7 +158,7 @@ export function DidOption(props: {
           className={clsx(
             'mx-2 shrink-0 truncate',
             props.active
-              ? 'text-primary-200'
+              ? 'text-gray-100'
               : props.disabled
               ? 'text-gray-300'
               : 'text-gray-500',
