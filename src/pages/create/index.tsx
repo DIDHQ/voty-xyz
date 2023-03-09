@@ -1,10 +1,9 @@
 import Head from 'next/head'
-import { useMemo, useRef } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import { useVirtualizer } from '@tanstack/react-virtual'
 
-import Button from '../../components/basic/button'
 import { DidOption } from '../../components/did-combobox'
 import LoadingBar from '../../components/basic/loading-bar'
 import useDids from '../../hooks/use-dids'
@@ -12,6 +11,8 @@ import useWallet from '../../hooks/use-wallet'
 import { documentTitle, isTestnet } from '../../utils/constants'
 import { trpc } from '../../utils/trpc'
 import ConnectButton from '../../components/connect-button'
+import TextInput from '../../components/basic/text-input'
+import TextButton from '../../components/basic/text-button'
 
 export default function CreateCommunityPage() {
   const router = useRouter()
@@ -30,9 +31,16 @@ export default function CreateCommunityPage() {
     () => dids?.map((did) => ({ did, disabled: existences?.[did] })),
     [dids, existences],
   )
+  const [query, setQuery] = useState('')
+  const filteredOptions =
+    query === ''
+      ? didOptions
+      : didOptions?.filter((option) => {
+          return option.did.toLowerCase().includes(query.toLowerCase())
+        })
   const parentRef = useRef<HTMLDivElement>(null)
   const rowVirtualizer = useVirtualizer({
-    count: didOptions?.length || 0,
+    count: filteredOptions?.length || 0,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 36,
   })
@@ -54,77 +62,91 @@ export default function CreateCommunityPage() {
             </p>
             <div className="mt-8 flex flex-col items-center space-y-6">
               {account ? (
-                <>
-                  {didOptions?.length ? (
-                    <>
-                      <div>
-                        <span className="mb-1 block text-sm font-medium text-gray-700">
-                          Select a DID as your community entry
-                        </span>
+                didOptions?.length ? (
+                  <>
+                    <div>
+                      <span className="mb-1 block text-sm font-medium text-gray-700">
+                        Select a DID as your community entry
+                      </span>
+                      <TextInput
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Type to filter"
+                        className="rounded-b-none"
+                      />
+                      <div
+                        ref={parentRef}
+                        className="relative max-h-80 overflow-auto rounded rounded-t-none border border-t-0 text-base focus:outline-none sm:text-sm"
+                      >
                         <div
-                          ref={parentRef}
-                          className="relative max-h-80 overflow-auto rounded border text-base focus:outline-none sm:text-sm"
+                          style={{
+                            height: `${rowVirtualizer.getTotalSize()}px`,
+                          }}
                         >
-                          <div
-                            style={{
-                              height: `${rowVirtualizer.getTotalSize()}px`,
-                            }}
-                          >
-                            {rowVirtualizer
-                              .getVirtualItems()
-                              .map((virtualItem) => (
-                                <div
-                                  key={didOptions?.[virtualItem.index]?.did}
-                                  onClick={() => {
-                                    if (
-                                      !didOptions?.[virtualItem.index]?.disabled
-                                    ) {
-                                      router.push(
-                                        `/create/${
-                                          didOptions?.[virtualItem.index]?.did
-                                        }`,
-                                      )
-                                    }
-                                  }}
-                                  className={clsx(
-                                    'absolute top-0 left-0 w-full py-2 px-3 hover:bg-gray-100',
-                                    didOptions?.[virtualItem.index]?.disabled
-                                      ? 'cursor-not-allowed'
-                                      : 'cursor-pointer',
-                                  )}
-                                  style={{
-                                    height: `${virtualItem.size}px`,
-                                    transform: `translateY(${virtualItem.start}px)`,
-                                  }}
-                                >
-                                  <DidOption
-                                    disabled={
-                                      didOptions?.[virtualItem.index]?.disabled
-                                    }
-                                    text={didOptions?.[virtualItem.index]?.did}
-                                  />
-                                </div>
-                              ))}
-                          </div>
+                          {rowVirtualizer
+                            .getVirtualItems()
+                            .map((virtualItem) => (
+                              <div
+                                key={filteredOptions?.[virtualItem.index]?.did}
+                                onClick={() => {
+                                  if (
+                                    !filteredOptions?.[virtualItem.index]
+                                      ?.disabled
+                                  ) {
+                                    router.push(
+                                      `/create/${
+                                        filteredOptions?.[virtualItem.index]
+                                          ?.did
+                                      }`,
+                                    )
+                                  }
+                                }}
+                                className={clsx(
+                                  'absolute top-0 left-0 w-full py-2 px-3 hover:bg-gray-100',
+                                  filteredOptions?.[virtualItem.index]?.disabled
+                                    ? 'cursor-not-allowed'
+                                    : 'cursor-pointer',
+                                )}
+                                style={{
+                                  height: `${virtualItem.size}px`,
+                                  transform: `translateY(${virtualItem.start}px)`,
+                                }}
+                              >
+                                <DidOption
+                                  disabled={
+                                    filteredOptions?.[virtualItem.index]
+                                      ?.disabled
+                                  }
+                                  text={
+                                    filteredOptions?.[virtualItem.index]?.did
+                                  }
+                                  label={
+                                    filteredOptions?.[virtualItem.index]
+                                      ?.disabled
+                                      ? '(used)'
+                                      : undefined
+                                  }
+                                />
+                              </div>
+                            ))}
                         </div>
                       </div>
-                      <span className="mb-1 block text-sm font-medium text-gray-400">
-                        or
-                      </span>
-                    </>
-                  ) : null}
-                  <a
-                    href={
-                      isTestnet
-                        ? 'https://test2f7a872b.did.id/explorer'
-                        : 'https://app.did.id/explorer'
-                    }
-                  >
-                    <Button large primary>
-                      Register →
-                    </Button>
-                  </a>
-                </>
+                    </div>
+                    <span className="mb-1 block text-sm font-medium text-gray-400">
+                      or{' '}
+                      <TextButton
+                        secondary
+                        href={
+                          isTestnet
+                            ? 'https://test2f7a872b.did.id/explorer'
+                            : 'https://app.did.id/explorer'
+                        }
+                      >
+                        Register →
+                      </TextButton>
+                    </span>
+                  </>
+                ) : null
               ) : (
                 <ConnectButton />
               )}

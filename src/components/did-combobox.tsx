@@ -156,8 +156,12 @@ export function DidOption(props: {
       {props.label ? (
         <span
           className={clsx(
-            'mx-2 shrink-0 truncate text-gray-500',
-            props.active ? 'text-indigo-200' : 'text-gray-500',
+            'mx-2 shrink-0 truncate',
+            props.active
+              ? 'text-primary-200'
+              : props.disabled
+              ? 'text-gray-300'
+              : 'text-gray-500',
           )}
         >
           {props.label}
