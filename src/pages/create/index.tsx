@@ -1,7 +1,8 @@
 import Head from 'next/head'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
+import { useVirtualizer } from '@tanstack/react-virtual'
 
 import Button from '../../components/basic/button'
 import { DidOption } from '../../components/did-combobox'
@@ -32,6 +33,12 @@ export default function CreateCommunityPage() {
         : undefined,
     [dids, existences],
   )
+  const parentRef = useRef<HTMLDivElement>(null)
+  const rowVirtualizer = useVirtualizer({
+    count: didOptions?.length || 0,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 36,
+  })
 
   return (
     <>
@@ -57,28 +64,51 @@ export default function CreateCommunityPage() {
                         <span className="mb-1 block text-sm font-medium text-gray-700">
                           Select a DID as your community entry
                         </span>
-                        <div className="max-h-80 overflow-auto rounded border py-1 text-base focus:outline-none sm:text-sm">
-                          {didOptions?.map((didOption) => (
-                            <div
-                              key={didOption.did}
-                              onClick={() => {
-                                if (!didOption.disabled) {
-                                  router.push(`/create/${didOption.did}`)
-                                }
-                              }}
-                              className={clsx(
-                                'py-2 px-3 hover:bg-gray-100',
-                                didOption.disabled
-                                  ? 'cursor-not-allowed'
-                                  : 'cursor-pointer',
-                              )}
-                            >
-                              <DidOption
-                                disabled={didOption.disabled}
-                                text={didOption.did}
-                              />
-                            </div>
-                          ))}
+                        <div
+                          ref={parentRef}
+                          className="relative max-h-80 overflow-auto rounded border py-1 text-base focus:outline-none sm:text-sm"
+                        >
+                          <div
+                            style={{
+                              height: `${rowVirtualizer.getTotalSize()}px`,
+                            }}
+                          >
+                            {rowVirtualizer
+                              .getVirtualItems()
+                              .map((virtualItem) => (
+                                <div
+                                  key={didOptions?.[virtualItem.index]?.did}
+                                  onClick={() => {
+                                    if (
+                                      !didOptions?.[virtualItem.index]?.disabled
+                                    ) {
+                                      router.push(
+                                        `/create/${
+                                          didOptions?.[virtualItem.index]?.did
+                                        }`,
+                                      )
+                                    }
+                                  }}
+                                  className={clsx(
+                                    'absolute top-0 left-0 w-full py-2 px-3 hover:bg-gray-100',
+                                    didOptions?.[virtualItem.index]?.disabled
+                                      ? 'cursor-not-allowed'
+                                      : 'cursor-pointer',
+                                  )}
+                                  style={{
+                                    height: `${virtualItem.size}px`,
+                                    transform: `translateY(${virtualItem.start}px)`,
+                                  }}
+                                >
+                                  <DidOption
+                                    disabled={
+                                      didOptions?.[virtualItem.index]?.disabled
+                                    }
+                                    text={didOptions?.[virtualItem.index]?.did}
+                                  />
+                                </div>
+                              ))}
+                          </div>
                         </div>
                       </div>
                       <span className="mb-1 block text-sm font-medium text-gray-400">
