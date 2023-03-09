@@ -70,11 +70,9 @@ export default function CommunityForm(props: {
       </Notification>
       <Form className={clsx('pt-8', props.className)}>
         <FormSection
-          title={
-            isNewCommunity
-              ? `New community of ${props.author}`
-              : 'Basic Information'
-          }
+          title={`${isNewCommunity ? 'New' : 'Edit'} community of ${
+            props.author
+          }`}
         >
           <Grid6>
             <GridItem6>
