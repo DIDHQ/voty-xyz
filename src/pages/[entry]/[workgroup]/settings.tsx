@@ -3,10 +3,9 @@ import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import WorkgroupForm from '../../../components/workgroup-form'
-import CommunityLayout from '../../../components/layouts/community'
-import WorkgroupLayout from '../../../components/layouts/workgroup'
 import { trpc } from '../../../utils/trpc'
 import LoadingBar from '../../../components/basic/loading-bar'
+import TextButton from '../../../components/basic/text-button'
 
 export default function WorkgroupSettingsPage() {
   const router = useRouter()
@@ -34,17 +33,21 @@ export default function WorkgroupSettingsPage() {
   return (
     <>
       <LoadingBar loading={isLoading} />
-      <CommunityLayout>
-        <WorkgroupLayout>
-          <WorkgroupForm
-            author={query.entry || ''}
-            initialValue={community || undefined}
-            workgroup={query.workgroup || ''}
-            onSuccess={handleSuccess}
-            className="pt-6 sm:pt-8"
-          />
-        </WorkgroupLayout>
-      </CommunityLayout>
+      <div className="w-full">
+        <TextButton
+          href={`/${query.entry}/${query.workgroup}`}
+          className="mt-6 sm:mt-8"
+        >
+          <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+        </TextButton>
+        <WorkgroupForm
+          author={query.entry || ''}
+          initialValue={community || undefined}
+          workgroup={query.workgroup || ''}
+          onSuccess={handleSuccess}
+          className="pt-6 sm:pt-8"
+        />
+      </div>
     </>
   )
 }
