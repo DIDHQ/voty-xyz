@@ -11,6 +11,7 @@ import { formatDuration } from '../../../utils/time'
 import Article from '../../../components/basic/article'
 import { BooleanSets, DecimalSets } from '../../../utils/schemas/sets'
 import Button from '../../../components/basic/button'
+import useIsManager from '../../../hooks/use-is-manager'
 
 export default function WorkgroupRulesPage() {
   const query = useRouterQuery<['entry', 'workgroup']>()
@@ -19,6 +20,7 @@ export default function WorkgroupRulesPage() {
     { enabled: !!query.entry },
   )
   const workgroup = useWorkgroup(community, query.workgroup)
+  const isManager = useIsManager(query.entry)
 
   return (
     <>
@@ -27,14 +29,16 @@ export default function WorkgroupRulesPage() {
         <WorkgroupLayout>
           {workgroup ? (
             <>
-              <Link
-                href={`/${query.entry}/${query.workgroup}/settings`}
-                className="float-right mt-5"
-              >
-                <Button primary icon={PencilIcon}>
-                  Edit
-                </Button>
-              </Link>
+              {isManager ? (
+                <Link
+                  href={`/${query.entry}/${query.workgroup}/settings`}
+                  className="float-right mt-5"
+                >
+                  <Button icon={PencilIcon} secondary>
+                    Edit
+                  </Button>
+                </Link>
+              ) : null}
               <article className="prose max-w-none pt-6 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
                 <h3>Proposing</h3>
                 <em>The following DIDs are eligible to propose</em>
