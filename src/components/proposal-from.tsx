@@ -33,6 +33,7 @@ import Button from './basic/button'
 import useSignDocument from '../hooks/use-sign-document'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
+import RadioGroup from './basic/radio-group'
 
 export default function ProposalForm(props: {
   community?: Authorized<Community> & Serialize<{ entry: Entry }>
@@ -157,6 +158,21 @@ export default function ProposalForm(props: {
     () => !status?.timestamp || !did || !props.community || !snapshots,
     [props.community, did, snapshots, status?.timestamp],
   )
+  const votingTypes = useMemo(
+    () => [
+      {
+        value: 'single',
+        name: 'Single choice',
+        description: 'Choose only one option',
+      },
+      {
+        value: 'approval',
+        name: 'Approval',
+        description: 'Approve a certain number of options',
+      },
+    ],
+    [],
+  )
 
   return (
     <>
@@ -198,55 +214,12 @@ export default function ProposalForm(props: {
                   control={control}
                   name="voting_type"
                   render={({ field: { value, onChange } }) => (
-                    <div className="space-y-2">
-                      {[
-                        {
-                          id: 'single',
-                          name: 'Single choice',
-                          description: 'Choose only one option',
-                        },
-                        {
-                          id: 'approval',
-                          name: 'Approval',
-                          description: 'Approve a certain number of options',
-                        },
-                      ].map((plan) => (
-                        <div
-                          key={plan.id}
-                          className="relative flex items-start"
-                        >
-                          <div className="flex h-5 items-center">
-                            <input
-                              id={plan.id}
-                              aria-describedby={`${plan.id}-description`}
-                              name="plan"
-                              type="radio"
-                              disabled={disabled}
-                              checked={value === plan.id}
-                              onChange={() => onChange(plan.id)}
-                              className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600"
-                            />
-                          </div>
-                          <div className="ml-3 text-sm">
-                            <label
-                              htmlFor={plan.id}
-                              className={clsx(
-                                'font-medium text-gray-700',
-                                disabled ? 'cursor-not-allowed' : undefined,
-                              )}
-                            >
-                              {plan.name}
-                            </label>
-                            <p
-                              id={`${plan.id}-description`}
-                              className="text-gray-500"
-                            >
-                              {plan.description}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <RadioGroup
+                      options={votingTypes}
+                      value={value}
+                      onChange={onChange}
+                      disabled={disabled}
+                    />
                   )}
                 />
               </FormItem>
