@@ -12,40 +12,6 @@ import Article from '../../../components/basic/article'
 import { BooleanSets, DecimalSets } from '../../../utils/schemas/sets'
 import Button from '../../../components/basic/button'
 
-export function SetsDescription(props: {
-  entry?: string
-  value: BooleanSets | DecimalSets
-}) {
-  return (
-    <ul>
-      {props.value.operands.map((operand, index) => (
-        <li key={index}>
-          {operand.name ? (
-            <>
-              <b>{operand.name}</b>:
-            </>
-          ) : null}
-          {operand.arguments[1].length
-            ? null
-            : operand.arguments[0] === 'bit'
-            ? ' All .bit accounts'
-            : ` All SubDIDs of ${props.entry}`}
-          {operand.arguments[2] ? ` (Power: ${operand.arguments[2]})` : null}
-          {operand.arguments[1].length ? (
-            <ul>
-              {operand.arguments[1].map((argument) => (
-                <li key={argument}>
-                  {argument}.{operand.arguments[0]}
-                </li>
-              ))}
-            </ul>
-          ) : null}
-        </li>
-      ))}
-    </ul>
-  )
-}
-
 export default function WorkgroupRulesPage() {
   const query = useRouterQuery<['entry', 'workgroup']>()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
@@ -108,5 +74,39 @@ export default function WorkgroupRulesPage() {
         </WorkgroupLayout>
       </CommunityLayout>
     </>
+  )
+}
+
+function SetsDescription(props: {
+  entry?: string
+  value: BooleanSets | DecimalSets
+}) {
+  return (
+    <ul>
+      {props.value.operands.map((operand, index) => (
+        <li key={index}>
+          {operand.name ? (
+            <>
+              <b>{operand.name}</b>:
+            </>
+          ) : null}
+          {operand.arguments[1].length
+            ? null
+            : operand.arguments[0] === 'bit'
+            ? ' All .bit accounts'
+            : ` All SubDIDs of ${props.entry}`}
+          {operand.arguments[2] ? ` (Power: ${operand.arguments[2]})` : null}
+          {operand.arguments[1].length ? (
+            <ul>
+              {operand.arguments[1].map((argument) => (
+                <li key={argument}>
+                  {argument}.{operand.arguments[0]}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </li>
+      ))}
+    </ul>
   )
 }
