@@ -48,8 +48,7 @@ export default function CreateCommunityPage() {
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">
               to hear valuable voices from your community members
             </p>
-
-            <div className="mt-10 flex flex-col items-center space-y-6">
+            <div className="mt-8 flex flex-col items-center space-y-6">
               {account ? (
                 <>
                   {didOptions?.length ? (
