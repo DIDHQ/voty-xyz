@@ -1,19 +1,22 @@
 import Head from 'next/head'
-import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useRef } from 'react'
+import clsx from 'clsx'
+import { useRouter } from 'next/router'
+import { useVirtualizer } from '@tanstack/react-virtual'
 
 import Button from '../../components/basic/button'
-import DidCombobox from '../../components/did-combobox'
+import { DidOption } from '../../components/did-combobox'
 import LoadingBar from '../../components/basic/loading-bar'
 import useDids from '../../hooks/use-dids'
 import useWallet from '../../hooks/use-wallet'
 import { documentTitle, isTestnet } from '../../utils/constants'
 import { trpc } from '../../utils/trpc'
+import ConnectButton from '../../components/connect-button'
 
 export default function CreateCommunityPage() {
-  const { account, connect } = useWallet()
+  const router = useRouter()
+  const { account } = useWallet()
   const { data, isLoading } = useDids(account)
-  const [entry, setEntry] = useState('')
   const dids = useMemo(
     () => data?.filter((did) => did.indexOf('.') === did.lastIndexOf('.')),
     [data],
@@ -24,12 +27,18 @@ export default function CreateCommunityPage() {
       { enabled: !!dids?.length },
     )
   const didOptions = useMemo(
-    () => dids?.map((did) => ({ did, disabled: existences?.[did] })),
+    () =>
+      existences
+        ? dids?.map((did) => ({ did, disabled: existences[did] }))
+        : undefined,
     [dids, existences],
   )
-  useEffect(() => {
-    setEntry(didOptions?.find(({ disabled }) => !disabled)?.did || '')
-  }, [didOptions])
+  const parentRef = useRef<HTMLDivElement>(null)
+  const rowVirtualizer = useVirtualizer({
+    count: didOptions?.length || 0,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 36,
+  })
 
   return (
     <>
@@ -38,58 +47,89 @@ export default function CreateCommunityPage() {
       </Head>
       <LoadingBar loading={isLoading || isExistencesLoading} />
       <div className="w-full bg-white">
-        <div className="py-24 sm:px-6 sm:py-32">
+        <div className="pt-8 sm:px-6 sm:pt-16">
           <div className="mx-auto text-center">
             <h2 className="text-4xl font-bold tracking-tight text-gray-900">
               Create a community
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">
-              {didOptions?.length === 0
-                ? 'You need a DID to create community'
-                : 'to hear valuable voices from your community members'}
+              to hear valuable voices from your community members
             </p>
-            <div className="mt-10 flex flex-col items-center space-y-6">
-              {didOptions?.length === 0 ? (
-                <a
-                  href={
-                    isTestnet
-                      ? 'https://test2f7a872b.did.id/explorer'
-                      : 'https://app.did.id/explorer'
-                  }
-                >
-                  <Button large primary>
-                    Register →
-                  </Button>
-                </a>
-              ) : (
+            <div className="mt-8 flex flex-col items-center space-y-6">
+              {account ? (
                 <>
-                  <DidCombobox
-                    label="Select a DID as your community entry"
-                    options={didOptions}
-                    value={entry}
-                    onChange={setEntry}
-                    onClick={connect}
-                  />
-                  {entry ? (
-                    <Link href={`/create/${entry}`}>
-                      <Button large primary>
-                        Next →
-                      </Button>
-                    </Link>
-                  ) : (
-                    <a
-                      href={
-                        isTestnet
-                          ? 'https://test2f7a872b.did.id/explorer'
-                          : 'https://app.did.id/explorer'
-                      }
-                    >
-                      <Button large primary>
-                        Register →
-                      </Button>
-                    </a>
-                  )}
+                  {didOptions?.length ? (
+                    <>
+                      <div>
+                        <span className="mb-1 block text-sm font-medium text-gray-700">
+                          Select a DID as your community entry
+                        </span>
+                        <div
+                          ref={parentRef}
+                          className="relative max-h-80 overflow-auto rounded border py-1 text-base focus:outline-none sm:text-sm"
+                        >
+                          <div
+                            style={{
+                              height: `${rowVirtualizer.getTotalSize()}px`,
+                            }}
+                          >
+                            {rowVirtualizer
+                              .getVirtualItems()
+                              .map((virtualItem) => (
+                                <div
+                                  key={didOptions?.[virtualItem.index]?.did}
+                                  onClick={() => {
+                                    if (
+                                      !didOptions?.[virtualItem.index]?.disabled
+                                    ) {
+                                      router.push(
+                                        `/create/${
+                                          didOptions?.[virtualItem.index]?.did
+                                        }`,
+                                      )
+                                    }
+                                  }}
+                                  className={clsx(
+                                    'absolute top-0 left-0 w-full py-2 px-3 hover:bg-gray-100',
+                                    didOptions?.[virtualItem.index]?.disabled
+                                      ? 'cursor-not-allowed'
+                                      : 'cursor-pointer',
+                                  )}
+                                  style={{
+                                    height: `${virtualItem.size}px`,
+                                    transform: `translateY(${virtualItem.start}px)`,
+                                  }}
+                                >
+                                  <DidOption
+                                    disabled={
+                                      didOptions?.[virtualItem.index]?.disabled
+                                    }
+                                    text={didOptions?.[virtualItem.index]?.did}
+                                  />
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      </div>
+                      <span className="mb-1 block text-sm font-medium text-gray-400">
+                        or
+                      </span>
+                    </>
+                  ) : null}
+                  <a
+                    href={
+                      isTestnet
+                        ? 'https://test2f7a872b.did.id/explorer'
+                        : 'https://app.did.id/explorer'
+                    }
+                  >
+                    <Button large primary>
+                      Register →
+                    </Button>
+                  </a>
                 </>
+              ) : (
+                <ConnectButton />
               )}
             </div>
           </div>

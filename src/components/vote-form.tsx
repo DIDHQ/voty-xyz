@@ -123,9 +123,9 @@ export default function VoteForm(props: {
   const id = useId()
   const didOptions = useMemo(
     () =>
-      voted && powers && dids
+      voted && powers
         ? dids
-            .filter((did) => powers[did].gt(0))
+            ?.filter((did) => powers[did].gt(0))
             .map((did) => ({
               did,
               label: `${voted[did] ? '(voted) ' : ''}${powers[did]}`,

@@ -123,8 +123,8 @@ export default function ProposalForm(props: {
   )
   const didOptions = useMemo(
     () =>
-      disables && dids
-        ? dids.map((did) => ({ did, disabled: disables[did] }))
+      disables
+        ? dids?.map((did) => ({ did, disabled: disables[did] }))
         : undefined,
     [dids, disables],
   )

@@ -94,7 +94,7 @@ export default function DidCombobox(props: {
                       'absolute top-0 left-0 w-full cursor-default select-none py-2 px-3',
                       active
                         ? 'bg-primary-600 text-white'
-                        : props.options?.[virtualItem.index]?.disabled
+                        : disabled
                         ? 'text-gray-400'
                         : 'text-gray-900',
                     )
@@ -105,42 +105,13 @@ export default function DidCombobox(props: {
                   }}
                 >
                   {({ active, selected, disabled }) => (
-                    <div
-                      className={clsx(
-                        'flex items-center',
-                        disabled ? 'cursor-not-allowed' : undefined,
-                      )}
-                    >
-                      <span
-                        className={clsx(
-                          'inline-block h-2 w-2 shrink-0 rounded-full',
-                          disabled ? 'bg-gray-200' : 'bg-primary-400',
-                        )}
-                        aria-hidden="true"
-                      />
-                      <span
-                        className={clsx(
-                          'ml-3 flex-1 truncate text-start',
-                          selected && 'font-semibold',
-                        )}
-                      >
-                        {props.options?.[virtualItem.index]?.did}
-                        <span className="sr-only">
-                          {' '}
-                          is {disabled ? 'offline' : 'online'}
-                        </span>
-                      </span>
-                      {props.options?.[virtualItem.index]?.label ? (
-                        <span
-                          className={clsx(
-                            'mx-2 shrink-0 truncate text-gray-500',
-                            active ? 'text-indigo-200' : 'text-gray-500',
-                          )}
-                        >
-                          {props.options?.[virtualItem.index]?.label}
-                        </span>
-                      ) : null}
-                    </div>
+                    <DidOption
+                      active={active}
+                      selected={selected}
+                      disabled={disabled}
+                      text={props.options?.[virtualItem.index]?.did}
+                      label={props.options?.[virtualItem.index]?.label}
+                    />
                   )}
                 </Combobox.Option>
               ))}
@@ -149,5 +120,49 @@ export default function DidCombobox(props: {
         </Combobox.Options>
       </div>
     </Combobox>
+  )
+}
+
+export function DidOption(props: {
+  active?: boolean
+  selected?: boolean
+  disabled?: boolean
+  text?: string
+  label?: string
+}) {
+  return (
+    <div
+      className={clsx(
+        'flex items-center',
+        props.disabled ? 'cursor-not-allowed' : undefined,
+      )}
+    >
+      <span
+        className={clsx(
+          'inline-block h-2 w-2 shrink-0 rounded-full',
+          props.disabled ? 'bg-gray-200' : 'bg-primary-400',
+        )}
+        aria-hidden="true"
+      />
+      <span
+        className={clsx(
+          'ml-3 flex-1 truncate text-start',
+          props.selected && 'font-semibold',
+          props.disabled ? 'text-gray-400' : 'text-gray-800',
+        )}
+      >
+        {props.text}
+      </span>
+      {props.label ? (
+        <span
+          className={clsx(
+            'mx-2 shrink-0 truncate text-gray-500',
+            props.active ? 'text-indigo-200' : 'text-gray-500',
+          )}
+        >
+          {props.label}
+        </span>
+      ) : null}
+    </div>
   )
 }
