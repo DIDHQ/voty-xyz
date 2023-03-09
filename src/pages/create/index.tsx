@@ -63,7 +63,7 @@ export default function CreateCommunityPage() {
                         </span>
                         <div
                           ref={parentRef}
-                          className="relative max-h-80 overflow-auto rounded border py-1 text-base focus:outline-none sm:text-sm"
+                          className="relative max-h-80 overflow-auto rounded border text-base focus:outline-none sm:text-sm"
                         >
                           <div
                             style={{
