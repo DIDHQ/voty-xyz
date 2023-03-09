@@ -40,26 +40,24 @@ export default function GroupIndexPage() {
     <CommunityLayout>
       <WorkgroupLayout>
         <LoadingBar loading={isLoading} />
+        <div className="my-5 flex justify-between">
+          <Select options={['All']} value="All" onChange={() => {}} />
+          <CreateProposalButton
+            entry={query.entry}
+            workgroup={query.workgroup}
+            community={community?.entry.community}
+          />
+        </div>
         {proposals?.length === 0 ? (
           <EmptyState title="No proposals" className="mt-24" />
         ) : (
-          <>
-            <div className="my-5 flex justify-between">
-              <Select options={['All']} value="All" onChange={() => {}} />
-              <CreateProposalButton
-                entry={query.entry}
-                workgroup={query.workgroup}
-                community={community?.entry.community}
-              />
-            </div>
-            <ul role="list" className="mt-1 space-y-1">
-              {proposals?.map((proposal) => (
-                <li key={proposal.permalink}>
-                  <ProposalListItem proposal={proposal} />
-                </li>
-              ))}
-            </ul>
-          </>
+          <ul role="list" className="mt-1 space-y-1">
+            {proposals?.map((proposal) => (
+              <li key={proposal.permalink}>
+                <ProposalListItem proposal={proposal} />
+              </li>
+            ))}
+          </ul>
         )}
         <div ref={ref} />
       </WorkgroupLayout>
