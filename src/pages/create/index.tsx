@@ -62,9 +62,11 @@ export default function CreateCommunityPage() {
                           {didOptions?.map((didOption) => (
                             <div
                               key={didOption.did}
-                              onClick={() =>
-                                router.push(`/create/${didOption.did}`)
-                              }
+                              onClick={() => {
+                                if (!didOption.disabled) {
+                                  router.push(`/create/${didOption.did}`)
+                                }
+                              }}
                               className={clsx(
                                 'py-2 px-3 hover:bg-gray-100',
                                 didOption.disabled
