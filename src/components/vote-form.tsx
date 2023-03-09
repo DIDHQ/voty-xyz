@@ -21,6 +21,7 @@ import { ChoiceListItem } from './choice-list-item'
 import DidCombobox from './did-combobox'
 import Button from './basic/button'
 import useSignDocument from '../hooks/use-sign-document'
+import TextButton from './basic/text-button'
 
 const Tooltip = dynamic(
   () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
@@ -28,6 +29,7 @@ const Tooltip = dynamic(
 )
 
 export default function VoteForm(props: {
+  entry?: string
   proposal?: Proposal & { permalink: string; votes: number }
   workgroup?: Workgroup
   onSuccess: () => void
@@ -187,20 +189,30 @@ export default function VoteForm(props: {
       </FormItem>
       {period === Period.ENDED ? null : (
         <div className="mt-6 flex w-full flex-col items-end">
-          <DidCombobox
-            top
-            label="Select a DID as voter"
-            options={didOptions}
-            value={did}
-            onChange={setDid}
-            onClick={connect}
-            className="w-full flex-1 sm:w-64 sm:flex-none"
-          />
+          <div>
+            <DidCombobox
+              top
+              label="Select a DID as voter"
+              options={didOptions}
+              value={did}
+              onChange={setDid}
+              onClick={connect}
+              className="w-full flex-1 sm:w-64 sm:flex-none"
+            />
+            {didOptions?.length === 0 ? (
+              <TextButton
+                secondary
+                href={`/${props.entry}/${props.workgroup?.id}/rules`}
+              >
+                Why I&#39;m not eligible to vote
+              </TextButton>
+            ) : null}
+          </div>
           {period !== Period.VOTING ? (
             <>
               <div
                 data-tooltip-id={id}
-                data-tooltip-place="top"
+                data-tooltip-place="left"
                 className="mt-6"
               >
                 <Button
