@@ -18,7 +18,7 @@
     "@hookform/resolvers": "^2.9.11",
     "@nervosnetwork/ckb-sdk-core": "^0.103.1",
     "@prisma/client": "^4.11.0",
-    "@rainbow-me/rainbowkit": "^0.11.0",
+    "@rainbow-me/rainbowkit": "^0.11.1",
     "@sentry/nextjs": "^7.40.0",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tanstack/react-query": "^4.26.1",
