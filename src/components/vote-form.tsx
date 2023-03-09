@@ -189,7 +189,7 @@ export default function VoteForm(props: {
       </FormItem>
       {period === Period.ENDED ? null : (
         <div className="mt-6 flex w-full flex-col items-end">
-          <div>
+          <div className="w-full flex-1 sm:w-64 sm:flex-none">
             <DidCombobox
               top
               label="Select a DID as voter"
@@ -197,7 +197,6 @@ export default function VoteForm(props: {
               value={did}
               onChange={setDid}
               onClick={connect}
-              className="w-full flex-1 sm:w-64 sm:flex-none"
             />
             {didOptions?.length === 0 ? (
               <TextButton

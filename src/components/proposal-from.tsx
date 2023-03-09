@@ -281,7 +281,7 @@ export default function ProposalForm(props: {
           </Grid6>
         </FormSection>
         <div className="flex w-full flex-col items-end space-y-6">
-          <div>
+          <div className="w-full flex-1 sm:w-64 sm:flex-none">
             <DidCombobox
               top
               label="Select a DID as proposer"
@@ -289,7 +289,6 @@ export default function ProposalForm(props: {
               value={did}
               onChange={setDid}
               onClick={connect}
-              className="w-full flex-1 sm:w-64 sm:flex-none"
             />
             {didOptions?.length === 0 ? (
               <TextButton
