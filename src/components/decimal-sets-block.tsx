@@ -214,9 +214,9 @@ function DecimalUnitBlock(props: {
                     disabled={props.disabled}
                     options={[
                       { value: 'allowlist', name: 'Allowlist' },
-                      { value: 'none', name: 'None' },
+                      { value: 'all', name: 'All' },
                     ]}
-                    value={value.length ? 'allowlist' : 'none'}
+                    value={value.length ? 'allowlist' : 'all'}
                     onChange={(v) => onChange(v === 'allowlist' ? [''] : [])}
                   />
                 )}
