@@ -9,7 +9,7 @@ export default function RadioGroup(props: {
 
   return (
     <fieldset className={props.className}>
-      <div className="flex items-center space-y-0 space-x-6">
+      <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-6">
         {props.options.map((option) => (
           <div
             key={option.value}
@@ -25,7 +25,7 @@ export default function RadioGroup(props: {
             />
             <label
               htmlFor={option.value}
-              className="ml-3 block text-sm text-gray-700"
+              className="ml-3 block whitespace-nowrap text-sm text-gray-700"
             >
               {option.name}
             </label>

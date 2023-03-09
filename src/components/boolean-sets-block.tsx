@@ -187,8 +187,8 @@ function BooleanUnitBlock(props: {
                   <RadioGroup
                     disabled={props.disabled}
                     options={[
-                      { value: props.entry, name: 'SubDID' },
-                      { value: 'bit', name: '.bit' },
+                      { value: props.entry, name: `SubDID of ${props.entry}` },
+                      { value: 'bit', name: 'Any .bit account' },
                     ]}
                     value={value}
                     onChange={onChange}
@@ -214,9 +214,9 @@ function BooleanUnitBlock(props: {
                     disabled={props.disabled}
                     options={[
                       { value: 'allowlist', name: 'Allowlist' },
-                      { value: 'all', name: 'All' },
+                      { value: 'none', name: 'None' },
                     ]}
-                    value={value.length ? 'allowlist' : 'all'}
+                    value={value.length ? 'allowlist' : 'none'}
                     onChange={(v) => onChange(v === 'allowlist' ? [''] : [])}
                   />
                 )}

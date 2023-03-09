@@ -198,7 +198,7 @@ export default function ProposalForm(props: {
                   control={control}
                   name="voting_type"
                   render={({ field: { value, onChange } }) => (
-                    <div className="space-y-4">
+                    <div className="space-y-2">
                       {[
                         {
                           id: 'single',
