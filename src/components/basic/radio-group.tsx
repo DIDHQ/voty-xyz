@@ -24,7 +24,7 @@ export default function RadioGroup(props: {
           </div>
           <div className="ml-3 text-sm">
             <label
-              onClick={() => onChange(option.value)}
+              onClick={() => (props.disabled ? null : onChange(option.value))}
               className={clsx(
                 'font-medium text-gray-700',
                 props.disabled ? 'cursor-not-allowed' : undefined,
