@@ -71,7 +71,7 @@ export default function ProposalPage() {
     (className?: string) => (
       <div
         className={clsx(
-          'relative mt-[-1px] w-full shrink-0 sm:sticky sm:top-18 sm:w-72 sm:pt-8',
+          'relative mt-[-1px] w-full shrink-0 sm:sticky sm:top-18 sm:w-80 sm:pt-8',
           className,
         )}
       >
@@ -94,7 +94,7 @@ export default function ProposalPage() {
               {workgroup?.name || '...'}
             </DetailItem>
             <DetailItem title="Proposer" className="truncate whitespace-nowrap">
-              {proposal?.authorship.author}
+              {proposal?.authorship.author || '...'}
             </DetailItem>
             <DetailItem title="Voting type">
               {proposal
@@ -164,16 +164,14 @@ export default function ProposalPage() {
             >
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>
-            {proposal ? (
-              <div className="mb-6 border-b border-gray-200 pb-6">
-                <h3 className="mt-4 break-words text-3xl font-bold leading-8 tracking-tight text-gray-900 line-clamp-2 sm:text-4xl">
-                  {proposal?.title}
-                </h3>
-                <Article className="mt-6 sm:mt-8">
-                  {proposal?.extension?.content}
-                </Article>
-              </div>
-            ) : null}
+            <div className="mb-6 border-b border-gray-200 pb-6">
+              <h3 className="mt-4 break-words text-3xl font-bold leading-8 tracking-tight text-gray-900 line-clamp-2 sm:text-4xl">
+                {proposal?.title || '...'}
+              </h3>
+              <Article className="mt-6 sm:mt-8">
+                {proposal?.extension?.content}
+              </Article>
+            </div>
             {renderCard('block sm:hidden mb-6')}
             <VoteForm
               entry={community?.authorship.author}
