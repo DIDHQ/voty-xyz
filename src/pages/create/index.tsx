@@ -44,6 +44,21 @@ export default function CreateCommunityPage() {
     getScrollElement: () => parentRef.current,
     estimateSize: () => 36,
   })
+  const register = useMemo(
+    () => (
+      <TextButton
+        secondary
+        href={
+          isTestnet
+            ? 'https://test2f7a872b.did.id/explorer'
+            : 'https://app.did.id/explorer'
+        }
+      >
+        Register →
+      </TextButton>
+    ),
+    [],
+  )
 
   return (
     <>
@@ -133,20 +148,12 @@ export default function CreateCommunityPage() {
                       </div>
                     </div>
                     <span className="mb-1 block text-sm font-medium text-gray-400">
-                      or{' '}
-                      <TextButton
-                        secondary
-                        href={
-                          isTestnet
-                            ? 'https://test2f7a872b.did.id/explorer'
-                            : 'https://app.did.id/explorer'
-                        }
-                      >
-                        Register →
-                      </TextButton>
+                      or {register}
                     </span>
                   </>
-                ) : null
+                ) : (
+                  register
+                )
               ) : (
                 <ConnectButton />
               )}
