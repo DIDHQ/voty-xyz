@@ -20,7 +20,7 @@ export default function CommunitySettingsPage() {
   )
   const handleSuccess = useCallback(() => {
     refetch()
-    router.push(`/${query.entry}`)
+    router.push(`/${query.entry}/about`)
   }, [query.entry, refetch, router])
 
   return (

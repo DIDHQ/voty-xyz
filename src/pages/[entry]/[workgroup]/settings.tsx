@@ -23,8 +23,8 @@ export default function WorkgroupSettingsPage() {
       refetch()
       router.push(
         isArchive
-          ? `/${query.entry}`
-          : `/${query.entry}/${query.workgroup}/settings`,
+          ? `/${query.entry}/about`
+          : `/${query.entry}/${query.workgroup}/rules`,
       )
     },
     [query.entry, query.workgroup, refetch, router],
@@ -35,7 +35,7 @@ export default function WorkgroupSettingsPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextButton
-          href={`/${query.entry}/${query.workgroup}`}
+          href={`/${query.entry}/${query.workgroup}/rules`}
           className="mt-6 sm:mt-8"
         >
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
