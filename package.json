@@ -30,7 +30,7 @@
     "@trpc/server": "^10.13.0",
     "@vercel/analytics": "^0.1.11",
     "arweave": "^1.13.1",
-    "browser-image-compression": "^2.0.0",
+    "browser-image-compression": "^2.0.2",
     "clsx": "^1.2.1",
     "dayjs": "^1.11.7",
     "decimal.js": "^10.4.3",
