@@ -125,7 +125,9 @@ export default function ProposalForm(props: {
   const didOptions = useMemo(
     () =>
       disables
-        ? dids?.map((did) => ({ did, disabled: disables[did] }))
+        ? dids
+            ?.map((did) => ({ did, disabled: disables[did] }))
+            .filter(({ disabled }) => !disabled)
         : undefined,
     [dids, disables],
   )
@@ -279,15 +281,25 @@ export default function ProposalForm(props: {
           </Grid6>
         </FormSection>
         <div className="flex w-full flex-col items-end space-y-6">
-          <DidCombobox
-            top
-            label="Select a DID as proposer"
-            options={didOptions}
-            value={did}
-            onChange={setDid}
-            onClick={connect}
-            className="w-full flex-1 sm:w-64 sm:flex-none"
-          />
+          <div>
+            <DidCombobox
+              top
+              label="Select a DID as proposer"
+              options={didOptions}
+              value={did}
+              onChange={setDid}
+              onClick={connect}
+              className="w-full flex-1 sm:w-64 sm:flex-none"
+            />
+            {didOptions?.length === 0 ? (
+              <TextButton
+                secondary
+                href={`/${props.community?.authorship.author}/${props.workgroup?.id}/rules`}
+              >
+                Why I&#39;m not eligible to propose
+              </TextButton>
+            ) : null}
+          </div>
           <Button
             primary
             large

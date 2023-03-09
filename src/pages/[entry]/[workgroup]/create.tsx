@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/router'
-import dynamic from 'next/dynamic'
 import Head from 'next/head'
 
 import useRouterQuery from '../../../hooks/use-router-query'
@@ -14,10 +13,6 @@ import Article from '../../../components/basic/article'
 import LoadingBar from '../../../components/basic/loading-bar'
 import ProposalForm from '../../../components/proposal-from'
 import { documentTitle } from '../../../utils/constants'
-
-const Slide = dynamic(() => import('../../../components/basic/slide'), {
-  ssr: false,
-})
 
 export default function CreateProposalPage() {
   const router = useRouter()
@@ -70,48 +65,6 @@ export default function CreateProposalPage() {
               >
                 {workgroup?.name || '...'}
               </DetailItem>
-            </DetailList>
-            <DetailList title="Proposers">
-              {workgroup?.permission.proposing.operands.map(
-                (operand, index) => (
-                  <DetailItem
-                    key={operand.function + index}
-                    title={operand.name || `Filter ${index}`}
-                    className="truncate whitespace-nowrap"
-                  >
-                    <Slide
-                      title="Proposers"
-                      trigger={({ handleOpen }) => (
-                        <TextButton secondary onClick={handleOpen}>
-                          View
-                        </TextButton>
-                      )}
-                      small
-                    >
-                      {() => (
-                        <DetailList title={operand.name || `Filter ${index}`}>
-                          <DetailItem title="Base on">
-                            {operand.arguments[0] === 'bit' ? '.bit' : 'SubDID'}
-                          </DetailItem>
-                          <DetailItem title="Filter">
-                            {operand.arguments[1].length ? 'Allowlist' : 'All'}
-                          </DetailItem>
-                          {operand.arguments[1].length ? (
-                            <DetailItem title="Allowlist">
-                              {operand.arguments[1]
-                                .map(
-                                  (argument) =>
-                                    `${argument}.${operand.arguments[0]}`,
-                                )
-                                .join('\n')}
-                            </DetailItem>
-                          ) : null}
-                        </DetailList>
-                      )}
-                    </Slide>
-                  </DetailItem>
-                ),
-              )}
             </DetailList>
             <DetailList title="Duration">
               <DetailItem title="Pending">

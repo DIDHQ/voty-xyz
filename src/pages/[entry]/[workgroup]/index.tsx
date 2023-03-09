@@ -8,6 +8,8 @@ import WorkgroupLayout from '../../../components/layouts/workgroup'
 import { trpc } from '../../../utils/trpc'
 import LoadingBar from '../../../components/basic/loading-bar'
 import EmptyState from '../../../components/empty-state'
+import CreateProposalButton from '../../../components/create-proposal-button'
+import Select from '../../../components/basic/select'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['entry', 'workgroup']>()
@@ -19,6 +21,10 @@ export default function GroupIndexPage() {
         getNextPageParam: ({ next }) => next,
       },
     )
+  const { data: community } = trpc.community.getByEntry.useQuery(
+    { entry: query.entry },
+    { enabled: !!query.entry },
+  )
   const proposals = useMemo(
     () => data?.pages.flatMap(({ data }) => data),
     [data],
@@ -37,13 +43,23 @@ export default function GroupIndexPage() {
         {proposals?.length === 0 ? (
           <EmptyState title="No proposals" className="mt-24" />
         ) : (
-          <ul role="list" className="mt-1 space-y-1">
-            {proposals?.map((proposal) => (
-              <li key={proposal.permalink}>
-                <ProposalListItem proposal={proposal} />
-              </li>
-            ))}
-          </ul>
+          <>
+            <div className="my-5 flex justify-between">
+              <Select options={['All']} value="All" onChange={() => {}} />
+              <CreateProposalButton
+                entry={query.entry}
+                workgroup={query.workgroup}
+                community={community?.entry.community}
+              />
+            </div>
+            <ul role="list" className="mt-1 space-y-1">
+              {proposals?.map((proposal) => (
+                <li key={proposal.permalink}>
+                  <ProposalListItem proposal={proposal} />
+                </li>
+              ))}
+            </ul>
+          </>
         )}
         <div ref={ref} />
       </WorkgroupLayout>

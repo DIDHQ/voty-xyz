@@ -23,10 +23,6 @@ export default function CreateWorkgroupPage() {
     { enabled: !!query.entry },
   )
   const newWorkgroup = useMemo(() => nanoid(), [])
-  const handleSuccess = useCallback(() => {
-    refetch()
-    router.push(`/${query.entry}/${newWorkgroup}`)
-  }, [newWorkgroup, query.entry, refetch, router])
   const initialValue = useMemo(
     () =>
       community && query.entry
@@ -70,6 +66,10 @@ export default function CreateWorkgroupPage() {
         : undefined,
     [community, newWorkgroup, query.entry],
   )
+  const handleSuccess = useCallback(() => {
+    refetch()
+    router.push(`/${query.entry}/${newWorkgroup}/rules`)
+  }, [newWorkgroup, query.entry, refetch, router])
 
   return (
     <>

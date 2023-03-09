@@ -11,7 +11,7 @@ export default function CreateEntryPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry']>()
   const handleSuccess = useCallback(() => {
-    router.push(`/${query.entry}`)
+    router.push(`/${query.entry}/about`)
   }, [query.entry, router])
 
   return (

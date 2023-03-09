@@ -39,10 +39,6 @@ const ProposalSchedule = dynamic(
   },
 )
 
-const Slide = dynamic(() => import('../../components/basic/slide'), {
-  ssr: false,
-})
-
 export default function ProposalPage() {
   const query = useRouterQuery<['proposal']>()
   const { data: proposal, isLoading } = trpc.proposal.getByPermalink.useQuery(
@@ -107,49 +103,6 @@ export default function ProposalPage() {
                   : 'Approval'
                 : '...'}
             </DetailItem>
-          </DetailList>
-          <DetailList title="Voters">
-            {workgroup?.permission.voting.operands.map((operand, index) => (
-              <DetailItem
-                key={operand.function + index}
-                title={operand.name || `Filter ${index}`}
-                className="truncate whitespace-nowrap"
-              >
-                <Slide
-                  title="Voters"
-                  trigger={({ handleOpen }) => (
-                    <TextButton secondary onClick={handleOpen}>
-                      View
-                    </TextButton>
-                  )}
-                  small
-                >
-                  {() => (
-                    <DetailList title={operand.name || `Filter ${index}`}>
-                      <DetailItem title="Base on">
-                        {operand.arguments[0] === 'bit' ? '.bit' : 'SubDID'}
-                      </DetailItem>
-                      <DetailItem title="Filter">
-                        {operand.arguments[1].length ? 'Allowlist' : 'All'}
-                      </DetailItem>
-                      {operand.arguments[1].length ? (
-                        <DetailItem title="Allowlist">
-                          {operand.arguments[1]
-                            .map(
-                              (argument) =>
-                                `${argument}.${operand.arguments[0]}`,
-                            )
-                            .join('\n')}
-                        </DetailItem>
-                      ) : null}
-                      <DetailItem title="Power">
-                        {operand.arguments[2]}
-                      </DetailItem>
-                    </DetailList>
-                  )}
-                </Slide>
-              </DetailItem>
-            ))}
           </DetailList>
           <ProposalSchedule
             proposal={query.proposal}
@@ -223,6 +176,7 @@ export default function ProposalPage() {
             ) : null}
             {renderCard('block sm:hidden mb-6')}
             <VoteForm
+              entry={community?.authorship.author}
               proposal={proposal || undefined}
               workgroup={workgroup}
               onSuccess={refetchList}

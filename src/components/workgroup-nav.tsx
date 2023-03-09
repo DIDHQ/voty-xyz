@@ -3,23 +3,14 @@ import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useId, useMemo } from 'react'
+import { useMemo } from 'react'
 import Head from 'next/head'
-import dynamic from 'next/dynamic'
-import { PlusIcon } from '@heroicons/react/20/solid'
 
 import useWorkgroup from '../hooks/use-workgroup'
 import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
-import Button from './basic/button'
-import useStatus from '../hooks/use-status'
 import { documentTitle } from '../utils/constants'
-
-const Tooltip = dynamic(
-  () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
-  { ssr: false },
-)
 
 export default function WorkgroupNav(props: { className?: string }) {
   const query = useRouterQuery<['entry', 'workgroup']>()
@@ -37,9 +28,9 @@ export default function WorkgroupNav(props: { className?: string }) {
         current: router.pathname === '/[entry]/[workgroup]',
       },
       {
-        name: 'Settings',
-        href: `/${query.entry}/${query.workgroup}/settings`,
-        current: router.pathname === '/[entry]/[workgroup]/settings',
+        name: 'Rules',
+        href: `/${query.entry}/${query.workgroup}/rules`,
+        current: router.pathname === '/[entry]/[workgroup]/rules',
       },
     ],
     [query.entry, query.workgroup, router.pathname],
@@ -52,12 +43,10 @@ export default function WorkgroupNav(props: { className?: string }) {
     () => workgroup?.name.replace(emoji || '', ''),
     [emoji, workgroup?.name],
   )
-  const { data: status } = useStatus(community?.entry.community)
   const title = useMemo(
     () => compact([name, community?.name, documentTitle]).join(' - '),
     [community?.name, name],
   )
-  const id = useId()
 
   return (
     <>
@@ -82,38 +71,13 @@ export default function WorkgroupNav(props: { className?: string }) {
           <h3 className="mr-4 w-0 flex-1 truncate text-2xl font-medium text-gray-900">
             {name || '...'}
           </h3>
-          {status?.timestamp ? (
-            <Link
-              href={`/${query.entry}/${query.workgroup}/create`}
-              className="shrink-0"
-            >
-              <Button primary icon={PlusIcon}>
-                Proposal
-              </Button>
-            </Link>
-          ) : (
-            <>
-              <div
-                data-tooltip-id={id}
-                data-tooltip-place="left"
-                className="shrink-0"
-              >
-                <Button primary disabled icon={PlusIcon}>
-                  Proposal
-                </Button>
-              </div>
-              <Tooltip id={id} className="rounded">
-                Waiting for workgroup transaction (in about 5 minutes)
-              </Tooltip>
-            </>
-          )}
         </div>
         {workgroup?.extension.introduction ? (
-          <p className="mt-1 text-sm text-gray-500 line-clamp-1">
+          <p className="mt-2 text-sm text-gray-500 line-clamp-1">
             {workgroup.extension.introduction}
           </p>
         ) : null}
-        <div className="border-b">
+        <div className="mt-2 border-b">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">
             {tabs.map((tab) => (
               <Link

@@ -97,7 +97,9 @@ export default function WorkgroupForm(props: {
       </Notification>
       <Form className={props.className}>
         <FormSection
-          title={props.isNewWorkgroup ? 'New workgroup' : 'Basic information'}
+          title={`${props.isNewWorkgroup ? 'New' : 'Edit'} workgroup of ${
+            props.author
+          }`}
         >
           <Grid6>
             <GridItem6>
@@ -136,7 +138,7 @@ export default function WorkgroupForm(props: {
         </FormSection>
         <FormSection
           title="Proposers"
-          description="Defines who has rights to propose"
+          description="The following DIDs are eligible to propose"
         >
           <Grid6>
             <GridItem6>
@@ -160,7 +162,7 @@ export default function WorkgroupForm(props: {
         </FormSection>
         <FormSection
           title="Voters"
-          description="Defines who has power of voting"
+          description="The following DIDs are eligible to vote"
         >
           <Grid6>
             <GridItem6>
@@ -182,11 +184,11 @@ export default function WorkgroupForm(props: {
             </GridItem6>
           </Grid6>
         </FormSection>
-        <FormSection title="Rules">
+        <FormSection title="Schedule">
           <Grid6>
             <GridItem3>
               <FormItem
-                label="Duration of pending"
+                label="Duration of pending before voting"
                 error={
                   errors?.workgroups?.[workgroupIndex]?.duration?.announcement
                     ?.message
@@ -233,9 +235,15 @@ export default function WorkgroupForm(props: {
                 />
               </FormItem>
             </GridItem3>
+          </Grid6>
+        </FormSection>
+        <FormSection
+          title="Terms and conditions"
+          description="Defines the final state of proposal"
+        >
+          <Grid6>
             <GridItem6>
               <FormItem
-                label="Terms and conditions"
                 description={
                   <PreviewMarkdown>
                     {watch(
@@ -265,7 +273,8 @@ export default function WorkgroupForm(props: {
         {isManager ? (
           <FormFooter>
             <Button
-              primary
+              primary={props.isNewWorkgroup}
+              secondary={!props.isNewWorkgroup}
               icon={props.isNewWorkgroup ? PlusIcon : ArrowPathIcon}
               loading={handleSubmit.isLoading}
               onClick={onSubmit(
