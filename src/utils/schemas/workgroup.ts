@@ -6,6 +6,7 @@ export const workgroupSchema = z.object({
   id: z.string().min(1, 'Required'),
   name: z.string().min(1, 'Required'),
   duration: z.object({
+    // TODO: rename to pending
     announcement: z.number().min(3600, 'Minium 1 hour'),
     voting: z.number().min(3600, 'Minium 1 hour'),
   }),

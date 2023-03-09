@@ -114,7 +114,7 @@ export default function CreateProposalPage() {
               )}
             </DetailList>
             <DetailList title="Duration">
-              <DetailItem title="Announcement">
+              <DetailItem title="Pending">
                 {workgroup
                   ? formatDuration(workgroup.duration.announcement)
                   : null}

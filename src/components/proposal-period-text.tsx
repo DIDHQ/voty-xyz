@@ -19,8 +19,8 @@ export default function ProposalPeriodText(props: {
       className={
         period
           ? {
-              [Period.PENDING]: 'text-gray-600',
-              [Period.ANNOUNCING]: 'text-yellow-600',
+              [Period.CONFIRMING]: 'text-gray-600',
+              [Period.PENDING]: 'text-yellow-600',
               [Period.VOTING]: 'text-green-600',
               [Period.ENDED]: 'text-red-600',
             }[period]

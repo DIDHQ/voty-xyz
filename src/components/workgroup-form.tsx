@@ -186,7 +186,7 @@ export default function WorkgroupForm(props: {
           <Grid6>
             <GridItem3>
               <FormItem
-                label="Duration of announcement"
+                label="Duration of pending"
                 error={
                   errors?.workgroups?.[workgroupIndex]?.duration?.announcement
                     ?.message

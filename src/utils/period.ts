@@ -1,8 +1,8 @@
 import type { Workgroup } from './schemas/workgroup'
 
 export enum Period {
+  CONFIRMING = 'Confirming',
   PENDING = 'Pending',
-  ANNOUNCING = 'Announcing',
   VOTING = 'Voting',
   ENDED = 'Ended',
 }
@@ -13,10 +13,10 @@ export function getPeriod(
   duration?: Workgroup['duration'],
 ): Period {
   if (!timestamp || !duration) {
-    return Period.PENDING
+    return Period.CONFIRMING
   }
   if (now.getTime() < timestamp.getTime() + duration.announcement * 1000) {
-    return Period.ANNOUNCING
+    return Period.PENDING
   }
   if (
     now.getTime() <

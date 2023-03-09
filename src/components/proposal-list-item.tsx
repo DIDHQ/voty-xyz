@@ -50,7 +50,7 @@ export default function ProposalListItem(props: {
           aria-hidden="true"
         />
         <p>{props.proposal.authorship.author}</p>
-        {period === Period.PENDING || period === Period.ANNOUNCING ? null : (
+        {period === Period.CONFIRMING || period === Period.PENDING ? null : (
           <>
             <BoltIcon
               className="ml-4 mr-1.5 h-4 w-4 shrink-0"
@@ -59,7 +59,7 @@ export default function ProposalListItem(props: {
             <p>{props.proposal.votes}</p>
           </>
         )}
-        {period === Period.ANNOUNCING && status?.timestamp && workgroup ? (
+        {period === Period.PENDING && status?.timestamp && workgroup ? (
           <>
             <ClockIcon
               className="ml-4 mr-1.5 h-4 w-4 shrink-0"
