@@ -27,10 +27,7 @@ export default function CreateCommunityPage() {
       { enabled: !!dids?.length },
     )
   const didOptions = useMemo(
-    () =>
-      existences
-        ? dids?.map((did) => ({ did, disabled: existences[did] }))
-        : undefined,
+    () => dids?.map((did) => ({ did, disabled: existences?.[did] })),
     [dids, existences],
   )
   const parentRef = useRef<HTMLDivElement>(null)
