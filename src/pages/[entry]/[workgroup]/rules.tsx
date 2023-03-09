@@ -1,3 +1,6 @@
+import Link from 'next/link'
+import { PencilIcon } from '@heroicons/react/20/solid'
+
 import useRouterQuery from '../../../hooks/use-router-query'
 import CommunityLayout from '../../../components/layouts/community'
 import WorkgroupLayout from '../../../components/layouts/workgroup'
@@ -7,6 +10,7 @@ import useWorkgroup from '../../../hooks/use-workgroup'
 import { formatDuration } from '../../../utils/time'
 import Article from '../../../components/basic/article'
 import { BooleanSets, DecimalSets } from '../../../utils/schemas/sets'
+import Button from '../../../components/basic/button'
 
 export function SetsDescription(props: {
   entry?: string
@@ -57,6 +61,14 @@ export default function WorkgroupRulesPage() {
         <WorkgroupLayout>
           {workgroup ? (
             <>
+              <Link
+                href={`/${query.entry}/${query.workgroup}/settings`}
+                className="float-right mt-5"
+              >
+                <Button primary icon={PencilIcon}>
+                  Edit
+                </Button>
+              </Link>
               <article className="prose max-w-none pt-6 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
                 <h3>Proposing</h3>
                 <em>The following DIDs are eligible to propose</em>
