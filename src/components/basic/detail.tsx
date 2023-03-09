@@ -21,7 +21,7 @@ export function DetailItem(props: {
       <div className="w-0 flex-1" />
       <dd
         className={clsx(
-          'whitespace-pre-wrap break-all text-right text-gray-900',
+          'break-word whitespace-pre-wrap text-right text-gray-900',
           props.className,
         )}
       >
