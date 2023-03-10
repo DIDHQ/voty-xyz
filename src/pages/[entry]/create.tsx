@@ -5,11 +5,11 @@ import Head from 'next/head'
 
 import useRouterQuery from '../../hooks/use-router-query'
 import WorkgroupForm from '../../components/workgroup-form'
-import CommunityLayout from '../../components/layouts/community'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
 import { documentTitle } from '../../utils/constants'
 import { Community } from '../../utils/schemas/community'
+import TextButton from '../../components/basic/text-button'
 
 export default function CreateWorkgroupPage() {
   const router = useRouter()
@@ -77,7 +77,10 @@ export default function CreateWorkgroupPage() {
         <title>{`New workgroup - ${documentTitle}`}</title>
       </Head>
       <LoadingBar loading={isLoading} />
-      <CommunityLayout>
+      <div className="w-full">
+        <TextButton href={`/${query.entry}`} className="mt-6 sm:mt-8">
+          <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+        </TextButton>
         <WorkgroupForm
           author={query.entry || ''}
           initialValue={initialValue}
@@ -86,7 +89,7 @@ export default function CreateWorkgroupPage() {
           onSuccess={handleSuccess}
           className="pt-6 sm:pt-8"
         />
-      </CommunityLayout>
+      </div>
     </>
   )
 }
