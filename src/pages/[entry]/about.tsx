@@ -25,7 +25,7 @@ export default function CommunityAboutPage() {
           href={`/${query.entry}/settings`}
           className="float-right mt-6 sm:mt-8"
         >
-          <Button icon={PencilIcon} secondary>
+          <Button icon={PencilIcon} primary>
             Edit
           </Button>
         </Link>

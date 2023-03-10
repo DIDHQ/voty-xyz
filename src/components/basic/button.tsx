@@ -5,7 +5,6 @@ export default function Button(
   props: ButtonHTMLAttributes<HTMLButtonElement> & {
     icon?: ExoticComponent<{ className?: string }>
     primary?: boolean
-    secondary?: boolean
     loading?: boolean
     large?: boolean
   },
@@ -13,7 +12,6 @@ export default function Button(
   const {
     icon: Icon,
     primary,
-    secondary,
     loading,
     large,
     disabled,
@@ -31,8 +29,6 @@ export default function Button(
         large ? 'px-6 py-3 text-base' : 'px-4 py-2 text-sm',
         primary
           ? 'border-transparent bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-300'
-          : secondary
-          ? 'border-transparent bg-secondary-600 text-white hover:bg-secondary-700 focus:ring-secondary-300'
           : 'border-gray-200 bg-white hover:bg-gray-50',
         className,
       )}

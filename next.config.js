@@ -32,5 +32,5 @@ const nextConfig = {
 module.exports = withSentryConfig(
   withPWA(withBundleAnalyzer(nextConfig)),
   { silent: true, dryRun: process.env.NODE_ENV === 'development' },
-  { hideSourcemaps: true },
+  { hideSourceMaps: true },
 )

@@ -273,8 +273,7 @@ export default function WorkgroupForm(props: {
         {isManager ? (
           <FormFooter>
             <Button
-              primary={props.isNewWorkgroup}
-              secondary={!props.isNewWorkgroup}
+              primary
               icon={props.isNewWorkgroup ? PlusIcon : ArrowPathIcon}
               loading={handleSubmit.isLoading}
               onClick={onSubmit(

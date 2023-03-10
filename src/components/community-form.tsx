@@ -203,8 +203,7 @@ export default function CommunityForm(props: {
         {isManager ? (
           <FormFooter>
             <Button
-              primary={isNewCommunity}
-              secondary={!isNewCommunity}
+              primary
               icon={isNewCommunity ? PlusIcon : ArrowPathIcon}
               loading={handleSubmit.isLoading}
               onClick={onSubmit(

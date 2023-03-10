@@ -34,7 +34,7 @@ export default function WorkgroupRulesPage() {
                   href={`/${query.entry}/${query.workgroup}/settings`}
                   className="float-right mt-5"
                 >
-                  <Button icon={PencilIcon} secondary>
+                  <Button icon={PencilIcon} primary>
                     Edit
                   </Button>
                 </Link>
