@@ -12,7 +12,7 @@ import { formatDuration } from '../utils/time'
 import { trpc } from '../utils/trpc'
 import ProposalPeriodTag from './proposal-period-tag'
 
-export default function ProposalListItem(props: {
+export default function ProposalCard(props: {
   proposal: Authorized<Proposal> & { permalink: string; votes: number }
 }) {
   const { data: community } = trpc.community.getByPermalink.useQuery(
@@ -31,7 +31,7 @@ export default function ProposalListItem(props: {
     <Link
       shallow
       href={`/proposal/${permalink2Id(props.proposal.permalink)}`}
-      className="-mx-4 block space-y-2 rounded p-4 transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:bg-gray-100"
+      className="block space-y-2 rounded border p-4 transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:border-primary-500 hover:bg-gray-100"
     >
       <div className="flex w-full items-center justify-between">
         <p className="truncate text-lg font-medium text-gray-800">
