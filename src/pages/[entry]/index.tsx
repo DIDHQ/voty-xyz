@@ -63,7 +63,7 @@ export default function CommunityIndexPage() {
         <ul role="list" className="mt-6 space-y-6">
           {proposals?.map((proposal) => (
             <li key={proposal.permalink}>
-              {query.entry ? <ProposalCard proposal={proposal} /> : null}
+              <ProposalCard proposal={proposal} />
             </li>
           ))}
         </ul>
