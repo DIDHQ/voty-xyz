@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
@@ -9,7 +10,6 @@ import { Authorized } from '../utils/schemas/authorship'
 import { Proposal } from '../utils/schemas/proposal'
 import { formatDuration } from '../utils/time'
 import { trpc } from '../utils/trpc'
-import ProposalPeriodTag from './proposal-period-tag'
 
 export default function ProposalCard(props: {
   proposal: Authorized<Proposal> & { permalink: string; votes: number }
@@ -33,12 +33,9 @@ export default function ProposalCard(props: {
       className="block divide-y rounded border transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:border-primary-500 hover:bg-gray-50"
     >
       <div className="w-full p-4">
-        <div className="flex w-full items-center justify-between">
-          <p className="truncate text-lg font-medium text-gray-800">
-            {props.proposal.title}
-          </p>
-          <ProposalPeriodTag proposal={props.proposal} className="ml-4" />
-        </div>
+        <p className="truncate text-lg font-medium text-gray-800">
+          {props.proposal.title}
+        </p>
         {props.proposal.extension?.content ? (
           <p className="text-gray-600 line-clamp-3">
             {props.proposal.extension.content}
@@ -57,12 +54,16 @@ export default function ProposalCard(props: {
             period === Period.CONFIRMING ? (
               <>
                 <p className="truncate">Transaction confirming</p>
-                <p className="truncate text-gray-400">in about 5 minutes</p>
+                <p className="truncate text-gray-400">
+                  <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                  in about 5 minutes
+                </p>
               </>
             ) : period === Period.PENDING ? (
               <>
                 <p>Voting starts</p>
                 <p className="text-gray-400">
+                  <PeriodDot value={period} className="mb-0.5 mr-1.5" />
                   in&nbsp;
                   {formatDuration(
                     status.timestamp.getTime() / 1000 +
@@ -75,6 +76,7 @@ export default function ProposalCard(props: {
               <>
                 <p>Voting ends</p>
                 <p className="text-gray-400">
+                  <PeriodDot value={period} className="mb-0.5 mr-1.5" />
                   in&nbsp;
                   {formatDuration(
                     status.timestamp.getTime() / 1000 +
@@ -88,6 +90,7 @@ export default function ProposalCard(props: {
               <>
                 <p>Voting ended</p>
                 <p className="text-gray-400">
+                  <PeriodDot value={period} className="mb-0.5 mr-1.5" />
                   {formatDuration(
                     status.timestamp.getTime() / 1000 +
                       workgroup.duration.announcement +
@@ -106,5 +109,28 @@ export default function ProposalCard(props: {
         </div>
       </div>
     </Link>
+  )
+}
+
+function PeriodDot(props: { value?: Period; className?: string }) {
+  return (
+    <svg
+      className={clsx(
+        'mb-0.5 mr-1.5 inline h-2 w-2',
+        props.value
+          ? {
+              [Period.CONFIRMING]: 'text-blue-400',
+              [Period.PENDING]: 'text-yellow-400',
+              [Period.VOTING]: 'text-green-400',
+              [Period.ENDED]: 'text-gray-400',
+            }[props.value]
+          : undefined,
+        props.className,
+      )}
+      fill="currentColor"
+      viewBox="0 0 8 8"
+    >
+      {props.value ? <circle cx={4} cy={4} r={3} /> : null}
+    </svg>
   )
 }
