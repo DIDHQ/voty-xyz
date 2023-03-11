@@ -46,11 +46,13 @@ export default function ProposalCard(props: {
         ) : null}
       </div>
       <div className="flex w-full divide-x bg-gray-50 text-sm">
-        <div className="flex-1 px-4 py-2">
+        <div className="w-0 flex-1 px-4 py-2">
           <p>Proposer</p>
-          <p className="text-gray-400">{props.proposal.authorship.author}</p>
+          <p className="truncate text-gray-400">
+            {props.proposal.authorship.author}
+          </p>
         </div>
-        <div className="flex-1 px-4 py-2">
+        <div className="w-0 flex-1 px-4 py-2">
           {status?.timestamp && workgroup ? (
             period === Period.PENDING ? (
               <>
@@ -93,7 +95,7 @@ export default function ProposalCard(props: {
             ) : null
           ) : null}
         </div>
-        <div className="flex-1 px-4 py-2">
+        <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
           <p>Votes</p>
           <p className="text-gray-400">{props.proposal.votes}</p>
         </div>
