@@ -54,7 +54,12 @@ export default function ProposalCard(props: {
         </div>
         <div className="w-0 flex-1 px-4 py-2">
           {status?.timestamp && workgroup ? (
-            period === Period.PENDING ? (
+            period === Period.CONFIRMING ? (
+              <>
+                <p className="truncate">Transaction confirming</p>
+                <p className="truncate text-gray-400">in about 5 minutes</p>
+              </>
+            ) : period === Period.PENDING ? (
               <>
                 <p>Voting starts</p>
                 <p className="text-gray-400">
