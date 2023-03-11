@@ -1,4 +1,3 @@
-import { BoltIcon, ClockIcon, HandRaisedIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
@@ -31,67 +30,73 @@ export default function ProposalCard(props: {
     <Link
       shallow
       href={`/proposal/${permalink2Id(props.proposal.permalink)}`}
-      className="block space-y-2 rounded border p-4 transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:border-primary-500 hover:bg-gray-100"
+      className="block divide-y rounded border transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:border-primary-500 hover:bg-gray-50"
     >
-      <div className="flex w-full items-center justify-between">
-        <p className="truncate text-lg font-medium text-gray-800">
-          {props.proposal.title}
-        </p>
-        <ProposalPeriodTag proposal={props.proposal} className="ml-4" />
+      <div className="w-full p-4">
+        <div className="flex w-full items-center justify-between">
+          <p className="truncate text-lg font-medium text-gray-800">
+            {props.proposal.title}
+          </p>
+          <ProposalPeriodTag proposal={props.proposal} className="ml-4" />
+        </div>
+        {props.proposal.extension?.content ? (
+          <p className="text-gray-600 line-clamp-3">
+            {props.proposal.extension.content}
+          </p>
+        ) : null}
       </div>
-      {props.proposal.extension?.content ? (
-        <p className="text-gray-600 line-clamp-3">
-          {props.proposal.extension.content}
-        </p>
-      ) : null}
-      <div className="flex w-full items-center justify-start text-sm text-gray-400">
-        <HandRaisedIcon
-          className="mr-1.5 h-4 w-4 shrink-0"
-          aria-hidden="true"
-        />
-        <p>{props.proposal.authorship.author}</p>
-        {period === Period.CONFIRMING || period === Period.PENDING ? null : (
-          <>
-            <BoltIcon
-              className="ml-4 mr-1.5 h-4 w-4 shrink-0"
-              aria-hidden="true"
-            />
-            <p>{props.proposal.votes}</p>
-          </>
-        )}
-        {period === Period.PENDING && status?.timestamp && workgroup ? (
-          <>
-            <ClockIcon
-              className="ml-4 mr-1.5 h-4 w-4 shrink-0"
-              aria-hidden="true"
-            />
-            <p>
-              start in{' '}
-              {formatDuration(
-                status.timestamp.getTime() / 1000 +
-                  workgroup.duration.announcement -
-                  now.getTime() / 1000,
-              )}
-            </p>
-          </>
-        ) : null}
-        {period === Period.VOTING && status?.timestamp && workgroup ? (
-          <>
-            <ClockIcon
-              className="ml-4 mr-1.5 h-4 w-4 shrink-0"
-              aria-hidden="true"
-            />
-            <p>
-              end in{' '}
-              {formatDuration(
-                status.timestamp.getTime() / 1000 +
-                  workgroup.duration.announcement +
-                  workgroup.duration.voting -
-                  now.getTime() / 1000,
-              )}
-            </p>
-          </>
-        ) : null}
+      <div className="flex w-full divide-x bg-gray-50 text-sm">
+        <div className="flex-1 px-4 py-2">
+          <p>Proposer</p>
+          <p className="text-gray-400">{props.proposal.authorship.author}</p>
+        </div>
+        <div className="flex-1 px-4 py-2">
+          {status?.timestamp && workgroup ? (
+            period === Period.PENDING ? (
+              <>
+                <p>Voting starts</p>
+                <p className="text-gray-400">
+                  in&nbsp;
+                  {formatDuration(
+                    status.timestamp.getTime() / 1000 +
+                      workgroup.duration.announcement -
+                      now.getTime() / 1000,
+                  )}
+                </p>
+              </>
+            ) : period === Period.VOTING ? (
+              <>
+                <p>Voting ends</p>
+                <p className="text-gray-400">
+                  in&nbsp;
+                  {formatDuration(
+                    status.timestamp.getTime() / 1000 +
+                      workgroup.duration.announcement +
+                      workgroup.duration.voting -
+                      now.getTime() / 1000,
+                  )}
+                </p>
+              </>
+            ) : period === Period.ENDED ? (
+              <>
+                <p>Voting ended</p>
+                <p className="text-gray-400">
+                  {formatDuration(
+                    status.timestamp.getTime() / 1000 +
+                      workgroup.duration.announcement +
+                      workgroup.duration.voting -
+                      now.getTime() / 1000,
+                  )}
+                  &nbsp;ago
+                </p>
+              </>
+            ) : null
+          ) : null}
+        </div>
+        <div className="flex-1 px-4 py-2">
+          <p>Votes</p>
+          <p className="text-gray-400">{props.proposal.votes}</p>
+        </div>
       </div>
     </Link>
   )
