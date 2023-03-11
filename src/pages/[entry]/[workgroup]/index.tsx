@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 
 import useRouterQuery from '../../../hooks/use-router-query'
-import ProposalListItem from '../../../components/proposal-list-item'
+import ProposalCard from '../../../components/proposal-card'
 import CommunityLayout from '../../../components/layouts/community'
 import WorkgroupLayout from '../../../components/layouts/workgroup'
 import { trpc } from '../../../utils/trpc'
@@ -51,10 +51,10 @@ export default function GroupIndexPage() {
         {proposals?.length === 0 ? (
           <EmptyState title="No proposals" className="mt-24" />
         ) : (
-          <ul role="list" className="mt-1 space-y-1">
+          <ul role="list" className="mt-6 space-y-6">
             {proposals?.map((proposal) => (
               <li key={proposal.permalink}>
-                <ProposalListItem proposal={proposal} />
+                <ProposalCard proposal={proposal} />
               </li>
             ))}
           </ul>

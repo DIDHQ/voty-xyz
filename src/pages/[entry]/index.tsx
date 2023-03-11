@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { PlusIcon } from '@heroicons/react/20/solid'
 
 import useRouterQuery from '../../hooks/use-router-query'
-import ProposalListItem from '../../components/proposal-list-item'
+import ProposalCard from '../../components/proposal-card'
 import CommunityLayout from '../../components/layouts/community'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
@@ -60,10 +60,10 @@ export default function CommunityIndexPage() {
           }
         />
       ) : (
-        <ul role="list" className="mt-1 space-y-1">
+        <ul role="list" className="mt-6 space-y-6">
           {proposals?.map((proposal) => (
             <li key={proposal.permalink}>
-              {query.entry ? <ProposalListItem proposal={proposal} /> : null}
+              <ProposalCard proposal={proposal} />
             </li>
           ))}
         </ul>
