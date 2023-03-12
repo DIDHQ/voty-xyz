@@ -32,12 +32,12 @@ model Proposal {
 
   data Json
 
-  votes            Int
-  duration_pending Int @default(3600)
-  duration_voting  Int @default(3600)
+  votes Int
 
-  ts        DateTime
-  confirmed Boolean?
+  ts         DateTime
+  ts_pending DateTime?
+  ts_voting  DateTime?
+  confirmed  Boolean?
 
   @@id([permalink])
   @@index([entry, workgroup])

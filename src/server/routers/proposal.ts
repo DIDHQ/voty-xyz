@@ -108,15 +108,21 @@ export const proposalRouter = router({
         database.proposal.create({
           data: {
             permalink,
-            ts,
             author: input.authorship.author,
             entry: community.authorship.author,
             community: input.community,
             workgroup: input.workgroup,
             data: input,
             votes: 0,
-            duration_pending: workgroup.duration.announcement,
-            duration_voting: workgroup.duration.voting,
+            ts,
+            ts_pending: new Date(
+              ts.getTime() + workgroup.duration.announcement * 1000,
+            ),
+            ts_voting: new Date(
+              ts.getTime() +
+                (workgroup.duration.announcement + workgroup.duration.voting) *
+                  1000,
+            ),
           },
         }),
         database.entry.update({
