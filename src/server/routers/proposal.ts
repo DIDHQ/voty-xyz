@@ -92,7 +92,7 @@ export const proposalRouter = router({
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
-      const { community } = await verifyProposal(input)
+      const { community, workgroup } = await verifyProposal(input)
 
       const entry = await database.entry.findFirst({
         where: { did: community.authorship.author },
@@ -115,6 +115,8 @@ export const proposalRouter = router({
             workgroup: input.workgroup,
             data: input,
             votes: 0,
+            duration_pending: workgroup.duration.announcement,
+            duration_voting: workgroup.duration.voting,
           },
         }),
         database.entry.update({
