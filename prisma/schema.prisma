@@ -12,11 +12,11 @@ datasource db {
 
 model Community {
   permalink String
-  ts        DateTime
-  confirmed Boolean?
   entry     String
 
   data Json
+
+  ts DateTime
 
   @@id([permalink])
   @@index([entry])
@@ -24,17 +24,18 @@ model Community {
 
 model Proposal {
   permalink String
-  ts        DateTime
-  confirmed Boolean?
   entry     String
   author    String
-
   community String
   workgroup String
 
   data Json
 
   votes Int
+
+  ts         DateTime
+  ts_pending DateTime?
+  ts_voting  DateTime?
 
   @@id([permalink])
   @@index([entry, workgroup])
@@ -44,15 +45,14 @@ model Proposal {
 
 model Vote {
   permalink String
-  ts        DateTime
-  confirmed Boolean?
   author    String
-
   community String
   workgroup String
   proposal  String
 
   data Json
+
+  ts DateTime
 
   @@id([permalink])
   @@unique([proposal, author])
@@ -60,14 +60,14 @@ model Vote {
 }
 
 model Entry {
-  did String
-  ts  DateTime
-
+  did       String
   community String
 
   subscribers Int
   proposals   Int
   votes       Int
+
+  ts DateTime
 
   @@id([did])
 }

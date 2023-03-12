@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import Link from 'next/link'
 import { PlusIcon } from '@heroicons/react/20/solid'
@@ -11,9 +11,12 @@ import LoadingBar from '../../components/basic/loading-bar'
 import Button from '../../components/basic/button'
 import EmptyState from '../../components/empty-state'
 import useIsManager from '../../hooks/use-is-manager'
+import Select from '../../components/basic/select'
+import { Period } from '../../utils/period'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['entry']>()
+  const [period, setPeriod] = useState<Period | 'All'>('All')
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
@@ -24,7 +27,7 @@ export default function CommunityIndexPage() {
     hasNextPage,
     isLoading: isListLoading,
   } = trpc.proposal.list.useInfiniteQuery(
-    { entry: query.entry },
+    { entry: query.entry, period: period === 'All' ? undefined : period },
     { enabled: !!query.entry, getNextPageParam: ({ next }) => next },
   )
   const proposals = useMemo(
@@ -42,9 +45,23 @@ export default function CommunityIndexPage() {
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading || isListLoading} />
-      <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8">
-        Timeline
-      </h3>
+      <div className="mt-6 flex justify-between sm:mt-8">
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Timeline
+        </h3>
+        <Select
+          options={[
+            'All',
+            Period.CONFIRMING,
+            Period.PENDING,
+            Period.VOTING,
+            Period.ENDED,
+          ]}
+          value={period}
+          onChange={(p) => setPeriod(p as Period | 'All')}
+          className="-mt-1 sm:-mt-2"
+        />
+      </div>
       {proposals?.length === 0 ? (
         <EmptyState
           title="No events"
@@ -60,7 +77,7 @@ export default function CommunityIndexPage() {
           }
         />
       ) : (
-        <ul role="list" className="mt-6 space-y-6">
+        <ul role="list" className="mt-5 space-y-5">
           {proposals?.map((proposal) => (
             <li key={proposal.permalink}>
               <ProposalCard proposal={proposal} />
