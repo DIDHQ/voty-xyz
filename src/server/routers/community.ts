@@ -8,10 +8,14 @@ import { authorized } from '../../utils/schemas/authorship'
 import { communitySchema } from '../../utils/schemas/community'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
-import { DataType } from '../../utils/constants'
+import { commonCoinTypes, DataType } from '../../utils/constants'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
+import {
+  getSnapshotTimestamp,
+  getPermalinkSnapshot,
+} from '../../utils/snapshot'
 
 const schema = proved(authorized(communitySchema))
 
@@ -78,6 +82,24 @@ export const communityRouter = router({
         DataType.COMMUNITY,
         input.permalink,
       )
+
+      if (community && !community.confirmed) {
+        try {
+          const timestamp = await getSnapshotTimestamp(
+            commonCoinTypes.AR,
+            await getPermalinkSnapshot(input.permalink),
+          )
+          await database.community.update({
+            where: { permalink: input.permalink },
+            data: {
+              confirmed: true,
+              ts: timestamp,
+            },
+          })
+        } catch (err) {
+          console.error(err)
+        }
+      }
 
       return community ? community.data : null
     }),
