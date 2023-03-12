@@ -24,13 +24,13 @@ export default function ProposalCard(props: {
     { refetchOnWindowFocus: false },
   )
   const workgroup = useWorkgroup(community, props.proposal.workgroup)
-  const now = useMemo(() => new Date(), [])
+  const now = useMemo(() => Date.now(), [])
   const period = useMemo(
     () =>
       props.proposal.ts_pending && props.proposal.ts_voting
-        ? now.getTime() < props.proposal.ts_pending.getTime()
+        ? now < props.proposal.ts_pending.getTime()
           ? Period.PENDING
-          : now.getTime() < props.proposal.ts_voting.getTime()
+          : now < props.proposal.ts_voting.getTime()
           ? Period.VOTING
           : Period.ENDED
         : Period.CONFIRMING,
@@ -76,9 +76,7 @@ export default function ProposalCard(props: {
                 <p className="text-gray-400">
                   <PeriodDot value={period} className="mb-0.5 mr-1.5" />
                   in&nbsp;
-                  {formatDurationMs(
-                    props.proposal.ts_pending.getTime() - now.getTime(),
-                  )}
+                  {formatDurationMs(props.proposal.ts_pending.getTime() - now)}
                 </p>
               </>
             ) : period === Period.VOTING && props.proposal.ts_voting ? (
@@ -87,9 +85,7 @@ export default function ProposalCard(props: {
                 <p className="text-gray-400">
                   <PeriodDot value={period} className="mb-0.5 mr-1.5" />
                   in&nbsp;
-                  {formatDurationMs(
-                    props.proposal.ts_voting.getTime() - now.getTime(),
-                  )}
+                  {formatDurationMs(props.proposal.ts_voting.getTime() - now)}
                 </p>
               </>
             ) : period === Period.ENDED && props.proposal.ts_voting ? (
@@ -97,9 +93,7 @@ export default function ProposalCard(props: {
                 <p>Voting ended</p>
                 <p className="text-gray-400">
                   <PeriodDot value={period} className="mb-0.5 mr-1.5" />
-                  {formatDurationMs(
-                    props.proposal.ts_voting.getTime() - now.getTime(),
-                  )}
+                  {formatDurationMs(props.proposal.ts_voting.getTime() - now)}
                   &nbsp;ago
                 </p>
               </>
