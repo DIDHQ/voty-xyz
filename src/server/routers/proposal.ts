@@ -18,6 +18,7 @@ import {
   getPermalinkSnapshot,
   getSnapshotTimestamp,
 } from '../../utils/snapshot'
+import { Period } from '../../utils/period'
 
 const schema = proved(authorized(proposalSchema))
 
@@ -81,6 +82,14 @@ export const proposalRouter = router({
       z.object({
         entry: z.string().optional(),
         workgroup: z.string().optional(),
+        period: z
+          .enum([
+            Period.CONFIRMING,
+            Period.PENDING,
+            Period.VOTING,
+            Period.ENDED,
+          ])
+          .optional(),
         cursor: z.string().optional(),
       }),
     )
@@ -104,10 +113,21 @@ export const proposalRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
+      const now = new Date()
+      const filter =
+        input.period === Period.CONFIRMING
+          ? { confirmed: null }
+          : input.period === Period.PENDING
+          ? { ts_pending: { gt: now } }
+          : input.period === Period.VOTING
+          ? { ts_pending: { lte: now }, ts_voting: { gt: now } }
+          : input.period === Period.ENDED
+          ? { ts_voting: { lte: now } }
+          : {}
       const proposals = await database.proposal.findMany({
         where: input.workgroup
-          ? { entry: input.entry, workgroup: input.workgroup }
-          : { entry: input.entry },
+          ? { entry: input.entry, workgroup: input.workgroup, ...filter }
+          : { entry: input.entry, ...filter },
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
         take: 20,
         skip: input.cursor ? 1 : 0,

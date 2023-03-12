@@ -60,7 +60,7 @@ export default function CommunityIndexPage() {
           }
         />
       ) : (
-        <ul role="list" className="mt-6 space-y-6">
+        <ul role="list" className="mt-5 space-y-5">
           {proposals?.map((proposal) => (
             <li key={proposal.permalink}>
               <ProposalCard proposal={proposal} />
