@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { compact, last } from 'lodash-es'
 import { z } from 'zod'
+import dayjs from 'dayjs'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database, getByPermalink } from '../../utils/database'
@@ -9,10 +10,14 @@ import { proposalSchema } from '../../utils/schemas/proposal'
 import verifyProposal from '../../utils/verifiers/verify-proposal'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
-import { DataType } from '../../utils/constants'
+import { commonCoinTypes, DataType } from '../../utils/constants'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
+import {
+  getPermalinkSnapshot,
+  getSnapshotTimestamp,
+} from '../../utils/snapshot'
 
 const schema = proved(authorized(proposalSchema))
 
@@ -28,6 +33,40 @@ export const proposalRouter = router({
       }
 
       const proposal = await getByPermalink(DataType.PROPOSAL, input.permalink)
+
+      if (proposal && !proposal.confirmed) {
+        try {
+          const community = await getByPermalink(
+            DataType.COMMUNITY,
+            proposal.community,
+          )
+          const workgroup = community?.data.workgroups?.find(
+            (w) => w.id === proposal.workgroup,
+          )
+          if (workgroup) {
+            const timestamp = await getSnapshotTimestamp(
+              commonCoinTypes.AR,
+              await getPermalinkSnapshot(proposal.permalink),
+            )
+            await database.proposal.update({
+              where: { permalink: proposal.permalink },
+              data: {
+                confirmed: true,
+                ts: timestamp,
+                ts_pending: dayjs(timestamp)
+                  .add(workgroup.duration.announcement * 1000)
+                  .toDate(),
+                ts_voting: dayjs(timestamp)
+                  .add(workgroup.duration.announcement * 1000)
+                  .add(workgroup.duration.voting * 1000)
+                  .toDate(),
+              },
+            })
+          }
+        } catch (err) {
+          console.error(err)
+        }
+      }
 
       return proposal
         ? {
@@ -115,14 +154,13 @@ export const proposalRouter = router({
             data: input,
             votes: 0,
             ts,
-            ts_pending: new Date(
-              ts.getTime() + workgroup.duration.announcement * 1000,
-            ),
-            ts_voting: new Date(
-              ts.getTime() +
-                (workgroup.duration.announcement + workgroup.duration.voting) *
-                  1000,
-            ),
+            ts_pending: dayjs(ts)
+              .add(workgroup.duration.announcement * 1000)
+              .toDate(),
+            ts_voting: dayjs(ts)
+              .add(workgroup.duration.announcement * 1000)
+              .add(workgroup.duration.voting * 1000)
+              .toDate(),
           },
         }),
         database.entry.update({
