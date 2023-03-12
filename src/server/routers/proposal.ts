@@ -35,7 +35,7 @@ export const proposalRouter = router({
 
       const proposal = await getByPermalink(DataType.PROPOSAL, input.permalink)
 
-      if (proposal && !proposal.confirmed) {
+      if (proposal && !proposal.ts_pending && !proposal.ts_voting) {
         try {
           const community = await getByPermalink(
             DataType.COMMUNITY,
@@ -52,7 +52,6 @@ export const proposalRouter = router({
             await database.proposal.update({
               where: { permalink: proposal.permalink },
               data: {
-                confirmed: true,
                 ts: timestamp,
                 ts_pending: dayjs(timestamp)
                   .add(workgroup.duration.announcement * 1000)
@@ -102,7 +101,6 @@ export const proposalRouter = router({
             ts: z.date(),
             ts_pending: z.date().nullable(),
             ts_voting: z.date().nullable(),
-            confirmed: z.boolean().nullable(),
           }),
         ),
         next: z.string().optional(),
@@ -116,9 +114,9 @@ export const proposalRouter = router({
       const now = new Date()
       const filter =
         input.period === Period.CONFIRMING
-          ? { confirmed: null }
+          ? { ts_pending: null, ts_voting: null }
           : input.period === Period.PENDING
-          ? { ts_pending: { gt: now } }
+          ? { ts: { lte: now }, ts_pending: { gt: now } }
           : input.period === Period.VOTING
           ? { ts_pending: { lte: now }, ts_voting: { gt: now } }
           : input.period === Period.ENDED
@@ -137,15 +135,7 @@ export const proposalRouter = router({
       return {
         data: compact(
           proposals.map(
-            ({
-              data,
-              permalink,
-              votes,
-              ts,
-              ts_pending,
-              ts_voting,
-              confirmed,
-            }) => {
+            ({ data, permalink, votes, ts, ts_pending, ts_voting }) => {
               try {
                 return {
                   ...schema.parse(data),
@@ -154,7 +144,6 @@ export const proposalRouter = router({
                   ts,
                   ts_pending,
                   ts_voting,
-                  confirmed,
                 }
               } catch {
                 return

@@ -16,8 +16,7 @@ model Community {
 
   data Json
 
-  ts        DateTime
-  confirmed Boolean?
+  ts DateTime
 
   @@id([permalink])
   @@index([entry])
@@ -37,7 +36,6 @@ model Proposal {
   ts         DateTime
   ts_pending DateTime?
   ts_voting  DateTime?
-  confirmed  Boolean?
 
   @@id([permalink])
   @@index([entry, workgroup])
@@ -54,8 +52,7 @@ model Vote {
 
   data Json
 
-  ts        DateTime
-  confirmed Boolean?
+  ts DateTime
 
   @@id([permalink])
   @@unique([proposal, author])

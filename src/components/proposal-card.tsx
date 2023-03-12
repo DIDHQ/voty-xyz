@@ -17,7 +17,6 @@ export default function ProposalCard(props: {
     ts: Date
     ts_pending: Date | null
     ts_voting: Date | null
-    confirmed: boolean | null
   }
 }) {
   const { data: community } = trpc.community.getByPermalink.useQuery(
@@ -28,21 +27,14 @@ export default function ProposalCard(props: {
   const now = useMemo(() => new Date(), [])
   const period = useMemo(
     () =>
-      props.proposal.confirmed
-        ? props.proposal.ts_pending &&
-          now.getTime() < props.proposal.ts_pending.getTime()
+      props.proposal.ts_pending && props.proposal.ts_voting
+        ? now.getTime() < props.proposal.ts_pending.getTime()
           ? Period.PENDING
-          : props.proposal.ts_voting &&
-            now.getTime() < props.proposal.ts_voting.getTime()
+          : now.getTime() < props.proposal.ts_voting.getTime()
           ? Period.VOTING
           : Period.ENDED
         : Period.CONFIRMING,
-    [
-      props.proposal.confirmed,
-      props.proposal.ts_pending,
-      props.proposal.ts_voting,
-      now,
-    ],
+    [props.proposal.ts_pending, props.proposal.ts_voting, now],
   )
 
   return (
