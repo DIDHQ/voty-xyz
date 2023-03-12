@@ -32,7 +32,9 @@ model Proposal {
 
   data Json
 
-  votes Int
+  votes          Int
+  period_pending Int @default(3600)
+  period_voting  Int @default(3600)
 
   ts        DateTime
   confirmed Boolean?
