@@ -2,28 +2,47 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
-import useStatus from '../hooks/use-status'
 import useWorkgroup from '../hooks/use-workgroup'
-import { getPeriod, Period } from '../utils/period'
+import { Period } from '../utils/period'
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/authorship'
 import { Proposal } from '../utils/schemas/proposal'
-import { formatDuration } from '../utils/time'
+import { formatDurationMs } from '../utils/time'
 import { trpc } from '../utils/trpc'
 
 export default function ProposalCard(props: {
-  proposal: Authorized<Proposal> & { permalink: string; votes: number }
+  proposal: Authorized<Proposal> & {
+    permalink: string
+    votes: number
+    ts: Date
+    ts_pending: Date | null
+    ts_voting: Date | null
+    confirmed: boolean | null
+  }
 }) {
   const { data: community } = trpc.community.getByPermalink.useQuery(
     { permalink: props.proposal.community },
     { refetchOnWindowFocus: false },
   )
   const workgroup = useWorkgroup(community, props.proposal.workgroup)
-  const { data: status } = useStatus(props.proposal.permalink)
   const now = useMemo(() => new Date(), [])
   const period = useMemo(
-    () => getPeriod(now, status?.timestamp, workgroup?.duration),
-    [status?.timestamp, workgroup?.duration, now],
+    () =>
+      props.proposal.confirmed
+        ? props.proposal.ts_pending &&
+          now.getTime() < props.proposal.ts_pending.getTime()
+          ? Period.PENDING
+          : props.proposal.ts_voting &&
+            now.getTime() < props.proposal.ts_voting.getTime()
+          ? Period.VOTING
+          : Period.ENDED
+        : Period.CONFIRMING,
+    [
+      props.proposal.confirmed,
+      props.proposal.ts_pending,
+      props.proposal.ts_voting,
+      now,
+    ],
   )
 
   return (
@@ -50,7 +69,7 @@ export default function ProposalCard(props: {
           </p>
         </div>
         <div className="w-0 flex-1 px-4 py-2">
-          {status?.timestamp && workgroup ? (
+          {workgroup ? (
             period === Period.CONFIRMING ? (
               <>
                 <p className="truncate">Transaction confirming</p>
@@ -59,43 +78,35 @@ export default function ProposalCard(props: {
                   in about 5 minutes
                 </p>
               </>
-            ) : period === Period.PENDING ? (
+            ) : period === Period.PENDING && props.proposal.ts_pending ? (
               <>
                 <p>Voting starts</p>
                 <p className="text-gray-400">
                   <PeriodDot value={period} className="mb-0.5 mr-1.5" />
                   in&nbsp;
-                  {formatDuration(
-                    status.timestamp.getTime() / 1000 +
-                      workgroup.duration.announcement -
-                      now.getTime() / 1000,
+                  {formatDurationMs(
+                    props.proposal.ts_pending.getTime() - now.getTime(),
                   )}
                 </p>
               </>
-            ) : period === Period.VOTING ? (
+            ) : period === Period.VOTING && props.proposal.ts_voting ? (
               <>
                 <p>Voting ends</p>
                 <p className="text-gray-400">
                   <PeriodDot value={period} className="mb-0.5 mr-1.5" />
                   in&nbsp;
-                  {formatDuration(
-                    status.timestamp.getTime() / 1000 +
-                      workgroup.duration.announcement +
-                      workgroup.duration.voting -
-                      now.getTime() / 1000,
+                  {formatDurationMs(
+                    props.proposal.ts_voting.getTime() - now.getTime(),
                   )}
                 </p>
               </>
-            ) : period === Period.ENDED ? (
+            ) : period === Period.ENDED && props.proposal.ts_voting ? (
               <>
                 <p>Voting ended</p>
                 <p className="text-gray-400">
                   <PeriodDot value={period} className="mb-0.5 mr-1.5" />
-                  {formatDuration(
-                    status.timestamp.getTime() / 1000 +
-                      workgroup.duration.announcement +
-                      workgroup.duration.voting -
-                      now.getTime() / 1000,
+                  {formatDurationMs(
+                    props.proposal.ts_voting.getTime() - now.getTime(),
                   )}
                   &nbsp;ago
                 </p>

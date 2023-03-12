@@ -91,10 +91,7 @@ export const communityRouter = router({
           )
           await database.community.update({
             where: { permalink: input.permalink },
-            data: {
-              confirmed: true,
-              ts: timestamp,
-            },
+            data: { confirmed: true, ts: timestamp },
           })
         } catch (err) {
           console.error(err)

@@ -87,7 +87,14 @@ export const proposalRouter = router({
     .output(
       z.object({
         data: z.array(
-          schema.extend({ permalink: z.string(), votes: z.number() }),
+          schema.extend({
+            permalink: z.string(),
+            votes: z.number(),
+            ts: z.date(),
+            ts_pending: z.date().nullable(),
+            ts_voting: z.date().nullable(),
+            confirmed: z.boolean().nullable(),
+          }),
         ),
         next: z.string().optional(),
       }),
@@ -109,17 +116,31 @@ export const proposalRouter = router({
 
       return {
         data: compact(
-          proposals.map(({ data, permalink, votes }) => {
-            try {
-              return {
-                ...schema.parse(data),
-                permalink,
-                votes,
+          proposals.map(
+            ({
+              data,
+              permalink,
+              votes,
+              ts,
+              ts_pending,
+              ts_voting,
+              confirmed,
+            }) => {
+              try {
+                return {
+                  ...schema.parse(data),
+                  permalink,
+                  votes,
+                  ts,
+                  ts_pending,
+                  ts_voting,
+                  confirmed,
+                }
+              } catch {
+                return
               }
-            } catch {
-              return
-            }
-          }),
+            },
+          ),
         ),
         next: last(proposals)?.permalink,
       }

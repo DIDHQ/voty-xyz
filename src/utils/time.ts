@@ -9,6 +9,10 @@ export function formatDuration(seconds: number) {
   return dayjs.duration(seconds, 'seconds').humanize()
 }
 
+export function formatDurationMs(ms: number) {
+  return dayjs.duration(ms, 'milliseconds').humanize()
+}
+
 export function formatTime(date: Date | string | number) {
   return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
 }
