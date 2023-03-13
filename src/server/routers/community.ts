@@ -128,9 +128,8 @@ export const communityRouter = router({
             community.workgroups.every((workgroup) =>
               workgroup.permission.proposing.operands.every((operand) => {
                 return (
-                  operand.function === 'prefixes_dot_suffix_exact_match' &&
-                  (operand.arguments[0] === 'bit' ||
-                    operand.arguments[0] === community.authorship.author)
+                  operand.arguments[0] === 'bit' ||
+                  operand.arguments[0] === community.authorship.author
                 )
               }),
             ),
@@ -142,9 +141,8 @@ export const communityRouter = router({
             community.workgroups.every((workgroup) =>
               workgroup.permission.voting.operands.every((operand) => {
                 return (
-                  operand.function === 'prefixes_dot_suffix_fixed_power' &&
-                  (operand.arguments[0] === 'bit' ||
-                    operand.arguments[0] === community.authorship.author)
+                  operand.arguments[0] === 'bit' ||
+                  operand.arguments[0] === community.authorship.author
                 )
               }),
             ),

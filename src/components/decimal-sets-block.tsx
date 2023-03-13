@@ -195,7 +195,7 @@ function DecimalUnitBlock(props: {
                       {
                         value: 'bit',
                         name: '.bit',
-                        description: 'Any .bit account',
+                        description: 'Any .bit accounts (not including SubDID)',
                       },
                     ]}
                     value={value}
@@ -206,14 +206,7 @@ function DecimalUnitBlock(props: {
             </FormItem>
           </GridItem6>
           <GridItem6>
-            <FormItem
-              label="Filter"
-              error={
-                errors.workgroups?.[props.workgroupIndex]?.permission?.[
-                  props.name
-                ]?.operands?.[props.index]?.arguments?.[1]?.message
-              }
-            >
+            <FormItem label="Filter">
               <Controller
                 control={control}
                 name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
@@ -224,12 +217,18 @@ function DecimalUnitBlock(props: {
                       {
                         value: 'allowlist',
                         name: 'Allowlist',
-                        description: `Only the following SubDIDs of ${props.entry} are eligible`,
+                        description:
+                          suffix === 'bit'
+                            ? 'Only the following .bit accounts are eligible'
+                            : `Only the following SubDIDs of ${props.entry} are eligible`,
                       },
                       {
                         value: 'all',
                         name: 'All',
-                        description: `All SubDIDs of ${props.entry} are eligible`,
+                        description:
+                          suffix === 'bit'
+                            ? 'All .bit accounts are eligible'
+                            : `All SubDIDs of ${props.entry} are eligible`,
                       },
                     ]}
                     value={value.length ? 'allowlist' : 'all'}
@@ -246,6 +245,9 @@ function DecimalUnitBlock(props: {
               <FormItem
                 label="Allowlist"
                 error={
+                  errors.workgroups?.[props.workgroupIndex]?.permission?.[
+                    props.name
+                  ]?.operands?.[props.index]?.arguments?.[1]?.message ||
                   errors.workgroups?.[props.workgroupIndex]?.permission?.[
                     props.name
                   ]?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
@@ -279,6 +281,9 @@ function DecimalUnitBlock(props: {
                         onChange(array.length ? array : [''])
                       }}
                       error={
+                        !!errors.workgroups?.[props.workgroupIndex]
+                          ?.permission?.[props.name]?.operands?.[props.index]
+                          ?.arguments?.[1]?.message ||
                         !!errors.workgroups?.[props.workgroupIndex]
                           ?.permission?.[props.name]?.operands?.[props.index]
                           ?.arguments?.[1]?.[0]?.message

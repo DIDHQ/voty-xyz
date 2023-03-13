@@ -7,7 +7,12 @@ export const booleanUnitSchema = z.discriminatedUnion('function', [
     function: z.literal('prefixes_dot_suffix_exact_match'),
     arguments: z.tuple([
       z.string().min(1),
-      z.array(z.string().min(1, 'Required')),
+      z
+        .array(z.string().min(1, 'Required'))
+        .refine(
+          (did_list) => did_list.every((did) => did.indexOf('.') === -1),
+          { message: 'Invalid DID list' },
+        ),
     ]),
   }),
 ])
@@ -27,7 +32,12 @@ export const decimalUnitSchema = z.discriminatedUnion('function', [
     function: z.literal('prefixes_dot_suffix_fixed_power'),
     arguments: z.tuple([
       z.string().min(1),
-      z.array(z.string().min(1, 'Required')),
+      z
+        .array(z.string().min(1, 'Required'))
+        .refine(
+          (did_list) => did_list.every((did) => did.indexOf('.') === -1),
+          { message: 'Invalid DID list' },
+        ),
       z.string().refine(
         (power) => {
           try {
