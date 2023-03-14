@@ -31,7 +31,6 @@ export default function CreateGroupPage() {
             groups: [
               ...(community.groups || []),
               {
-                type: 'workgroup',
                 id: newGroup,
                 name: '',
                 permission: {
@@ -59,6 +58,7 @@ export default function CreateGroupPage() {
                   voting: 86400,
                 },
                 extension: {
+                  type: 'workgroup',
                   terms_and_conditions: '',
                 },
               },
