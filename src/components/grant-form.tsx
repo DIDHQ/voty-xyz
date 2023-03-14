@@ -271,12 +271,19 @@ export default function GrantForm(props: {
                     className="w-0 flex-1"
                   />
                   <span className="text-gray-500">X</span>
-                  <TextInput
-                    disabled={!isManager}
-                    {...register(`groups.${groupIndex}.extension.funding.0.1`)}
-                    error={!!groupErrors?.duration?.voting}
-                    placeholder="count"
-                    className="w-16 shrink-0"
+                  <Controller
+                    control={control}
+                    name={`groups.${groupIndex}.extension.funding.0.1`}
+                    render={({ field: { value, onChange } }) => (
+                      <TextInput
+                        disabled={!isManager}
+                        value={value}
+                        onChange={(e) => onChange(e.target.valueAsNumber)}
+                        error={!!groupErrors?.duration?.voting}
+                        placeholder="count"
+                        className="w-16 shrink-0"
+                      />
+                    )}
                   />
                 </div>
               </FormItem>
