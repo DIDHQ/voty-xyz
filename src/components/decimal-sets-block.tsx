@@ -292,23 +292,15 @@ function DecimalUnitBlock(props: {
                   ?.operands?.[props.index]?.arguments?.[2]?.message
               }
             >
-              <Controller
-                control={control}
-                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`}
-                render={({ field: { value, onChange } }) => (
-                  <TextInput
-                    disabled={props.disabled}
-                    value={value}
-                    onChange={(e) => {
-                      onChange(e.target.value)
-                    }}
-                    error={
-                      !!errors.groups?.[props.groupIndex]?.permission?.[
-                        props.name
-                      ]?.operands?.[props.index]?.arguments?.[2]?.message
-                    }
-                  />
+              <TextInput
+                disabled={props.disabled}
+                {...register(
+                  `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`,
                 )}
+                error={
+                  !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                    ?.operands?.[props.index]?.arguments?.[2]?.message
+                }
               />
             </FormItem>
           </GridItem2>

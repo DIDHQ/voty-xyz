@@ -26,7 +26,9 @@ export const proposalRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
     .output(
-      schema.extend({ permalink: z.string(), votes: z.number() }).nullable(),
+      schema
+        .extend({ permalink: z.string(), votes: z.number().int() })
+        .nullable(),
     )
     .query(async ({ input }) => {
       if (!input.permalink) {
@@ -116,7 +118,7 @@ export const proposalRouter = router({
         data: z.array(
           schema.extend({
             permalink: z.string(),
-            votes: z.number(),
+            votes: z.number().int(),
             ts: z.date(),
             ts_pending: z.date().nullable(),
             ts_adding_option: z.date().nullable(),

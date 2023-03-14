@@ -18,7 +18,6 @@ import { useMutation } from '@tanstack/react-query'
 import { Community, communitySchema } from '../utils/schemas/community'
 import DurationInput from './basic/duration-input'
 import TextInput from './basic/text-input'
-import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import DecimalSetsBlock from './decimal-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
@@ -134,8 +133,8 @@ export default function GrantForm(props: {
           </Grid6>
         </FormSection>
         <FormSection
-          title="Proposers"
-          description="The following DIDs are eligible to propose"
+          title="Investors"
+          description="The following DIDs are eligible to create funding round"
         >
           <Grid6>
             <GridItem6>
@@ -145,6 +144,29 @@ export default function GrantForm(props: {
                 <FormProvider {...methods}>
                   <BooleanSetsBlock
                     name="proposing"
+                    entry={props.author}
+                    groupIndex={groupIndex}
+                    disabled={!isManager}
+                  />
+                </FormProvider>
+              </FormItem>
+            </GridItem6>
+          </Grid6>
+        </FormSection>
+        <FormSection
+          title="Proposers"
+          description="The following DIDs are eligible to propose"
+        >
+          <Grid6>
+            <GridItem6>
+              <FormItem
+                error={
+                  groupErrors?.permission?.adding_option?.operands?.message
+                }
+              >
+                <FormProvider {...methods}>
+                  <BooleanSetsBlock
+                    name="adding_option"
                     entry={props.author}
                     groupIndex={groupIndex}
                     disabled={!isManager}
@@ -236,20 +258,29 @@ export default function GrantForm(props: {
             </GridItem2>
           </Grid6>
         </FormSection>
-        <FormSection
-          title="Funding"
-          description="Defines the final state of proposal"
-        >
+        <FormSection title="Funding" description="Defines the prize of winner">
           <Grid6>
-            <GridItem6>
+            <GridItem2>
               <FormItem error={groupErrors?.extension?.funding?.message}>
-                <Textarea
-                  disabled={!isManager}
-                  {...register(`groups.${groupIndex}.extension.funding`)}
-                  error={!!groupErrors?.extension?.funding?.message}
-                />
+                <div className="flex items-center space-x-2">
+                  <TextInput
+                    disabled={!isManager}
+                    {...register(`groups.${groupIndex}.extension.funding.0.0`)}
+                    error={!!groupErrors?.extension?.funding?.[0]?.[0]}
+                    placeholder="name"
+                    className="w-0 flex-1"
+                  />
+                  <span className="text-gray-500">X</span>
+                  <TextInput
+                    disabled={!isManager}
+                    {...register(`groups.${groupIndex}.extension.funding.0.1`)}
+                    error={!!groupErrors?.duration?.voting}
+                    placeholder="count"
+                    className="w-16 shrink-0"
+                  />
+                </div>
               </FormItem>
-            </GridItem6>
+            </GridItem2>
           </Grid6>
         </FormSection>
         {isManager ? (

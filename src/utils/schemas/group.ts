@@ -11,8 +11,8 @@ export const workgroupSchema = z.object({
     voting: decimalSetsSchema,
   }),
   duration: z.object({
-    pending: z.number().min(3600, 'Minium 1 hour'),
-    voting: z.number().min(3600, 'Minium 1 hour'),
+    pending: z.number().int().min(3600, 'Minium 1 hour'),
+    voting: z.number().int().min(3600, 'Minium 1 hour'),
   }),
   extension: z.object({
     introduction: z.string().max(160, 'Maximum 160 characters').optional(),
@@ -30,14 +30,14 @@ export const grantSchema = z.object({
     voting: decimalSetsSchema,
   }),
   duration: z.object({
-    pending: z.number().min(3600, 'Minium 1 hour'),
-    adding_option: z.number().min(3600, 'Minium 1 hour'),
-    voting: z.number().min(3600, 'Minium 1 hour'),
+    pending: z.number().int().min(3600, 'Minium 1 hour'),
+    adding_option: z.number().int().min(3600, 'Minium 1 hour'),
+    voting: z.number().int().min(3600, 'Minium 1 hour'),
   }),
   extension: z.object({
     introduction: z.string().max(160, 'Maximum 160 characters').optional(),
     funding: z
-      .array(z.tuple([z.string(), z.number().int()]))
+      .array(z.tuple([z.string().min(1, 'Required'), z.number().int().min(1)]))
       .min(1, 'Required'),
   }),
 })

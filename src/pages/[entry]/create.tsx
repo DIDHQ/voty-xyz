@@ -31,42 +31,85 @@ export default function CreateGroupPage() {
             ...community,
             groups: [
               ...(community.groups || []),
-              {
-                type: 'workgroup',
-                id: newGroup,
-                name: '',
-                permission: {
-                  proposing: {
-                    operation: 'or',
-                    operands: [
-                      {
-                        function: 'prefixes_dot_suffix_exact_match',
-                        arguments: [query.entry, ['']],
+              query.type === 'grant'
+                ? {
+                    type: 'grant',
+                    id: newGroup,
+                    name: '',
+                    permission: {
+                      proposing: {
+                        operation: 'or',
+                        operands: [
+                          {
+                            function: 'prefixes_dot_suffix_exact_match',
+                            arguments: [query.entry, ['']],
+                          },
+                        ],
                       },
-                    ],
-                  },
-                  voting: {
-                    operation: 'max',
-                    operands: [
-                      {
-                        function: 'prefixes_dot_suffix_fixed_power',
-                        arguments: [query.entry, [''], '1'],
+                      adding_option: {
+                        operation: 'or',
+                        operands: [
+                          {
+                            function: 'prefixes_dot_suffix_exact_match',
+                            arguments: [query.entry, ['']],
+                          },
+                        ],
                       },
-                    ],
+                      voting: {
+                        operation: 'max',
+                        operands: [
+                          {
+                            function: 'prefixes_dot_suffix_fixed_power',
+                            arguments: [query.entry, [''], '1'],
+                          },
+                        ],
+                      },
+                    },
+                    duration: {
+                      pending: 86400,
+                      adding_option: 86400,
+                      voting: 86400,
+                    },
+                    extension: {
+                      funding: [['', 5]],
+                    },
+                  }
+                : {
+                    type: 'workgroup',
+                    id: newGroup,
+                    name: '',
+                    permission: {
+                      proposing: {
+                        operation: 'or',
+                        operands: [
+                          {
+                            function: 'prefixes_dot_suffix_exact_match',
+                            arguments: [query.entry, ['']],
+                          },
+                        ],
+                      },
+                      voting: {
+                        operation: 'max',
+                        operands: [
+                          {
+                            function: 'prefixes_dot_suffix_fixed_power',
+                            arguments: [query.entry, [''], '1'],
+                          },
+                        ],
+                      },
+                    },
+                    duration: {
+                      pending: 86400,
+                      voting: 86400,
+                    },
+                    extension: {
+                      terms_and_conditions: '',
+                    },
                   },
-                },
-                duration: {
-                  pending: 86400,
-                  voting: 86400,
-                },
-                extension: {
-                  terms_and_conditions: '',
-                },
-              },
             ],
           } satisfies Community)
         : undefined,
-    [community, newGroup, query.entry],
+    [community, newGroup, query.entry, query.type],
   )
   const handleSuccess = useCallback(() => {
     refetch()

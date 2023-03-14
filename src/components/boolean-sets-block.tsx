@@ -1,9 +1,17 @@
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import { useCallback, useEffect, useState } from 'react'
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import {
+  Controller,
+  FieldError,
+  FieldErrorsImpl,
+  Merge,
+  useFieldArray,
+  useFormContext,
+} from 'react-hook-form'
 
 import { Community } from '../utils/schemas/community'
+import { Grant } from '../utils/schemas/group'
 import { FormItem } from './basic/form'
 import { Grid6, GridItem6 } from './basic/grid'
 import RadioGroup from './basic/radio-group'
@@ -12,7 +20,7 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 
 export default function BooleanSetsBlock(props: {
-  name: 'proposing'
+  name: 'proposing' | 'adding_option'
   entry: string
   groupIndex: number
   disabled?: boolean
@@ -74,7 +82,7 @@ export default function BooleanSetsBlock(props: {
 }
 
 function BooleanUnitBlock(props: {
-  name: 'proposing'
+  name: 'proposing' | 'adding_option'
   entry: string
   groupIndex: number
   index: number
@@ -96,15 +104,15 @@ function BooleanUnitBlock(props: {
   const handleRemove = useCallback(() => {
     onRemove(props.index)
   }, [onRemove, props.index])
+  const groupErrors = errors.groups?.[props.groupIndex] as Merge<
+    FieldError,
+    FieldErrorsImpl<NonNullable<Grant>>
+  >
   useEffect(() => {
-    if (
-      errors.groups?.[props.groupIndex]?.permission?.[props.name]?.operands?.[
-        props.index
-      ]
-    ) {
+    if (groupErrors?.permission?.[props.name]?.operands?.[props.index]) {
       setOpen(props.index)
     }
-  }, [errors.groups, props.index, props.name, props.groupIndex, setOpen])
+  }, [groupErrors?.permission, props.index, props.name, setOpen])
   const suffix = watch(
     `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
   )
@@ -147,8 +155,8 @@ function BooleanUnitBlock(props: {
             <FormItem
               label="Name"
               error={
-                errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.name?.message
+                groupErrors?.permission?.[props.name]?.operands?.[props.index]
+                  ?.name?.message
               }
             >
               <TextInput
@@ -157,8 +165,9 @@ function BooleanUnitBlock(props: {
                   `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
                 )}
                 error={
-                  !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                    ?.operands?.[props.index]?.name?.message
+                  !!groupErrors?.permission?.[props.name]?.operands?.[
+                    props.index
+                  ]?.name?.message
                 }
                 placeholder={`Filter ${props.index + 1}`}
               />
@@ -168,8 +177,8 @@ function BooleanUnitBlock(props: {
             <FormItem
               label="Base on"
               error={
-                errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[0]?.message
+                groupErrors?.permission?.[props.name]?.operands?.[props.index]
+                  ?.arguments?.[0]?.message
               }
             >
               <Controller
@@ -237,10 +246,10 @@ function BooleanUnitBlock(props: {
               <FormItem
                 label="Allowlist"
                 error={
-                  errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                    ?.operands?.[props.index]?.arguments?.[1]?.message ||
-                  errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                    ?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
+                  groupErrors?.permission?.[props.name]?.operands?.[props.index]
+                    ?.arguments?.[1]?.message ||
+                  groupErrors?.permission?.[props.name]?.operands?.[props.index]
+                    ?.arguments?.[1]?.[0]?.message
                 }
               >
                 <Controller
@@ -271,12 +280,12 @@ function BooleanUnitBlock(props: {
                         onChange(array.length ? array : [''])
                       }}
                       error={
-                        !!errors.groups?.[props.groupIndex]?.permission?.[
-                          props.name
-                        ]?.operands?.[props.index]?.arguments?.[1]?.message ||
-                        !!errors.groups?.[props.groupIndex]?.permission?.[
-                          props.name
-                        ]?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
+                        !!groupErrors?.permission?.[props.name]?.operands?.[
+                          props.index
+                        ]?.arguments?.[1]?.message ||
+                        !!groupErrors?.permission?.[props.name]?.operands?.[
+                          props.index
+                        ]?.arguments?.[1]?.[0]?.message
                       }
                     />
                   )}

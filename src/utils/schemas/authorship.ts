@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const authorshipSchema = z.object({
   author: z.string().min(1),
-  coin_type: z.number(),
+  coin_type: z.number().int(),
   snapshot: z.string().min(1),
   testnet: z.literal(true).optional(),
 })
