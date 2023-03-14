@@ -20,6 +20,7 @@ import {
 } from '../../utils/constants'
 import VoteForm from '../../components/vote-form'
 import useRouterQuery from '../../hooks/use-router-query'
+import Markdown from '../../components/basic/markdown'
 
 const StatusIcon = dynamic(() => import('../../components/status-icon'), {
   ssr: false,
@@ -130,7 +131,7 @@ export default function ProposalPage() {
           ) : null}
           <DetailList title="Terms and conditions">
             <Article small className="pt-2">
-              {group?.extension.terms_and_conditions}
+              <Markdown>{group?.extension.terms_and_conditions}</Markdown>
             </Article>
           </DetailList>
         </div>
@@ -169,7 +170,7 @@ export default function ProposalPage() {
                 {proposal?.title || '...'}
               </h3>
               <Article className="mt-6 sm:mt-8">
-                {proposal?.extension?.content}
+                <Markdown>{proposal?.extension?.content}</Markdown>
               </Article>
             </div>
             {renderCard('block sm:hidden mb-6')}

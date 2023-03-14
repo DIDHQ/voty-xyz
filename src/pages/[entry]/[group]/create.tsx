@@ -13,6 +13,7 @@ import Article from '../../../components/basic/article'
 import LoadingBar from '../../../components/basic/loading-bar'
 import ProposalForm from '../../../components/proposal-from'
 import { documentTitle } from '../../../utils/constants'
+import Markdown from '../../../components/basic/markdown'
 
 export default function CreateProposalPage() {
   const router = useRouter()
@@ -78,12 +79,12 @@ export default function CreateProposalPage() {
               'terms_and_conditions' in group.extension ? (
                 <DetailList title="Terms and conditions">
                   <Article small className="pt-2">
-                    {group.extension.terms_and_conditions}
+                    <Markdown>{group.extension.terms_and_conditions}</Markdown>
                   </Article>
                 </DetailList>
               ) : (
                 <DetailList title="Funding">
-                  <article className="prose-sm max-w-none pt-2 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
+                  <Article small className="pt-2">
                     <ul>
                       {group.extension.funding.map((funding, index) => (
                         <li key={index}>
@@ -93,7 +94,7 @@ export default function CreateProposalPage() {
                         </li>
                       ))}
                     </ul>
-                  </article>
+                  </Article>
                 </DetailList>
               )
             ) : null}

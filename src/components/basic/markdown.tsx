@@ -7,7 +7,7 @@ import {
   outputFor,
 } from 'simple-markdown'
 
-export default function Markdown(props: { children: string }) {
+export default function Markdown(props: { children?: string }) {
   const rules = useMemo<ParserRules>(
     () => ({
       ...defaultRules,
@@ -47,5 +47,7 @@ export default function Markdown(props: { children: string }) {
   const parser = useMemo(() => parserFor(rules), [rules])
   const output = useMemo(() => outputFor(rules, 'react' as any), [rules])
 
-  return <>{output(parser(`${props.children || ''}\n\n`, { inline: false }))}</>
+  return props.children ? (
+    <>{output(parser(`${props.children}\n\n`, { inline: false }))}</>
+  ) : null
 }

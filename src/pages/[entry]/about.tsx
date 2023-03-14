@@ -8,6 +8,7 @@ import LoadingBar from '../../components/basic/loading-bar'
 import Button from '../../components/basic/button'
 import useRouterQuery from '../../hooks/use-router-query'
 import useIsManager from '../../hooks/use-is-manager'
+import Markdown from '../../components/basic/markdown'
 
 export default function CommunityAboutPage() {
   const query = useRouterQuery<['entry']>()
@@ -33,7 +34,9 @@ export default function CommunityAboutPage() {
       <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8">
         About
       </h3>
-      <Article className="w-full pt-6">{community?.extension?.about}</Article>
+      <Article className="w-full pt-6">
+        <Markdown>{community?.extension?.about}</Markdown>
+      </Article>
     </CommunityLayout>
   )
 }

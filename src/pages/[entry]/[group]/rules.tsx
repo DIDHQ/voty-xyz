@@ -13,6 +13,7 @@ import { BooleanSets, DecimalSets } from '../../../utils/schemas/sets'
 import Button from '../../../components/basic/button'
 import useIsManager from '../../../hooks/use-is-manager'
 import { Grant } from '../../../utils/schemas/group'
+import Markdown from '../../../components/basic/markdown'
 
 export default function GroupRulesPage() {
   const query = useRouterQuery<['entry', 'group']>()
@@ -42,7 +43,7 @@ export default function GroupRulesPage() {
               ) : null}
               {group.extension.type === 'grant' ? (
                 <>
-                  <article className="prose max-w-none pt-6 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
+                  <Article className="pt-6">
                     <h3>Investors</h3>
                     <em>The following DIDs are eligible to creating round</em>
                     <SetsDescription
@@ -94,11 +95,11 @@ export default function GroupRulesPage() {
                         </li>
                       ))}
                     </ul>
-                  </article>
+                  </Article>
                 </>
               ) : (
                 <>
-                  <article className="prose max-w-none pt-6 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
+                  <Article className="pt-6">
                     <h3>Proposers</h3>
                     <em>The following DIDs are eligible to propose</em>
                     <SetsDescription
@@ -128,9 +129,9 @@ export default function GroupRulesPage() {
                       </li>
                     </ul>
                     <h3>Terms and conditions</h3>
-                  </article>
+                  </Article>
                   <Article className="mt-3">
-                    {group.extension.terms_and_conditions}
+                    <Markdown>{group.extension.terms_and_conditions}</Markdown>
                   </Article>
                 </>
               )}
