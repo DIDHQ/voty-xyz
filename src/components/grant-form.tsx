@@ -261,7 +261,12 @@ export default function GrantForm(props: {
         <FormSection title="Funding" description="Defines the prize of winner">
           <Grid6>
             <GridItem2>
-              <FormItem error={groupErrors?.extension?.funding?.message}>
+              <FormItem
+                error={
+                  groupErrors?.extension?.funding?.[0]?.[0]?.message ||
+                  groupErrors?.extension?.funding?.[0]?.[1]?.message
+                }
+              >
                 <div className="flex items-center space-x-2">
                   <TextInput
                     disabled={!isManager}
@@ -277,11 +282,11 @@ export default function GrantForm(props: {
                     render={({ field: { value, onChange } }) => (
                       <TextInput
                         disabled={!isManager}
-                        value={value}
+                        value={value || ''}
                         onChange={(e) => onChange(e.target.valueAsNumber)}
                         error={!!groupErrors?.duration?.voting}
                         placeholder="count"
-                        className="w-16 shrink-0"
+                        className="shrink-0 basis-16"
                       />
                     )}
                   />
