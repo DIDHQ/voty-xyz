@@ -43,7 +43,7 @@ export default function GroupSettingsPage() {
         >
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
-        {group?.type === 'grant' ? (
+        {group?.extension.type === 'grant' ? (
           <GrantForm
             author={query.entry || ''}
             initialValue={community || undefined}

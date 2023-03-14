@@ -164,7 +164,7 @@ export default function CommunityNav(props: { className?: string }) {
             </h3>
             <div>
               {community?.groups
-                ?.filter(({ type }) => type === 'workgroup')
+                ?.filter(({ extension: { type } }) => type === 'workgroup')
                 ?.map((group) => (
                   <GroupListItem
                     key={group.id}
@@ -186,7 +186,7 @@ export default function CommunityNav(props: { className?: string }) {
             </h3>
             <div>
               {community?.groups
-                ?.filter(({ type }) => type === 'grant')
+                ?.filter(({ extension: { type } }) => type === 'grant')
                 ?.map((group) => (
                   <GroupListItem
                     key={group.id}

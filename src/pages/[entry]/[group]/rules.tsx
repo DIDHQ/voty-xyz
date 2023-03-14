@@ -12,6 +12,7 @@ import Article from '../../../components/basic/article'
 import { BooleanSets, DecimalSets } from '../../../utils/schemas/sets'
 import Button from '../../../components/basic/button'
 import useIsManager from '../../../hooks/use-is-manager'
+import { Grant } from '../../../utils/schemas/group'
 
 export default function GroupRulesPage() {
   const query = useRouterQuery<['entry', 'group']>()
@@ -39,7 +40,7 @@ export default function GroupRulesPage() {
                   </Button>
                 </Link>
               ) : null}
-              {group.type === 'grant' ? (
+              {group.extension.type === 'grant' ? (
                 <>
                   <article className="prose max-w-none pt-6 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
                     <h3>Investing</h3>
@@ -52,7 +53,7 @@ export default function GroupRulesPage() {
                     <em>The following DIDs are eligible to propose</em>
                     <SetsDescription
                       entry={query.entry}
-                      value={group.permission.adding_option}
+                      value={(group as Grant).permission.adding_option}
                     />
                     <h3>Voting</h3>
                     <em>
@@ -73,8 +74,10 @@ export default function GroupRulesPage() {
                       </li>
                       <li>
                         Voting starts&nbsp;
-                        {formatDuration(group.duration.adding_option)} after
-                        proposing starting.
+                        {formatDuration(
+                          (group as Grant).duration.adding_option,
+                        )}{' '}
+                        after proposing starting.
                       </li>
                       <li>
                         Voting ends {formatDuration(group.duration.voting)}

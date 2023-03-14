@@ -5,7 +5,7 @@ import { Group } from '../utils/schemas/group'
 import TextButton from './basic/text-button'
 
 export default function CreateGroupButton(props: {
-  type: Group['type']
+  type: Group['extension']['type']
   entry?: string
   className?: string
 }) {
