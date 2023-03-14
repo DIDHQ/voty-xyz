@@ -3,7 +3,6 @@ import { z } from 'zod'
 import { booleanSetsSchema, decimalSetsSchema } from './sets'
 
 export const workgroupSchema = z.object({
-  type: z.literal('workgroup'),
   id: z.string().min(1, 'Required'),
   name: z.string().min(1, 'Required'),
   permission: z.object({
@@ -15,13 +14,13 @@ export const workgroupSchema = z.object({
     voting: z.number().int().min(3600, 'Minium 1 hour'),
   }),
   extension: z.object({
+    type: z.literal('workgroup'),
     introduction: z.string().max(160, 'Maximum 160 characters').optional(),
     terms_and_conditions: z.string().min(1, 'Required'),
   }),
 })
 
 export const grantSchema = z.object({
-  type: z.literal('grant'),
   id: z.string().min(1, 'Required'),
   name: z.string().min(1, 'Required'),
   permission: z.object({
@@ -35,6 +34,7 @@ export const grantSchema = z.object({
     voting: z.number().int().min(3600, 'Minium 1 hour'),
   }),
   extension: z.object({
+    type: z.literal('grant'),
     introduction: z.string().max(160, 'Maximum 160 characters').optional(),
     funding: z
       .array(z.tuple([z.string().min(1, 'Required'), z.number().int().min(1)]))
@@ -42,10 +42,7 @@ export const grantSchema = z.object({
   }),
 })
 
-export const groupSchema = z.discriminatedUnion('type', [
-  workgroupSchema,
-  grantSchema,
-])
+export const groupSchema = z.union([workgroupSchema, grantSchema])
 
 export type Workgroup = z.infer<typeof workgroupSchema>
 

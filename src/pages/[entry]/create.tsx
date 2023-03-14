@@ -33,7 +33,6 @@ export default function CreateGroupPage() {
               ...(community.groups || []),
               query.type === 'grant'
                 ? {
-                    type: 'grant',
                     id: newGroup,
                     name: '',
                     permission: {
@@ -71,11 +70,11 @@ export default function CreateGroupPage() {
                       voting: 86400,
                     },
                     extension: {
+                      type: 'grant',
                       funding: [['', 5]],
                     },
                   }
                 : {
-                    type: 'workgroup',
                     id: newGroup,
                     name: '',
                     permission: {
@@ -103,6 +102,7 @@ export default function CreateGroupPage() {
                       voting: 86400,
                     },
                     extension: {
+                      type: 'workgroup',
                       terms_and_conditions: '',
                     },
                   },
