@@ -29,8 +29,8 @@ const ProposalSchedule = dynamic(
     loading: () => (
       <DetailList title="Schedule">
         <DetailItem title="Period">{null}</DetailItem>
-        <DetailItem title="Start">...</DetailItem>
-        <DetailItem title="End">...</DetailItem>
+        <DetailItem title="Voting start">...</DetailItem>
+        <DetailItem title="Voting end">...</DetailItem>
       </DetailList>
     ),
   },
@@ -68,21 +68,11 @@ export default function RoundPage() {
             >
               {community?.name || '...'}
             </DetailItem>
-            <DetailItem
-              title="Workgroup"
-              className="truncate whitespace-nowrap"
-            >
+            <DetailItem title="Grant" className="truncate whitespace-nowrap">
               {group?.name || '...'}
             </DetailItem>
-            <DetailItem title="Proposer" className="truncate whitespace-nowrap">
+            <DetailItem title="Investor" className="truncate whitespace-nowrap">
               {proposal?.authorship.author || '...'}
-            </DetailItem>
-            <DetailItem title="Voting type">
-              {proposal
-                ? proposal.voting_type === 'single'
-                  ? 'Single choice'
-                  : 'Approval'
-                : '...'}
             </DetailItem>
           </DetailList>
           <ProposalSchedule
