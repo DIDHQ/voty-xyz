@@ -16,6 +16,7 @@ export default function ProposalCard(props: {
     votes: number
     ts: Date
     ts_pending: Date | null
+    ts_adding_option: Date | null
     ts_voting: Date | null
   }
 }) {
@@ -118,6 +119,7 @@ function PeriodDot(props: { value?: Period; className?: string }) {
           ? {
               [Period.CONFIRMING]: 'text-blue-400',
               [Period.PENDING]: 'text-yellow-400',
+              [Period.PROPOSING]: 'text-purple-400',
               [Period.VOTING]: 'text-green-400',
               [Period.ENDED]: 'text-gray-400',
             }[props.value]
