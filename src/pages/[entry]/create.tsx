@@ -31,6 +31,7 @@ export default function CreateGroupPage() {
             groups: [
               ...(community.groups || []),
               {
+                type: 'workgroup',
                 id: newGroup,
                 name: '',
                 permission: {
