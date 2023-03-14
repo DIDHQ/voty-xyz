@@ -6,42 +6,39 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import Head from 'next/head'
 
-import useWorkgroup from '../hooks/use-workgroup'
+import useGroup from '../hooks/use-group'
 import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 import { documentTitle } from '../utils/constants'
 
-export default function WorkgroupNav(props: { className?: string }) {
-  const query = useRouterQuery<['entry', 'workgroup']>()
+export default function GroupNav(props: { className?: string }) {
+  const query = useRouterQuery<['entry', 'group']>()
   const { data: community } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  const workgroup = useWorkgroup(community, query.workgroup)
+  const group = useGroup(community, query.group)
   const router = useRouter()
   const tabs = useMemo(
     () => [
       {
         name: 'Proposals',
-        href: `/${query.entry}/${query.workgroup}`,
-        current: router.pathname === '/[entry]/[workgroup]',
+        href: `/${query.entry}/${query.group}`,
+        current: router.pathname === '/[entry]/[group]',
       },
       {
         name: 'Rules',
-        href: `/${query.entry}/${query.workgroup}/rules`,
-        current: router.pathname === '/[entry]/[workgroup]/rules',
+        href: `/${query.entry}/${query.group}/rules`,
+        current: router.pathname === '/[entry]/[group]/rules',
       },
     ],
-    [query.entry, query.workgroup, router.pathname],
+    [query.entry, query.group, router.pathname],
   )
-  const emoji = useMemo(
-    () => extractStartEmoji(workgroup?.name),
-    [workgroup?.name],
-  )
+  const emoji = useMemo(() => extractStartEmoji(group?.name), [group?.name])
   const name = useMemo(
-    () => workgroup?.name.replace(emoji || '', ''),
-    [emoji, workgroup?.name],
+    () => group?.name.replace(emoji || '', ''),
+    [emoji, group?.name],
   )
   const title = useMemo(
     () => compact([name, community?.name, documentTitle]).join(' - '),
@@ -72,9 +69,9 @@ export default function WorkgroupNav(props: { className?: string }) {
             {name || '...'}
           </h3>
         </div>
-        {workgroup?.extension.introduction ? (
+        {group?.extension.introduction ? (
           <p className="mt-2 text-sm text-gray-500 line-clamp-1">
-            {workgroup.extension.introduction}
+            {group.extension.introduction}
           </p>
         ) : null}
         <div className="mt-2 border-b">

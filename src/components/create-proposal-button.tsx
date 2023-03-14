@@ -8,7 +8,7 @@ import Button from './basic/button'
 
 export default function CreateProposalButton(props: {
   entry?: string
-  workgroup?: string
+  group?: string
   community?: string
   className?: string
 }) {
@@ -17,7 +17,7 @@ export default function CreateProposalButton(props: {
 
   return status?.timestamp ? (
     <Link
-      href={`/${props.entry}/${props.workgroup}/create`}
+      href={`/${props.entry}/${props.group}/create`}
       className={props.className}
     >
       <Button primary icon={PlusIcon}>
@@ -36,7 +36,7 @@ export default function CreateProposalButton(props: {
         </Button>
       </div>
       <Tooltip id={id} className="rounded">
-        Waiting for workgroup transaction (in about 5 minutes)
+        Waiting for transaction (in about 5 minutes)
       </Tooltip>
     </>
   )

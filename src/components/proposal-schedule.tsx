@@ -1,12 +1,12 @@
 import useStatus from '../hooks/use-status'
-import { Workgroup } from '../utils/schemas/workgroup'
+import { Group } from '../utils/schemas/group'
 import { formatTime } from '../utils/time'
 import { DetailList, DetailItem } from './basic/detail'
 import ProposalPeriodText from './proposal-period-text'
 
 export default function ProposalSchedule(props: {
   proposal?: string
-  duration?: Workgroup['duration']
+  duration?: Group['duration']
 }) {
   const { data: status } = useStatus(props.proposal)
 
@@ -21,7 +21,7 @@ export default function ProposalSchedule(props: {
       <DetailItem title="Start">
         {status?.timestamp && props.duration
           ? formatTime(
-              status.timestamp.getTime() + props.duration.announcement * 1000,
+              status.timestamp.getTime() + props.duration.pending * 1000,
             )
           : '...'}
       </DetailItem>
@@ -29,7 +29,7 @@ export default function ProposalSchedule(props: {
         {status?.timestamp && props.duration
           ? formatTime(
               status.timestamp.getTime() +
-                (props.duration.announcement + props.duration.voting) * 1000,
+                (props.duration.pending + props.duration.voting) * 1000,
             )
           : '...'}
       </DetailItem>

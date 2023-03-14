@@ -16,7 +16,7 @@ import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
 import useRouterQuery from '../hooks/use-router-query'
 import Avatar from './basic/avatar'
 import { extractStartEmoji } from '../utils/emoji'
-import { Workgroup } from '../utils/schemas/workgroup'
+import { Group } from '../utils/schemas/group'
 import { trpc } from '../utils/trpc'
 import { documentTitle } from '../utils/constants'
 import TextButton from './basic/text-button'
@@ -29,14 +29,13 @@ const SubscriptionButton = dynamic(() => import('./subscription-button'), {
   ssr: false,
 })
 
-const CreateWorkgroupButton = dynamic(
-  () => import('./create-workgroup-button'),
-  { ssr: false },
-)
+const CreateGroupButton = dynamic(() => import('./create-group-button'), {
+  ssr: false,
+})
 
 export default function CommunityNav(props: { className?: string }) {
   const router = useRouter()
-  const query = useRouterQuery<['entry', 'workgroup']>()
+  const query = useRouterQuery<['entry', 'group']>()
   const { data: community } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
@@ -157,18 +156,15 @@ export default function CommunityNav(props: { className?: string }) {
           <div className="mt-6 w-full">
             <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
               Workgroups
-              <CreateWorkgroupButton
-                entry={query.entry}
-                className="float-right"
-              />
+              <CreateGroupButton entry={query.entry} className="float-right" />
             </h3>
             <div>
-              {community?.workgroups?.map((workgroup, index) => (
-                <WorkgroupListItem
-                  key={workgroup.name + index}
+              {community?.groups?.map((group) => (
+                <GroupListItem
+                  key={group.id}
                   entry={query.entry}
-                  workgroup={workgroup}
-                  current={query.workgroup === workgroup.id}
+                  group={group}
+                  current={query.group === group.id}
                 />
               ))}
             </div>
@@ -193,19 +189,19 @@ export default function CommunityNav(props: { className?: string }) {
   )
 }
 
-function WorkgroupListItem(props: {
+function GroupListItem(props: {
   entry?: string
-  workgroup: Workgroup
+  group: Group
   current: boolean
 }) {
   const emoji = useMemo(
-    () => extractStartEmoji(props.workgroup.name),
-    [props.workgroup.name],
+    () => extractStartEmoji(props.group.name),
+    [props.group.name],
   )
 
   return (
     <Link
-      href={`/${props.entry}/${props.workgroup.id}`}
+      href={`/${props.entry}/${props.group.id}`}
       scroll={false}
       className={clsx(
         props.current
@@ -233,7 +229,7 @@ function WorkgroupListItem(props: {
         />
       )}
       <span className="truncate">
-        {props.workgroup.name.replace(emoji || '', '')}
+        {props.group.name.replace(emoji || '', '')}
       </span>
     </Link>
   )

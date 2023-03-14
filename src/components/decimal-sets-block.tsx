@@ -14,17 +14,17 @@ import Textarea from './basic/textarea'
 export default function DecimalSetsBlock(props: {
   name: 'voting'
   entry: string
-  workgroupIndex: number
+  groupIndex: number
   disabled?: boolean
 }) {
   const { watch, control } = useFormContext<Community>()
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `workgroups.${props.workgroupIndex}.permission.${props.name}.operands`,
+    name: `groups.${props.groupIndex}.permission.${props.name}.operands`,
   })
   const [open, setOpen] = useState<number | undefined>(0)
   const operands = watch(
-    `workgroups.${props.workgroupIndex}.permission.${props.name}.operands`,
+    `groups.${props.groupIndex}.permission.${props.name}.operands`,
     fields,
   )
 
@@ -44,7 +44,7 @@ export default function DecimalSetsBlock(props: {
               }
               name={props.name}
               entry={props.entry}
-              workgroupIndex={props.workgroupIndex}
+              groupIndex={props.groupIndex}
               index={index}
               open={open === index}
               setOpen={setOpen}
@@ -76,7 +76,7 @@ export default function DecimalSetsBlock(props: {
 function DecimalUnitBlock(props: {
   name: 'voting'
   entry: string
-  workgroupIndex: number
+  groupIndex: number
   index: number
   open: boolean
   setOpen(index?: number): void
@@ -98,20 +98,15 @@ function DecimalUnitBlock(props: {
   }, [onRemove, props.index])
   useEffect(() => {
     if (
-      errors.workgroups?.[props.workgroupIndex]?.permission?.[props.name]
-        ?.operands?.[props.index]
+      errors.groups?.[props.groupIndex]?.permission?.[props.name]?.operands?.[
+        props.index
+      ]
     ) {
       setOpen(props.index)
     }
-  }, [
-    errors.workgroups,
-    props.index,
-    props.name,
-    props.workgroupIndex,
-    setOpen,
-  ])
+  }, [errors.groups, props.index, props.name, props.groupIndex, setOpen])
   const suffix = watch(
-    `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
+    `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
   )
   const regex = new RegExp(`\\.${suffix.replaceAll('.', '\\.')}\$`)
 
@@ -126,7 +121,7 @@ function DecimalUnitBlock(props: {
         <div className="flex w-0 flex-1 items-center">
           <span className="w-0 flex-1 truncate">
             {watch(
-              `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.name`,
+              `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
             ) || `Filter ${props.index + 1}`}
           </span>
         </div>
@@ -152,20 +147,18 @@ function DecimalUnitBlock(props: {
             <FormItem
               label="Name"
               error={
-                errors.workgroups?.[props.workgroupIndex]?.permission?.[
-                  props.name
-                ]?.operands?.[props.index]?.name?.message
+                errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                  ?.operands?.[props.index]?.name?.message
               }
             >
               <TextInput
                 disabled={props.disabled}
                 {...register(
-                  `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.name`,
+                  `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
                 )}
                 error={
-                  !!errors.workgroups?.[props.workgroupIndex]?.permission?.[
-                    props.name
-                  ]?.operands?.[props.index]?.name?.message
+                  !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                    ?.operands?.[props.index]?.name?.message
                 }
                 placeholder={`Filter ${props.index + 1}`}
               />
@@ -175,14 +168,13 @@ function DecimalUnitBlock(props: {
             <FormItem
               label="Base on"
               error={
-                errors.workgroups?.[props.workgroupIndex]?.permission?.[
-                  props.name
-                ]?.operands?.[props.index]?.arguments?.[0]?.message
+                errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                  ?.operands?.[props.index]?.arguments?.[0]?.message
               }
             >
               <Controller
                 control={control}
-                name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
+                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
                 render={({ field: { value, onChange } }) => (
                   <RadioGroup
                     disabled={props.disabled}
@@ -209,7 +201,7 @@ function DecimalUnitBlock(props: {
             <FormItem label="Filter">
               <Controller
                 control={control}
-                name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
+                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
                 render={({ field: { value, onChange } }) => (
                   <RadioGroup
                     disabled={props.disabled}
@@ -239,23 +231,21 @@ function DecimalUnitBlock(props: {
             </FormItem>
           </GridItem6>
           {watch(
-            `workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`,
+            `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`,
           )?.length ? (
             <GridItem6>
               <FormItem
                 label="Allowlist"
                 error={
-                  errors.workgroups?.[props.workgroupIndex]?.permission?.[
-                    props.name
-                  ]?.operands?.[props.index]?.arguments?.[1]?.message ||
-                  errors.workgroups?.[props.workgroupIndex]?.permission?.[
-                    props.name
-                  ]?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
+                  errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                    ?.operands?.[props.index]?.arguments?.[1]?.message ||
+                  errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                    ?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
                 }
               >
                 <Controller
                   control={control}
-                  name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
+                  name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
                   render={({ field: { value, onChange } }) => (
                     <Textarea
                       autoCorrect="false"
@@ -281,12 +271,12 @@ function DecimalUnitBlock(props: {
                         onChange(array.length ? array : [''])
                       }}
                       error={
-                        !!errors.workgroups?.[props.workgroupIndex]
-                          ?.permission?.[props.name]?.operands?.[props.index]
-                          ?.arguments?.[1]?.message ||
-                        !!errors.workgroups?.[props.workgroupIndex]
-                          ?.permission?.[props.name]?.operands?.[props.index]
-                          ?.arguments?.[1]?.[0]?.message
+                        !!errors.groups?.[props.groupIndex]?.permission?.[
+                          props.name
+                        ]?.operands?.[props.index]?.arguments?.[1]?.message ||
+                        !!errors.groups?.[props.groupIndex]?.permission?.[
+                          props.name
+                        ]?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
                       }
                     />
                   )}
@@ -298,14 +288,13 @@ function DecimalUnitBlock(props: {
             <FormItem
               label="Power"
               error={
-                errors.workgroups?.[props.workgroupIndex]?.permission?.[
-                  props.name
-                ]?.operands?.[props.index]?.arguments?.[2]?.message
+                errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                  ?.operands?.[props.index]?.arguments?.[2]?.message
               }
             >
               <Controller
                 control={control}
-                name={`workgroups.${props.workgroupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`}
+                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`}
                 render={({ field: { value, onChange } }) => (
                   <TextInput
                     disabled={props.disabled}
@@ -314,7 +303,7 @@ function DecimalUnitBlock(props: {
                       onChange(e.target.value)
                     }}
                     error={
-                      !!errors.workgroups?.[props.workgroupIndex]?.permission?.[
+                      !!errors.groups?.[props.groupIndex]?.permission?.[
                         props.name
                       ]?.operands?.[props.index]?.arguments?.[2]?.message
                     }

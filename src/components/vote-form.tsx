@@ -13,7 +13,7 @@ import { trpc } from '../utils/trpc'
 import useStatus from '../hooks/use-status'
 import { getPeriod, Period } from '../utils/period'
 import { Proposal } from '../utils/schemas/proposal'
-import { Workgroup } from '../utils/schemas/workgroup'
+import { Group } from '../utils/schemas/group'
 import { FormItem } from './basic/form'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
@@ -31,7 +31,7 @@ const Tooltip = dynamic(
 export default function VoteForm(props: {
   entry?: string
   proposal?: Proposal & { permalink: string; votes: number }
-  workgroup?: Workgroup
+  group?: Group
   onSuccess: () => void
   className?: string
 }) {
@@ -45,13 +45,13 @@ export default function VoteForm(props: {
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account, props.proposal?.snapshots)
   const { data: powers } = useQuery(
-    [dids, props.workgroup, props.proposal?.snapshots],
+    [dids, props.group, props.proposal?.snapshots],
     async () => {
       const decimals = await pMap(
         dids!,
         (did) =>
           calculateDecimal(
-            props.workgroup!.permission.voting,
+            props.group!.permission.voting,
             did,
             props.proposal?.snapshots!,
           ),
@@ -62,7 +62,7 @@ export default function VoteForm(props: {
         return obj
       }, {} as { [key: string]: Decimal })
     },
-    { enabled: !!dids && !!props.workgroup && !!props.proposal?.snapshots },
+    { enabled: !!dids && !!props.group && !!props.proposal?.snapshots },
   )
   const { data: voted, refetch: refetchVoted } =
     trpc.vote.groupByProposal.useQuery(
@@ -85,14 +85,14 @@ export default function VoteForm(props: {
     }
   }, [props.proposal?.permalink, setValue])
   const { data: votingPower } = useQuery(
-    ['votingPower', props.workgroup, did, props.proposal],
+    ['votingPower', props.group, did, props.proposal],
     () =>
       calculateDecimal(
-        props.workgroup!.permission.voting,
+        props.group!.permission.voting,
         did!,
         props.proposal!.snapshots,
       ),
-    { enabled: !!props.workgroup && !!did && !!props.proposal },
+    { enabled: !!props.group && !!did && !!props.proposal },
   )
   useEffect(() => {
     if (votingPower === undefined) {
@@ -109,8 +109,8 @@ export default function VoteForm(props: {
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
   const { data: status } = useStatus(props.proposal?.permalink)
   const period = useMemo(
-    () => getPeriod(new Date(), status?.timestamp, props.workgroup?.duration),
-    [props.workgroup?.duration, status?.timestamp],
+    () => getPeriod(new Date(), status?.timestamp, props.group?.duration),
+    [props.group?.duration, status?.timestamp],
   )
   const disables = useCallback(
     (did?: string) =>
@@ -201,7 +201,7 @@ export default function VoteForm(props: {
             {didOptions?.length === 0 ? (
               <TextButton
                 secondary
-                href={`/${props.entry}/${props.workgroup?.id}/rules`}
+                href={`/${props.entry}/${props.group?.id}/rules`}
               >
                 Why I&#39;m not eligible to vote
               </TextButton>

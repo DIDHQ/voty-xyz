@@ -1,17 +1,17 @@
 import { z } from 'zod'
 
-import { workgroupSchema } from './workgroup'
+import { groupSchema } from './group'
 
 export const communitySchema = z.object({
   name: z.string().min(1, 'Required').max(32, 'Maximum 32 characters'),
-  workgroups: z
-    .array(workgroupSchema)
+  groups: z
+    .array(groupSchema)
     .optional()
     .refine(
-      (workgroups) =>
-        !workgroups?.length ||
-        new Set(workgroups.map(({ id }) => id)).size === workgroups.length,
-      { message: 'Workgroup ids are not unique' },
+      (groups) =>
+        !groups?.length ||
+        new Set(groups.map(({ id }) => id)).size === groups.length,
+      { message: 'Group ids are not unique' },
     ),
   extension: z.object({
     logo: z.string(),

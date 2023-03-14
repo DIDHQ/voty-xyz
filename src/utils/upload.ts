@@ -47,7 +47,7 @@ function getArweaveTags(document: Authorized<Community | Proposal | Vote>) {
       ...defaultArweaveTags,
       'App-Data-Type': DataType.PROPOSAL,
       'App-Index-Community': document.community,
-      'App-Index-Workgroup': document.workgroup,
+      'App-Index-Group': document.group,
     }
   }
   if (isVote(document)) {

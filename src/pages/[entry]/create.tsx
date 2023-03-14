@@ -4,14 +4,14 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 
 import useRouterQuery from '../../hooks/use-router-query'
-import WorkgroupForm from '../../components/workgroup-form'
+import GroupForm from '../../components/group-form'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
 import { documentTitle } from '../../utils/constants'
 import { Community } from '../../utils/schemas/community'
 import TextButton from '../../components/basic/text-button'
 
-export default function CreateWorkgroupPage() {
+export default function CreateGroupPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry']>()
   const {
@@ -22,16 +22,16 @@ export default function CreateWorkgroupPage() {
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  const newWorkgroup = useMemo(() => nanoid(), [])
+  const newGroup = useMemo(() => nanoid(), [])
   const initialValue = useMemo(
     () =>
       community && query.entry
         ? ({
             ...community,
-            workgroups: [
-              ...(community.workgroups || []),
+            groups: [
+              ...(community.groups || []),
               {
-                id: newWorkgroup,
+                id: newGroup,
                 name: '',
                 permission: {
                   proposing: {
@@ -54,7 +54,7 @@ export default function CreateWorkgroupPage() {
                   },
                 },
                 duration: {
-                  announcement: 86400,
+                  pending: 86400,
                   voting: 86400,
                 },
                 extension: {
@@ -64,12 +64,12 @@ export default function CreateWorkgroupPage() {
             ],
           } satisfies Community)
         : undefined,
-    [community, newWorkgroup, query.entry],
+    [community, newGroup, query.entry],
   )
   const handleSuccess = useCallback(() => {
     refetch()
-    router.push(`/${query.entry}/${newWorkgroup}/rules`)
-  }, [newWorkgroup, query.entry, refetch, router])
+    router.push(`/${query.entry}/${newGroup}/rules`)
+  }, [newGroup, query.entry, refetch, router])
 
   return (
     <>
@@ -81,11 +81,11 @@ export default function CreateWorkgroupPage() {
         <TextButton href={`/${query.entry}`} className="mt-6 sm:mt-8">
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
-        <WorkgroupForm
+        <GroupForm
           author={query.entry || ''}
           initialValue={initialValue}
-          workgroup={newWorkgroup}
-          isNewWorkgroup
+          group={newGroup}
+          isNewGroup
           onSuccess={handleSuccess}
           className="pt-6 sm:pt-8"
         />

@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server'
 import { checkBoolean } from '../functions/boolean'
 import { Authorized } from '../schemas/authorship'
 import { Community } from '../schemas/community'
-import { Workgroup } from '../schemas/workgroup'
+import { Group } from '../schemas/group'
 import { Proved } from '../schemas/proof'
 import { Proposal } from '../schemas/proposal'
 import { getByPermalink } from '../database'
@@ -14,7 +14,7 @@ export default async function verifyProposal(
   proposal: Proved<Authorized<Proposal>>,
 ): Promise<{
   community: Proved<Authorized<Community>>
-  workgroup: Workgroup
+  group: Group
 }> {
   const [timestamp, data] = await Promise.all([
     getPermalinkSnapshot(proposal.community).then((snapshot) =>
@@ -27,16 +27,14 @@ export default async function verifyProposal(
   }
   const community = data.data
 
-  const workgroup = community.workgroups?.find(
-    ({ id }) => id === proposal.workgroup,
-  )
-  if (!workgroup) {
-    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Workgroup not found' })
+  const group = community.groups?.find(({ id }) => id === proposal.group)
+  if (!group) {
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Group not found' })
   }
 
   if (
     !(await checkBoolean(
-      workgroup.permission.proposing,
+      group.permission.proposing,
       proposal.authorship.author,
       proposal.snapshots,
     ))
@@ -47,5 +45,5 @@ export default async function verifyProposal(
     })
   }
 
-  return { community, workgroup }
+  return { community, group }
 }
