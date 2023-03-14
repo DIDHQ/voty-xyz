@@ -45,10 +45,7 @@ export default function ProposalForm(props: {
   const type = props.group?.extension.type === 'grant' ? 'round' : 'proposal'
   const methods = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
-    defaultValues: {
-      options: type === 'round' ? undefined : ['', ''],
-      voting_type: 'single',
-    },
+    defaultValues: { voting_type: 'single' },
   })
   const {
     register,
@@ -74,6 +71,17 @@ export default function ProposalForm(props: {
   useEffect(() => {
     if (props.group) {
       setValue('group', props.group.id)
+    }
+  }, [props.group, setValue])
+  useEffect(() => {
+    if (props.group) {
+      if (props.group.extension.type === 'grant') {
+        setValue('options', undefined)
+        setValue('extension.funding', [['', 5]])
+      } else {
+        setValue('options', ['', ''])
+        setValue('extension.funding', undefined)
+      }
     }
   }, [props.group, setValue])
   const [did, setDid] = useState('')
@@ -224,7 +232,7 @@ export default function ProposalForm(props: {
                       disabled={disabled}
                       {...register('extension.funding.0.0')}
                       error={!!errors?.extension?.funding?.[0]?.[0]}
-                      placeholder="name"
+                      placeholder="prize"
                       className="w-0 flex-1"
                     />
                     <span className="text-gray-400">X</span>
@@ -234,6 +242,7 @@ export default function ProposalForm(props: {
                       render={({ field: { value, onChange } }) => (
                         <TextInput
                           disabled={disabled}
+                          type="number"
                           value={value || ''}
                           onChange={(e) => onChange(e.target.valueAsNumber)}
                           error={!!errors?.extension?.funding?.[0]?.[1]}
