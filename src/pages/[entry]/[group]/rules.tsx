@@ -43,19 +43,19 @@ export default function GroupRulesPage() {
               {group.extension.type === 'grant' ? (
                 <>
                   <article className="prose max-w-none pt-6 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
-                    <h3>Investing</h3>
+                    <h3>Investors</h3>
                     <em>The following DIDs are eligible to creating round</em>
                     <SetsDescription
                       entry={query.entry}
                       value={group.permission.proposing}
                     />
-                    <h3>Proposing</h3>
+                    <h3>Proposers</h3>
                     <em>The following DIDs are eligible to propose</em>
                     <SetsDescription
                       entry={query.entry}
                       value={(group as Grant).permission.adding_option}
                     />
-                    <h3>Voting</h3>
+                    <h3>Voters</h3>
                     <em>
                       The following DIDs are eligible to vote
                       <br />
@@ -99,13 +99,13 @@ export default function GroupRulesPage() {
               ) : (
                 <>
                   <article className="prose max-w-none pt-6 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
-                    <h3>Proposing</h3>
+                    <h3>Proposers</h3>
                     <em>The following DIDs are eligible to propose</em>
                     <SetsDescription
                       entry={query.entry}
                       value={group.permission.proposing}
                     />
-                    <h3>Voting</h3>
+                    <h3>Voters</h3>
                     <em>
                       The following DIDs are eligible to vote
                       <br />
