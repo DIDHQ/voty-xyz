@@ -11,6 +11,7 @@ import EmptyState from '../../../components/empty-state'
 import CreateProposalButton from '../../../components/create-proposal-button'
 import Select from '../../../components/basic/select'
 import { Period } from '../../../utils/period'
+import useGroup from '../../../hooks/use-group'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['entry', 'group']>()
@@ -31,6 +32,7 @@ export default function GroupIndexPage() {
     { entry: query.entry },
     { enabled: !!query.entry },
   )
+  const group = useGroup(community, query.group)
   const proposals = useMemo(
     () => data?.pages.flatMap(({ data }) => data),
     [data],
@@ -60,12 +62,17 @@ export default function GroupIndexPage() {
           />
           <CreateProposalButton
             entry={query.entry}
-            group={query.group}
+            group={group}
             community={community?.entry.community}
           />
         </div>
         {proposals?.length === 0 ? (
-          <EmptyState title="No proposals" className="mt-24" />
+          <EmptyState
+            title={
+              group?.extension.type === 'grant' ? 'No rounds' : 'No proposals'
+            }
+            className="mt-24"
+          />
         ) : (
           <ul role="list" className="mt-5 space-y-5">
             {proposals?.map((proposal) => (
