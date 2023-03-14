@@ -3,7 +3,6 @@ import { z } from 'zod'
 import { booleanSetsSchema, decimalSetsSchema } from './sets'
 
 export const groupSchema = z.object({
-  type: z.literal('workgroup'),
   id: z.string().min(1, 'Required'),
   name: z.string().min(1, 'Required'),
   duration: z.object({
@@ -15,6 +14,7 @@ export const groupSchema = z.object({
     voting: decimalSetsSchema,
   }),
   extension: z.object({
+    type: z.literal('workgroup'),
     introduction: z.string().max(160, 'Maximum 160 characters').optional(),
     terms_and_conditions: z.string().min(1, 'Required'),
   }),
