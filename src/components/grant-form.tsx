@@ -134,7 +134,7 @@ export default function GrantForm(props: {
         </FormSection>
         <FormSection
           title="Investors"
-          description="The following DIDs are eligible to create funding round"
+          description="The following DIDs are eligible to invest"
         >
           <Grid6>
             <GridItem6>
@@ -254,43 +254,6 @@ export default function GrantForm(props: {
                     />
                   )}
                 />
-              </FormItem>
-            </GridItem2>
-          </Grid6>
-        </FormSection>
-        <FormSection title="Funding" description="Defines the prize of winner">
-          <Grid6>
-            <GridItem2>
-              <FormItem
-                error={
-                  groupErrors?.extension?.funding?.[0]?.[0]?.message ||
-                  groupErrors?.extension?.funding?.[0]?.[1]?.message
-                }
-              >
-                <div className="flex items-center space-x-2">
-                  <TextInput
-                    disabled={!isManager}
-                    {...register(`groups.${groupIndex}.extension.funding.0.0`)}
-                    error={!!groupErrors?.extension?.funding?.[0]?.[0]}
-                    placeholder="name"
-                    className="w-0 flex-1"
-                  />
-                  <span className="text-gray-400">X</span>
-                  <Controller
-                    control={control}
-                    name={`groups.${groupIndex}.extension.funding.0.1`}
-                    render={({ field: { value, onChange } }) => (
-                      <TextInput
-                        disabled={!isManager}
-                        value={value || ''}
-                        onChange={(e) => onChange(e.target.valueAsNumber)}
-                        error={!!groupErrors?.duration?.voting}
-                        placeholder="count"
-                        className="shrink-0 basis-16"
-                      />
-                    )}
-                  />
-                </div>
               </FormItem>
             </GridItem2>
           </Grid6>

@@ -45,7 +45,7 @@ export default function GroupRulesPage() {
                 <>
                   <Article className="pt-6">
                     <h3>Investors</h3>
-                    <em>The following DIDs are eligible to creating round</em>
+                    <em>The following DIDs are eligible to invest</em>
                     <SetsDescription
                       entry={query.entry}
                       value={group.permission.proposing}
@@ -84,16 +84,6 @@ export default function GroupRulesPage() {
                         Voting ends {formatDuration(group.duration.voting)}
                         &nbsp;after starting.
                       </li>
-                    </ul>
-                    <h3>Funding</h3>
-                    <ul>
-                      {group.extension.funding.map((funding, index) => (
-                        <li key={index}>
-                          {funding[0]}&nbsp;
-                          <span className="text-gray-400">X</span>&nbsp;
-                          {funding[1]}
-                        </li>
-                      ))}
                     </ul>
                   </Article>
                 </>

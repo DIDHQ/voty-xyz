@@ -76,28 +76,12 @@ export default function CreateProposalPage() {
                 {group ? formatDuration(group.duration.voting) : null}
               </DetailItem>
             </DetailList>
-            {group ? (
-              'terms_and_conditions' in group.extension ? (
-                <DetailList title="Terms and conditions">
-                  <Article small className="pt-2">
-                    <Markdown>{group.extension.terms_and_conditions}</Markdown>
-                  </Article>
-                </DetailList>
-              ) : (
-                <DetailList title="Funding">
-                  <Article small className="pt-2">
-                    <ul>
-                      {group.extension.funding.map((funding, index) => (
-                        <li key={index}>
-                          {funding[0]}&nbsp;
-                          <span className="text-gray-400">X</span>&nbsp;
-                          {funding[1]}
-                        </li>
-                      ))}
-                    </ul>
-                  </Article>
-                </DetailList>
-              )
+            {group && 'terms_and_conditions' in group.extension ? (
+              <DetailList title="Terms and conditions">
+                <Article small className="pt-2">
+                  <Markdown>{group.extension.terms_and_conditions}</Markdown>
+                </Article>
+              </DetailList>
             ) : null}
           </div>
         </div>

@@ -36,9 +36,6 @@ export const grantSchema = z.object({
   extension: z.object({
     type: z.literal('grant'),
     introduction: z.string().max(160, 'Maximum 160 characters').optional(),
-    funding: z
-      .array(z.tuple([z.string().min(1, 'Required'), z.number().int().min(1)]))
-      .min(1, 'Required'),
   }),
 })
 

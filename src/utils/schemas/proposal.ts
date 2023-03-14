@@ -16,6 +16,12 @@ export const proposalSchema = z.object({
   extension: z
     .object({
       content: z.string().optional(),
+      funding: z
+        .array(
+          z.tuple([z.string().min(1, 'Required'), z.number().int().min(1)]),
+        )
+        .length(1)
+        .optional(),
     })
     .optional(),
 })

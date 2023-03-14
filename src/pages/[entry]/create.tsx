@@ -71,7 +71,6 @@ export default function CreateGroupPage() {
                     },
                     extension: {
                       type: 'grant',
-                      funding: [['', 5]],
                     },
                   }
                 : {

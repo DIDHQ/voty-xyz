@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { uniq } from 'lodash-es'
-import { HandRaisedIcon } from '@heroicons/react/20/solid'
+import { BanknotesIcon, HandRaisedIcon } from '@heroicons/react/20/solid'
 import { Entry } from '@prisma/client'
 import type { Serialize } from '@trpc/server/dist/shared/internal/serialize'
 import clsx from 'clsx'
@@ -15,7 +15,7 @@ import TextInput from '../components/basic/text-input'
 import Textarea from '../components/basic/textarea'
 import TextButton from '../components/basic/text-button'
 import { Form, FormItem, FormSection } from '../components/basic/form'
-import { Grid6, GridItem6 } from '../components/basic/grid'
+import { Grid6, GridItem3, GridItem6 } from '../components/basic/grid'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import PreviewMarkdown from '../components/preview-markdown'
 import useStatus from '../hooks/use-status'
@@ -210,7 +210,42 @@ export default function ProposalForm(props: {
                 />
               </FormItem>
             </GridItem6>
-            {type === 'round' ? null : (
+            {type === 'round' ? (
+              <GridItem3>
+                <FormItem
+                  label="Funding"
+                  error={
+                    errors?.extension?.funding?.[0]?.[0]?.message ||
+                    errors?.extension?.funding?.[0]?.[1]?.message
+                  }
+                >
+                  <div className="flex w-full items-center space-x-2">
+                    <TextInput
+                      disabled={disabled}
+                      {...register('extension.funding.0.0')}
+                      error={!!errors?.extension?.funding?.[0]?.[0]}
+                      placeholder="name"
+                      className="w-0 flex-1"
+                    />
+                    <span className="text-gray-400">X</span>
+                    <Controller
+                      control={control}
+                      name="extension.funding.0.1"
+                      render={({ field: { value, onChange } }) => (
+                        <TextInput
+                          disabled={disabled}
+                          value={value || ''}
+                          onChange={(e) => onChange(e.target.valueAsNumber)}
+                          error={!!errors?.extension?.funding?.[0]?.[1]}
+                          placeholder="count"
+                          className="shrink-0 basis-16"
+                        />
+                      )}
+                    />
+                  </div>
+                </FormItem>
+              </GridItem3>
+            ) : (
               <>
                 <GridItem6>
                   <FormItem
@@ -292,7 +327,9 @@ export default function ProposalForm(props: {
           <div className="w-full flex-1 sm:w-64 sm:flex-none">
             <DidCombobox
               top
-              label="Select a DID as proposer"
+              label={`Select a DID as ${
+                type === 'round' ? 'investor' : 'proposer'
+              }`}
               options={didOptions}
               value={did}
               onChange={setDid}
@@ -303,14 +340,15 @@ export default function ProposalForm(props: {
                 secondary
                 href={`/${props.community?.authorship.author}/${props.group?.id}/rules`}
               >
-                Why I&#39;m not eligible to propose
+                Why I&#39;m not eligible to&nbsp;
+                {type === 'round' ? 'invest' : 'propose'}
               </TextButton>
             ) : null}
           </div>
           <Button
             primary
             large
-            icon={HandRaisedIcon}
+            icon={type === 'round' ? BanknotesIcon : HandRaisedIcon}
             disabled={disabled}
             loading={handleSign.isLoading}
             onClick={handleSubmit(
@@ -318,7 +356,7 @@ export default function ProposalForm(props: {
               console.error,
             )}
           >
-            Propose
+            {type === 'round' ? 'Invest' : 'Propose'}
           </Button>
         </div>
       </Form>
