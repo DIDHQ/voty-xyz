@@ -3,6 +3,7 @@ import {
   GlobeAltIcon,
   BriefcaseIcon,
   DocumentTextIcon,
+  TrophyIcon,
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
@@ -245,6 +246,16 @@ function GroupListItem(props: {
         >
           {emoji}
         </span>
+      ) : props.group.extension.type === 'grant' ? (
+        <TrophyIcon
+          className={clsx(
+            props.current
+              ? 'text-primary-500'
+              : 'text-gray-300 group-hover:text-gray-400',
+            'mr-2 h-5 w-5 shrink-0',
+          )}
+          aria-hidden="true"
+        />
       ) : (
         <BriefcaseIcon
           className={clsx(
