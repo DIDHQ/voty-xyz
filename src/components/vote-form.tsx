@@ -163,7 +163,7 @@ export default function VoteForm(props: {
           control={control}
           name="choice"
           render={({ field: { value, onChange } }) =>
-            props.proposal?.options.length ? (
+            props.proposal?.options?.length ? (
               <ul
                 role="list"
                 className="mt-6 divide-y divide-gray-200 rounded border border-gray-200"
