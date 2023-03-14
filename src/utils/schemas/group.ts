@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { booleanSetsSchema, decimalSetsSchema } from './sets'
 
 export const groupSchema = z.object({
+  type: z.literal('workgroup'),
   id: z.string().min(1, 'Required'),
   name: z.string().min(1, 'Required'),
   permission: z.object({
