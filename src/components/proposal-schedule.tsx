@@ -21,7 +21,7 @@ export default function ProposalSchedule(props: {
       <DetailItem title="Start">
         {status?.timestamp && props.duration
           ? formatTime(
-              status.timestamp.getTime() + props.duration.announcement * 1000,
+              status.timestamp.getTime() + props.duration.pending * 1000,
             )
           : '...'}
       </DetailItem>
@@ -29,7 +29,7 @@ export default function ProposalSchedule(props: {
         {status?.timestamp && props.duration
           ? formatTime(
               status.timestamp.getTime() +
-                (props.duration.announcement + props.duration.voting) * 1000,
+                (props.duration.pending + props.duration.voting) * 1000,
             )
           : '...'}
       </DetailItem>

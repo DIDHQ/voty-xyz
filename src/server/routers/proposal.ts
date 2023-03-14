@@ -54,10 +54,10 @@ export const proposalRouter = router({
               data: {
                 ts: timestamp,
                 ts_pending: dayjs(timestamp)
-                  .add(group.duration.announcement * 1000)
+                  .add(group.duration.pending * 1000)
                   .toDate(),
                 ts_voting: dayjs(timestamp)
-                  .add(group.duration.announcement * 1000)
+                  .add(group.duration.pending * 1000)
                   .add(group.duration.voting * 1000)
                   .toDate(),
               },
@@ -185,10 +185,10 @@ export const proposalRouter = router({
             votes: 0,
             ts,
             ts_pending: dayjs(ts)
-              .add(group.duration.announcement * 1000)
+              .add(group.duration.pending * 1000)
               .toDate(),
             ts_voting: dayjs(ts)
-              .add(group.duration.announcement * 1000)
+              .add(group.duration.pending * 1000)
               .add(group.duration.voting * 1000)
               .toDate(),
           },

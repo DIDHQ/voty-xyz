@@ -68,7 +68,7 @@ export default function CreateProposalPage() {
             </DetailList>
             <DetailList title="Duration">
               <DetailItem title="Pending">
-                {group ? formatDuration(group.duration.announcement) : null}
+                {group ? formatDuration(group.duration.pending) : null}
               </DetailItem>
               <DetailItem title="Voting">
                 {group ? formatDuration(group.duration.voting) : null}

@@ -54,7 +54,7 @@ export default function CreateGroupPage() {
                   },
                 },
                 duration: {
-                  announcement: 86400,
+                  pending: 86400,
                   voting: 86400,
                 },
                 extension: {

@@ -15,12 +15,12 @@ export function getPeriod(
   if (!timestamp || !duration) {
     return Period.CONFIRMING
   }
-  if (now.getTime() < timestamp.getTime() + duration.announcement * 1000) {
+  if (now.getTime() < timestamp.getTime() + duration.pending * 1000) {
     return Period.PENDING
   }
   if (
     now.getTime() <
-    timestamp.getTime() + (duration.announcement + duration.voting) * 1000
+    timestamp.getTime() + (duration.pending + duration.voting) * 1000
   ) {
     return Period.VOTING
   }

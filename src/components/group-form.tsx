@@ -184,21 +184,17 @@ export default function GroupForm(props: {
             <GridItem3>
               <FormItem
                 label="Duration of pending before voting"
-                error={
-                  errors?.groups?.[groupIndex]?.duration?.announcement?.message
-                }
+                error={errors?.groups?.[groupIndex]?.duration?.pending?.message}
               >
                 <Controller
                   control={control}
-                  name={`groups.${groupIndex}.duration.announcement`}
+                  name={`groups.${groupIndex}.duration.pending`}
                   render={({ field: { value, onChange } }) => (
                     <DurationInput
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={
-                        !!errors?.groups?.[groupIndex]?.duration?.announcement
-                      }
+                      error={!!errors?.groups?.[groupIndex]?.duration?.pending}
                     />
                   )}
                 />

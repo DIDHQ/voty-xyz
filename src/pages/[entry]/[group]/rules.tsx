@@ -60,8 +60,8 @@ export default function GroupRulesPage() {
                 <ul>
                   <li>
                     Voting starts&nbsp;
-                    {formatDuration(group.duration.announcement)} after
-                    transaction confirmation.
+                    {formatDuration(group.duration.pending)} after transaction
+                    confirmation.
                   </li>
                   <li>
                     Voting ends {formatDuration(group.duration.voting)}
