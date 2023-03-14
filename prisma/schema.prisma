@@ -27,7 +27,7 @@ model Proposal {
   entry     String
   author    String
   community String
-  workgroup String
+  group     String
 
   data Json
 
@@ -38,8 +38,8 @@ model Proposal {
   ts_voting  DateTime?
 
   @@id([permalink])
-  @@index([entry, workgroup])
-  @@index([community, workgroup])
+  @@index([entry, group])
+  @@index([community, group])
   @@index([author])
 }
 
@@ -47,7 +47,7 @@ model Vote {
   permalink String
   author    String
   community String
-  workgroup String
+  group     String
   proposal  String
 
   data Json

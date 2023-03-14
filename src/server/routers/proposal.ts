@@ -42,7 +42,7 @@ export const proposalRouter = router({
             proposal.community,
           )
           const workgroup = community?.data.workgroups?.find(
-            (w) => w.id === proposal.workgroup,
+            (w) => w.id === proposal.group,
           )
           if (workgroup) {
             const timestamp = await getSnapshotTimestamp(
@@ -124,7 +124,7 @@ export const proposalRouter = router({
           : {}
       const proposals = await database.proposal.findMany({
         where: input.workgroup
-          ? { entry: input.entry, workgroup: input.workgroup, ...filter }
+          ? { entry: input.entry, group: input.workgroup, ...filter }
           : { entry: input.entry, ...filter },
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
         take: 20,
@@ -180,7 +180,7 @@ export const proposalRouter = router({
             author: input.authorship.author,
             entry: community.authorship.author,
             community: input.community,
-            workgroup: input.workgroup,
+            group: input.workgroup,
             data: input,
             votes: 0,
             ts,
