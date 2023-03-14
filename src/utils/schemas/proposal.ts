@@ -8,7 +8,8 @@ export const proposalSchema = z.object({
   options: z
     .array(z.string().min(1, 'Required'))
     .min(2, 'At least 2 options')
-    .refine((options) => new Set(options).size === options.length, {
+    .optional()
+    .refine((options) => !options || new Set(options).size === options.length, {
       message: 'Options are not unique',
     }),
   snapshots: z.record(z.string(), z.string()),

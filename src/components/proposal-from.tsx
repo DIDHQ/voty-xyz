@@ -42,9 +42,13 @@ export default function ProposalForm(props: {
   className?: string
 }) {
   const { onSuccess } = props
+  const type = props.group?.extension.type === 'grant' ? 'round' : 'proposal'
   const methods = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
-    defaultValues: { options: ['', ''], voting_type: 'single' },
+    defaultValues: {
+      options: type === 'round' ? undefined : ['', ''],
+      voting_type: 'single',
+    },
   })
   const {
     register,
@@ -143,7 +147,7 @@ export default function ProposalForm(props: {
   const options = watch('options') || []
   const signDocument = useSignDocument(
     did,
-    `You are creating proposal on Voty\n\nhash:\n{sha256}`,
+    `You are creating ${type} on Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.proposal.create.useMutation()
   const handleSign = useMutation<void, Error, Proposal>(async (proposal) => {
@@ -178,7 +182,7 @@ export default function ProposalForm(props: {
         {handleSign.error?.message}
       </Notification>
       <Form className={props.className}>
-        <FormSection title="New proposal">
+        <FormSection title={`New ${type}`}>
           <Grid6 className="mt-6">
             <GridItem6>
               <FormItem label="Title" error={errors.title?.message}>
@@ -206,74 +210,82 @@ export default function ProposalForm(props: {
                 />
               </FormItem>
             </GridItem6>
-            <GridItem6>
-              <FormItem label="Voting type" error={errors.voting_type?.message}>
-                <Controller
-                  control={control}
-                  name="voting_type"
-                  render={({ field: { value, onChange } }) => (
-                    <RadioGroup
-                      options={votingTypes}
-                      value={value}
-                      onChange={onChange}
-                      disabled={disabled}
-                    />
-                  )}
-                />
-              </FormItem>
-            </GridItem6>
-            <GridItem6>
-              <FormItem
-                label="Options"
-                description={
-                  <TextButton
-                    secondary
-                    disabled={disabled}
-                    onClick={() => {
-                      setValue('options', [...options, ''])
-                    }}
+            {type === 'round' ? null : (
+              <>
+                <GridItem6>
+                  <FormItem
+                    label="Voting type"
+                    error={errors.voting_type?.message}
                   >
-                    Add
-                  </TextButton>
-                }
-                error={
-                  errors.options?.message ||
-                  errors.options?.find?.((option) => option?.message)?.message
-                }
-              >
-                <div className="space-y-[-1px]">
-                  {options.map((_, index) => (
-                    <div
-                      key={index}
-                      className="relative flex items-center justify-between text-sm"
-                    >
-                      <input
-                        type="text"
-                        placeholder={`Option ${index + 1}`}
-                        {...register(`options.${index}`)}
+                    <Controller
+                      control={control}
+                      name="voting_type"
+                      render={({ field: { value, onChange } }) => (
+                        <RadioGroup
+                          options={votingTypes}
+                          value={value}
+                          onChange={onChange}
+                          disabled={disabled}
+                        />
+                      )}
+                    />
+                  </FormItem>
+                </GridItem6>
+                <GridItem6>
+                  <FormItem
+                    label="Options"
+                    description={
+                      <TextButton
+                        secondary
                         disabled={disabled}
-                        className={clsx(
-                          'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600 sm:text-sm',
-                          options.length > 1 ? 'pr-20' : 'pr-3',
-                          index === 0 ? 'rounded-t' : undefined,
-                          index === options.length - 1
-                            ? 'rounded-b'
-                            : undefined,
-                        )}
-                      />
-                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
-                        {options.length > 2 ? (
-                          <OptionRemove
-                            index={index}
-                            onDelete={handleOptionDelete}
+                        onClick={() => {
+                          setValue('options', [...options, ''])
+                        }}
+                      >
+                        Add
+                      </TextButton>
+                    }
+                    error={
+                      errors.options?.message ||
+                      errors.options?.find?.((option) => option?.message)
+                        ?.message
+                    }
+                  >
+                    <div className="space-y-[-1px]">
+                      {options.map((_, index) => (
+                        <div
+                          key={index}
+                          className="relative flex items-center justify-between text-sm"
+                        >
+                          <input
+                            type="text"
+                            placeholder={`Option ${index + 1}`}
+                            {...register(`options.${index}`)}
+                            disabled={disabled}
+                            className={clsx(
+                              'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600 sm:text-sm',
+                              options.length > 1 ? 'pr-20' : 'pr-3',
+                              index === 0 ? 'rounded-t' : undefined,
+                              index === options.length - 1
+                                ? 'rounded-b'
+                                : undefined,
+                            )}
                           />
-                        ) : null}
-                      </div>
+                          <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
+                            {options.length > 2 ? (
+                              <OptionRemove
+                                index={index}
+                                onDelete={handleOptionDelete}
+                              />
+                            ) : null}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </FormItem>
-            </GridItem6>
+                  </FormItem>
+                </GridItem6>
+              </>
+            )}
           </Grid6>
         </FormSection>
         <div className="flex w-full flex-col items-end space-y-6">

@@ -23,17 +23,18 @@ export default function CreateProposalPage() {
     { enabled: !!query.entry },
   )
   const group = useGroup(community, query.group)
+  const type = group?.extension.type === 'grant' ? 'round' : 'proposal'
   const handleSuccess = useCallback(
     (permalink: string) => {
-      router.push(`/proposal/${permalink2Id(permalink)}`)
+      router.push(`/${type}/${permalink2Id(permalink)}`)
     },
-    [router],
+    [router, type],
   )
 
   return (
     <>
       <Head>
-        <title>{`New proposal - ${documentTitle}`}</title>
+        <title>{`New ${type} - ${documentTitle}`}</title>
       </Head>
       <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
         <LoadingBar loading={isLoading} />
