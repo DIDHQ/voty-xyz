@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 
 import useRouterQuery from '../../../hooks/use-router-query'
-import useWorkgroup from '../../../hooks/use-workgroup'
+import useGroup from '../../../hooks/use-group'
 import TextButton from '../../../components/basic/text-button'
 import { permalink2Id } from '../../../utils/permalink'
 import { formatDuration } from '../../../utils/time'
@@ -16,12 +16,12 @@ import { documentTitle } from '../../../utils/constants'
 
 export default function CreateProposalPage() {
   const router = useRouter()
-  const query = useRouterQuery<['entry', 'workgroup']>()
+  const query = useRouterQuery<['entry', 'group']>()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  const workgroup = useWorkgroup(community, query.workgroup)
+  const group = useGroup(community, query.group)
   const handleSuccess = useCallback(
     (permalink: string) => {
       router.push(`/proposal/${permalink2Id(permalink)}`)
@@ -38,14 +38,14 @@ export default function CreateProposalPage() {
         <LoadingBar loading={isLoading} />
         <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
           <TextButton
-            disabled={!query.entry || !query.workgroup}
-            href={`/${query.entry}/${query.workgroup}`}
+            disabled={!query.entry || !query.group}
+            href={`/${query.entry}/${query.group}`}
           >
             <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
           </TextButton>
           <ProposalForm
             community={community || undefined}
-            workgroup={workgroup}
+            group={group}
             onSuccess={handleSuccess}
             className="pt-6"
           />
@@ -63,22 +63,20 @@ export default function CreateProposalPage() {
                 title="Workgroup"
                 className="truncate whitespace-nowrap"
               >
-                {workgroup?.name || '...'}
+                {group?.name || '...'}
               </DetailItem>
             </DetailList>
             <DetailList title="Duration">
               <DetailItem title="Pending">
-                {workgroup
-                  ? formatDuration(workgroup.duration.announcement)
-                  : null}
+                {group ? formatDuration(group.duration.announcement) : null}
               </DetailItem>
               <DetailItem title="Voting">
-                {workgroup ? formatDuration(workgroup.duration.voting) : null}
+                {group ? formatDuration(group.duration.voting) : null}
               </DetailItem>
             </DetailList>
             <DetailList title="Terms and conditions">
               <Article small className="pt-2">
-                {workgroup?.extension.terms_and_conditions}
+                {group?.extension.terms_and_conditions}
               </Article>
             </DetailList>
           </div>

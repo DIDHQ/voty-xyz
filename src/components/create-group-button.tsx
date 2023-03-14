@@ -3,7 +3,7 @@ import { PlusIcon } from '@heroicons/react/20/solid'
 import useIsManager from '../hooks/use-is-manager'
 import TextButton from './basic/text-button'
 
-export default function CreateWorkgroupButton(props: {
+export default function CreateGroupButton(props: {
   entry?: string
   className?: string
 }) {

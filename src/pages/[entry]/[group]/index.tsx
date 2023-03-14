@@ -4,7 +4,7 @@ import { useInView } from 'react-intersection-observer'
 import useRouterQuery from '../../../hooks/use-router-query'
 import ProposalCard from '../../../components/proposal-card'
 import CommunityLayout from '../../../components/layouts/community'
-import WorkgroupLayout from '../../../components/layouts/workgroup'
+import GroupLayout from '../../../components/layouts/group'
 import { trpc } from '../../../utils/trpc'
 import LoadingBar from '../../../components/basic/loading-bar'
 import EmptyState from '../../../components/empty-state'
@@ -13,17 +13,17 @@ import Select from '../../../components/basic/select'
 import { Period } from '../../../utils/period'
 
 export default function GroupIndexPage() {
-  const query = useRouterQuery<['entry', 'workgroup']>()
+  const query = useRouterQuery<['entry', 'group']>()
   const [period, setPeriod] = useState<Period | 'All'>('All')
   const { data, fetchNextPage, hasNextPage, isLoading } =
     trpc.proposal.list.useInfiniteQuery(
       {
         entry: query.entry,
-        workgroup: query.workgroup,
+        group: query.group,
         period: period === 'All' ? undefined : period,
       },
       {
-        enabled: !!query.entry && !!query.workgroup,
+        enabled: !!query.entry && !!query.group,
         getNextPageParam: ({ next }) => next,
       },
     )
@@ -44,7 +44,7 @@ export default function GroupIndexPage() {
 
   return (
     <CommunityLayout>
-      <WorkgroupLayout>
+      <GroupLayout>
         <LoadingBar loading={isLoading} />
         <div className="my-5 flex justify-between">
           <Select
@@ -60,7 +60,7 @@ export default function GroupIndexPage() {
           />
           <CreateProposalButton
             entry={query.entry}
-            workgroup={query.workgroup}
+            group={query.group}
             community={community?.entry.community}
           />
         </div>
@@ -76,7 +76,7 @@ export default function GroupIndexPage() {
           </ul>
         )}
         <div ref={ref} />
-      </WorkgroupLayout>
+      </GroupLayout>
     </CommunityLayout>
   )
 }

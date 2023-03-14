@@ -4,7 +4,7 @@ import { getPeriod, Period } from '../period'
 import { calculateDecimal } from '../functions/number'
 import { Authorized } from '../schemas/authorship'
 import { Community } from '../schemas/community'
-import { Workgroup } from '../schemas/workgroup'
+import { Group } from '../schemas/group'
 import { Proved } from '../schemas/proof'
 import { Proposal } from '../schemas/proposal'
 import { Vote } from '../schemas/vote'
@@ -17,7 +17,7 @@ export default async function verifyVote(
   vote: Proved<Authorized<Vote>>,
 ): Promise<{
   proposal: Proved<Authorized<Proposal>>
-  workgroup: Workgroup
+  group: Group
   community: Proved<Authorized<Community>>
 }> {
   const [timestamp, data] = await Promise.all([
@@ -30,9 +30,9 @@ export default async function verifyVote(
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Proposal not found' })
   }
   const proposal = data.data
-  const { community, workgroup } = await verifyProposal(proposal)
+  const { community, group } = await verifyProposal(proposal)
 
-  if (getPeriod(new Date(), timestamp, workgroup.duration) !== Period.VOTING) {
+  if (getPeriod(new Date(), timestamp, group.duration) !== Period.VOTING) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Not in voting period',
@@ -40,7 +40,7 @@ export default async function verifyVote(
   }
 
   const votingPower = await calculateDecimal(
-    workgroup.permission.voting,
+    group.permission.voting,
     vote.authorship.author,
     proposal.snapshots,
   )
@@ -51,5 +51,5 @@ export default async function verifyVote(
     })
   }
 
-  return { proposal, workgroup, community }
+  return { proposal, group, community }
 }

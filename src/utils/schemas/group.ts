@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { booleanSetsSchema, decimalSetsSchema } from './sets'
 
-export const workgroupSchema = z.object({
+export const groupSchema = z.object({
   id: z.string().min(1, 'Required'),
   name: z.string().min(1, 'Required'),
   duration: z.object({
@@ -20,4 +20,4 @@ export const workgroupSchema = z.object({
   }),
 })
 
-export type Workgroup = z.infer<typeof workgroupSchema>
+export type Group = z.infer<typeof groupSchema>

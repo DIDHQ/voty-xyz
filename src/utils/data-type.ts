@@ -8,7 +8,7 @@ export function isCommunity(document: object): document is Community {
 }
 
 export function isProposal(document: object): document is Proposal {
-  return 'community' in document && 'workgroup' in document
+  return 'community' in document && 'group' in document
 }
 
 export function isVote(document: object): document is Vote {

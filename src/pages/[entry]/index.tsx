@@ -67,7 +67,7 @@ export default function CommunityIndexPage() {
           title="No events"
           className="mt-24"
           footer={
-            community && !community?.workgroups?.length && isManager ? (
+            community && !community?.groups?.length && isManager ? (
               <Link href={`/${query.entry}/create`}>
                 <Button primary icon={PlusIcon}>
                   Workgroup

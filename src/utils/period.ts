@@ -1,4 +1,4 @@
-import type { Workgroup } from './schemas/workgroup'
+import type { Group } from './schemas/group'
 
 export enum Period {
   CONFIRMING = 'Confirming',
@@ -10,7 +10,7 @@ export enum Period {
 export function getPeriod(
   now: Date,
   timestamp?: Date,
-  duration?: Workgroup['duration'],
+  duration?: Group['duration'],
 ): Period {
   if (!timestamp || !duration) {
     return Period.CONFIRMING

@@ -21,7 +21,7 @@ import PreviewMarkdown from '../components/preview-markdown'
 import useStatus from '../hooks/use-status'
 import { Community } from '../utils/schemas/community'
 import { Authorized } from '../utils/schemas/authorship'
-import { Workgroup } from '../utils/schemas/workgroup'
+import { Group } from '../utils/schemas/group'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import DidCombobox from './did-combobox'
@@ -37,7 +37,7 @@ import RadioGroup from './basic/radio-group'
 
 export default function ProposalForm(props: {
   community?: Authorized<Community> & Serialize<{ entry: Entry }>
-  workgroup?: Workgroup
+  group?: Group
   onSuccess(permalink: string): void
   className?: string
 }) {
@@ -68,19 +68,17 @@ export default function ProposalForm(props: {
     }
   }, [props.community, setValue])
   useEffect(() => {
-    if (props.workgroup) {
-      setValue('workgroup', props.workgroup.id)
+    if (props.group) {
+      setValue('group', props.group.id)
     }
-  }, [props.workgroup, setValue])
+  }, [props.group, setValue])
   const [did, setDid] = useState('')
   const { data: snapshots } = useQuery(
-    ['snapshots', did, props.workgroup?.permission.proposing],
+    ['snapshots', did, props.group?.permission.proposing],
     async () => {
       const requiredCoinTypes = uniq([
         ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
-        ...requiredCoinTypesOfBooleanSets(
-          props.workgroup!.permission.proposing!,
-        ),
+        ...requiredCoinTypesOfBooleanSets(props.group!.permission.proposing!),
       ])
       const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
         concurrency: 5,
@@ -91,20 +89,18 @@ export default function ProposalForm(props: {
       }, {} as { [coinType: string]: string })
     },
     {
-      enabled: !!props.workgroup?.permission.proposing,
+      enabled: !!props.group?.permission.proposing,
       refetchInterval: 30000,
     },
   )
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account)
   const { data: disables } = useQuery(
-    [dids, props.workgroup?.permission.proposing],
+    [dids, props.group?.permission.proposing],
     async () => {
       const requiredCoinTypes = uniq([
         ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
-        ...requiredCoinTypesOfBooleanSets(
-          props.workgroup!.permission.proposing!,
-        ),
+        ...requiredCoinTypesOfBooleanSets(props.group!.permission.proposing!),
       ])
       const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
         concurrency: 5,
@@ -112,7 +108,7 @@ export default function ProposalForm(props: {
       const booleans = await pMap(
         dids!,
         (did) =>
-          checkBoolean(props.workgroup!.permission.proposing, did, snapshots!),
+          checkBoolean(props.group!.permission.proposing, did, snapshots!),
         { concurrency: 5 },
       )
       return dids!.reduce((obj, did, index) => {
@@ -120,7 +116,7 @@ export default function ProposalForm(props: {
         return obj
       }, {} as { [key: string]: boolean })
     },
-    { enabled: !!dids && !!props.workgroup },
+    { enabled: !!dids && !!props.group },
   )
   const didOptions = useMemo(
     () =>
@@ -293,7 +289,7 @@ export default function ProposalForm(props: {
             {didOptions?.length === 0 ? (
               <TextButton
                 secondary
-                href={`/${props.community?.authorship.author}/${props.workgroup?.id}/rules`}
+                href={`/${props.community?.authorship.author}/${props.group?.id}/rules`}
               >
                 Why I&#39;m not eligible to propose
               </TextButton>

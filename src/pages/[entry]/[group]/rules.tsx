@@ -3,35 +3,35 @@ import { PencilIcon } from '@heroicons/react/20/solid'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import CommunityLayout from '../../../components/layouts/community'
-import WorkgroupLayout from '../../../components/layouts/workgroup'
+import GroupLayout from '../../../components/layouts/group'
 import { trpc } from '../../../utils/trpc'
 import LoadingBar from '../../../components/basic/loading-bar'
-import useWorkgroup from '../../../hooks/use-workgroup'
+import useGroup from '../../../hooks/use-group'
 import { formatDuration } from '../../../utils/time'
 import Article from '../../../components/basic/article'
 import { BooleanSets, DecimalSets } from '../../../utils/schemas/sets'
 import Button from '../../../components/basic/button'
 import useIsManager from '../../../hooks/use-is-manager'
 
-export default function WorkgroupRulesPage() {
-  const query = useRouterQuery<['entry', 'workgroup']>()
+export default function GroupRulesPage() {
+  const query = useRouterQuery<['entry', 'group']>()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  const workgroup = useWorkgroup(community, query.workgroup)
+  const group = useGroup(community, query.group)
   const isManager = useIsManager(query.entry)
 
   return (
     <>
       <LoadingBar loading={isLoading} />
       <CommunityLayout>
-        <WorkgroupLayout>
-          {workgroup ? (
+        <GroupLayout>
+          {group ? (
             <>
               {isManager ? (
                 <Link
-                  href={`/${query.entry}/${query.workgroup}/settings`}
+                  href={`/${query.entry}/${query.group}/settings`}
                   className="float-right mt-5"
                 >
                   <Button icon={PencilIcon} primary>
@@ -44,7 +44,7 @@ export default function WorkgroupRulesPage() {
                 <em>The following DIDs are eligible to propose</em>
                 <SetsDescription
                   entry={query.entry}
-                  value={workgroup.permission.proposing}
+                  value={group.permission.proposing}
                 />
                 <h3>Voting</h3>
                 <em>
@@ -54,28 +54,28 @@ export default function WorkgroupRulesPage() {
                 </em>
                 <SetsDescription
                   entry={query.entry}
-                  value={workgroup.permission.voting}
+                  value={group.permission.voting}
                 />
                 <h3>Schedule</h3>
                 <ul>
                   <li>
                     Voting starts&nbsp;
-                    {formatDuration(workgroup.duration.announcement)} after
+                    {formatDuration(group.duration.announcement)} after
                     transaction confirmation.
                   </li>
                   <li>
-                    Voting ends {formatDuration(workgroup.duration.voting)}
+                    Voting ends {formatDuration(group.duration.voting)}
                     &nbsp;after starting.
                   </li>
                 </ul>
                 <h3>Terms and conditions</h3>
               </article>
               <Article className="mt-3">
-                {workgroup.extension.terms_and_conditions}
+                {group.extension.terms_and_conditions}
               </Article>
             </>
           ) : null}
-        </WorkgroupLayout>
+        </GroupLayout>
       </CommunityLayout>
     </>
   )

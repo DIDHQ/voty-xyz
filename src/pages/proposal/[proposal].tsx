@@ -5,7 +5,7 @@ import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 
-import useWorkgroup from '../../hooks/use-workgroup'
+import useGroup from '../../hooks/use-group'
 import { stringifyChoice } from '../../utils/voting'
 import { DetailItem, DetailList } from '../../components/basic/detail'
 import { permalink2Explorer } from '../../utils/permalink'
@@ -50,7 +50,7 @@ export default function ProposalPage() {
       { permalink: proposal?.community },
       { enabled: !!proposal?.community, refetchOnWindowFocus: false },
     )
-  const workgroup = useWorkgroup(community, proposal?.workgroup)
+  const group = useGroup(community, proposal?.group)
   const {
     data,
     fetchNextPage,
@@ -91,7 +91,7 @@ export default function ProposalPage() {
               title="Workgroup"
               className="truncate whitespace-nowrap"
             >
-              {workgroup?.name || '...'}
+              {group?.name || '...'}
             </DetailItem>
             <DetailItem title="Proposer" className="truncate whitespace-nowrap">
               {proposal?.authorship.author || '...'}
@@ -106,7 +106,7 @@ export default function ProposalPage() {
           </DetailList>
           <ProposalSchedule
             proposal={query.proposal}
-            duration={workgroup?.duration}
+            duration={group?.duration}
           />
           {proposal?.snapshots ? (
             <DetailList title="Snapshots">
@@ -130,23 +130,23 @@ export default function ProposalPage() {
           ) : null}
           <DetailList title="Terms and conditions">
             <Article small className="pt-2">
-              {workgroup?.extension.terms_and_conditions}
+              {group?.extension.terms_and_conditions}
             </Article>
           </DetailList>
         </div>
       </div>
     ),
-    [community?.name, proposal, query.proposal, workgroup],
+    [community?.name, proposal, query.proposal, group],
   )
   const title = useMemo(
     () =>
       compact([
         proposal?.title,
-        workgroup?.name,
+        group?.name,
         community?.name,
         documentTitle,
       ]).join(' - '),
-    [community?.name, proposal?.title, workgroup?.name],
+    [community?.name, proposal?.title, group?.name],
   )
 
   return (
@@ -159,8 +159,8 @@ export default function ProposalPage() {
         <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
           <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
             <TextButton
-              disabled={!community || !workgroup}
-              href={`/${community?.authorship.author}/${workgroup?.id}`}
+              disabled={!community || !group}
+              href={`/${community?.authorship.author}/${group?.id}`}
             >
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>
@@ -176,7 +176,7 @@ export default function ProposalPage() {
             <VoteForm
               entry={community?.authorship.author}
               proposal={proposal || undefined}
-              workgroup={workgroup}
+              group={group}
               onSuccess={refetchList}
             />
             {proposal?.votes ? (

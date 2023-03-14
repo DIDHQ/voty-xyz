@@ -41,10 +41,10 @@ export const proposalRouter = router({
             DataType.COMMUNITY,
             proposal.community,
           )
-          const workgroup = community?.data.workgroups?.find(
+          const group = community?.data.groups?.find(
             (w) => w.id === proposal.group,
           )
-          if (workgroup) {
+          if (group) {
             const timestamp = await getSnapshotTimestamp(
               commonCoinTypes.AR,
               await getPermalinkSnapshot(proposal.permalink),
@@ -54,11 +54,11 @@ export const proposalRouter = router({
               data: {
                 ts: timestamp,
                 ts_pending: dayjs(timestamp)
-                  .add(workgroup.duration.announcement * 1000)
+                  .add(group.duration.announcement * 1000)
                   .toDate(),
                 ts_voting: dayjs(timestamp)
-                  .add(workgroup.duration.announcement * 1000)
-                  .add(workgroup.duration.voting * 1000)
+                  .add(group.duration.announcement * 1000)
+                  .add(group.duration.voting * 1000)
                   .toDate(),
               },
             })
@@ -80,7 +80,7 @@ export const proposalRouter = router({
     .input(
       z.object({
         entry: z.string().optional(),
-        workgroup: z.string().optional(),
+        group: z.string().optional(),
         period: z
           .enum([
             Period.CONFIRMING,
@@ -123,8 +123,8 @@ export const proposalRouter = router({
           ? { ts_voting: { lte: now } }
           : {}
       const proposals = await database.proposal.findMany({
-        where: input.workgroup
-          ? { entry: input.entry, group: input.workgroup, ...filter }
+        where: input.group
+          ? { entry: input.entry, group: input.group, ...filter }
           : { entry: input.entry, ...filter },
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
         take: 20,
@@ -161,7 +161,7 @@ export const proposalRouter = router({
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
-      const { community, workgroup } = await verifyProposal(input)
+      const { community, group } = await verifyProposal(input)
 
       const entry = await database.entry.findFirst({
         where: { did: community.authorship.author },
@@ -180,16 +180,16 @@ export const proposalRouter = router({
             author: input.authorship.author,
             entry: community.authorship.author,
             community: input.community,
-            group: input.workgroup,
+            group: input.group,
             data: input,
             votes: 0,
             ts,
             ts_pending: dayjs(ts)
-              .add(workgroup.duration.announcement * 1000)
+              .add(group.duration.announcement * 1000)
               .toDate(),
             ts_voting: dayjs(ts)
-              .add(workgroup.duration.announcement * 1000)
-              .add(workgroup.duration.voting * 1000)
+              .add(group.duration.announcement * 1000)
+              .add(group.duration.voting * 1000)
               .toDate(),
           },
         }),

@@ -96,7 +96,7 @@ export const voteRouter = router({
             ts,
             author: input.authorship.author,
             community: proposal.community,
-            group: proposal.workgroup,
+            group: proposal.group,
             proposal: input.proposal,
             data: input,
           },

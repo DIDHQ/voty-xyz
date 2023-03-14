@@ -23,11 +23,11 @@ import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
 import useIsManager from '../hooks/use-is-manager'
 
-export default function WorkgroupForm(props: {
+export default function GroupForm(props: {
   author: string
   initialValue?: Community
-  workgroup?: string
-  isNewWorkgroup?: boolean
+  group?: string
+  isNewGroup?: boolean
   onSuccess: (isArchive: boolean) => void
   className?: string
 }) {
@@ -43,22 +43,22 @@ export default function WorkgroupForm(props: {
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
-  const workgroupIndex = useMemo(() => {
-    const index = props.initialValue?.workgroups?.findIndex(
-      ({ id }) => id === props.workgroup,
+  const groupIndex = useMemo(() => {
+    const index = props.initialValue?.groups?.findIndex(
+      ({ id }) => id === props.group,
     )
     if (index === undefined || index === -1) {
-      return props.initialValue?.workgroups?.length || 0
+      return props.initialValue?.groups?.length || 0
     }
     return index
-  }, [props.initialValue?.workgroups, props.workgroup])
+  }, [props.initialValue?.groups, props.group])
   useEffect(() => {
     reset(props.initialValue)
   }, [props.initialValue, reset])
   const signDocument = useSignDocument(
     props.author,
     `You are ${
-      props.isNewWorkgroup ? 'creating' : 'updating'
+      props.isNewGroup ? 'creating' : 'updating'
     } workgroup on Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.community.create.useMutation()
@@ -75,9 +75,7 @@ export default function WorkgroupForm(props: {
     async (community) => {
       const signed = await signDocument({
         ...community,
-        workgroups: community.workgroups?.filter(
-          ({ id }) => id !== props.workgroup,
-        ),
+        groups: community.groups?.filter(({ id }) => id !== props.group),
       })
       if (signed) {
         await mutateAsync(signed)
@@ -97,7 +95,7 @@ export default function WorkgroupForm(props: {
       </Notification>
       <Form className={props.className}>
         <FormSection
-          title={`${props.isNewWorkgroup ? 'New' : 'Edit'} workgroup of ${
+          title={`${props.isNewGroup ? 'New' : 'Edit'} workgroup of ${
             props.author
           }`}
         >
@@ -105,11 +103,11 @@ export default function WorkgroupForm(props: {
             <GridItem6>
               <FormItem
                 label="Name"
-                error={errors.workgroups?.[workgroupIndex]?.name?.message}
+                error={errors.groups?.[groupIndex]?.name?.message}
               >
                 <TextInput
-                  {...register(`workgroups.${workgroupIndex}.name`)}
-                  error={!!errors.workgroups?.[workgroupIndex]?.name?.message}
+                  {...register(`groups.${groupIndex}.name`)}
+                  error={!!errors.groups?.[groupIndex]?.name?.message}
                   disabled={!isManager}
                 />
               </FormItem>
@@ -118,17 +116,14 @@ export default function WorkgroupForm(props: {
               <FormItem
                 label="Introduction"
                 error={
-                  errors.workgroups?.[workgroupIndex]?.extension?.introduction
-                    ?.message
+                  errors.groups?.[groupIndex]?.extension?.introduction?.message
                 }
               >
                 <TextInput
-                  {...register(
-                    `workgroups.${workgroupIndex}.extension.introduction`,
-                  )}
+                  {...register(`groups.${groupIndex}.extension.introduction`)}
                   error={
-                    !!errors.workgroups?.[workgroupIndex]?.extension
-                      ?.introduction?.message
+                    !!errors.groups?.[groupIndex]?.extension?.introduction
+                      ?.message
                   }
                   disabled={!isManager}
                 />
@@ -144,15 +139,15 @@ export default function WorkgroupForm(props: {
             <GridItem6>
               <FormItem
                 error={
-                  errors.workgroups?.[workgroupIndex]?.permission?.proposing
-                    ?.operands?.message
+                  errors.groups?.[groupIndex]?.permission?.proposing?.operands
+                    ?.message
                 }
               >
                 <FormProvider {...methods}>
                   <BooleanSetsBlock
                     name="proposing"
                     entry={props.author}
-                    workgroupIndex={workgroupIndex}
+                    groupIndex={groupIndex}
                     disabled={!isManager}
                   />
                 </FormProvider>
@@ -168,15 +163,15 @@ export default function WorkgroupForm(props: {
             <GridItem6>
               <FormItem
                 error={
-                  errors?.workgroups?.[workgroupIndex]?.permission?.voting
-                    ?.operands?.message
+                  errors?.groups?.[groupIndex]?.permission?.voting?.operands
+                    ?.message
                 }
               >
                 <FormProvider {...methods}>
                   <DecimalSetsBlock
                     name="voting"
                     entry={props.author}
-                    workgroupIndex={workgroupIndex}
+                    groupIndex={groupIndex}
                     disabled={!isManager}
                   />
                 </FormProvider>
@@ -190,21 +185,19 @@ export default function WorkgroupForm(props: {
               <FormItem
                 label="Duration of pending before voting"
                 error={
-                  errors?.workgroups?.[workgroupIndex]?.duration?.announcement
-                    ?.message
+                  errors?.groups?.[groupIndex]?.duration?.announcement?.message
                 }
               >
                 <Controller
                   control={control}
-                  name={`workgroups.${workgroupIndex}.duration.announcement`}
+                  name={`groups.${groupIndex}.duration.announcement`}
                   render={({ field: { value, onChange } }) => (
                     <DurationInput
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
                       error={
-                        !!errors?.workgroups?.[workgroupIndex]?.duration
-                          ?.announcement
+                        !!errors?.groups?.[groupIndex]?.duration?.announcement
                       }
                     />
                   )}
@@ -214,22 +207,17 @@ export default function WorkgroupForm(props: {
             <GridItem3>
               <FormItem
                 label="Duration of voting"
-                error={
-                  errors?.workgroups?.[workgroupIndex]?.duration?.voting
-                    ?.message
-                }
+                error={errors?.groups?.[groupIndex]?.duration?.voting?.message}
               >
                 <Controller
                   control={control}
-                  name={`workgroups.${workgroupIndex}.duration.voting`}
+                  name={`groups.${groupIndex}.duration.voting`}
                   render={({ field: { value, onChange } }) => (
                     <DurationInput
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={
-                        !!errors?.workgroups?.[workgroupIndex]?.duration?.voting
-                      }
+                      error={!!errors?.groups?.[groupIndex]?.duration?.voting}
                     />
                   )}
                 />
@@ -247,22 +235,22 @@ export default function WorkgroupForm(props: {
                 description={
                   <PreviewMarkdown>
                     {watch(
-                      `workgroups.${workgroupIndex}.extension.terms_and_conditions`,
+                      `groups.${groupIndex}.extension.terms_and_conditions`,
                     )}
                   </PreviewMarkdown>
                 }
                 error={
-                  errors?.workgroups?.[workgroupIndex]?.extension
-                    ?.terms_and_conditions?.message
+                  errors?.groups?.[groupIndex]?.extension?.terms_and_conditions
+                    ?.message
                 }
               >
                 <Textarea
                   disabled={!isManager}
                   {...register(
-                    `workgroups.${workgroupIndex}.extension.terms_and_conditions`,
+                    `groups.${groupIndex}.extension.terms_and_conditions`,
                   )}
                   error={
-                    !!errors?.workgroups?.[workgroupIndex]?.extension
+                    !!errors?.groups?.[groupIndex]?.extension
                       ?.terms_and_conditions?.message
                   }
                 />
@@ -274,16 +262,16 @@ export default function WorkgroupForm(props: {
           <FormFooter>
             <Button
               primary
-              icon={props.isNewWorkgroup ? PlusIcon : ArrowPathIcon}
+              icon={props.isNewGroup ? PlusIcon : ArrowPathIcon}
               loading={handleSubmit.isLoading}
               onClick={onSubmit(
                 (value) => handleSubmit.mutate(value),
                 console.error,
               )}
             >
-              {props.isNewWorkgroup ? 'Create' : 'Update'}
+              {props.isNewGroup ? 'Create' : 'Update'}
             </Button>
-            {props.isNewWorkgroup ? null : (
+            {props.isNewGroup ? null : (
               <Button
                 icon={ArchiveBoxIcon}
                 loading={handleArchive.isLoading}

@@ -2,11 +2,11 @@ import { useMemo } from 'react'
 
 import useStatus from '../hooks/use-status'
 import { getPeriod, Period } from '../utils/period'
-import type { Workgroup } from '../utils/schemas/workgroup'
+import type { Group } from '../utils/schemas/group'
 
 export default function ProposalPeriodText(props: {
   proposal?: string
-  duration?: Workgroup['duration']
+  duration?: Group['duration']
 }) {
   const { data: status, isLoading } = useStatus(props.proposal)
   const period = useMemo(

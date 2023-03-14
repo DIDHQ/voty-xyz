@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
-import useWorkgroup from '../hooks/use-workgroup'
+import useGroup from '../hooks/use-group'
 import { Period } from '../utils/period'
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/authorship'
@@ -23,7 +23,7 @@ export default function ProposalCard(props: {
     { permalink: props.proposal.community },
     { refetchOnWindowFocus: false },
   )
-  const workgroup = useWorkgroup(community, props.proposal.workgroup)
+  const group = useGroup(community, props.proposal.group)
   const now = useMemo(() => Date.now(), [])
   const period = useMemo(
     () =>
@@ -61,7 +61,7 @@ export default function ProposalCard(props: {
           </p>
         </div>
         <div className="w-0 flex-1 px-4 py-2">
-          {workgroup ? (
+          {group ? (
             period === Period.CONFIRMING ? (
               <>
                 <p className="truncate">Transaction confirming</p>
