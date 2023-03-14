@@ -19,7 +19,7 @@ export default function GroupRulesPage() {
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  const group = useGroup(community, query.group, 'workgroup')
+  const group = useGroup(community, query.group)
   const isManager = useIsManager(query.entry)
 
   return (
@@ -39,40 +39,98 @@ export default function GroupRulesPage() {
                   </Button>
                 </Link>
               ) : null}
-              <article className="prose max-w-none pt-6 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
-                <h3>Proposing</h3>
-                <em>The following DIDs are eligible to propose</em>
-                <SetsDescription
-                  entry={query.entry}
-                  value={group.permission.proposing}
-                />
-                <h3>Voting</h3>
-                <em>
-                  The following DIDs are eligible to vote
-                  <br />
-                  The voting power is calculated based on the maximum value
-                </em>
-                <SetsDescription
-                  entry={query.entry}
-                  value={group.permission.voting}
-                />
-                <h3>Schedule</h3>
-                <ul>
-                  <li>
-                    Voting starts&nbsp;
-                    {formatDuration(group.duration.pending)} after transaction
-                    confirmation.
-                  </li>
-                  <li>
-                    Voting ends {formatDuration(group.duration.voting)}
-                    &nbsp;after starting.
-                  </li>
-                </ul>
-                <h3>Terms and conditions</h3>
-              </article>
-              <Article className="mt-3">
-                {group.extension.terms_and_conditions}
-              </Article>
+              {group.type === 'grant' ? (
+                <>
+                  <article className="prose max-w-none pt-6 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
+                    <h3>Investing</h3>
+                    <em>The following DIDs are eligible to creating round</em>
+                    <SetsDescription
+                      entry={query.entry}
+                      value={group.permission.proposing}
+                    />
+                    <h3>Proposing</h3>
+                    <em>The following DIDs are eligible to propose</em>
+                    <SetsDescription
+                      entry={query.entry}
+                      value={group.permission.adding_option}
+                    />
+                    <h3>Voting</h3>
+                    <em>
+                      The following DIDs are eligible to vote
+                      <br />
+                      The voting power is calculated based on the maximum value
+                    </em>
+                    <SetsDescription
+                      entry={query.entry}
+                      value={group.permission.voting}
+                    />
+                    <h3>Schedule</h3>
+                    <ul>
+                      <li>
+                        Proposing starts&nbsp;
+                        {formatDuration(group.duration.pending)} after
+                        transaction confirmation.
+                      </li>
+                      <li>
+                        Voting starts&nbsp;
+                        {formatDuration(group.duration.adding_option)} after
+                        proposing starting.
+                      </li>
+                      <li>
+                        Voting ends {formatDuration(group.duration.voting)}
+                        &nbsp;after starting.
+                      </li>
+                    </ul>
+                    <h3>Funding</h3>
+                    <ul>
+                      {group.extension.funding.map((funding, index) => (
+                        <li key={index}>
+                          {funding[0]}&nbsp;
+                          <span className="text-gray-400">X</span>&nbsp;
+                          {funding[1]}
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                </>
+              ) : (
+                <>
+                  <article className="prose max-w-none pt-6 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
+                    <h3>Proposing</h3>
+                    <em>The following DIDs are eligible to propose</em>
+                    <SetsDescription
+                      entry={query.entry}
+                      value={group.permission.proposing}
+                    />
+                    <h3>Voting</h3>
+                    <em>
+                      The following DIDs are eligible to vote
+                      <br />
+                      The voting power is calculated based on the maximum value
+                    </em>
+                    <SetsDescription
+                      entry={query.entry}
+                      value={group.permission.voting}
+                    />
+                    <h3>Schedule</h3>
+                    <ul>
+                      <li>
+                        Voting starts&nbsp;
+                        {formatDuration(group.duration.pending)} after
+                        transaction confirmation.
+                      </li>
+                      <li>
+                        Voting ends {formatDuration(group.duration.voting)}
+                        &nbsp;after starting.
+                      </li>
+                    </ul>
+                    <h3>Terms and conditions</h3>
+                  </article>
+                  <Article className="mt-3">
+                    {group.extension.terms_and_conditions}
+                  </Article>
+                </>
+              )}
             </>
           ) : null}
         </GroupLayout>

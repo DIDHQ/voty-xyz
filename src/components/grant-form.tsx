@@ -270,7 +270,7 @@ export default function GrantForm(props: {
                     placeholder="name"
                     className="w-0 flex-1"
                   />
-                  <span className="text-gray-500">X</span>
+                  <span className="text-gray-400">X</span>
                   <Controller
                     control={control}
                     name={`groups.${groupIndex}.extension.funding.0.1`}
