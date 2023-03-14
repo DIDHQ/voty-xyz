@@ -1,6 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo } from 'react'
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import {
+  Controller,
+  FieldError,
+  FieldErrorsImpl,
+  FormProvider,
+  Merge,
+  useForm,
+} from 'react-hook-form'
 import {
   ArchiveBoxIcon,
   ArrowPathIcon,
@@ -22,8 +29,9 @@ import useSignDocument from '../hooks/use-sign-document'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
 import useIsManager from '../hooks/use-is-manager'
+import { Workgroup } from '../utils/schemas/group'
 
-export default function GroupForm(props: {
+export default function WorkgroupForm(props: {
   author: string
   initialValue?: Community
   group?: string
@@ -84,6 +92,10 @@ export default function GroupForm(props: {
     },
   )
   const isManager = useIsManager(props.author)
+  const groupErrors = errors.groups?.[groupIndex] as Merge<
+    FieldError,
+    FieldErrorsImpl<NonNullable<Workgroup>>
+  >
 
   return (
     <>
@@ -101,13 +113,10 @@ export default function GroupForm(props: {
         >
           <Grid6>
             <GridItem6>
-              <FormItem
-                label="Name"
-                error={errors.groups?.[groupIndex]?.name?.message}
-              >
+              <FormItem label="Name" error={groupErrors?.name?.message}>
                 <TextInput
                   {...register(`groups.${groupIndex}.name`)}
-                  error={!!errors.groups?.[groupIndex]?.name?.message}
+                  error={!!groupErrors?.name?.message}
                   disabled={!isManager}
                 />
               </FormItem>
@@ -115,16 +124,11 @@ export default function GroupForm(props: {
             <GridItem6>
               <FormItem
                 label="Introduction"
-                error={
-                  errors.groups?.[groupIndex]?.extension?.introduction?.message
-                }
+                error={groupErrors?.extension?.introduction?.message}
               >
                 <TextInput
                   {...register(`groups.${groupIndex}.extension.introduction`)}
-                  error={
-                    !!errors.groups?.[groupIndex]?.extension?.introduction
-                      ?.message
-                  }
+                  error={!!groupErrors?.extension?.introduction?.message}
                   disabled={!isManager}
                 />
               </FormItem>
@@ -138,10 +142,7 @@ export default function GroupForm(props: {
           <Grid6>
             <GridItem6>
               <FormItem
-                error={
-                  errors.groups?.[groupIndex]?.permission?.proposing?.operands
-                    ?.message
-                }
+                error={groupErrors?.permission?.proposing?.operands?.message}
               >
                 <FormProvider {...methods}>
                   <BooleanSetsBlock
@@ -162,10 +163,7 @@ export default function GroupForm(props: {
           <Grid6>
             <GridItem6>
               <FormItem
-                error={
-                  errors?.groups?.[groupIndex]?.permission?.voting?.operands
-                    ?.message
-                }
+                error={groupErrors?.permission?.voting?.operands?.message}
               >
                 <FormProvider {...methods}>
                   <DecimalSetsBlock
@@ -184,7 +182,7 @@ export default function GroupForm(props: {
             <GridItem3>
               <FormItem
                 label="Duration of pending before voting"
-                error={errors?.groups?.[groupIndex]?.duration?.pending?.message}
+                error={groupErrors?.duration?.pending?.message}
               >
                 <Controller
                   control={control}
@@ -194,7 +192,7 @@ export default function GroupForm(props: {
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={!!errors?.groups?.[groupIndex]?.duration?.pending}
+                      error={!!groupErrors?.duration?.pending}
                     />
                   )}
                 />
@@ -203,7 +201,7 @@ export default function GroupForm(props: {
             <GridItem3>
               <FormItem
                 label="Duration of voting"
-                error={errors?.groups?.[groupIndex]?.duration?.voting?.message}
+                error={groupErrors?.duration?.voting?.message}
               >
                 <Controller
                   control={control}
@@ -213,7 +211,7 @@ export default function GroupForm(props: {
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={!!errors?.groups?.[groupIndex]?.duration?.voting}
+                      error={!!groupErrors?.duration?.voting}
                     />
                   )}
                 />
@@ -235,10 +233,7 @@ export default function GroupForm(props: {
                     )}
                   </PreviewMarkdown>
                 }
-                error={
-                  errors?.groups?.[groupIndex]?.extension?.terms_and_conditions
-                    ?.message
-                }
+                error={groupErrors?.extension?.terms_and_conditions?.message}
               >
                 <Textarea
                   disabled={!isManager}
@@ -246,8 +241,7 @@ export default function GroupForm(props: {
                     `groups.${groupIndex}.extension.terms_and_conditions`,
                   )}
                   error={
-                    !!errors?.groups?.[groupIndex]?.extension
-                      ?.terms_and_conditions?.message
+                    !!groupErrors?.extension?.terms_and_conditions?.message
                   }
                 />
               </FormItem>

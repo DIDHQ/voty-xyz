@@ -68,11 +68,19 @@ export default function CommunityIndexPage() {
           className="mt-24"
           footer={
             community && !community?.groups?.length && isManager ? (
-              <Link href={`/${query.entry}/create`}>
-                <Button primary icon={PlusIcon}>
-                  Workgroup
-                </Button>
-              </Link>
+              <div className="flex flex-col items-center space-y-2">
+                <Link href={`/${query.entry}/create?type=workgroup`}>
+                  <Button primary icon={PlusIcon}>
+                    Workgroup
+                  </Button>
+                </Link>
+                <span className="text-gray-500">or</span>
+                <Link href={`/${query.entry}/create?type=grant`}>
+                  <Button primary icon={PlusIcon}>
+                    Grant
+                  </Button>
+                </Link>
+              </div>
             ) : undefined
           }
         />

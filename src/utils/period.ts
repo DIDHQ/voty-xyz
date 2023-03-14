@@ -22,14 +22,18 @@ export function getPeriod(
   if (
     now.getTime() <
     timestamp.getTime() +
-      (duration.pending + (duration.adding_option || 0)) * 1000
+      (duration.pending +
+        ('adding_option' in duration ? duration.adding_option : 0)) *
+        1000
   ) {
     return Period.PROPOSING
   }
   if (
     now.getTime() <
     timestamp.getTime() +
-      (duration.pending + (duration.adding_option || 0) + duration.voting) *
+      (duration.pending +
+        ('adding_option' in duration ? duration.adding_option : 0) +
+        duration.voting) *
         1000
   ) {
     return Period.VOTING

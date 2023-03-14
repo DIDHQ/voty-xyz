@@ -21,7 +21,7 @@ export default function CreateProposalPage() {
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  const group = useGroup(community, query.group)
+  const group = useGroup(community, query.group, 'workgroup')
   const handleSuccess = useCallback(
     (permalink: string) => {
       router.push(`/proposal/${permalink2Id(permalink)}`)

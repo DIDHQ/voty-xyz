@@ -63,11 +63,19 @@ export const proposalRouter = router({
                   .toDate(),
                 ts_adding_option: dayjs(timestamp)
                   .add(group.duration.pending * 1000)
-                  .add((group.duration.adding_option || 0) * 1000)
+                  .add(
+                    ('adding_option' in group.duration
+                      ? group.duration.adding_option
+                      : 0) * 1000,
+                  )
                   .toDate(),
                 ts_voting: dayjs(timestamp)
                   .add(group.duration.pending * 1000)
-                  .add((group.duration.adding_option || 0) * 1000)
+                  .add(
+                    ('adding_option' in group.duration
+                      ? group.duration.adding_option
+                      : 0) * 1000,
+                  )
                   .add(group.duration.voting * 1000)
                   .toDate(),
               },

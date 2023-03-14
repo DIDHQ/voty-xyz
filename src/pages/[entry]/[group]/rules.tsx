@@ -19,7 +19,7 @@ export default function GroupRulesPage() {
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  const group = useGroup(community, query.group)
+  const group = useGroup(community, query.group, 'workgroup')
   const isManager = useIsManager(query.entry)
 
   return (

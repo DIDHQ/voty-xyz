@@ -50,7 +50,7 @@ export default function ProposalPage() {
       { permalink: proposal?.community },
       { enabled: !!proposal?.community, refetchOnWindowFocus: false },
     )
-  const group = useGroup(community, proposal?.group)
+  const group = useGroup(community, proposal?.group, 'workgroup')
   const {
     data,
     fetchNextPage,

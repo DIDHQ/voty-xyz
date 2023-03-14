@@ -156,17 +156,45 @@ export default function CommunityNav(props: { className?: string }) {
           <div className="mt-6 w-full">
             <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
               Workgroups
-              <CreateGroupButton entry={query.entry} className="float-right" />
+              <CreateGroupButton
+                type="workgroup"
+                entry={query.entry}
+                className="float-right"
+              />
             </h3>
             <div>
-              {community?.groups?.map((group) => (
-                <GroupListItem
-                  key={group.id}
-                  entry={query.entry}
-                  group={group}
-                  current={query.group === group.id}
-                />
-              ))}
+              {community?.groups
+                ?.filter(({ type }) => type === 'workgroup')
+                ?.map((group) => (
+                  <GroupListItem
+                    key={group.id}
+                    entry={query.entry}
+                    group={group}
+                    current={query.group === group.id}
+                  />
+                ))}
+            </div>
+          </div>
+          <div className="mt-6 w-full">
+            <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
+              Grants
+              <CreateGroupButton
+                type="grant"
+                entry={query.entry}
+                className="float-right"
+              />
+            </h3>
+            <div>
+              {community?.groups
+                ?.filter(({ type }) => type === 'grant')
+                ?.map((group) => (
+                  <GroupListItem
+                    key={group.id}
+                    entry={query.entry}
+                    group={group}
+                    current={query.group === group.id}
+                  />
+                ))}
             </div>
           </div>
           {externals.length ? (
