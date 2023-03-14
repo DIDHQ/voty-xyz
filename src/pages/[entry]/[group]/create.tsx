@@ -21,7 +21,7 @@ export default function CreateProposalPage() {
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  const group = useGroup(community, query.group, 'workgroup')
+  const group = useGroup(community, query.group)
   const handleSuccess = useCallback(
     (permalink: string) => {
       router.push(`/proposal/${permalink2Id(permalink)}`)
@@ -74,11 +74,29 @@ export default function CreateProposalPage() {
                 {group ? formatDuration(group.duration.voting) : null}
               </DetailItem>
             </DetailList>
-            <DetailList title="Terms and conditions">
-              <Article small className="pt-2">
-                {group?.extension.terms_and_conditions}
-              </Article>
-            </DetailList>
+            {group ? (
+              'terms_and_conditions' in group.extension ? (
+                <DetailList title="Terms and conditions">
+                  <Article small className="pt-2">
+                    {group.extension.terms_and_conditions}
+                  </Article>
+                </DetailList>
+              ) : (
+                <DetailList title="Funding">
+                  <article className="prose-sm max-w-none pt-2 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
+                    <ul>
+                      {group.extension.funding.map((funding, index) => (
+                        <li key={index}>
+                          {funding[0]}&nbsp;
+                          <span className="text-gray-400">X</span>&nbsp;
+                          {funding[1]}
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                </DetailList>
+              )
+            ) : null}
           </div>
         </div>
       </div>
