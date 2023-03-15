@@ -30,6 +30,7 @@ const Tooltip = dynamic(
 
 export default function VoteForm(props: {
   entry?: string
+  defaultChoice?: string
   proposal?: Proposal & { permalink: string }
   group?: Group
   onSuccess: () => void
@@ -107,6 +108,11 @@ export default function VoteForm(props: {
     setValue('choice', '')
     onSuccess()
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
+  useEffect(() => {
+    if (props.defaultChoice) {
+      setValue('choice', props.defaultChoice)
+    }
+  }, [props.defaultChoice, setValue])
   const { data: status } = useStatus(props.proposal?.permalink)
   const period = useMemo(
     () => getPeriod(new Date(), status?.timestamp, props.group?.duration),
@@ -229,7 +235,9 @@ export default function VoteForm(props: {
                 </Button>
               </div>
               <Tooltip id={id} className="rounded">
-                Waiting for transaction (in about 5 minutes)
+                {period === Period.CONFIRMING
+                  ? 'Waiting for transaction (in about 5 minutes)'
+                  : 'Waiting for voting'}
               </Tooltip>
             </>
           ) : (

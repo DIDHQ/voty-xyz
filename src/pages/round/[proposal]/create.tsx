@@ -42,7 +42,15 @@ export default function CreateOptionPage() {
       </Head>
       <LoadingBar loading={isLoading || isCommunityLoading} />
       <div className="w-full">
-        <TextButton href={`/round/${query.proposal}`} className="mt-6 sm:mt-8">
+        <TextButton
+          disabled={!query.proposal}
+          href={
+            query.proposal
+              ? `/round/${permalink2Id(query.proposal)}`
+              : undefined
+          }
+          className="mt-6 sm:mt-8"
+        >
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
         <OptionForm
