@@ -1,15 +1,17 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useId, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
 import { HandRaisedIcon } from '@heroicons/react/20/solid'
+import pMap from 'p-map'
+import { uniq } from 'lodash-es'
 
 import { trpc } from '../utils/trpc'
 import useStatus from '../hooks/use-status'
 import { getPeriod, Period } from '../utils/period'
 import { Proposal } from '../utils/schemas/proposal'
-import { Group } from '../utils/schemas/group'
+import { Grant } from '../utils/schemas/group'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import DidCombobox from './did-combobox'
@@ -23,6 +25,12 @@ import { Grid6, GridItem6 } from './basic/grid'
 import TextInput from './basic/text-input'
 import PreviewMarkdown from './preview-markdown'
 import Textarea from './basic/textarea'
+import { requiredCoinTypeOfDidChecker } from '../utils/did'
+import {
+  checkBoolean,
+  requiredCoinTypesOfBooleanSets,
+} from '../utils/functions/boolean'
+import { getCurrentSnapshot } from '../utils/snapshot'
 
 const Tooltip = dynamic(
   () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
@@ -32,7 +40,7 @@ const Tooltip = dynamic(
 export default function OptionForm(props: {
   entry?: string
   proposal?: Proposal & { permalink: string }
-  group?: Group
+  group?: Grant
   onSuccess: (permalink: string) => void
   className?: string
 }) {
@@ -61,13 +69,39 @@ export default function OptionForm(props: {
     [props.group?.duration, status?.timestamp],
   )
   const id = useId()
+  const { data: disables } = useQuery(
+    [dids, props.group?.permission.adding_option],
+    async () => {
+      const requiredCoinTypes = uniq([
+        ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
+        ...requiredCoinTypesOfBooleanSets(
+          props.group!.permission.adding_option!,
+        ),
+      ])
+      const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
+        concurrency: 5,
+      })
+      const booleans = await pMap(
+        dids!,
+        (did) =>
+          checkBoolean(props.group!.permission.adding_option, did, snapshots!),
+        { concurrency: 5 },
+      )
+      return dids!.reduce((obj, did, index) => {
+        obj[did] = !booleans[index]
+        return obj
+      }, {} as { [key: string]: boolean })
+    },
+    { enabled: !!dids && !!props.group },
+  )
   const didOptions = useMemo(
     () =>
-      dids?.map((did) => ({
-        did,
-        disabled: false,
-      })),
-    [dids],
+      disables
+        ? dids
+            ?.map((did) => ({ did, disabled: disables[did] }))
+            .filter(({ disabled }) => !disabled)
+        : undefined,
+    [dids, disables],
   )
   const { mutateAsync } = trpc.option.create.useMutation()
   const signDocument = useSignDocument(
