@@ -141,11 +141,7 @@ function SetsDescription(props: {
     <ul>
       {props.value.operands.map((operand, index) => (
         <li key={index}>
-          {operand.name ? (
-            <>
-              <b>{operand.name}</b>:
-            </>
-          ) : null}
+          <b>{operand.name || `Filter ${index + 1}`}</b>:
           {operand.arguments[1].length
             ? null
             : operand.arguments[0] === 'bit'
