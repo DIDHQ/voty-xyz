@@ -23,6 +23,7 @@ import Button from './basic/button'
 import useSignDocument from '../hooks/use-sign-document'
 import TextButton from './basic/text-button'
 import Notification from './basic/notification'
+import { updateChoice } from '../utils/voting'
 
 const Tooltip = dynamic(
   () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
@@ -31,7 +32,7 @@ const Tooltip = dynamic(
 
 export default function VoteForm(props: {
   entry?: string
-  defaultChoice?: string
+  defaultOption?: string
   proposal?: Proposal & { permalink: string }
   group?: Group
   onSuccess: () => void
@@ -110,10 +111,10 @@ export default function VoteForm(props: {
     onSuccess()
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
   useEffect(() => {
-    if (props.defaultChoice) {
-      setValue('choice', props.defaultChoice)
+    if (props.defaultOption) {
+      setValue('choice', updateChoice('single', undefined, props.defaultOption))
     }
-  }, [props.defaultChoice, setValue])
+  }, [props.defaultOption, setValue])
   const { data: status } = useStatus(props.proposal?.permalink)
   const period = useMemo(
     () => getPeriod(new Date(), status?.timestamp, props.group?.duration),

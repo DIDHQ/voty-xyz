@@ -5,7 +5,6 @@ import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 
 import useGroup from '../../../hooks/use-group'
-import { stringifyChoice } from '../../../utils/voting'
 import { permalink2Explorer, permalink2Id } from '../../../utils/permalink'
 import { trpc } from '../../../utils/trpc'
 import Article from '../../../components/basic/article'
@@ -97,7 +96,7 @@ export default function OptionPage() {
               className="mb-6 block sm:hidden"
             />
             <VoteForm
-              defaultChoice={query.option}
+              defaultOption={query.option}
               entry={community?.authorship.author}
               proposal={proposal || undefined}
               group={group}
@@ -114,15 +113,9 @@ export default function OptionPage() {
                   <tr>
                     <th
                       scope="col"
-                      className="sticky top-18 rounded-t border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="sticky top-18 rounded-t border-r border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       DID
-                    </th>
-                    <th
-                      scope="col"
-                      className="sticky top-18 border-x border-b border-gray-200 bg-white/80 px-3 py-2 text-left text-sm font-semibold text-gray-900 backdrop-blur"
-                    >
-                      Choice
                     </th>
                     <th
                       scope="col"
@@ -138,20 +131,10 @@ export default function OptionPage() {
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
+                          'truncate whitespace-nowrap border-r border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
                         )}
                       >
                         {vote.authorship.author}
-                      </td>
-                      <td
-                        className={clsx(
-                          index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-x border-gray-200 px-3 py-2 text-sm text-gray-500',
-                        )}
-                      >
-                        {proposal
-                          ? stringifyChoice(proposal.voting_type, vote.choice)
-                          : vote.choice}
                       </td>
                       <td
                         className={clsx(

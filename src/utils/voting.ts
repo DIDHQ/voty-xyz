@@ -5,7 +5,7 @@ import { Proposal } from './schemas/proposal'
 
 export function updateChoice(
   type: Proposal['voting_type'],
-  choice: string,
+  choice: string | undefined,
   option: string,
 ): string {
   try {
