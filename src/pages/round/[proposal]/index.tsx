@@ -1,22 +1,15 @@
-import { useCallback, useEffect, useMemo } from 'react'
-import clsx from 'clsx'
-import dynamic from 'next/dynamic'
+import { useEffect, useMemo } from 'react'
 import { compact } from 'lodash-es'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useInView } from 'react-intersection-observer'
 
 import useGroup from '../../../hooks/use-group'
-import { DetailItem, DetailList } from '../../../components/basic/detail'
 import { trpc } from '../../../utils/trpc'
 import Article from '../../../components/basic/article'
 import TextButton from '../../../components/basic/text-button'
 import LoadingBar from '../../../components/basic/loading-bar'
-import {
-  coinTypeExplorers,
-  coinTypeNames,
-  documentTitle,
-} from '../../../utils/constants'
+import { documentTitle } from '../../../utils/constants'
 import useRouterQuery from '../../../hooks/use-router-query'
 import Markdown from '../../../components/basic/markdown'
 import Button from '../../../components/basic/button'
@@ -25,24 +18,7 @@ import { permalink2Id } from '../../../utils/permalink'
 import OptionCard from '../../../components/option-card'
 import { getPeriod, Period } from '../../../utils/period'
 import useStatus from '../../../hooks/use-status'
-
-const StatusIcon = dynamic(() => import('../../../components/status-icon'), {
-  ssr: false,
-})
-
-const ProposalSchedule = dynamic(
-  () => import('../../../components/proposal-schedule'),
-  {
-    ssr: false,
-    loading: () => (
-      <DetailList title="Schedule">
-        <DetailItem title="Period">{null}</DetailItem>
-        <DetailItem title="Voting start">...</DetailItem>
-        <DetailItem title="Voting end">...</DetailItem>
-      </DetailList>
-    ),
-  },
-)
+import ProposalInfo from '../../../components/proposal-info'
 
 export default function RoundPage() {
   const query = useRouterQuery<['proposal']>()
@@ -60,75 +36,6 @@ export default function RoundPage() {
   const period = useMemo(
     () => getPeriod(new Date(), status?.timestamp, group?.duration),
     [group?.duration, status?.timestamp],
-  )
-  const renderCard = useCallback(
-    (className?: string) => (
-      <div
-        className={clsx(
-          'relative mt-[-1px] w-full shrink-0 sm:sticky sm:top-18 sm:w-80 sm:pt-8',
-          className,
-        )}
-      >
-        <StatusIcon
-          permalink={query.proposal}
-          className="absolute right-4 top-4 sm:top-12"
-        />
-        <div className="space-y-6 rounded border border-gray-200 p-6">
-          <DetailList title="Information">
-            <DetailItem
-              title="Community"
-              className="truncate whitespace-nowrap"
-            >
-              {community?.name || '...'}
-            </DetailItem>
-            <DetailItem title="Grant" className="truncate whitespace-nowrap">
-              {group?.name || '...'}
-            </DetailItem>
-            <DetailItem title="Investor" className="truncate whitespace-nowrap">
-              {proposal?.authorship.author || '...'}
-            </DetailItem>
-          </DetailList>
-          <ProposalSchedule
-            proposal={query.proposal}
-            duration={group?.duration}
-          />
-          {proposal?.snapshots ? (
-            <DetailList title="Snapshots">
-              {Object.entries(proposal.snapshots).map(
-                ([coinType, snapshot]) => (
-                  <DetailItem
-                    key={coinType}
-                    title={coinTypeNames[parseInt(coinType)] || coinType}
-                  >
-                    <TextButton
-                      href={`${
-                        coinTypeExplorers[parseInt(coinType)]
-                      }${snapshot}`}
-                    >
-                      {snapshot}
-                    </TextButton>
-                  </DetailItem>
-                ),
-              )}
-            </DetailList>
-          ) : null}
-          <DetailList title="Funding">
-            <Article small className="pt-2">
-              <ul>
-                {proposal?.extension?.funding?.map((funding, index) => (
-                  <li key={index}>
-                    {funding[0]}&nbsp;
-                    <span className="text-gray-400">X</span>&nbsp;
-                    {funding[1]}
-                  </li>
-                ))}
-              </ul>
-            </Article>
-          </DetailList>
-        </div>
-      </div>
-    ),
-    [community?.name, proposal, query.proposal, group],
   )
   const title = useMemo(
     () =>
@@ -176,7 +83,10 @@ export default function RoundPage() {
                 <Markdown>{proposal?.extension?.content}</Markdown>
               </Article>
             </div>
-            {renderCard('block sm:hidden mb-6')}
+            <ProposalInfo
+              proposal={proposal || undefined}
+              className="mb-6 block sm:hidden"
+            />
             {query.proposal && period === Period.PROPOSING ? (
               <Link href={`/round/${permalink2Id(query.proposal)}/create`}>
                 <Button icon={PlusIcon} primary className="float-right -mt-1">
@@ -200,7 +110,10 @@ export default function RoundPage() {
             </ul>
             <div ref={ref} />
           </div>
-          {renderCard('hidden sm:block')}
+          <ProposalInfo
+            proposal={proposal || undefined}
+            className="hidden sm:block"
+          />
         </div>
       </div>
     </>

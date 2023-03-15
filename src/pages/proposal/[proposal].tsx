@@ -1,44 +1,21 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import clsx from 'clsx'
-import dynamic from 'next/dynamic'
 import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 
 import useGroup from '../../hooks/use-group'
 import { stringifyChoice } from '../../utils/voting'
-import { DetailItem, DetailList } from '../../components/basic/detail'
 import { permalink2Explorer } from '../../utils/permalink'
 import { trpc } from '../../utils/trpc'
 import Article from '../../components/basic/article'
 import TextButton from '../../components/basic/text-button'
 import LoadingBar from '../../components/basic/loading-bar'
-import {
-  coinTypeExplorers,
-  coinTypeNames,
-  documentTitle,
-} from '../../utils/constants'
+import { documentTitle } from '../../utils/constants'
 import VoteForm from '../../components/vote-form'
 import useRouterQuery from '../../hooks/use-router-query'
 import Markdown from '../../components/basic/markdown'
-
-const StatusIcon = dynamic(() => import('../../components/status-icon'), {
-  ssr: false,
-})
-
-const ProposalSchedule = dynamic(
-  () => import('../../components/proposal-schedule'),
-  {
-    ssr: false,
-    loading: () => (
-      <DetailList title="Schedule">
-        <DetailItem title="Period">{null}</DetailItem>
-        <DetailItem title="Start">...</DetailItem>
-        <DetailItem title="End">...</DetailItem>
-      </DetailList>
-    ),
-  },
-)
+import ProposalInfo from '../../components/proposal-info'
 
 export default function ProposalPage() {
   const query = useRouterQuery<['proposal']>()
@@ -68,77 +45,6 @@ export default function ProposalPage() {
       fetchNextPage()
     }
   }, [fetchNextPage, hasNextPage, inView])
-  const renderCard = useCallback(
-    (className?: string) => (
-      <div
-        className={clsx(
-          'relative mt-[-1px] w-full shrink-0 sm:sticky sm:top-18 sm:w-80 sm:pt-8',
-          className,
-        )}
-      >
-        <StatusIcon
-          permalink={query.proposal}
-          className="absolute right-4 top-4 sm:top-12"
-        />
-        <div className="space-y-6 rounded border border-gray-200 p-6">
-          <DetailList title="Information">
-            <DetailItem
-              title="Community"
-              className="truncate whitespace-nowrap"
-            >
-              {community?.name || '...'}
-            </DetailItem>
-            <DetailItem
-              title="Workgroup"
-              className="truncate whitespace-nowrap"
-            >
-              {group?.name || '...'}
-            </DetailItem>
-            <DetailItem title="Proposer" className="truncate whitespace-nowrap">
-              {proposal?.authorship.author || '...'}
-            </DetailItem>
-            <DetailItem title="Voting type">
-              {proposal
-                ? proposal.voting_type === 'single'
-                  ? 'Single choice'
-                  : 'Approval'
-                : '...'}
-            </DetailItem>
-          </DetailList>
-          <ProposalSchedule
-            proposal={query.proposal}
-            duration={group?.duration}
-          />
-          {proposal?.snapshots ? (
-            <DetailList title="Snapshots">
-              {Object.entries(proposal.snapshots).map(
-                ([coinType, snapshot]) => (
-                  <DetailItem
-                    key={coinType}
-                    title={coinTypeNames[parseInt(coinType)] || coinType}
-                  >
-                    <TextButton
-                      href={`${
-                        coinTypeExplorers[parseInt(coinType)]
-                      }${snapshot}`}
-                    >
-                      {snapshot}
-                    </TextButton>
-                  </DetailItem>
-                ),
-              )}
-            </DetailList>
-          ) : null}
-          <DetailList title="Terms and conditions">
-            <Article small className="pt-2">
-              <Markdown>{group?.extension.terms_and_conditions}</Markdown>
-            </Article>
-          </DetailList>
-        </div>
-      </div>
-    ),
-    [community?.name, proposal, query.proposal, group],
-  )
   const title = useMemo(
     () =>
       compact([
@@ -173,7 +79,10 @@ export default function ProposalPage() {
                 <Markdown>{proposal?.extension?.content}</Markdown>
               </Article>
             </div>
-            {renderCard('block sm:hidden mb-6')}
+            <ProposalInfo
+              proposal={proposal || undefined}
+              className="mb-6 block sm:hidden"
+            />
             <VoteForm
               entry={community?.authorship.author}
               proposal={proposal || undefined}
@@ -249,7 +158,10 @@ export default function ProposalPage() {
               </table>
             ) : null}
           </div>
-          {renderCard('hidden sm:block')}
+          <ProposalInfo
+            proposal={proposal || undefined}
+            className="hidden sm:block"
+          />
         </div>
         <div ref={ref} />
       </div>
