@@ -38,7 +38,7 @@ export default function CreateOptionPage() {
   return (
     <>
       <Head>
-        <title>{`New proposal - ${documentTitle}`}</title>
+        <title>{`New round - ${documentTitle}`}</title>
       </Head>
       <LoadingBar loading={isLoading || isCommunityLoading} />
       <div className="w-full">
