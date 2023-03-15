@@ -48,7 +48,7 @@ export default function OptionCard(props: {
           </p>
         </div>
         <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
-          <p>Votes</p>
+          <p>Power</p>
           <p className="text-gray-400">{props.option.power}</p>
         </div>
       </div>

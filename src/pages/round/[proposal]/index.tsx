@@ -1,9 +1,10 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { compact } from 'lodash-es'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useInView } from 'react-intersection-observer'
 
 import useGroup from '../../../hooks/use-group'
 import { DetailItem, DetailList } from '../../../components/basic/detail'
@@ -22,6 +23,8 @@ import Button from '../../../components/basic/button'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { permalink2Id } from '../../../utils/permalink'
 import OptionCard from '../../../components/option-card'
+import { getPeriod, Period } from '../../../utils/period'
+import useStatus from '../../../hooks/use-status'
 
 const StatusIcon = dynamic(() => import('../../../components/status-icon'), {
   ssr: false,
@@ -53,6 +56,11 @@ export default function RoundPage() {
       { enabled: !!proposal?.community, refetchOnWindowFocus: false },
     )
   const group = useGroup(community, proposal?.group, 'grant')
+  const { data: status } = useStatus(query.proposal)
+  const period = useMemo(
+    () => getPeriod(new Date(), status?.timestamp, group?.duration),
+    [group?.duration, status?.timestamp],
+  )
   const renderCard = useCallback(
     (className?: string) => (
       <div
@@ -132,11 +140,18 @@ export default function RoundPage() {
       ]).join(' - '),
     [community?.name, proposal?.title, group?.name],
   )
-  const { data } = trpc.option.list.useInfiniteQuery(
-    { proposal: query.proposal },
-    { enabled: !!query.proposal, getNextPageParam: ({ next }) => next },
-  )
+  const { data, hasNextPage, fetchNextPage } =
+    trpc.option.list.useInfiniteQuery(
+      { proposal: query.proposal },
+      { enabled: !!query.proposal, getNextPageParam: ({ next }) => next },
+    )
   const options = useMemo(() => data?.pages.flatMap(({ data }) => data), [data])
+  const { ref, inView } = useInView()
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage()
+    }
+  }, [fetchNextPage, hasNextPage, inView])
 
   return (
     <>
@@ -162,7 +177,7 @@ export default function RoundPage() {
               </Article>
             </div>
             {renderCard('block sm:hidden mb-6')}
-            {query.proposal ? (
+            {query.proposal && period === Period.PROPOSING ? (
               <Link href={`/round/${permalink2Id(query.proposal)}/create`}>
                 <Button icon={PlusIcon} primary className="float-right -mt-1">
                   Proposal
@@ -183,6 +198,7 @@ export default function RoundPage() {
                 </li>
               ))}
             </ul>
+            <div ref={ref} />
           </div>
           {renderCard('hidden sm:block')}
         </div>

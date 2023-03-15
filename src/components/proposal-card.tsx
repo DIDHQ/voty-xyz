@@ -67,7 +67,7 @@ export default function ProposalCard(props: {
       </div>
       <div className="flex w-full divide-x bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">
-          <p>Proposer</p>
+          <p>{group?.extension.type === 'grant' ? 'Investor' : 'Proposer'}</p>
           <p className="truncate text-gray-400">
             {props.proposal.authorship.author}
           </p>
