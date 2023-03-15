@@ -23,7 +23,7 @@ import Button from './basic/button'
 import useSignDocument from '../hooks/use-sign-document'
 import TextButton from './basic/text-button'
 import Notification from './basic/notification'
-import { updateChoice } from '../utils/voting'
+import { updateChoice } from '../utils/choice'
 
 const Tooltip = dynamic(
   () => import('react-tooltip').then(({ Tooltip }) => Tooltip),

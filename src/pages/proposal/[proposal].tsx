@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 
 import useGroup from '../../hooks/use-group'
-import { stringifyChoice } from '../../utils/voting'
+import { stringifyChoice } from '../../utils/choice'
 import { permalink2Explorer } from '../../utils/permalink'
 import { trpc } from '../../utils/trpc'
 import Article from '../../components/basic/article'

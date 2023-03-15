@@ -16,7 +16,7 @@ import VoteForm from '../../../components/vote-form'
 import useRouterQuery from '../../../hooks/use-router-query'
 import Markdown from '../../../components/basic/markdown'
 import ProposalInfo from '../../../components/proposal-info'
-import { powerOfChoice } from '../../../utils/voting'
+import { powerOfChoice } from '../../../utils/choice'
 
 export default function OptionPage() {
   const query = useRouterQuery<['proposal', 'option']>()

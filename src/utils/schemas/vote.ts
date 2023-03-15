@@ -1,7 +1,7 @@
 import Decimal from 'decimal.js'
 import { z } from 'zod'
 
-import { choiceIsEmpty } from '../voting'
+import { choiceIsEmpty } from '../choice'
 import { decimalSchema } from './decimal'
 
 export const voteSchema = z.object({

@@ -11,7 +11,7 @@ import {
   choiceIsEmpty,
   updateChoice,
   checkChoice,
-} from '../utils/voting'
+} from '../utils/choice'
 
 export function ChoiceListItem(props: {
   type: Proposal['voting_type']
