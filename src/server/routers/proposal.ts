@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, last } from 'lodash-es'
+import { compact, keyBy, last, uniq } from 'lodash-es'
 import { z } from 'zod'
 import dayjs from 'dayjs'
 
@@ -19,6 +19,8 @@ import {
   getSnapshotTimestamp,
 } from '../../utils/snapshot'
 import { Period } from '../../utils/period'
+import { groupSchema } from '../../utils/schemas/group'
+import { communitySchema } from '../../utils/schemas/community'
 
 const schema = proved(authorized(proposalSchema))
 
@@ -123,6 +125,7 @@ export const proposalRouter = router({
         data: z.array(
           schema.extend({
             permalink: z.string(),
+            g: groupSchema,
             options_count: z.number().int(),
             votes: z.number().int(),
             ts: z.date(),
@@ -161,11 +164,23 @@ export const proposalRouter = router({
         skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
+      const communities = keyBy(
+        await database.community.findMany({
+          where: {
+            permalink: {
+              in: uniq(proposals.map(({ community }) => community)),
+            },
+          },
+        }),
+        ({ permalink }) => permalink,
+      )
 
       return {
         data: compact(
           proposals.map(
             ({
+              community,
+              group,
               data,
               permalink,
               options_count,
@@ -176,16 +191,22 @@ export const proposalRouter = router({
               ts_voting,
             }) => {
               try {
-                return {
-                  ...schema.parse(data),
-                  permalink,
-                  options_count,
-                  votes,
-                  ts,
-                  ts_pending,
-                  ts_adding_option,
-                  ts_voting,
-                }
+                const g = communitySchema
+                  .parse(communities[community].data)
+                  .groups?.find(({ id }) => group === id)
+                return g
+                  ? {
+                      ...schema.parse(data),
+                      permalink,
+                      g,
+                      options_count,
+                      votes,
+                      ts,
+                      ts_pending,
+                      ts_adding_option,
+                      ts_voting,
+                    }
+                  : undefined
               } catch {
                 return
               }

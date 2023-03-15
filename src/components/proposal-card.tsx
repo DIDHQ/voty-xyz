@@ -2,17 +2,17 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
-import useGroup from '../hooks/use-group'
 import { Period } from '../utils/period'
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/authorship'
+import { Group } from '../utils/schemas/group'
 import { Proposal } from '../utils/schemas/proposal'
 import { formatDurationMs } from '../utils/time'
-import { trpc } from '../utils/trpc'
 
 export default function ProposalCard(props: {
   proposal: Authorized<Proposal> & {
     permalink: string
+    g: Group
     votes: number
     options_count: number
     ts: Date
@@ -21,11 +21,7 @@ export default function ProposalCard(props: {
     ts_voting: Date | null
   }
 }) {
-  const { data: community } = trpc.community.getByPermalink.useQuery(
-    { permalink: props.proposal.community },
-    { refetchOnWindowFocus: false },
-  )
-  const group = useGroup(community, props.proposal.group)
+  const group = props.proposal.g
   const now = useMemo(() => Date.now(), [])
   const period = useMemo(
     () =>
@@ -50,13 +46,9 @@ export default function ProposalCard(props: {
   return (
     <Link
       shallow
-      href={
-        group
-          ? `/${
-              group.extension.type === 'grant' ? 'round' : 'proposal'
-            }/${permalink2Id(props.proposal.permalink)}`
-          : '#'
-      }
+      href={`/${
+        group.extension.type === 'grant' ? 'round' : 'proposal'
+      }/${permalink2Id(props.proposal.permalink)}`}
       className="block divide-y rounded border transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:border-primary-500 hover:bg-gray-50"
     >
       <div className="w-full p-4">
@@ -71,92 +63,83 @@ export default function ProposalCard(props: {
       </div>
       <div className="flex w-full divide-x bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">
-          {group ? (
-            group.extension.type === 'grant' &&
-            props.proposal.extension?.funding?.[0] ? (
-              <>
-                <p>Funding</p>
-                <p className="truncate text-gray-400">
-                  {props.proposal.extension.funding[0][0]}&nbsp;X&nbsp;
-                  {props.proposal.extension.funding[0][1]}
-                </p>
-              </>
-            ) : (
-              <>
-                <p>Proposer</p>
-                <p className="truncate text-gray-400">
-                  {props.proposal.authorship.author}
-                </p>
-              </>
-            )
-          ) : null}
+          {group.extension.type === 'grant' &&
+          props.proposal.extension?.funding?.[0] ? (
+            <>
+              <p>Funding</p>
+              <p className="truncate text-gray-400">
+                {props.proposal.extension.funding[0][0]}&nbsp;X&nbsp;
+                {props.proposal.extension.funding[0][1]}
+              </p>
+            </>
+          ) : (
+            <>
+              <p>Proposer</p>
+              <p className="truncate text-gray-400">
+                {props.proposal.authorship.author}
+              </p>
+            </>
+          )}
         </div>
         <div className="w-0 flex-1 px-4 py-2">
-          {group ? (
-            period === Period.CONFIRMING ? (
-              <>
-                <p className="truncate">Transaction confirming</p>
-                <p className="truncate text-gray-400">
-                  <PeriodDot value={period} className="mb-0.5 mr-1.5" />
-                  in about 5 minutes
-                </p>
-              </>
-            ) : period === Period.PENDING && props.proposal.ts_pending ? (
-              <>
-                <p>
-                  {group.extension.type === 'grant' ? 'Proposing' : 'Voting'}
-                  &nbsp; starts
-                </p>
-                <p className="text-gray-400">
-                  <PeriodDot value={period} className="mb-0.5 mr-1.5" />
-                  in&nbsp;
-                  {formatDurationMs(props.proposal.ts_pending.getTime() - now)}
-                </p>
-              </>
-            ) : period === Period.PROPOSING &&
-              props.proposal.ts_adding_option ? (
-              <>
-                <p>Proposing ends</p>
-                <p className="text-gray-400">
-                  <PeriodDot value={period} className="mb-0.5 mr-1.5" />
-                  in&nbsp;
-                  {formatDurationMs(
-                    props.proposal.ts_adding_option.getTime() - now,
-                  )}
-                </p>
-              </>
-            ) : period === Period.VOTING && props.proposal.ts_voting ? (
-              <>
-                <p>Voting ends</p>
-                <p className="text-gray-400">
-                  <PeriodDot value={period} className="mb-0.5 mr-1.5" />
-                  in&nbsp;
-                  {formatDurationMs(props.proposal.ts_voting.getTime() - now)}
-                </p>
-              </>
-            ) : period === Period.ENDED && props.proposal.ts_voting ? (
-              <>
-                <p>Voting ended</p>
-                <p className="text-gray-400">
-                  <PeriodDot value={period} className="mb-0.5 mr-1.5" />
-                  {formatDurationMs(props.proposal.ts_voting.getTime() - now)}
-                  &nbsp;ago
-                </p>
-              </>
-            ) : null
-          ) : null}
-        </div>
-        <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
-          {group ? (
+          {period === Period.CONFIRMING ? (
             <>
-              <p>{group.extension.type === 'grant' ? 'Proposals' : 'Votes'}</p>
+              <p className="truncate">Transaction confirming</p>
+              <p className="truncate text-gray-400">
+                <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                in about 5 minutes
+              </p>
+            </>
+          ) : period === Period.PENDING && props.proposal.ts_pending ? (
+            <>
+              <p>
+                {group.extension.type === 'grant' ? 'Proposing' : 'Voting'}
+                &nbsp; starts
+              </p>
               <p className="text-gray-400">
-                {group.extension.type === 'grant'
-                  ? props.proposal.options_count
-                  : props.proposal.votes}
+                <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                in&nbsp;
+                {formatDurationMs(props.proposal.ts_pending.getTime() - now)}
+              </p>
+            </>
+          ) : period === Period.PROPOSING && props.proposal.ts_adding_option ? (
+            <>
+              <p>Proposing ends</p>
+              <p className="text-gray-400">
+                <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                in&nbsp;
+                {formatDurationMs(
+                  props.proposal.ts_adding_option.getTime() - now,
+                )}
+              </p>
+            </>
+          ) : period === Period.VOTING && props.proposal.ts_voting ? (
+            <>
+              <p>Voting ends</p>
+              <p className="text-gray-400">
+                <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                in&nbsp;
+                {formatDurationMs(props.proposal.ts_voting.getTime() - now)}
+              </p>
+            </>
+          ) : period === Period.ENDED && props.proposal.ts_voting ? (
+            <>
+              <p>Voting ended</p>
+              <p className="text-gray-400">
+                <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                {formatDurationMs(props.proposal.ts_voting.getTime() - now)}
+                &nbsp;ago
               </p>
             </>
           ) : null}
+        </div>
+        <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
+          <p>{group.extension.type === 'grant' ? 'Proposals' : 'Votes'}</p>
+          <p className="text-gray-400">
+            {group.extension.type === 'grant'
+              ? props.proposal.options_count
+              : props.proposal.votes}
+          </p>
         </div>
       </div>
     </Link>
