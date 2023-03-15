@@ -50,7 +50,9 @@ export default function ProposalCard(props: {
   return (
     <Link
       shallow
-      href={`/proposal/${permalink2Id(props.proposal.permalink)}`}
+      href={`/${
+        group?.extension.type === 'grant' ? 'round' : 'proposal'
+      }/${permalink2Id(props.proposal.permalink)}`}
       className="block divide-y rounded border transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:border-primary-500 hover:bg-gray-50"
     >
       <div className="w-full p-4">
