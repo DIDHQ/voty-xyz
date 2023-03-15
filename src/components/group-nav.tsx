@@ -23,7 +23,11 @@ export default function GroupNav(props: { className?: string }) {
   const tabs = useMemo(
     () => [
       {
-        name: group?.extension.type === 'grant' ? 'Rounds' : 'Proposals',
+        name: group?.extension.type
+          ? group.extension.type === 'grant'
+            ? 'Rounds'
+            : 'Proposals'
+          : '',
         href: `/${query.entry}/${query.group}`,
         current: router.pathname === '/[entry]/[group]',
       },
@@ -59,17 +63,19 @@ export default function GroupNav(props: { className?: string }) {
             >
               {emoji}
             </span>
-          ) : group?.extension.type === 'grant' ? (
-            <TrophyIcon
-              className="mr-3 h-8 w-8 shrink-0 text-gray-400"
-              aria-hidden="true"
-            />
-          ) : (
-            <BriefcaseIcon
-              className="mr-3 h-8 w-8 shrink-0 text-gray-400"
-              aria-hidden="true"
-            />
-          )}
+          ) : group ? (
+            group.extension.type === 'grant' ? (
+              <TrophyIcon
+                className="mr-3 h-8 w-8 shrink-0 text-gray-400"
+                aria-hidden="true"
+              />
+            ) : (
+              <BriefcaseIcon
+                className="mr-3 h-8 w-8 shrink-0 text-gray-400"
+                aria-hidden="true"
+              />
+            )
+          ) : null}
           <h3 className="mr-4 w-0 flex-1 truncate text-2xl font-medium text-gray-900">
             {name || '...'}
           </h3>

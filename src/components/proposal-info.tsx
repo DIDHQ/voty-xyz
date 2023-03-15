@@ -43,13 +43,25 @@ export default function ProposalInfo(props: {
             {community?.name || '...'}
           </DetailItem>
           <DetailItem
-            title={group?.extension.type === 'grant' ? 'Grant' : 'Workgroup'}
+            title={
+              group
+                ? group.extension.type === 'grant'
+                  ? 'Grant'
+                  : 'Workgroup'
+                : '...'
+            }
             className="truncate whitespace-nowrap"
           >
             {group?.name || '...'}
           </DetailItem>
           <DetailItem
-            title={group?.extension.type === 'grant' ? 'Investor' : 'Proposer'}
+            title={
+              group
+                ? group.extension.type === 'grant'
+                  ? 'Investor'
+                  : 'Proposer'
+                : '...'
+            }
             className="truncate whitespace-nowrap"
           >
             {props.proposal?.authorship.author || '...'}

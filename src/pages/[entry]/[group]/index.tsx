@@ -69,7 +69,11 @@ export default function GroupIndexPage() {
         {proposals?.length === 0 ? (
           <EmptyState
             title={
-              group?.extension.type === 'grant' ? 'No rounds' : 'No proposals'
+              group
+                ? group.extension.type === 'grant'
+                  ? 'No rounds'
+                  : 'No proposals'
+                : ''
             }
             className="mt-24"
           />

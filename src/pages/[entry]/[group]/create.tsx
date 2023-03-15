@@ -23,7 +23,11 @@ export default function CreateProposalPage() {
     { enabled: !!query.entry },
   )
   const group = useGroup(community, query.group)
-  const type = group?.extension.type === 'grant' ? 'round' : 'proposal'
+  const type = group
+    ? group.extension.type === 'grant'
+      ? 'round'
+      : 'proposal'
+    : undefined
   const handleSuccess = useCallback(
     (permalink: string) => {
       router.push(`/${type}/${permalink2Id(permalink)}`)

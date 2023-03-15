@@ -43,23 +43,25 @@ export default function GroupSettingsPage() {
         >
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
-        {group?.extension.type === 'grant' ? (
-          <GrantForm
-            author={query.entry || ''}
-            initialValue={community || undefined}
-            group={query.group || ''}
-            onSuccess={handleSuccess}
-            className="pt-6 sm:pt-8"
-          />
-        ) : (
-          <WorkgroupForm
-            author={query.entry || ''}
-            initialValue={community || undefined}
-            group={query.group || ''}
-            onSuccess={handleSuccess}
-            className="pt-6 sm:pt-8"
-          />
-        )}
+        {group ? (
+          group.extension.type === 'grant' ? (
+            <GrantForm
+              author={query.entry || ''}
+              initialValue={community || undefined}
+              group={query.group || ''}
+              onSuccess={handleSuccess}
+              className="pt-6 sm:pt-8"
+            />
+          ) : (
+            <WorkgroupForm
+              author={query.entry || ''}
+              initialValue={community || undefined}
+              group={query.group || ''}
+              onSuccess={handleSuccess}
+              className="pt-6 sm:pt-8"
+            />
+          )
+        ) : null}
       </div>
     </>
   )

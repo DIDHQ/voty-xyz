@@ -42,7 +42,11 @@ export default function ProposalForm(props: {
   className?: string
 }) {
   const { onSuccess } = props
-  const type = props.group?.extension.type === 'grant' ? 'round' : 'proposal'
+  const type = props.group
+    ? props.group.extension.type === 'grant'
+      ? 'round'
+      : 'proposal'
+    : undefined
   const methods = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
     defaultValues: { voting_type: 'single' },

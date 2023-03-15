@@ -71,10 +71,25 @@ export default function ProposalCard(props: {
       </div>
       <div className="flex w-full divide-x bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">
-          <p>{group?.extension.type === 'grant' ? 'Investor' : 'Proposer'}</p>
-          <p className="truncate text-gray-400">
-            {props.proposal.authorship.author}
-          </p>
+          {group ? (
+            group.extension.type === 'grant' &&
+            props.proposal.extension?.funding?.[0] ? (
+              <>
+                <p>Funding</p>
+                <p className="truncate text-gray-400">
+                  {props.proposal.extension.funding[0][0]}&nbsp;X&nbsp;
+                  {props.proposal.extension.funding[0][1]}
+                </p>
+              </>
+            ) : (
+              <>
+                <p>Proposer</p>
+                <p className="truncate text-gray-400">
+                  {props.proposal.authorship.author}
+                </p>
+              </>
+            )
+          ) : null}
         </div>
         <div className="w-0 flex-1 px-4 py-2">
           {group ? (

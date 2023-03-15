@@ -33,7 +33,11 @@ export default function CreateProposalButton(props: {
         className={props.className}
       >
         <Button primary disabled icon={PlusIcon}>
-          {props.group?.extension.type === 'grant' ? 'Round' : 'Proposal'}
+          {props.group
+            ? props.group.extension.type === 'grant'
+              ? 'Round'
+              : 'Proposal'
+            : null}
         </Button>
       </div>
       <Tooltip id={id} className="rounded">
