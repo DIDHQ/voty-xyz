@@ -14,6 +14,7 @@ export default function ProposalCard(props: {
   proposal: Authorized<Proposal> & {
     permalink: string
     votes: number
+    options: number
     ts: Date
     ts_pending: Date | null
     ts_adding_option: Date | null
@@ -31,11 +32,19 @@ export default function ProposalCard(props: {
       props.proposal.ts_pending && props.proposal.ts_voting
         ? now < props.proposal.ts_pending.getTime()
           ? Period.PENDING
+          : props.proposal.ts_adding_option &&
+            now < props.proposal.ts_adding_option.getTime()
+          ? Period.PROPOSING
           : now < props.proposal.ts_voting.getTime()
           ? Period.VOTING
           : Period.ENDED
         : Period.CONFIRMING,
-    [props.proposal.ts_pending, props.proposal.ts_voting, now],
+    [
+      props.proposal.ts_pending,
+      props.proposal.ts_voting,
+      props.proposal.ts_adding_option,
+      now,
+    ],
   )
 
   return (
@@ -73,11 +82,26 @@ export default function ProposalCard(props: {
               </>
             ) : period === Period.PENDING && props.proposal.ts_pending ? (
               <>
-                <p>Voting starts</p>
+                <p>
+                  {group.extension.type === 'grant' ? 'Proposing' : 'Voting'}
+                  &nbsp; starts
+                </p>
                 <p className="text-gray-400">
                   <PeriodDot value={period} className="mb-0.5 mr-1.5" />
                   in&nbsp;
                   {formatDurationMs(props.proposal.ts_pending.getTime() - now)}
+                </p>
+              </>
+            ) : period === Period.PROPOSING &&
+              props.proposal.ts_adding_option ? (
+              <>
+                <p>Proposing deadline</p>
+                <p className="text-gray-400">
+                  <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                  in&nbsp;
+                  {formatDurationMs(
+                    props.proposal.ts_adding_option.getTime() - now,
+                  )}
                 </p>
               </>
             ) : period === Period.VOTING && props.proposal.ts_voting ? (
@@ -102,8 +126,12 @@ export default function ProposalCard(props: {
           ) : null}
         </div>
         <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
-          <p>Votes</p>
-          <p className="text-gray-400">{props.proposal.votes}</p>
+          <p>{group?.extension.type === 'grant' ? 'Proposals' : 'Votes'}</p>
+          <p className="text-gray-400">
+            {group?.extension.type === 'grant'
+              ? props.proposal.options
+              : props.proposal.votes}
+          </p>
         </div>
       </div>
     </Link>
