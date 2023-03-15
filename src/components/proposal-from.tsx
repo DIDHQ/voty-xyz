@@ -194,7 +194,7 @@ export default function ProposalForm(props: {
         {handleSubmit.error?.message}
       </Notification>
       <Form className={props.className}>
-        <FormSection title={`New ${type}`}>
+        <FormSection title={`New ${type || ''}`}>
           <Grid6 className="mt-6">
             <GridItem6>
               <FormItem label="Title" error={errors.title?.message}>
@@ -236,7 +236,7 @@ export default function ProposalForm(props: {
                       disabled={disabled}
                       {...register('extension.funding.0.0')}
                       error={!!errors?.extension?.funding?.[0]?.[0]}
-                      placeholder="prize"
+                      placeholder="e.g. 500 USD"
                       className="w-0 flex-1"
                     />
                     <span className="text-gray-400">X</span>
