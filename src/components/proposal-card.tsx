@@ -14,7 +14,7 @@ export default function ProposalCard(props: {
   proposal: Authorized<Proposal> & {
     permalink: string
     votes: number
-    options: number
+    options_count: number
     ts: Date
     ts_pending: Date | null
     ts_adding_option: Date | null
@@ -129,7 +129,7 @@ export default function ProposalCard(props: {
           <p>{group?.extension.type === 'grant' ? 'Proposals' : 'Votes'}</p>
           <p className="text-gray-400">
             {group?.extension.type === 'grant'
-              ? props.proposal.options
+              ? props.proposal.options_count
               : props.proposal.votes}
           </p>
         </div>

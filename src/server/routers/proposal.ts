@@ -27,7 +27,11 @@ export const proposalRouter = router({
     .input(z.object({ permalink: z.string().optional() }))
     .output(
       schema
-        .extend({ permalink: z.string(), votes: z.number().int() })
+        .extend({
+          permalink: z.string(),
+          options_count: z.number().int(),
+          votes: z.number().int(),
+        })
         .nullable(),
     )
     .query(async ({ input }) => {
@@ -92,6 +96,7 @@ export const proposalRouter = router({
         ? {
             ...proposal.data,
             permalink: proposal.permalink,
+            options_count: proposal.options_count,
             votes: proposal.votes,
           }
         : null
@@ -118,6 +123,7 @@ export const proposalRouter = router({
         data: z.array(
           schema.extend({
             permalink: z.string(),
+            options_count: z.number().int(),
             votes: z.number().int(),
             ts: z.date(),
             ts_pending: z.date().nullable(),
@@ -162,6 +168,7 @@ export const proposalRouter = router({
             ({
               data,
               permalink,
+              options_count,
               votes,
               ts,
               ts_pending,
@@ -172,6 +179,7 @@ export const proposalRouter = router({
                 return {
                   ...schema.parse(data),
                   permalink,
+                  options_count,
                   votes,
                   ts,
                   ts_pending,
@@ -215,6 +223,7 @@ export const proposalRouter = router({
             community: input.community,
             group: input.group,
             data: input,
+            options_count: 0,
             votes: 0,
             ts,
           },
