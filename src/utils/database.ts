@@ -2,15 +2,17 @@ import {
   PrismaClient,
   Community as CommunityModel,
   Proposal as ProposalModel,
+  Option as OptionModel,
   Vote as VoteModel,
 } from '@prisma/client'
 import { keyBy } from 'lodash-es'
 
 import { DataType } from './constants'
 import { Authorized } from './schemas/authorship'
+import { Proved } from './schemas/proof'
 import { Community } from './schemas/community'
 import { Proposal } from './schemas/proposal'
-import { Proved } from './schemas/proof'
+import { Option } from './schemas/option'
 import { Vote } from './schemas/vote'
 
 export const database = new PrismaClient()
@@ -24,6 +26,8 @@ export async function getByPermalink<T extends DataType>(
       ? await database.community.findUnique({ where: { permalink } })
       : type === DataType.PROPOSAL
       ? await database.proposal.findUnique({ where: { permalink } })
+      : type === DataType.OPTION
+      ? await database.option.findUnique({ where: { permalink } })
       : type === DataType.VOTE
       ? await database.vote.findUnique({ where: { permalink } })
       : undefined
@@ -34,6 +38,8 @@ export async function getByPermalink<T extends DataType>(
     ? Omit<CommunityModel, 'data'> & { data: Proved<Authorized<Community>> }
     : T extends DataType.PROPOSAL
     ? Omit<ProposalModel, 'data'> & { data: Proved<Authorized<Proposal>> }
+    : T extends DataType.OPTION
+    ? Omit<OptionModel, 'data'> & { data: Proved<Authorized<Option>> }
     : T extends DataType.VOTE
     ? Omit<VoteModel, 'data'> & { data: Proved<Authorized<Vote>> }
     : never
@@ -50,6 +56,10 @@ export async function mapByPermalinks<T extends DataType>(
         })
       : type === DataType.PROPOSAL
       ? await database.proposal.findMany({
+          where: { permalink: { in: permalinks } },
+        })
+      : type === DataType.OPTION
+      ? await database.option.findMany({
           where: { permalink: { in: permalinks } },
         })
       : type === DataType.VOTE
@@ -69,6 +79,11 @@ export async function mapByPermalinks<T extends DataType>(
     ? Record<
         string,
         Omit<ProposalModel, 'data'> & { data: Proved<Authorized<Proposal>> }
+      >
+    : T extends DataType.OPTION
+    ? Record<
+        string,
+        Omit<OptionModel, 'data'> & { data: Proved<Authorized<Option>> }
       >
     : T extends DataType.VOTE
     ? Record<

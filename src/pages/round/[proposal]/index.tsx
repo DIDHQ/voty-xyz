@@ -3,27 +3,32 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { compact } from 'lodash-es'
 import Head from 'next/head'
+import Link from 'next/link'
 
-import useGroup from '../../hooks/use-group'
-import { DetailItem, DetailList } from '../../components/basic/detail'
-import { trpc } from '../../utils/trpc'
-import Article from '../../components/basic/article'
-import TextButton from '../../components/basic/text-button'
-import LoadingBar from '../../components/basic/loading-bar'
+import useGroup from '../../../hooks/use-group'
+import { DetailItem, DetailList } from '../../../components/basic/detail'
+import { trpc } from '../../../utils/trpc'
+import Article from '../../../components/basic/article'
+import TextButton from '../../../components/basic/text-button'
+import LoadingBar from '../../../components/basic/loading-bar'
 import {
   coinTypeExplorers,
   coinTypeNames,
   documentTitle,
-} from '../../utils/constants'
-import useRouterQuery from '../../hooks/use-router-query'
-import Markdown from '../../components/basic/markdown'
+} from '../../../utils/constants'
+import useRouterQuery from '../../../hooks/use-router-query'
+import Markdown from '../../../components/basic/markdown'
+import Button from '../../../components/basic/button'
+import { PlusIcon } from '@heroicons/react/20/solid'
+import { permalink2Id } from '../../../utils/permalink'
+import OptionCard from '../../../components/option-card'
 
-const StatusIcon = dynamic(() => import('../../components/status-icon'), {
+const StatusIcon = dynamic(() => import('../../../components/status-icon'), {
   ssr: false,
 })
 
 const ProposalSchedule = dynamic(
-  () => import('../../components/proposal-schedule'),
+  () => import('../../../components/proposal-schedule'),
   {
     ssr: false,
     loading: () => (
@@ -127,6 +132,11 @@ export default function RoundPage() {
       ]).join(' - '),
     [community?.name, proposal?.title, group?.name],
   )
+  const { data } = trpc.option.list.useInfiniteQuery(
+    { proposal: query.proposal },
+    { enabled: !!query.proposal, getNextPageParam: ({ next }) => next },
+  )
+  const options = useMemo(() => data?.pages.flatMap(({ data }) => data), [data])
 
   return (
     <>
@@ -152,11 +162,27 @@ export default function RoundPage() {
               </Article>
             </div>
             {renderCard('block sm:hidden mb-6')}
-            {proposal?.votes ? (
-              <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
-                {proposal.votes === 1 ? '1 Vote' : `${proposal.votes} Votes`}
+            {query.proposal ? (
+              <Link href={`/round/${permalink2Id(query.proposal)}/create`}>
+                <Button icon={PlusIcon} primary className="float-right -mt-1">
+                  Proposal
+                </Button>
+              </Link>
+            ) : null}
+            {proposal?.options_count ? (
+              <h2 className="my-6 text-2xl font-bold">
+                {proposal.options_count === 1
+                  ? '1 Proposal'
+                  : `${proposal.options_count} Proposals`}
               </h2>
             ) : null}
+            <ul role="list" className="mt-5 space-y-5">
+              {options?.map((option) => (
+                <li key={option.permalink}>
+                  <OptionCard option={option} />
+                </li>
+              ))}
+            </ul>
           </div>
           {renderCard('hidden sm:block')}
         </div>

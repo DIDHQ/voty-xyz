@@ -30,7 +30,7 @@ const Tooltip = dynamic(
 
 export default function VoteForm(props: {
   entry?: string
-  proposal?: Proposal & { permalink: string; votes: number }
+  proposal?: Proposal & { permalink: string }
   group?: Group
   onSuccess: () => void
   className?: string
@@ -229,7 +229,7 @@ export default function VoteForm(props: {
                 </Button>
               </div>
               <Tooltip id={id} className="rounded">
-                Waiting for proposal transaction (in about 5 minutes)
+                Waiting for transaction (in about 5 minutes)
               </Tooltip>
             </>
           ) : (

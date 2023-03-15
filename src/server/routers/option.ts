@@ -1,9 +1,9 @@
 import { TRPCError } from '@trpc/server'
-import { compact, last } from 'lodash-es'
+import { compact, keyBy, last, mapValues } from 'lodash-es'
 import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
-import { database } from '../../utils/database'
+import { database, getByPermalink } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
 import { optionSchema } from '../../utils/schemas/option'
 import { procedure, router } from '../trpc'
@@ -12,10 +12,24 @@ import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyOption from '../../utils/verifiers/verify-option'
+import { DataType } from '../../utils/constants'
+import { decimalSchema } from '../../utils/schemas/decimal'
 
 const schema = proved(authorized(optionSchema))
 
 export const optionRouter = router({
+  getByPermalink: procedure
+    .input(z.object({ permalink: z.string().optional() }))
+    .output(schema.nullable())
+    .query(async ({ input }) => {
+      if (!input.permalink) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
+      }
+
+      const option = await getByPermalink(DataType.OPTION, input.permalink)
+
+      return option ? option.data : null
+    }),
   list: procedure
     .input(
       z.object({
@@ -25,7 +39,13 @@ export const optionRouter = router({
     )
     .output(
       z.object({
-        data: z.array(schema.extend({ permalink: z.string() })),
+        data: z.array(
+          schema.extend({
+            permalink: z.string(),
+            power: decimalSchema,
+            ts: z.date(),
+          }),
+        ),
         next: z.string().optional(),
       }),
     )
@@ -41,14 +61,25 @@ export const optionRouter = router({
         skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
+      const powers = mapValues(
+        keyBy(
+          await database.choice.findMany({
+            where: { proposal: input.proposal },
+          }),
+          ({ option }) => option,
+        ),
+        ({ power }) => power,
+      )
 
       return {
         data: compact(
-          options.map(({ permalink, data }) => {
+          options.map(({ data, permalink, ts }) => {
             try {
               return {
                 ...schema.parse(data),
                 permalink,
+                power: powers[permalink]?.toString() || '0',
+                ts,
               }
             } catch {
               return
