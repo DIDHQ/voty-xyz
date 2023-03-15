@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
@@ -55,6 +55,9 @@ export default function ProposalPage() {
       ]).join(' - '),
     [community?.name, proposal?.title, group?.name],
   )
+  const handleSuccess = useCallback(() => {
+    refetchList()
+  }, [refetchList])
 
   return (
     <>
@@ -87,7 +90,7 @@ export default function ProposalPage() {
               entry={community?.authorship.author}
               proposal={proposal || undefined}
               group={group}
-              onSuccess={refetchList}
+              onSuccess={handleSuccess}
             />
             {proposal?.votes ? (
               <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">

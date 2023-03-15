@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
@@ -23,7 +23,7 @@ export default function OptionPage() {
     { permalink: query.option },
     { enabled: !!query.option, refetchOnWindowFocus: false },
   )
-  const { data: proposal } = trpc.proposal.getByPermalink.useQuery(
+  const { data: proposal, refetch } = trpc.proposal.getByPermalink.useQuery(
     { permalink: query.proposal },
     { enabled: !!query.proposal, refetchOnWindowFocus: false },
   )
@@ -59,6 +59,10 @@ export default function OptionPage() {
       ]).join(' - '),
     [community?.name, option?.title, group?.name],
   )
+  const handleSuccess = useCallback(() => {
+    refetch()
+    refetchList()
+  }, [refetch, refetchList])
 
   return (
     <>
@@ -97,7 +101,7 @@ export default function OptionPage() {
               entry={community?.authorship.author}
               proposal={proposal || undefined}
               group={group}
-              onSuccess={refetchList}
+              onSuccess={handleSuccess}
             />
             {proposal?.votes ? (
               <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
