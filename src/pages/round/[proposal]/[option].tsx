@@ -102,9 +102,9 @@ export default function OptionPage() {
               group={group}
               onSuccess={handleSuccess}
             />
-            {proposal?.votes ? (
+            {option?.power ? (
               <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
-                {proposal.votes === 1 ? '1 Vote' : `${proposal.votes} Votes`}
+                {option.power} Power
               </h2>
             ) : null}
             {votes?.length ? (
