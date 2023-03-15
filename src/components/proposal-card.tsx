@@ -50,9 +50,13 @@ export default function ProposalCard(props: {
   return (
     <Link
       shallow
-      href={`/${
-        group?.extension.type === 'grant' ? 'round' : 'proposal'
-      }/${permalink2Id(props.proposal.permalink)}`}
+      href={
+        group
+          ? `/${
+              group.extension.type === 'grant' ? 'round' : 'proposal'
+            }/${permalink2Id(props.proposal.permalink)}`
+          : ''
+      }
       className="block divide-y rounded border transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:border-primary-500 hover:bg-gray-50"
     >
       <div className="w-full p-4">
@@ -128,12 +132,16 @@ export default function ProposalCard(props: {
           ) : null}
         </div>
         <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
-          <p>{group?.extension.type === 'grant' ? 'Proposals' : 'Votes'}</p>
-          <p className="text-gray-400">
-            {group?.extension.type === 'grant'
-              ? props.proposal.options_count
-              : props.proposal.votes}
-          </p>
+          {group ? (
+            <>
+              <p>{group.extension.type === 'grant' ? 'Proposals' : 'Votes'}</p>
+              <p className="text-gray-400">
+                {group.extension.type === 'grant'
+                  ? props.proposal.options_count
+                  : props.proposal.votes}
+              </p>
+            </>
+          ) : null}
         </div>
       </div>
     </Link>
