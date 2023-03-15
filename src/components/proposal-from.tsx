@@ -54,7 +54,7 @@ export default function ProposalForm(props: {
     watch,
     control,
     formState: { errors },
-    handleSubmit,
+    handleSubmit: onSubmit,
   } = methods
   const handleOptionDelete = useCallback(
     (index: number) => {
@@ -158,7 +158,7 @@ export default function ProposalForm(props: {
     `You are creating ${type} on Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.proposal.create.useMutation()
-  const handleSign = useMutation<void, Error, Proposal>(async (proposal) => {
+  const handleSubmit = useMutation<void, Error, Proposal>(async (proposal) => {
     const signed = await signDocument(proposal)
     if (signed) {
       onSuccess(await mutateAsync(signed))
@@ -186,8 +186,8 @@ export default function ProposalForm(props: {
 
   return (
     <>
-      <Notification show={handleSign.isError}>
-        {handleSign.error?.message}
+      <Notification show={handleSubmit.isError}>
+        {handleSubmit.error?.message}
       </Notification>
       <Form className={props.className}>
         <FormSection title={`New ${type}`}>
@@ -359,9 +359,9 @@ export default function ProposalForm(props: {
             large
             icon={type === 'round' ? BanknotesIcon : HandRaisedIcon}
             disabled={disabled}
-            loading={handleSign.isLoading}
-            onClick={handleSubmit(
-              (values) => handleSign.mutate(values),
+            loading={handleSubmit.isLoading}
+            onClick={onSubmit(
+              (values) => handleSubmit.mutate(values),
               console.error,
             )}
           >

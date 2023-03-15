@@ -74,7 +74,7 @@ export default function OptionForm(props: {
     did,
     `You are proposing on Voty\n\nhash:\n{sha256}`,
   )
-  const handleSign = useMutation<void, Error, Option>(async (option) => {
+  const handleSubmit = useMutation<void, Error, Option>(async (option) => {
     const signed = await signDocument(option)
     if (signed) {
       onSuccess(await mutateAsync(signed))
@@ -91,8 +91,8 @@ export default function OptionForm(props: {
 
   return (
     <>
-      <Notification show={handleSign.isError}>
-        {handleSign.error?.message}
+      <Notification show={handleSubmit.isError}>
+        {handleSubmit.error?.message}
       </Notification>
       <Form className={props.className}>
         <FormSection title="New proposal">
@@ -159,11 +159,11 @@ export default function OptionForm(props: {
                     primary
                     icon={HandRaisedIcon}
                     onClick={onSubmit(
-                      (value) => handleSign.mutate(value),
+                      (value) => handleSubmit.mutate(value),
                       console.error,
                     )}
                     disabled={disabled}
-                    loading={handleSign.isLoading}
+                    loading={handleSubmit.isLoading}
                   >
                     Propose
                   </Button>
@@ -178,11 +178,11 @@ export default function OptionForm(props: {
                 primary
                 icon={HandRaisedIcon}
                 onClick={onSubmit(
-                  (value) => handleSign.mutate(value),
+                  (value) => handleSubmit.mutate(value),
                   console.error,
                 )}
                 disabled={disabled}
-                loading={handleSign.isLoading}
+                loading={handleSubmit.isLoading}
                 className="mt-6"
               >
                 Propose
