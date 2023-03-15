@@ -33,7 +33,7 @@ export default function SubscriptionButton(props: {
   const signUnsubscribe = useSignDocumentWithoutAuthorship(
     `You are unsubscribing community on Voty\n\nhash:\n{sha256}`,
   )
-  const handleSignSubscribe = useMutation<
+  const handleSubscribe = useMutation<
     void,
     Error,
     ReactMouseEvent<HTMLButtonElement, MouseEvent>
@@ -49,7 +49,7 @@ export default function SubscriptionButton(props: {
       await mutateAsync(signed)
     }
   })
-  const handleSignUnsubscribe = useMutation<
+  const handleUnsubscribe = useMutation<
     void,
     Error,
     ReactMouseEvent<HTMLButtonElement, MouseEvent>
@@ -75,17 +75,17 @@ export default function SubscriptionButton(props: {
   return (
     <>
       <Notification show={isError}>{error?.message}</Notification>
-      <Notification show={handleSignUnsubscribe.isError}>
-        {handleSignUnsubscribe.error?.message}
+      <Notification show={handleUnsubscribe.isError}>
+        {handleUnsubscribe.error?.message}
       </Notification>
-      <Notification show={handleSignSubscribe.isError}>
-        {handleSignSubscribe.error?.message}
+      <Notification show={handleSubscribe.isError}>
+        {handleSubscribe.error?.message}
       </Notification>
       {subscribed ? (
         <TextButton
           primary
-          disabled={isLoading || handleSignUnsubscribe.isLoading}
-          onClick={handleSignUnsubscribe.mutate}
+          disabled={isLoading || handleUnsubscribe.isLoading}
+          onClick={handleUnsubscribe.mutate}
           className={props.className}
         >
           <BookmarkSolidIcon className="h-5 w-5" />
@@ -93,8 +93,8 @@ export default function SubscriptionButton(props: {
       ) : (
         <TextButton
           primary
-          disabled={isLoading || handleSignSubscribe.isLoading}
-          onClick={handleSignSubscribe.mutate}
+          disabled={isLoading || handleSubscribe.isLoading}
+          onClick={handleSubscribe.mutate}
           className={props.className}
         >
           <BookmarkOutlineIcon className="h-5 w-5" />

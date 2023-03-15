@@ -22,6 +22,8 @@ import DidCombobox from './did-combobox'
 import Button from './basic/button'
 import useSignDocument from '../hooks/use-sign-document'
 import TextButton from './basic/text-button'
+import Notification from './basic/notification'
+import { updateChoice } from '../utils/choice'
 
 const Tooltip = dynamic(
   () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
@@ -30,7 +32,8 @@ const Tooltip = dynamic(
 
 export default function VoteForm(props: {
   entry?: string
-  proposal?: Proposal & { permalink: string; votes: number }
+  defaultOption?: string
+  proposal?: Proposal & { permalink: string }
   group?: Group
   onSuccess: () => void
   className?: string
@@ -107,6 +110,11 @@ export default function VoteForm(props: {
     setValue('choice', '')
     onSuccess()
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
+  useEffect(() => {
+    if (props.defaultOption) {
+      setValue('choice', updateChoice('single', undefined, props.defaultOption))
+    }
+  }, [props.defaultOption, setValue])
   const { data: status } = useStatus(props.proposal?.permalink)
   const period = useMemo(
     () => getPeriod(new Date(), status?.timestamp, props.group?.duration),
@@ -141,7 +149,7 @@ export default function VoteForm(props: {
     did,
     `You are voting on Voty\n\nhash:\n{sha256}`,
   )
-  const handleSign = useMutation<void, Error, Vote>(async (vote) => {
+  const handleSubmit = useMutation<void, Error, Vote>(async (vote) => {
     const signed = await signDocument(vote)
     if (signed) {
       await mutateAsync(signed)
@@ -157,99 +165,106 @@ export default function VoteForm(props: {
   }, [defaultDid])
 
   return (
-    <div className={props.className}>
-      <FormItem error={errors.choice?.message}>
-        <Controller
-          control={control}
-          name="choice"
-          render={({ field: { value, onChange } }) =>
-            props.proposal?.options.length ? (
-              <ul
-                role="list"
-                className="mt-6 divide-y divide-gray-200 rounded border border-gray-200"
-              >
-                {props.proposal?.options.map((option) => (
-                  <ChoiceListItem
-                    key={option}
-                    type={props.proposal!.voting_type}
-                    option={option}
-                    votingPower={votingPower}
-                    choices={choices}
+    <>
+      <Notification show={handleSubmit.isError}>
+        {handleSubmit.error?.message}
+      </Notification>
+      <div className={props.className}>
+        <FormItem error={errors.choice?.message}>
+          <Controller
+            control={control}
+            name="choice"
+            render={({ field: { value, onChange } }) =>
+              props.proposal?.options?.length ? (
+                <ul
+                  role="list"
+                  className="mt-6 divide-y divide-gray-200 rounded border border-gray-200"
+                >
+                  {props.proposal?.options.map((option) => (
+                    <ChoiceListItem
+                      key={option}
+                      type={props.proposal!.voting_type}
+                      option={option}
+                      votingPower={votingPower}
+                      choices={choices}
+                      disabled={disables(did)}
+                      value={value}
+                      onChange={onChange}
+                    />
+                  ))}
+                </ul>
+              ) : (
+                <></>
+              )
+            }
+          />
+        </FormItem>
+        {period === Period.ENDED ? null : (
+          <div className="mt-6 flex w-full flex-col items-end">
+            <div className="w-full flex-1 sm:w-64 sm:flex-none">
+              <DidCombobox
+                top
+                label="Select a DID as voter"
+                options={didOptions}
+                value={did}
+                onChange={setDid}
+                onClick={connect}
+              />
+              {didOptions?.length === 0 ? (
+                <TextButton
+                  secondary
+                  href={`/${props.entry}/${props.group?.id}/rules`}
+                >
+                  Why I&#39;m not eligible to vote
+                </TextButton>
+              ) : null}
+            </div>
+            {period !== Period.VOTING ? (
+              <>
+                <div
+                  data-tooltip-id={id}
+                  data-tooltip-place="left"
+                  className="mt-6"
+                >
+                  <Button
+                    large
+                    primary
+                    icon={BoltIcon}
+                    onClick={onSubmit(
+                      (value) => handleSubmit.mutate(value),
+                      console.error,
+                    )}
                     disabled={disables(did)}
-                    value={value}
-                    onChange={onChange}
-                  />
-                ))}
-              </ul>
+                    loading={handleSubmit.isLoading}
+                  >
+                    Vote{votingPower ? ` (${votingPower})` : null}
+                  </Button>
+                </div>
+                <Tooltip id={id} className="rounded">
+                  {period === Period.CONFIRMING
+                    ? 'Waiting for transaction (in about 5 minutes)'
+                    : 'Waiting for voting'}
+                </Tooltip>
+              </>
             ) : (
-              <></>
-            )
-          }
-        />
-      </FormItem>
-      {period === Period.ENDED ? null : (
-        <div className="mt-6 flex w-full flex-col items-end">
-          <div className="w-full flex-1 sm:w-64 sm:flex-none">
-            <DidCombobox
-              top
-              label="Select a DID as voter"
-              options={didOptions}
-              value={did}
-              onChange={setDid}
-              onClick={connect}
-            />
-            {didOptions?.length === 0 ? (
-              <TextButton
-                secondary
-                href={`/${props.entry}/${props.group?.id}/rules`}
-              >
-                Why I&#39;m not eligible to vote
-              </TextButton>
-            ) : null}
-          </div>
-          {period !== Period.VOTING ? (
-            <>
-              <div
-                data-tooltip-id={id}
-                data-tooltip-place="left"
+              <Button
+                large
+                primary
+                icon={BoltIcon}
+                onClick={onSubmit(
+                  (value) => handleSubmit.mutate(value),
+                  console.error,
+                )}
+                disabled={disables(did)}
+                loading={handleSubmit.isLoading}
                 className="mt-6"
               >
-                <Button
-                  large
-                  primary
-                  icon={BoltIcon}
-                  onClick={onSubmit(
-                    (value) => handleSign.mutate(value),
-                    console.error,
-                  )}
-                  disabled={disables(did)}
-                  loading={handleSign.isLoading}
-                >
-                  Vote{votingPower ? ` (${votingPower})` : null}
-                </Button>
-              </div>
-              <Tooltip id={id} className="rounded">
-                Waiting for proposal transaction (in about 5 minutes)
-              </Tooltip>
-            </>
-          ) : (
-            <Button
-              large
-              primary
-              icon={BoltIcon}
-              onClick={onSubmit(
-                (value) => handleSign.mutate(value),
-                console.error,
-              )}
-              disabled={disables(did)}
-              loading={handleSign.isLoading}
-              className="mt-6"
-            >
-              Vote{votingPower ? ` (${votingPower})` : null}
-            </Button>
-          )}
-        </div>
-      )}
-    </div>
+                Vote{votingPower ? ` (${votingPower})` : null}
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
+    </>
   )
 }

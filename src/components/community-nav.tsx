@@ -3,6 +3,7 @@ import {
   GlobeAltIcon,
   BriefcaseIcon,
   DocumentTextIcon,
+  TrophyIcon,
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
@@ -156,17 +157,45 @@ export default function CommunityNav(props: { className?: string }) {
           <div className="mt-6 w-full">
             <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
               Workgroups
-              <CreateGroupButton entry={query.entry} className="float-right" />
+              <CreateGroupButton
+                type="workgroup"
+                entry={query.entry}
+                className="float-right"
+              />
             </h3>
             <div>
-              {community?.groups?.map((group) => (
-                <GroupListItem
-                  key={group.id}
-                  entry={query.entry}
-                  group={group}
-                  current={query.group === group.id}
-                />
-              ))}
+              {community?.groups
+                ?.filter(({ extension: { type } }) => type === 'workgroup')
+                ?.map((group) => (
+                  <GroupListItem
+                    key={group.id}
+                    entry={query.entry}
+                    group={group}
+                    current={query.group === group.id}
+                  />
+                ))}
+            </div>
+          </div>
+          <div className="mt-6 w-full">
+            <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
+              Grants
+              <CreateGroupButton
+                type="grant"
+                entry={query.entry}
+                className="float-right"
+              />
+            </h3>
+            <div>
+              {community?.groups
+                ?.filter(({ extension: { type } }) => type === 'grant')
+                ?.map((group) => (
+                  <GroupListItem
+                    key={group.id}
+                    entry={query.entry}
+                    group={group}
+                    current={query.group === group.id}
+                  />
+                ))}
             </div>
           </div>
           {externals.length ? (
@@ -217,6 +246,16 @@ function GroupListItem(props: {
         >
           {emoji}
         </span>
+      ) : props.group.extension.type === 'grant' ? (
+        <TrophyIcon
+          className={clsx(
+            props.current
+              ? 'text-primary-500'
+              : 'text-gray-300 group-hover:text-gray-400',
+            'mr-2 h-5 w-5 shrink-0',
+          )}
+          aria-hidden="true"
+        />
       ) : (
         <BriefcaseIcon
           className={clsx(

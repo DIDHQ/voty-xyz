@@ -12,6 +12,8 @@ import Article from '../../../components/basic/article'
 import { BooleanSets, DecimalSets } from '../../../utils/schemas/sets'
 import Button from '../../../components/basic/button'
 import useIsManager from '../../../hooks/use-is-manager'
+import { Grant } from '../../../utils/schemas/group'
+import Markdown from '../../../components/basic/markdown'
 
 export default function GroupRulesPage() {
   const query = useRouterQuery<['entry', 'group']>()
@@ -39,40 +41,90 @@ export default function GroupRulesPage() {
                   </Button>
                 </Link>
               ) : null}
-              <article className="prose max-w-none pt-6 prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400">
-                <h3>Proposing</h3>
-                <em>The following DIDs are eligible to propose</em>
-                <SetsDescription
-                  entry={query.entry}
-                  value={group.permission.proposing}
-                />
-                <h3>Voting</h3>
-                <em>
-                  The following DIDs are eligible to vote
-                  <br />
-                  The voting power is calculated based on the maximum value
-                </em>
-                <SetsDescription
-                  entry={query.entry}
-                  value={group.permission.voting}
-                />
-                <h3>Schedule</h3>
-                <ul>
-                  <li>
-                    Voting starts&nbsp;
-                    {formatDuration(group.duration.pending)} after transaction
-                    confirmation.
-                  </li>
-                  <li>
-                    Voting ends {formatDuration(group.duration.voting)}
-                    &nbsp;after starting.
-                  </li>
-                </ul>
-                <h3>Terms and conditions</h3>
-              </article>
-              <Article className="mt-3">
-                {group.extension.terms_and_conditions}
-              </Article>
+              {group.extension.type === 'grant' ? (
+                <>
+                  <Article className="pt-6">
+                    <h3>Investors</h3>
+                    <em>The following DIDs are eligible to invest</em>
+                    <SetsDescription
+                      entry={query.entry}
+                      value={group.permission.proposing}
+                    />
+                    <h3>Proposers</h3>
+                    <em>The following DIDs are eligible to propose</em>
+                    <SetsDescription
+                      entry={query.entry}
+                      value={(group as Grant).permission.adding_option}
+                    />
+                    <h3>Voters</h3>
+                    <em>
+                      The following DIDs are eligible to vote
+                      <br />
+                      The voting power is calculated based on the maximum value
+                    </em>
+                    <SetsDescription
+                      entry={query.entry}
+                      value={group.permission.voting}
+                    />
+                    <h3>Schedule</h3>
+                    <ul>
+                      <li>
+                        Proposing starts&nbsp;
+                        {formatDuration(group.duration.pending)} after
+                        transaction confirmation.
+                      </li>
+                      <li>
+                        Voting starts&nbsp;
+                        {formatDuration(
+                          (group as Grant).duration.adding_option,
+                        )}{' '}
+                        after proposing starting.
+                      </li>
+                      <li>
+                        Voting ends {formatDuration(group.duration.voting)}
+                        &nbsp;after starting.
+                      </li>
+                    </ul>
+                  </Article>
+                </>
+              ) : (
+                <>
+                  <Article className="pt-6">
+                    <h3>Proposers</h3>
+                    <em>The following DIDs are eligible to propose</em>
+                    <SetsDescription
+                      entry={query.entry}
+                      value={group.permission.proposing}
+                    />
+                    <h3>Voters</h3>
+                    <em>
+                      The following DIDs are eligible to vote
+                      <br />
+                      The voting power is calculated based on the maximum value
+                    </em>
+                    <SetsDescription
+                      entry={query.entry}
+                      value={group.permission.voting}
+                    />
+                    <h3>Schedule</h3>
+                    <ul>
+                      <li>
+                        Voting starts&nbsp;
+                        {formatDuration(group.duration.pending)} after
+                        transaction confirmation.
+                      </li>
+                      <li>
+                        Voting ends {formatDuration(group.duration.voting)}
+                        &nbsp;after starting.
+                      </li>
+                    </ul>
+                    <h3>Terms and conditions</h3>
+                  </Article>
+                  <Article className="mt-3">
+                    <Markdown>{group.extension.terms_and_conditions}</Markdown>
+                  </Article>
+                </>
+              )}
             </>
           ) : null}
         </GroupLayout>

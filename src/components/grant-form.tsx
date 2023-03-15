@@ -1,6 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo } from 'react'
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import {
+  Controller,
+  FieldError,
+  FieldErrorsImpl,
+  FormProvider,
+  Merge,
+  useForm,
+} from 'react-hook-form'
 import {
   ArchiveBoxIcon,
   ArrowPathIcon,
@@ -11,19 +18,18 @@ import { useMutation } from '@tanstack/react-query'
 import { Community, communitySchema } from '../utils/schemas/community'
 import DurationInput from './basic/duration-input'
 import TextInput from './basic/text-input'
-import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import DecimalSetsBlock from './decimal-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
-import { Grid6, GridItem3, GridItem6 } from './basic/grid'
-import PreviewMarkdown from './preview-markdown'
+import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 import Button from './basic/button'
 import useSignDocument from '../hooks/use-sign-document'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
 import useIsManager from '../hooks/use-is-manager'
+import { Grant } from '../utils/schemas/group'
 
-export default function GroupForm(props: {
+export default function GrantForm(props: {
   author: string
   initialValue?: Community
   group?: string
@@ -39,7 +45,6 @@ export default function GroupForm(props: {
     control,
     register,
     reset,
-    watch,
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
@@ -59,7 +64,7 @@ export default function GroupForm(props: {
     props.author,
     `You are ${
       props.isNewGroup ? 'creating' : 'updating'
-    } workgroup on Voty\n\nhash:\n{sha256}`,
+    } grant on Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.community.create.useMutation()
   const handleSubmit = useMutation<void, Error, Community>(
@@ -84,6 +89,10 @@ export default function GroupForm(props: {
     },
   )
   const isManager = useIsManager(props.author)
+  const groupErrors = errors.groups?.[groupIndex] as Merge<
+    FieldError,
+    FieldErrorsImpl<NonNullable<Grant>>
+  >
 
   return (
     <>
@@ -95,19 +104,16 @@ export default function GroupForm(props: {
       </Notification>
       <Form className={props.className}>
         <FormSection
-          title={`${props.isNewGroup ? 'New' : 'Edit'} workgroup of ${
+          title={`${props.isNewGroup ? 'New' : 'Edit'} grant of ${
             props.author
           }`}
         >
           <Grid6>
             <GridItem6>
-              <FormItem
-                label="Name"
-                error={errors.groups?.[groupIndex]?.name?.message}
-              >
+              <FormItem label="Name" error={groupErrors?.name?.message}>
                 <TextInput
                   {...register(`groups.${groupIndex}.name`)}
-                  error={!!errors.groups?.[groupIndex]?.name?.message}
+                  error={!!groupErrors?.name?.message}
                   disabled={!isManager}
                 />
               </FormItem>
@@ -115,18 +121,34 @@ export default function GroupForm(props: {
             <GridItem6>
               <FormItem
                 label="Introduction"
-                error={
-                  errors.groups?.[groupIndex]?.extension?.introduction?.message
-                }
+                error={groupErrors?.extension?.introduction?.message}
               >
                 <TextInput
                   {...register(`groups.${groupIndex}.extension.introduction`)}
-                  error={
-                    !!errors.groups?.[groupIndex]?.extension?.introduction
-                      ?.message
-                  }
+                  error={!!groupErrors?.extension?.introduction?.message}
                   disabled={!isManager}
                 />
+              </FormItem>
+            </GridItem6>
+          </Grid6>
+        </FormSection>
+        <FormSection
+          title="Investors"
+          description="The following DIDs are eligible to invest"
+        >
+          <Grid6>
+            <GridItem6>
+              <FormItem
+                error={groupErrors?.permission?.proposing?.operands?.message}
+              >
+                <FormProvider {...methods}>
+                  <BooleanSetsBlock
+                    name="proposing"
+                    entry={props.author}
+                    groupIndex={groupIndex}
+                    disabled={!isManager}
+                  />
+                </FormProvider>
               </FormItem>
             </GridItem6>
           </Grid6>
@@ -139,13 +161,12 @@ export default function GroupForm(props: {
             <GridItem6>
               <FormItem
                 error={
-                  errors.groups?.[groupIndex]?.permission?.proposing?.operands
-                    ?.message
+                  groupErrors?.permission?.adding_option?.operands?.message
                 }
               >
                 <FormProvider {...methods}>
                   <BooleanSetsBlock
-                    name="proposing"
+                    name="adding_option"
                     entry={props.author}
                     groupIndex={groupIndex}
                     disabled={!isManager}
@@ -162,10 +183,7 @@ export default function GroupForm(props: {
           <Grid6>
             <GridItem6>
               <FormItem
-                error={
-                  errors?.groups?.[groupIndex]?.permission?.voting?.operands
-                    ?.message
-                }
+                error={groupErrors?.permission?.voting?.operands?.message}
               >
                 <FormProvider {...methods}>
                   <DecimalSetsBlock
@@ -181,10 +199,10 @@ export default function GroupForm(props: {
         </FormSection>
         <FormSection title="Schedule">
           <Grid6>
-            <GridItem3>
+            <GridItem2>
               <FormItem
-                label="Duration of pending before voting"
-                error={errors?.groups?.[groupIndex]?.duration?.pending?.message}
+                label="Duration of pending before proposing"
+                error={groupErrors?.duration?.pending?.message}
               >
                 <Controller
                   control={control}
@@ -194,16 +212,35 @@ export default function GroupForm(props: {
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={!!errors?.groups?.[groupIndex]?.duration?.pending}
+                      error={!!groupErrors?.duration?.pending}
                     />
                   )}
                 />
               </FormItem>
-            </GridItem3>
-            <GridItem3>
+            </GridItem2>
+            <GridItem2>
+              <FormItem
+                label="Duration of proposing before voting"
+                error={groupErrors?.duration?.adding_option?.message}
+              >
+                <Controller
+                  control={control}
+                  name={`groups.${groupIndex}.duration.adding_option`}
+                  render={({ field: { value, onChange } }) => (
+                    <DurationInput
+                      value={value}
+                      onChange={onChange}
+                      disabled={!isManager}
+                      error={!!groupErrors?.duration?.adding_option}
+                    />
+                  )}
+                />
+              </FormItem>
+            </GridItem2>
+            <GridItem2>
               <FormItem
                 label="Duration of voting"
-                error={errors?.groups?.[groupIndex]?.duration?.voting?.message}
+                error={groupErrors?.duration?.voting?.message}
               >
                 <Controller
                   control={control}
@@ -213,45 +250,12 @@ export default function GroupForm(props: {
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={!!errors?.groups?.[groupIndex]?.duration?.voting}
+                      error={!!groupErrors?.duration?.voting}
                     />
                   )}
                 />
               </FormItem>
-            </GridItem3>
-          </Grid6>
-        </FormSection>
-        <FormSection
-          title="Terms and conditions"
-          description="Defines the final state of proposal"
-        >
-          <Grid6>
-            <GridItem6>
-              <FormItem
-                description={
-                  <PreviewMarkdown>
-                    {watch(
-                      `groups.${groupIndex}.extension.terms_and_conditions`,
-                    )}
-                  </PreviewMarkdown>
-                }
-                error={
-                  errors?.groups?.[groupIndex]?.extension?.terms_and_conditions
-                    ?.message
-                }
-              >
-                <Textarea
-                  disabled={!isManager}
-                  {...register(
-                    `groups.${groupIndex}.extension.terms_and_conditions`,
-                  )}
-                  error={
-                    !!errors?.groups?.[groupIndex]?.extension
-                      ?.terms_and_conditions?.message
-                  }
-                />
-              </FormItem>
-            </GridItem6>
+            </GridItem2>
           </Grid6>
         </FormSection>
         {isManager ? (

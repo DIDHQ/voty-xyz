@@ -5,7 +5,7 @@ import { Proposal } from './schemas/proposal'
 
 export function updateChoice(
   type: Proposal['voting_type'],
-  choice: string,
+  choice: string | undefined,
   option: string,
 ): string {
   try {
@@ -68,7 +68,7 @@ export function powerOfChoice(
 
 export function choiceIsEmpty(
   type: Proposal['voting_type'],
-  choice: string,
+  choice: string | undefined,
 ): boolean {
   if (type === 'single') {
     return !choice

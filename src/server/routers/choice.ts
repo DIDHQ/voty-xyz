@@ -7,6 +7,29 @@ import { database } from '../../utils/database'
 import { procedure, router } from '../trpc'
 
 export const choiceRouter = router({
+  get: procedure
+    .input(
+      z.object({
+        proposal: z.string().optional(),
+        option: z.string().optional(),
+      }),
+    )
+    .output(z.object({ power: z.string() }))
+    .query(async ({ input }) => {
+      if (!input.proposal || !input.option) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
+      }
+
+      const choice = await database.choice.findUnique({
+        where: {
+          proposal_option: { proposal: input.proposal, option: input.option },
+        },
+      })
+
+      return {
+        power: choice?.power.toString() || '0',
+      }
+    }),
   groupByProposal: procedure
     .input(z.object({ proposal: z.string().optional() }))
     .output(

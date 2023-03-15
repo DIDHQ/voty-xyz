@@ -19,9 +19,10 @@ const entrySchema = z.object({
   did: z.string(),
   ts: z.string(),
   community: z.string(),
-  subscribers: z.number(),
-  proposals: z.number(),
-  votes: z.number(),
+  subscribers: z.number().int(),
+  proposals: z.number().int(),
+  options_count: z.number().int(),
+  votes: z.number().int(),
 })
 
 export const communityRouter = router({
@@ -175,6 +176,7 @@ export const communityRouter = router({
             community: permalink,
             subscribers: 0,
             proposals: 0,
+            options_count: 0,
             votes: 0,
             ts,
           },

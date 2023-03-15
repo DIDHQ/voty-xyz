@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { uniq } from 'lodash-es'
-import { HandRaisedIcon } from '@heroicons/react/20/solid'
+import { BanknotesIcon, HandRaisedIcon } from '@heroicons/react/20/solid'
 import { Entry } from '@prisma/client'
 import type { Serialize } from '@trpc/server/dist/shared/internal/serialize'
 import clsx from 'clsx'
@@ -15,7 +15,7 @@ import TextInput from '../components/basic/text-input'
 import Textarea from '../components/basic/textarea'
 import TextButton from '../components/basic/text-button'
 import { Form, FormItem, FormSection } from '../components/basic/form'
-import { Grid6, GridItem6 } from '../components/basic/grid'
+import { Grid6, GridItem3, GridItem6 } from '../components/basic/grid'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import PreviewMarkdown from '../components/preview-markdown'
 import useStatus from '../hooks/use-status'
@@ -42,9 +42,10 @@ export default function ProposalForm(props: {
   className?: string
 }) {
   const { onSuccess } = props
+  const type = props.group?.extension.type === 'grant' ? 'round' : 'proposal'
   const methods = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
-    defaultValues: { options: ['', ''], voting_type: 'single' },
+    defaultValues: { voting_type: 'single' },
   })
   const {
     register,
@@ -53,7 +54,7 @@ export default function ProposalForm(props: {
     watch,
     control,
     formState: { errors },
-    handleSubmit,
+    handleSubmit: onSubmit,
   } = methods
   const handleOptionDelete = useCallback(
     (index: number) => {
@@ -70,6 +71,17 @@ export default function ProposalForm(props: {
   useEffect(() => {
     if (props.group) {
       setValue('group', props.group.id)
+    }
+  }, [props.group, setValue])
+  useEffect(() => {
+    if (props.group) {
+      if (props.group.extension.type === 'grant') {
+        setValue('options', undefined)
+        setValue('extension.funding', [['', 5]])
+      } else {
+        setValue('options', ['', ''])
+        setValue('extension.funding', undefined)
+      }
     }
   }, [props.group, setValue])
   const [did, setDid] = useState('')
@@ -143,10 +155,10 @@ export default function ProposalForm(props: {
   const options = watch('options') || []
   const signDocument = useSignDocument(
     did,
-    `You are creating proposal on Voty\n\nhash:\n{sha256}`,
+    `You are creating ${type} on Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.proposal.create.useMutation()
-  const handleSign = useMutation<void, Error, Proposal>(async (proposal) => {
+  const handleSubmit = useMutation<void, Error, Proposal>(async (proposal) => {
     const signed = await signDocument(proposal)
     if (signed) {
       onSuccess(await mutateAsync(signed))
@@ -174,11 +186,11 @@ export default function ProposalForm(props: {
 
   return (
     <>
-      <Notification show={handleSign.isError}>
-        {handleSign.error?.message}
+      <Notification show={handleSubmit.isError}>
+        {handleSubmit.error?.message}
       </Notification>
       <Form className={props.className}>
-        <FormSection title="New proposal">
+        <FormSection title={`New ${type}`}>
           <Grid6 className="mt-6">
             <GridItem6>
               <FormItem label="Title" error={errors.title?.message}>
@@ -206,81 +218,127 @@ export default function ProposalForm(props: {
                 />
               </FormItem>
             </GridItem6>
-            <GridItem6>
-              <FormItem label="Voting type" error={errors.voting_type?.message}>
-                <Controller
-                  control={control}
-                  name="voting_type"
-                  render={({ field: { value, onChange } }) => (
-                    <RadioGroup
-                      options={votingTypes}
-                      value={value}
-                      onChange={onChange}
+            {type === 'round' ? (
+              <GridItem3>
+                <FormItem
+                  label="Funding"
+                  error={
+                    errors?.extension?.funding?.[0]?.[0]?.message ||
+                    errors?.extension?.funding?.[0]?.[1]?.message
+                  }
+                >
+                  <div className="flex w-full items-center space-x-2">
+                    <TextInput
                       disabled={disabled}
+                      {...register('extension.funding.0.0')}
+                      error={!!errors?.extension?.funding?.[0]?.[0]}
+                      placeholder="prize"
+                      className="w-0 flex-1"
                     />
-                  )}
-                />
-              </FormItem>
-            </GridItem6>
-            <GridItem6>
-              <FormItem
-                label="Options"
-                description={
-                  <TextButton
-                    secondary
-                    disabled={disabled}
-                    onClick={() => {
-                      setValue('options', [...options, ''])
-                    }}
+                    <span className="text-gray-400">X</span>
+                    <Controller
+                      control={control}
+                      name="extension.funding.0.1"
+                      render={({ field: { value, onChange } }) => (
+                        <TextInput
+                          disabled={disabled}
+                          type="number"
+                          value={value || ''}
+                          onChange={(e) => onChange(e.target.valueAsNumber)}
+                          error={!!errors?.extension?.funding?.[0]?.[1]}
+                          placeholder="count"
+                          className="shrink-0 basis-16"
+                        />
+                      )}
+                    />
+                  </div>
+                </FormItem>
+              </GridItem3>
+            ) : (
+              <>
+                <GridItem6>
+                  <FormItem
+                    label="Voting type"
+                    error={errors.voting_type?.message}
                   >
-                    Add
-                  </TextButton>
-                }
-                error={
-                  errors.options?.message ||
-                  errors.options?.find?.((option) => option?.message)?.message
-                }
-              >
-                <div className="space-y-[-1px]">
-                  {options.map((_, index) => (
-                    <div
-                      key={index}
-                      className="relative flex items-center justify-between text-sm"
-                    >
-                      <input
-                        type="text"
-                        placeholder={`Option ${index + 1}`}
-                        {...register(`options.${index}`)}
+                    <Controller
+                      control={control}
+                      name="voting_type"
+                      render={({ field: { value, onChange } }) => (
+                        <RadioGroup
+                          options={votingTypes}
+                          value={value}
+                          onChange={onChange}
+                          disabled={disabled}
+                        />
+                      )}
+                    />
+                  </FormItem>
+                </GridItem6>
+                <GridItem6>
+                  <FormItem
+                    label="Options"
+                    description={
+                      <TextButton
+                        secondary
                         disabled={disabled}
-                        className={clsx(
-                          'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600 sm:text-sm',
-                          options.length > 1 ? 'pr-20' : 'pr-3',
-                          index === 0 ? 'rounded-t' : undefined,
-                          index === options.length - 1
-                            ? 'rounded-b'
-                            : undefined,
-                        )}
-                      />
-                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
-                        {options.length > 2 ? (
-                          <OptionRemove
-                            index={index}
-                            onDelete={handleOptionDelete}
+                        onClick={() => {
+                          setValue('options', [...options, ''])
+                        }}
+                      >
+                        Add
+                      </TextButton>
+                    }
+                    error={
+                      errors.options?.message ||
+                      errors.options?.find?.((option) => option?.message)
+                        ?.message
+                    }
+                  >
+                    <div className="space-y-[-1px]">
+                      {options.map((_, index) => (
+                        <div
+                          key={index}
+                          className="relative flex items-center justify-between text-sm"
+                        >
+                          <input
+                            type="text"
+                            placeholder={`Option ${index + 1}`}
+                            {...register(`options.${index}`)}
+                            disabled={disabled}
+                            className={clsx(
+                              'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600 sm:text-sm',
+                              options.length > 1 ? 'pr-20' : 'pr-3',
+                              index === 0 ? 'rounded-t' : undefined,
+                              index === options.length - 1
+                                ? 'rounded-b'
+                                : undefined,
+                            )}
                           />
-                        ) : null}
-                      </div>
+                          <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
+                            {options.length > 2 ? (
+                              <OptionRemove
+                                index={index}
+                                onDelete={handleOptionDelete}
+                              />
+                            ) : null}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </FormItem>
-            </GridItem6>
+                  </FormItem>
+                </GridItem6>
+              </>
+            )}
           </Grid6>
         </FormSection>
         <div className="flex w-full flex-col items-end space-y-6">
           <div className="w-full flex-1 sm:w-64 sm:flex-none">
             <DidCombobox
               top
-              label="Select a DID as proposer"
+              label={`Select a DID as ${
+                type === 'round' ? 'investor' : 'proposer'
+              }`}
               options={didOptions}
               value={did}
               onChange={setDid}
@@ -291,22 +349,23 @@ export default function ProposalForm(props: {
                 secondary
                 href={`/${props.community?.authorship.author}/${props.group?.id}/rules`}
               >
-                Why I&#39;m not eligible to propose
+                Why I&#39;m not eligible to&nbsp;
+                {type === 'round' ? 'invest' : 'propose'}
               </TextButton>
             ) : null}
           </div>
           <Button
             primary
             large
-            icon={HandRaisedIcon}
+            icon={type === 'round' ? BanknotesIcon : HandRaisedIcon}
             disabled={disabled}
-            loading={handleSign.isLoading}
-            onClick={handleSubmit(
-              (values) => handleSign.mutate(values),
+            loading={handleSubmit.isLoading}
+            onClick={onSubmit(
+              (values) => handleSubmit.mutate(values),
               console.error,
             )}
           >
-            Propose
+            {type === 'round' ? 'Invest' : 'Propose'}
           </Button>
         </div>
       </Form>

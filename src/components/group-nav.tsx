@@ -1,4 +1,4 @@
-import { BriefcaseIcon } from '@heroicons/react/24/outline'
+import { BriefcaseIcon, TrophyIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import Link from 'next/link'
@@ -23,7 +23,7 @@ export default function GroupNav(props: { className?: string }) {
   const tabs = useMemo(
     () => [
       {
-        name: 'Proposals',
+        name: group?.extension.type === 'grant' ? 'Rounds' : 'Proposals',
         href: `/${query.entry}/${query.group}`,
         current: router.pathname === '/[entry]/[group]',
       },
@@ -33,7 +33,7 @@ export default function GroupNav(props: { className?: string }) {
         current: router.pathname === '/[entry]/[group]/rules',
       },
     ],
-    [query.entry, query.group, router.pathname],
+    [group?.extension.type, query.entry, query.group, router.pathname],
   )
   const emoji = useMemo(() => extractStartEmoji(group?.name), [group?.name])
   const name = useMemo(
@@ -59,6 +59,11 @@ export default function GroupNav(props: { className?: string }) {
             >
               {emoji}
             </span>
+          ) : group?.extension.type === 'grant' ? (
+            <TrophyIcon
+              className="mr-3 h-8 w-8 shrink-0 text-gray-400"
+              aria-hidden="true"
+            />
           ) : (
             <BriefcaseIcon
               className="mr-3 h-8 w-8 shrink-0 text-gray-400"

@@ -4,24 +4,25 @@ import { useId } from 'react'
 import { Tooltip } from 'react-tooltip'
 
 import useStatus from '../hooks/use-status'
+import { Group } from '../utils/schemas/group'
 import Button from './basic/button'
 
 export default function CreateProposalButton(props: {
   entry?: string
-  group?: string
   community?: string
+  group?: Group
   className?: string
 }) {
   const { data: status } = useStatus(props.community)
   const id = useId()
 
-  return status?.timestamp ? (
+  return status?.timestamp && props.group ? (
     <Link
-      href={`/${props.entry}/${props.group}/create`}
+      href={`/${props.entry}/${props.group.id}/create`}
       className={props.className}
     >
       <Button primary icon={PlusIcon}>
-        Proposal
+        {props.group.extension.type === 'grant' ? 'Round' : 'Proposal'}
       </Button>
     </Link>
   ) : (
@@ -32,7 +33,7 @@ export default function CreateProposalButton(props: {
         className={props.className}
       >
         <Button primary disabled icon={PlusIcon}>
-          Proposal
+          {props.group?.extension.type === 'grant' ? 'Round' : 'Proposal'}
         </Button>
       </div>
       <Tooltip id={id} className="rounded">

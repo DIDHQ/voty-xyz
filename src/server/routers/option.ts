@@ -1,23 +1,35 @@
 import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last, mapValues } from 'lodash-es'
 import { z } from 'zod'
-import Decimal from 'decimal.js'
 
 import { uploadToArweave } from '../../utils/upload'
-import { database } from '../../utils/database'
+import { database, getByPermalink } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
-import { voteSchema } from '../../utils/schemas/vote'
-import verifyVote from '../../utils/verifiers/verify-vote'
-import { powerOfChoice } from '../../utils/choice'
+import { optionSchema } from '../../utils/schemas/option'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
+import verifyOption from '../../utils/verifiers/verify-option'
+import { DataType } from '../../utils/constants'
+import { decimalSchema } from '../../utils/schemas/decimal'
 
-const schema = proved(authorized(voteSchema))
+const schema = proved(authorized(optionSchema))
 
-export const voteRouter = router({
+export const optionRouter = router({
+  getByPermalink: procedure
+    .input(z.object({ permalink: z.string().optional() }))
+    .output(schema.nullable())
+    .query(async ({ input }) => {
+      if (!input.permalink) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
+      }
+
+      const option = await getByPermalink(DataType.OPTION, input.permalink)
+
+      return option ? option.data : null
+    }),
   list: procedure
     .input(
       z.object({
@@ -27,7 +39,13 @@ export const voteRouter = router({
     )
     .output(
       z.object({
-        data: z.array(schema.extend({ permalink: z.string() })),
+        data: z.array(
+          schema.extend({
+            permalink: z.string(),
+            power: decimalSchema,
+            ts: z.date(),
+          }),
+        ),
         next: z.string().optional(),
       }),
     )
@@ -36,46 +54,40 @@ export const voteRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const votes = await database.vote.findMany({
+      const options = await database.option.findMany({
         where: { proposal: input.proposal },
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
         take: 20,
         skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
+      const powers = mapValues(
+        keyBy(
+          await database.choice.findMany({
+            where: { proposal: input.proposal },
+          }),
+          ({ option }) => option,
+        ),
+        ({ power }) => power,
+      )
 
       return {
         data: compact(
-          votes.map(({ permalink, data }) => {
+          options.map(({ data, permalink, ts }) => {
             try {
               return {
                 ...schema.parse(data),
                 permalink,
+                power: powers[permalink]?.toString() || '0',
+                ts,
               }
             } catch {
               return
             }
           }),
         ),
-        next: last(votes)?.permalink,
+        next: last(options)?.permalink,
       }
-    }),
-  groupByProposal: procedure
-    .input(z.object({ proposal: z.string().optional() }))
-    .output(z.record(z.string(), z.string()))
-    .query(async ({ input }) => {
-      if (!input.proposal) {
-        throw new TRPCError({ code: 'BAD_REQUEST' })
-      }
-
-      const votes = await database.vote.findMany({
-        where: { proposal: input.proposal },
-      })
-
-      return mapValues(
-        keyBy(votes, ({ author }) => author),
-        ({ data }) => schema.parse(data).power,
-      )
     }),
   create: procedure
     .input(schema)
@@ -84,13 +96,13 @@ export const voteRouter = router({
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
-      const { proposal, community } = await verifyVote(input)
+      const { proposal, community } = await verifyOption(input)
 
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
       await database.$transaction([
-        database.vote.create({
+        database.option.create({
           data: {
             permalink,
             ts,
@@ -103,37 +115,16 @@ export const voteRouter = router({
         }),
         database.proposal.update({
           where: { permalink: input.proposal },
-          data: { votes: { increment: 1 } },
+          data: { options_count: { increment: 1 } },
         }),
         database.entry.update({
           where: { did: community.authorship.author },
-          data: { votes: { increment: 1 } },
+          data: { options_count: { increment: 1 } },
         }),
-        ...Object.entries(
-          powerOfChoice(
-            proposal.voting_type,
-            input.choice,
-            new Decimal(input.power),
-          ),
-        ).map(([option, power = 0]) =>
-          database.choice.upsert({
-            where: {
-              proposal_option: { proposal: input.proposal, option },
-            },
-            create: {
-              proposal: input.proposal,
-              option,
-              power,
-            },
-            update: {
-              power: { increment: power },
-            },
-          }),
-        ),
       ])
 
       return permalink
     }),
 })
 
-export type VoteRouter = typeof voteRouter
+export type OptionRouter = typeof optionRouter

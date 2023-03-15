@@ -26,7 +26,13 @@ export const proposalRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
     .output(
-      schema.extend({ permalink: z.string(), votes: z.number() }).nullable(),
+      schema
+        .extend({
+          permalink: z.string(),
+          options_count: z.number().int(),
+          votes: z.number().int(),
+        })
+        .nullable(),
     )
     .query(async ({ input }) => {
       if (!input.permalink) {
@@ -35,7 +41,12 @@ export const proposalRouter = router({
 
       const proposal = await getByPermalink(DataType.PROPOSAL, input.permalink)
 
-      if (proposal && !proposal.ts_pending && !proposal.ts_voting) {
+      if (
+        proposal &&
+        (!proposal.ts_pending ||
+          !proposal.ts_adding_option ||
+          !proposal.ts_voting)
+      ) {
         try {
           const community = await getByPermalink(
             DataType.COMMUNITY,
@@ -56,8 +67,21 @@ export const proposalRouter = router({
                 ts_pending: dayjs(timestamp)
                   .add(group.duration.pending * 1000)
                   .toDate(),
+                ts_adding_option: dayjs(timestamp)
+                  .add(group.duration.pending * 1000)
+                  .add(
+                    ('adding_option' in group.duration
+                      ? group.duration.adding_option
+                      : 0) * 1000,
+                  )
+                  .toDate(),
                 ts_voting: dayjs(timestamp)
                   .add(group.duration.pending * 1000)
+                  .add(
+                    ('adding_option' in group.duration
+                      ? group.duration.adding_option
+                      : 0) * 1000,
+                  )
                   .add(group.duration.voting * 1000)
                   .toDate(),
               },
@@ -72,6 +96,7 @@ export const proposalRouter = router({
         ? {
             ...proposal.data,
             permalink: proposal.permalink,
+            options_count: proposal.options_count,
             votes: proposal.votes,
           }
         : null
@@ -85,6 +110,7 @@ export const proposalRouter = router({
           .enum([
             Period.CONFIRMING,
             Period.PENDING,
+            Period.PROPOSING,
             Period.VOTING,
             Period.ENDED,
           ])
@@ -97,9 +123,11 @@ export const proposalRouter = router({
         data: z.array(
           schema.extend({
             permalink: z.string(),
-            votes: z.number(),
+            options_count: z.number().int(),
+            votes: z.number().int(),
             ts: z.date(),
             ts_pending: z.date().nullable(),
+            ts_adding_option: z.date().nullable(),
             ts_voting: z.date().nullable(),
           }),
         ),
@@ -114,11 +142,13 @@ export const proposalRouter = router({
       const now = new Date()
       const filter =
         input.period === Period.CONFIRMING
-          ? { ts_pending: null, ts_voting: null }
+          ? { ts_pending: null, ts_adding_option: null, ts_voting: null }
           : input.period === Period.PENDING
           ? { ts: { lte: now }, ts_pending: { gt: now } }
+          : input.period === Period.PROPOSING
+          ? { ts_pending: { lte: now }, ts_adding_option: { gt: now } }
           : input.period === Period.VOTING
-          ? { ts_pending: { lte: now }, ts_voting: { gt: now } }
+          ? { ts_adding_option: { lte: now }, ts_voting: { gt: now } }
           : input.period === Period.ENDED
           ? { ts_voting: { lte: now } }
           : {}
@@ -135,14 +165,25 @@ export const proposalRouter = router({
       return {
         data: compact(
           proposals.map(
-            ({ data, permalink, votes, ts, ts_pending, ts_voting }) => {
+            ({
+              data,
+              permalink,
+              options_count,
+              votes,
+              ts,
+              ts_pending,
+              ts_adding_option,
+              ts_voting,
+            }) => {
               try {
                 return {
                   ...schema.parse(data),
                   permalink,
+                  options_count,
                   votes,
                   ts,
                   ts_pending,
+                  ts_adding_option,
                   ts_voting,
                 }
               } catch {
@@ -161,7 +202,7 @@ export const proposalRouter = router({
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
-      const { community, group } = await verifyProposal(input)
+      const { community } = await verifyProposal(input)
 
       const entry = await database.entry.findFirst({
         where: { did: community.authorship.author },
@@ -182,15 +223,9 @@ export const proposalRouter = router({
             community: input.community,
             group: input.group,
             data: input,
+            options_count: 0,
             votes: 0,
             ts,
-            ts_pending: dayjs(ts)
-              .add(group.duration.pending * 1000)
-              .toDate(),
-            ts_voting: dayjs(ts)
-              .add(group.duration.pending * 1000)
-              .add(group.duration.voting * 1000)
-              .toDate(),
           },
         }),
         database.entry.update({

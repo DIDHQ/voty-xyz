@@ -14,8 +14,10 @@ export default function ProposalCard(props: {
   proposal: Authorized<Proposal> & {
     permalink: string
     votes: number
+    options_count: number
     ts: Date
     ts_pending: Date | null
+    ts_adding_option: Date | null
     ts_voting: Date | null
   }
 }) {
@@ -30,17 +32,31 @@ export default function ProposalCard(props: {
       props.proposal.ts_pending && props.proposal.ts_voting
         ? now < props.proposal.ts_pending.getTime()
           ? Period.PENDING
+          : props.proposal.ts_adding_option &&
+            now < props.proposal.ts_adding_option.getTime()
+          ? Period.PROPOSING
           : now < props.proposal.ts_voting.getTime()
           ? Period.VOTING
           : Period.ENDED
         : Period.CONFIRMING,
-    [props.proposal.ts_pending, props.proposal.ts_voting, now],
+    [
+      props.proposal.ts_pending,
+      props.proposal.ts_voting,
+      props.proposal.ts_adding_option,
+      now,
+    ],
   )
 
   return (
     <Link
       shallow
-      href={`/proposal/${permalink2Id(props.proposal.permalink)}`}
+      href={
+        group
+          ? `/${
+              group.extension.type === 'grant' ? 'round' : 'proposal'
+            }/${permalink2Id(props.proposal.permalink)}`
+          : ''
+      }
       className="block divide-y rounded border transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:border-primary-500 hover:bg-gray-50"
     >
       <div className="w-full p-4">
@@ -55,7 +71,7 @@ export default function ProposalCard(props: {
       </div>
       <div className="flex w-full divide-x bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">
-          <p>Proposer</p>
+          <p>{group?.extension.type === 'grant' ? 'Investor' : 'Proposer'}</p>
           <p className="truncate text-gray-400">
             {props.proposal.authorship.author}
           </p>
@@ -72,11 +88,26 @@ export default function ProposalCard(props: {
               </>
             ) : period === Period.PENDING && props.proposal.ts_pending ? (
               <>
-                <p>Voting starts</p>
+                <p>
+                  {group.extension.type === 'grant' ? 'Proposing' : 'Voting'}
+                  &nbsp; starts
+                </p>
                 <p className="text-gray-400">
                   <PeriodDot value={period} className="mb-0.5 mr-1.5" />
                   in&nbsp;
                   {formatDurationMs(props.proposal.ts_pending.getTime() - now)}
+                </p>
+              </>
+            ) : period === Period.PROPOSING &&
+              props.proposal.ts_adding_option ? (
+              <>
+                <p>Proposing ends</p>
+                <p className="text-gray-400">
+                  <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                  in&nbsp;
+                  {formatDurationMs(
+                    props.proposal.ts_adding_option.getTime() - now,
+                  )}
                 </p>
               </>
             ) : period === Period.VOTING && props.proposal.ts_voting ? (
@@ -101,8 +132,16 @@ export default function ProposalCard(props: {
           ) : null}
         </div>
         <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
-          <p>Votes</p>
-          <p className="text-gray-400">{props.proposal.votes}</p>
+          {group ? (
+            <>
+              <p>{group.extension.type === 'grant' ? 'Proposals' : 'Votes'}</p>
+              <p className="text-gray-400">
+                {group.extension.type === 'grant'
+                  ? props.proposal.options_count
+                  : props.proposal.votes}
+              </p>
+            </>
+          ) : null}
         </div>
       </div>
     </Link>
@@ -118,6 +157,7 @@ function PeriodDot(props: { value?: Period; className?: string }) {
           ? {
               [Period.CONFIRMING]: 'text-blue-400',
               [Period.PENDING]: 'text-yellow-400',
+              [Period.PROPOSING]: 'text-purple-400',
               [Period.VOTING]: 'text-green-400',
               [Period.ENDED]: 'text-gray-400',
             }[props.value]

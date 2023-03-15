@@ -13,6 +13,7 @@ import Article from '../../../components/basic/article'
 import LoadingBar from '../../../components/basic/loading-bar'
 import ProposalForm from '../../../components/proposal-from'
 import { documentTitle } from '../../../utils/constants'
+import Markdown from '../../../components/basic/markdown'
 
 export default function CreateProposalPage() {
   const router = useRouter()
@@ -22,17 +23,18 @@ export default function CreateProposalPage() {
     { enabled: !!query.entry },
   )
   const group = useGroup(community, query.group)
+  const type = group?.extension.type === 'grant' ? 'round' : 'proposal'
   const handleSuccess = useCallback(
     (permalink: string) => {
-      router.push(`/proposal/${permalink2Id(permalink)}`)
+      router.push(`/${type}/${permalink2Id(permalink)}`)
     },
-    [router],
+    [router, type],
   )
 
   return (
     <>
       <Head>
-        <title>{`New proposal - ${documentTitle}`}</title>
+        <title>{`New ${type} - ${documentTitle}`}</title>
       </Head>
       <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
         <LoadingBar loading={isLoading} />
@@ -74,11 +76,13 @@ export default function CreateProposalPage() {
                 {group ? formatDuration(group.duration.voting) : null}
               </DetailItem>
             </DetailList>
-            <DetailList title="Terms and conditions">
-              <Article small className="pt-2">
-                {group?.extension.terms_and_conditions}
-              </Article>
-            </DetailList>
+            {group && 'terms_and_conditions' in group.extension ? (
+              <DetailList title="Terms and conditions">
+                <Article small className="pt-2">
+                  <Markdown>{group.extension.terms_and_conditions}</Markdown>
+                </Article>
+              </DetailList>
+            ) : null}
           </div>
         </div>
       </div>

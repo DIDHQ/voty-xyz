@@ -1,10 +1,9 @@
 import clsx from 'clsx'
-
-import Markdown from './markdown'
+import { ReactNode } from 'react'
 
 export default function Article(props: {
   small?: boolean
-  children?: string
+  children?: ReactNode
   className?: string
 }) {
   return props.children ? (
@@ -15,7 +14,7 @@ export default function Article(props: {
         props.className,
       )}
     >
-      <Markdown>{props.children}</Markdown>
+      {props.children}
     </article>
   ) : null
 }

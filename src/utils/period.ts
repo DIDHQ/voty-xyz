@@ -3,6 +3,7 @@ import type { Group } from './schemas/group'
 export enum Period {
   CONFIRMING = 'Confirming',
   PENDING = 'Pending',
+  PROPOSING = 'Proposing',
   VOTING = 'Voting',
   ENDED = 'Ended',
 }
@@ -20,7 +21,20 @@ export function getPeriod(
   }
   if (
     now.getTime() <
-    timestamp.getTime() + (duration.pending + duration.voting) * 1000
+    timestamp.getTime() +
+      (duration.pending +
+        ('adding_option' in duration ? duration.adding_option : 0)) *
+        1000
+  ) {
+    return Period.PROPOSING
+  }
+  if (
+    now.getTime() <
+    timestamp.getTime() +
+      (duration.pending +
+        ('adding_option' in duration ? duration.adding_option : 0) +
+        duration.voting) *
+        1000
   ) {
     return Period.VOTING
   }
