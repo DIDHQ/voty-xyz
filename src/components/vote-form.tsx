@@ -199,71 +199,71 @@ export default function VoteForm(props: {
             }
           />
         </FormItem>
-        {period === Period.ENDED ? null : (
-          <div className="mt-6 flex w-full flex-col items-end">
-            <div className="w-full flex-1 sm:w-64 sm:flex-none">
-              <DidCombobox
-                top
-                label="Select a DID as voter"
-                options={didOptions}
-                value={did}
-                onChange={setDid}
-                onClick={connect}
-              />
-              {didOptions?.length === 0 ? (
-                <TextButton
-                  secondary
-                  href={`/${props.entry}/${props.group?.id}/rules`}
-                >
-                  Why I&#39;m not eligible to vote
-                </TextButton>
-              ) : null}
-            </div>
-            {period !== Period.VOTING ? (
-              <>
-                <div
-                  data-tooltip-id={id}
-                  data-tooltip-place="left"
-                  className="mt-6"
-                >
-                  <Button
-                    large
-                    primary
-                    icon={BoltIcon}
-                    onClick={onSubmit(
-                      (value) => handleSubmit.mutate(value),
-                      console.error,
-                    )}
-                    disabled={disables(did)}
-                    loading={handleSubmit.isLoading}
-                  >
-                    Vote{votingPower ? ` (${votingPower})` : null}
-                  </Button>
-                </div>
-                <Tooltip id={id} className="rounded">
-                  {period === Period.CONFIRMING
-                    ? 'Waiting for transaction (in about 5 minutes)'
-                    : 'Waiting for voting'}
-                </Tooltip>
-              </>
-            ) : (
-              <Button
-                large
-                primary
-                icon={BoltIcon}
-                onClick={onSubmit(
-                  (value) => handleSubmit.mutate(value),
-                  console.error,
-                )}
-                disabled={disables(did)}
-                loading={handleSubmit.isLoading}
+        <div className="mt-6 flex w-full flex-col items-end">
+          <div className="w-full flex-1 sm:w-64 sm:flex-none">
+            <DidCombobox
+              top
+              label="Select a DID as voter"
+              options={didOptions}
+              value={did}
+              onChange={setDid}
+              onClick={connect}
+            />
+            {didOptions?.length === 0 ? (
+              <TextButton
+                secondary
+                href={`/${props.entry}/${props.group?.id}/rules`}
+              >
+                Why I&#39;m not eligible to vote
+              </TextButton>
+            ) : null}
+          </div>
+          {period !== Period.VOTING ? (
+            <>
+              <div
+                data-tooltip-id={id}
+                data-tooltip-place="left"
                 className="mt-6"
               >
-                Vote{votingPower ? ` (${votingPower})` : null}
-              </Button>
-            )}
-          </div>
-        )}
+                <Button
+                  large
+                  primary
+                  icon={BoltIcon}
+                  onClick={onSubmit(
+                    (value) => handleSubmit.mutate(value),
+                    console.error,
+                  )}
+                  disabled={disables(did)}
+                  loading={handleSubmit.isLoading}
+                >
+                  Vote{votingPower ? ` (${votingPower})` : null}
+                </Button>
+              </div>
+              <Tooltip id={id} className="rounded">
+                {period === Period.CONFIRMING
+                  ? 'Waiting for transaction (in about 5 minutes)'
+                  : period === Period.ENDED
+                  ? 'Voting ended'
+                  : 'Waiting for voting'}
+              </Tooltip>
+            </>
+          ) : (
+            <Button
+              large
+              primary
+              icon={BoltIcon}
+              onClick={onSubmit(
+                (value) => handleSubmit.mutate(value),
+                console.error,
+              )}
+              disabled={disables(did)}
+              loading={handleSubmit.isLoading}
+              className="mt-6"
+            >
+              Vote{votingPower ? ` (${votingPower})` : null}
+            </Button>
+          )}
+        </div>
       </div>
     </>
   )
