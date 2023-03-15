@@ -55,7 +55,7 @@ export default function ProposalCard(props: {
           ? `/${
               group.extension.type === 'grant' ? 'round' : 'proposal'
             }/${permalink2Id(props.proposal.permalink)}`
-          : ''
+          : '#'
       }
       className="block divide-y rounded border transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:border-primary-500 hover:bg-gray-50"
     >
