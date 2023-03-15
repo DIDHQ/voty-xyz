@@ -89,6 +89,7 @@ export default function OptionPage() {
             </div>
             <ProposalInfo
               proposal={proposal || undefined}
+              option={option || undefined}
               className="mb-6 block sm:hidden"
             />
             <VoteForm
@@ -169,6 +170,7 @@ export default function OptionPage() {
           </div>
           <ProposalInfo
             proposal={proposal || undefined}
+            option={option || undefined}
             className="hidden sm:block"
           />
         </div>

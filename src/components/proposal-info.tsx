@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import useGroup from '../hooks/use-group'
 import { coinTypeExplorers, coinTypeNames } from '../utils/constants'
 import { Authorized } from '../utils/schemas/authorship'
+import { Option } from '../utils/schemas/option'
 import { Proposal } from '../utils/schemas/proposal'
 import { trpc } from '../utils/trpc'
 import Article from './basic/article'
@@ -16,6 +17,7 @@ const StatusIcon = dynamic(() => import('./status-icon'), { ssr: false })
 
 export default function ProposalInfo(props: {
   proposal?: Authorized<Proposal> & { permalink: string }
+  option?: Authorized<Option>
   className?: string
 }) {
   const { data: community } = trpc.community.getByPermalink.useQuery(
@@ -52,6 +54,11 @@ export default function ProposalInfo(props: {
           >
             {props.proposal?.authorship.author || '...'}
           </DetailItem>
+          {props.option ? (
+            <DetailItem title="Proposer" className="truncate whitespace-nowrap">
+              {props.option.authorship.author}
+            </DetailItem>
+          ) : null}
         </DetailList>
         <ProposalSchedule
           proposal={props.proposal?.permalink}
