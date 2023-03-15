@@ -97,7 +97,7 @@ export default function ProposalCard(props: {
             ) : period === Period.PROPOSING &&
               props.proposal.ts_adding_option ? (
               <>
-                <p>Proposing deadline</p>
+                <p>Proposing ends</p>
                 <p className="text-gray-400">
                   <PeriodDot value={period} className="mb-0.5 mr-1.5" />
                   in&nbsp;

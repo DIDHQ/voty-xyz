@@ -32,7 +32,7 @@ export default function ProposalSchedule(props: {
           : '...'}
       </DetailItem>
       {props.duration && 'adding_option' in props.duration ? (
-        <DetailItem title="Proposing deadline">
+        <DetailItem title="Proposing end">
           {status?.timestamp && props.duration
             ? formatTime(
                 status.timestamp.getTime() +
