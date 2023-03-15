@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
+import Decimal from 'decimal.js'
 
 import useGroup from '../../../hooks/use-group'
 import { permalink2Explorer, permalink2Id } from '../../../utils/permalink'
@@ -15,6 +16,7 @@ import VoteForm from '../../../components/vote-form'
 import useRouterQuery from '../../../hooks/use-router-query'
 import Markdown from '../../../components/basic/markdown'
 import ProposalInfo from '../../../components/proposal-info'
+import { powerOfChoice } from '../../../utils/voting'
 
 export default function OptionPage() {
   const query = useRouterQuery<['proposal', 'option']>()
@@ -50,7 +52,25 @@ export default function OptionPage() {
     { proposal: query.proposal },
     { enabled: !!query.proposal, getNextPageParam: ({ next }) => next },
   )
-  const votes = useMemo(() => data?.pages.flatMap(({ data }) => data), [data])
+  const votes = useMemo(
+    () =>
+      data?.pages
+        .flatMap(({ data }) =>
+          data.map((vote) => ({
+            ...vote,
+            power:
+              query.option && proposal
+                ? powerOfChoice(
+                    proposal.voting_type,
+                    vote.choice,
+                    new Decimal(vote.power),
+                  )[query.option]
+                : undefined,
+          })),
+        )
+        .filter((vote) => vote.power?.gt(0)),
+    [data?.pages, proposal, query.option],
+  )
   const { ref, inView } = useInView()
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -162,7 +182,7 @@ export default function OptionPage() {
                           primary
                           href={permalink2Explorer(vote.permalink)}
                         >
-                          {vote.power}
+                          {vote.power?.toString()}
                         </TextButton>
                       </td>
                     </tr>
