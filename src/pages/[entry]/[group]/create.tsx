@@ -66,7 +66,13 @@ export default function CreateProposalPage() {
                 {community?.name || '...'}
               </DetailItem>
               <DetailItem
-                title="Workgroup"
+                title={
+                  group
+                    ? group.extension.type === 'grant'
+                      ? 'Grant'
+                      : 'Workgroup'
+                    : '...'
+                }
                 className="truncate whitespace-nowrap"
               >
                 {group?.name || '...'}
@@ -76,6 +82,11 @@ export default function CreateProposalPage() {
               <DetailItem title="Pending">
                 {group ? formatDuration(group.duration.pending) : null}
               </DetailItem>
+              {group && 'adding_option' in group.duration ? (
+                <DetailItem title="Proposing">
+                  {group ? formatDuration(group.duration.adding_option) : null}
+                </DetailItem>
+              ) : null}
               <DetailItem title="Voting">
                 {group ? formatDuration(group.duration.voting) : null}
               </DetailItem>
