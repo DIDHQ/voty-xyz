@@ -22,10 +22,19 @@ export default function OptionPage() {
     { permalink: query.option },
     { enabled: !!query.option, refetchOnWindowFocus: false },
   )
-  const { data: proposal, refetch } = trpc.proposal.getByPermalink.useQuery(
-    { permalink: query.proposal },
-    { enabled: !!query.proposal, refetchOnWindowFocus: false },
+  const {
+    data: power,
+    refetch,
+    isLoading: isPowerLoading,
+  } = trpc.choice.get.useQuery(
+    { proposal: query.proposal, option: query.option },
+    { enabled: !!query.proposal && !!query.option },
   )
+  const { data: proposal, isLoading: isProposalLoading } =
+    trpc.proposal.getByPermalink.useQuery(
+      { permalink: query.proposal },
+      { enabled: !!query.proposal, refetchOnWindowFocus: false },
+    )
   const { data: community, isLoading: isCommunityLoading } =
     trpc.community.getByPermalink.useQuery(
       { permalink: proposal?.community },
@@ -69,7 +78,14 @@ export default function OptionPage() {
         <title>{title}</title>
       </Head>
       <div className="w-full">
-        <LoadingBar loading={isLoading || isCommunityLoading} />
+        <LoadingBar
+          loading={
+            isLoading ||
+            isPowerLoading ||
+            isProposalLoading ||
+            isCommunityLoading
+          }
+        />
         <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
           <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
             <TextButton
@@ -102,9 +118,9 @@ export default function OptionPage() {
               group={group}
               onSuccess={handleSuccess}
             />
-            {option?.power ? (
+            {power ? (
               <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
-                {option.power} Power
+                {power.power} Power
               </h2>
             ) : null}
             {votes?.length ? (

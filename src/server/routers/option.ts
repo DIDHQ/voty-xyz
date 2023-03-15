@@ -20,27 +20,15 @@ const schema = proved(authorized(optionSchema))
 export const optionRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(schema.extend({ power: decimalSchema }).nullable())
+    .output(schema.nullable())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
       const option = await getByPermalink(DataType.OPTION, input.permalink)
-      if (!option) {
-        return null
-      }
 
-      const choice = await database.choice.findUnique({
-        where: {
-          proposal_option: {
-            proposal: option.proposal,
-            option: input.permalink,
-          },
-        },
-      })
-
-      return { ...option.data, power: choice?.power.toString() || '0' }
+      return option ? option.data : null
     }),
   list: procedure
     .input(
