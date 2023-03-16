@@ -1,6 +1,8 @@
 import clsx from 'clsx'
-import { ReactNode } from 'react'
+import { useMemo } from 'react'
 
+import useDids from '../hooks/use-dids'
+import useWallet from '../hooks/use-wallet'
 import { BooleanSets, DecimalSets } from '../utils/schemas/sets'
 
 export default function PermissionCard(props: {
@@ -9,6 +11,10 @@ export default function PermissionCard(props: {
   entry?: string
   value: BooleanSets | DecimalSets
 }) {
+  const { account } = useWallet()
+  const { data: dids } = useDids(account)
+  const didSet = useMemo(() => new Set(dids || []), [dids])
+
   return (
     <div className="rounded border p-6">
       <h3 className="text-xl font-semibold">{props.title}</h3>
@@ -22,8 +28,14 @@ export default function PermissionCard(props: {
             {operand.arguments[1].length ? (
               <div className="-m-1">
                 {operand.arguments[1].map((argument) => (
-                  <Tag key={argument} className="m-1">
-                    {argument}.{operand.arguments[0]}
+                  <Tag
+                    key={argument}
+                    highlight={didSet.has(
+                      `${argument}.${operand.arguments[0]}`,
+                    )}
+                    className="m-1"
+                  >
+                    {`${argument}.${operand.arguments[0]}`}
                   </Tag>
                 ))}
               </div>
@@ -46,11 +58,18 @@ export default function PermissionCard(props: {
   )
 }
 
-function Tag(props: { children: ReactNode; className?: string }) {
+function Tag(props: {
+  highlight?: boolean
+  children: string
+  className?: string
+}) {
   return (
     <span
       className={clsx(
-        'inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-sm font-medium text-gray-700',
+        'inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium',
+        props.highlight
+          ? 'bg-primary-200 text-primary-700'
+          : 'bg-gray-100 text-gray-700',
         props.className,
       )}
     >
