@@ -147,7 +147,7 @@ export default function GroupRulesPage() {
                   <h3 className="text-xl font-semibold">
                     Terms and conditions
                   </h3>
-                  <Article className="mt-4 border-t pt-4">
+                  <Article small className="mt-4 border-t pt-2">
                     <Markdown>{group.extension.terms_and_conditions}</Markdown>
                   </Article>
                 </div>
