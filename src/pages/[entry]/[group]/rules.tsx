@@ -30,39 +30,29 @@ export default function GroupRulesPage() {
       <CommunityLayout>
         <GroupLayout>
           {group ? (
-            <>
-              {isManager ? (
-                <Link
-                  href={`/${query.entry}/${query.group}/settings`}
-                  className="float-right mt-5"
-                >
-                  <Button icon={PencilIcon} primary>
-                    Edit
-                  </Button>
-                </Link>
-              ) : null}
-              {group.extension.type === 'grant' ? (
-                <>
-                  <Article className="pt-6">
-                    <PermissionCard
-                      title="Investors"
-                      description="The following DIDs are eligible to invest"
-                      entry={query.entry}
-                      value={group.permission.proposing}
-                    />
-                    <PermissionCard
-                      title="Proposers"
-                      description="The following DIDs are eligible to propose"
-                      entry={query.entry}
-                      value={(group as Grant).permission.adding_option}
-                    />
-                    <PermissionCard
-                      title="Voters"
-                      description="The following DIDs are eligible to vote"
-                      entry={query.entry}
-                      value={group.permission.voting}
-                    />
-                    <h3>Schedule</h3>
+            group.extension.type === 'grant' ? (
+              <div className="mt-6 space-y-6">
+                <PermissionCard
+                  title="Investors"
+                  description="The following DIDs are eligible to invest"
+                  entry={query.entry}
+                  value={group.permission.proposing}
+                />
+                <PermissionCard
+                  title="Proposers"
+                  description="The following DIDs are eligible to propose"
+                  entry={query.entry}
+                  value={(group as Grant).permission.adding_option}
+                />
+                <PermissionCard
+                  title="Voters"
+                  description="The following DIDs are eligible to vote"
+                  entry={query.entry}
+                  value={group.permission.voting}
+                />
+                <div className="rounded border p-6">
+                  <h3 className="text-xl font-semibold">Schedule</h3>
+                  <Article>
                     <ul>
                       <li>
                         Proposing starts&nbsp;
@@ -82,23 +72,25 @@ export default function GroupRulesPage() {
                       </li>
                     </ul>
                   </Article>
-                </>
-              ) : (
-                <>
-                  <Article className="pt-6">
-                    <PermissionCard
-                      title="Proposers"
-                      description="The following DIDs are eligible to propose"
-                      entry={query.entry}
-                      value={group.permission.proposing}
-                    />
-                    <PermissionCard
-                      title="Voters"
-                      description="The following DIDs are eligible to vote"
-                      entry={query.entry}
-                      value={group.permission.voting}
-                    />
-                    <h3>Schedule</h3>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-6 space-y-6">
+                <PermissionCard
+                  title="Proposers"
+                  description="The following DIDs are eligible to propose"
+                  entry={query.entry}
+                  value={group.permission.proposing}
+                />
+                <PermissionCard
+                  title="Voters"
+                  description="The following DIDs are eligible to vote"
+                  entry={query.entry}
+                  value={group.permission.voting}
+                />
+                <div className="rounded border p-6">
+                  <h3 className="text-xl font-semibold">Schedule</h3>
+                  <Article>
                     <ul>
                       <li>
                         Voting starts&nbsp;
@@ -110,14 +102,28 @@ export default function GroupRulesPage() {
                         &nbsp;after starting.
                       </li>
                     </ul>
-                    <h3>Terms and conditions</h3>
                   </Article>
-                  <Article className="mt-3">
+                </div>
+                <div className="rounded border p-6">
+                  <h3 className="text-xl font-semibold">
+                    Terms and conditions
+                  </h3>
+                  <Article>
                     <Markdown>{group.extension.terms_and_conditions}</Markdown>
                   </Article>
-                </>
-              )}
-            </>
+                </div>
+              </div>
+            )
+          ) : null}
+          {isManager ? (
+            <Link
+              href={`/${query.entry}/${query.group}/settings`}
+              className="mt-6"
+            >
+              <Button icon={PencilIcon} primary>
+                Edit
+              </Button>
+            </Link>
           ) : null}
         </GroupLayout>
       </CommunityLayout>
