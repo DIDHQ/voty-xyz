@@ -50,9 +50,9 @@ export default function GroupRulesPage() {
                   entry={query.entry}
                   value={group.permission.voting}
                 />
-                <div className="rounded border p-6">
+                <div className="rounded border p-4">
                   <h3 className="text-xl font-semibold">Schedule</h3>
-                  <Article>
+                  <Article className="mt-4 border-t pt-4">
                     <ul>
                       <li>
                         Proposing starts&nbsp;
@@ -88,9 +88,9 @@ export default function GroupRulesPage() {
                   entry={query.entry}
                   value={group.permission.voting}
                 />
-                <div className="rounded border p-6">
+                <div className="rounded border p-4">
                   <h3 className="text-xl font-semibold">Schedule</h3>
-                  <Article>
+                  <Article className="mt-4 border-t pt-4">
                     <ul>
                       <li>
                         Voting starts&nbsp;
@@ -104,11 +104,11 @@ export default function GroupRulesPage() {
                     </ul>
                   </Article>
                 </div>
-                <div className="rounded border p-6">
+                <div className="rounded border p-4">
                   <h3 className="text-xl font-semibold">
                     Terms and conditions
                   </h3>
-                  <Article className="pt-2">
+                  <Article className="mt-4 border-t pt-4">
                     <Markdown>{group.extension.terms_and_conditions}</Markdown>
                   </Article>
                 </div>

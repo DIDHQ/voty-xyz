@@ -19,9 +19,9 @@ export default function PermissionCard(props: {
     <div className="rounded border p-6">
       <h3 className="text-xl font-semibold">{props.title}</h3>
       <p className="mt-1 text-gray-500">{props.description}</p>
-      <ul className="mt-6 divide-y border-t">
+      <ul className="mt-4 divide-y border-t">
         {props.value.operands.map((operand, index) => (
-          <li key={index} className="pt-6">
+          <li key={index} className="pt-4">
             <h4 className="mb-3 text-base font-medium">
               {operand.name || `Filter ${index + 1}`}
             </h4>
