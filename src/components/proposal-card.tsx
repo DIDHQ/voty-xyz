@@ -153,11 +153,11 @@ function PeriodDot(props: { value?: Period; className?: string }) {
         'mb-0.5 mr-1.5 inline h-2 w-2',
         props.value
           ? {
-              [Period.CONFIRMING]: 'text-blue-400',
-              [Period.PENDING]: 'text-yellow-400',
-              [Period.PROPOSING]: 'text-purple-400',
-              [Period.VOTING]: 'text-green-400',
-              [Period.ENDED]: 'text-gray-400',
+              [Period.CONFIRMING]: 'text-slate-400',
+              [Period.PENDING]: 'text-amber-400',
+              [Period.PROPOSING]: 'text-sky-400',
+              [Period.VOTING]: 'text-lime-400',
+              [Period.ENDED]: 'text-stone-400',
             }[props.value]
           : undefined,
         props.className,

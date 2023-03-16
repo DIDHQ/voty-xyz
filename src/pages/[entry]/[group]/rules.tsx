@@ -9,11 +9,11 @@ import LoadingBar from '../../../components/basic/loading-bar'
 import useGroup from '../../../hooks/use-group'
 import { formatDuration } from '../../../utils/time'
 import Article from '../../../components/basic/article'
-import { BooleanSets, DecimalSets } from '../../../utils/schemas/sets'
 import Button from '../../../components/basic/button'
 import useIsManager from '../../../hooks/use-is-manager'
 import { Grant } from '../../../utils/schemas/group'
 import Markdown from '../../../components/basic/markdown'
+import PermissionCard from '../../../components/permission-card'
 
 export default function GroupRulesPage() {
   const query = useRouterQuery<['entry', 'group']>()
@@ -30,135 +30,128 @@ export default function GroupRulesPage() {
       <CommunityLayout>
         <GroupLayout>
           {group ? (
-            <>
-              {isManager ? (
-                <Link
-                  href={`/${query.entry}/${query.group}/settings`}
-                  className="float-right mt-5"
-                >
-                  <Button icon={PencilIcon} primary>
-                    Edit
-                  </Button>
-                </Link>
-              ) : null}
-              {group.extension.type === 'grant' ? (
-                <>
-                  <Article className="pt-6">
-                    <h3>Investors</h3>
-                    <em>The following DIDs are eligible to invest</em>
-                    <SetsDescription
-                      entry={query.entry}
-                      value={group.permission.proposing}
-                    />
-                    <h3>Proposers</h3>
-                    <em>The following DIDs are eligible to propose</em>
-                    <SetsDescription
-                      entry={query.entry}
-                      value={(group as Grant).permission.adding_option}
-                    />
-                    <h3>Voters</h3>
-                    <em>
-                      The following DIDs are eligible to vote
-                      <br />
-                      The voting power is calculated based on the maximum value
-                    </em>
-                    <SetsDescription
-                      entry={query.entry}
-                      value={group.permission.voting}
-                    />
-                    <h3>Schedule</h3>
-                    <ul>
-                      <li>
-                        Proposing starts&nbsp;
-                        {formatDuration(group.duration.pending)} after
-                        transaction confirmation.
+            group.extension.type === 'grant' ? (
+              <div className="mt-6 space-y-6">
+                <PermissionCard
+                  title="Investors"
+                  description="The following DIDs are eligible to invest"
+                  entry={query.entry}
+                  value={group.permission.proposing}
+                />
+                <PermissionCard
+                  title="Proposers"
+                  description="The following DIDs are eligible to propose"
+                  entry={query.entry}
+                  value={(group as Grant).permission.adding_option}
+                />
+                <PermissionCard
+                  title="Voters"
+                  description="The following DIDs are eligible to vote"
+                  entry={query.entry}
+                  value={group.permission.voting}
+                />
+                <div className="rounded border p-4">
+                  <h3 className="text-xl font-semibold">Schedule</h3>
+                  <nav className="mt-4 border-t pt-4">
+                    <ol role="list" className="md:flex">
+                      <li style={{ flex: Math.sqrt(group.duration.pending) }}>
+                        <div className="flex flex-col border-l-4 border-amber-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0 md:pr-4">
+                          <span className="text-sm text-gray-500">Pending</span>
+                          <span className="text-sm font-medium">
+                            {formatDuration(group.duration.pending)}
+                          </span>
+                        </div>
                       </li>
-                      <li>
-                        Voting starts&nbsp;
-                        {formatDuration(
-                          (group as Grant).duration.adding_option,
-                        )}{' '}
-                        after proposing starting.
+                      <li
+                        style={{
+                          flex: Math.sqrt(
+                            (group as Grant).duration.adding_option,
+                          ),
+                        }}
+                      >
+                        <div className="flex flex-col border-l-4 border-sky-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0 md:pr-4">
+                          <span className="text-sm text-gray-500">
+                            Proposing
+                          </span>
+                          <span className="text-sm font-medium">
+                            {formatDuration(
+                              (group as Grant).duration.adding_option,
+                            )}
+                          </span>
+                        </div>
                       </li>
-                      <li>
-                        Voting ends {formatDuration(group.duration.voting)}
-                        &nbsp;after starting.
+                      <li style={{ flex: Math.sqrt(group.duration.voting) }}>
+                        <div className="flex flex-col border-l-4 border-lime-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0 md:pr-4">
+                          <span className="text-sm text-gray-500">Voting</span>
+                          <span className="text-sm font-medium">
+                            {formatDuration(group.duration.voting)}
+                          </span>
+                        </div>
                       </li>
-                    </ul>
-                  </Article>
-                </>
-              ) : (
-                <>
-                  <Article className="pt-6">
-                    <h3>Proposers</h3>
-                    <em>The following DIDs are eligible to propose</em>
-                    <SetsDescription
-                      entry={query.entry}
-                      value={group.permission.proposing}
-                    />
-                    <h3>Voters</h3>
-                    <em>
-                      The following DIDs are eligible to vote
-                      <br />
-                      The voting power is calculated based on the maximum value
-                    </em>
-                    <SetsDescription
-                      entry={query.entry}
-                      value={group.permission.voting}
-                    />
-                    <h3>Schedule</h3>
-                    <ul>
-                      <li>
-                        Voting starts&nbsp;
-                        {formatDuration(group.duration.pending)} after
-                        transaction confirmation.
+                    </ol>
+                  </nav>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-6 space-y-6">
+                <PermissionCard
+                  title="Proposers"
+                  description="The following DIDs are eligible to propose"
+                  entry={query.entry}
+                  value={group.permission.proposing}
+                />
+                <PermissionCard
+                  title="Voters"
+                  description="The following DIDs are eligible to vote"
+                  entry={query.entry}
+                  value={group.permission.voting}
+                />
+                <div className="rounded border p-4">
+                  <h3 className="text-xl font-semibold">Schedule</h3>
+                  <nav className="mt-4 border-t pt-4">
+                    <ol role="list" className="md:flex">
+                      <li style={{ flex: Math.sqrt(group.duration.pending) }}>
+                        <div className="flex flex-col border-l-4 border-amber-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0 md:pr-4">
+                          <span className="text-sm text-gray-500">Pending</span>
+                          <span className="text-sm font-medium">
+                            {formatDuration(group.duration.pending)}
+                          </span>
+                        </div>
                       </li>
-                      <li>
-                        Voting ends {formatDuration(group.duration.voting)}
-                        &nbsp;after starting.
+                      <li style={{ flex: Math.sqrt(group.duration.voting) }}>
+                        <div className="flex flex-col border-l-4 border-lime-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0 md:pr-4">
+                          <span className="text-sm text-gray-500">Voting</span>
+                          <span className="text-sm font-medium">
+                            {formatDuration(group.duration.voting)}
+                          </span>
+                        </div>
                       </li>
-                    </ul>
-                    <h3>Terms and conditions</h3>
-                  </Article>
-                  <Article className="mt-3">
+                    </ol>
+                  </nav>
+                </div>
+                <div className="rounded border p-4">
+                  <h3 className="text-xl font-semibold">
+                    Terms and conditions
+                  </h3>
+                  <Article small className="mt-4 border-t pt-2">
                     <Markdown>{group.extension.terms_and_conditions}</Markdown>
                   </Article>
-                </>
-              )}
-            </>
+                </div>
+              </div>
+            )
+          ) : null}
+          {isManager ? (
+            <Link
+              href={`/${query.entry}/${query.group}/settings`}
+              className="mt-6 block w-fit"
+            >
+              <Button icon={PencilIcon} primary>
+                Edit
+              </Button>
+            </Link>
           ) : null}
         </GroupLayout>
       </CommunityLayout>
     </>
-  )
-}
-
-function SetsDescription(props: {
-  entry?: string
-  value: BooleanSets | DecimalSets
-}) {
-  return (
-    <ul>
-      {props.value.operands.map((operand, index) => (
-        <li key={index}>
-          <b>{operand.name || `Filter ${index + 1}`}</b>:
-          {operand.arguments[1].length
-            ? null
-            : operand.arguments[0] === 'bit'
-            ? ' All .bit accounts'
-            : ` All SubDIDs of ${props.entry}`}
-          {operand.arguments[2] ? ` (Power: ${operand.arguments[2]})` : null}
-          {operand.arguments[1].length ? (
-            <ul>
-              {operand.arguments[1].map((argument) => (
-                <li key={argument}>
-                  {argument}.{operand.arguments[0]}
-                </li>
-              ))}
-            </ul>
-          ) : null}
-        </li>
-      ))}
-    </ul>
   )
 }
