@@ -58,8 +58,8 @@ export default function GroupRulesPage() {
                       className="space-y-4 md:flex md:space-y-0 md:space-x-4"
                     >
                       <li style={{ flex: Math.sqrt(group.duration.pending) }}>
-                        <div className="group flex flex-col border-l-4 border-yellow-600 py-2 pl-4 hover:border-yellow-800 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0">
-                          <span className="text-sm font-medium text-yellow-600 group-hover:text-yellow-800">
+                        <div className="flex flex-col border-l-4 border-yellow-600 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0">
+                          <span className="text-sm font-medium text-yellow-600">
                             Pending
                           </span>
                           <span className="text-sm font-medium">
@@ -74,8 +74,8 @@ export default function GroupRulesPage() {
                           ),
                         }}
                       >
-                        <div className="group flex flex-col border-l-4 border-purple-600 py-2 pl-4 hover:border-purple-800 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0">
-                          <span className="text-sm font-medium text-purple-600 group-hover:text-purple-800">
+                        <div className="flex flex-col border-l-4 border-purple-600 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0">
+                          <span className="text-sm font-medium text-purple-600">
                             Proposing
                           </span>
                           <span className="text-sm font-medium">
@@ -86,8 +86,8 @@ export default function GroupRulesPage() {
                         </div>
                       </li>
                       <li style={{ flex: Math.sqrt(group.duration.voting) }}>
-                        <div className="group flex flex-col border-l-4 border-green-600 py-2 pl-4 hover:border-green-800 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0">
-                          <span className="text-sm font-medium text-green-600 group-hover:text-green-800">
+                        <div className="flex flex-col border-l-4 border-green-600 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0">
+                          <span className="text-sm font-medium text-green-600">
                             Voting
                           </span>
                           <span className="text-sm font-medium">
@@ -121,8 +121,8 @@ export default function GroupRulesPage() {
                       className="space-y-4 md:flex md:space-y-0 md:space-x-4"
                     >
                       <li style={{ flex: Math.sqrt(group.duration.pending) }}>
-                        <div className="group flex flex-col border-l-4 border-yellow-600 py-2 pl-4 hover:border-yellow-800 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0">
-                          <span className="text-sm font-medium text-yellow-600 group-hover:text-yellow-800">
+                        <div className="flex flex-col border-l-4 border-yellow-600 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0">
+                          <span className="text-sm font-medium text-yellow-600">
                             Pending
                           </span>
                           <span className="text-sm font-medium">
@@ -131,8 +131,8 @@ export default function GroupRulesPage() {
                         </div>
                       </li>
                       <li style={{ flex: Math.sqrt(group.duration.voting) }}>
-                        <div className="group flex flex-col border-l-4 border-green-600 py-2 pl-4 hover:border-green-800 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0">
-                          <span className="text-sm font-medium text-green-600 group-hover:text-green-800">
+                        <div className="flex flex-col border-l-4 border-green-600 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0">
+                          <span className="text-sm font-medium text-green-600">
                             Voting
                           </span>
                           <span className="text-sm font-medium">
