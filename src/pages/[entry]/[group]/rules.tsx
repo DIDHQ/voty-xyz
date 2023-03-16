@@ -52,26 +52,45 @@ export default function GroupRulesPage() {
                 />
                 <div className="rounded border p-4">
                   <h3 className="text-xl font-semibold">Schedule</h3>
-                  <Article className="mt-4 border-t pt-4">
-                    <ul>
-                      <li>
-                        Proposing starts&nbsp;
-                        {formatDuration(group.duration.pending)} after
-                        transaction confirmation.
+                  <nav className="mt-4 border-t pt-4">
+                    <ol
+                      role="list"
+                      className="space-y-4 md:flex md:space-y-0 md:space-x-8"
+                    >
+                      <li className="md:flex-1">
+                        <div className="group flex flex-col border-l-4 border-yellow-600 py-2 pl-4 hover:border-yellow-800 md:border-l-0 md:border-t-4 md:pl-0 md:pt-4 md:pb-0">
+                          <span className="text-sm font-medium text-yellow-600 group-hover:text-yellow-800">
+                            Pending
+                          </span>
+                          <span className="text-sm font-medium">
+                            {formatDuration(group.duration.pending)}
+                          </span>
+                        </div>
                       </li>
-                      <li>
-                        Voting starts&nbsp;
-                        {formatDuration(
-                          (group as Grant).duration.adding_option,
-                        )}{' '}
-                        after proposing starting.
+                      <li className="md:flex-1">
+                        <div className="group flex flex-col border-l-4 border-purple-600 py-2 pl-4 hover:border-purple-800 md:border-l-0 md:border-t-4 md:pl-0 md:pt-4 md:pb-0">
+                          <span className="text-sm font-medium text-purple-600 group-hover:text-purple-800">
+                            Proposing
+                          </span>
+                          <span className="text-sm font-medium">
+                            {formatDuration(
+                              (group as Grant).duration.adding_option,
+                            )}
+                          </span>
+                        </div>
                       </li>
-                      <li>
-                        Voting ends {formatDuration(group.duration.voting)}
-                        &nbsp;after starting.
+                      <li className="md:flex-1">
+                        <div className="group flex flex-col border-l-4 border-green-600 py-2 pl-4 hover:border-green-800 md:border-l-0 md:border-t-4 md:pl-0 md:pt-4 md:pb-0">
+                          <span className="text-sm font-medium text-green-600 group-hover:text-green-800">
+                            Voting
+                          </span>
+                          <span className="text-sm font-medium">
+                            {formatDuration(group.duration.voting)}
+                          </span>
+                        </div>
                       </li>
-                    </ul>
-                  </Article>
+                    </ol>
+                  </nav>
                 </div>
               </div>
             ) : (
@@ -90,19 +109,33 @@ export default function GroupRulesPage() {
                 />
                 <div className="rounded border p-4">
                   <h3 className="text-xl font-semibold">Schedule</h3>
-                  <Article className="mt-4 border-t pt-4">
-                    <ul>
-                      <li>
-                        Voting starts&nbsp;
-                        {formatDuration(group.duration.pending)} after
-                        transaction confirmation.
+                  <nav className="mt-4 border-t pt-4">
+                    <ol
+                      role="list"
+                      className="space-y-4 md:flex md:space-y-0 md:space-x-8"
+                    >
+                      <li className="md:flex-1">
+                        <div className="group flex flex-col border-l-4 border-yellow-600 py-2 pl-4 hover:border-yellow-800 md:border-l-0 md:border-t-4 md:pl-0 md:pt-4 md:pb-0">
+                          <span className="text-sm font-medium text-yellow-600 group-hover:text-yellow-800">
+                            Pending
+                          </span>
+                          <span className="text-sm font-medium">
+                            {formatDuration(group.duration.pending)}
+                          </span>
+                        </div>
                       </li>
-                      <li>
-                        Voting ends {formatDuration(group.duration.voting)}
-                        &nbsp;after starting.
+                      <li className="md:flex-1">
+                        <div className="group flex flex-col border-l-4 border-green-600 py-2 pl-4 hover:border-green-800 md:border-l-0 md:border-t-4 md:pl-0 md:pt-4 md:pb-0">
+                          <span className="text-sm font-medium text-green-600 group-hover:text-green-800">
+                            Voting
+                          </span>
+                          <span className="text-sm font-medium">
+                            {formatDuration(group.duration.voting)}
+                          </span>
+                        </div>
                       </li>
-                    </ul>
-                  </Article>
+                    </ol>
+                  </nav>
                 </div>
                 <div className="rounded border p-4">
                   <h3 className="text-xl font-semibold">
@@ -118,7 +151,7 @@ export default function GroupRulesPage() {
           {isManager ? (
             <Link
               href={`/${query.entry}/${query.group}/settings`}
-              className="mt-6"
+              className="mt-6 block w-fit"
             >
               <Button icon={PencilIcon} primary>
                 Edit
