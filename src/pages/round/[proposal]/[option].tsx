@@ -144,7 +144,7 @@ export default function OptionPage() {
               </h2>
             ) : null}
             {votes?.length ? (
-              <table className="my-6 w-full border-separate border-spacing-0 rounded border border-gray-200">
+              <table className="my-6 w-full border-separate border-spacing-0 rounded-md border border-gray-200">
                 <thead>
                   <tr>
                     <th

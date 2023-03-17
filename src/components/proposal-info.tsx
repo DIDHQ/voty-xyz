@@ -37,7 +37,7 @@ export default function ProposalInfo(props: {
         permalink={props.proposal?.permalink}
         className="absolute right-4 top-4 sm:top-12"
       />
-      <div className="space-y-6 rounded border border-gray-200 p-6">
+      <div className="space-y-6 rounded-md border border-gray-200 p-6">
         <DetailList title="Information">
           <DetailItem title="Community" className="truncate whitespace-nowrap">
             {community?.name || '...'}

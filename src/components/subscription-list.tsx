@@ -63,7 +63,7 @@ function SubscriptionListItem(props: { value: Authorized<Community> }) {
           className="ring-1 ring-gray-200 hover:ring-2 hover:ring-gray-300 hover:ring-offset-2"
         />
       </Link>
-      <Tooltip id={id} className="rounded">
+      <Tooltip id={id} className="rounded-md">
         {props.value.name}
       </Tooltip>
     </li>

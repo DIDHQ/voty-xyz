@@ -39,7 +39,7 @@ export default function StatusIcon(props: {
           {children}
         </TextButton>
       </a>
-      <Tooltip id={id} className="rounded">
+      <Tooltip id={id} className="rounded-md">
         Transaction {status?.timestamp ? 'confirmed' : 'pending'}
       </Tooltip>
     </>

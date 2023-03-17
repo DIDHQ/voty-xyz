@@ -16,7 +16,7 @@ export default function PermissionCard(props: {
   const didSet = useMemo(() => new Set(dids || []), [dids])
 
   return (
-    <div className="rounded border p-6">
+    <div className="rounded-md border p-6">
       <h3 className="text-xl font-semibold">{props.title}</h3>
       <p className="mt-1 text-gray-500">{props.description}</p>
       <ul className="mt-4 divide-y border-t">

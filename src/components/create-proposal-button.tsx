@@ -40,7 +40,7 @@ export default function CreateProposalButton(props: {
             : null}
         </Button>
       </div>
-      <Tooltip id={id} className="rounded">
+      <Tooltip id={id} className="rounded-md">
         Waiting for transaction (in about 5 minutes)
       </Tooltip>
     </>

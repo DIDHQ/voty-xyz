@@ -91,7 +91,7 @@ export default function CreateCommunityPage() {
                       />
                       <div
                         ref={parentRef}
-                        className="relative max-h-80 overflow-auto rounded rounded-t-none border border-t-0 text-base focus:outline-none sm:text-sm"
+                        className="relative max-h-80 overflow-auto rounded-md rounded-t-none border border-t-0 text-base focus:outline-none sm:text-sm"
                       >
                         <div
                           style={{

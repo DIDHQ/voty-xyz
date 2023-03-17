@@ -178,7 +178,7 @@ export default function VoteForm(props: {
               props.proposal?.options?.length ? (
                 <ul
                   role="list"
-                  className="mt-6 divide-y divide-gray-200 rounded border border-gray-200"
+                  className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
                 >
                   {props.proposal?.options.map((option) => (
                     <ChoiceListItem
@@ -239,7 +239,7 @@ export default function VoteForm(props: {
                   Vote{votingPower ? ` (${votingPower})` : null}
                 </Button>
               </div>
-              <Tooltip id={id} className="rounded">
+              <Tooltip id={id} className="rounded-md">
                 {period === Period.CONFIRMING
                   ? 'Waiting for transaction (in about 5 minutes)'
                   : period === Period.ENDED

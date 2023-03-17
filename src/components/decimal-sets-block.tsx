@@ -33,7 +33,7 @@ export default function DecimalSetsBlock(props: {
       {operands.length ? (
         <ul
           role="list"
-          className="divide-y divide-gray-200 overflow-hidden rounded border border-gray-200"
+          className="divide-y divide-gray-200 overflow-hidden rounded-md border border-gray-200"
         >
           {operands.map((operand, index) => (
             <DecimalUnitBlock

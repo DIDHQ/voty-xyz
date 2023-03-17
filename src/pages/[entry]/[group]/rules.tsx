@@ -50,7 +50,7 @@ export default function GroupRulesPage() {
                   entry={query.entry}
                   value={group.permission.voting}
                 />
-                <div className="rounded border p-4">
+                <div className="rounded-md border p-4">
                   <h3 className="text-xl font-semibold">Schedule</h3>
                   <nav className="mt-4 border-t pt-4">
                     <ol role="list" className="md:flex">
@@ -106,7 +106,7 @@ export default function GroupRulesPage() {
                   entry={query.entry}
                   value={group.permission.voting}
                 />
-                <div className="rounded border p-4">
+                <div className="rounded-md border p-4">
                   <h3 className="text-xl font-semibold">Schedule</h3>
                   <nav className="mt-4 border-t pt-4">
                     <ol role="list" className="md:flex">
@@ -129,7 +129,7 @@ export default function GroupRulesPage() {
                     </ol>
                   </nav>
                 </div>
-                <div className="rounded border p-4">
+                <div className="rounded-md border p-4">
                   <h3 className="text-xl font-semibold">
                     Terms and conditions
                   </h3>
