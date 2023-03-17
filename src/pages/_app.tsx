@@ -1,4 +1,4 @@
-import type { AppType } from 'next/app'
+import type { AppType, NextWebVitalsMetric } from 'next/app'
 import Head from 'next/head'
 import { Chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import {
@@ -21,7 +21,7 @@ import {
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
 import { useMemo } from 'react'
-import { Analytics } from '@vercel/analytics/react'
+import { GoogleAnalytics, event } from 'nextjs-google-analytics'
 import 'react-tooltip/dist/react-tooltip.css'
 import '@total-typescript/ts-reset'
 
@@ -74,6 +74,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
         />
       </Head>
+      <GoogleAnalytics trackPageViews />
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider modalSize="compact" chains={chains} theme={theme}>
           <ShellLayout>
@@ -81,9 +82,22 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           </ShellLayout>
         </RainbowKitProvider>
       </WagmiConfig>
-      <Analytics />
     </>
   )
 }
 
 export default trpc.withTRPC(MyApp)
+
+export function reportWebVitals({
+  id,
+  name,
+  label,
+  value,
+}: NextWebVitalsMetric) {
+  event(name, {
+    category: label === 'web-vital' ? 'Web Vitals' : 'Next.js custom metric',
+    value: Math.round(name === 'CLS' ? value * 1000 : value), // values must be integers
+    label: id, // id unique to current page load
+    nonInteraction: true, // avoids affecting bounce rate.
+  })
+}
