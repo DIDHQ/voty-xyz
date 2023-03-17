@@ -18,10 +18,10 @@ export default function TextButton(
         className={clsx(
           'rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-gray-400',
           primary
-            ? 'text-primary-600 hover:text-primary-700 focus:ring-primary-300'
+            ? 'text-primary-600 hover:text-primary-500 focus:ring-primary-300'
             : secondary
-            ? 'text-secondary-600 hover:text-secondary-700 focus:ring-secondary-300'
-            : 'text-gray-600 hover:text-gray-700 focus:ring-gray-300',
+            ? 'text-secondary-600 hover:text-secondary-500 focus:ring-secondary-300'
+            : 'text-gray-600 hover:text-gray-500 focus:ring-gray-300',
           restProps.className,
         )}
       >

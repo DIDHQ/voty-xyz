@@ -16,7 +16,7 @@ export default function CommunityCard(props: {
     <Link
       key={community.entry.community}
       href={`/${community.authorship.author}`}
-      className="flex items-center overflow-hidden rounded-md border border-gray-200 p-6 transition-colors focus-within:ring-2 focus-within:ring-primary-500 focus-within:ring-offset-2 hover:border-primary-500 hover:bg-gray-50"
+      className="flex items-center overflow-hidden rounded-md border border-gray-200 p-6 transition-colors focus-within:ring-2 focus-within:ring-primary-300 focus-within:ring-offset-2 hover:border-primary-500 hover:bg-gray-50"
     >
       <Avatar
         size={24}

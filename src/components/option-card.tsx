@@ -21,7 +21,7 @@ export default function OptionCard(props: {
       href={`/round/${permalink2Id(props.option.proposal)}/${permalink2Id(
         props.option.permalink,
       )}`}
-      className="block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-primary-500 hover:border-primary-500 hover:bg-gray-50"
+      className="block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-primary-300 hover:border-primary-500 hover:bg-gray-50"
     >
       <div className="w-full p-4">
         <p className="truncate text-lg font-medium text-gray-800">

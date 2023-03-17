@@ -20,7 +20,7 @@ export default function Select(props: {
           <div className="relative">
             <Listbox.Button
               className={clsx(
-                'relative w-full cursor-default rounded-md border border-gray-200 bg-white py-2 pl-3 pr-10 text-left focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-sm',
+                'relative w-full cursor-default rounded-md border border-gray-200 bg-white py-2 pl-3 pr-10 text-left focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-300 sm:text-sm',
                 props.className,
               )}
             >

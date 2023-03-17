@@ -28,7 +28,7 @@ export default function Button(
         'group flex items-center rounded-md border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500',
         large ? 'px-6 py-3 text-base' : 'px-4 py-2 text-sm',
         primary
-          ? 'border-transparent bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-300'
+          ? 'border-transparent bg-primary-600 text-white hover:bg-primary-500 focus:ring-primary-300'
           : 'border-gray-200 bg-white hover:bg-gray-50',
         className,
       )}
