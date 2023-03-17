@@ -134,7 +134,7 @@ export default function GrantForm(props: {
         </FormSection>
         <FormSection
           title="Investors"
-          description="The following DIDs are eligible to invest"
+          description="are eligible to open new rounds to this grant"
         >
           <Grid6>
             <GridItem6>
@@ -155,7 +155,7 @@ export default function GrantForm(props: {
         </FormSection>
         <FormSection
           title="Proposers"
-          description="The following DIDs are eligible to propose"
+          description="are eligible to create proposals of rounds to this grant"
         >
           <Grid6>
             <GridItem6>
@@ -178,7 +178,7 @@ export default function GrantForm(props: {
         </FormSection>
         <FormSection
           title="Voters"
-          description="The following DIDs are eligible to vote"
+          description="are eligible to vote for proposals to this grant"
         >
           <Grid6>
             <GridItem6>
@@ -201,7 +201,7 @@ export default function GrantForm(props: {
           <Grid6>
             <GridItem2>
               <FormItem
-                label="Duration of pending before proposing"
+                label="Duration of pending"
                 error={groupErrors?.duration?.pending?.message}
               >
                 <Controller
@@ -220,7 +220,7 @@ export default function GrantForm(props: {
             </GridItem2>
             <GridItem2>
               <FormItem
-                label="Duration of proposing before voting"
+                label="Duration of proposing"
                 error={groupErrors?.duration?.adding_option?.message}
               >
                 <Controller

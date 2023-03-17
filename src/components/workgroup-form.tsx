@@ -137,7 +137,7 @@ export default function WorkgroupForm(props: {
         </FormSection>
         <FormSection
           title="Proposers"
-          description="The following DIDs are eligible to propose"
+          description="are eligible to create proposals in this workgroup"
         >
           <Grid6>
             <GridItem6>
@@ -158,7 +158,7 @@ export default function WorkgroupForm(props: {
         </FormSection>
         <FormSection
           title="Voters"
-          description="The following DIDs are eligible to vote"
+          description="are eligible to vote for proposals in this workgroup"
         >
           <Grid6>
             <GridItem6>

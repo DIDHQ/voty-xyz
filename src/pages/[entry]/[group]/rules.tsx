@@ -34,19 +34,19 @@ export default function GroupRulesPage() {
               <div className="mt-6 space-y-6">
                 <PermissionCard
                   title="Investors"
-                  description="The following DIDs are eligible to invest"
+                  description="are eligible to open new rounds to this grant"
                   entry={query.entry}
                   value={group.permission.proposing}
                 />
                 <PermissionCard
                   title="Proposers"
-                  description="The following DIDs are eligible to propose"
+                  description="are eligible to create proposals of rounds to this grant"
                   entry={query.entry}
                   value={(group as Grant).permission.adding_option}
                 />
                 <PermissionCard
                   title="Voters"
-                  description="The following DIDs are eligible to vote"
+                  description="are eligible to vote for proposals to this grant"
                   entry={query.entry}
                   value={group.permission.voting}
                 />
@@ -96,13 +96,13 @@ export default function GroupRulesPage() {
               <div className="mt-6 space-y-6">
                 <PermissionCard
                   title="Proposers"
-                  description="The following DIDs are eligible to propose"
+                  description="are eligible to create proposals in this workgroup"
                   entry={query.entry}
                   value={group.permission.proposing}
                 />
                 <PermissionCard
                   title="Voters"
-                  description="The following DIDs are eligible to vote"
+                  description="are eligible to vote for proposals in this workgroup"
                   entry={query.entry}
                   value={group.permission.voting}
                 />
