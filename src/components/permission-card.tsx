@@ -66,7 +66,7 @@ function Tag(props: {
   return (
     <span
       className={clsx(
-        'inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium',
+        'inline-flex items-center rounded-full px-3 py-0.5 text-sm',
         props.highlight
           ? 'bg-primary-100 text-primary-700'
           : 'bg-gray-100 text-gray-700',
