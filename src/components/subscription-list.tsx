@@ -49,19 +49,14 @@ function SubscriptionListItem(props: { value: Authorized<Community> }) {
   const id = useId()
 
   return (
-    <li>
+    <li className="rounded-full ring-2 ring-transparent ring-offset-2 hover:ring-gray-300">
       <Link
         data-tooltip-id={id}
         data-tooltip-place="top"
         href={`/${props.value.authorship.author}`}
         className="shrink-0"
       >
-        <Avatar
-          size={16}
-          value={props.value.extension?.logo}
-          noRing
-          className="ring-1 ring-gray-200 hover:ring-2 hover:ring-gray-300 hover:ring-offset-2"
-        />
+        <Avatar size={16} value={props.value.extension?.logo} />
       </Link>
       <Tooltip id={id} className="rounded-md">
         {props.value.name}
