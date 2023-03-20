@@ -47,7 +47,7 @@
     "react-top-loading-bar": "2.3.1",
     "simple-markdown": "0.7.3",
     "superjson": "1.12.2",
-    "wagmi": "0.12.1",
+    "wagmi": "0.12.2",
     "zod": "3.21.4"
   },
   "devDependencies": {
