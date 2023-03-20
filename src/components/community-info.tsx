@@ -34,7 +34,7 @@ const CreateGroupButton = dynamic(() => import('./create-group-button'), {
   ssr: false,
 })
 
-export default function CommunityNav(props: { className?: string }) {
+export default function CommunityInfo(props: { className?: string }) {
   const router = useRouter()
   const query = useRouterQuery<['entry', 'group']>()
   const { data: community } = trpc.community.getByEntry.useQuery(
@@ -113,11 +113,9 @@ export default function CommunityNav(props: { className?: string }) {
               <h3 className="w-full break-words text-xl font-bold text-gray-900 line-clamp-2 sm:text-center sm:text-2xl">
                 {community?.name || '...'}
               </h3>
-              {community?.extension?.slogan ? (
-                <p className="w-full text-sm text-gray-500 line-clamp-2 sm:text-center">
-                  {community.extension.slogan}
-                </p>
-              ) : null}
+              <p className="w-full text-sm text-gray-500 line-clamp-2 sm:text-center">
+                {community?.extension.slogan || '...'}
+              </p>
             </div>
           </div>
           <div className="my-6 w-full px-6">

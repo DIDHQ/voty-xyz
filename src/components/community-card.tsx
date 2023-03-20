@@ -27,11 +27,9 @@ export default function CommunityCard(props: {
         <h3 className="w-full truncate break-words text-lg font-medium text-gray-900">
           {community.name}
         </h3>
-        {community.extension?.slogan ? (
-          <p className="w-full text-sm text-gray-500 line-clamp-2">
-            {community.extension.slogan}
-          </p>
-        ) : null}
+        <p className="w-full text-sm text-gray-500 line-clamp-2">
+          {community.extension.slogan}
+        </p>
         <div className="h-0 flex-1" />
         <div className="col-span-2 flex items-center text-gray-400">
           <BookmarkIcon className="mr-1 h-4 w-4 shrink-0" />

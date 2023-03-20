@@ -12,7 +12,7 @@ import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 import { documentTitle } from '../utils/constants'
 
-export default function GroupNav(props: { className?: string }) {
+export default function GroupInfo(props: { className?: string }) {
   const query = useRouterQuery<['entry', 'group']>()
   const { data: community } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
