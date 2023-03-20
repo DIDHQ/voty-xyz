@@ -1,8 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useId, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import dynamic from 'next/dynamic'
 import { HandRaisedIcon } from '@heroicons/react/20/solid'
 import pMap from 'p-map'
 import { uniq } from 'lodash-es'
@@ -31,11 +30,7 @@ import {
   requiredCoinTypesOfBooleanSets,
 } from '../utils/functions/boolean'
 import { getCurrentSnapshot } from '../utils/snapshot'
-
-const Tooltip = dynamic(
-  () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
-  { ssr: false },
-)
+import Tooltip from './basic/tooltip'
 
 export default function OptionForm(props: {
   entry?: string
@@ -68,7 +63,6 @@ export default function OptionForm(props: {
     () => getPeriod(new Date(), status?.timestamp, props.group?.duration),
     [props.group?.duration, status?.timestamp],
   )
-  const id = useId()
   const { data: disables } = useQuery(
     [dids, props.group?.permission.adding_option],
     async () => {
@@ -182,30 +176,25 @@ export default function OptionForm(props: {
               ) : null}
             </div>
             {period !== Period.PROPOSING ? (
-              <>
-                <div
-                  data-tooltip-id={id}
-                  data-tooltip-place="left"
-                  className="mt-6"
+              <Tooltip
+                place="left"
+                text="Waiting for transaction (in about 5 minutes)"
+                className="mt-6"
+              >
+                <Button
+                  large
+                  primary
+                  icon={HandRaisedIcon}
+                  onClick={onSubmit(
+                    (value) => handleSubmit.mutate(value),
+                    console.error,
+                  )}
+                  disabled={disabled}
+                  loading={handleSubmit.isLoading}
                 >
-                  <Button
-                    large
-                    primary
-                    icon={HandRaisedIcon}
-                    onClick={onSubmit(
-                      (value) => handleSubmit.mutate(value),
-                      console.error,
-                    )}
-                    disabled={disabled}
-                    loading={handleSubmit.isLoading}
-                  >
-                    Propose
-                  </Button>
-                </div>
-                <Tooltip id={id} className="rounded-md">
-                  Waiting for transaction (in about 5 minutes)
-                </Tooltip>
-              </>
+                  Propose
+                </Button>
+              </Tooltip>
             ) : (
               <Button
                 large

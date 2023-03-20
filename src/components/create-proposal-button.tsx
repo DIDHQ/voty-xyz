@@ -1,11 +1,10 @@
 import { PlusIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
-import { useId } from 'react'
-import { Tooltip } from 'react-tooltip'
 
 import useStatus from '../hooks/use-status'
 import { Group } from '../utils/schemas/group'
 import Button from './basic/button'
+import Tooltip from './basic/tooltip'
 
 export default function CreateProposalButton(props: {
   entry?: string
@@ -14,7 +13,6 @@ export default function CreateProposalButton(props: {
   className?: string
 }) {
   const { data: status } = useStatus(props.community)
-  const id = useId()
 
   return status?.timestamp && props.group ? (
     <Link
@@ -26,23 +24,14 @@ export default function CreateProposalButton(props: {
       </Button>
     </Link>
   ) : (
-    <>
-      <div
-        data-tooltip-id={id}
-        data-tooltip-place="left"
-        className={props.className}
-      >
-        <Button primary disabled icon={PlusIcon}>
-          {props.group
-            ? props.group.extension.type === 'grant'
-              ? 'Round'
-              : 'Proposal'
-            : null}
-        </Button>
-      </div>
-      <Tooltip id={id} className="rounded-md">
-        Waiting for transaction (in about 5 minutes)
-      </Tooltip>
-    </>
+    <Tooltip place="left" text="Waiting for transaction (in about 5 minutes)">
+      <Button primary disabled icon={PlusIcon}>
+        {props.group
+          ? props.group.extension.type === 'grant'
+            ? 'Round'
+            : 'Proposal'
+          : null}
+      </Button>
+    </Tooltip>
   )
 }

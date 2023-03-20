@@ -1,17 +1,11 @@
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { useId } from 'react'
 
 import useWallet from '../hooks/use-wallet'
 import { Authorized } from '../utils/schemas/authorship'
 import { Community } from '../utils/schemas/community'
 import { trpc } from '../utils/trpc'
 import Avatar from './basic/avatar'
-
-const Tooltip = dynamic(
-  () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
-  { ssr: false },
-)
+import Tooltip from './basic/tooltip'
 
 export default function SubscriptionList(props: { className?: string }) {
   const { account } = useWallet()
@@ -46,25 +40,12 @@ export default function SubscriptionList(props: { className?: string }) {
 }
 
 function SubscriptionListItem(props: { value: Authorized<Community> }) {
-  const id = useId()
-
   return (
-    <li>
-      <Link
-        data-tooltip-id={id}
-        data-tooltip-place="top"
-        href={`/${props.value.authorship.author}`}
-        className="shrink-0"
-      >
-        <Avatar
-          size={16}
-          value={props.value.extension?.logo}
-          noRing
-          className="ring-1 ring-gray-200 hover:ring-2 hover:ring-gray-300 hover:ring-offset-2"
-        />
-      </Link>
-      <Tooltip id={id} className="rounded-md">
-        {props.value.name}
+    <li className="rounded-full ring-2 ring-transparent ring-offset-2 hover:ring-gray-300">
+      <Tooltip place="top" text={props.value.name}>
+        <Link href={`/${props.value.authorship.author}`}>
+          <Avatar size={16} value={props.value.extension?.logo} />
+        </Link>
       </Tooltip>
     </li>
   )

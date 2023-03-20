@@ -23,8 +23,6 @@ import {
 } from '@rainbow-me/rainbowkit/wallets'
 import { useMemo } from 'react'
 import { GoogleAnalytics, event } from 'nextjs-google-analytics'
-import 'react-tooltip/dist/react-tooltip.css'
-import '@total-typescript/ts-reset'
 
 import ShellLayout from '../components/layouts/shell'
 import { trpc } from '../utils/trpc'
