@@ -1,8 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useEffect, useId, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import dynamic from 'next/dynamic'
 import { BoltIcon } from '@heroicons/react/20/solid'
 import type { Decimal } from 'decimal.js'
 import pMap from 'p-map'
@@ -24,11 +23,7 @@ import useSignDocument from '../hooks/use-sign-document'
 import TextButton from './basic/text-button'
 import Notification from './basic/notification'
 import { updateChoice } from '../utils/choice'
-
-const Tooltip = dynamic(
-  () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
-  { ssr: false },
-)
+import Tooltip from './basic/tooltip'
 
 export default function VoteForm(props: {
   entry?: string
@@ -130,7 +125,6 @@ export default function VoteForm(props: {
       period !== Period.VOTING,
     [voted, powers, period],
   )
-  const id = useId()
   const didOptions = useMemo(
     () =>
       voted && powers
@@ -219,34 +213,31 @@ export default function VoteForm(props: {
             ) : null}
           </div>
           {period !== Period.VOTING ? (
-            <>
-              <div
-                data-tooltip-id={id}
-                data-tooltip-place="left"
-                className="mt-6"
-              >
-                <Button
-                  large
-                  primary
-                  icon={BoltIcon}
-                  onClick={onSubmit(
-                    (value) => handleSubmit.mutate(value),
-                    console.error,
-                  )}
-                  disabled={disables(did)}
-                  loading={handleSubmit.isLoading}
-                >
-                  Vote{votingPower ? ` (${votingPower})` : null}
-                </Button>
-              </div>
-              <Tooltip id={id} className="rounded-md">
-                {period === Period.CONFIRMING
+            <Tooltip
+              place="left"
+              text={
+                period === Period.CONFIRMING
                   ? 'Waiting for transaction (in about 5 minutes)'
                   : period === Period.ENDED
                   ? 'Voting ended'
-                  : 'Waiting for voting'}
-              </Tooltip>
-            </>
+                  : 'Waiting for voting'
+              }
+              className="mt-6"
+            >
+              <Button
+                large
+                primary
+                icon={BoltIcon}
+                onClick={onSubmit(
+                  (value) => handleSubmit.mutate(value),
+                  console.error,
+                )}
+                disabled={disables(did)}
+                loading={handleSubmit.isLoading}
+              >
+                Vote{votingPower ? ` (${votingPower})` : null}
+              </Button>
+            </Tooltip>
           ) : (
             <Button
               large
