@@ -313,9 +313,9 @@ export default function ProposalForm(props: {
                             className={clsx(
                               'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600 sm:text-sm',
                               options.length > 1 ? 'pr-20' : 'pr-3',
-                              index === 0 ? 'rounded-t' : undefined,
+                              index === 0 ? 'rounded-t-md' : undefined,
                               index === options.length - 1
-                                ? 'rounded-b'
+                                ? 'rounded-b-md'
                                 : undefined,
                             )}
                           />
