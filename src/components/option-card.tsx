@@ -21,7 +21,7 @@ export default function OptionCard(props: {
       href={`/round/${permalink2Id(props.option.proposal)}/${permalink2Id(
         props.option.permalink,
       )}`}
-      className="block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-primary-300 hover:border-primary-500 hover:bg-gray-50"
+      className="block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-primary-300 focus-within:ring-offset-2 hover:border-primary-500 hover:bg-gray-50"
     >
       <div className="w-full p-4">
         <p className="truncate text-lg font-medium text-gray-800">
@@ -33,7 +33,7 @@ export default function OptionCard(props: {
           </p>
         ) : null}
       </div>
-      <div className="flex w-full divide-x bg-gray-50 text-sm">
+      <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">
           <p>Proposer</p>
           <p className="truncate text-gray-400">
