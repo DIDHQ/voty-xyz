@@ -273,31 +273,22 @@ function LinkListItem(props: {
     ),
     [emoji, props],
   )
-
-  return props.href ? (
-    <Link
-      href={props.href}
-      scroll={false}
-      shallow
-      className={clsx(
+  const className = useMemo(
+    () =>
+      clsx(
         props.current
           ? 'text-primary-600'
           : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
         'group flex h-10 items-center px-6 py-2 text-sm font-medium',
-      )}
-    >
+      ),
+    [props],
+  )
+
+  return props.href ? (
+    <Link href={props.href} scroll={false} shallow className={className}>
       {content}
     </Link>
   ) : (
-    <span
-      className={clsx(
-        props.current
-          ? 'text-primary-600'
-          : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-        'group flex h-10 items-center px-6 py-2 text-sm font-medium',
-      )}
-    >
-      {content}
-    </span>
+    <span className={className}>{content}</span>
   )
 }

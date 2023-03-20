@@ -5,19 +5,23 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import Head from 'next/head'
+import { useAtomValue } from 'jotai'
 
 import useGroup from '../hooks/use-group'
 import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 import { documentTitle } from '../utils/constants'
+import { previewCommunityAtom } from '../utils/atoms'
 
 export default function GroupInfo(props: { className?: string }) {
   const query = useRouterQuery<['entry', 'group']>()
-  const { data: community } = trpc.community.getByEntry.useQuery(
+  const { data } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
   )
+  const previewCommunity = useAtomValue(previewCommunityAtom)
+  const community = previewCommunity || data
   const group = useGroup(community, query.group)
   const router = useRouter()
   const tabs = useMemo(
@@ -88,24 +92,38 @@ export default function GroupInfo(props: { className?: string }) {
         <div className="mt-2 border-b">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">
             {tabs.map((tab) => (
-              <Link
+              <Tab
                 key={tab.name}
-                href={tab.href}
-                scroll={false}
-                className={clsx(
-                  tab.current
-                    ? 'border-primary-500 text-primary-600'
-                    : 'border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700',
-                  'h-14 whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium',
-                )}
-                aria-current={tab.current ? 'page' : undefined}
+                href={previewCommunity ? undefined : tab.href}
+                current={tab.current}
               >
                 {tab.name}
-              </Link>
+              </Tab>
             ))}
           </nav>
         </div>
       </div>
     </>
+  )
+}
+
+function Tab(props: { href?: string; current: boolean; children: string }) {
+  const className = useMemo(
+    () =>
+      clsx(
+        props.current
+          ? 'border-primary-500 text-primary-600'
+          : 'border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700',
+        'h-14 whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium',
+      ),
+    [props],
+  )
+
+  return props.href ? (
+    <Link href={props.href} scroll={false} shallow className={className}>
+      {props.children}
+    </Link>
+  ) : (
+    <span className={className}>{props.children}</span>
   )
 }

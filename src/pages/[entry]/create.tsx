@@ -110,10 +110,6 @@ export default function CreateGroupPage() {
         : undefined,
     [community, newGroup, query.entry, query.type],
   )
-  const handleSuccess = useCallback(() => {
-    refetch()
-    router.push(`/${query.entry}/${newGroup}/rules`)
-  }, [newGroup, query.entry, refetch, router])
 
   return (
     <>
@@ -125,25 +121,35 @@ export default function CreateGroupPage() {
         <TextButton href={`/${query.entry}`} className="mt-6 sm:mt-8">
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
-        {query.type === 'grant' ? (
-          <GrantForm
-            author={query.entry || ''}
-            initialValue={initialValue}
-            group={newGroup}
-            isNewGroup
-            onSuccess={handleSuccess}
-            className="pt-6 sm:pt-8"
-          />
-        ) : (
-          <WorkgroupForm
-            author={query.entry || ''}
-            initialValue={initialValue}
-            group={newGroup}
-            isNewGroup
-            onSuccess={handleSuccess}
-            className="pt-6 sm:pt-8"
-          />
-        )}
+        {query.entry ? (
+          query.type === 'grant' ? (
+            <GrantForm
+              author={query.entry}
+              initialValue={initialValue}
+              group={newGroup}
+              preview={{
+                from: `/${query.entry}/create`,
+                to: `/${query.entry}/${newGroup}/rules`,
+                template: `You are creating grant on Voty\n\nhash:\n{sha256}`,
+                author: query.entry,
+              }}
+              className="pt-6 sm:pt-8"
+            />
+          ) : (
+            <WorkgroupForm
+              author={query.entry}
+              initialValue={initialValue}
+              group={newGroup}
+              preview={{
+                from: `/${query.entry}/create`,
+                to: `/${query.entry}/${newGroup}/rules`,
+                template: `You are creating workgroup on Voty\n\nhash:\n{sha256}`,
+                author: query.entry,
+              }}
+              className="pt-6 sm:pt-8"
+            />
+          )
+        ) : null}
       </div>
     </>
   )

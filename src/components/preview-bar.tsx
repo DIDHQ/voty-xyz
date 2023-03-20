@@ -53,7 +53,7 @@ export default function PreviewBar() {
       <Notification show={handleSubmit.isError}>
         {handleSubmit.error?.message}
       </Notification>
-      {previewCommunity ? (
+      {previewCommunity?.preview.to === router.asPath ? (
         <footer className="fixed inset-x-0 bottom-0 h-18 border-t bg-primary-500">
           <div className="mx-auto flex h-18 max-w-5xl items-center justify-between px-6">
             <TextButton white href={previewCommunity?.preview.from}>

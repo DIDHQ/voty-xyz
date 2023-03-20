@@ -49,154 +49,146 @@ export default function CommunityForm(props: {
   const isManager = useIsManager(props.author)
 
   return (
-    <>
-      <Form className={clsx('pt-8', props.className)}>
-        <FormSection
-          title={`${isNewCommunity ? 'New' : 'Edit'} community of ${
-            props.author
-          }`}
-        >
-          <Grid6>
-            <GridItem6>
-              <FormItem label="Logo" error={errors.extension?.logo?.message}>
-                <Controller
-                  control={control}
-                  name="extension.logo"
-                  render={({ field: { value, onChange } }) => (
-                    <AvatarInput
-                      value={value}
-                      onChange={onChange}
-                      disabled={!isManager}
-                    />
-                  )}
-                />
-              </FormItem>
-            </GridItem6>
-            <GridItem6>
-              <FormItem label="Name" error={errors.name?.message}>
-                <TextInput
-                  {...register('name')}
-                  error={!!errors.name?.message}
-                  disabled={!isManager}
-                />
-              </FormItem>
-            </GridItem6>
-            <GridItem6>
-              <FormItem
-                label="Slogan"
-                error={errors.extension?.slogan?.message}
-              >
-                <TextInput
-                  {...register('extension.slogan')}
-                  error={!!errors.extension?.slogan?.message}
-                  disabled={!isManager}
-                />
-              </FormItem>
-            </GridItem6>
-            <GridItem6>
-              <FormItem
-                label="About"
-                description={
-                  <PreviewMarkdown>{watch('extension.about')}</PreviewMarkdown>
-                }
-                error={errors.extension?.about?.message}
-              >
-                <Textarea
-                  {...register('extension.about')}
-                  error={!!errors.extension?.about?.message}
-                  disabled={!isManager}
-                />
-              </FormItem>
-            </GridItem6>
-          </Grid6>
-        </FormSection>
-        <FormSection title="Links">
-          <Grid6>
-            <GridItem6>
-              <FormItem
-                label="Website"
-                error={errors.extension?.website?.message}
-              >
-                <TextInput
-                  {...register('extension.website')}
-                  error={!!errors.extension?.website?.message}
-                  disabled={!isManager}
-                />
-              </FormItem>
-            </GridItem6>
-            <GridItem2>
-              <FormItem
-                label="Twitter"
-                error={errors.extension?.twitter?.message}
-              >
-                <TextInput
-                  {...register('extension.twitter')}
-                  onBlur={(e) =>
-                    setValue(
-                      'extension.twitter',
-                      e.target.value.replace(/^.*twitter\.com\//, ''),
-                    )
-                  }
-                  error={!!errors.extension?.twitter?.message}
-                  disabled={!isManager}
-                />
-              </FormItem>
-            </GridItem2>
-            <GridItem2>
-              <FormItem
-                label="Discord"
-                error={errors.extension?.discord?.message}
-              >
-                <TextInput
-                  {...register('extension.discord')}
-                  onBlur={(e) =>
-                    setValue(
-                      'extension.discord',
-                      e.target.value
-                        .replace(/^.*discord\.gg\//, '')
-                        .replace(/^.*discord\.com\/invite\//, ''),
-                    )
-                  }
-                  error={!!errors.extension?.discord?.message}
-                  disabled={!isManager}
-                />
-              </FormItem>
-            </GridItem2>
-            <GridItem2>
-              <FormItem
-                label="GitHub"
-                error={errors.extension?.github?.message}
-              >
-                <TextInput
-                  {...register('extension.github')}
-                  onBlur={(e) =>
-                    setValue(
-                      'extension.github',
-                      e.target.value.replace(/^.*github\.com\//, ''),
-                    )
-                  }
-                  error={!!errors.extension?.github?.message}
-                  disabled={!isManager}
-                />
-              </FormItem>
-            </GridItem2>
-          </Grid6>
-        </FormSection>
-        {isManager ? (
-          <FormFooter>
-            <Button
-              primary
-              icon={EyeIcon}
-              onClick={onSubmit((value) => {
-                setPreviewCommunity({ ...value, preview: props.preview })
-                router.push(props.preview.to)
-              }, console.error)}
+    <Form className={clsx('pt-8', props.className)}>
+      <FormSection
+        title={`${isNewCommunity ? 'New' : 'Edit'} community of ${
+          props.author
+        }`}
+      >
+        <Grid6>
+          <GridItem6>
+            <FormItem label="Logo" error={errors.extension?.logo?.message}>
+              <Controller
+                control={control}
+                name="extension.logo"
+                render={({ field: { value, onChange } }) => (
+                  <AvatarInput
+                    value={value}
+                    onChange={onChange}
+                    disabled={!isManager}
+                  />
+                )}
+              />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
+            <FormItem label="Name" error={errors.name?.message}>
+              <TextInput
+                {...register('name')}
+                error={!!errors.name?.message}
+                disabled={!isManager}
+              />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
+            <FormItem label="Slogan" error={errors.extension?.slogan?.message}>
+              <TextInput
+                {...register('extension.slogan')}
+                error={!!errors.extension?.slogan?.message}
+                disabled={!isManager}
+              />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
+            <FormItem
+              label="About"
+              description={
+                <PreviewMarkdown>{watch('extension.about')}</PreviewMarkdown>
+              }
+              error={errors.extension?.about?.message}
             >
-              Preview
-            </Button>
-          </FormFooter>
-        ) : null}
-      </Form>
-    </>
+              <Textarea
+                {...register('extension.about')}
+                error={!!errors.extension?.about?.message}
+                disabled={!isManager}
+              />
+            </FormItem>
+          </GridItem6>
+        </Grid6>
+      </FormSection>
+      <FormSection title="Links">
+        <Grid6>
+          <GridItem6>
+            <FormItem
+              label="Website"
+              error={errors.extension?.website?.message}
+            >
+              <TextInput
+                {...register('extension.website')}
+                error={!!errors.extension?.website?.message}
+                disabled={!isManager}
+              />
+            </FormItem>
+          </GridItem6>
+          <GridItem2>
+            <FormItem
+              label="Twitter"
+              error={errors.extension?.twitter?.message}
+            >
+              <TextInput
+                {...register('extension.twitter')}
+                onBlur={(e) =>
+                  setValue(
+                    'extension.twitter',
+                    e.target.value.replace(/^.*twitter\.com\//, ''),
+                  )
+                }
+                error={!!errors.extension?.twitter?.message}
+                disabled={!isManager}
+              />
+            </FormItem>
+          </GridItem2>
+          <GridItem2>
+            <FormItem
+              label="Discord"
+              error={errors.extension?.discord?.message}
+            >
+              <TextInput
+                {...register('extension.discord')}
+                onBlur={(e) =>
+                  setValue(
+                    'extension.discord',
+                    e.target.value
+                      .replace(/^.*discord\.gg\//, '')
+                      .replace(/^.*discord\.com\/invite\//, ''),
+                  )
+                }
+                error={!!errors.extension?.discord?.message}
+                disabled={!isManager}
+              />
+            </FormItem>
+          </GridItem2>
+          <GridItem2>
+            <FormItem label="GitHub" error={errors.extension?.github?.message}>
+              <TextInput
+                {...register('extension.github')}
+                onBlur={(e) =>
+                  setValue(
+                    'extension.github',
+                    e.target.value.replace(/^.*github\.com\//, ''),
+                  )
+                }
+                error={!!errors.extension?.github?.message}
+                disabled={!isManager}
+              />
+            </FormItem>
+          </GridItem2>
+        </Grid6>
+      </FormSection>
+      {isManager ? (
+        <FormFooter>
+          <Button
+            primary
+            icon={EyeIcon}
+            onClick={onSubmit((value) => {
+              setPreviewCommunity({ ...value, preview: props.preview })
+              router.push(props.preview.to)
+            }, console.error)}
+          >
+            Preview
+          </Button>
+        </FormFooter>
+      ) : null}
+    </Form>
   )
 }

@@ -21,17 +21,10 @@ export default function GroupSettingsPage() {
     { enabled: !!query.entry },
   )
   const group = useGroup(community, query.group)
-  const handleSuccess = useCallback(
-    (isArchive: boolean) => {
-      refetch()
-      router.push(
-        isArchive
-          ? `/${query.entry}/about`
-          : `/${query.entry}/${query.group}/rules`,
-      )
-    },
-    [query.entry, query.group, refetch, router],
-  )
+  const handleArchive = useCallback(() => {
+    refetch()
+    router.push(`/${query.entry}/about`)
+  }, [query.entry, refetch, router])
 
   return (
     <>
@@ -43,21 +36,33 @@ export default function GroupSettingsPage() {
         >
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
-        {group ? (
+        {group && query.entry && query.group ? (
           group.extension.type === 'grant' ? (
             <GrantForm
-              author={query.entry || ''}
+              author={query.entry}
               initialValue={community || undefined}
-              group={query.group || ''}
-              onSuccess={handleSuccess}
+              group={query.group}
+              onArchive={handleArchive}
+              preview={{
+                from: `/${query.entry}/${query.group}/settings`,
+                to: `/${query.entry}/${query.group}/rules`,
+                template: `You are updating grant on Voty\n\nhash:\n{sha256}`,
+                author: query.entry,
+              }}
               className="pt-6 sm:pt-8"
             />
           ) : (
             <WorkgroupForm
-              author={query.entry || ''}
+              author={query.entry}
               initialValue={community || undefined}
-              group={query.group || ''}
-              onSuccess={handleSuccess}
+              group={query.group}
+              onArchive={handleArchive}
+              preview={{
+                from: `/${query.entry}/${query.group}/settings`,
+                to: `/${query.entry}/${query.group}/rules`,
+                template: `You are updating workgroup on Voty\n\nhash:\n{sha256}`,
+                author: query.entry,
+              }}
               className="pt-6 sm:pt-8"
             />
           )

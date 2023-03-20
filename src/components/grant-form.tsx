@@ -8,12 +8,9 @@ import {
   Merge,
   useForm,
 } from 'react-hook-form'
-import {
-  ArchiveBoxIcon,
-  ArrowPathIcon,
-  PlusIcon,
-} from '@heroicons/react/20/solid'
+import { ArchiveBoxIcon, EyeIcon } from '@heroicons/react/20/solid'
 import { useMutation } from '@tanstack/react-query'
+import { useAtom } from 'jotai'
 
 import { Community, communitySchema } from '../utils/schemas/community'
 import DurationInput from './basic/duration-input'
@@ -28,16 +25,21 @@ import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
 import useIsManager from '../hooks/use-is-manager'
 import { Grant } from '../utils/schemas/group'
+import { Preview } from '../utils/types'
+import { useRouter } from 'next/router'
+import { previewCommunityAtom } from '../utils/atoms'
 
 export default function GrantForm(props: {
   author: string
   initialValue?: Community
   group?: string
-  isNewGroup?: boolean
-  onSuccess: (isArchive: boolean) => void
+  onArchive?: () => void
+  preview: Preview
   className?: string
 }) {
-  const { onSuccess } = props
+  const { onArchive } = props
+  const router = useRouter()
+  const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
   const methods = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
@@ -58,24 +60,14 @@ export default function GrantForm(props: {
     return index
   }, [props.initialValue?.groups, props.group])
   useEffect(() => {
-    reset(props.initialValue)
-  }, [props.initialValue, reset])
+    reset(previewCommunity || props.initialValue)
+  }, [previewCommunity, props.initialValue, reset])
+  const isNewGroup = !props.onArchive
   const signDocument = useSignDocument(
     props.author,
-    `You are ${
-      props.isNewGroup ? 'creating' : 'updating'
-    } grant on Voty\n\nhash:\n{sha256}`,
+    `You are archiving grant on Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.community.create.useMutation()
-  const handleSubmit = useMutation<void, Error, Community>(
-    async (community) => {
-      const signed = await signDocument(community)
-      if (signed) {
-        await mutateAsync(signed)
-        onSuccess(false)
-      }
-    },
-  )
   const handleArchive = useMutation<void, Error, Community>(
     async (community) => {
       const signed = await signDocument({
@@ -84,7 +76,7 @@ export default function GrantForm(props: {
       })
       if (signed) {
         await mutateAsync(signed)
-        onSuccess(true)
+        onArchive?.()
       }
     },
   )
@@ -96,17 +88,12 @@ export default function GrantForm(props: {
 
   return (
     <>
-      <Notification show={handleSubmit.isError}>
-        {handleSubmit.error?.message}
-      </Notification>
       <Notification show={handleArchive.isError}>
         {handleArchive.error?.message}
       </Notification>
       <Form className={props.className}>
         <FormSection
-          title={`${props.isNewGroup ? 'New' : 'Edit'} grant of ${
-            props.author
-          }`}
+          title={`${isNewGroup ? 'New' : 'Edit'} grant of ${props.author}`}
         >
           <Grid6>
             <GridItem6>
@@ -262,16 +249,15 @@ export default function GrantForm(props: {
           <FormFooter>
             <Button
               primary
-              icon={props.isNewGroup ? PlusIcon : ArrowPathIcon}
-              loading={handleSubmit.isLoading}
-              onClick={onSubmit(
-                (value) => handleSubmit.mutate(value),
-                console.error,
-              )}
+              icon={EyeIcon}
+              onClick={onSubmit((value) => {
+                setPreviewCommunity({ ...value, preview: props.preview })
+                router.push(props.preview.to)
+              }, console.error)}
             >
-              {props.isNewGroup ? 'Create' : 'Update'}
+              Preview
             </Button>
-            {props.isNewGroup ? null : (
+            {isNewGroup ? null : (
               <Button
                 icon={ArchiveBoxIcon}
                 loading={handleArchive.isLoading}
