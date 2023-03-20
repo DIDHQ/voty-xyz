@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 
@@ -10,9 +9,6 @@ import { documentTitle } from '../../utils/constants'
 export default function CreateEntryPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry']>()
-  const handlePreview = useCallback(() => {
-    router.push(`/${query.entry}/about`)
-  }, [query.entry, router])
 
   return (
     <>
@@ -32,7 +28,6 @@ export default function CreateEntryPage() {
               template: `You are creating community on Voty\n\nhash:\n{sha256}`,
               author: query.entry,
             }}
-            onPreview={handlePreview}
             className="flex w-full flex-col"
           />
         ) : null}

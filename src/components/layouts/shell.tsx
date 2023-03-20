@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic'
 import { ReactNode } from 'react'
 
+import PreviewBar from '../preview-bar'
 import Toolbar from '../toolbar'
 
 const Banner = dynamic(() => import('../banner'), { ssr: false })
@@ -15,6 +16,7 @@ export default function ShellLayout(props: { children: ReactNode }) {
           {props.children}
         </div>
       </div>
+      <PreviewBar />
     </>
   )
 }

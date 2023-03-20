@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import clsx from 'clsx'
 import { EyeIcon } from '@heroicons/react/20/solid'
 import { useAtom } from 'jotai'
+import { useRouter } from 'next/router'
 
 import { Community, communitySchema } from '../utils/schemas/community'
 import TextInput from './basic/text-input'
@@ -25,9 +26,9 @@ export default function CommunityForm(props: {
   author: string
   initialValue?: Community
   preview: Preview
-  onPreview: () => void
   className?: string
 }) {
+  const router = useRouter()
   const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
   const methods = useForm<Community>({
     resolver: zodResolver(communitySchema),
@@ -187,8 +188,8 @@ export default function CommunityForm(props: {
               primary
               icon={EyeIcon}
               onClick={onSubmit((value) => {
-                setPreviewCommunity({ ...value, ...props.preview })
-                props.onPreview()
+                setPreviewCommunity({ ...value, preview: props.preview })
+                router.push(props.preview.to)
               }, console.error)}
             >
               Preview

@@ -11,7 +11,6 @@ import useRouterQuery from '../../hooks/use-router-query'
 import useIsManager from '../../hooks/use-is-manager'
 import Markdown from '../../components/basic/markdown'
 import { previewCommunityAtom } from '../../utils/atoms'
-import PreviewBar from '../../components/preview-bar'
 
 export default function CommunityAboutPage() {
   const query = useRouterQuery<['entry']>()
@@ -42,7 +41,6 @@ export default function CommunityAboutPage() {
       <Article className="w-full pt-6">
         <Markdown>{community?.extension?.about}</Markdown>
       </Article>
-      {previewCommunity ? <PreviewBar /> : null}
     </CommunityLayout>
   )
 }
