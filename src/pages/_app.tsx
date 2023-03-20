@@ -1,6 +1,5 @@
 import type { AppType, NextWebVitalsMetric } from 'next/app'
 import Head from 'next/head'
-import { Inter } from 'next/font/google'
 import { Chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import {
   mainnet,
@@ -58,8 +57,6 @@ const wagmiClient = createClient({
   provider,
 })
 
-const font = Inter({ subsets: ['latin'] })
-
 const MyApp: AppType = ({ Component, pageProps }) => {
   const theme = useMemo(
     () => lightTheme({ borderRadius: 'small', fontStack: 'system' }),
@@ -78,11 +75,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <GoogleAnalytics trackPageViews />
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider modalSize="compact" chains={chains} theme={theme}>
-          <main className={font.className}>
-            <ShellLayout>
-              <Component {...pageProps} />
-            </ShellLayout>
-          </main>
+          <ShellLayout>
+            <Component {...pageProps} />
+          </ShellLayout>
         </RainbowKitProvider>
       </WagmiConfig>
     </>
