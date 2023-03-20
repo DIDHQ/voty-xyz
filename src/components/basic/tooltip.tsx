@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic'
 import { ReactNode, useId } from 'react'
+import 'react-tooltip/dist/react-tooltip.css'
 
 const ReactTooltip = dynamic(
   () => import('react-tooltip').then(({ Tooltip }) => Tooltip),
