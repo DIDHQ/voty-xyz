@@ -17,7 +17,7 @@ export default function Toolbar(props: { className?: string }) {
       )}
     >
       <div className="mx-auto flex h-18 w-full max-w-5xl items-center px-6">
-        <Link href="/" className="flex items-end">
+        <Link href="/" className="group flex items-end">
           <h1 className="text-lg font-bold">
             <svg
               width="73"
@@ -25,7 +25,7 @@ export default function Toolbar(props: { className?: string }) {
               viewBox="0 0 73 27"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="text-primary-600"
+              className="text-primary-600 group-hover:text-primary-500"
             >
               <path
                 d="M28.9838 21.6C27.3038 21.6 25.9338 21.33 24.8738 20.79C23.8138 20.25 23.0638 19.47 22.6238 18.46C22.1838 17.45 22.0438 16.25 22.2038 14.85C22.2537 14.45 22.3137 13.99 22.4037 13.48C22.4937 12.97 22.5737 12.52 22.6637 12.15C22.9837 10.73 23.5438 9.52 24.3538 8.52C25.1637 7.52 26.1838 6.75 27.4338 6.21C28.6738 5.67 30.1038 5.4 31.7238 5.4C33.3638 5.4 34.7137 5.67 35.7738 6.21C36.8338 6.75 37.5938 7.52 38.0638 8.52C38.5338 9.52 38.6937 10.73 38.5337 12.15C38.4937 12.53 38.4238 12.97 38.3338 13.48C38.2438 13.99 38.1637 14.45 38.0737 14.85C37.7537 16.25 37.2037 17.46 36.4237 18.46C35.6437 19.47 34.6338 20.25 33.3937 20.79C32.1537 21.33 30.6838 21.6 28.9838 21.6ZM29.6038 17.94C30.5038 17.94 31.2038 17.67 31.7038 17.13C32.2038 16.59 32.5737 15.78 32.8237 14.7C32.8937 14.4 32.9737 14 33.0537 13.5C33.1338 13 33.1938 12.6 33.2238 12.3C33.3438 11.24 33.2437 10.44 32.9237 9.89C32.6137 9.34 32.0038 9.06 31.1038 9.06C30.2238 9.06 29.5238 9.33 29.0138 9.88C28.5038 10.43 28.1338 11.24 27.9138 12.29C27.8438 12.59 27.7638 12.99 27.6838 13.49C27.6038 13.99 27.5438 14.39 27.5138 14.69C27.3738 15.77 27.4638 16.58 27.7938 17.12C28.1138 17.67 28.7238 17.94 29.6038 17.94Z"
@@ -42,9 +42,13 @@ export default function Toolbar(props: { className?: string }) {
             </svg>
           </h1>
           {isTestnet ? (
-            <span className="ml-2 italic text-primary-600">Testnet</span>
+            <span className="ml-2 italic text-primary-600 group-hover:text-primary-500">
+              Testnet
+            </span>
           ) : (
-            <span className="ml-2 italic text-primary-600">Alpha</span>
+            <span className="ml-2 italic text-primary-600 group-hover:text-primary-500">
+              Alpha
+            </span>
           )}
         </Link>
         <div className="w-0 flex-1" />
