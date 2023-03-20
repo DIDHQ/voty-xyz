@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 import clsx from 'clsx'
+import Link from 'next/link'
 
-import TextButton from './basic/text-button'
 import { isTestnet } from '../utils/constants'
 
 const ConnectButton = dynamic(() => import('./connect-button'), { ssr: false })
@@ -17,7 +17,7 @@ export default function Toolbar(props: { className?: string }) {
       )}
     >
       <div className="mx-auto flex h-18 w-full max-w-5xl items-center px-6">
-        <TextButton primary href="/" className="flex items-end">
+        <Link href="/" className="flex items-end">
           <h1 className="text-lg font-bold">
             <svg
               width="73"
@@ -42,11 +42,11 @@ export default function Toolbar(props: { className?: string }) {
             </svg>
           </h1>
           {isTestnet ? (
-            <span className="ml-2 italic">Testnet</span>
+            <span className="ml-2 italic text-primary-600">Testnet</span>
           ) : (
-            <span className="ml-2 italic">Alpha</span>
+            <span className="ml-2 italic text-primary-600">Alpha</span>
           )}
-        </TextButton>
+        </Link>
         <div className="w-0 flex-1" />
         <InfoButton />
         <div className="w-4"></div>
