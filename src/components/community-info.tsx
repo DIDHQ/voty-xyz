@@ -9,18 +9,19 @@ import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useMemo } from 'react'
+import { ExoticComponent, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
+import { useAtomValue } from 'jotai'
 
 import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
 import useRouterQuery from '../hooks/use-router-query'
 import Avatar from './basic/avatar'
 import { extractStartEmoji } from '../utils/emoji'
-import { Group } from '../utils/schemas/group'
 import { trpc } from '../utils/trpc'
 import { documentTitle } from '../utils/constants'
 import TextButton from './basic/text-button'
+import { previewCommunityAtom } from '../utils/atoms'
 
 const StatusIcon = dynamic(() => import('./status-icon'), {
   ssr: false,
@@ -37,10 +38,12 @@ const CreateGroupButton = dynamic(() => import('./create-group-button'), {
 export default function CommunityInfo(props: { className?: string }) {
   const router = useRouter()
   const query = useRouterQuery<['entry', 'group']>()
-  const { data: community } = trpc.community.getByEntry.useQuery(
+  const { data } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
   )
+  const previewCommunity = useAtomValue(previewCommunityAtom)
+  const community = previewCommunity || data
   const navigation = useMemo(
     () => [
       {
@@ -98,10 +101,12 @@ export default function CommunityInfo(props: { className?: string }) {
         <title>{title}</title>
       </Head>
       <aside className={clsx('relative', props.className)}>
-        <StatusIcon
-          permalink={community?.entry.community}
-          className="absolute right-4 top-4"
-        />
+        {previewCommunity ? null : (
+          <StatusIcon
+            permalink={data?.entry.community}
+            className="absolute right-4 top-4"
+          />
+        )}
         <div className="flex w-full flex-col items-center rounded-md border border-gray-200 pb-4">
           <div className="flex w-full items-center space-x-4 p-6 pb-0 sm:flex-col sm:space-y-4 sm:space-x-0 sm:pt-8">
             <Avatar
@@ -124,75 +129,89 @@ export default function CommunityInfo(props: { className?: string }) {
           <div className="w-full">
             <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
               Community
-              <SubscriptionButton entry={query.entry} className="float-right" />
+              {previewCommunity ? null : (
+                <SubscriptionButton
+                  entry={query.entry}
+                  className="float-right"
+                />
+              )}
             </h3>
             {navigation.map((item) => (
-              <Link
+              <LinkListItem
                 key={item.name}
-                href={item.href}
-                scroll={false}
-                shallow
-                className={clsx(
-                  item.current
-                    ? 'text-primary-600'
-                    : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                  'group flex h-10 items-center px-6 py-2 text-sm font-medium',
-                )}
+                href={previewCommunity ? undefined : item.href}
+                icon={item.icon}
+                current={item.current}
               >
-                <item.icon
-                  className={clsx(
-                    item.current
-                      ? 'text-primary-500'
-                      : 'text-gray-300 group-hover:text-gray-400',
-                    'mr-2 h-5 w-5 shrink-0',
-                  )}
-                  aria-hidden="true"
-                />
                 {item.name}
-              </Link>
+              </LinkListItem>
             ))}
           </div>
           <div className="mt-6 w-full">
             <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
               Workgroups
-              <CreateGroupButton
-                type="workgroup"
-                entry={query.entry}
-                className="float-right"
-              />
+              {previewCommunity ? null : (
+                <CreateGroupButton
+                  type="workgroup"
+                  entry={query.entry}
+                  className="float-right"
+                />
+              )}
             </h3>
             <div>
               {community?.groups
                 ?.filter(({ extension: { type } }) => type === 'workgroup')
                 ?.map((group) => (
-                  <GroupListItem
+                  <LinkListItem
                     key={group.id}
-                    entry={query.entry}
-                    group={group}
+                    href={
+                      previewCommunity
+                        ? undefined
+                        : `/${query.entry}/${group.id}`
+                    }
+                    icon={
+                      group.extension.type === 'grant'
+                        ? TrophyIcon
+                        : BriefcaseIcon
+                    }
                     current={query.group === group.id}
-                  />
+                  >
+                    {group.name}
+                  </LinkListItem>
                 ))}
             </div>
           </div>
           <div className="mt-6 w-full">
             <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
               Grants
-              <CreateGroupButton
-                type="grant"
-                entry={query.entry}
-                className="float-right"
-              />
+              {previewCommunity ? null : (
+                <CreateGroupButton
+                  type="grant"
+                  entry={query.entry}
+                  className="float-right"
+                />
+              )}
             </h3>
             <div>
               {community?.groups
                 ?.filter(({ extension: { type } }) => type === 'grant')
                 ?.map((group) => (
-                  <GroupListItem
+                  <LinkListItem
                     key={group.id}
-                    entry={query.entry}
-                    group={group}
+                    href={
+                      previewCommunity
+                        ? undefined
+                        : `/${query.entry}/${group.id}`
+                    }
+                    icon={
+                      group.extension.type === 'grant'
+                        ? TrophyIcon
+                        : BriefcaseIcon
+                    }
                     current={query.group === group.id}
-                  />
+                  >
+                    {group.name}
+                  </LinkListItem>
                 ))}
             </div>
           </div>
@@ -216,58 +235,69 @@ export default function CommunityInfo(props: { className?: string }) {
   )
 }
 
-function GroupListItem(props: {
-  entry?: string
-  group: Group
-  current: boolean
+function LinkListItem(props: {
+  href?: string
+  current?: boolean
+  icon?: ExoticComponent<{ className?: string }>
+  children: string
 }) {
   const emoji = useMemo(
-    () => extractStartEmoji(props.group.name),
-    [props.group.name],
+    () => extractStartEmoji(props.children),
+    [props.children],
+  )
+  const content = useMemo(
+    () => (
+      <>
+        {emoji ? (
+          <span
+            className="mr-2 w-5 shrink-0 text-center text-lg"
+            aria-hidden="true"
+          >
+            {emoji}
+          </span>
+        ) : props.icon ? (
+          <props.icon
+            className={clsx(
+              props.current
+                ? 'text-primary-500'
+                : 'text-gray-300 group-hover:text-gray-400',
+              'mr-2 h-5 w-5 shrink-0',
+            )}
+            aria-hidden="true"
+          />
+        ) : null}
+        <span className="truncate">
+          {props.children.replace(emoji || '', '')}
+        </span>
+      </>
+    ),
+    [emoji, props],
   )
 
-  return (
+  return props.href ? (
     <Link
-      href={`/${props.entry}/${props.group.id}`}
+      href={props.href}
       scroll={false}
+      shallow
       className={clsx(
         props.current
           ? 'text-primary-600'
           : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-        'group flex h-10 w-full items-center px-6 py-2 text-sm font-medium',
+        'group flex h-10 items-center px-6 py-2 text-sm font-medium',
       )}
     >
-      {emoji ? (
-        <span
-          className="mr-2 w-5 shrink-0 text-center text-lg"
-          aria-hidden="true"
-        >
-          {emoji}
-        </span>
-      ) : props.group.extension.type === 'grant' ? (
-        <TrophyIcon
-          className={clsx(
-            props.current
-              ? 'text-primary-500'
-              : 'text-gray-300 group-hover:text-gray-400',
-            'mr-2 h-5 w-5 shrink-0',
-          )}
-          aria-hidden="true"
-        />
-      ) : (
-        <BriefcaseIcon
-          className={clsx(
-            props.current
-              ? 'text-primary-500'
-              : 'text-gray-300 group-hover:text-gray-400',
-            'mr-2 h-5 w-5 shrink-0',
-          )}
-          aria-hidden="true"
-        />
-      )}
-      <span className="truncate">
-        {props.group.name.replace(emoji || '', '')}
-      </span>
+      {content}
     </Link>
+  ) : (
+    <span
+      className={clsx(
+        props.current
+          ? 'text-primary-600'
+          : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+        'group flex h-10 items-center px-6 py-2 text-sm font-medium',
+      )}
+    >
+      {content}
+    </span>
   )
 }

@@ -18,7 +18,7 @@ export default function CommunitySettingsPage() {
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  const handleSuccess = useCallback(() => {
+  const handlePreview = useCallback(() => {
     refetch()
     router.push(`/${query.entry}/about`)
   }, [query.entry, refetch, router])
@@ -30,11 +30,17 @@ export default function CommunitySettingsPage() {
         <TextButton href={`/${query.entry}/about`} className="mt-6 sm:mt-8">
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
-        {community ? (
+        {query.entry ? (
           <CommunityForm
             author={query.entry}
-            initialValue={community}
-            onSuccess={handleSuccess}
+            initialValue={community || undefined}
+            preview={{
+              from: router.asPath,
+              to: `/${query.entry}/about`,
+              template: `You are updating community on Voty\n\nhash:\n{sha256}`,
+              author: query.entry,
+            }}
+            onPreview={handlePreview}
             className="flex w-full flex-col"
           />
         ) : null}
