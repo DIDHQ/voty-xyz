@@ -17,7 +17,7 @@ import VoteForm from '../../../components/vote-form'
 import useRouterQuery from '../../../hooks/use-router-query'
 import Markdown from '../../../components/basic/markdown'
 import ProposalInfo from '../../../components/proposal-info'
-import { powerOfChoice } from '../../../utils/choice'
+import { powerOfChoice, updateChoice } from '../../../utils/choice'
 import { previewOptionAtom } from '../../../utils/atoms'
 
 export default function OptionPage() {
@@ -103,6 +103,13 @@ export default function OptionPage() {
     refetch()
     refetchList()
   }, [refetch, refetchList])
+  const initialValue = useMemo(
+    () =>
+      query.option
+        ? { choice: updateChoice('single', undefined, query.option) }
+        : undefined,
+    [query.option],
+  )
 
   return (
     <>
@@ -130,7 +137,7 @@ export default function OptionPage() {
             >
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>
-            <div className="mb-6 border-b border-gray-200 pb-6">
+            <div className="mb-6">
               <h3 className="mt-4 break-words text-3xl font-bold leading-8 tracking-tight text-gray-900 line-clamp-2 sm:text-4xl">
                 {option?.title || '...'}
               </h3>
@@ -144,7 +151,7 @@ export default function OptionPage() {
               className="mb-6 block sm:hidden"
             />
             <VoteForm
-              defaultOption={query.option}
+              initialValue={initialValue}
               entry={community?.authorship.author}
               proposal={proposal || undefined}
               group={group}

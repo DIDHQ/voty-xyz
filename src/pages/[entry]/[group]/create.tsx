@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import { useMemo } from 'react'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import useGroup from '../../../hooks/use-group'
@@ -7,6 +8,7 @@ import { trpc } from '../../../utils/trpc'
 import LoadingBar from '../../../components/basic/loading-bar'
 import ProposalForm from '../../../components/proposal-form'
 import { documentTitle } from '../../../utils/constants'
+import { Proposal } from '../../../utils/schemas/proposal'
 
 export default function CreateProposalPage() {
   const query = useRouterQuery<['entry', 'group']>()
@@ -20,6 +22,15 @@ export default function CreateProposalPage() {
       ? 'round'
       : 'proposal'
     : undefined
+  const initialValue = useMemo<Partial<Proposal> | undefined>(
+    () =>
+      type === 'round'
+        ? { voting_type: 'single', extension: { funding: [['', 5]] } }
+        : type === 'proposal'
+        ? { voting_type: 'single', options: ['', ''] }
+        : undefined,
+    [type],
+  )
 
   return (
     <>
@@ -36,13 +47,7 @@ export default function CreateProposalPage() {
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
         <ProposalForm
-          initialValue={
-            type === 'round'
-              ? { voting_type: 'single', extension: { funding: [['', 5]] } }
-              : type === 'proposal'
-              ? { voting_type: 'single', options: ['', ''] }
-              : undefined
-          }
+          initialValue={initialValue}
           community={community || undefined}
           group={group}
           className="pt-6 sm:pt-8"
