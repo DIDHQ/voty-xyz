@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
+import { useAtomValue } from 'jotai'
 
 import useGroup from '../../hooks/use-group'
 import { stringifyChoice } from '../../utils/choice'
@@ -11,18 +12,34 @@ import { trpc } from '../../utils/trpc'
 import Article from '../../components/basic/article'
 import TextButton from '../../components/basic/text-button'
 import LoadingBar from '../../components/basic/loading-bar'
-import { documentTitle } from '../../utils/constants'
+import { documentTitle, previewPermalink } from '../../utils/constants'
 import VoteForm from '../../components/vote-form'
 import useRouterQuery from '../../hooks/use-router-query'
 import Markdown from '../../components/basic/markdown'
 import ProposalInfo from '../../components/proposal-info'
+import { previewProposalAtom } from '../../utils/atoms'
+import { Proposal } from '../../utils/schemas/proposal'
 
 export default function ProposalPage() {
   const query = useRouterQuery<['proposal']>()
-  const { data: proposal, isLoading } = trpc.proposal.getByPermalink.useQuery(
+  const previewProposal = useAtomValue(previewProposalAtom)
+  const { data, isLoading } = trpc.proposal.getByPermalink.useQuery(
     { permalink: query.proposal },
     { enabled: !!query.proposal, refetchOnWindowFocus: false },
   )
+  const proposal = useMemo<
+    | (Proposal & { permalink: string; authorship?: { author?: string } })
+    | undefined
+  >(() => {
+    if (previewProposal) {
+      return {
+        ...previewProposal,
+        permalink: previewPermalink,
+        authorship: { author: previewProposal.preview.author },
+      }
+    }
+    return data || undefined
+  }, [data, previewProposal])
   const { data: community, isLoading: isCommunityLoading } =
     trpc.community.getByPermalink.useQuery(
       { permalink: proposal?.community },
@@ -30,7 +47,7 @@ export default function ProposalPage() {
     )
   const group = useGroup(community, proposal?.group, 'workgroup')
   const {
-    data,
+    data: list,
     fetchNextPage,
     hasNextPage,
     refetch: refetchList,
@@ -38,7 +55,7 @@ export default function ProposalPage() {
     { proposal: query.proposal },
     { enabled: !!query.proposal, getNextPageParam: ({ next }) => next },
   )
-  const votes = useMemo(() => data?.pages.flatMap(({ data }) => data), [data])
+  const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
   const { ref, inView } = useInView()
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -74,7 +91,7 @@ export default function ProposalPage() {
             >
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>
-            <div className="mb-6 border-b border-gray-200 pb-6">
+            <div className="mb-6">
               <h3 className="mt-4 break-words text-3xl font-bold leading-8 tracking-tight text-gray-900 line-clamp-2 sm:text-4xl">
                 {proposal?.title || '...'}
               </h3>
@@ -83,16 +100,16 @@ export default function ProposalPage() {
               </Article>
             </div>
             <ProposalInfo
-              proposal={proposal || undefined}
+              proposal={proposal}
               className="mb-6 block sm:hidden"
             />
             <VoteForm
               entry={community?.authorship.author}
-              proposal={proposal || undefined}
+              proposal={proposal}
               group={group}
               onSuccess={handleSuccess}
             />
-            {proposal?.votes ? (
+            {proposal && 'votes' in proposal && proposal?.votes ? (
               <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
                 {proposal.votes === 1 ? '1 Vote' : `${proposal.votes} Votes`}
               </h2>
@@ -161,10 +178,7 @@ export default function ProposalPage() {
               </table>
             ) : null}
           </div>
-          <ProposalInfo
-            proposal={proposal || undefined}
-            className="hidden sm:block"
-          />
+          <ProposalInfo proposal={proposal} className="hidden sm:block" />
         </div>
         <div ref={ref} />
       </div>

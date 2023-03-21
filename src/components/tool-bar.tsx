@@ -8,7 +8,7 @@ const ConnectButton = dynamic(() => import('./connect-button'), { ssr: false })
 
 const InfoButton = dynamic(() => import('./info-button'), { ssr: false })
 
-export default function Toolbar(props: { className?: string }) {
+export default function ToolBar(props: { className?: string }) {
   return (
     <header
       className={clsx(

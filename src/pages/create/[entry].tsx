@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 
@@ -10,9 +9,6 @@ import { documentTitle } from '../../utils/constants'
 export default function CreateEntryPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry']>()
-  const handleSuccess = useCallback(() => {
-    router.push(`/${query.entry}/about`)
-  }, [query.entry, router])
 
   return (
     <>
@@ -23,11 +19,18 @@ export default function CreateEntryPage() {
         <TextButton href="/create" className="mt-6 sm:mt-8">
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
-        <CommunityForm
-          author={query.entry}
-          onSuccess={handleSuccess}
-          className="flex w-full flex-col"
-        />
+        {query.entry ? (
+          <CommunityForm
+            author={query.entry}
+            preview={{
+              from: router.asPath,
+              to: `/${query.entry}/about`,
+              template: `You are creating community on Voty\n\nhash:\n{sha256}`,
+              author: query.entry,
+            }}
+            className="flex w-full flex-col"
+          />
+        ) : null}
       </div>
     </>
   )

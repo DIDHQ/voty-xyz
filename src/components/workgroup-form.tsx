@@ -8,12 +8,10 @@ import {
   Merge,
   useForm,
 } from 'react-hook-form'
-import {
-  ArchiveBoxIcon,
-  ArrowPathIcon,
-  PlusIcon,
-} from '@heroicons/react/20/solid'
+import { ArchiveBoxIcon, EyeIcon } from '@heroicons/react/20/solid'
 import { useMutation } from '@tanstack/react-query'
+import { useAtom } from 'jotai'
+import { useRouter } from 'next/router'
 
 import { Community, communitySchema } from '../utils/schemas/community'
 import DurationInput from './basic/duration-input'
@@ -23,23 +21,26 @@ import BooleanSetsBlock from './boolean-sets-block'
 import DecimalSetsBlock from './decimal-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem3, GridItem6 } from './basic/grid'
-import PreviewMarkdown from './preview-markdown'
 import Button from './basic/button'
 import useSignDocument from '../hooks/use-sign-document'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
 import useIsManager from '../hooks/use-is-manager'
 import { Workgroup } from '../utils/schemas/group'
+import { previewCommunityAtom } from '../utils/atoms'
+import { Preview } from '../utils/types'
 
 export default function WorkgroupForm(props: {
   author: string
   initialValue?: Community
   group?: string
-  isNewGroup?: boolean
-  onSuccess: (isArchive: boolean) => void
+  onArchive?: () => void
+  preview: Preview
   className?: string
 }) {
-  const { onSuccess } = props
+  const { onArchive } = props
+  const router = useRouter()
+  const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
   const methods = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
@@ -47,7 +48,6 @@ export default function WorkgroupForm(props: {
     control,
     register,
     reset,
-    watch,
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
@@ -61,24 +61,14 @@ export default function WorkgroupForm(props: {
     return index
   }, [props.initialValue?.groups, props.group])
   useEffect(() => {
-    reset(props.initialValue)
-  }, [props.initialValue, reset])
+    reset(previewCommunity || props.initialValue)
+  }, [previewCommunity, props.initialValue, reset])
+  const isNewGroup = !props.onArchive
   const signDocument = useSignDocument(
     props.author,
-    `You are ${
-      props.isNewGroup ? 'creating' : 'updating'
-    } workgroup on Voty\n\nhash:\n{sha256}`,
+    `You are archiving workgroup on Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.community.create.useMutation()
-  const handleSubmit = useMutation<void, Error, Community>(
-    async (community) => {
-      const signed = await signDocument(community)
-      if (signed) {
-        await mutateAsync(signed)
-        onSuccess(false)
-      }
-    },
-  )
   const handleArchive = useMutation<void, Error, Community>(
     async (community) => {
       const signed = await signDocument({
@@ -87,7 +77,7 @@ export default function WorkgroupForm(props: {
       })
       if (signed) {
         await mutateAsync(signed)
-        onSuccess(true)
+        onArchive?.()
       }
     },
   )
@@ -99,17 +89,12 @@ export default function WorkgroupForm(props: {
 
   return (
     <>
-      <Notification show={handleSubmit.isError}>
-        {handleSubmit.error?.message}
-      </Notification>
       <Notification show={handleArchive.isError}>
         {handleArchive.error?.message}
       </Notification>
       <Form className={props.className}>
         <FormSection
-          title={`${props.isNewGroup ? 'New' : 'Edit'} workgroup of ${
-            props.author
-          }`}
+          title={`${isNewGroup ? 'New' : 'Edit'} workgroup of ${props.author}`}
         >
           <Grid6>
             <GridItem6>
@@ -226,13 +211,7 @@ export default function WorkgroupForm(props: {
           <Grid6>
             <GridItem6>
               <FormItem
-                description={
-                  <PreviewMarkdown>
-                    {watch(
-                      `groups.${groupIndex}.extension.terms_and_conditions`,
-                    )}
-                  </PreviewMarkdown>
-                }
+                description="Markdown is supported"
                 error={groupErrors?.extension?.terms_and_conditions?.message}
               >
                 <Textarea
@@ -252,16 +231,15 @@ export default function WorkgroupForm(props: {
           <FormFooter>
             <Button
               primary
-              icon={props.isNewGroup ? PlusIcon : ArrowPathIcon}
-              loading={handleSubmit.isLoading}
-              onClick={onSubmit(
-                (value) => handleSubmit.mutate(value),
-                console.error,
-              )}
+              icon={EyeIcon}
+              onClick={onSubmit((value) => {
+                setPreviewCommunity({ ...value, preview: props.preview })
+                router.push(props.preview.to)
+              }, console.error)}
             >
-              {props.isNewGroup ? 'Create' : 'Update'}
+              Preview
             </Button>
-            {props.isNewGroup ? null : (
+            {isNewGroup ? null : (
               <Button
                 icon={ArchiveBoxIcon}
                 loading={handleArchive.isLoading}

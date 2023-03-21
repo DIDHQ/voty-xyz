@@ -1,14 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { commonCoinTypes } from '../utils/constants'
+import { commonCoinTypes, previewPermalink } from '../utils/constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../utils/snapshot'
-import { Status } from '../utils/types'
+import { PreviewPermalink, Status } from '../utils/types'
 
-export default function useStatus(permalink?: string) {
+export default function useStatus(permalink?: string | PreviewPermalink) {
   return useQuery<Status>(
     ['status', permalink],
     async () => {
       try {
+        if (permalink === previewPermalink) {
+          return { timestamp: new Date() }
+        }
         const snapshot = await getPermalinkSnapshot(permalink!)
         const timestamp = await getSnapshotTimestamp(
           commonCoinTypes.AR,

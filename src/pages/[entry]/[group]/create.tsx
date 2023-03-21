@@ -1,18 +1,16 @@
-import { useCallback } from 'react'
-import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { useMemo } from 'react'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import useGroup from '../../../hooks/use-group'
 import TextButton from '../../../components/basic/text-button'
-import { permalink2Id } from '../../../utils/permalink'
 import { trpc } from '../../../utils/trpc'
 import LoadingBar from '../../../components/basic/loading-bar'
-import ProposalForm from '../../../components/proposal-from'
+import ProposalForm from '../../../components/proposal-form'
 import { documentTitle } from '../../../utils/constants'
+import { Proposal } from '../../../utils/schemas/proposal'
 
 export default function CreateProposalPage() {
-  const router = useRouter()
   const query = useRouterQuery<['entry', 'group']>()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
@@ -24,11 +22,14 @@ export default function CreateProposalPage() {
       ? 'round'
       : 'proposal'
     : undefined
-  const handleSuccess = useCallback(
-    (permalink: string) => {
-      router.push(`/${type}/${permalink2Id(permalink)}`)
-    },
-    [router, type],
+  const initialValue = useMemo<Partial<Proposal> | undefined>(
+    () =>
+      type === 'round'
+        ? { voting_type: 'single', extension: { funding: [['', 5]] } }
+        : type === 'proposal'
+        ? { voting_type: 'single', options: ['', ''] }
+        : undefined,
+    [type],
   )
 
   return (
@@ -46,9 +47,9 @@ export default function CreateProposalPage() {
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
         <ProposalForm
+          initialValue={initialValue}
           community={community || undefined}
           group={group}
-          onSuccess={handleSuccess}
           className="pt-6 sm:pt-8"
         />
       </div>

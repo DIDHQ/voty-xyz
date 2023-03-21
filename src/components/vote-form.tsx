@@ -5,6 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { BoltIcon } from '@heroicons/react/20/solid'
 import type { Decimal } from 'decimal.js'
 import pMap from 'p-map'
+import clsx from 'clsx'
 
 import { calculateDecimal } from '../utils/functions/number'
 import { Vote, voteSchema } from '../utils/schemas/vote'
@@ -22,12 +23,11 @@ import Button from './basic/button'
 import useSignDocument from '../hooks/use-sign-document'
 import TextButton from './basic/text-button'
 import Notification from './basic/notification'
-import { updateChoice } from '../utils/choice'
 import Tooltip from './basic/tooltip'
 
 export default function VoteForm(props: {
   entry?: string
-  defaultOption?: string
+  initialValue?: Partial<Vote>
   proposal?: Proposal & { permalink: string }
   group?: Group
   onSuccess: () => void
@@ -74,9 +74,13 @@ export default function VoteForm(props: {
     setValue,
     resetField,
     control,
+    reset,
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
+  useEffect(() => {
+    reset(props.initialValue)
+  }, [props.initialValue, reset])
   useEffect(() => {
     if (props.proposal?.permalink) {
       setValue('proposal', props.proposal.permalink)
@@ -105,11 +109,6 @@ export default function VoteForm(props: {
     setValue('choice', '')
     onSuccess()
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
-  useEffect(() => {
-    if (props.defaultOption) {
-      setValue('choice', updateChoice('single', undefined, props.defaultOption))
-    }
-  }, [props.defaultOption, setValue])
   const { data: status } = useStatus(props.proposal?.permalink)
   const period = useMemo(
     () => getPeriod(new Date(), status?.timestamp, props.group?.duration),
@@ -163,35 +162,37 @@ export default function VoteForm(props: {
       <Notification show={handleSubmit.isError}>
         {handleSubmit.error?.message}
       </Notification>
-      <div className={props.className}>
+      <div className={clsx('mt-6 border-t border-gray-200', props.className)}>
         <FormItem error={errors.choice?.message}>
-          <Controller
-            control={control}
-            name="choice"
-            render={({ field: { value, onChange } }) =>
-              props.proposal?.options?.length ? (
-                <ul
-                  role="list"
-                  className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
-                >
-                  {props.proposal?.options.map((option) => (
-                    <ChoiceListItem
-                      key={option}
-                      type={props.proposal!.voting_type}
-                      option={option}
-                      votingPower={votingPower}
-                      choices={choices}
-                      disabled={disables(did)}
-                      value={value}
-                      onChange={onChange}
-                    />
-                  ))}
-                </ul>
-              ) : (
-                <></>
-              )
-            }
-          />
+          {props.initialValue ? null : (
+            <Controller
+              control={control}
+              name="choice"
+              render={({ field: { value, onChange } }) =>
+                props.proposal?.options?.length ? (
+                  <ul
+                    role="list"
+                    className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
+                  >
+                    {props.proposal?.options.map((option) => (
+                      <ChoiceListItem
+                        key={option}
+                        type={props.proposal!.voting_type}
+                        option={option}
+                        votingPower={votingPower}
+                        choices={choices}
+                        disabled={disables(did)}
+                        value={value}
+                        onChange={onChange}
+                      />
+                    ))}
+                  </ul>
+                ) : (
+                  <></>
+                )
+              }
+            />
+          )}
         </FormItem>
         <div className="mt-6 flex w-full flex-col items-end">
           <div className="w-full flex-1 sm:w-64 sm:flex-none">

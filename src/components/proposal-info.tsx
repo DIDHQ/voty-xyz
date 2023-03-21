@@ -2,8 +2,11 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 
 import useGroup from '../hooks/use-group'
-import { coinTypeExplorers, coinTypeNames } from '../utils/constants'
-import { Authorized } from '../utils/schemas/authorship'
+import {
+  coinTypeExplorers,
+  coinTypeNames,
+  previewPermalink,
+} from '../utils/constants'
 import { Option } from '../utils/schemas/option'
 import { Proposal } from '../utils/schemas/proposal'
 import { trpc } from '../utils/trpc'
@@ -12,12 +15,18 @@ import { DetailItem, DetailList } from './basic/detail'
 import Markdown from './basic/markdown'
 import TextButton from './basic/text-button'
 import ProposalSchedule from './proposal-schedule'
+import { PreviewPermalink } from '../utils/types'
 
 const StatusIcon = dynamic(() => import('./status-icon'), { ssr: false })
 
 export default function ProposalInfo(props: {
-  proposal?: Authorized<Proposal> & { permalink: string }
-  option?: Authorized<Option>
+  proposal?: Proposal & {
+    permalink: string | PreviewPermalink
+    authorship?: { author?: string }
+  }
+  option?: Option & {
+    authorship?: { author?: string }
+  }
   className?: string
 }) {
   const { data: community } = trpc.community.getByPermalink.useQuery(
@@ -33,10 +42,12 @@ export default function ProposalInfo(props: {
         props.className,
       )}
     >
-      <StatusIcon
-        permalink={props.proposal?.permalink}
-        className="absolute right-4 top-4 sm:top-12"
-      />
+      {props.proposal?.permalink === previewPermalink ? null : (
+        <StatusIcon
+          permalink={props.proposal?.permalink}
+          className="absolute right-4 top-4 sm:top-12"
+        />
+      )}
       <div className="space-y-6 rounded-md border border-gray-200 p-6">
         <DetailList title="Information">
           <DetailItem title="Community" className="truncate whitespace-nowrap">
@@ -64,11 +75,11 @@ export default function ProposalInfo(props: {
             }
             className="truncate whitespace-nowrap"
           >
-            {props.proposal?.authorship.author || '...'}
+            {props.proposal?.authorship?.author || '...'}
           </DetailItem>
           {props.option ? (
             <DetailItem title="Proposer" className="truncate whitespace-nowrap">
-              {props.option.authorship.author}
+              {props.option.authorship?.author}
             </DetailItem>
           ) : null}
         </DetailList>

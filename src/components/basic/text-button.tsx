@@ -7,9 +7,10 @@ export default function TextButton(
     href?: string
     primary?: boolean
     secondary?: boolean
+    white?: boolean
   },
 ) {
-  const { href, primary, secondary, ...restProps } = props
+  const { href, primary, secondary, white, ...restProps } = props
   const renderButton = useMemo(
     () => (
       <button
@@ -21,6 +22,8 @@ export default function TextButton(
             ? 'text-primary-600 hover:text-primary-500 focus:ring-primary-300'
             : secondary
             ? 'text-secondary-600 hover:text-secondary-500 focus:ring-secondary-300'
+            : white
+            ? 'text-gray-100 hover:text-gray-50 focus:ring-gray-300'
             : 'text-gray-600 hover:text-gray-500 focus:ring-gray-300',
           restProps.className,
         )}
@@ -28,7 +31,7 @@ export default function TextButton(
         {restProps.children}
       </button>
     ),
-    [primary, secondary, restProps],
+    [restProps, primary, secondary, white],
   )
 
   return href && !props.disabled ? (

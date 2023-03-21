@@ -33,3 +33,12 @@ export type Account = {
 export type Status = {
   timestamp?: Date
 }
+
+export type Preview = {
+  from: string
+  to: string
+  template: string
+  author: string
+}
+
+export type PreviewPermalink = 'preview'

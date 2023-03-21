@@ -3,13 +3,14 @@ import { compact } from 'lodash-es'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useInView } from 'react-intersection-observer'
+import { useAtomValue } from 'jotai'
 
 import useGroup from '../../../hooks/use-group'
 import { trpc } from '../../../utils/trpc'
 import Article from '../../../components/basic/article'
 import TextButton from '../../../components/basic/text-button'
 import LoadingBar from '../../../components/basic/loading-bar'
-import { documentTitle } from '../../../utils/constants'
+import { documentTitle, previewPermalink } from '../../../utils/constants'
 import useRouterQuery from '../../../hooks/use-router-query'
 import Markdown from '../../../components/basic/markdown'
 import Button from '../../../components/basic/button'
@@ -19,13 +20,29 @@ import OptionCard from '../../../components/option-card'
 import { getPeriod, Period } from '../../../utils/period'
 import useStatus from '../../../hooks/use-status'
 import ProposalInfo from '../../../components/proposal-info'
+import { previewProposalAtom } from '../../../utils/atoms'
+import { Proposal } from '../../../utils/schemas/proposal'
 
 export default function RoundPage() {
   const query = useRouterQuery<['proposal']>()
-  const { data: proposal, isLoading } = trpc.proposal.getByPermalink.useQuery(
+  const previewProposal = useAtomValue(previewProposalAtom)
+  const { data, isLoading } = trpc.proposal.getByPermalink.useQuery(
     { permalink: query.proposal },
     { enabled: !!query.proposal, refetchOnWindowFocus: false },
   )
+  const proposal = useMemo<
+    | (Proposal & { permalink: string; authorship?: { author?: string } })
+    | undefined
+  >(() => {
+    if (previewProposal) {
+      return {
+        ...previewProposal,
+        permalink: previewPermalink,
+        authorship: { author: previewProposal.preview.author },
+      }
+    }
+    return data || undefined
+  }, [data, previewProposal])
   const { data: community, isLoading: isCommunityLoading } =
     trpc.community.getByPermalink.useQuery(
       { permalink: proposal?.community },
@@ -47,12 +64,15 @@ export default function RoundPage() {
       ]).join(' - '),
     [community?.name, proposal?.title, group?.name],
   )
-  const { data, hasNextPage, fetchNextPage } =
-    trpc.option.list.useInfiniteQuery(
-      { proposal: query.proposal },
-      { enabled: !!query.proposal, getNextPageParam: ({ next }) => next },
-    )
-  const options = useMemo(() => data?.pages.flatMap(({ data }) => data), [data])
+  const {
+    data: list,
+    hasNextPage,
+    fetchNextPage,
+  } = trpc.option.list.useInfiniteQuery(
+    { proposal: query.proposal },
+    { enabled: !!query.proposal, getNextPageParam: ({ next }) => next },
+  )
+  const options = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
   const { ref, inView } = useInView()
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -70,7 +90,7 @@ export default function RoundPage() {
         <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
           <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
             <TextButton
-              disabled={!community || !group}
+              disabled={!!previewProposal || !community || !group}
               href={`/${community?.authorship.author}/${group?.id}`}
             >
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
@@ -84,7 +104,7 @@ export default function RoundPage() {
               </Article>
             </div>
             <ProposalInfo
-              proposal={proposal || undefined}
+              proposal={proposal}
               className="mb-6 block sm:hidden"
             />
             {query.proposal && period === Period.PROPOSING ? (
@@ -94,7 +114,9 @@ export default function RoundPage() {
                 </Button>
               </Link>
             ) : null}
-            {proposal?.options_count ? (
+            {proposal &&
+            'options_count' in proposal &&
+            proposal?.options_count ? (
               <h2 className="my-6 text-2xl font-bold">
                 {proposal.options_count === 1
                   ? '1 Proposal'
@@ -110,10 +132,7 @@ export default function RoundPage() {
             </ul>
             <div ref={ref} />
           </div>
-          <ProposalInfo
-            proposal={proposal || undefined}
-            className="hidden sm:block"
-          />
+          <ProposalInfo proposal={proposal} className="hidden sm:block" />
         </div>
       </div>
     </>
