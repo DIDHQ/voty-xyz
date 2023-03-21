@@ -41,6 +41,17 @@ export default function CommunityIndexPage() {
     }
   }, [fetchNextPage, hasNextPage, inView])
   const isManager = useIsManager(query.entry)
+  const options = useMemo(
+    () => [
+      'All',
+      Period.CONFIRMING,
+      Period.PENDING,
+      Period.PROPOSING,
+      Period.VOTING,
+      Period.ENDED,
+    ],
+    [],
+  )
 
   return (
     <CommunityLayout>
@@ -50,13 +61,7 @@ export default function CommunityIndexPage() {
           Timeline
         </h3>
         <Select
-          options={[
-            'All',
-            Period.CONFIRMING,
-            Period.PENDING,
-            Period.VOTING,
-            Period.ENDED,
-          ]}
+          options={options}
           value={period}
           onChange={(p) => setPeriod(p as Period | 'All')}
           className="-mt-1 sm:-mt-2"

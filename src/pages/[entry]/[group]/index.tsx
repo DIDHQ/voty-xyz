@@ -43,6 +43,26 @@ export default function GroupIndexPage() {
       fetchNextPage()
     }
   }, [fetchNextPage, hasNextPage, inView])
+  const options = useMemo(
+    () =>
+      group?.extension.type === 'grant'
+        ? [
+            'All',
+            Period.CONFIRMING,
+            Period.PENDING,
+            Period.PROPOSING,
+            Period.VOTING,
+            Period.ENDED,
+          ]
+        : [
+            'All',
+            Period.CONFIRMING,
+            Period.PENDING,
+            Period.VOTING,
+            Period.ENDED,
+          ],
+    [group?.extension.type],
+  )
 
   return (
     <CommunityLayout>
@@ -50,13 +70,7 @@ export default function GroupIndexPage() {
         <LoadingBar loading={isLoading} />
         <div className="my-5 flex justify-between">
           <Select
-            options={[
-              'All',
-              Period.CONFIRMING,
-              Period.PENDING,
-              Period.VOTING,
-              Period.ENDED,
-            ]}
+            options={options}
             value={period}
             onChange={(p) => setPeriod(p as Period | 'All')}
           />
