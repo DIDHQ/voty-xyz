@@ -1,6 +1,5 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { nanoid } from 'nanoid'
-import { useRouter } from 'next/router'
 import Head from 'next/head'
 
 import useRouterQuery from '../../hooks/use-router-query'
@@ -13,13 +12,8 @@ import TextButton from '../../components/basic/text-button'
 import GrantForm from '../../components/grant-form'
 
 export default function CreateGroupPage() {
-  const router = useRouter()
   const query = useRouterQuery<['entry', 'type']>()
-  const {
-    data: community,
-    isLoading,
-    refetch,
-  } = trpc.community.getByEntry.useQuery(
+  const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
   )

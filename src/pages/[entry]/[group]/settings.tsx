@@ -23,7 +23,9 @@ export default function GroupSettingsPage() {
   const group = useGroup(community, query.group)
   const handleArchive = useCallback(() => {
     refetch()
-    router.push(`/${query.entry}/about`)
+    if (query.entry) {
+      router.push(`/${query.entry}/about`)
+    }
   }, [query.entry, refetch, router])
 
   return (
