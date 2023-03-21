@@ -23,7 +23,6 @@ import TextButton from './basic/text-button'
 import { Form, FormItem, FormSection } from './basic/form'
 import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
-import PreviewMarkdown from './preview-markdown'
 import useStatus from '../hooks/use-status'
 import { Community } from '../utils/schemas/community'
 import { Authorized } from '../utils/schemas/authorship'
@@ -191,9 +190,7 @@ export default function ProposalForm(props: {
           <GridItem6>
             <FormItem
               label="Content"
-              description={
-                <PreviewMarkdown>{watch('extension.content')}</PreviewMarkdown>
-              }
+              description="Markdown is supported"
               error={errors.extension?.content?.message}
             >
               <Textarea

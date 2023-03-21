@@ -21,7 +21,6 @@ import BooleanSetsBlock from './boolean-sets-block'
 import DecimalSetsBlock from './decimal-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem3, GridItem6 } from './basic/grid'
-import PreviewMarkdown from './preview-markdown'
 import Button from './basic/button'
 import useSignDocument from '../hooks/use-sign-document'
 import { trpc } from '../utils/trpc'
@@ -49,7 +48,6 @@ export default function WorkgroupForm(props: {
     control,
     register,
     reset,
-    watch,
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
@@ -213,13 +211,7 @@ export default function WorkgroupForm(props: {
           <Grid6>
             <GridItem6>
               <FormItem
-                description={
-                  <PreviewMarkdown>
-                    {watch(
-                      `groups.${groupIndex}.extension.terms_and_conditions`,
-                    )}
-                  </PreviewMarkdown>
-                }
+                description="Markdown is supported"
                 error={groupErrors?.extension?.terms_and_conditions?.message}
               >
                 <Textarea

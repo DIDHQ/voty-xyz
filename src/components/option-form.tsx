@@ -21,7 +21,6 @@ import { Option, optionSchema } from '../utils/schemas/option'
 import { Form, FormItem, FormSection } from './basic/form'
 import { Grid6, GridItem6 } from './basic/grid'
 import TextInput from './basic/text-input'
-import PreviewMarkdown from './preview-markdown'
 import Textarea from './basic/textarea'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import {
@@ -50,7 +49,6 @@ export default function OptionForm(props: {
   })
   const {
     register,
-    watch,
     setValue,
     reset,
     formState: { errors },
@@ -130,11 +128,7 @@ export default function OptionForm(props: {
             <GridItem6>
               <FormItem
                 label="Content"
-                description={
-                  <PreviewMarkdown>
-                    {watch('extension.content')}
-                  </PreviewMarkdown>
-                }
+                description="Markdown is supported"
                 error={errors.extension?.content?.message}
               >
                 <Textarea

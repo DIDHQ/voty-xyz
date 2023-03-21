@@ -12,7 +12,6 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
-import PreviewMarkdown from './preview-markdown'
 import Button from './basic/button'
 import useIsManager from '../hooks/use-is-manager'
 import { previewCommunityAtom } from '../utils/atoms'
@@ -37,7 +36,6 @@ export default function CommunityForm(props: {
     control,
     register,
     reset,
-    watch,
     setValue,
     formState: { errors },
     handleSubmit: onSubmit,
@@ -92,9 +90,7 @@ export default function CommunityForm(props: {
           <GridItem6>
             <FormItem
               label="About"
-              description={
-                <PreviewMarkdown>{watch('extension.about')}</PreviewMarkdown>
-              }
+              description="Markdown is supported"
               error={errors.extension?.about?.message}
             >
               <Textarea
