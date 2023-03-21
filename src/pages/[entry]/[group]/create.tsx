@@ -36,6 +36,13 @@ export default function CreateProposalPage() {
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
         <ProposalForm
+          initialValue={
+            type === 'round'
+              ? { voting_type: 'single', extension: { funding: [['', 5]] } }
+              : type === 'proposal'
+              ? { voting_type: 'single', options: ['', ''] }
+              : undefined
+          }
           community={community || undefined}
           group={group}
           className="pt-6 sm:pt-8"

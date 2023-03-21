@@ -26,4 +26,10 @@ export const proposalSchema = z.object({
     .optional(),
 })
 
+export function proposalSchemaRefine(proposal: Proposal): boolean {
+  return proposal.options
+    ? !proposal.extension?.funding
+    : proposal.voting_type === 'single' && !!proposal.extension?.funding
+}
+
 export type Proposal = z.infer<typeof proposalSchema>

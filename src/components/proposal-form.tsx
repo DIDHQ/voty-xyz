@@ -11,7 +11,11 @@ import clsx from 'clsx'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 
-import { Proposal, proposalSchema } from '../utils/schemas/proposal'
+import {
+  Proposal,
+  proposalSchema,
+  proposalSchemaRefine,
+} from '../utils/schemas/proposal'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
@@ -37,6 +41,7 @@ import { previewProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
 
 export default function ProposalForm(props: {
+  initialValue?: Partial<Proposal>
   community?: Authorized<Community> & Serialize<{ entry: Entry }>
   group?: Group
   className?: string
@@ -49,25 +54,21 @@ export default function ProposalForm(props: {
     : undefined
   const [previewProposal, setPreviewProposal] = useAtom(previewProposalAtom)
   const methods = useForm<Proposal>({
-    resolver: zodResolver(proposalSchema),
-    defaultValues: previewProposal || {
-      voting_type: 'single',
-      options: props.group?.extension.type === 'grant' ? undefined : ['', ''],
-      extension: {
-        funding:
-          props.group?.extension.type === 'grant' ? [['', 5]] : undefined,
-      },
-    },
+    resolver: zodResolver(proposalSchema.refine(proposalSchemaRefine)),
   })
   const {
     register,
     setValue,
     getValues,
     watch,
+    reset,
     control,
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
+  useEffect(() => {
+    reset(previewProposal || props.initialValue)
+  }, [previewProposal, props.initialValue, reset])
   const handleOptionDelete = useCallback(
     (index: number) => {
       const options = getValues('options')?.filter((_, i) => i !== index)
