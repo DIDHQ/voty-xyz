@@ -40,3 +40,5 @@ export type Preview = {
   template: string
   author: string
 }
+
+export type PreviewPermalink = 'preview'

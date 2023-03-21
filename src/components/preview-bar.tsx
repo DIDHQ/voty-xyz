@@ -15,6 +15,8 @@ import { Preview } from '../utils/types'
 import Button from './basic/button'
 import Notification from './basic/notification'
 import TextButton from './basic/text-button'
+import { previewPermalink } from '../utils/constants'
+import { permalink2Id } from '../utils/permalink'
 
 export default function PreviewBar() {
   const router = useRouter()
@@ -59,9 +61,14 @@ export default function PreviewBar() {
       if (isProposal(document)) {
         const signed = await signDocument(document)
         if (signed) {
-          await mutateProposal(signed)
+          const permalink = await mutateProposal(signed)
           setPreviewProposal(undefined)
-          router.reload()
+          router.push(
+            preview.to.replace(
+              new RegExp(`\/${previewPermalink}\$`),
+              `/${permalink2Id(permalink)}`,
+            ),
+          )
         }
       }
       if (isOption(document)) {

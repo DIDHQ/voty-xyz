@@ -5,9 +5,10 @@ import useStatus from '../hooks/use-status'
 import { permalink2Explorer } from '../utils/permalink'
 import TextButton from './basic/text-button'
 import Tooltip from './basic/tooltip'
+import { PreviewPermalink } from '../utils/types'
 
 export default function StatusIcon(props: {
-  permalink?: string
+  permalink?: string | PreviewPermalink
   className?: string
 }) {
   const { data: status, isLoading } = useStatus(props.permalink)

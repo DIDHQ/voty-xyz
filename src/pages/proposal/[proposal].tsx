@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
+import { useAtomValue } from 'jotai'
 
 import useGroup from '../../hooks/use-group'
 import { stringifyChoice } from '../../utils/choice'
@@ -11,18 +12,34 @@ import { trpc } from '../../utils/trpc'
 import Article from '../../components/basic/article'
 import TextButton from '../../components/basic/text-button'
 import LoadingBar from '../../components/basic/loading-bar'
-import { documentTitle } from '../../utils/constants'
+import { documentTitle, previewPermalink } from '../../utils/constants'
 import VoteForm from '../../components/vote-form'
 import useRouterQuery from '../../hooks/use-router-query'
 import Markdown from '../../components/basic/markdown'
 import ProposalInfo from '../../components/proposal-info'
+import { previewProposalAtom } from '../../utils/atoms'
+import { Proposal } from '../../utils/schemas/proposal'
 
 export default function ProposalPage() {
   const query = useRouterQuery<['proposal']>()
-  const { data: proposal, isLoading } = trpc.proposal.getByPermalink.useQuery(
+  const previewProposal = useAtomValue(previewProposalAtom)
+  const { data, isLoading } = trpc.proposal.getByPermalink.useQuery(
     { permalink: query.proposal },
     { enabled: !!query.proposal, refetchOnWindowFocus: false },
   )
+  const proposal = useMemo<
+    | (Proposal & { permalink: string; authorship?: { author?: string } })
+    | undefined
+  >(() => {
+    if (previewProposal) {
+      return {
+        ...previewProposal,
+        permalink: previewPermalink,
+        authorship: { author: previewProposal.preview.author },
+      }
+    }
+    return data || undefined
+  }, [data, previewProposal])
   const { data: community, isLoading: isCommunityLoading } =
     trpc.community.getByPermalink.useQuery(
       { permalink: proposal?.community },
@@ -30,7 +47,7 @@ export default function ProposalPage() {
     )
   const group = useGroup(community, proposal?.group, 'workgroup')
   const {
-    data,
+    data: list,
     fetchNextPage,
     hasNextPage,
     refetch: refetchList,
@@ -38,7 +55,7 @@ export default function ProposalPage() {
     { proposal: query.proposal },
     { enabled: !!query.proposal, getNextPageParam: ({ next }) => next },
   )
-  const votes = useMemo(() => data?.pages.flatMap(({ data }) => data), [data])
+  const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
   const { ref, inView } = useInView()
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -92,7 +109,7 @@ export default function ProposalPage() {
               group={group}
               onSuccess={handleSuccess}
             />
-            {proposal?.votes ? (
+            {proposal && 'votes' in proposal && proposal?.votes ? (
               <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
                 {proposal.votes === 1 ? '1 Vote' : `${proposal.votes} Votes`}
               </h2>
