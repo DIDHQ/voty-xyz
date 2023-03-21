@@ -100,12 +100,12 @@ export default function ProposalPage() {
               </Article>
             </div>
             <ProposalInfo
-              proposal={proposal || undefined}
+              proposal={proposal}
               className="mb-6 block sm:hidden"
             />
             <VoteForm
               entry={community?.authorship.author}
-              proposal={proposal || undefined}
+              proposal={proposal}
               group={group}
               onSuccess={handleSuccess}
             />
@@ -178,10 +178,7 @@ export default function ProposalPage() {
               </table>
             ) : null}
           </div>
-          <ProposalInfo
-            proposal={proposal || undefined}
-            className="hidden sm:block"
-          />
+          <ProposalInfo proposal={proposal} className="hidden sm:block" />
         </div>
         <div ref={ref} />
       </div>

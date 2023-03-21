@@ -74,9 +74,14 @@ export default function PreviewBar() {
       if (isOption(document)) {
         const signed = await signDocument(document)
         if (signed) {
-          await mutateOption(signed)
+          const permalink = await mutateOption(signed)
           setPreviewOption(undefined)
-          router.reload()
+          router.push(
+            preview.to.replace(
+              new RegExp(`\/${previewPermalink}\$`),
+              `/${permalink2Id(permalink)}`,
+            ),
+          )
         }
       }
     },

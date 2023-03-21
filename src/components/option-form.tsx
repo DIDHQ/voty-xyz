@@ -1,12 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { HandRaisedIcon } from '@heroicons/react/20/solid'
+import { useQuery } from '@tanstack/react-query'
+import { EyeIcon } from '@heroicons/react/20/solid'
 import pMap from 'p-map'
 import { uniq } from 'lodash-es'
+import { useRouter } from 'next/router'
+import { useAtom } from 'jotai'
 
-import { trpc } from '../utils/trpc'
 import useStatus from '../hooks/use-status'
 import { getPeriod, Period } from '../utils/period'
 import { Proposal } from '../utils/schemas/proposal'
@@ -15,10 +16,8 @@ import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import DidCombobox from './did-combobox'
 import Button from './basic/button'
-import useSignDocument from '../hooks/use-sign-document'
 import TextButton from './basic/text-button'
 import { Option, optionSchema } from '../utils/schemas/option'
-import Notification from './basic/notification'
 import { Form, FormItem, FormSection } from './basic/form'
 import { Grid6, GridItem6 } from './basic/grid'
 import TextInput from './basic/text-input'
@@ -31,15 +30,18 @@ import {
 } from '../utils/functions/boolean'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import Tooltip from './basic/tooltip'
+import { Preview } from '../utils/types'
+import { previewOptionAtom } from '../utils/atoms'
+import { permalink2Id } from '../utils/permalink'
+import { previewPermalink } from '../utils/constants'
 
 export default function OptionForm(props: {
   entry?: string
   proposal?: Proposal & { permalink: string }
   group?: Grant
-  onSuccess: (permalink: string) => void
   className?: string
 }) {
-  const { onSuccess } = props
+  const router = useRouter()
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account, props.proposal?.snapshots)
@@ -50,9 +52,14 @@ export default function OptionForm(props: {
     register,
     watch,
     setValue,
+    reset,
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
+  const [previewOption, setPreviewOption] = useAtom(previewOptionAtom)
+  useEffect(() => {
+    reset(previewOption)
+  }, [previewOption, reset])
   useEffect(() => {
     if (props.proposal?.permalink) {
       setValue('proposal', props.proposal.permalink)
@@ -97,17 +104,6 @@ export default function OptionForm(props: {
         : undefined,
     [dids, disables],
   )
-  const { mutateAsync } = trpc.option.create.useMutation()
-  const signDocument = useSignDocument(
-    did,
-    `You are proposing on Voty\n\nhash:\n{sha256}`,
-  )
-  const handleSubmit = useMutation<void, Error, Option>(async (option) => {
-    const signed = await signDocument(option)
-    if (signed) {
-      onSuccess(await mutateAsync(signed))
-    }
-  })
   const defaultDid = useMemo(
     () => didOptions?.find(({ disabled }) => !disabled)?.did,
     [didOptions],
@@ -119,9 +115,6 @@ export default function OptionForm(props: {
 
   return (
     <>
-      <Notification show={handleSubmit.isError}>
-        {handleSubmit.error?.message}
-      </Notification>
       <Form className={props.className}>
         <FormSection title="New proposal">
           <Grid6 className="mt-6">
@@ -181,34 +174,41 @@ export default function OptionForm(props: {
                 text="Waiting for transaction (in about 5 minutes)"
                 className="mt-6"
               >
-                <Button
-                  large
-                  primary
-                  icon={HandRaisedIcon}
-                  onClick={onSubmit(
-                    (value) => handleSubmit.mutate(value),
-                    console.error,
-                  )}
-                  disabled={disabled}
-                  loading={handleSubmit.isLoading}
-                >
+                <Button primary icon={EyeIcon} disabled>
                   Propose
                 </Button>
               </Tooltip>
             ) : (
               <Button
-                large
                 primary
-                icon={HandRaisedIcon}
-                onClick={onSubmit(
-                  (value) => handleSubmit.mutate(value),
-                  console.error,
-                )}
+                icon={EyeIcon}
+                onClick={onSubmit((value) => {
+                  if (!props.proposal) {
+                    return
+                  }
+                  setPreviewOption({
+                    ...value,
+                    preview: {
+                      from: `/round/${permalink2Id(
+                        props.proposal.permalink,
+                      )}/create`,
+                      to: `/round/${permalink2Id(
+                        props.proposal.permalink,
+                      )}/${previewPermalink}`,
+                      template: `You are proposing on Voty\n\nhash:\n{sha256}`,
+                      author: did,
+                    },
+                  })
+                  router.push(
+                    `/round/${permalink2Id(
+                      props.proposal.permalink,
+                    )}/${previewPermalink}`,
+                  )
+                }, console.error)}
                 disabled={disabled}
-                loading={handleSubmit.isLoading}
                 className="mt-6"
               >
-                Propose
+                Preview
               </Button>
             )}
           </div>

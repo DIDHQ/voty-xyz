@@ -4,6 +4,7 @@ import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import Decimal from 'decimal.js'
+import { useAtomValue } from 'jotai'
 
 import useGroup from '../../../hooks/use-group'
 import { permalink2Explorer, permalink2Id } from '../../../utils/permalink'
@@ -17,13 +18,24 @@ import useRouterQuery from '../../../hooks/use-router-query'
 import Markdown from '../../../components/basic/markdown'
 import ProposalInfo from '../../../components/proposal-info'
 import { powerOfChoice } from '../../../utils/choice'
+import { previewOptionAtom } from '../../../utils/atoms'
 
 export default function OptionPage() {
   const query = useRouterQuery<['proposal', 'option']>()
-  const { data: option, isLoading } = trpc.option.getByPermalink.useQuery(
+  const previewOption = useAtomValue(previewOptionAtom)
+  const { data, isLoading } = trpc.option.getByPermalink.useQuery(
     { permalink: query.option },
     { enabled: !!query.option, refetchOnWindowFocus: false },
   )
+  const option = useMemo(() => {
+    if (previewOption) {
+      return {
+        ...previewOption,
+        authorship: { author: previewOption.preview.author },
+      }
+    }
+    return data || undefined
+  }, [data, previewOption])
   const {
     data: power,
     refetch,
@@ -44,7 +56,7 @@ export default function OptionPage() {
     )
   const group = useGroup(community, proposal?.group, 'grant')
   const {
-    data,
+    data: list,
     fetchNextPage,
     hasNextPage,
     refetch: refetchList,
@@ -54,7 +66,7 @@ export default function OptionPage() {
   )
   const votes = useMemo(
     () =>
-      data?.pages
+      list?.pages
         .flatMap(({ data }) =>
           data.map((vote) => ({
             ...vote,
@@ -69,7 +81,7 @@ export default function OptionPage() {
           })),
         )
         .filter((vote) => vote.power?.gt(0)),
-    [data?.pages, proposal, query.option],
+    [list?.pages, proposal, query.option],
   )
   const { ref, inView } = useInView()
   useEffect(() => {
@@ -128,7 +140,7 @@ export default function OptionPage() {
             </div>
             <ProposalInfo
               proposal={proposal || undefined}
-              option={option || undefined}
+              option={option}
               className="mb-6 block sm:hidden"
             />
             <VoteForm
@@ -193,7 +205,7 @@ export default function OptionPage() {
           </div>
           <ProposalInfo
             proposal={proposal || undefined}
-            option={option || undefined}
+            option={option}
             className="hidden sm:block"
           />
         </div>

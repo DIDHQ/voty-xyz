@@ -7,7 +7,6 @@ import {
   coinTypeNames,
   previewPermalink,
 } from '../utils/constants'
-import { Authorized } from '../utils/schemas/authorship'
 import { Option } from '../utils/schemas/option'
 import { Proposal } from '../utils/schemas/proposal'
 import { trpc } from '../utils/trpc'
@@ -25,7 +24,9 @@ export default function ProposalInfo(props: {
     permalink: string | PreviewPermalink
     authorship?: { author?: string }
   }
-  option?: Authorized<Option>
+  option?: Option & {
+    authorship?: { author?: string }
+  }
   className?: string
 }) {
   const { data: community } = trpc.community.getByPermalink.useQuery(
@@ -78,7 +79,7 @@ export default function ProposalInfo(props: {
           </DetailItem>
           {props.option ? (
             <DetailItem title="Proposer" className="truncate whitespace-nowrap">
-              {props.option.authorship.author}
+              {props.option.authorship?.author}
             </DetailItem>
           ) : null}
         </DetailList>
