@@ -41,9 +41,18 @@ export default function PermissionCard(props: {
               </div>
             ) : (
               <span className="text-sm text-gray-600">
-                {operand.arguments[0] === 'bit'
-                  ? 'All .bit accounts'
-                  : `All SubDIDs of ${props.entry}`}
+                {operand.arguments[0] === 'bit' ? (
+                  'All .bit accounts'
+                ) : (
+                  <>
+                    All SubDIDs of&nbsp;
+                    {
+                      <Tag highlight={props.entry === operand.arguments[0]}>
+                        {operand.arguments[0]}
+                      </Tag>
+                    }
+                  </>
+                )}
               </span>
             )}
             {operand.arguments[2] ? (
