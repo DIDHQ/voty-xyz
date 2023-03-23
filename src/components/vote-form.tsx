@@ -24,6 +24,8 @@ import useSignDocument from '../hooks/use-sign-document'
 import TextButton from './basic/text-button'
 import Notification from './basic/notification'
 import Tooltip from './basic/tooltip'
+import Slide from './basic/slide'
+import RulesView from './rules-view'
 
 export default function VoteForm(props: {
   entry?: string
@@ -204,13 +206,21 @@ export default function VoteForm(props: {
               onChange={setDid}
               onClick={connect}
             />
-            {didOptions?.length === 0 ? (
-              <TextButton
-                secondary
-                href={`/${props.entry}/${props.group?.id}/rules`}
+            {didOptions?.length === 0 && props.group ? (
+              <Slide
+                title={`Rules of ${props.group.name}`}
+                trigger={({ handleOpen }) => (
+                  <TextButton secondary onClick={handleOpen}>
+                    Why I&#39;m not eligible to vote
+                  </TextButton>
+                )}
               >
-                Why I&#39;m not eligible to vote
-              </TextButton>
+                {() =>
+                  props.group ? (
+                    <RulesView entry={props.entry} group={props.group} />
+                  ) : null
+                }
+              </Slide>
             ) : null}
           </div>
           {period !== Period.VOTING ? (

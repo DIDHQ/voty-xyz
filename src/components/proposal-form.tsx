@@ -38,6 +38,8 @@ import Button from './basic/button'
 import RadioGroup from './basic/radio-group'
 import { previewProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
+import Slide from './basic/slide'
+import RulesView from './rules-view'
 
 export default function ProposalForm(props: {
   initialValue?: Partial<Proposal>
@@ -325,14 +327,25 @@ export default function ProposalForm(props: {
             onChange={setDid}
             onClick={connect}
           />
-          {didOptions?.length === 0 ? (
-            <TextButton
-              secondary
-              href={`/${props.community?.authorship.author}/${props.group?.id}/rules`}
+          {didOptions?.length === 0 && props.group ? (
+            <Slide
+              title={`Rules of ${props.group.name}`}
+              trigger={({ handleOpen }) => (
+                <TextButton secondary onClick={handleOpen}>
+                  Why I&#39;m not eligible to&nbsp;
+                  {type === 'round' ? 'invest' : 'propose'}
+                </TextButton>
+              )}
             >
-              Why I&#39;m not eligible to&nbsp;
-              {type === 'round' ? 'invest' : 'propose'}
-            </TextButton>
+              {() =>
+                props.group ? (
+                  <RulesView
+                    entry={props.community?.entry.did}
+                    group={props.group}
+                  />
+                ) : null
+              }
+            </Slide>
           ) : null}
         </div>
         <Button

@@ -29,10 +29,11 @@ import {
 } from '../utils/functions/boolean'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import Tooltip from './basic/tooltip'
-import { Preview } from '../utils/types'
 import { previewOptionAtom } from '../utils/atoms'
 import { permalink2Id } from '../utils/permalink'
 import { previewPermalink } from '../utils/constants'
+import Slide from './basic/slide'
+import RulesView from './rules-view'
 
 export default function OptionForm(props: {
   entry?: string
@@ -153,13 +154,21 @@ export default function OptionForm(props: {
                 onChange={setDid}
                 onClick={connect}
               />
-              {didOptions?.length === 0 ? (
-                <TextButton
-                  secondary
-                  href={`/${props.entry}/${props.group?.id}/rules`}
+              {didOptions?.length === 0 && props.group ? (
+                <Slide
+                  title={`Rules of ${props.group.name}`}
+                  trigger={({ handleOpen }) => (
+                    <TextButton secondary onClick={handleOpen}>
+                      Why I&#39;m not eligible to propose
+                    </TextButton>
+                  )}
                 >
-                  Why I&#39;m not eligible to propose
-                </TextButton>
+                  {() =>
+                    props.group ? (
+                      <RulesView entry={props.entry} group={props.group} />
+                    ) : null
+                  }
+                </Slide>
               ) : null}
             </div>
             {period !== Period.PROPOSING ? (
