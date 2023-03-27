@@ -26,7 +26,7 @@
     "@trpc/next": "10.17.0",
     "@trpc/react-query": "10.17.0",
     "@trpc/server": "10.17.0",
-    "arweave": "1.13.3",
+    "arweave": "1.13.4",
     "browser-image-compression": "2.0.2",
     "clsx": "1.2.1",
     "dayjs": "1.11.7",
