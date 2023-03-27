@@ -32,6 +32,14 @@ export default async function verifyProposal(
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Group not found' })
   }
 
+  if (group.extension.type === 'grant' && proposal.options?.length) {
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Group type mismatch' })
+  }
+
+  if (group.extension.type === 'workgroup' && !proposal.options?.length) {
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Group type mismatch' })
+  }
+
   if (
     !(await checkBoolean(
       group.permission.proposing,
