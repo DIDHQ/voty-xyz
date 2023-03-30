@@ -29,7 +29,9 @@ export function FormSection(props: {
           {props.title}
         </h3>
       ) : null}
-      <p className="mt-1 mb-6 text-sm text-gray-500">{props.description}</p>
+      {props.description ? (
+        <p className="mt-1 mb-6 text-sm text-gray-500">{props.description}</p>
+      ) : null}
       {props.children}
     </div>
   )
