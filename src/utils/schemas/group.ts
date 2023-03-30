@@ -16,7 +16,7 @@ export const workgroupSchema = z.object({
   extension: z.object({
     type: z.literal('workgroup'),
     introduction: z.string().max(160, 'Maximum 160 characters').optional(),
-    terms_and_conditions: z.string().min(1, 'Required'), // TODO: rename to criteria_for_approval
+    terms_and_conditions: z.string().min(1, 'Required'),
   }),
 })
 

@@ -120,7 +120,7 @@ export default function ProposalInfo(props: {
             </Article>
           </DetailList>
         ) : (
-          <DetailList title="Criteria for approval">
+          <DetailList title="Terms and conditions">
             <Article small className="pt-2">
               <Markdown>{group?.extension.terms_and_conditions}</Markdown>
             </Article>
