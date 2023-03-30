@@ -99,9 +99,13 @@ export default function WorkgroupForm(props: {
         <FormSection>
           <Grid6>
             <GridItem6>
-              <FormItem label="Name" error={groupErrors?.name?.message}>
+              <FormItem
+                label="Workgroup name"
+                error={groupErrors?.name?.message}
+              >
                 <TextInput
                   {...register(`groups.${groupIndex}.name`)}
+                  placeholder="e.g. Marketing Team"
                   error={!!groupErrors?.name?.message}
                   disabled={!isManager}
                 />
@@ -114,6 +118,7 @@ export default function WorkgroupForm(props: {
               >
                 <TextInput
                   {...register(`groups.${groupIndex}.extension.introduction`)}
+                  placeholder="e.g. A group of marketing specialists responsible for planning, creating, and monitoring marketing activities"
                   error={!!groupErrors?.extension?.introduction?.message}
                   disabled={!isManager}
                 />
@@ -123,7 +128,7 @@ export default function WorkgroupForm(props: {
         </FormSection>
         <FormSection
           title="Proposers"
-          description="are eligible to create proposals in this workgroup"
+          description="SubDIDs who can initiate proposals in this workgroup"
         >
           <Grid6>
             <GridItem6>
@@ -144,7 +149,7 @@ export default function WorkgroupForm(props: {
         </FormSection>
         <FormSection
           title="Voters"
-          description="are eligible to vote for proposals in this workgroup"
+          description="SubDIDs who can vote in this workgroup. You can create multiple voter group"
         >
           <Grid6>
             <GridItem6>
@@ -163,11 +168,11 @@ export default function WorkgroupForm(props: {
             </GridItem6>
           </Grid6>
         </FormSection>
-        <FormSection title="Schedule">
+        <FormSection title="Rules">
           <Grid6>
             <GridItem3>
               <FormItem
-                label="Duration of pending before voting"
+                label="Proposal publicity phase"
                 error={groupErrors?.duration?.pending?.message}
               >
                 <Controller
@@ -186,7 +191,7 @@ export default function WorkgroupForm(props: {
             </GridItem3>
             <GridItem3>
               <FormItem
-                label="Duration of voting"
+                label="Voting phase"
                 error={groupErrors?.duration?.voting?.message}
               >
                 <Controller
@@ -203,15 +208,9 @@ export default function WorkgroupForm(props: {
                 />
               </FormItem>
             </GridItem3>
-          </Grid6>
-        </FormSection>
-        <FormSection
-          title="Terms and conditions"
-          description="Defines the final state of proposal"
-        >
-          <Grid6>
             <GridItem6>
               <FormItem
+                label="The criteria for proposal approval"
                 description="Markdown is supported"
                 error={groupErrors?.extension?.terms_and_conditions?.message}
               >
