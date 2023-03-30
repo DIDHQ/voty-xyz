@@ -123,7 +123,7 @@ export default function CreateGroupPage() {
               group={newGroup}
               preview={{
                 from: `/${query.entry}/create`,
-                to: `/${query.entry}/${newGroup}/rules`,
+                to: `/${query.entry}/${newGroup}/about`,
                 template: `You are creating grant on Voty\n\nhash:\n{sha256}`,
                 author: query.entry,
               }}
@@ -136,7 +136,7 @@ export default function CreateGroupPage() {
               group={newGroup}
               preview={{
                 from: `/${query.entry}/create`,
-                to: `/${query.entry}/${newGroup}/rules`,
+                to: `/${query.entry}/${newGroup}/about`,
                 template: `You are creating workgroup on Voty\n\nhash:\n{sha256}`,
                 author: query.entry,
               }}
