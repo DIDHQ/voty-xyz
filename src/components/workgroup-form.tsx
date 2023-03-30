@@ -92,10 +92,11 @@ export default function WorkgroupForm(props: {
       <Notification show={handleArchive.isError}>
         {handleArchive.error?.message}
       </Notification>
-      <Form className={props.className}>
-        <FormSection
-          title={`${isNewGroup ? 'New' : 'Edit'} workgroup of ${props.author}`}
-        >
+      <Form
+        title={`${isNewGroup ? 'New' : 'Edit'} workgroup of ${props.author}`}
+        className={props.className}
+      >
+        <FormSection>
           <Grid6>
             <GridItem6>
               <FormItem label="Name" error={groupErrors?.name?.message}>

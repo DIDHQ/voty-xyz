@@ -65,7 +65,9 @@ export default function CreateCommunityPage() {
       <Head>
         <title>{`New community - ${documentTitle}`}</title>
       </Head>
-      <LoadingBar loading={isLoading || isExistencesLoading} />
+      <LoadingBar
+        loading={isLoading || (!!dids?.length && isExistencesLoading)}
+      />
       <div className="w-full bg-white">
         <div className="pt-8 sm:px-6 sm:pt-16">
           <div className="mx-auto text-center">

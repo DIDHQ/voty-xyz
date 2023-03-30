@@ -1,23 +1,34 @@
 import clsx from 'clsx'
 import { InputHTMLAttributes, ReactNode } from 'react'
 
-export function Form(props: { className?: string; children: ReactNode }) {
+export function Form(props: {
+  title: string
+  className?: string
+  children: ReactNode
+}) {
   return (
-    <div className={clsx('space-y-12', props.className)}>{props.children}</div>
+    <div className={clsx('space-y-12', props.className)}>
+      <h2 className="text-center text-3xl font-semibold leading-6 text-gray-900">
+        {props.title}
+      </h2>
+      {props.children}
+    </div>
   )
 }
 
 export function FormSection(props: {
-  title: string
+  title?: string
   description?: string
   children: ReactNode
   className?: string
 }) {
   return (
     <div className={props.className}>
-      <h3 className="text-xl font-semibold leading-6 text-gray-900">
-        {props.title}
-      </h3>
+      {props.title ? (
+        <h3 className="text-xl font-semibold leading-6 text-gray-900">
+          {props.title}
+        </h3>
+      ) : null}
       <p className="mt-1 mb-6 text-sm text-gray-500">{props.description}</p>
       {props.children}
     </div>

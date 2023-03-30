@@ -33,7 +33,7 @@ export default function GroupSettingsPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextButton
-          href={`/${query.entry}/${query.group}/rules`}
+          href={`/${query.entry}/${query.group}/about`}
           className="mt-6 sm:mt-8"
         >
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
@@ -47,7 +47,7 @@ export default function GroupSettingsPage() {
               onArchive={handleArchive}
               preview={{
                 from: `/${query.entry}/${query.group}/settings`,
-                to: `/${query.entry}/${query.group}/rules`,
+                to: `/${query.entry}/${query.group}/about`,
                 template: `You are updating grant on Voty\n\nhash:\n{sha256}`,
                 author: query.entry,
               }}
@@ -61,7 +61,7 @@ export default function GroupSettingsPage() {
               onArchive={handleArchive}
               preview={{
                 from: `/${query.entry}/${query.group}/settings`,
-                to: `/${query.entry}/${query.group}/rules`,
+                to: `/${query.entry}/${query.group}/about`,
                 template: `You are updating workgroup on Voty\n\nhash:\n{sha256}`,
                 author: query.entry,
               }}
