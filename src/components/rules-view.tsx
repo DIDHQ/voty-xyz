@@ -107,7 +107,7 @@ export default function RulesView(props: {
         </nav>
       </div>
       <div className="rounded-md border p-4">
-        <h3 className="text-xl font-semibold">Terms and conditions</h3>
+        <h3 className="text-xl font-semibold">Criteria for approval</h3>
         <Article small className="mt-4 border-t pt-2">
           <Markdown>{group.extension.terms_and_conditions}</Markdown>
         </Article>

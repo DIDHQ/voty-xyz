@@ -149,7 +149,7 @@ export default function WorkgroupForm(props: {
         </FormSection>
         <FormSection
           title="Voters"
-          description="SubDIDs who can vote in this workgroup. You can create multiple voter group"
+          description="SubDIDs who can vote in this workgroup. You can create multiple voter filters"
         >
           <Grid6>
             <GridItem6>
@@ -210,7 +210,7 @@ export default function WorkgroupForm(props: {
             </GridItem3>
             <GridItem6>
               <FormItem
-                label="The criteria for proposal approval"
+                label="Criteria for approval"
                 description="Markdown is supported"
                 error={groupErrors?.extension?.terms_and_conditions?.message}
               >
