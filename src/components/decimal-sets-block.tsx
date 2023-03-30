@@ -105,9 +105,10 @@ function DecimalUnitBlock(props: {
       setOpen(props.index)
     }
   }, [errors.groups, props.index, props.name, props.groupIndex, setOpen])
-  const suffix = watch(
-    `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
-  )
+  const suffix =
+    watch(
+      `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
+    ) || ''
   const regex = new RegExp(`\\.${suffix.replaceAll('.', '\\.')}\$`)
 
   return (
