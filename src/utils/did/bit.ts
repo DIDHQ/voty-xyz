@@ -13,6 +13,9 @@ export const bitChecker: DidChecker<'bit'> = (did) => ({
       throw new Error(`unsupported proof type ${proof.type}`)
     }
     const address = await snapshotPermissionsInfo(did, snapshot)
+    if (!address) {
+      throw new Error(`${did} resolved empty at ${snapshot}`)
+    }
     return getAddress(address) === proof.address
   },
 })

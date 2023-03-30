@@ -8,11 +8,11 @@ const endpoint = isTestnet
 export async function snapshotPermissionsInfo(
   did: string,
   snapshot: string,
-): Promise<string> {
+): Promise<string | undefined> {
   const { data } = await fetchJson<{
     errno: number
     errmsg: string
-    data: {
+    data?: {
       account: string
       account_id: string
       block_number: number
@@ -25,7 +25,7 @@ export async function snapshotPermissionsInfo(
     `${endpoint}/v1/snapshot/permissions/info`,
     postJson({ account: did, block_number: parseInt(snapshot) }),
   )
-  return data.manager
+  return data?.manager
 }
 
 export async function snapshotAddressAccounts(
