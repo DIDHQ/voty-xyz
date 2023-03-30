@@ -177,8 +177,8 @@ export default function ProposalForm(props: {
   )
 
   return (
-    <Form className={props.className}>
-      <FormSection title={`New ${type || ''}`}>
+    <Form title={`New ${type || ''}`} className={props.className}>
+      <FormSection>
         <Grid6 className="mt-6">
           <GridItem6>
             <FormItem label="Title" error={errors.title?.message}>

@@ -47,12 +47,11 @@ export default function CommunityForm(props: {
   const isManager = useIsManager(props.author)
 
   return (
-    <Form className={clsx('pt-8', props.className)}>
-      <FormSection
-        title={`${isNewCommunity ? 'New' : 'Edit'} community of ${
-          props.author
-        }`}
-      >
+    <Form
+      title={`${isNewCommunity ? 'New' : 'Edit'} community of ${props.author}`}
+      className={clsx('pt-8', props.className)}
+    >
+      <FormSection>
         <Grid6>
           <GridItem6>
             <FormItem label="Logo" error={errors.extension?.logo?.message}>
