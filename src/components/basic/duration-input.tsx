@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 
 enum DurationType {
+  MINUTE = 60,
   HOUR = 60 * 60,
   DAY = 24 * 60 * 60,
   WEEK = 7 * 24 * 60 * 60,
@@ -15,6 +16,7 @@ const types = [
   DurationType.WEEK,
   DurationType.DAY,
   DurationType.HOUR,
+  DurationType.MINUTE,
 ]
 
 export default function DurationInput(props: {
@@ -75,6 +77,7 @@ export default function DurationInput(props: {
           disabled={props.disabled}
           className="h-full rounded-md border-transparent bg-transparent py-0 pl-2 pr-7 text-gray-500 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed sm:text-sm"
         >
+          <option value={DurationType.MINUTE}>Minutes</option>
           <option value={DurationType.HOUR}>Hours</option>
           <option value={DurationType.DAY}>Days</option>
           <option value={DurationType.WEEK}>Weeks</option>
