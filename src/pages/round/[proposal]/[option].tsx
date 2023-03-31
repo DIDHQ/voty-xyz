@@ -138,7 +138,7 @@ export default function OptionPage() {
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
             </TextButton>
             <div className="mb-6">
-              <h3 className="mt-4 break-words text-3xl font-bold leading-8 tracking-tight text-gray-900 line-clamp-2 sm:text-4xl">
+              <h3 className="mt-4 line-clamp-2 break-words text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
                 {option?.title || '...'}
               </h3>
               <Article className="mt-6 sm:mt-8">
@@ -168,7 +168,7 @@ export default function OptionPage() {
                   <tr>
                     <th
                       scope="col"
-                      className="sticky top-18 rounded-t-md border-r border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="sticky top-18 rounded-t-md border-b border-r border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       DID
                     </th>

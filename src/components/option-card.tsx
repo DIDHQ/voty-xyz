@@ -28,7 +28,7 @@ export default function OptionCard(props: {
           {props.option.title}
         </p>
         {props.option.extension?.content ? (
-          <p className="text-gray-600 line-clamp-3">
+          <p className="line-clamp-3 text-gray-600">
             {props.option.extension.content}
           </p>
         ) : null}

@@ -76,7 +76,7 @@ export default function DidCombobox(props: {
           )}
         >
           {filteredOptions?.length === 0 && query !== '' ? (
-            <div className="relative cursor-default select-none py-2 px-4 text-start text-gray-700">
+            <div className="relative cursor-default select-none px-4 py-2 text-start text-gray-700">
               No DID found
             </div>
           ) : (
@@ -91,7 +91,7 @@ export default function DidCombobox(props: {
                   disabled={props.options?.[virtualItem.index]?.disabled}
                   className={({ active }) =>
                     clsx(
-                      'absolute top-0 left-0 flex w-full cursor-default select-none items-center py-2 px-3',
+                      'absolute left-0 top-0 flex w-full cursor-default select-none items-center px-3 py-2',
                       active ? 'bg-primary-600' : undefined,
                     )
                   }

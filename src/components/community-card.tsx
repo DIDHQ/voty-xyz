@@ -27,7 +27,7 @@ export default function CommunityCard(props: {
         <h3 className="w-full truncate break-words text-lg font-medium text-gray-900">
           {community.name}
         </h3>
-        <p className="w-full text-sm text-gray-500 line-clamp-2">
+        <p className="line-clamp-2 w-full text-sm text-gray-500">
           {community.extension.slogan}
         </p>
         <div className="h-0 flex-1" />

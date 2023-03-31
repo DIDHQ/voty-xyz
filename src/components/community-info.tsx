@@ -108,17 +108,17 @@ export default function CommunityInfo(props: { className?: string }) {
           />
         )}
         <div className="flex w-full flex-col items-center rounded-md border border-gray-200 pb-4">
-          <div className="flex w-full items-center space-x-4 p-6 pb-0 sm:flex-col sm:space-y-4 sm:space-x-0 sm:pt-8">
+          <div className="flex w-full items-center space-x-4 p-6 pb-0 sm:flex-col sm:space-x-0 sm:space-y-4 sm:pt-8">
             <Avatar
               value={community?.extension?.logo}
               size={24}
               className="shrink-0"
             />
             <div className="sm:space-y-2">
-              <h3 className="w-full break-words text-xl font-bold text-gray-900 line-clamp-2 sm:text-center sm:text-2xl">
+              <h3 className="line-clamp-2 w-full break-words text-xl font-bold text-gray-900 sm:text-center sm:text-2xl">
                 {community?.name || '...'}
               </h3>
-              <p className="w-full text-sm text-gray-500 line-clamp-2 sm:text-center">
+              <p className="line-clamp-2 w-full text-sm text-gray-500 sm:text-center">
                 {community?.extension.slogan || '...'}
               </p>
             </div>

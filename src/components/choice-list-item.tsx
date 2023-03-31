@@ -44,7 +44,7 @@ export function ChoiceListItem(props: {
 
   return (
     <li
-      className="flex items-center justify-between bg-no-repeat py-3 px-4 text-sm"
+      className="flex items-center justify-between bg-no-repeat px-4 py-3 text-sm"
       style={{
         transition: 'background-size 0.3s ease-out',
         backgroundImage: `linear-gradient(90deg, ${gray['100']} 100%, transparent 100%)`,

@@ -38,7 +38,7 @@ export default function RulesView(props: {
         <nav className="mt-4 border-t pt-4">
           <ol role="list" className="md:flex">
             <li style={{ flex: Math.sqrt(group.duration.pending) }}>
-              <div className="flex flex-col border-l-4 border-amber-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0 md:pr-4">
+              <div className="flex flex-col border-l-4 border-amber-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pr-4 md:pt-2">
                 <span className="text-sm text-gray-500">Pending</span>
                 <span className="text-sm font-medium">
                   {formatDuration(group.duration.pending)}
@@ -50,7 +50,7 @@ export default function RulesView(props: {
                 flex: Math.sqrt((group as Grant).duration.adding_option),
               }}
             >
-              <div className="flex flex-col border-l-4 border-sky-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0 md:pr-4">
+              <div className="flex flex-col border-l-4 border-sky-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pr-4 md:pt-2">
                 <span className="text-sm text-gray-500">Proposing</span>
                 <span className="text-sm font-medium">
                   {formatDuration((group as Grant).duration.adding_option)}
@@ -58,7 +58,7 @@ export default function RulesView(props: {
               </div>
             </li>
             <li style={{ flex: Math.sqrt(group.duration.voting) }}>
-              <div className="flex flex-col border-l-4 border-lime-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0 md:pr-4">
+              <div className="flex flex-col border-l-4 border-lime-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pr-4 md:pt-2">
                 <span className="text-sm text-gray-500">Voting</span>
                 <span className="text-sm font-medium">
                   {formatDuration(group.duration.voting)}
@@ -88,7 +88,7 @@ export default function RulesView(props: {
         <nav className="mt-4 border-t pt-4">
           <ol role="list" className="md:flex">
             <li style={{ flex: Math.sqrt(group.duration.pending) }}>
-              <div className="flex flex-col border-l-4 border-amber-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0 md:pr-4">
+              <div className="flex flex-col border-l-4 border-amber-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pr-4 md:pt-2">
                 <span className="text-sm text-gray-500">Pending</span>
                 <span className="text-sm font-medium">
                   {formatDuration(group.duration.pending)}
@@ -96,7 +96,7 @@ export default function RulesView(props: {
               </div>
             </li>
             <li style={{ flex: Math.sqrt(group.duration.voting) }}>
-              <div className="flex flex-col border-l-4 border-lime-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-2 md:pb-0 md:pr-4">
+              <div className="flex flex-col border-l-4 border-lime-500 py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pr-4 md:pt-2">
                 <span className="text-sm text-gray-500">Voting</span>
                 <span className="text-sm font-medium">
                   {formatDuration(group.duration.voting)}

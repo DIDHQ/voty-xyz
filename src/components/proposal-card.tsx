@@ -56,7 +56,7 @@ export default function ProposalCard(props: {
           {props.proposal.title}
         </p>
         {props.proposal.extension?.content ? (
-          <p className="text-gray-600 line-clamp-3">
+          <p className="line-clamp-3 text-gray-600">
             {props.proposal.extension.content}
           </p>
         ) : null}

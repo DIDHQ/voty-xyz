@@ -123,7 +123,7 @@ function BooleanUnitBlock(props: {
     <>
       <li
         className={clsx(
-          'flex items-center justify-between py-3 px-4 text-sm',
+          'flex items-center justify-between px-4 py-3 text-sm',
           props.open ? 'bg-gray-50' : undefined,
         )}
       >

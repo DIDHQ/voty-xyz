@@ -119,7 +119,7 @@ export default function CreateCommunityPage() {
                                   }
                                 }}
                                 className={clsx(
-                                  'absolute top-0 left-0 flex w-full items-center py-2 px-3',
+                                  'absolute left-0 top-0 flex w-full items-center px-3 py-2',
                                   filteredOptions?.[virtualItem.index]?.disabled
                                     ? 'cursor-not-allowed'
                                     : 'cursor-pointer hover:bg-gray-100',
