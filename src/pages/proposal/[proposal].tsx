@@ -120,19 +120,19 @@ export default function ProposalPage() {
                   <tr>
                     <th
                       scope="col"
-                      className="sticky top-18 rounded-t-md border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="rounded-t-md border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       DID
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-18 border-x border-b border-gray-200 bg-white/80 px-3 py-2 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="border-x border-b border-gray-200 bg-white/80 px-3 py-2 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       Choice
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-18 rounded-t-md border-b border-gray-200 bg-white/80 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="rounded-t-md border-b border-gray-200 bg-white/80 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       Power
                     </th>

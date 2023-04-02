@@ -38,7 +38,7 @@ export default function ProposalInfo(props: {
   return (
     <div
       className={clsx(
-        'relative mt-[-1px] w-full shrink-0 sm:sticky sm:top-18 sm:w-80 sm:pt-8',
+        'relative w-full shrink-0 sm:mt-8 sm:w-80',
         props.className,
       )}
     >
