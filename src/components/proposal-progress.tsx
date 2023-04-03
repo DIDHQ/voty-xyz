@@ -12,7 +12,7 @@ export default function ProposalProgress(props: {
 
   return (
     <DetailList title="Progress">
-      <DetailItem title="Phase" className="overflow-y-visible">
+      <DetailItem title="Current phase" className="overflow-y-visible">
         <ProposalPhaseText
           proposal={props.proposal}
           duration={props.duration}
