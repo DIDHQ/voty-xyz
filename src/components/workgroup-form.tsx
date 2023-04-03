@@ -177,7 +177,7 @@ export default function WorkgroupForm(props: {
           <Grid6>
             <GridItem3>
               <FormItem
-                label="Proposal publicity phase"
+                label="Publicity phase"
                 error={groupErrors?.duration?.pending?.message}
               >
                 <Controller
@@ -215,7 +215,7 @@ export default function WorkgroupForm(props: {
             </GridItem3>
             <GridItem6>
               <FormItem
-                label="The criteria for proposal approval"
+                label="Criteria for approval"
                 description="Markdown is supported"
                 error={groupErrors?.extension?.terms_and_conditions?.message}
               >
