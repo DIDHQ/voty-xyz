@@ -2,21 +2,24 @@ import useStatus from '../hooks/use-status'
 import { Group } from '../utils/schemas/group'
 import { formatTime } from '../utils/time'
 import { DetailList, DetailItem } from './basic/detail'
-import ProposalPeriodText from './proposal-period-text'
+import ProposalPhaseText from './proposal-phase-text'
 
-export default function ProposalSchedule(props: {
+export default function ProposalProgress(props: {
   proposal?: string
   duration?: Group['duration']
 }) {
   const { data: status } = useStatus(props.proposal)
 
   return (
-    <DetailList title="Schedule">
-      <DetailItem title="Period" className="overflow-y-visible">
-        <ProposalPeriodText
+    <DetailList title="Progress">
+      <DetailItem title="Phase" className="overflow-y-visible">
+        <ProposalPhaseText
           proposal={props.proposal}
           duration={props.duration}
         />
+      </DetailItem>
+      <DetailItem title="Created at">
+        {status?.timestamp ? formatTime(status.timestamp) : '...'}
       </DetailItem>
       <DetailItem
         title={

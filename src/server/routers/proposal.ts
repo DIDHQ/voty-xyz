@@ -21,7 +21,7 @@ import {
   getPermalinkSnapshot,
   getSnapshotTimestamp,
 } from '../../utils/snapshot'
-import { Period } from '../../utils/period'
+import { Phase } from '../../utils/phase'
 import { groupSchema } from '../../utils/schemas/group'
 import { communitySchema } from '../../utils/schemas/community'
 
@@ -111,13 +111,13 @@ export const proposalRouter = router({
       z.object({
         entry: z.string().optional(),
         group: z.string().optional(),
-        period: z
+        phase: z
           .enum([
-            Period.CONFIRMING,
-            Period.PENDING,
-            Period.PROPOSING,
-            Period.VOTING,
-            Period.ENDED,
+            Phase.CONFIRMING,
+            Phase.PENDING,
+            Phase.PROPOSING,
+            Phase.VOTING,
+            Phase.ENDED,
           ])
           .optional(),
         cursor: z.string().optional(),
@@ -147,15 +147,15 @@ export const proposalRouter = router({
 
       const now = new Date()
       const filter =
-        input.period === Period.CONFIRMING
+        input.phase === Phase.CONFIRMING
           ? { ts_pending: null, ts_adding_option: null, ts_voting: null }
-          : input.period === Period.PENDING
+          : input.phase === Phase.PENDING
           ? { ts: { lte: now }, ts_pending: { gt: now } }
-          : input.period === Period.PROPOSING
+          : input.phase === Phase.PROPOSING
           ? { ts_pending: { lte: now }, ts_adding_option: { gt: now } }
-          : input.period === Period.VOTING
+          : input.phase === Phase.VOTING
           ? { ts_adding_option: { lte: now }, ts_voting: { gt: now } }
-          : input.period === Period.ENDED
+          : input.phase === Phase.ENDED
           ? { ts_voting: { lte: now } }
           : {}
       const proposals = await database.proposal.findMany({

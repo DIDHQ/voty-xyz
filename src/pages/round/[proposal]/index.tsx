@@ -17,7 +17,7 @@ import Button from '../../../components/basic/button'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { permalink2Id } from '../../../utils/permalink'
 import OptionCard from '../../../components/option-card'
-import { getPeriod, Period } from '../../../utils/period'
+import { getPhase, Phase } from '../../../utils/phase'
 import useStatus from '../../../hooks/use-status'
 import ProposalInfo from '../../../components/proposal-info'
 import { previewProposalAtom } from '../../../utils/atoms'
@@ -50,8 +50,8 @@ export default function RoundPage() {
     )
   const group = useGroup(community, proposal?.group, 'grant')
   const { data: status } = useStatus(query.proposal)
-  const period = useMemo(
-    () => getPeriod(new Date(), status?.timestamp, group?.duration),
+  const phase = useMemo(
+    () => getPhase(new Date(), status?.timestamp, group?.duration),
     [group?.duration, status?.timestamp],
   )
   const title = useMemo(
@@ -107,7 +107,7 @@ export default function RoundPage() {
               proposal={proposal}
               className="mb-6 block sm:hidden"
             />
-            {query.proposal && period === Period.PROPOSING ? (
+            {query.proposal && phase === Phase.PROPOSING ? (
               <Link href={`/round/${permalink2Id(query.proposal)}/create`}>
                 <Button icon={PlusIcon} primary className="float-right -mt-1">
                   Proposal

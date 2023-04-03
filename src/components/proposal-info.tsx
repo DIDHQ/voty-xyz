@@ -9,7 +9,7 @@ import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import Markdown from './basic/markdown'
 import TextButton from './basic/text-button'
-import ProposalSchedule from './proposal-schedule'
+import ProposalProgress from './proposal-progress'
 import { PreviewPermalink } from '../utils/types'
 
 export default function ProposalInfo(props: {
@@ -36,6 +36,10 @@ export default function ProposalInfo(props: {
       )}
     >
       <div className="space-y-6 rounded-md border border-gray-200 p-6">
+        <ProposalProgress
+          proposal={props.proposal?.permalink}
+          duration={group?.duration}
+        />
         <DetailList title="Information">
           <DetailItem title="Community" className="truncate whitespace-nowrap">
             {community?.name || '...'}
@@ -70,10 +74,6 @@ export default function ProposalInfo(props: {
             </DetailItem>
           ) : null}
         </DetailList>
-        <ProposalSchedule
-          proposal={props.proposal?.permalink}
-          duration={group?.duration}
-        />
         {props.proposal?.snapshots ? (
           <DetailList title="Snapshots">
             {Object.entries(props.proposal.snapshots).map(

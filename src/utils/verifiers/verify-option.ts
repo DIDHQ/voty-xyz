@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 
-import { getPeriod, Period } from '../period'
+import { getPhase, Phase } from '../phase'
 import { Authorized } from '../schemas/authorship'
 import { Community } from '../schemas/community'
 import { Group } from '../schemas/group'
@@ -31,10 +31,10 @@ export default async function verifyOption(
   const proposal = data.data
   const { community, group } = await verifyProposal(proposal)
 
-  if (getPeriod(new Date(), timestamp, group.duration) !== Period.PROPOSING) {
+  if (getPhase(new Date(), timestamp, group.duration) !== Phase.PROPOSING) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
-      message: 'Not in proposing period',
+      message: 'Not in proposing phase',
     })
   }
 

@@ -11,7 +11,7 @@ import { calculateDecimal } from '../utils/functions/number'
 import { Vote, voteSchema } from '../utils/schemas/vote'
 import { trpc } from '../utils/trpc'
 import useStatus from '../hooks/use-status'
-import { getPeriod, Period } from '../utils/period'
+import { getPhase, Phase } from '../utils/phase'
 import { Proposal } from '../utils/schemas/proposal'
 import { Group } from '../utils/schemas/group'
 import { FormItem } from './basic/form'
@@ -112,8 +112,8 @@ export default function VoteForm(props: {
     onSuccess()
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
   const { data: status } = useStatus(props.proposal?.permalink)
-  const period = useMemo(
-    () => getPeriod(new Date(), status?.timestamp, props.group?.duration),
+  const phase = useMemo(
+    () => getPhase(new Date(), status?.timestamp, props.group?.duration),
     [props.group?.duration, status?.timestamp],
   )
   const disables = useCallback(
@@ -123,8 +123,8 @@ export default function VoteForm(props: {
       !powers ||
       !!voted[did] ||
       !powers[did] ||
-      period !== Period.VOTING,
-    [voted, powers, period],
+      phase !== Phase.VOTING,
+    [voted, powers, phase],
   )
   const didOptions = useMemo(
     () =>
@@ -223,13 +223,13 @@ export default function VoteForm(props: {
               </Slide>
             ) : null}
           </div>
-          {period !== Period.VOTING ? (
+          {phase !== Phase.VOTING ? (
             <Tooltip
               place="left"
               text={
-                period === Period.CONFIRMING
+                phase === Phase.CONFIRMING
                   ? 'Waiting for transaction (in about 5 minutes)'
-                  : period === Period.ENDED
+                  : phase === Phase.ENDED
                   ? 'Voting ended'
                   : 'Waiting for voting'
               }

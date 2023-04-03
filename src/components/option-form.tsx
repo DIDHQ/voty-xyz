@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 import { useAtom } from 'jotai'
 
 import useStatus from '../hooks/use-status'
-import { getPeriod, Period } from '../utils/period'
+import { getPhase, Phase } from '../utils/phase'
 import { Proposal } from '../utils/schemas/proposal'
 import { Grant } from '../utils/schemas/group'
 import useWallet from '../hooks/use-wallet'
@@ -65,8 +65,8 @@ export default function OptionForm(props: {
     }
   }, [props.proposal?.permalink, setValue])
   const { data: status } = useStatus(props.proposal?.permalink)
-  const period = useMemo(
-    () => getPeriod(new Date(), status?.timestamp, props.group?.duration),
+  const phase = useMemo(
+    () => getPhase(new Date(), status?.timestamp, props.group?.duration),
     [props.group?.duration, status?.timestamp],
   )
   const { data: disables } = useQuery(
@@ -143,7 +143,7 @@ export default function OptionForm(props: {
         </FormSection>
       </Form>
       <div>
-        {period === Period.ENDED ? null : (
+        {phase === Phase.ENDED ? null : (
           <div className="mt-6 flex w-full flex-col items-end">
             <div className="w-full flex-1 sm:w-64 sm:flex-none">
               <DidCombobox
@@ -171,7 +171,7 @@ export default function OptionForm(props: {
                 </Slide>
               ) : null}
             </div>
-            {period !== Period.PROPOSING ? (
+            {phase !== Phase.PROPOSING ? (
               <Tooltip
                 place="left"
                 text="Waiting for transaction (in about 5 minutes)"
