@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 
 import useGroup from '../hooks/use-group'
-import { coinTypeExplorers, coinTypeNames } from '../utils/constants'
+import { coinTypeExplorers, commonCoinTypes } from '../utils/constants'
 import { Option } from '../utils/schemas/option'
 import { Proposal } from '../utils/schemas/proposal'
 import { trpc } from '../utils/trpc'
@@ -11,6 +11,8 @@ import Markdown from './basic/markdown'
 import TextButton from './basic/text-button'
 import ProposalProgress from './proposal-progress'
 import { PreviewPermalink } from '../utils/types'
+import { permalink2Explorer } from '../utils/permalink'
+import { formatNumber } from '../utils/number'
 
 export default function ProposalInfo(props: {
   proposal?: Proposal & {
@@ -40,9 +42,36 @@ export default function ProposalInfo(props: {
           proposal={props.proposal?.permalink}
           duration={group?.duration}
         />
+        {group?.extension.type === 'grant' ? (
+          <DetailList title="Funding">
+            <Article small className="pt-2">
+              <ul>
+                {props.proposal?.extension?.funding?.map((funding, index) => (
+                  <li key={index}>
+                    {funding[0]}&nbsp;
+                    <span className="text-gray-400">X</span>&nbsp;
+                    {funding[1]}
+                  </li>
+                ))}
+              </ul>
+            </Article>
+          </DetailList>
+        ) : (
+          <DetailList title="Criteria for approval">
+            <Article small className="pt-2">
+              <Markdown>{group?.extension.terms_and_conditions}</Markdown>
+            </Article>
+          </DetailList>
+        )}
         <DetailList title="Information">
           <DetailItem title="Community" className="truncate whitespace-nowrap">
-            {community?.name || '...'}
+            {community ? (
+              <TextButton href={`/${community.authorship.author}`}>
+                {community.name}
+              </TextButton>
+            ) : (
+              '...'
+            )}
           </DetailItem>
           <DetailItem
             title={
@@ -54,7 +83,13 @@ export default function ProposalInfo(props: {
             }
             className="truncate whitespace-nowrap"
           >
-            {group?.name || '...'}
+            {group && community ? (
+              <TextButton href={`/${community.authorship.author}/${group.id}`}>
+                {group.name}
+              </TextButton>
+            ) : (
+              '...'
+            )}
           </DetailItem>
           <DetailItem
             title={
@@ -75,44 +110,25 @@ export default function ProposalInfo(props: {
           ) : null}
         </DetailList>
         {props.proposal?.snapshots ? (
-          <DetailList title="Snapshots">
-            {Object.entries(props.proposal.snapshots).map(
-              ([coinType, snapshot]) => (
-                <DetailItem
-                  key={coinType}
-                  title={coinTypeNames[parseInt(coinType)] || coinType}
-                >
-                  <TextButton
-                    href={`${coinTypeExplorers[parseInt(coinType)]}${snapshot}`}
-                  >
-                    {snapshot}
-                  </TextButton>
-                </DetailItem>
-              ),
-            )}
+          <DetailList title="On-chain verification">
+            <DetailItem title="Snapshot">
+              <TextButton
+                href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
+                  props.proposal.snapshots[commonCoinTypes.CKB]
+                }`}
+              >
+                {formatNumber(
+                  parseInt(props.proposal.snapshots[commonCoinTypes.CKB], 10),
+                )}
+              </TextButton>
+            </DetailItem>
+            <DetailItem title="Arweave TX">
+              <TextButton href={permalink2Explorer(props.proposal?.community)}>
+                {props.proposal?.community.substring(40) || '...'}
+              </TextButton>
+            </DetailItem>
           </DetailList>
         ) : null}
-        {group?.extension.type === 'grant' ? (
-          <DetailList title="Funding">
-            <Article small className="pt-2">
-              <ul>
-                {props.proposal?.extension?.funding?.map((funding, index) => (
-                  <li key={index}>
-                    {funding[0]}&nbsp;
-                    <span className="text-gray-400">X</span>&nbsp;
-                    {funding[1]}
-                  </li>
-                ))}
-              </ul>
-            </Article>
-          </DetailList>
-        ) : (
-          <DetailList title="Terms and conditions">
-            <Article small className="pt-2">
-              <Markdown>{group?.extension.terms_and_conditions}</Markdown>
-            </Article>
-          </DetailList>
-        )}
       </div>
     </div>
   )
