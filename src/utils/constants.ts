@@ -4,6 +4,12 @@ export const isTestnet = !!process.env.NEXT_PUBLIC_TESTNET
 
 export const documentTitle = `Voty ${isTestnet ? 'Testnet' : 'Alpha'}`
 
+export const description = 'Voice of your community'
+
+export const domain = isTestnet
+  ? 'https://votyxyz.vercel.app'
+  : 'https://alpha.voty.xyz'
+
 export const commonCoinTypes = {
   ETH: 60,
   CKB: 309,

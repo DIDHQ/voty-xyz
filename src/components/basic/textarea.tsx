@@ -27,7 +27,7 @@ export default forwardRef<
       ref={ref}
       aria-invalid={error ? 'true' : 'false'}
       onKeyDown={handleKeyDown}
-      minRows={3}
+      minRows={7}
       {...restProps}
       className={clsx(
         'block h-24 w-full rounded-md border disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',

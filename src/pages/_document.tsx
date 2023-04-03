@@ -1,12 +1,6 @@
 import { Html, Head, Main, NextScript } from 'next/document'
 
-import { documentTitle, isTestnet } from '../utils/constants'
-
-const description = 'Voice of your community'
-
-const domain = isTestnet
-  ? 'https://votyxyz.vercel.app'
-  : 'https://alpha.voty.xyz'
+import { description, documentTitle, domain } from '../utils/constants'
 
 export default function MyDocument() {
   return (

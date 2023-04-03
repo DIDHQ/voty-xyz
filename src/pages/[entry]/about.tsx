@@ -29,7 +29,7 @@ export default function CommunityAboutPage() {
         About
       </h3>
       <Article className="w-full pt-6">
-        <Markdown>{community?.extension?.about}</Markdown>
+        <Markdown>{community?.extension?.description}</Markdown>
       </Article>
       {isManager && !previewCommunity ? (
         <Link
