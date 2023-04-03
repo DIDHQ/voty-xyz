@@ -1,12 +1,7 @@
 import clsx from 'clsx'
-import dynamic from 'next/dynamic'
 
 import useGroup from '../hooks/use-group'
-import {
-  coinTypeExplorers,
-  coinTypeNames,
-  previewPermalink,
-} from '../utils/constants'
+import { coinTypeExplorers, coinTypeNames } from '../utils/constants'
 import { Option } from '../utils/schemas/option'
 import { Proposal } from '../utils/schemas/proposal'
 import { trpc } from '../utils/trpc'
@@ -16,8 +11,6 @@ import Markdown from './basic/markdown'
 import TextButton from './basic/text-button'
 import ProposalSchedule from './proposal-schedule'
 import { PreviewPermalink } from '../utils/types'
-
-const StatusIcon = dynamic(() => import('./status-icon'), { ssr: false })
 
 export default function ProposalInfo(props: {
   proposal?: Proposal & {
@@ -42,12 +35,6 @@ export default function ProposalInfo(props: {
         props.className,
       )}
     >
-      {props.proposal?.permalink === previewPermalink ? null : (
-        <StatusIcon
-          permalink={props.proposal?.permalink}
-          className="absolute right-4 top-4 sm:top-12"
-        />
-      )}
       <div className="space-y-6 rounded-md border border-gray-200 p-6">
         <DetailList title="Information">
           <DetailItem title="Community" className="truncate whitespace-nowrap">
