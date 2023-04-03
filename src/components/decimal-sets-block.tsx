@@ -5,7 +5,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../utils/schemas/community'
 import { FormItem } from './basic/form'
-import { Grid6, GridItem2, GridItem6 } from './basic/grid'
+import { Grid6, GridItem6 } from './basic/grid'
 import RadioGroup from './basic/radio-group'
 import TextButton from './basic/text-button'
 import TextInput from './basic/text-input'
@@ -146,7 +146,7 @@ function DecimalUnitBlock(props: {
         <Grid6 className="p-6">
           <GridItem6>
             <FormItem
-              label="Name"
+              label="Voter group name"
               error={
                 errors.groups?.[props.groupIndex]?.permission?.[props.name]
                   ?.operands?.[props.index]?.name?.message
@@ -167,39 +167,27 @@ function DecimalUnitBlock(props: {
           </GridItem6>
           <GridItem6>
             <FormItem
-              label="Base on"
+              label="Voting power"
+              description="Each SubDID in this voter group has an equal voting power"
               error={
                 errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[0]?.message
+                  ?.operands?.[props.index]?.arguments?.[2]?.message
               }
             >
-              <Controller
-                control={control}
-                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`}
-                render={({ field: { value, onChange } }) => (
-                  <RadioGroup
-                    disabled={props.disabled}
-                    options={[
-                      {
-                        value: props.entry,
-                        name: 'SubDID',
-                        description: `SubDIDs of ${props.entry}`,
-                      },
-                      {
-                        value: 'bit',
-                        name: '.bit',
-                        description: 'Any .bit accounts (not including SubDID)',
-                      },
-                    ]}
-                    value={value}
-                    onChange={onChange}
-                  />
+              <TextInput
+                disabled={props.disabled}
+                {...register(
+                  `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`,
                 )}
+                error={
+                  !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                    ?.operands?.[props.index]?.arguments?.[2]?.message
+                }
               />
             </FormItem>
           </GridItem6>
           <GridItem6>
-            <FormItem label="Filter">
+            <FormItem label="Voter group members">
               <Controller
                 control={control}
                 name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
@@ -209,19 +197,11 @@ function DecimalUnitBlock(props: {
                     options={[
                       {
                         value: 'allowlist',
-                        name: 'Allowlist',
-                        description:
-                          suffix === 'bit'
-                            ? 'Only the following .bit accounts are eligible'
-                            : `Only the following SubDIDs of ${props.entry} are eligible`,
+                        name: `Some of ${suffix}'s SubDIDs`,
                       },
                       {
                         value: 'all',
-                        name: 'All',
-                        description:
-                          suffix === 'bit'
-                            ? 'All .bit accounts are eligible'
-                            : `All SubDIDs of ${props.entry} are eligible`,
+                        name: `All of ${suffix}'s SubDIDs`,
                       },
                     ]}
                     value={value.length ? 'allowlist' : 'all'}
@@ -236,7 +216,6 @@ function DecimalUnitBlock(props: {
           )?.length ? (
             <GridItem6>
               <FormItem
-                label="Allowlist"
                 error={
                   errors.groups?.[props.groupIndex]?.permission?.[props.name]
                     ?.operands?.[props.index]?.arguments?.[1]?.message ||
@@ -253,7 +232,7 @@ function DecimalUnitBlock(props: {
                       autoCapitalize="false"
                       autoComplete="false"
                       disabled={props.disabled}
-                      placeholder={`.${suffix}`}
+                      placeholder={`e.g.\nsatoshi.${suffix}\nvitalik.${suffix}`}
                       value={
                         Array.isArray(value)
                           ? (value as string[]).join('\n')
@@ -285,26 +264,6 @@ function DecimalUnitBlock(props: {
               </FormItem>
             </GridItem6>
           ) : null}
-          <GridItem2>
-            <FormItem
-              label="Power"
-              error={
-                errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[2]?.message
-              }
-            >
-              <TextInput
-                disabled={props.disabled}
-                {...register(
-                  `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`,
-                )}
-                error={
-                  !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                    ?.operands?.[props.index]?.arguments?.[2]?.message
-                }
-              />
-            </FormItem>
-          </GridItem2>
         </Grid6>
       ) : null}
     </>

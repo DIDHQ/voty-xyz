@@ -40,6 +40,9 @@ export default function WorkgroupForm(props: {
 }) {
   const { onArchive } = props
   const router = useRouter()
+  const { data: community } = trpc.community.getByEntry.useQuery({
+    entry: props.author,
+  })
   const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
   const methods = useForm<Community>({
     resolver: zodResolver(communitySchema),
@@ -93,15 +96,21 @@ export default function WorkgroupForm(props: {
         {handleArchive.error?.message}
       </Notification>
       <Form
-        title={`${isNewGroup ? 'New' : 'Edit'} workgroup of ${props.author}`}
+        title={`${isNewGroup ? 'Create' : 'Edit'} workgroup${
+          community?.name ? ` of ${community.name}` : ''
+        }`}
         className={props.className}
       >
         <FormSection>
           <Grid6>
             <GridItem6>
-              <FormItem label="Name" error={groupErrors?.name?.message}>
+              <FormItem
+                label="Workgroup name"
+                error={groupErrors?.name?.message}
+              >
                 <TextInput
                   {...register(`groups.${groupIndex}.name`)}
+                  placeholder="e.g. Marketing Team"
                   error={!!groupErrors?.name?.message}
                   disabled={!isManager}
                 />
@@ -110,6 +119,7 @@ export default function WorkgroupForm(props: {
             <GridItem6>
               <FormItem
                 label="Introduction"
+                description="The propose of this workgroup"
                 error={groupErrors?.extension?.introduction?.message}
               >
                 <TextInput
@@ -123,7 +133,7 @@ export default function WorkgroupForm(props: {
         </FormSection>
         <FormSection
           title="Proposers"
-          description="are eligible to create proposals in this workgroup"
+          description="SubDIDs who can initiate proposals in this working group"
         >
           <Grid6>
             <GridItem6>
@@ -144,7 +154,7 @@ export default function WorkgroupForm(props: {
         </FormSection>
         <FormSection
           title="Voters"
-          description="are eligible to vote for proposals in this workgroup"
+          description="SubDIDs who can vote in this workgroup. You can create multiple voter groups with different voting power assigned o each group"
         >
           <Grid6>
             <GridItem6>
@@ -163,11 +173,11 @@ export default function WorkgroupForm(props: {
             </GridItem6>
           </Grid6>
         </FormSection>
-        <FormSection title="Schedule">
+        <FormSection title="Rules">
           <Grid6>
             <GridItem3>
               <FormItem
-                label="Duration of pending before voting"
+                label="Proposal publicity phase"
                 error={groupErrors?.duration?.pending?.message}
               >
                 <Controller
@@ -186,7 +196,7 @@ export default function WorkgroupForm(props: {
             </GridItem3>
             <GridItem3>
               <FormItem
-                label="Duration of voting"
+                label="Voting phase"
                 error={groupErrors?.duration?.voting?.message}
               >
                 <Controller
@@ -203,15 +213,9 @@ export default function WorkgroupForm(props: {
                 />
               </FormItem>
             </GridItem3>
-          </Grid6>
-        </FormSection>
-        <FormSection
-          title="Terms and conditions"
-          description="Defines the final state of proposal"
-        >
-          <Grid6>
             <GridItem6>
               <FormItem
+                label="The criteria for proposal approval"
                 description="Markdown is supported"
                 error={groupErrors?.extension?.terms_and_conditions?.message}
               >
