@@ -2,7 +2,7 @@ import { ChangeEvent, MouseEvent, useCallback, useRef } from 'react'
 import imageCompression from 'browser-image-compression'
 
 import Avatar from './avatar'
-import TextButton from './text-button'
+import Button from './button'
 
 export default function AvatarInput(props: {
   name?: string
@@ -38,9 +38,9 @@ export default function AvatarInput(props: {
   )
 
   return (
-    <div>
-      <span className="h-20 w-20 overflow-hidden rounded-full bg-gray-100">
-        <Avatar size={20} value={props.value} />
+    <div className="flex items-center">
+      <span className="h-16 w-16 overflow-hidden rounded-full bg-gray-100">
+        <Avatar size={16} value={props.value} />
       </span>
       <input
         ref={inputRef}
@@ -50,9 +50,9 @@ export default function AvatarInput(props: {
         onChange={handleChange}
       />
       {props.disabled ? null : (
-        <TextButton secondary onClick={handleClick} className="mt-1">
+        <Button onClick={handleClick} className="ml-4">
           Change
-        </TextButton>
+        </Button>
       )}
     </div>
   )
