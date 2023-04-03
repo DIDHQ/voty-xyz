@@ -24,7 +24,7 @@ export default function Tooltip(props: {
       >
         {props.children}
       </div>
-      <ReactTooltip id={id} className="rounded-md">
+      <ReactTooltip id={id} className="z-50 rounded-md">
         {props.text}
       </ReactTooltip>
     </>

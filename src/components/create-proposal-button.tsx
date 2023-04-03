@@ -24,7 +24,10 @@ export default function CreateProposalButton(props: {
       </Button>
     </Link>
   ) : (
-    <Tooltip place="left" text="Waiting for transaction (in about 5 minutes)">
+    <Tooltip
+      place="top"
+      text="Waiting for community changes confirming (in about 5 minutes)"
+    >
       <Button primary disabled icon={PlusIcon}>
         {props.group
           ? props.group.extension.type === 'grant'

@@ -174,7 +174,7 @@ export default function OptionForm(props: {
             {phase !== Phase.PROPOSING ? (
               <Tooltip
                 place="left"
-                text="Waiting for transaction (in about 5 minutes)"
+                text="Waiting for round confirming (in about 5 minutes)"
                 className="mt-6"
               >
                 <Button primary icon={EyeIcon} disabled>

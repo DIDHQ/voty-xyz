@@ -123,8 +123,8 @@ export default function ProposalInfo(props: {
               </TextButton>
             </DetailItem>
             <DetailItem title="Arweave TX">
-              <TextButton href={permalink2Explorer(props.proposal?.community)}>
-                {props.proposal?.community.substring(40) || '...'}
+              <TextButton href={permalink2Explorer(props.proposal?.permalink)}>
+                {props.proposal?.permalink.substring(40) || '...'}
               </TextButton>
             </DetailItem>
           </DetailList>

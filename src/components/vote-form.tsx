@@ -26,6 +26,7 @@ import Notification from './basic/notification'
 import Tooltip from './basic/tooltip'
 import Slide from './basic/slide'
 import RulesView from './rules-view'
+import { formatDurationMs } from '../utils/time'
 
 export default function VoteForm(props: {
   entry?: string
@@ -112,9 +113,10 @@ export default function VoteForm(props: {
     onSuccess()
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
   const { data: status } = useStatus(props.proposal?.permalink)
+  const now = useMemo(() => new Date(), [])
   const phase = useMemo(
-    () => getPhase(new Date(), status?.timestamp, props.group?.duration),
-    [props.group?.duration, status?.timestamp],
+    () => getPhase(now, status?.timestamp, props.group?.duration),
+    [now, props.group?.duration, status?.timestamp],
   )
   const disables = useCallback(
     (did?: string) =>
@@ -223,15 +225,40 @@ export default function VoteForm(props: {
               </Slide>
             ) : null}
           </div>
-          {phase !== Phase.VOTING ? (
+          {phase === Phase.VOTING ? (
+            <Button
+              large
+              primary
+              icon={BoltIcon}
+              onClick={onSubmit(
+                (value) => handleSubmit.mutate(value),
+                console.error,
+              )}
+              disabled={disables(did)}
+              loading={handleSubmit.isLoading}
+              className="mt-6"
+            >
+              Vote{votingPower ? ` (${votingPower})` : null}
+            </Button>
+          ) : (
             <Tooltip
-              place="left"
+              place="top"
               text={
                 phase === Phase.CONFIRMING
-                  ? 'Waiting for transaction (in about 5 minutes)'
+                  ? 'Waiting for proposal confirming (in about 5 minutes)'
                   : phase === Phase.ENDED
                   ? 'Voting ended'
-                  : 'Waiting for voting'
+                  : status?.timestamp && props.group
+                  ? `Waiting for voting start (in ${formatDurationMs(
+                      status.timestamp.getTime() +
+                        (props.group.duration.pending +
+                          ('adding_option' in props.group.duration
+                            ? props.group.duration.adding_option
+                            : 0)) *
+                          1000 -
+                        now.getTime(),
+                    )})`
+                  : 'Waiting for voting start'
               }
               className="mt-6"
             >
@@ -249,21 +276,6 @@ export default function VoteForm(props: {
                 Vote{votingPower ? ` (${votingPower})` : null}
               </Button>
             </Tooltip>
-          ) : (
-            <Button
-              large
-              primary
-              icon={BoltIcon}
-              onClick={onSubmit(
-                (value) => handleSubmit.mutate(value),
-                console.error,
-              )}
-              disabled={disables(did)}
-              loading={handleSubmit.isLoading}
-              className="mt-6"
-            >
-              Vote{votingPower ? ` (${votingPower})` : null}
-            </Button>
           )}
         </div>
       </div>
