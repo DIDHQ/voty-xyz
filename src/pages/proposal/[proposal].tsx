@@ -116,7 +116,7 @@ export default function ProposalPage() {
               </h2>
             ) : null}
             {votes?.length ? (
-              <table className="my-6 w-full border-separate border-spacing-0 rounded-md border border-gray-200">
+              <table className="my-6 w-full border-separate border-spacing-0">
                 <thead>
                   <tr>
                     <th
@@ -127,7 +127,7 @@ export default function ProposalPage() {
                     </th>
                     <th
                       scope="col"
-                      className="border-x border-b border-gray-200 bg-white/80 px-3 py-2 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="border-b border-gray-200 bg-white/80 px-3 py-2 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       Choice
                     </th>
@@ -153,7 +153,7 @@ export default function ProposalPage() {
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-x border-gray-200 px-3 py-2 text-sm text-gray-500',
+                          'truncate whitespace-nowrap border-gray-200 px-3 py-2 text-sm text-gray-500',
                         )}
                       >
                         {proposal
