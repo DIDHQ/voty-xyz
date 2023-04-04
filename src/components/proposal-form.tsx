@@ -216,7 +216,7 @@ export default function ProposalForm(props: {
       >
         <Grid6>
           <GridItem6>
-            <FormItem label="Proposal title" error={errors.title?.message}>
+            <FormItem label="Title" error={errors.title?.message}>
               <TextInput
                 {...register('title')}
                 disabled={disabled}
@@ -226,7 +226,7 @@ export default function ProposalForm(props: {
           </GridItem6>
           <GridItem6>
             <FormItem
-              label="Proposal details"
+              label="Content"
               description="Markdown is supported"
               error={errors.extension?.content?.message}
             >
@@ -237,7 +237,10 @@ export default function ProposalForm(props: {
               />
             </FormItem>
           </GridItem6>
-
+        </Grid6>
+      </FormSection>
+      <FormSection title="Voting config">
+        <Grid6>
           <GridItem6>
             <FormItem label="Voting type" error={errors.voting_type?.message}>
               <Controller
