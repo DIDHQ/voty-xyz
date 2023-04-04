@@ -125,13 +125,12 @@ export const communityRouter = router({
         .refine(
           (community) =>
             !community.groups ||
-            community.groups.every((group) =>
-              group.permission.proposing.operands.every((operand) => {
-                return (
-                  // operand.arguments[0] === 'bit' ||
-                  operand.arguments[0] === community.authorship.author
-                )
-              }),
+            community.groups.every(
+              (group) =>
+                group.permission.proposing.operands.length === 1 &&
+                group.permission.proposing.operands[0].arguments[0] ===
+                  community.authorship.author &&
+                group.permission.proposing.operands[0].arguments[1].length > 0,
             ),
           { message: 'Invalid proposing permission' },
         )
@@ -140,10 +139,7 @@ export const communityRouter = router({
             !community.groups ||
             community.groups.every((group) =>
               group.permission.voting.operands.every((operand) => {
-                return (
-                  // operand.arguments[0] === 'bit' ||
-                  operand.arguments[0] === community.authorship.author
-                )
+                return operand.arguments[0] === community.authorship.author
               }),
             ),
           { message: 'Invalid voting permission' },
