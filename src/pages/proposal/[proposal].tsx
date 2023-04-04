@@ -23,7 +23,7 @@ import { Proposal } from '../../utils/schemas/proposal'
 export default function ProposalPage() {
   const query = useRouterQuery<['proposal']>()
   const previewProposal = useAtomValue(previewProposalAtom)
-  const { data, isLoading } = trpc.proposal.getByPermalink.useQuery(
+  const { data, isLoading, refetch } = trpc.proposal.getByPermalink.useQuery(
     { permalink: query.proposal },
     { enabled: !!query.proposal, refetchOnWindowFocus: false },
   )
@@ -73,8 +73,9 @@ export default function ProposalPage() {
     [community?.name, proposal?.title, group?.name],
   )
   const handleSuccess = useCallback(() => {
+    refetch()
     refetchList()
-  }, [refetchList])
+  }, [refetch, refetchList])
 
   return (
     <>
