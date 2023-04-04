@@ -108,7 +108,7 @@ function DecimalUnitBlock(props: {
           </TextButton>
         )}
       </div>
-      <Grid6 className="p-6">
+      <Grid6 className="px-6 py-4">
         <GridItem6>
           <FormItem
             label="Voter group name"
