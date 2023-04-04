@@ -3,10 +3,10 @@ import { ReactNode } from 'react'
 
 export default function Article(props: {
   small?: boolean
-  children?: ReactNode
+  children: ReactNode
   className?: string
 }) {
-  return props.children ? (
+  return (
     <article
       className={clsx(
         'max-w-none prose-ol:list-decimal marker:prose-ol:text-gray-400 prose-ul:list-disc marker:prose-ul:text-gray-400',
@@ -16,5 +16,5 @@ export default function Article(props: {
     >
       {props.children}
     </article>
-  ) : null
+  )
 }

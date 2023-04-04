@@ -44,7 +44,10 @@ export function ChoiceListItem(props: {
 
   return (
     <li
-      className="flex items-center justify-between bg-no-repeat px-4 py-3 text-sm"
+      className={clsx(
+        'group flex items-center justify-between bg-no-repeat px-4 py-3 text-sm',
+        props.disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+      )}
       style={{
         transition: 'background-size 0.3s ease-out',
         backgroundImage: `linear-gradient(90deg, ${gray['100']} 100%, transparent 100%)`,
@@ -58,7 +61,7 @@ export function ChoiceListItem(props: {
     >
       <span className="w-0 flex-1 truncate">{option}</span>
       {choices?.powers[option] || newPower.gt(0) ? (
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-gray-800">
           {choices?.powers[option] || 0}
           {newPower.gt(0) ? ` + ${newPower.toString()}` : ''}&nbsp;(
           {percentage.toFixed(1)}%)
@@ -71,7 +74,7 @@ export function ChoiceListItem(props: {
           disabled={props.disabled}
           onChange={() => null}
           className={clsx(
-            'h-4 w-4 border border-gray-300 text-primary-600 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600',
+            'h-4 w-4 border border-gray-300 text-primary-600 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600 group-hover:border-primary-400',
             type === 'single' ? undefined : 'rounded',
           )}
         />

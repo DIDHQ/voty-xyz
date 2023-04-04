@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 
 export default function RadioGroup(props: {
-  options: { value: string; name: string; description: string }[]
+  options: { value: string; name: string; description?: string }[]
   disabled?: boolean
   value: string
   onChange(value: string): void

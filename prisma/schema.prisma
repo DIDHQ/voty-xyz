@@ -35,7 +35,7 @@ model Proposal {
   votes         Int
 
   ts               DateTime
-  ts_pending       DateTime?
+  ts_announcing    DateTime?
   ts_adding_option DateTime?
   ts_voting        DateTime?
 

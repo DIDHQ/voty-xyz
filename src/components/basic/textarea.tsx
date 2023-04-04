@@ -1,14 +1,14 @@
 import clsx from 'clsx'
-import { forwardRef, KeyboardEvent, useCallback } from 'react'
+import { forwardRef, Fragment, KeyboardEvent, useCallback } from 'react'
 import TextareaAutosize, {
   TextareaAutosizeProps,
 } from 'react-textarea-autosize'
 
 export default forwardRef<
   HTMLTextAreaElement,
-  TextareaAutosizeProps & { error?: boolean }
+  TextareaAutosizeProps & { shadow?: string; error?: boolean }
 >(function Textarea(props, ref) {
-  const { error, children, className, ...restProps } = props
+  const { shadow, error, children, className, ...restProps } = props
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key == 'Tab') {
       e.preventDefault()
@@ -23,19 +23,33 @@ export default forwardRef<
   }, [])
 
   return (
-    <TextareaAutosize
-      ref={ref}
-      aria-invalid={error ? 'true' : 'false'}
-      onKeyDown={handleKeyDown}
-      minRows={3}
-      {...restProps}
-      className={clsx(
-        'block h-24 w-full rounded-md border disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
-        error
-          ? 'border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500'
-          : 'border-gray-200 focus:border-primary-500 focus:ring-primary-300',
-        className,
-      )}
-    />
+    <div className={clsx('relative text-sm', className)}>
+      {shadow && props.value ? (
+        <span className="absolute -z-10 select-none border border-transparent px-3 py-2 text-gray-400">
+          {(props.value as string | undefined)
+            ?.split('\n')
+            .map((line, index) => (
+              <Fragment key={index}>
+                <span className="text-transparent">{line}</span>
+                <span>{shadow}</span>
+                <br />
+              </Fragment>
+            ))}
+        </span>
+      ) : null}
+      <TextareaAutosize
+        ref={ref}
+        aria-invalid={error ? 'true' : 'false'}
+        onKeyDown={handleKeyDown}
+        minRows={7}
+        {...restProps}
+        className={clsx(
+          'block w-full rounded-md border bg-transparent disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
+          error
+            ? 'border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500'
+            : 'border-gray-200 focus:border-primary-500 focus:ring-primary-300',
+        )}
+      />
+    </div>
   )
 })

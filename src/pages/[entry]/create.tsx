@@ -35,7 +35,7 @@ export default function CreateGroupPage() {
                         operands: [
                           {
                             function: 'prefixes_dot_suffix_exact_match',
-                            arguments: [query.entry, ['']],
+                            arguments: [query.entry, []],
                           },
                         ],
                       },
@@ -44,7 +44,7 @@ export default function CreateGroupPage() {
                         operands: [
                           {
                             function: 'prefixes_dot_suffix_exact_match',
-                            arguments: [query.entry, ['']],
+                            arguments: [query.entry, []],
                           },
                         ],
                       },
@@ -53,13 +53,13 @@ export default function CreateGroupPage() {
                         operands: [
                           {
                             function: 'prefixes_dot_suffix_fixed_power',
-                            arguments: [query.entry, [''], '1'],
+                            arguments: [query.entry, [], '1'],
                           },
                         ],
                       },
                     },
                     duration: {
-                      pending: 86400,
+                      announcing: 86400,
                       adding_option: 86400,
                       voting: 86400,
                     },
@@ -76,7 +76,7 @@ export default function CreateGroupPage() {
                         operands: [
                           {
                             function: 'prefixes_dot_suffix_exact_match',
-                            arguments: [query.entry, ['']],
+                            arguments: [query.entry, []],
                           },
                         ],
                       },
@@ -85,18 +85,18 @@ export default function CreateGroupPage() {
                         operands: [
                           {
                             function: 'prefixes_dot_suffix_fixed_power',
-                            arguments: [query.entry, [''], '1'],
+                            arguments: [query.entry, [], '1'],
                           },
                         ],
                       },
                     },
                     duration: {
-                      pending: 86400,
+                      announcing: 86400,
                       voting: 86400,
                     },
                     extension: {
                       type: 'workgroup',
-                      terms_and_conditions: '',
+                      criteria_for_approval: '',
                     },
                   },
             ],

@@ -18,13 +18,15 @@ export default function PermissionCard(props: {
   return (
     <div className="rounded-md border p-6">
       <h3 className="text-xl font-semibold">{props.title}</h3>
-      <p className="mt-1 text-gray-500">{props.description}</p>
-      <ul className="mt-4 divide-y border-t">
+      <p className="mt-1 text-sm text-gray-500">{props.description}</p>
+      <ul className="mt-4 space-y-4 divide-y border-t">
         {props.value.operands.map((operand, index) => (
           <li key={index} className="pt-4">
-            <h4 className="mb-3 text-base font-medium">
-              {operand.name || `Filter ${index + 1}`}
-            </h4>
+            {props.value.operands.length === 1 ? null : (
+              <h4 className="mb-3 text-sm font-semibold">
+                {operand.name || `Group ${index + 1}`}
+              </h4>
+            )}
             {operand.arguments[1].length ? (
               <div className="-m-1">
                 {operand.arguments[1].map((argument) => (

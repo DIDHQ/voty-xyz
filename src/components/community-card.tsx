@@ -1,4 +1,3 @@
-import { BookmarkIcon } from '@heroicons/react/20/solid'
 import { Entry } from '@prisma/client'
 import { Serialize } from '@trpc/server/dist/shared/internal/serialize'
 import Link from 'next/link'
@@ -27,14 +26,9 @@ export default function CommunityCard(props: {
         <h3 className="w-full truncate break-words text-lg font-medium text-gray-900">
           {community.name}
         </h3>
-        <p className="line-clamp-2 w-full text-sm text-gray-500">
+        <p className="line-clamp-3 w-full text-sm text-gray-500">
           {community.extension.slogan}
         </p>
-        <div className="h-0 flex-1" />
-        <div className="col-span-2 flex items-center text-gray-400">
-          <BookmarkIcon className="mr-1 h-4 w-4 shrink-0" />
-          <span className="text-sm">{community.entry.subscribers}</span>
-        </div>
       </div>
     </Link>
   )

@@ -5,9 +5,7 @@ import CommunityInfo from '../community-info'
 export default function CommunityLayout(props: { children: ReactNode }) {
   return (
     <>
-      <div className="top-18 mt-[-1px] block w-full shrink-0 pt-6 sm:sticky sm:w-60 sm:pt-8">
-        <CommunityInfo />
-      </div>
+      <CommunityInfo className="mt-6 block w-full shrink-0 sm:mt-8 sm:w-60" />
       <div className="w-full flex-1 sm:w-0 sm:pl-10">{props.children}</div>
     </>
   )

@@ -10,18 +10,18 @@ import LoadingBar from '../../../components/basic/loading-bar'
 import EmptyState from '../../../components/empty-state'
 import CreateProposalButton from '../../../components/create-proposal-button'
 import Select from '../../../components/basic/select'
-import { Period } from '../../../utils/period'
+import { Phase } from '../../../utils/phase'
 import useGroup from '../../../hooks/use-group'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['entry', 'group']>()
-  const [period, setPeriod] = useState<Period | 'All'>('All')
+  const [phase, setPhase] = useState<Phase | 'All'>('All')
   const { data, fetchNextPage, hasNextPage, isLoading } =
     trpc.proposal.list.useInfiniteQuery(
       {
         entry: query.entry,
         group: query.group,
-        period: period === 'All' ? undefined : period,
+        phase: phase === 'All' ? undefined : phase,
       },
       {
         enabled: !!query.entry && !!query.group,
@@ -48,18 +48,18 @@ export default function GroupIndexPage() {
       group?.extension.type === 'grant'
         ? [
             'All',
-            Period.CONFIRMING,
-            Period.PENDING,
-            Period.PROPOSING,
-            Period.VOTING,
-            Period.ENDED,
+            Phase.CONFIRMING,
+            Phase.ANNOUNCING,
+            Phase.PROPOSING,
+            Phase.VOTING,
+            Phase.ENDED,
           ]
         : [
             'All',
-            Period.CONFIRMING,
-            Period.PENDING,
-            Period.VOTING,
-            Period.ENDED,
+            Phase.CONFIRMING,
+            Phase.ANNOUNCING,
+            Phase.VOTING,
+            Phase.ENDED,
           ],
     [group?.extension.type],
   )
@@ -71,8 +71,8 @@ export default function GroupIndexPage() {
         <div className="my-5 flex justify-between">
           <Select
             options={options}
-            value={period}
-            onChange={(p) => setPeriod(p as Period | 'All')}
+            value={phase}
+            onChange={(p) => setPhase(p as Phase | 'All')}
           />
           <CreateProposalButton
             entry={query.entry}

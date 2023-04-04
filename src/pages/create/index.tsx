@@ -13,6 +13,7 @@ import { trpc } from '../../utils/trpc'
 import ConnectButton from '../../components/connect-button'
 import TextInput from '../../components/basic/text-input'
 import TextButton from '../../components/basic/text-button'
+import Button from '../../components/basic/button'
 
 export default function CreateCommunityPage() {
   const router = useRouter()
@@ -44,26 +45,11 @@ export default function CreateCommunityPage() {
     getScrollElement: () => parentRef.current,
     estimateSize: () => 40,
   })
-  const register = useMemo(
-    () => (
-      <TextButton
-        secondary
-        href={
-          isTestnet
-            ? 'https://test2f7a872b.did.id/explorer'
-            : 'https://app.did.id/explorer'
-        }
-      >
-        Register →
-      </TextButton>
-    ),
-    [],
-  )
 
   return (
     <>
       <Head>
-        <title>{`New community - ${documentTitle}`}</title>
+        <title>{`Import community - ${documentTitle}`}</title>
       </Head>
       <LoadingBar
         loading={isLoading || (!!dids?.length && isExistencesLoading)}
@@ -72,23 +58,23 @@ export default function CreateCommunityPage() {
         <div className="pt-8 sm:px-6 sm:pt-16">
           <div className="mx-auto text-center">
             <h2 className="text-4xl font-bold tracking-tight text-gray-900">
-              Create a community
+              Import your community
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">
-              to hear valuable voices from your community members
+              to hear the real voices from your community members
             </p>
             <div className="mt-8 flex flex-col items-center space-y-6">
               {account ? (
                 didOptions?.length ? (
                   <>
-                    <div>
+                    <div className="sm:min-w-[500px]">
                       <span className="mb-1 block text-sm font-medium text-gray-700">
-                        Select a DID as your community entry
+                        Select a .bit as your community entry on Voty
                       </span>
                       <TextInput
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Type to filter"
+                        placeholder="Search"
                         className="rounded-b-none"
                       />
                       <div
@@ -150,11 +136,34 @@ export default function CreateCommunityPage() {
                       </div>
                     </div>
                     <span className="mb-1 block text-sm font-medium text-gray-400">
-                      or {register}
+                      or&nbsp;
+                      <TextButton
+                        secondary
+                        href={
+                          isTestnet
+                            ? 'https://test2f7a872b.did.id/explorer'
+                            : 'https://app.did.id/explorer'
+                        }
+                      >
+                        Register a new .bit →
+                      </TextButton>
                     </span>
                   </>
                 ) : (
-                  register
+                  <>
+                    <p className="text-sm font-medium text-gray-700">
+                      You need a .bit as your community entry
+                    </p>
+                    <a
+                      href={
+                        isTestnet
+                          ? 'https://test2f7a872b.did.id/explorer'
+                          : 'https://app.did.id/explorer'
+                      }
+                    >
+                      <Button primary>Register →</Button>
+                    </a>
+                  </>
                 )
               ) : (
                 <ConnectButton />

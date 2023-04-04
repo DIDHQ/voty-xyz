@@ -16,6 +16,7 @@ import Button from './basic/button'
 import useIsManager from '../hooks/use-is-manager'
 import { previewCommunityAtom } from '../utils/atoms'
 import { Preview } from '../utils/types'
+import { domain } from '../utils/constants'
 
 const AvatarInput = dynamic(() => import('./basic/avatar-input'), {
   ssr: false,
@@ -48,7 +49,11 @@ export default function CommunityForm(props: {
 
   return (
     <Form
-      title={`${isNewCommunity ? 'New' : 'Edit'} community of ${props.author}`}
+      title={
+        isNewCommunity
+          ? 'Import your community'
+          : `Edit community of ${props.author}`
+      }
       className={clsx('pt-8', props.className)}
     >
       <FormSection>
@@ -69,18 +74,25 @@ export default function CommunityForm(props: {
             </FormItem>
           </GridItem6>
           <GridItem6>
-            <FormItem label="Name" error={errors.name?.message}>
+            <FormItem label="Community name" error={errors.name?.message}>
               <TextInput
                 {...register('name')}
+                placeholder="e.g. Bankless DAO"
                 error={!!errors.name?.message}
                 disabled={!isManager}
               />
             </FormItem>
           </GridItem6>
           <GridItem6>
+            <FormItem label="Community entry">
+              <TextInput defaultValue={`${domain}/${props.author}`} disabled />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
             <FormItem label="Slogan" error={errors.extension?.slogan?.message}>
               <TextInput
                 {...register('extension.slogan')}
+                placeholder="e.g. Media and Social DAO onboarding 1 billion people to crypto"
                 error={!!errors.extension?.slogan?.message}
                 disabled={!isManager}
               />
@@ -88,20 +100,20 @@ export default function CommunityForm(props: {
           </GridItem6>
           <GridItem6>
             <FormItem
-              label="About"
-              description="Markdown is supported"
-              error={errors.extension?.about?.message}
+              label="Description"
+              description="Provide a detailed description of your community to leave a lasting impression on people. Markdown is supported"
+              error={errors.extension?.description?.message}
             >
               <Textarea
-                {...register('extension.about')}
-                error={!!errors.extension?.about?.message}
+                {...register('extension.description')}
+                error={!!errors.extension?.description?.message}
                 disabled={!isManager}
               />
             </FormItem>
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Links">
+      <FormSection title="Links (optional)">
         <Grid6>
           <GridItem6>
             <FormItem

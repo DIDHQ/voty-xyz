@@ -21,7 +21,7 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import TextButton from './basic/text-button'
 import { Form, FormItem, FormSection } from './basic/form'
-import { Grid6, GridItem3, GridItem6 } from './basic/grid'
+import { Grid6, GridItem2, GridItem3, GridItem6 } from './basic/grid'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import useStatus from '../hooks/use-status'
 import { Community } from '../utils/schemas/community'
@@ -177,11 +177,54 @@ export default function ProposalForm(props: {
   )
 
   return (
-    <Form title={`New ${type || ''}`} className={props.className}>
-      <FormSection>
-        <Grid6 className="mt-6">
+    <Form
+      title={`New ${type || ''}${
+        props.group?.name ? ` for ${props.group.name}` : ''
+      }`}
+      className={props.className}
+    >
+      <FormSection title="Proposer" description="Author of the proposal">
+        <Grid6>
+          <GridItem2>
+            <FormItem>
+              <DidCombobox
+                top
+                options={didOptions}
+                value={did}
+                onChange={setDid}
+                onClick={connect}
+              />
+              {didOptions?.length === 0 && props.group ? (
+                <Slide
+                  title={`Rules of ${props.group.name}`}
+                  trigger={({ handleOpen }) => (
+                    <TextButton secondary onClick={handleOpen}>
+                      Why I&#39;m not eligible to&nbsp;
+                      {type === 'round' ? 'invest' : 'propose'}
+                    </TextButton>
+                  )}
+                >
+                  {() =>
+                    props.group ? (
+                      <RulesView
+                        entry={props.community?.entry.did}
+                        group={props.group}
+                      />
+                    ) : null
+                  }
+                </Slide>
+              ) : null}
+            </FormItem>
+          </GridItem2>
+        </Grid6>
+      </FormSection>
+      <FormSection
+        title="Proposal"
+        description="Proposals that include a concise title and detailed content are more likely to capture member's attention"
+      >
+        <Grid6>
           <GridItem6>
-            <FormItem label="Title" error={errors.title?.message}>
+            <FormItem label="Proposal title" error={errors.title?.message}>
               <TextInput
                 {...register('title')}
                 disabled={disabled}
@@ -191,7 +234,7 @@ export default function ProposalForm(props: {
           </GridItem6>
           <GridItem6>
             <FormItem
-              label="Content"
+              label="Proposal details"
               description="Markdown is supported"
               error={errors.extension?.content?.message}
             >
@@ -262,17 +305,6 @@ export default function ProposalForm(props: {
               <GridItem6>
                 <FormItem
                   label="Options"
-                  description={
-                    <TextButton
-                      secondary
-                      disabled={disabled}
-                      onClick={() => {
-                        setValue('options', [...options, ''])
-                      }}
-                    >
-                      Add
-                    </TextButton>
-                  }
                   error={
                     errors.options?.message ||
                     errors.options?.find?.((option) => option?.message)?.message
@@ -309,6 +341,16 @@ export default function ProposalForm(props: {
                       </div>
                     ))}
                   </div>
+                  {disabled ? null : (
+                    <Button
+                      onClick={() => {
+                        setValue('options', [...options, ''])
+                      }}
+                      className="mt-4"
+                    >
+                      Add
+                    </Button>
+                  )}
                 </FormItem>
               </GridItem6>
             </>
@@ -316,38 +358,6 @@ export default function ProposalForm(props: {
         </Grid6>
       </FormSection>
       <div className="flex w-full flex-col items-end space-y-6">
-        <div className="w-full flex-1 sm:w-64 sm:flex-none">
-          <DidCombobox
-            top
-            label={`Select a DID as ${
-              type === 'round' ? 'investor' : 'proposer'
-            }`}
-            options={didOptions}
-            value={did}
-            onChange={setDid}
-            onClick={connect}
-          />
-          {didOptions?.length === 0 && props.group ? (
-            <Slide
-              title={`Rules of ${props.group.name}`}
-              trigger={({ handleOpen }) => (
-                <TextButton secondary onClick={handleOpen}>
-                  Why I&#39;m not eligible to&nbsp;
-                  {type === 'round' ? 'invest' : 'propose'}
-                </TextButton>
-              )}
-            >
-              {() =>
-                props.group ? (
-                  <RulesView
-                    entry={props.community?.entry.did}
-                    group={props.group}
-                  />
-                ) : null
-              }
-            </Slide>
-          ) : null}
-        </div>
         <Button
           primary
           icon={EyeIcon}

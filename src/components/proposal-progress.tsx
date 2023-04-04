@@ -2,21 +2,24 @@ import useStatus from '../hooks/use-status'
 import { Group } from '../utils/schemas/group'
 import { formatTime } from '../utils/time'
 import { DetailList, DetailItem } from './basic/detail'
-import ProposalPeriodText from './proposal-period-text'
+import ProposalPhaseText from './proposal-phase-text'
 
-export default function ProposalSchedule(props: {
+export default function ProposalProgress(props: {
   proposal?: string
   duration?: Group['duration']
 }) {
   const { data: status } = useStatus(props.proposal)
 
   return (
-    <DetailList title="Schedule">
-      <DetailItem title="Period" className="overflow-y-visible">
-        <ProposalPeriodText
+    <DetailList title="Progress">
+      <DetailItem title="Current phase" className="overflow-y-visible">
+        <ProposalPhaseText
           proposal={props.proposal}
           duration={props.duration}
         />
+      </DetailItem>
+      <DetailItem title="Created at">
+        {status?.timestamp ? formatTime(status.timestamp) : '...'}
       </DetailItem>
       <DetailItem
         title={
@@ -27,7 +30,7 @@ export default function ProposalSchedule(props: {
       >
         {status?.timestamp && props.duration
           ? formatTime(
-              status.timestamp.getTime() + props.duration.pending * 1000,
+              status.timestamp.getTime() + props.duration.announcing * 1000,
             )
           : '...'}
       </DetailItem>
@@ -36,7 +39,7 @@ export default function ProposalSchedule(props: {
           {status?.timestamp && props.duration
             ? formatTime(
                 status.timestamp.getTime() +
-                  (props.duration.pending + props.duration.adding_option) *
+                  (props.duration.announcing + props.duration.adding_option) *
                     1000,
               )
             : '...'}
@@ -46,7 +49,7 @@ export default function ProposalSchedule(props: {
         {status?.timestamp && props.duration
           ? formatTime(
               status.timestamp.getTime() +
-                (props.duration.pending +
+                (props.duration.announcing +
                   ('adding_option' in props.duration
                     ? props.duration.adding_option
                     : 0) +

@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
-import { Period } from '../utils/period'
+import { Phase } from '../utils/phase'
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/authorship'
 import { Group } from '../utils/schemas/group'
@@ -16,27 +16,27 @@ export default function ProposalCard(props: {
     votes: number
     options_count: number
     ts: Date
-    ts_pending: Date | null
+    ts_announcing: Date | null
     ts_adding_option: Date | null
     ts_voting: Date | null
   }
 }) {
   const group = props.proposal.g
   const now = useMemo(() => Date.now(), [])
-  const period = useMemo(
+  const phase = useMemo(
     () =>
-      props.proposal.ts_pending && props.proposal.ts_voting
-        ? now < props.proposal.ts_pending.getTime()
-          ? Period.PENDING
+      props.proposal.ts_announcing && props.proposal.ts_voting
+        ? now < props.proposal.ts_announcing.getTime()
+          ? Phase.ANNOUNCING
           : props.proposal.ts_adding_option &&
             now < props.proposal.ts_adding_option.getTime()
-          ? Period.PROPOSING
+          ? Phase.PROPOSING
           : now < props.proposal.ts_voting.getTime()
-          ? Period.VOTING
-          : Period.ENDED
-        : Period.CONFIRMING,
+          ? Phase.VOTING
+          : Phase.ENDED
+        : Phase.CONFIRMING,
     [
-      props.proposal.ts_pending,
+      props.proposal.ts_announcing,
       props.proposal.ts_voting,
       props.proposal.ts_adding_option,
       now,
@@ -82,51 +82,51 @@ export default function ProposalCard(props: {
           )}
         </div>
         <div className="w-0 flex-1 px-4 py-2">
-          {period === Period.CONFIRMING ? (
+          {phase === Phase.CONFIRMING ? (
             <>
               <p className="truncate">Transaction confirming</p>
               <p className="truncate text-gray-400">
-                <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in about 5 minutes
               </p>
             </>
-          ) : period === Period.PENDING && props.proposal.ts_pending ? (
+          ) : phase === Phase.ANNOUNCING && props.proposal.ts_announcing ? (
             <>
               <p>
                 {group.extension.type === 'grant' ? 'Proposing' : 'Voting'}
                 &nbsp; starts
               </p>
               <p className="text-gray-400">
-                <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
-                {formatDurationMs(props.proposal.ts_pending.getTime() - now)}
+                {formatDurationMs(props.proposal.ts_announcing.getTime() - now)}
               </p>
             </>
-          ) : period === Period.PROPOSING && props.proposal.ts_adding_option ? (
+          ) : phase === Phase.PROPOSING && props.proposal.ts_adding_option ? (
             <>
               <p>Proposing ends</p>
               <p className="text-gray-400">
-                <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
                 {formatDurationMs(
                   props.proposal.ts_adding_option.getTime() - now,
                 )}
               </p>
             </>
-          ) : period === Period.VOTING && props.proposal.ts_voting ? (
+          ) : phase === Phase.VOTING && props.proposal.ts_voting ? (
             <>
               <p>Voting ends</p>
               <p className="text-gray-400">
-                <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
                 {formatDurationMs(props.proposal.ts_voting.getTime() - now)}
               </p>
             </>
-          ) : period === Period.ENDED && props.proposal.ts_voting ? (
+          ) : phase === Phase.ENDED && props.proposal.ts_voting ? (
             <>
               <p>Voting ended</p>
               <p className="text-gray-400">
-                <PeriodDot value={period} className="mb-0.5 mr-1.5" />
+                <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 {formatDurationMs(props.proposal.ts_voting.getTime() - now)}
                 &nbsp;ago
               </p>
@@ -146,18 +146,18 @@ export default function ProposalCard(props: {
   )
 }
 
-function PeriodDot(props: { value?: Period; className?: string }) {
+function PhaseDot(props: { value?: Phase; className?: string }) {
   return (
     <svg
       className={clsx(
         'mb-0.5 mr-1.5 inline h-2 w-2',
         props.value
           ? {
-              [Period.CONFIRMING]: 'text-slate-400',
-              [Period.PENDING]: 'text-amber-400',
-              [Period.PROPOSING]: 'text-sky-400',
-              [Period.VOTING]: 'text-lime-400',
-              [Period.ENDED]: 'text-stone-400',
+              [Phase.CONFIRMING]: 'text-slate-400',
+              [Phase.ANNOUNCING]: 'text-amber-400',
+              [Phase.PROPOSING]: 'text-sky-400',
+              [Phase.VOTING]: 'text-lime-400',
+              [Phase.ENDED]: 'text-stone-400',
             }[props.value]
           : undefined,
         props.className,

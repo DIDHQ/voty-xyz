@@ -25,6 +25,10 @@ export default function PreviewBar() {
   const [previewOption, setPreviewOption] = useAtom(previewOptionAtom)
   const document = previewCommunity || previewProposal || previewOption
   const preview = document?.preview
+  const { data: community } = trpc.community.getByEntry.useQuery(
+    { entry: previewCommunity?.preview.author },
+    { enabled: !!previewCommunity?.preview.author },
+  )
   useEffect(() => {
     function handler(url: string) {
       if (preview && url !== preview.from && url !== preview.to) {
@@ -103,7 +107,7 @@ export default function PreviewBar() {
               loading={handleSubmit.isLoading}
               onClick={() => (document ? handleSubmit.mutate(document) : null)}
             >
-              Submit
+              {previewCommunity && community === null ? 'Import' : 'Submit'}
             </Button>
           </div>
         </footer>

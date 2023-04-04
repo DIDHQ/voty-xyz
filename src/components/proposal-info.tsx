@@ -1,10 +1,9 @@
 import clsx from 'clsx'
-import dynamic from 'next/dynamic'
 
 import useGroup from '../hooks/use-group'
 import {
   coinTypeExplorers,
-  coinTypeNames,
+  commonCoinTypes,
   previewPermalink,
 } from '../utils/constants'
 import { Option } from '../utils/schemas/option'
@@ -14,10 +13,10 @@ import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import Markdown from './basic/markdown'
 import TextButton from './basic/text-button'
-import ProposalSchedule from './proposal-schedule'
+import ProposalProgress from './proposal-progress'
 import { PreviewPermalink } from '../utils/types'
-
-const StatusIcon = dynamic(() => import('./status-icon'), { ssr: false })
+import { permalink2Explorer } from '../utils/permalink'
+import { formatNumber } from '../utils/number'
 
 export default function ProposalInfo(props: {
   proposal?: Proposal & {
@@ -38,20 +37,45 @@ export default function ProposalInfo(props: {
   return (
     <div
       className={clsx(
-        'relative mt-[-1px] w-full shrink-0 sm:sticky sm:top-18 sm:w-80 sm:pt-8',
+        'relative w-full shrink-0 sm:mt-8 sm:w-80',
         props.className,
       )}
     >
-      {props.proposal?.permalink === previewPermalink ? null : (
-        <StatusIcon
-          permalink={props.proposal?.permalink}
-          className="absolute right-4 top-4 sm:top-12"
-        />
-      )}
       <div className="space-y-6 rounded-md border border-gray-200 p-6">
+        <ProposalProgress
+          proposal={props.proposal?.permalink}
+          duration={group?.duration}
+        />
+        {group?.extension.type === 'grant' ? (
+          <DetailList title="Funding">
+            <Article small className="pt-2">
+              <ul>
+                {props.proposal?.extension?.funding?.map((funding, index) => (
+                  <li key={index}>
+                    {funding[0]}&nbsp;
+                    <span className="text-gray-400">X</span>&nbsp;
+                    {funding[1]}
+                  </li>
+                ))}
+              </ul>
+            </Article>
+          </DetailList>
+        ) : (
+          <DetailList title="Criteria for approval">
+            <Article small className="pt-2">
+              <Markdown>{group?.extension.criteria_for_approval}</Markdown>
+            </Article>
+          </DetailList>
+        )}
         <DetailList title="Information">
           <DetailItem title="Community" className="truncate whitespace-nowrap">
-            {community?.name || '...'}
+            {community ? (
+              <TextButton href={`/${community.authorship.author}`}>
+                {community.name}
+              </TextButton>
+            ) : (
+              '...'
+            )}
           </DetailItem>
           <DetailItem
             title={
@@ -63,7 +87,13 @@ export default function ProposalInfo(props: {
             }
             className="truncate whitespace-nowrap"
           >
-            {group?.name || '...'}
+            {group && community ? (
+              <TextButton href={`/${community.authorship.author}/${group.id}`}>
+                {group.name}
+              </TextButton>
+            ) : (
+              '...'
+            )}
           </DetailItem>
           <DetailItem
             title={
@@ -83,49 +113,32 @@ export default function ProposalInfo(props: {
             </DetailItem>
           ) : null}
         </DetailList>
-        <ProposalSchedule
-          proposal={props.proposal?.permalink}
-          duration={group?.duration}
-        />
         {props.proposal?.snapshots ? (
-          <DetailList title="Snapshots">
-            {Object.entries(props.proposal.snapshots).map(
-              ([coinType, snapshot]) => (
-                <DetailItem
-                  key={coinType}
-                  title={coinTypeNames[parseInt(coinType)] || coinType}
-                >
-                  <TextButton
-                    href={`${coinTypeExplorers[parseInt(coinType)]}${snapshot}`}
-                  >
-                    {snapshot}
-                  </TextButton>
-                </DetailItem>
-              ),
-            )}
+          <DetailList title="On-chain verification">
+            <DetailItem title="Snapshot">
+              <TextButton
+                href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
+                  props.proposal.snapshots[commonCoinTypes.CKB]
+                }`}
+              >
+                {formatNumber(
+                  parseInt(props.proposal.snapshots[commonCoinTypes.CKB], 10),
+                )}
+              </TextButton>
+            </DetailItem>
+            <DetailItem title="Arweave TX">
+              <TextButton
+                href={
+                  props.proposal?.permalink === previewPermalink
+                    ? undefined
+                    : permalink2Explorer(props.proposal?.permalink)
+                }
+              >
+                {props.proposal?.permalink.substring(40) || '...'}
+              </TextButton>
+            </DetailItem>
           </DetailList>
         ) : null}
-        {group?.extension.type === 'grant' ? (
-          <DetailList title="Funding">
-            <Article small className="pt-2">
-              <ul>
-                {props.proposal?.extension?.funding?.map((funding, index) => (
-                  <li key={index}>
-                    {funding[0]}&nbsp;
-                    <span className="text-gray-400">X</span>&nbsp;
-                    {funding[1]}
-                  </li>
-                ))}
-              </ul>
-            </Article>
-          </DetailList>
-        ) : (
-          <DetailList title="Terms and conditions">
-            <Article small className="pt-2">
-              <Markdown>{group?.extension.terms_and_conditions}</Markdown>
-            </Article>
-          </DetailList>
-        )}
       </div>
     </div>
   )

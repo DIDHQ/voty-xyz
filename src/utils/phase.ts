@@ -1,42 +1,42 @@
 import type { Group } from './schemas/group'
 
-export enum Period {
+export enum Phase {
   CONFIRMING = 'Confirming',
-  PENDING = 'Pending',
+  ANNOUNCING = 'Announcing',
   PROPOSING = 'Proposing',
   VOTING = 'Voting',
   ENDED = 'Ended',
 }
 
-export function getPeriod(
+export function getPhase(
   now: Date,
   timestamp?: Date,
   duration?: Group['duration'],
-): Period {
+): Phase {
   if (!timestamp || !duration) {
-    return Period.CONFIRMING
+    return Phase.CONFIRMING
   }
-  if (now.getTime() < timestamp.getTime() + duration.pending * 1000) {
-    return Period.PENDING
+  if (now.getTime() < timestamp.getTime() + duration.announcing * 1000) {
+    return Phase.ANNOUNCING
   }
   if (
     now.getTime() <
     timestamp.getTime() +
-      (duration.pending +
+      (duration.announcing +
         ('adding_option' in duration ? duration.adding_option : 0)) *
         1000
   ) {
-    return Period.PROPOSING
+    return Phase.PROPOSING
   }
   if (
     now.getTime() <
     timestamp.getTime() +
-      (duration.pending +
+      (duration.announcing +
         ('adding_option' in duration ? duration.adding_option : 0) +
         duration.voting) *
         1000
   ) {
-    return Period.VOTING
+    return Phase.VOTING
   }
-  return Period.ENDED
+  return Phase.ENDED
 }

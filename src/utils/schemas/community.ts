@@ -16,7 +16,7 @@ export const communitySchema = z.object({
   extension: z.object({
     logo: z.string(),
     slogan: z.string().min(1, 'Required').max(160, 'Maximum 160 characters'),
-    about: z.string().optional(),
+    description: z.string().optional(),
     website: z.string().optional(),
     twitter: z.string().optional(),
     discord: z.string().optional(),

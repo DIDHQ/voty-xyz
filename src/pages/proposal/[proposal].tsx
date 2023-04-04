@@ -23,7 +23,7 @@ import { Proposal } from '../../utils/schemas/proposal'
 export default function ProposalPage() {
   const query = useRouterQuery<['proposal']>()
   const previewProposal = useAtomValue(previewProposalAtom)
-  const { data, isLoading } = trpc.proposal.getByPermalink.useQuery(
+  const { data, isLoading, refetch } = trpc.proposal.getByPermalink.useQuery(
     { permalink: query.proposal },
     { enabled: !!query.proposal, refetchOnWindowFocus: false },
   )
@@ -73,8 +73,9 @@ export default function ProposalPage() {
     [community?.name, proposal?.title, group?.name],
   )
   const handleSuccess = useCallback(() => {
+    refetch()
     refetchList()
-  }, [refetchList])
+  }, [refetch, refetchList])
 
   return (
     <>
@@ -115,24 +116,24 @@ export default function ProposalPage() {
               </h2>
             ) : null}
             {votes?.length ? (
-              <table className="my-6 w-full border-separate border-spacing-0 rounded-md border border-gray-200">
+              <table className="my-6 w-full border-separate border-spacing-0">
                 <thead>
                   <tr>
                     <th
                       scope="col"
-                      className="sticky top-18 rounded-t-md border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="rounded-t-md border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       DID
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-18 border-x border-b border-gray-200 bg-white/80 px-3 py-2 text-left text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="border-b border-gray-200 bg-white/80 px-3 py-2 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       Choice
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-18 rounded-t-md border-b border-gray-200 bg-white/80 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
+                      className="rounded-t-md border-b border-gray-200 bg-white/80 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
                     >
                       Power
                     </th>
@@ -152,7 +153,7 @@ export default function ProposalPage() {
                       <td
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-x border-gray-200 px-3 py-2 text-sm text-gray-500',
+                          'truncate whitespace-nowrap border-gray-200 px-3 py-2 text-sm text-gray-500',
                         )}
                       >
                         {proposal

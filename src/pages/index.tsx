@@ -34,9 +34,7 @@ export default function IndexPage() {
       <SubscriptionList />
       {account ? (
         <Link href="/create" className="float-right mt-6 sm:mt-8">
-          <Button primary icon={PlusIcon}>
-            Community
-          </Button>
+          <Button primary>Import Community</Button>
         </Link>
       ) : null}
       <h2 className="mt-7 text-xl font-semibold sm:mt-9">Communities</h2>

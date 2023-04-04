@@ -68,7 +68,7 @@ export const subscriptionRouter = router({
           .filter((community) => community)
           .map(({ permalink, data }) => {
             try {
-              return { ...data, permalink }
+              return { ...schema.parse(data), permalink }
             } catch {
               return
             }

@@ -18,9 +18,19 @@ export default function SubscriptionButton(props: {
     { subscriber: { type: 'eth_personal_sign', address: account?.address! } },
     { enabled: !!account?.address },
   )
-  const { data, mutateAsync, isLoading, isSuccess, isError, error } =
-    trpc.subscription.set.useMutation()
-  const { data: subscribed = data, refetch } = trpc.subscription.get.useQuery(
+  const {
+    data,
+    mutateAsync,
+    isLoading: isSetting,
+    isSuccess,
+    isError,
+    error,
+  } = trpc.subscription.set.useMutation()
+  const {
+    data: subscribed = data,
+    refetch,
+    isFetching,
+  } = trpc.subscription.get.useQuery(
     {
       subscriber: { type: 'eth_personal_sign', address: account?.address! },
       entry: props.entry,
@@ -84,7 +94,7 @@ export default function SubscriptionButton(props: {
       {subscribed ? (
         <TextButton
           primary
-          disabled={isLoading || handleUnsubscribe.isLoading}
+          disabled={isFetching || isSetting || handleUnsubscribe.isLoading}
           onClick={handleUnsubscribe.mutate}
           className={props.className}
         >
@@ -93,7 +103,7 @@ export default function SubscriptionButton(props: {
       ) : (
         <TextButton
           primary
-          disabled={isLoading || handleSubscribe.isLoading}
+          disabled={isFetching || isSetting || handleSubscribe.isLoading}
           onClick={handleSubscribe.mutate}
           className={props.className}
         >

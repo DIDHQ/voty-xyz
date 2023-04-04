@@ -37,16 +37,6 @@ export default function GroupRulesPage() {
       <LoadingBar loading={isLoading} />
       <CommunityLayout>
         <GroupLayout>
-          {isManager && !previewCommunity ? (
-            <Link
-              href={`/${query.entry}/${query.group}/settings`}
-              className="float-right mt-6"
-            >
-              <Button icon={PencilIcon} primary>
-                Edit
-              </Button>
-            </Link>
-          ) : null}
           <div className="mt-6 flex items-center">
             {emoji ? (
               <span
@@ -79,6 +69,14 @@ export default function GroupRulesPage() {
           ) : null}
           {group ? (
             <RulesView entry={query.entry} group={group} className="mt-6" />
+          ) : null}
+          {isManager && !previewCommunity ? (
+            <Link
+              href={`/${query.entry}/${query.group}/settings`}
+              className="mt-6 block w-fit sm:mt-8"
+            >
+              <Button icon={PencilIcon}>Edit</Button>
+            </Link>
           ) : null}
         </GroupLayout>
       </CommunityLayout>
