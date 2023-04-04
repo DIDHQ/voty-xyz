@@ -177,7 +177,12 @@ export default function ProposalForm(props: {
   )
 
   return (
-    <Form title={`New ${type || ''}`} className={props.className}>
+    <Form
+      title={`New ${type || ''}${
+        props.group?.name ? ` for ${props.group.name}` : ''
+      }`}
+      className={props.className}
+    >
       <FormSection title="Proposer" description="Author of the proposal">
         <Grid6>
           <GridItem2>
@@ -219,7 +224,7 @@ export default function ProposalForm(props: {
       >
         <Grid6>
           <GridItem6>
-            <FormItem label="Title" error={errors.title?.message}>
+            <FormItem label="Proposal title" error={errors.title?.message}>
               <TextInput
                 {...register('title')}
                 disabled={disabled}
@@ -229,7 +234,7 @@ export default function ProposalForm(props: {
           </GridItem6>
           <GridItem6>
             <FormItem
-              label="Content"
+              label="Proposal details"
               description="Markdown is supported"
               error={errors.extension?.content?.message}
             >
