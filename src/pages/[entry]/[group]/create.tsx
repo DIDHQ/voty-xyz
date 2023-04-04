@@ -17,25 +17,15 @@ export default function CreateProposalPage() {
     { enabled: !!query.entry },
   )
   const group = useGroup(community, query.group)
-  const type = group
-    ? group.extension.type === 'grant'
-      ? 'round'
-      : 'proposal'
-    : undefined
   const initialValue = useMemo<Partial<Proposal> | undefined>(
-    () =>
-      type === 'round'
-        ? { voting_type: 'single', extension: { funding: [['', 5]] } }
-        : type === 'proposal'
-        ? { voting_type: 'single', options: ['', ''] }
-        : undefined,
-    [type],
+    () => ({ voting_type: 'single', options: ['', ''] }),
+    [],
   )
 
   return (
     <>
       <Head>
-        <title>{`New ${type || ''} - ${documentTitle}`}</title>
+        <title>{`New proposal - ${documentTitle}`}</title>
       </Head>
       <LoadingBar loading={isLoading} />
       <div className="w-full">

@@ -20,7 +20,7 @@ export default function CreateProposalButton(props: {
       className={props.className}
     >
       <Button primary icon={PlusIcon}>
-        {props.group.extension.type === 'grant' ? 'Round' : 'Proposal'}
+        Proposal
       </Button>
     </Link>
   ) : (
@@ -29,11 +29,7 @@ export default function CreateProposalButton(props: {
       text="Waiting for community changes to be confirmed (in about 5 minutes)"
     >
       <Button primary disabled icon={PlusIcon}>
-        {props.group
-          ? props.group.extension.type === 'grant'
-            ? 'Round'
-            : 'Proposal'
-          : null}
+        Proposal
       </Button>
     </Tooltip>
   )

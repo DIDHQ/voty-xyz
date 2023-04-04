@@ -26,7 +26,7 @@ import useSignDocument from '../hooks/use-sign-document'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
 import useIsManager from '../hooks/use-is-manager'
-import { Workgroup } from '../utils/schemas/group'
+import { Group } from '../utils/schemas/group'
 import { previewCommunityAtom } from '../utils/atoms'
 import { Preview } from '../utils/types'
 
@@ -87,7 +87,7 @@ export default function WorkgroupForm(props: {
   const isManager = useIsManager(props.author)
   const groupErrors = errors.groups?.[groupIndex] as Merge<
     FieldError,
-    FieldErrorsImpl<NonNullable<Workgroup>>
+    FieldErrorsImpl<NonNullable<Group>>
   >
 
   return (

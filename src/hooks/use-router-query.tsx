@@ -16,12 +16,6 @@ export default function useRouterQuery<S extends string[] = []>() {
           router.query.proposal !== previewPermalink
             ? id2Permalink(router.query.proposal)
             : undefined,
-        option:
-          typeof router.query.option === 'string' &&
-          router.query.option &&
-          router.query.option !== previewPermalink
-            ? id2Permalink(router.query.option)
-            : undefined,
       } as Partial<{
         [key in S[number]]: string
       }>),

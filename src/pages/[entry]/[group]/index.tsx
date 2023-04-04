@@ -44,24 +44,14 @@ export default function GroupIndexPage() {
     }
   }, [fetchNextPage, hasNextPage, inView])
   const options = useMemo(
-    () =>
-      group?.extension.type === 'grant'
-        ? [
-            'All',
-            Phase.CONFIRMING,
-            Phase.ANNOUNCING,
-            Phase.PROPOSING,
-            Phase.VOTING,
-            Phase.ENDED,
-          ]
-        : [
-            'All',
-            Phase.CONFIRMING,
-            Phase.ANNOUNCING,
-            Phase.VOTING,
-            Phase.ENDED,
-          ],
-    [group?.extension.type],
+    () => [
+      'All',
+      Phase.CONFIRMING,
+      Phase.ANNOUNCING,
+      Phase.VOTING,
+      Phase.ENDED,
+    ],
+    [],
   )
 
   return (
@@ -81,16 +71,7 @@ export default function GroupIndexPage() {
           />
         </div>
         {proposals?.length === 0 ? (
-          <EmptyState
-            title={
-              group
-                ? group.extension.type === 'grant'
-                  ? 'No rounds'
-                  : 'No proposals'
-                : ''
-            }
-            className="mt-24"
-          />
+          <EmptyState title="No proposals" className="mt-24" />
         ) : (
           <ul role="list" className="mt-5 space-y-5">
             {proposals?.map((proposal) => (

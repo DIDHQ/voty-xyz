@@ -8,11 +8,11 @@ import {
 } from 'react-hook-form'
 
 import { Community } from '../utils/schemas/community'
-import { Grant } from '../utils/schemas/group'
+import { Group } from '../utils/schemas/group'
 import Textarea from './basic/textarea'
 
 export default function BooleanSetsBlock(props: {
-  name: 'proposing' | 'adding_option'
+  name: 'proposing'
   entry: string
   groupIndex: number
   disabled?: boolean
@@ -29,7 +29,7 @@ export default function BooleanSetsBlock(props: {
 }
 
 function BooleanUnitBlock(props: {
-  name: 'proposing' | 'adding_option'
+  name: 'proposing'
   entry: string
   groupIndex: number
   index: number
@@ -42,7 +42,7 @@ function BooleanUnitBlock(props: {
   } = useFormContext<Community>()
   const groupErrors = errors.groups?.[props.groupIndex] as Merge<
     FieldError,
-    FieldErrorsImpl<NonNullable<Grant>>
+    FieldErrorsImpl<NonNullable<Group>>
   >
   const suffix =
     watch(

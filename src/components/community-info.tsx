@@ -3,7 +3,6 @@ import {
   GlobeAltIcon,
   BriefcaseIcon,
   DocumentTextIcon,
-  TrophyIcon,
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
@@ -152,67 +151,24 @@ export default function CommunityInfo(props: { className?: string }) {
               Workgroups
               {previewCommunity ? null : (
                 <CreateGroupButton
-                  type="workgroup"
                   entry={query.entry}
                   className="float-right"
                 />
               )}
             </h3>
             <div>
-              {community?.groups
-                ?.filter(({ extension: { type } }) => type === 'workgroup')
-                ?.map((group) => (
-                  <LinkListItem
-                    key={group.id}
-                    href={
-                      previewCommunity
-                        ? undefined
-                        : `/${query.entry}/${group.id}`
-                    }
-                    icon={
-                      group.extension.type === 'grant'
-                        ? TrophyIcon
-                        : BriefcaseIcon
-                    }
-                    current={query.group === group.id}
-                  >
-                    {group.name}
-                  </LinkListItem>
-                ))}
-            </div>
-          </div>
-          <div className="mt-6 w-full">
-            <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
-              Grants
-              {previewCommunity ? null : (
-                <CreateGroupButton
-                  type="grant"
-                  entry={query.entry}
-                  className="float-right"
-                />
-              )}
-            </h3>
-            <div>
-              {community?.groups
-                ?.filter(({ extension: { type } }) => type === 'grant')
-                ?.map((group) => (
-                  <LinkListItem
-                    key={group.id}
-                    href={
-                      previewCommunity
-                        ? undefined
-                        : `/${query.entry}/${group.id}`
-                    }
-                    icon={
-                      group.extension.type === 'grant'
-                        ? TrophyIcon
-                        : BriefcaseIcon
-                    }
-                    current={query.group === group.id}
-                  >
-                    {group.name}
-                  </LinkListItem>
-                ))}
+              {community?.groups?.map((group) => (
+                <LinkListItem
+                  key={group.id}
+                  href={
+                    previewCommunity ? undefined : `/${query.entry}/${group.id}`
+                  }
+                  icon={BriefcaseIcon}
+                  current={query.group === group.id}
+                >
+                  {group.name}
+                </LinkListItem>
+              ))}
             </div>
           </div>
           {externals.length ? (

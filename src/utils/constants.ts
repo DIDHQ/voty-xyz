@@ -80,7 +80,6 @@ export const coinTypeLogos: { [coinType: number]: string | undefined } = {
 export enum DataType {
   COMMUNITY = 'community',
   PROPOSAL = 'proposal',
-  OPTION = 'option',
   VOTE = 'vote',
 }
 
