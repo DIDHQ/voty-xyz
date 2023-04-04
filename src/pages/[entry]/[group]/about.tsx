@@ -17,7 +17,7 @@ import { previewCommunityAtom } from '../../../utils/atoms'
 import GroupAbout from '../../../components/group-about'
 import { extractStartEmoji } from '../../../utils/emoji'
 
-export default function GroupRulesPage() {
+export default function GroupAboutPage() {
   const query = useRouterQuery<['entry', 'group']>()
   const router = useRouter()
   const { data, isLoading } = trpc.community.getByEntry.useQuery(
