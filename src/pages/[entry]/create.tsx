@@ -1,6 +1,7 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { nanoid } from 'nanoid'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../hooks/use-router-query'
 import WorkgroupForm from '../../components/workgroup-form'
@@ -12,6 +13,7 @@ import TextButton from '../../components/basic/text-button'
 
 export default function CreateGroupPage() {
   const query = useRouterQuery<['entry']>()
+  const router = useRouter()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
@@ -60,6 +62,11 @@ export default function CreateGroupPage() {
         : undefined,
     [community, newGroup, query.entry],
   )
+  useEffect(() => {
+    if (community === null) {
+      router.push('/404')
+    }
+  }, [community, router])
 
   return (
     <>

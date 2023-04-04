@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
+import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import ProposalCard from '../../../components/proposal-card'
@@ -15,6 +16,7 @@ import useGroup from '../../../hooks/use-group'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['entry', 'group']>()
+  const router = useRouter()
   const [phase, setPhase] = useState<Phase | 'All'>('All')
   const { data, fetchNextPage, hasNextPage, isLoading } =
     trpc.proposal.list.useInfiniteQuery(
@@ -53,6 +55,11 @@ export default function GroupIndexPage() {
     ],
     [],
   )
+  useEffect(() => {
+    if (community === null || (community && !group)) {
+      router.push('/404')
+    }
+  }, [community, group, router])
 
   return (
     <CommunityLayout>

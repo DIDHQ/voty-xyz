@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import Link from 'next/link'
 import { PlusIcon } from '@heroicons/react/20/solid'
+import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../hooks/use-router-query'
 import ProposalCard from '../../components/proposal-card'
@@ -16,6 +17,7 @@ import { Phase } from '../../utils/phase'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['entry']>()
+  const router = useRouter()
   const [phase, setPhase] = useState<Phase | 'All'>('All')
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
@@ -51,6 +53,11 @@ export default function CommunityIndexPage() {
     ],
     [],
   )
+  useEffect(() => {
+    if (community === null) {
+      router.push('/404')
+    }
+  }, [community, router])
 
   return (
     <CommunityLayout>
