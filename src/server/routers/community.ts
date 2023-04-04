@@ -109,7 +109,7 @@ export const communityRouter = router({
             .map((entry) => {
               try {
                 return {
-                  ...communities[entry.community].data,
+                  ...schema.parse(communities[entry.community].data),
                   entry: { ...entry, ts: entry.ts.toString() },
                 }
               } catch {

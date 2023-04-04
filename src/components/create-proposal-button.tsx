@@ -26,7 +26,7 @@ export default function CreateProposalButton(props: {
   ) : (
     <Tooltip
       place="top"
-      text="Waiting for community changes confirming (in about 5 minutes)"
+      text="Waiting for community changes to be confirmed (in about 5 minutes)"
     >
       <Button primary disabled icon={PlusIcon}>
         {props.group
