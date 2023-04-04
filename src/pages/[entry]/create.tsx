@@ -9,10 +9,9 @@ import LoadingBar from '../../components/basic/loading-bar'
 import { documentTitle } from '../../utils/constants'
 import { Community } from '../../utils/schemas/community'
 import TextButton from '../../components/basic/text-button'
-import GrantForm from '../../components/grant-form'
 
 export default function CreateGroupPage() {
-  const query = useRouterQuery<['entry', 'type']>()
+  const query = useRouterQuery<['entry']>()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
@@ -25,84 +24,41 @@ export default function CreateGroupPage() {
             ...community,
             groups: [
               ...(community.groups || []),
-              query.type === 'grant'
-                ? {
-                    id: newGroup,
-                    name: '',
-                    permission: {
-                      proposing: {
-                        operation: 'or',
-                        operands: [
-                          {
-                            function: 'prefixes_dot_suffix_exact_match',
-                            arguments: [query.entry, []],
-                          },
-                        ],
+              {
+                id: newGroup,
+                name: '',
+                permission: {
+                  proposing: {
+                    operation: 'or',
+                    operands: [
+                      {
+                        function: 'prefixes_dot_suffix_exact_match',
+                        arguments: [query.entry, []],
                       },
-                      adding_option: {
-                        operation: 'or',
-                        operands: [
-                          {
-                            function: 'prefixes_dot_suffix_exact_match',
-                            arguments: [query.entry, []],
-                          },
-                        ],
-                      },
-                      voting: {
-                        operation: 'max',
-                        operands: [
-                          {
-                            function: 'prefixes_dot_suffix_fixed_power',
-                            arguments: [query.entry, [], '1'],
-                          },
-                        ],
-                      },
-                    },
-                    duration: {
-                      announcing: 86400,
-                      adding_option: 86400,
-                      voting: 86400,
-                    },
-                    extension: {
-                      type: 'grant',
-                    },
-                  }
-                : {
-                    id: newGroup,
-                    name: '',
-                    permission: {
-                      proposing: {
-                        operation: 'or',
-                        operands: [
-                          {
-                            function: 'prefixes_dot_suffix_exact_match',
-                            arguments: [query.entry, []],
-                          },
-                        ],
-                      },
-                      voting: {
-                        operation: 'max',
-                        operands: [
-                          {
-                            function: 'prefixes_dot_suffix_fixed_power',
-                            arguments: [query.entry, [], '1'],
-                          },
-                        ],
-                      },
-                    },
-                    duration: {
-                      announcing: 86400,
-                      voting: 86400,
-                    },
-                    extension: {
-                      type: 'workgroup',
-                      criteria_for_approval: '',
-                    },
+                    ],
                   },
+                  voting: {
+                    operation: 'max',
+                    operands: [
+                      {
+                        function: 'prefixes_dot_suffix_fixed_power',
+                        arguments: [query.entry, [], '1'],
+                      },
+                    ],
+                  },
+                },
+                duration: {
+                  announcing: 86400,
+                  voting: 86400,
+                },
+                extension: {
+                  criteria_for_approval: '',
+                },
+              },
             ],
           } satisfies Community)
         : undefined,
-    [community, newGroup, query.entry, query.type],
+    [community, newGroup, query.entry],
   )
 
   return (
@@ -116,33 +72,18 @@ export default function CreateGroupPage() {
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
         {query.entry ? (
-          query.type === 'grant' ? (
-            <GrantForm
-              author={query.entry}
-              initialValue={initialValue}
-              group={newGroup}
-              preview={{
-                from: `/${query.entry}/create`,
-                to: `/${query.entry}/${newGroup}/about`,
-                template: `You are creating grant on Voty\n\nhash:\n{sha256}`,
-                author: query.entry,
-              }}
-              className="pt-6 sm:pt-8"
-            />
-          ) : (
-            <WorkgroupForm
-              author={query.entry}
-              initialValue={initialValue}
-              group={newGroup}
-              preview={{
-                from: `/${query.entry}/create`,
-                to: `/${query.entry}/${newGroup}/about`,
-                template: `You are creating workgroup on Voty\n\nhash:\n{sha256}`,
-                author: query.entry,
-              }}
-              className="pt-6 sm:pt-8"
-            />
-          )
+          <WorkgroupForm
+            author={query.entry}
+            initialValue={initialValue}
+            group={newGroup}
+            preview={{
+              from: `/${query.entry}/create`,
+              to: `/${query.entry}/${newGroup}/about`,
+              template: `You are creating workgroup on Voty\n\nhash:\n{sha256}`,
+              author: query.entry,
+            }}
+            className="pt-6 sm:pt-8"
+          />
         ) : null}
       </div>
     </>

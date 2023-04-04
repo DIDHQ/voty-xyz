@@ -26,11 +26,7 @@ export default function GroupInfo(props: { className?: string }) {
   const tabs = useMemo(
     () => [
       {
-        name: group?.extension.type
-          ? group.extension.type === 'grant'
-            ? 'Rounds'
-            : 'Proposals'
-          : '',
+        name: 'Proposals',
         href: `/${query.entry}/${query.group}`,
         current: router.pathname === '/[entry]/[group]',
       },
@@ -40,7 +36,7 @@ export default function GroupInfo(props: { className?: string }) {
         current: router.pathname === '/[entry]/[group]/about',
       },
     ],
-    [group?.extension.type, query.entry, query.group, router.pathname],
+    [query.entry, query.group, router.pathname],
   )
   const emoji = useMemo(() => extractStartEmoji(group?.name), [group?.name])
   const name = useMemo(

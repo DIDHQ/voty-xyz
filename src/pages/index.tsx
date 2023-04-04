@@ -1,4 +1,3 @@
-import { PlusIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 import { useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'

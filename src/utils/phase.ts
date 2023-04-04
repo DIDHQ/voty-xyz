@@ -3,7 +3,6 @@ import type { Group } from './schemas/group'
 export enum Phase {
   CONFIRMING = 'Confirming',
   ANNOUNCING = 'Announcing',
-  PROPOSING = 'Proposing',
   VOTING = 'Voting',
   ENDED = 'Ended',
 }
@@ -21,20 +20,7 @@ export function getPhase(
   }
   if (
     now.getTime() <
-    timestamp.getTime() +
-      (duration.announcing +
-        ('adding_option' in duration ? duration.adding_option : 0)) *
-        1000
-  ) {
-    return Phase.PROPOSING
-  }
-  if (
-    now.getTime() <
-    timestamp.getTime() +
-      (duration.announcing +
-        ('adding_option' in duration ? duration.adding_option : 0) +
-        duration.voting) *
-        1000
+    timestamp.getTime() + (duration.announcing + duration.voting) * 1000
   ) {
     return Phase.VOTING
   }

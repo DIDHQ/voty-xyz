@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { PencilIcon } from '@heroicons/react/20/solid'
 import { useAtomValue } from 'jotai'
-import { BriefcaseIcon, TrophyIcon } from '@heroicons/react/24/outline'
+import { BriefcaseIcon } from '@heroicons/react/24/outline'
 import { useMemo } from 'react'
 
 import useRouterQuery from '../../../hooks/use-router-query'
@@ -45,19 +45,12 @@ export default function GroupRulesPage() {
               >
                 {emoji}
               </span>
-            ) : group ? (
-              group.extension.type === 'grant' ? (
-                <TrophyIcon
-                  className="mr-3 h-8 w-8 shrink-0 text-gray-400"
-                  aria-hidden="true"
-                />
-              ) : (
-                <BriefcaseIcon
-                  className="mr-3 h-8 w-8 shrink-0 text-gray-400"
-                  aria-hidden="true"
-                />
-              )
-            ) : null}
+            ) : (
+              <BriefcaseIcon
+                className="mr-3 h-8 w-8 shrink-0 text-gray-400"
+                aria-hidden="true"
+              />
+            )}
             <h3 className="mr-4 w-0 flex-1 truncate text-2xl font-medium text-gray-900">
               {name || '...'}
             </h3>

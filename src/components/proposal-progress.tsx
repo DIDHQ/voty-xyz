@@ -18,43 +18,21 @@ export default function ProposalProgress(props: {
           duration={props.duration}
         />
       </DetailItem>
-      <DetailItem title="Created at">
+      <DetailItem title="Confirmed at">
         {status?.timestamp ? formatTime(status.timestamp) : '...'}
       </DetailItem>
-      <DetailItem
-        title={
-          props.duration && 'adding_option' in props.duration
-            ? 'Proposing start'
-            : 'Voting start'
-        }
-      >
+      <DetailItem title="Voting start">
         {status?.timestamp && props.duration
           ? formatTime(
               status.timestamp.getTime() + props.duration.announcing * 1000,
             )
           : '...'}
       </DetailItem>
-      {props.duration && 'adding_option' in props.duration ? (
-        <DetailItem title="Proposing end">
-          {status?.timestamp && props.duration
-            ? formatTime(
-                status.timestamp.getTime() +
-                  (props.duration.announcing + props.duration.adding_option) *
-                    1000,
-              )
-            : '...'}
-        </DetailItem>
-      ) : null}
       <DetailItem title="Voting end">
         {status?.timestamp && props.duration
           ? formatTime(
               status.timestamp.getTime() +
-                (props.duration.announcing +
-                  ('adding_option' in props.duration
-                    ? props.duration.adding_option
-                    : 0) +
-                  props.duration.voting) *
-                  1000,
+                (props.duration.announcing + props.duration.voting) * 1000,
             )
           : '...'}
       </DetailItem>

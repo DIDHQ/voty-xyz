@@ -8,28 +8,15 @@ export const proposalSchema = z.object({
   options: z
     .array(z.string().min(1, 'Required'))
     .min(2, 'At least 2 options')
-    .optional()
-    .refine((options) => !options || new Set(options).size === options.length, {
+    .refine((options) => new Set(options).size === options.length, {
       message: 'Options are not unique',
     }),
   snapshots: z.record(z.string(), z.string()),
   extension: z
     .object({
       content: z.string().optional(),
-      funding: z
-        .array(
-          z.tuple([z.string().min(1, 'Required'), z.number().int().min(1)]),
-        )
-        .length(1)
-        .optional(),
     })
     .optional(),
 })
-
-export function proposalSchemaRefine(proposal: Proposal): boolean {
-  return proposal.options
-    ? !proposal.extension?.funding
-    : proposal.voting_type === 'single' && !!proposal.extension?.funding
-}
 
 export type Proposal = z.infer<typeof proposalSchema>

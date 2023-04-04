@@ -11,11 +11,7 @@ import clsx from 'clsx'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 
-import {
-  Proposal,
-  proposalSchema,
-  proposalSchemaRefine,
-} from '../utils/schemas/proposal'
+import { Proposal, proposalSchema } from '../utils/schemas/proposal'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
@@ -48,14 +44,9 @@ export default function ProposalForm(props: {
   className?: string
 }) {
   const router = useRouter()
-  const type = props.group
-    ? props.group.extension.type === 'grant'
-      ? 'round'
-      : 'proposal'
-    : undefined
   const [previewProposal, setPreviewProposal] = useAtom(previewProposalAtom)
   const methods = useForm<Proposal>({
-    resolver: zodResolver(proposalSchema.refine(proposalSchemaRefine)),
+    resolver: zodResolver(proposalSchema),
   })
   const {
     register,
@@ -178,7 +169,7 @@ export default function ProposalForm(props: {
 
   return (
     <Form
-      title={`New ${type || ''}${
+      title={`New proposal${
         props.group?.name ? ` for ${props.group.name}` : ''
       }`}
       className={props.className}
@@ -199,8 +190,7 @@ export default function ProposalForm(props: {
                   title={`Rules of ${props.group.name}`}
                   trigger={({ handleOpen }) => (
                     <TextButton secondary onClick={handleOpen}>
-                      Why I&#39;m not eligible to&nbsp;
-                      {type === 'round' ? 'invest' : 'propose'}
+                      Why I&#39;m not eligible to propose
                     </TextButton>
                   )}
                 >
@@ -245,116 +235,74 @@ export default function ProposalForm(props: {
               />
             </FormItem>
           </GridItem6>
-          {type === 'round' ? (
-            <GridItem3>
-              <FormItem
-                label="Funding"
-                error={
-                  errors?.extension?.funding?.[0]?.[0]?.message ||
-                  errors?.extension?.funding?.[0]?.[1]?.message
-                }
-              >
-                <div className="flex w-full items-center space-x-2">
-                  <TextInput
+
+          <GridItem6>
+            <FormItem label="Voting type" error={errors.voting_type?.message}>
+              <Controller
+                control={control}
+                name="voting_type"
+                render={({ field: { value, onChange } }) => (
+                  <RadioGroup
+                    options={votingTypes}
+                    value={value}
+                    onChange={onChange}
                     disabled={disabled}
-                    {...register('extension.funding.0.0')}
-                    error={!!errors?.extension?.funding?.[0]?.[0]}
-                    placeholder="e.g. 500 USD"
-                    className="w-0 flex-1"
                   />
-                  <span className="text-gray-400">X</span>
-                  <Controller
-                    control={control}
-                    name="extension.funding.0.1"
-                    render={({ field: { value, onChange } }) => (
-                      <TextInput
-                        disabled={disabled}
-                        type="number"
-                        value={value || ''}
-                        onChange={(e) => onChange(e.target.valueAsNumber)}
-                        error={!!errors?.extension?.funding?.[0]?.[1]}
-                        placeholder="count"
-                        className="shrink-0 basis-16"
-                      />
-                    )}
-                  />
-                </div>
-              </FormItem>
-            </GridItem3>
-          ) : (
-            <>
-              <GridItem6>
-                <FormItem
-                  label="Voting type"
-                  error={errors.voting_type?.message}
-                >
-                  <Controller
-                    control={control}
-                    name="voting_type"
-                    render={({ field: { value, onChange } }) => (
-                      <RadioGroup
-                        options={votingTypes}
-                        value={value}
-                        onChange={onChange}
-                        disabled={disabled}
-                      />
-                    )}
-                  />
-                </FormItem>
-              </GridItem6>
-              <GridItem6>
-                <FormItem
-                  label="Options"
-                  error={
-                    errors.options?.message ||
-                    errors.options?.find?.((option) => option?.message)?.message
-                  }
-                >
-                  <div className="space-y-[-1px]">
-                    {options.map((_, index) => (
-                      <div
-                        key={index}
-                        className="relative flex items-center justify-between text-sm"
-                      >
-                        <input
-                          type="text"
-                          placeholder={`Option ${index + 1}`}
-                          {...register(`options.${index}`)}
-                          disabled={disabled}
-                          className={clsx(
-                            'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600 sm:text-sm',
-                            options.length > 1 ? 'pr-20' : 'pr-3',
-                            index === 0 ? 'rounded-t-md' : undefined,
-                            index === options.length - 1
-                              ? 'rounded-b-md'
-                              : undefined,
-                          )}
+                )}
+              />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
+            <FormItem
+              label="Options"
+              error={
+                errors.options?.message ||
+                errors.options?.find?.((option) => option?.message)?.message
+              }
+            >
+              <div className="space-y-[-1px]">
+                {options.map((_, index) => (
+                  <div
+                    key={index}
+                    className="relative flex items-center justify-between text-sm"
+                  >
+                    <input
+                      type="text"
+                      placeholder={`Option ${index + 1}`}
+                      {...register(`options.${index}`)}
+                      disabled={disabled}
+                      className={clsx(
+                        'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600 sm:text-sm',
+                        options.length > 1 ? 'pr-20' : 'pr-3',
+                        index === 0 ? 'rounded-t-md' : undefined,
+                        index === options.length - 1
+                          ? 'rounded-b-md'
+                          : undefined,
+                      )}
+                    />
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
+                      {options.length > 2 ? (
+                        <OptionRemove
+                          index={index}
+                          onDelete={handleOptionDelete}
                         />
-                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
-                          {options.length > 2 ? (
-                            <OptionRemove
-                              index={index}
-                              onDelete={handleOptionDelete}
-                            />
-                          ) : null}
-                        </div>
-                      </div>
-                    ))}
+                      ) : null}
+                    </div>
                   </div>
-                  {disabled ? null : (
-                    <Button
-                      onClick={() => {
-                        setValue('options', [...options, ''])
-                      }}
-                      className="mt-4"
-                    >
-                      Add
-                    </Button>
-                  )}
-                </FormItem>
-              </GridItem6>
-            </>
-          )}
+                ))}
+              </div>
+              {disabled ? null : (
+                <Button
+                  onClick={() => {
+                    setValue('options', [...options, ''])
+                  }}
+                  className="mt-4"
+                >
+                  Add
+                </Button>
+              )}
+            </FormItem>
+          </GridItem6>
         </Grid6>
       </FormSection>
       <div className="flex w-full flex-col items-end space-y-6">
@@ -367,12 +315,12 @@ export default function ProposalForm(props: {
               ...value,
               preview: {
                 from: `/${props.community?.entry.did}/${props.group?.id}/create`,
-                to: `/${type}/${previewPermalink}`,
-                template: `You are creating ${type} on Voty\n\nhash:\n{sha256}`,
+                to: `/proposal/${previewPermalink}`,
+                template: `You are creating proposal on Voty\n\nhash:\n{sha256}`,
                 author: did,
               },
             })
-            router.push(`/${type}/${previewPermalink}`)
+            router.push(`/proposal/${previewPermalink}`)
           }, console.error)}
         >
           Preview

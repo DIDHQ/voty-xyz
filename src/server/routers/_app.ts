@@ -1,7 +1,6 @@
 import { router } from '../trpc'
 import { choiceRouter } from './choice'
 import { communityRouter } from './community'
-import { optionRouter } from './option'
 import { proposalRouter } from './proposal'
 import { subscriptionRouter } from './subscription'
 import { voteRouter } from './vote'
@@ -9,7 +8,6 @@ import { voteRouter } from './vote'
 export const appRouter = router({
   choice: choiceRouter,
   community: communityRouter,
-  option: optionRouter,
   proposal: proposalRouter,
   subscription: subscriptionRouter,
   vote: voteRouter,

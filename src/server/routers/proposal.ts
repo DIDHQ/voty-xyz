@@ -6,10 +6,7 @@ import dayjs from 'dayjs'
 import { uploadToArweave } from '../../utils/upload'
 import { database, getByPermalink } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
-import {
-  proposalSchema,
-  proposalSchemaRefine,
-} from '../../utils/schemas/proposal'
+import { proposalSchema } from '../../utils/schemas/proposal'
 import verifyProposal from '../../utils/verifiers/verify-proposal'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
@@ -22,7 +19,6 @@ import {
   getSnapshotTimestamp,
 } from '../../utils/snapshot'
 import { Phase } from '../../utils/phase'
-import { groupSchema } from '../../utils/schemas/group'
 import { communitySchema } from '../../utils/schemas/community'
 
 const schema = proved(authorized(proposalSchema))
@@ -34,7 +30,6 @@ export const proposalRouter = router({
       schema
         .extend({
           permalink: z.string(),
-          options_count: z.number().int(),
           votes: z.number().int(),
         })
         .nullable(),
@@ -46,12 +41,7 @@ export const proposalRouter = router({
 
       const proposal = await getByPermalink(DataType.PROPOSAL, input.permalink)
 
-      if (
-        proposal &&
-        (!proposal.ts_announcing ||
-          !proposal.ts_adding_option ||
-          !proposal.ts_voting)
-      ) {
+      if (proposal && (!proposal.ts_announcing || !proposal.ts_voting)) {
         try {
           const community = await getByPermalink(
             DataType.COMMUNITY,
@@ -72,21 +62,8 @@ export const proposalRouter = router({
                 ts_announcing: dayjs(timestamp)
                   .add(group.duration.announcing * 1000)
                   .toDate(),
-                ts_adding_option: dayjs(timestamp)
-                  .add(group.duration.announcing * 1000)
-                  .add(
-                    ('adding_option' in group.duration
-                      ? group.duration.adding_option
-                      : 0) * 1000,
-                  )
-                  .toDate(),
                 ts_voting: dayjs(timestamp)
                   .add(group.duration.announcing * 1000)
-                  .add(
-                    ('adding_option' in group.duration
-                      ? group.duration.adding_option
-                      : 0) * 1000,
-                  )
                   .add(group.duration.voting * 1000)
                   .toDate(),
               },
@@ -101,7 +78,6 @@ export const proposalRouter = router({
         ? {
             ...proposal.data,
             permalink: proposal.permalink,
-            options_count: proposal.options_count,
             votes: proposal.votes,
           }
         : null
@@ -112,13 +88,7 @@ export const proposalRouter = router({
         entry: z.string().optional(),
         group: z.string().optional(),
         phase: z
-          .enum([
-            Phase.CONFIRMING,
-            Phase.ANNOUNCING,
-            Phase.PROPOSING,
-            Phase.VOTING,
-            Phase.ENDED,
-          ])
+          .enum([Phase.CONFIRMING, Phase.ANNOUNCING, Phase.VOTING, Phase.ENDED])
           .optional(),
         cursor: z.string().optional(),
       }),
@@ -128,12 +98,9 @@ export const proposalRouter = router({
         data: z.array(
           schema.extend({
             permalink: z.string(),
-            g: groupSchema,
-            options_count: z.number().int(),
             votes: z.number().int(),
             ts: z.date(),
             ts_announcing: z.date().nullable(),
-            ts_adding_option: z.date().nullable(),
             ts_voting: z.date().nullable(),
           }),
         ),
@@ -148,13 +115,11 @@ export const proposalRouter = router({
       const now = new Date()
       const filter =
         input.phase === Phase.CONFIRMING
-          ? { ts_announcing: null, ts_adding_option: null, ts_voting: null }
+          ? { ts_announcing: null, ts_voting: null }
           : input.phase === Phase.ANNOUNCING
           ? { ts: { lte: now }, ts_announcing: { gt: now } }
-          : input.phase === Phase.PROPOSING
-          ? { ts_announcing: { lte: now }, ts_adding_option: { gt: now } }
           : input.phase === Phase.VOTING
-          ? { ts_adding_option: { lte: now }, ts_voting: { gt: now } }
+          ? { ts_announcing: { lte: now }, ts_voting: { gt: now } }
           : input.phase === Phase.ENDED
           ? { ts_voting: { lte: now } }
           : {}
@@ -186,11 +151,9 @@ export const proposalRouter = router({
               group,
               data,
               permalink,
-              options_count,
               votes,
               ts,
               ts_announcing,
-              ts_adding_option,
               ts_voting,
             }) => {
               try {
@@ -201,12 +164,9 @@ export const proposalRouter = router({
                   ? {
                       ...schema.parse(data),
                       permalink,
-                      g,
-                      options_count,
                       votes,
                       ts,
                       ts_announcing,
-                      ts_adding_option,
                       ts_voting,
                     }
                   : undefined
@@ -220,7 +180,7 @@ export const proposalRouter = router({
       }
     }),
   create: procedure
-    .input(schema.refine(proposalSchemaRefine))
+    .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
       await verifySnapshot(input.authorship)
@@ -247,7 +207,6 @@ export const proposalRouter = router({
             community: input.community,
             group: input.group,
             data: input,
-            options_count: 0,
             votes: 0,
             ts,
           },

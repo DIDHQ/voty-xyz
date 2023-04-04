@@ -4,12 +4,8 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 import useSignDocument from '../hooks/use-sign-document'
-import {
-  previewCommunityAtom,
-  previewOptionAtom,
-  previewProposalAtom,
-} from '../utils/atoms'
-import { isCommunity, isOption, isProposal } from '../utils/data-type'
+import { previewCommunityAtom, previewProposalAtom } from '../utils/atoms'
+import { isCommunity, isProposal } from '../utils/data-type'
 import { trpc } from '../utils/trpc'
 import { Preview } from '../utils/types'
 import Button from './basic/button'
@@ -22,8 +18,7 @@ export default function PreviewBar() {
   const router = useRouter()
   const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
   const [previewProposal, setPreviewProposal] = useAtom(previewProposalAtom)
-  const [previewOption, setPreviewOption] = useAtom(previewOptionAtom)
-  const document = previewCommunity || previewProposal || previewOption
+  const document = previewCommunity || previewProposal
   const preview = document?.preview
   const { data: community } = trpc.community.getByEntry.useQuery(
     { entry: previewCommunity?.preview.author },
@@ -34,24 +29,16 @@ export default function PreviewBar() {
       if (preview && url !== preview.from && url !== preview.to) {
         setPreviewCommunity(undefined)
         setPreviewProposal(undefined)
-        setPreviewOption(undefined)
       }
     }
     router.events.on('routeChangeComplete', handler)
     return () => {
       router.events.off('routeChangeComplete', handler)
     }
-  }, [
-    router.events,
-    preview,
-    setPreviewCommunity,
-    setPreviewProposal,
-    setPreviewOption,
-  ])
+  }, [router.events, preview, setPreviewCommunity, setPreviewProposal])
   const signDocument = useSignDocument(preview?.author, preview?.template)
   const { mutateAsync: mutateCommunity } = trpc.community.create.useMutation()
   const { mutateAsync: mutateProposal } = trpc.proposal.create.useMutation()
-  const { mutateAsync: mutateOption } = trpc.option.create.useMutation()
   const handleSubmit = useMutation<void, Error, object & { preview: Preview }>(
     async ({ preview, ...document }) => {
       if (isCommunity(document)) {
@@ -67,19 +54,6 @@ export default function PreviewBar() {
         if (signed) {
           const permalink = await mutateProposal(signed)
           setPreviewProposal(undefined)
-          router.push(
-            preview.to.replace(
-              new RegExp(`\/${previewPermalink}\$`),
-              `/${permalink2Id(permalink)}`,
-            ),
-          )
-        }
-      }
-      if (isOption(document)) {
-        const signed = await signDocument(document)
-        if (signed) {
-          const permalink = await mutateOption(signed)
-          setPreviewOption(undefined)
           router.push(
             preview.to.replace(
               new RegExp(`\/${previewPermalink}\$`),
