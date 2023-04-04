@@ -10,13 +10,13 @@ export const workgroupSchema = z.object({
     voting: decimalSetsSchema,
   }),
   duration: z.object({
-    pending: z.number().int().min(300, 'Minium 5 minutes'),
+    announcing: z.number().int().min(300, 'Minium 5 minutes'),
     voting: z.number().int().min(300, 'Minium 5 minutes'),
   }),
   extension: z.object({
     type: z.literal('workgroup'),
     introduction: z.string().max(160, 'Maximum 160 characters').optional(),
-    terms_and_conditions: z.string().min(1, 'Required'), // TODO: rename to criteria_for_approval
+    criteria_for_approval: z.string().min(1, 'Required'),
   }),
 })
 
@@ -29,7 +29,7 @@ export const grantSchema = z.object({
     voting: decimalSetsSchema,
   }),
   duration: z.object({
-    pending: z.number().int().min(300, 'Minium 5 minutes'),
+    announcing: z.number().int().min(300, 'Minium 5 minutes'),
     adding_option: z.number().int().min(300, 'Minium 5 minutes'),
     voting: z.number().int().min(300, 'Minium 5 minutes'),
   }),

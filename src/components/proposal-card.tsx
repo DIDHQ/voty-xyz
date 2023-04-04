@@ -16,7 +16,7 @@ export default function ProposalCard(props: {
     votes: number
     options_count: number
     ts: Date
-    ts_pending: Date | null
+    ts_announcing: Date | null
     ts_adding_option: Date | null
     ts_voting: Date | null
   }
@@ -25,9 +25,9 @@ export default function ProposalCard(props: {
   const now = useMemo(() => Date.now(), [])
   const phase = useMemo(
     () =>
-      props.proposal.ts_pending && props.proposal.ts_voting
-        ? now < props.proposal.ts_pending.getTime()
-          ? Phase.PENDING
+      props.proposal.ts_announcing && props.proposal.ts_voting
+        ? now < props.proposal.ts_announcing.getTime()
+          ? Phase.ANNOUNCING
           : props.proposal.ts_adding_option &&
             now < props.proposal.ts_adding_option.getTime()
           ? Phase.PROPOSING
@@ -36,7 +36,7 @@ export default function ProposalCard(props: {
           : Phase.ENDED
         : Phase.CONFIRMING,
     [
-      props.proposal.ts_pending,
+      props.proposal.ts_announcing,
       props.proposal.ts_voting,
       props.proposal.ts_adding_option,
       now,
@@ -90,7 +90,7 @@ export default function ProposalCard(props: {
                 in about 5 minutes
               </p>
             </>
-          ) : phase === Phase.PENDING && props.proposal.ts_pending ? (
+          ) : phase === Phase.ANNOUNCING && props.proposal.ts_announcing ? (
             <>
               <p>
                 {group.extension.type === 'grant' ? 'Proposing' : 'Voting'}
@@ -99,7 +99,7 @@ export default function ProposalCard(props: {
               <p className="text-gray-400">
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
-                {formatDurationMs(props.proposal.ts_pending.getTime() - now)}
+                {formatDurationMs(props.proposal.ts_announcing.getTime() - now)}
               </p>
             </>
           ) : phase === Phase.PROPOSING && props.proposal.ts_adding_option ? (
@@ -154,7 +154,7 @@ function PhaseDot(props: { value?: Phase; className?: string }) {
         props.value
           ? {
               [Phase.CONFIRMING]: 'text-slate-400',
-              [Phase.PENDING]: 'text-amber-400',
+              [Phase.ANNOUNCING]: 'text-amber-400',
               [Phase.PROPOSING]: 'text-sky-400',
               [Phase.VOTING]: 'text-lime-400',
               [Phase.ENDED]: 'text-stone-400',

@@ -177,18 +177,18 @@ export default function WorkgroupForm(props: {
           <Grid6>
             <GridItem3>
               <FormItem
-                label="Publicity phase"
-                error={groupErrors?.duration?.pending?.message}
+                label="Announcing phase"
+                error={groupErrors?.duration?.announcing?.message}
               >
                 <Controller
                   control={control}
-                  name={`groups.${groupIndex}.duration.pending`}
+                  name={`groups.${groupIndex}.duration.announcing`}
                   render={({ field: { value, onChange } }) => (
                     <DurationInput
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={!!groupErrors?.duration?.pending}
+                      error={!!groupErrors?.duration?.announcing}
                     />
                   )}
                 />
@@ -217,15 +217,15 @@ export default function WorkgroupForm(props: {
               <FormItem
                 label="Criteria for approval"
                 description="Markdown is supported"
-                error={groupErrors?.extension?.terms_and_conditions?.message}
+                error={groupErrors?.extension?.criteria_for_approval?.message}
               >
                 <Textarea
                   disabled={!isManager}
                   {...register(
-                    `groups.${groupIndex}.extension.terms_and_conditions`,
+                    `groups.${groupIndex}.extension.criteria_for_approval`,
                   )}
                   error={
-                    !!groupErrors?.extension?.terms_and_conditions?.message
+                    !!groupErrors?.extension?.criteria_for_approval?.message
                   }
                 />
               </FormItem>

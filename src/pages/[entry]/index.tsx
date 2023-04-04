@@ -45,7 +45,7 @@ export default function CommunityIndexPage() {
     () => [
       'All',
       Phase.CONFIRMING,
-      Phase.PENDING,
+      Phase.ANNOUNCING,
       Phase.PROPOSING,
       Phase.VOTING,
       Phase.ENDED,

@@ -189,18 +189,18 @@ export default function GrantForm(props: {
           <Grid6>
             <GridItem2>
               <FormItem
-                label="Duration of pending"
-                error={groupErrors?.duration?.pending?.message}
+                label="Announcing phase"
+                error={groupErrors?.duration?.announcing?.message}
               >
                 <Controller
                   control={control}
-                  name={`groups.${groupIndex}.duration.pending`}
+                  name={`groups.${groupIndex}.duration.announcing`}
                   render={({ field: { value, onChange } }) => (
                     <DurationInput
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={!!groupErrors?.duration?.pending}
+                      error={!!groupErrors?.duration?.announcing}
                     />
                   )}
                 />
@@ -208,7 +208,7 @@ export default function GrantForm(props: {
             </GridItem2>
             <GridItem2>
               <FormItem
-                label="Duration of proposing"
+                label="Proposing phase"
                 error={groupErrors?.duration?.adding_option?.message}
               >
                 <Controller
@@ -227,7 +227,7 @@ export default function GrantForm(props: {
             </GridItem2>
             <GridItem2>
               <FormItem
-                label="Duration of voting"
+                label="Voting phase"
                 error={groupErrors?.duration?.voting?.message}
               >
                 <Controller

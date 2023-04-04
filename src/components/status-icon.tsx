@@ -32,7 +32,7 @@ export default function StatusIcon(props: {
   return props.permalink ? (
     <Tooltip
       place="top"
-      text={`Transaction ${status?.timestamp ? 'confirmed' : 'pending'}`}
+      text={`Transaction ${status?.timestamp ? 'confirmed' : 'confirming'}`}
       className={props.className}
     >
       <TextButton

@@ -48,7 +48,7 @@ export const proposalRouter = router({
 
       if (
         proposal &&
-        (!proposal.ts_pending ||
+        (!proposal.ts_announcing ||
           !proposal.ts_adding_option ||
           !proposal.ts_voting)
       ) {
@@ -69,11 +69,11 @@ export const proposalRouter = router({
               where: { permalink: proposal.permalink },
               data: {
                 ts: timestamp,
-                ts_pending: dayjs(timestamp)
-                  .add(group.duration.pending * 1000)
+                ts_announcing: dayjs(timestamp)
+                  .add(group.duration.announcing * 1000)
                   .toDate(),
                 ts_adding_option: dayjs(timestamp)
-                  .add(group.duration.pending * 1000)
+                  .add(group.duration.announcing * 1000)
                   .add(
                     ('adding_option' in group.duration
                       ? group.duration.adding_option
@@ -81,7 +81,7 @@ export const proposalRouter = router({
                   )
                   .toDate(),
                 ts_voting: dayjs(timestamp)
-                  .add(group.duration.pending * 1000)
+                  .add(group.duration.announcing * 1000)
                   .add(
                     ('adding_option' in group.duration
                       ? group.duration.adding_option
@@ -114,7 +114,7 @@ export const proposalRouter = router({
         phase: z
           .enum([
             Phase.CONFIRMING,
-            Phase.PENDING,
+            Phase.ANNOUNCING,
             Phase.PROPOSING,
             Phase.VOTING,
             Phase.ENDED,
@@ -132,7 +132,7 @@ export const proposalRouter = router({
             options_count: z.number().int(),
             votes: z.number().int(),
             ts: z.date(),
-            ts_pending: z.date().nullable(),
+            ts_announcing: z.date().nullable(),
             ts_adding_option: z.date().nullable(),
             ts_voting: z.date().nullable(),
           }),
@@ -148,11 +148,11 @@ export const proposalRouter = router({
       const now = new Date()
       const filter =
         input.phase === Phase.CONFIRMING
-          ? { ts_pending: null, ts_adding_option: null, ts_voting: null }
-          : input.phase === Phase.PENDING
-          ? { ts: { lte: now }, ts_pending: { gt: now } }
+          ? { ts_announcing: null, ts_adding_option: null, ts_voting: null }
+          : input.phase === Phase.ANNOUNCING
+          ? { ts: { lte: now }, ts_announcing: { gt: now } }
           : input.phase === Phase.PROPOSING
-          ? { ts_pending: { lte: now }, ts_adding_option: { gt: now } }
+          ? { ts_announcing: { lte: now }, ts_adding_option: { gt: now } }
           : input.phase === Phase.VOTING
           ? { ts_adding_option: { lte: now }, ts_voting: { gt: now } }
           : input.phase === Phase.ENDED
@@ -189,7 +189,7 @@ export const proposalRouter = router({
               options_count,
               votes,
               ts,
-              ts_pending,
+              ts_announcing,
               ts_adding_option,
               ts_voting,
             }) => {
@@ -205,7 +205,7 @@ export const proposalRouter = router({
                       options_count,
                       votes,
                       ts,
-                      ts_pending,
+                      ts_announcing,
                       ts_adding_option,
                       ts_voting,
                     }

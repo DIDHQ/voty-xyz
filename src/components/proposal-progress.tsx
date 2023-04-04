@@ -30,7 +30,7 @@ export default function ProposalProgress(props: {
       >
         {status?.timestamp && props.duration
           ? formatTime(
-              status.timestamp.getTime() + props.duration.pending * 1000,
+              status.timestamp.getTime() + props.duration.announcing * 1000,
             )
           : '...'}
       </DetailItem>
@@ -39,7 +39,7 @@ export default function ProposalProgress(props: {
           {status?.timestamp && props.duration
             ? formatTime(
                 status.timestamp.getTime() +
-                  (props.duration.pending + props.duration.adding_option) *
+                  (props.duration.announcing + props.duration.adding_option) *
                     1000,
               )
             : '...'}
@@ -49,7 +49,7 @@ export default function ProposalProgress(props: {
         {status?.timestamp && props.duration
           ? formatTime(
               status.timestamp.getTime() +
-                (props.duration.pending +
+                (props.duration.announcing +
                   ('adding_option' in props.duration
                     ? props.duration.adding_option
                     : 0) +

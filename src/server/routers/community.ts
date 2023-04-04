@@ -129,7 +129,7 @@ export const communityRouter = router({
             community.groups.every((group) =>
               group.permission.proposing.operands.every((operand) => {
                 return (
-                  operand.arguments[0] === 'bit' ||
+                  // operand.arguments[0] === 'bit' ||
                   operand.arguments[0] === community.authorship.author
                 )
               }),
@@ -142,7 +142,7 @@ export const communityRouter = router({
             community.groups.every((group) =>
               group.permission.voting.operands.every((operand) => {
                 return (
-                  operand.arguments[0] === 'bit' ||
+                  // operand.arguments[0] === 'bit' ||
                   operand.arguments[0] === community.authorship.author
                 )
               }),

@@ -251,7 +251,7 @@ export default function VoteForm(props: {
                   : status?.timestamp && props.group
                   ? `Waiting for voting start (in ${formatDurationMs(
                       status.timestamp.getTime() +
-                        (props.group.duration.pending +
+                        (props.group.duration.announcing +
                           ('adding_option' in props.group.duration
                             ? props.group.duration.adding_option
                             : 0)) *

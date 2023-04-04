@@ -20,7 +20,7 @@ export default function ProposalPhaseText(props: {
         phase
           ? {
               [Phase.CONFIRMING]: 'text-slate-600',
-              [Phase.PENDING]: 'text-amber-600',
+              [Phase.ANNOUNCING]: 'text-amber-600',
               [Phase.PROPOSING]: 'text-sky-600',
               [Phase.VOTING]: 'text-lime-600',
               [Phase.ENDED]: 'text-stone-600',

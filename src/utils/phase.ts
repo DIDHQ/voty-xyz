@@ -2,7 +2,7 @@ import type { Group } from './schemas/group'
 
 export enum Phase {
   CONFIRMING = 'Confirming',
-  PENDING = 'Pending',
+  ANNOUNCING = 'Announcing',
   PROPOSING = 'Proposing',
   VOTING = 'Voting',
   ENDED = 'Ended',
@@ -16,13 +16,13 @@ export function getPhase(
   if (!timestamp || !duration) {
     return Phase.CONFIRMING
   }
-  if (now.getTime() < timestamp.getTime() + duration.pending * 1000) {
-    return Phase.PENDING
+  if (now.getTime() < timestamp.getTime() + duration.announcing * 1000) {
+    return Phase.ANNOUNCING
   }
   if (
     now.getTime() <
     timestamp.getTime() +
-      (duration.pending +
+      (duration.announcing +
         ('adding_option' in duration ? duration.adding_option : 0)) *
         1000
   ) {
@@ -31,7 +31,7 @@ export function getPhase(
   if (
     now.getTime() <
     timestamp.getTime() +
-      (duration.pending +
+      (duration.announcing +
         ('adding_option' in duration ? duration.adding_option : 0) +
         duration.voting) *
         1000

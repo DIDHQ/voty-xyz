@@ -59,7 +59,7 @@ export default function CreateGroupPage() {
                       },
                     },
                     duration: {
-                      pending: 86400,
+                      announcing: 86400,
                       adding_option: 86400,
                       voting: 86400,
                     },
@@ -91,12 +91,12 @@ export default function CreateGroupPage() {
                       },
                     },
                     duration: {
-                      pending: 86400,
+                      announcing: 86400,
                       voting: 86400,
                     },
                     extension: {
                       type: 'workgroup',
-                      terms_and_conditions: '',
+                      criteria_for_approval: '',
                     },
                   },
             ],

@@ -49,12 +49,18 @@ export default function GroupIndexPage() {
         ? [
             'All',
             Phase.CONFIRMING,
-            Phase.PENDING,
+            Phase.ANNOUNCING,
             Phase.PROPOSING,
             Phase.VOTING,
             Phase.ENDED,
           ]
-        : ['All', Phase.CONFIRMING, Phase.PENDING, Phase.VOTING, Phase.ENDED],
+        : [
+            'All',
+            Phase.CONFIRMING,
+            Phase.ANNOUNCING,
+            Phase.VOTING,
+            Phase.ENDED,
+          ],
     [group?.extension.type],
   )
 
