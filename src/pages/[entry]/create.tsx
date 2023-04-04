@@ -35,7 +35,7 @@ export default function CreateGroupPage() {
                         operands: [
                           {
                             function: 'prefixes_dot_suffix_exact_match',
-                            arguments: [query.entry, ['']],
+                            arguments: [query.entry, []],
                           },
                         ],
                       },
@@ -44,7 +44,7 @@ export default function CreateGroupPage() {
                         operands: [
                           {
                             function: 'prefixes_dot_suffix_exact_match',
-                            arguments: [query.entry, ['']],
+                            arguments: [query.entry, []],
                           },
                         ],
                       },
@@ -53,7 +53,7 @@ export default function CreateGroupPage() {
                         operands: [
                           {
                             function: 'prefixes_dot_suffix_fixed_power',
-                            arguments: [query.entry, [''], '1'],
+                            arguments: [query.entry, [], '1'],
                           },
                         ],
                       },
@@ -76,7 +76,7 @@ export default function CreateGroupPage() {
                         operands: [
                           {
                             function: 'prefixes_dot_suffix_exact_match',
-                            arguments: [query.entry, ['']],
+                            arguments: [query.entry, []],
                           },
                         ],
                       },
@@ -85,7 +85,7 @@ export default function CreateGroupPage() {
                         operands: [
                           {
                             function: 'prefixes_dot_suffix_fixed_power',
-                            arguments: [query.entry, [''], '1'],
+                            arguments: [query.entry, [], '1'],
                           },
                         ],
                       },
