@@ -21,6 +21,7 @@ import { trpc } from '../utils/trpc'
 import { documentTitle } from '../utils/constants'
 import TextButton from './basic/text-button'
 import { previewCommunityAtom } from '../utils/atoms'
+import Button from './basic/button'
 
 const StatusIcon = dynamic(() => import('./status-icon'), {
   ssr: false,
@@ -81,7 +82,7 @@ export default function CommunityInfo(props: { className?: string }) {
               : undefined,
             community.extension.github
               ? {
-                  href: `https://github.com/${community.extension?.github}`,
+                  href: `https://github.com/${community.extension.github}`,
                   icon: GitHubIcon,
                 }
               : undefined,
@@ -109,7 +110,7 @@ export default function CommunityInfo(props: { className?: string }) {
         <div className="flex w-full flex-col items-center rounded-md border border-gray-200 pb-4">
           <div className="flex w-full items-center space-x-4 p-6 pb-0 sm:flex-col sm:space-x-0 sm:space-y-4 sm:pt-8">
             <Avatar
-              value={community?.extension?.logo}
+              value={community?.extension.logo}
               size={24}
               className="shrink-0"
             />
@@ -184,6 +185,17 @@ export default function CommunityInfo(props: { className?: string }) {
                 ))}
               </div>
             </>
+          ) : null}
+          {community?.extension.how_to_join ? (
+            previewCommunity ? (
+              <Button primary className="mt-4">
+                Want to join?
+              </Button>
+            ) : (
+              <Link href={`/${query.entry}/about#how-to-join`} className="mt-4">
+                <Button primary>Want to join?</Button>
+              </Link>
+            )
           ) : null}
         </div>
       </aside>

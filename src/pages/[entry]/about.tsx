@@ -33,13 +33,28 @@ export default function CommunityAboutPage() {
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
-      <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8">
-        About
-      </h3>
-      {community?.extension?.description ? (
-        <Article className="w-full pt-6">
-          <Markdown>{community?.extension?.description}</Markdown>
-        </Article>
+      {community?.extension.description ? (
+        <>
+          <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8">
+            Description
+          </h3>
+          <Article className="w-full pt-6">
+            <Markdown>{community?.extension.description}</Markdown>
+          </Article>
+        </>
+      ) : null}
+      {community?.extension.how_to_join ? (
+        <>
+          <h3
+            id="how-to-join"
+            className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8"
+          >
+            How to join
+          </h3>
+          <Article className="w-full pt-6">
+            <Markdown>{community?.extension.how_to_join}</Markdown>
+          </Article>
+        </>
       ) : null}
       {isManager && !previewCommunity ? (
         <Link

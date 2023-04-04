@@ -111,6 +111,20 @@ export default function CommunityForm(props: {
               />
             </FormItem>
           </GridItem6>
+          <GridItem6>
+            <FormItem
+              label="How to join"
+              description="Provide a guide on how to join this community for people"
+              error={errors.extension?.how_to_join?.message}
+            >
+              <Textarea
+                {...register('extension.how_to_join')}
+                placeholder="e.g. Holding a SubDID is the only credential for being a community member"
+                error={!!errors.extension?.how_to_join?.message}
+                disabled={!isManager}
+              />
+            </FormItem>
+          </GridItem6>
         </Grid6>
       </FormSection>
       <FormSection title="Links (optional)">
