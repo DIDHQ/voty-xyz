@@ -18,7 +18,7 @@ export default function ProposalProgress(props: {
           duration={props.duration}
         />
       </DetailItem>
-      <DetailItem title="Created at">
+      <DetailItem title="Confirmed at">
         {status?.timestamp ? formatTime(status.timestamp) : '...'}
       </DetailItem>
       <DetailItem title="Voting start">
