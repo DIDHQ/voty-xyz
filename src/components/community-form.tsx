@@ -56,7 +56,7 @@ export default function CommunityForm(props: {
       }
       className={clsx('pt-8', props.className)}
     >
-      <FormSection>
+      <FormSection title="Basic information">
         <Grid6>
           <GridItem6>
             <FormItem label="Logo" error={errors.extension?.logo?.message}>

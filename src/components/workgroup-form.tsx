@@ -101,7 +101,7 @@ export default function WorkgroupForm(props: {
         }`}
         className={props.className}
       >
-        <FormSection>
+        <FormSection title="Basic information">
           <Grid6>
             <GridItem6>
               <FormItem

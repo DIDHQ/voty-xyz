@@ -17,18 +17,16 @@ export function Form(props: {
 }
 
 export function FormSection(props: {
-  title?: string
+  title: string
   description?: string
   children: ReactNode
   className?: string
 }) {
   return (
     <div className={props.className}>
-      {props.title ? (
-        <h3 className="text-xl font-semibold leading-6 text-gray-900">
-          {props.title}
-        </h3>
-      ) : null}
+      <h3 className="text-xl font-semibold leading-6 text-gray-900">
+        {props.title}
+      </h3>
       <p className="mb-6 mt-2 text-sm text-gray-500">{props.description}</p>
       {props.children}
     </div>
