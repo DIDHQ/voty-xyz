@@ -24,7 +24,7 @@ export default function PermissionCard(props: {
           <li key={index} className="pt-4">
             {props.value.operands.length === 1 ? null : (
               <h4 className="mb-3 text-base font-medium">
-                {operand.name || `Filter ${index + 1}`}
+                {operand.name || `Group ${index + 1}`}
               </h4>
             )}
             {operand.arguments[1].length ? (

@@ -7,7 +7,7 @@ export function Form(props: {
   children: ReactNode
 }) {
   return (
-    <div className={clsx('space-y-12', props.className)}>
+    <div className={clsx('space-y-16', props.className)}>
       <h2 className="text-center text-3xl font-semibold leading-6 text-gray-900">
         {props.title}
       </h2>
