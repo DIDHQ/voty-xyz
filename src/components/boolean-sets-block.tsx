@@ -61,6 +61,7 @@ function BooleanUnitBlock(props: {
           autoComplete="false"
           disabled={props.disabled}
           placeholder={`e.g.\nsatoshi.${suffix}\nvitalik.${suffix}`}
+          shadow={`.${suffix}`}
           value={Array.isArray(value) ? (value as string[]).join('\n') : ''}
           onChange={(e) => {
             const array = e.target.value.split(/[\t\n, ]/)

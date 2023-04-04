@@ -198,6 +198,7 @@ function DecimalUnitBlock(props: {
                     autoComplete="false"
                     disabled={props.disabled}
                     placeholder={`e.g.\nsatoshi.${suffix}\nvitalik.${suffix}`}
+                    shadow={`.${suffix}`}
                     value={
                       Array.isArray(value) ? (value as string[]).join('\n') : ''
                     }
