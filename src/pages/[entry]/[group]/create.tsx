@@ -1,5 +1,6 @@
 import Head from 'next/head'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
+import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import useGroup from '../../../hooks/use-group'
@@ -12,6 +13,7 @@ import { Proposal } from '../../../utils/schemas/proposal'
 
 export default function CreateProposalPage() {
   const query = useRouterQuery<['entry', 'group']>()
+  const router = useRouter()
   const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
@@ -21,6 +23,11 @@ export default function CreateProposalPage() {
     () => ({ voting_type: 'single', options: ['', ''] }),
     [],
   )
+  useEffect(() => {
+    if (community === null || (community && !group)) {
+      router.push('/404')
+    }
+  }, [community, group, router])
 
   return (
     <>

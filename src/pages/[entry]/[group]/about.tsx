@@ -2,7 +2,8 @@ import Link from 'next/link'
 import { PencilIcon } from '@heroicons/react/20/solid'
 import { useAtomValue } from 'jotai'
 import { BriefcaseIcon } from '@heroicons/react/24/outline'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
+import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import CommunityLayout from '../../../components/layouts/community'
@@ -13,11 +14,12 @@ import useGroup from '../../../hooks/use-group'
 import Button from '../../../components/basic/button'
 import useIsManager from '../../../hooks/use-is-manager'
 import { previewCommunityAtom } from '../../../utils/atoms'
-import RulesView from '../../../components/rules-view'
+import GroupAbout from '../../../components/group-about'
 import { extractStartEmoji } from '../../../utils/emoji'
 
-export default function GroupRulesPage() {
+export default function GroupAboutPage() {
   const query = useRouterQuery<['entry', 'group']>()
+  const router = useRouter()
   const { data, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
@@ -31,6 +33,11 @@ export default function GroupRulesPage() {
     () => group?.name.replace(emoji || '', ''),
     [emoji, group?.name],
   )
+  useEffect(() => {
+    if (community === null || (community && !group)) {
+      router.push('/404')
+    }
+  }, [community, group, router])
 
   return (
     <>
@@ -61,7 +68,7 @@ export default function GroupRulesPage() {
             </p>
           ) : null}
           {group ? (
-            <RulesView entry={query.entry} group={group} className="mt-6" />
+            <GroupAbout entry={query.entry} group={group} className="mt-6" />
           ) : null}
           {isManager && !previewCommunity ? (
             <Link

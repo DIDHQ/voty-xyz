@@ -56,7 +56,7 @@ export default function CommunityForm(props: {
       }
       className={clsx('pt-8', props.className)}
     >
-      <FormSection>
+      <FormSection title="Basic information">
         <Grid6>
           <GridItem6>
             <FormItem label="Logo" error={errors.extension?.logo?.message}>
@@ -107,6 +107,20 @@ export default function CommunityForm(props: {
               <Textarea
                 {...register('extension.description')}
                 error={!!errors.extension?.description?.message}
+                disabled={!isManager}
+              />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
+            <FormItem
+              label="How to join"
+              description="Provide a guide on how to join this community for people"
+              error={errors.extension?.how_to_join?.message}
+            >
+              <Textarea
+                {...register('extension.how_to_join')}
+                placeholder="e.g. Holding a SubDID is the only credential for being a community member"
+                error={!!errors.extension?.how_to_join?.message}
                 disabled={!isManager}
               />
             </FormItem>

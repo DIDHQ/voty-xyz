@@ -1,6 +1,5 @@
-import clsx from 'clsx'
 import { compact } from 'lodash-es'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../utils/schemas/community'
@@ -43,6 +42,7 @@ export default function DecimalSetsBlock(props: {
               entry={props.entry}
               groupIndex={props.groupIndex}
               index={index}
+              length={operands.length}
               onRemove={remove}
               disabled={props.disabled}
             />
@@ -71,6 +71,7 @@ function DecimalUnitBlock(props: {
   entry: string
   groupIndex: number
   index: number
+  length: number
   onRemove(index: number): void
   disabled?: boolean
 }) {
@@ -98,7 +99,7 @@ function DecimalUnitBlock(props: {
             `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
           ) || `Group ${props.index + 1}`}
         </span>
-        {props.disabled ? null : (
+        {props.disabled || props.length === 1 ? null : (
           <TextButton
             secondary
             onClick={handleRemove}

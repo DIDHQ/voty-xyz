@@ -35,7 +35,7 @@ import RadioGroup from './basic/radio-group'
 import { previewProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
 import Slide from './basic/slide'
-import RulesView from './rules-view'
+import GroupPermission from './group-permission'
 
 export default function ProposalForm(props: {
   initialValue?: Partial<Proposal>
@@ -187,7 +187,7 @@ export default function ProposalForm(props: {
               />
               {didOptions?.length === 0 && props.group ? (
                 <Slide
-                  title={`Rules of ${props.group.name}`}
+                  title={`Permissions of ${props.group.name}`}
                   trigger={({ handleOpen }) => (
                     <TextButton secondary onClick={handleOpen}>
                       Why I&#39;m not eligible to propose
@@ -196,10 +196,12 @@ export default function ProposalForm(props: {
                 >
                   {() =>
                     props.group ? (
-                      <RulesView
-                        entry={props.community?.entry.did}
-                        group={props.group}
-                      />
+                      <div className="space-y-6">
+                        <GroupPermission
+                          entry={props.community?.entry.did}
+                          group={props.group}
+                        />
+                      </div>
                     ) : null
                   }
                 </Slide>
@@ -214,7 +216,7 @@ export default function ProposalForm(props: {
       >
         <Grid6>
           <GridItem6>
-            <FormItem label="Proposal title" error={errors.title?.message}>
+            <FormItem label="Title" error={errors.title?.message}>
               <TextInput
                 {...register('title')}
                 disabled={disabled}
@@ -224,7 +226,7 @@ export default function ProposalForm(props: {
           </GridItem6>
           <GridItem6>
             <FormItem
-              label="Proposal details"
+              label="Content"
               description="Markdown is supported"
               error={errors.extension?.content?.message}
             >
@@ -235,7 +237,10 @@ export default function ProposalForm(props: {
               />
             </FormItem>
           </GridItem6>
-
+        </Grid6>
+      </FormSection>
+      <FormSection title="Voting config">
+        <Grid6>
           <GridItem6>
             <FormItem label="Voting type" error={errors.voting_type?.message}>
               <Controller

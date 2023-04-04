@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { PencilIcon } from '@heroicons/react/20/solid'
 import { useAtomValue } from 'jotai'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 import CommunityLayout from '../../components/layouts/community'
 import Article from '../../components/basic/article'
@@ -14,6 +16,7 @@ import { previewCommunityAtom } from '../../utils/atoms'
 
 export default function CommunityAboutPage() {
   const query = useRouterQuery<['entry']>()
+  const router = useRouter()
   const { data, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
@@ -21,17 +24,37 @@ export default function CommunityAboutPage() {
   const isManager = useIsManager(query.entry)
   const previewCommunity = useAtomValue(previewCommunityAtom)
   const community = previewCommunity || data
+  useEffect(() => {
+    if (community === null) {
+      router.push('/404')
+    }
+  }, [community, router])
 
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
-      <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8">
-        About
-      </h3>
-      {community?.extension?.description ? (
-        <Article className="w-full pt-6">
-          <Markdown>{community?.extension?.description}</Markdown>
-        </Article>
+      {community?.extension.description ? (
+        <>
+          <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8">
+            Description
+          </h3>
+          <Article className="w-full pt-6">
+            <Markdown>{community?.extension.description}</Markdown>
+          </Article>
+        </>
+      ) : null}
+      {community?.extension.how_to_join ? (
+        <>
+          <h3
+            id="how-to-join"
+            className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8"
+          >
+            How to join
+          </h3>
+          <Article className="w-full pt-6">
+            <Markdown>{community?.extension.how_to_join}</Markdown>
+          </Article>
+        </>
       ) : null}
       {isManager && !previewCommunity ? (
         <Link
