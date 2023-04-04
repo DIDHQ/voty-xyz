@@ -28,9 +28,11 @@ export default function CommunityAboutPage() {
       <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8">
         About
       </h3>
-      <Article className="w-full pt-6">
-        <Markdown>{community?.extension?.description}</Markdown>
-      </Article>
+      {community?.extension?.description ? (
+        <Article className="w-full pt-6">
+          <Markdown>{community?.extension?.description}</Markdown>
+        </Article>
+      ) : null}
       {isManager && !previewCommunity ? (
         <Link
           href={`/${query.entry}/settings`}
