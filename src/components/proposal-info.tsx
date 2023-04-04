@@ -1,7 +1,11 @@
 import clsx from 'clsx'
 
 import useGroup from '../hooks/use-group'
-import { coinTypeExplorers, commonCoinTypes } from '../utils/constants'
+import {
+  coinTypeExplorers,
+  commonCoinTypes,
+  previewPermalink,
+} from '../utils/constants'
 import { Option } from '../utils/schemas/option'
 import { Proposal } from '../utils/schemas/proposal'
 import { trpc } from '../utils/trpc'
@@ -123,7 +127,13 @@ export default function ProposalInfo(props: {
               </TextButton>
             </DetailItem>
             <DetailItem title="Arweave TX">
-              <TextButton href={permalink2Explorer(props.proposal?.permalink)}>
+              <TextButton
+                href={
+                  props.proposal?.permalink === previewPermalink
+                    ? undefined
+                    : permalink2Explorer(props.proposal?.permalink)
+                }
+              >
                 {props.proposal?.permalink.substring(40) || '...'}
               </TextButton>
             </DetailItem>

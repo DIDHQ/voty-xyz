@@ -27,6 +27,7 @@ import Tooltip from './basic/tooltip'
 import Slide from './basic/slide'
 import RulesView from './rules-view'
 import { formatDurationMs } from '../utils/time'
+import { previewPermalink } from '../utils/constants'
 
 export default function VoteForm(props: {
   entry?: string
@@ -198,70 +199,35 @@ export default function VoteForm(props: {
             />
           )}
         </FormItem>
-        <div className="mt-6 flex w-full flex-col items-end">
-          <div className="w-full flex-1 sm:w-64 sm:flex-none">
-            <DidCombobox
-              top
-              label="Select a DID as voter"
-              options={didOptions}
-              value={did}
-              onChange={setDid}
-              onClick={connect}
-            />
-            {didOptions?.length === 0 && props.group ? (
-              <Slide
-                title={`Rules of ${props.group.name}`}
-                trigger={({ handleOpen }) => (
-                  <TextButton secondary onClick={handleOpen}>
-                    Why I&#39;m not eligible to vote
-                  </TextButton>
-                )}
-              >
-                {() =>
-                  props.group ? (
-                    <RulesView entry={props.entry} group={props.group} />
-                  ) : null
-                }
-              </Slide>
-            ) : null}
-          </div>
-          {phase === Phase.VOTING ? (
-            <Button
-              large
-              primary
-              icon={BoltIcon}
-              onClick={onSubmit(
-                (value) => handleSubmit.mutate(value),
-                console.error,
-              )}
-              disabled={disables(did)}
-              loading={handleSubmit.isLoading}
-              className="mt-6"
-            >
-              Vote{votingPower ? ` (${votingPower})` : null}
-            </Button>
-          ) : (
-            <Tooltip
-              place="top"
-              text={
-                phase === Phase.CONFIRMING
-                  ? 'Waiting for proposal confirming (in about 5 minutes)'
-                  : phase === Phase.ENDED
-                  ? 'Voting ended'
-                  : status?.timestamp && props.group
-                  ? `Waiting for voting start (in ${formatDurationMs(
-                      status.timestamp.getTime() +
-                        (props.group.duration.announcing +
-                          ('adding_option' in props.group.duration
-                            ? props.group.duration.adding_option
-                            : 0)) *
-                          1000 -
-                        now.getTime(),
-                    )})`
-                  : 'Waiting for voting start'
-              }
-              className="mt-6"
-            >
+        {props.proposal?.permalink === previewPermalink ? null : (
+          <div className="mt-6 flex w-full flex-col items-end">
+            <div className="w-full flex-1 sm:w-64 sm:flex-none">
+              <DidCombobox
+                top
+                label="Select a DID as voter"
+                options={didOptions}
+                value={did}
+                onChange={setDid}
+                onClick={connect}
+              />
+              {didOptions?.length === 0 && props.group ? (
+                <Slide
+                  title={`Rules of ${props.group.name}`}
+                  trigger={({ handleOpen }) => (
+                    <TextButton secondary onClick={handleOpen}>
+                      Why I&#39;m not eligible to vote
+                    </TextButton>
+                  )}
+                >
+                  {() =>
+                    props.group ? (
+                      <RulesView entry={props.entry} group={props.group} />
+                    ) : null
+                  }
+                </Slide>
+              ) : null}
+            </div>
+            {phase === Phase.VOTING ? (
               <Button
                 large
                 primary
@@ -272,12 +238,49 @@ export default function VoteForm(props: {
                 )}
                 disabled={disables(did)}
                 loading={handleSubmit.isLoading}
+                className="mt-6"
               >
                 Vote{votingPower ? ` (${votingPower})` : null}
               </Button>
-            </Tooltip>
-          )}
-        </div>
+            ) : (
+              <Tooltip
+                place="top"
+                text={
+                  phase === Phase.CONFIRMING
+                    ? 'Waiting for proposal confirming (in about 5 minutes)'
+                    : phase === Phase.ENDED
+                    ? 'Voting ended'
+                    : status?.timestamp && props.group
+                    ? `Waiting for voting start (in ${formatDurationMs(
+                        status.timestamp.getTime() +
+                          (props.group.duration.announcing +
+                            ('adding_option' in props.group.duration
+                              ? props.group.duration.adding_option
+                              : 0)) *
+                            1000 -
+                          now.getTime(),
+                      )})`
+                    : 'Waiting for voting start'
+                }
+                className="mt-6"
+              >
+                <Button
+                  large
+                  primary
+                  icon={BoltIcon}
+                  onClick={onSubmit(
+                    (value) => handleSubmit.mutate(value),
+                    console.error,
+                  )}
+                  disabled={disables(did)}
+                  loading={handleSubmit.isLoading}
+                >
+                  Vote{votingPower ? ` (${votingPower})` : null}
+                </Button>
+              </Tooltip>
+            )}
+          </div>
+        )}
       </div>
     </>
   )

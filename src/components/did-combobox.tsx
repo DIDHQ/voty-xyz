@@ -46,10 +46,12 @@ export default function DidCombobox(props: {
       disabled={disabled}
       className={props.className}
     >
-      <Combobox.Label className="block text-sm font-medium text-gray-700">
-        {props.label}
-      </Combobox.Label>
-      <div className="relative mt-1">
+      {props.label ? (
+        <Combobox.Label className="mb-1 block text-sm font-medium text-gray-700">
+          {props.label}
+        </Combobox.Label>
+      ) : null}
+      <div className="relative">
         <Combobox.Input
           placeholder={
             props.options
