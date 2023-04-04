@@ -19,7 +19,7 @@ export default function PermissionCard(props: {
     <div className="rounded-md border p-6">
       <h3 className="text-xl font-semibold">{props.title}</h3>
       <p className="mt-1 text-sm text-gray-500">{props.description}</p>
-      <ul className="mt-4 divide-y border-t">
+      <ul className="mt-4 space-y-4 divide-y border-t">
         {props.value.operands.map((operand, index) => (
           <li key={index} className="pt-4">
             {props.value.operands.length === 1 ? null : (
