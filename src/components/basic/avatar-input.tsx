@@ -39,9 +39,7 @@ export default function AvatarInput(props: {
 
   return (
     <div className="flex items-center">
-      <span className="h-16 w-16 overflow-hidden rounded-full bg-gray-100">
-        <Avatar size={16} value={props.value} />
-      </span>
+      <Avatar size={16} value={props.value} />
       <input
         ref={inputRef}
         type="file"
