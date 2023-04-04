@@ -6,10 +6,7 @@ import dayjs from 'dayjs'
 import { uploadToArweave } from '../../utils/upload'
 import { database, getByPermalink } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
-import {
-  proposalSchema,
-  proposalSchemaRefine,
-} from '../../utils/schemas/proposal'
+import { proposalSchema } from '../../utils/schemas/proposal'
 import verifyProposal from '../../utils/verifiers/verify-proposal'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
@@ -183,7 +180,7 @@ export const proposalRouter = router({
       }
     }),
   create: procedure
-    .input(schema.refine(proposalSchemaRefine))
+    .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
       await verifySnapshot(input.authorship)

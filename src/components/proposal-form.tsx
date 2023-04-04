@@ -11,11 +11,7 @@ import clsx from 'clsx'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 
-import {
-  Proposal,
-  proposalSchema,
-  proposalSchemaRefine,
-} from '../utils/schemas/proposal'
+import { Proposal, proposalSchema } from '../utils/schemas/proposal'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
@@ -50,7 +46,7 @@ export default function ProposalForm(props: {
   const router = useRouter()
   const [previewProposal, setPreviewProposal] = useAtom(previewProposalAtom)
   const methods = useForm<Proposal>({
-    resolver: zodResolver(proposalSchema.refine(proposalSchemaRefine)),
+    resolver: zodResolver(proposalSchema),
   })
   const {
     register,
