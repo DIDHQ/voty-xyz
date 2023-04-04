@@ -14,7 +14,7 @@ import useGroup from '../../../hooks/use-group'
 import Button from '../../../components/basic/button'
 import useIsManager from '../../../hooks/use-is-manager'
 import { previewCommunityAtom } from '../../../utils/atoms'
-import RulesView from '../../../components/rules-view'
+import GroupAbout from '../../../components/group-about'
 import { extractStartEmoji } from '../../../utils/emoji'
 
 export default function GroupRulesPage() {
@@ -68,7 +68,7 @@ export default function GroupRulesPage() {
             </p>
           ) : null}
           {group ? (
-            <RulesView entry={query.entry} group={group} className="mt-6" />
+            <GroupAbout entry={query.entry} group={group} className="mt-6" />
           ) : null}
           {isManager && !previewCommunity ? (
             <Link
