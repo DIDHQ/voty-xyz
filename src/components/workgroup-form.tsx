@@ -238,7 +238,11 @@ export default function WorkgroupForm(props: {
               primary
               icon={EyeIcon}
               onClick={onSubmit((value) => {
-                setPreviewCommunity({ ...value, preview: props.preview })
+                setPreviewCommunity({
+                  ...value,
+                  preview: props.preview,
+                  group: props.group,
+                })
                 router.push(props.preview.to)
               }, console.error)}
             >

@@ -8,7 +8,7 @@ import { Preview } from './types'
 export const showBannerAtom = atomWithStorage('showBanner', true)
 
 export const previewCommunityAtom = atom<
-  (Community & { preview: Preview }) | undefined
+  (Community & { preview: Preview; group?: string }) | undefined
 >(undefined)
 
 export const previewProposalAtom = atom<

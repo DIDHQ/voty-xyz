@@ -20,10 +20,11 @@ export default function PreviewBar() {
   const [previewProposal, setPreviewProposal] = useAtom(previewProposalAtom)
   const document = previewCommunity || previewProposal
   const preview = document?.preview
-  const { data: community, refetch } = trpc.community.getByEntry.useQuery(
+  const { data: community } = trpc.community.getByEntry.useQuery(
     { entry: previewCommunity?.preview.author },
     { enabled: !!previewCommunity?.preview.author },
   )
+  const utils = trpc.useContext()
   useEffect(() => {
     function handler(url: string) {
       if (preview && url !== preview.from && url !== preview.to) {
@@ -39,32 +40,52 @@ export default function PreviewBar() {
   const signDocument = useSignDocument(preview?.author, preview?.template)
   const { mutateAsync: mutateCommunity } = trpc.community.create.useMutation()
   const { mutateAsync: mutateProposal } = trpc.proposal.create.useMutation()
-  const handleSubmit = useMutation<void, Error, object & { preview: Preview }>(
-    async ({ preview, ...document }) => {
-      if (isCommunity(document)) {
-        const signed = await signDocument(document)
-        if (signed) {
-          await mutateCommunity(signed)
-          await refetch()
-          setPreviewCommunity(undefined)
-          router.push(`/${signed.authorship.author}`)
-        }
+  const handleSubmit = useMutation<
+    void,
+    Error,
+    object & { preview: Preview; group?: string }
+  >(async ({ preview, ...document }) => {
+    if (isCommunity(document)) {
+      const signed = await signDocument(document)
+      if (signed) {
+        await mutateCommunity(signed)
+        await Promise.all([
+          utils.community.getByEntry.prefetch({
+            entry: signed.authorship.author,
+          }),
+          utils.proposal.list.prefetch({
+            entry: signed.authorship.author,
+            group: document.group,
+          }),
+        ])
+        setPreviewCommunity(undefined)
+        router.push(
+          document.group
+            ? `/${signed.authorship.author}/${document.group}`
+            : `/${signed.authorship.author}`,
+        )
       }
-      if (isProposal(document)) {
-        const signed = await signDocument(document)
-        if (signed) {
-          const permalink = await mutateProposal(signed)
-          setPreviewProposal(undefined)
-          router.push(
-            preview.to.replace(
-              new RegExp(`\/${previewPermalink}\$`),
-              `/${permalink2Id(permalink)}`,
-            ),
-          )
-        }
+    }
+    if (isProposal(document)) {
+      const signed = await signDocument(document)
+      if (signed) {
+        const permalink = await mutateProposal(signed)
+        await Promise.all([
+          utils.proposal.getByPermalink.prefetch({ permalink }),
+          utils.community.getByPermalink.prefetch({
+            permalink: signed.community,
+          }),
+        ])
+        setPreviewProposal(undefined)
+        router.push(
+          preview.to.replace(
+            new RegExp(`\/${previewPermalink}\$`),
+            `/${permalink2Id(permalink)}`,
+          ),
+        )
       }
-    },
-  )
+    }
+  })
 
   return (
     <>
