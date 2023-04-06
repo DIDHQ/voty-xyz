@@ -34,10 +34,10 @@ export default function GroupAboutPage() {
     [emoji, group?.name],
   )
   useEffect(() => {
-    if (community === null || (community && !group)) {
+    if (community === null || (community && !group && !previewCommunity)) {
       router.push('/404')
     }
-  }, [community, group, router])
+  }, [community, group, previewCommunity, router])
 
   return (
     <>

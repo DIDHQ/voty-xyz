@@ -88,6 +88,7 @@ export default function CreateGroupPage() {
               to: `/${query.entry}/${newGroup}/about`,
               template: `You are creating workgroup on Voty\n\nhash:\n{sha256}`,
               author: query.entry,
+              group: newGroup,
             }}
             className="pt-6 sm:pt-8"
           />
