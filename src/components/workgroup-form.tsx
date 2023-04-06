@@ -35,7 +35,7 @@ export default function WorkgroupForm(props: {
   initialValue?: Community
   group?: string
   onArchive?: () => void
-  preview: Preview
+  preview: Preview & { group: string }
   className?: string
 }) {
   const { onArchive } = props
@@ -51,6 +51,7 @@ export default function WorkgroupForm(props: {
     control,
     register,
     reset,
+    setValue,
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
@@ -65,7 +66,17 @@ export default function WorkgroupForm(props: {
   }, [props.initialValue?.groups, props.group])
   useEffect(() => {
     reset(previewCommunity || props.initialValue)
-  }, [previewCommunity, props.initialValue, reset])
+    if (props.group) {
+      setValue(`groups.${groupIndex}.id`, props.group)
+    }
+  }, [
+    groupIndex,
+    previewCommunity,
+    props.group,
+    props.initialValue,
+    reset,
+    setValue,
+  ])
   const isNewGroup = !props.onArchive
   const signDocument = useSignDocument(
     props.author,
@@ -241,7 +252,6 @@ export default function WorkgroupForm(props: {
                 setPreviewCommunity({
                   ...value,
                   preview: props.preview,
-                  group: props.group,
                 })
                 router.push(props.preview.to)
               }, console.error)}

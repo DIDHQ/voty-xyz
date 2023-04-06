@@ -53,6 +53,7 @@ export default function GroupSettingsPage() {
               to: `/${query.entry}/${query.group}/about`,
               template: `You are updating workgroup on Voty\n\nhash:\n{sha256}`,
               author: query.entry,
+              group: query.group,
             }}
             className="pt-6 sm:pt-8"
           />

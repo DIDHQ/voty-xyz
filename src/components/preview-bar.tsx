@@ -43,7 +43,7 @@ export default function PreviewBar() {
   const handleSubmit = useMutation<
     void,
     Error,
-    object & { preview: Preview; group?: string }
+    object & { preview: Preview & { group?: string } }
   >(async ({ preview, ...document }) => {
     if (isCommunity(document)) {
       const signed = await signDocument(document)
@@ -55,13 +55,14 @@ export default function PreviewBar() {
           }),
           utils.proposal.list.prefetch({
             entry: signed.authorship.author,
-            group: document.group,
+            group: preview.group,
+            phase: undefined,
           }),
         ])
         setPreviewCommunity(undefined)
         router.push(
-          document.group
-            ? `/${signed.authorship.author}/${document.group}`
+          preview.group
+            ? `/${signed.authorship.author}/${preview.group}`
             : `/${signed.authorship.author}`,
         )
       }
