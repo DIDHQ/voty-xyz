@@ -16,7 +16,7 @@ export default function GroupPermission(props: {
     <>
       <PermissionCard
         title="Proposers"
-        description="SubDIDs who can initiate proposals in this working group"
+        description="SubDIDs who can initiate proposals in this workgroup"
         entry={props.entry}
         value={group.permission.proposing}
       />

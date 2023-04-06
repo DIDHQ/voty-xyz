@@ -133,7 +133,7 @@ export default function WorkgroupForm(props: {
         </FormSection>
         <FormSection
           title="Proposers"
-          description="SubDIDs who can initiate proposals in this working group"
+          description="SubDIDs who can initiate proposals in this workgroup"
         >
           <Grid6>
             <GridItem6>
