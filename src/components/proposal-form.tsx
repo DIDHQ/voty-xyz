@@ -17,7 +17,7 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import TextButton from './basic/text-button'
 import { Form, FormItem, FormSection } from './basic/form'
-import { Grid6, GridItem2, GridItem3, GridItem6 } from './basic/grid'
+import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import useStatus from '../hooks/use-status'
 import { Community } from '../utils/schemas/community'
@@ -31,16 +31,16 @@ import {
   requiredCoinTypesOfBooleanSets,
 } from '../utils/functions/boolean'
 import Button from './basic/button'
-import RadioGroup from './basic/radio-group'
+import RadioGroup2 from './basic/radio-group2'
 import { previewProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
 import Slide from './basic/slide'
 import GroupPermission from './group-permission'
 
 export default function ProposalForm(props: {
-  initialValue?: Partial<Proposal>
-  community?: Authorized<Community> & Serialize<{ entry: Entry }>
-  group?: Group
+  initialValue: Partial<Proposal>
+  community: Authorized<Community> & Serialize<{ entry: Entry }>
+  group: Group
   className?: string
 }) {
   const router = useRouter()
@@ -80,41 +80,37 @@ export default function ProposalForm(props: {
   }, [props.group, setValue])
   const [did, setDid] = useState('')
   const { data: snapshots } = useQuery(
-    ['snapshots', did, props.group?.permission.proposing],
+    ['snapshots', did, props.group.permission.proposing],
     async () => {
       const requiredCoinTypes = uniq([
         ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
-        ...requiredCoinTypesOfBooleanSets(props.group!.permission.proposing!),
+        ...requiredCoinTypesOfBooleanSets(props.group.permission.proposing),
       ])
-      const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
+      const snapshots = await pMap(requiredCoinTypes, getCurrentSnapshot, {
         concurrency: 5,
       })
       return snapshots.reduce((obj, snapshot, index) => {
-        obj[requiredCoinTypes![index]] = snapshot.toString()
+        obj[requiredCoinTypes[index]] = snapshot.toString()
         return obj
       }, {} as { [coinType: string]: string })
     },
-    {
-      enabled: !!props.group?.permission.proposing,
-      refetchInterval: 30000,
-    },
+    { refetchInterval: 30000 },
   )
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account)
   const { data: disables } = useQuery(
-    [dids, props.group?.permission.proposing],
+    [dids, props.group.permission.proposing],
     async () => {
       const requiredCoinTypes = uniq([
         ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
-        ...requiredCoinTypesOfBooleanSets(props.group!.permission.proposing!),
+        ...requiredCoinTypesOfBooleanSets(props.group.permission.proposing),
       ])
-      const snapshots = await pMap(requiredCoinTypes!, getCurrentSnapshot, {
+      const snapshots = await pMap(requiredCoinTypes, getCurrentSnapshot, {
         concurrency: 5,
       })
       const booleans = await pMap(
         dids!,
-        (did) =>
-          checkBoolean(props.group!.permission.proposing, did, snapshots!),
+        (did) => checkBoolean(props.group.permission.proposing, did, snapshots),
         { concurrency: 5 },
       )
       return dids!.reduce((obj, did, index) => {
@@ -122,7 +118,7 @@ export default function ProposalForm(props: {
         return obj
       }, {} as { [key: string]: boolean })
     },
-    { enabled: !!dids && !!props.group },
+    { enabled: !!dids },
   )
   const didOptions = useMemo(
     () =>
@@ -145,7 +141,7 @@ export default function ProposalForm(props: {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
-  const { data: status } = useStatus(props.community?.entry.community)
+  const { data: status } = useStatus(props.community.entry.community)
   const options = watch('options') || []
   const disabled = useMemo(
     () => !status?.timestamp || !did || !props.community || !snapshots,
@@ -169,9 +165,7 @@ export default function ProposalForm(props: {
 
   return (
     <Form
-      title={`New proposal${
-        props.group?.name ? ` for ${props.group.name}` : ''
-      }`}
+      title={`New proposal for ${props.group.name}`}
       className={props.className}
     >
       <FormSection title="Proposer" description="Author of the proposal">
@@ -198,7 +192,7 @@ export default function ProposalForm(props: {
                     props.group ? (
                       <div className="space-y-6">
                         <GroupPermission
-                          entry={props.community?.entry.did}
+                          entry={props.community.entry.did}
                           group={props.group}
                         />
                       </div>
@@ -247,7 +241,7 @@ export default function ProposalForm(props: {
                 control={control}
                 name="voting_type"
                 render={({ field: { value, onChange } }) => (
-                  <RadioGroup
+                  <RadioGroup2
                     options={votingTypes}
                     value={value}
                     onChange={onChange}
@@ -319,7 +313,7 @@ export default function ProposalForm(props: {
             setPreviewProposal({
               ...value,
               preview: {
-                from: `/${props.community?.entry.did}/${props.group?.id}/create`,
+                from: `/${props.community.entry.did}/${props.group.id}/create`,
                 to: `/proposal/${previewPermalink}`,
                 template: `You are creating proposal on Voty\n\nhash:\n{sha256}`,
                 author: did,

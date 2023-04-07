@@ -1,10 +1,15 @@
 import { Fragment, ReactNode, useEffect, useState } from 'react'
 import { Portal, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import {
+  ExclamationTriangleIcon,
+  CheckCircleIcon,
+} from '@heroicons/react/24/outline'
+import { upperFirst } from 'lodash-es'
 
 export default function Notification(props: {
   show: boolean
+  type: 'success' | 'error'
   children: ReactNode
 }) {
   const [show, setShow] = useState(props.show)
@@ -22,7 +27,7 @@ export default function Notification(props: {
     <Portal>
       <div
         aria-live="assertive"
-        className="pointer-events-none fixed inset-0 top-16 z-50 flex items-end px-4 py-6 sm:items-start sm:p-6"
+        className="pointer-events-none fixed inset-0 z-50 flex items-end px-4 py-6 sm:items-start sm:p-6"
       >
         <div className="flex w-full flex-col items-center space-y-4 sm:items-end">
           <Transition
@@ -39,13 +44,22 @@ export default function Notification(props: {
               <div className="p-4">
                 <div className="flex items-start">
                   <div className="shrink-0">
-                    <ExclamationTriangleIcon
-                      className="h-6 w-6 text-red-400"
-                      aria-hidden="true"
-                    />
+                    {props.type === 'error' ? (
+                      <ExclamationTriangleIcon
+                        className="h-6 w-6 text-red-400"
+                        aria-hidden="true"
+                      />
+                    ) : props.type === 'success' ? (
+                      <CheckCircleIcon
+                        className="h-6 w-6 text-green-400"
+                        aria-hidden="true"
+                      />
+                    ) : null}
                   </div>
                   <div className="ml-3 w-0 flex-1 pt-0.5">
-                    <p className="text-sm font-medium text-gray-900">Error</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {upperFirst(props.type)}
+                    </p>
                     <p className="mt-1 text-sm text-gray-500">
                       {props.children}
                     </p>

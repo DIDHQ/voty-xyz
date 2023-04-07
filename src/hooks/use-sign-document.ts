@@ -11,19 +11,17 @@ import useWallet from './use-wallet'
 export default function useSignDocument(
   did?: string,
   template?: string,
-): <T extends object>(
-  document: T,
-) => Promise<Proved<Authorized<T>> | undefined> {
+): <T extends object>(document: T) => Promise<Proved<Authorized<T>>> {
   const { account, connect, signMessage } = useWallet()
 
   return useCallback(
     async (document) => {
       if (!did) {
-        return
+        throw new Error('Login required')
       }
       if (!account?.address) {
         connect()
-        return
+        throw new Error('Login required')
       }
       const coinType = requiredCoinTypeOfDidChecker(did)
       const snapshot = await getCurrentSnapshot(coinType)

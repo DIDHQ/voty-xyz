@@ -27,10 +27,10 @@ export default function CommunitySettingsPage() {
         <TextButton href={`/${query.entry}/about`} className="mt-6 sm:mt-8">
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
-        {query.entry ? (
+        {query.entry && community !== undefined ? (
           <CommunityForm
             author={query.entry}
-            initialValue={community || undefined}
+            initialValue={community}
             preview={{
               from: router.asPath,
               to: `/${query.entry}/about`,

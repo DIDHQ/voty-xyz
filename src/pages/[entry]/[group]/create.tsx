@@ -19,7 +19,7 @@ export default function CreateProposalPage() {
     { enabled: !!query.entry },
   )
   const group = useGroup(community, query.group)
-  const initialValue = useMemo<Partial<Proposal> | undefined>(
+  const initialValue = useMemo<Partial<Proposal>>(
     () => ({ voting_type: 'single', options: ['', ''] }),
     [],
   )
@@ -43,12 +43,14 @@ export default function CreateProposalPage() {
         >
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
-        <ProposalForm
-          initialValue={initialValue}
-          community={community || undefined}
-          group={group}
-          className="pt-6 sm:pt-8"
-        />
+        {community && group ? (
+          <ProposalForm
+            initialValue={initialValue}
+            community={community}
+            group={group}
+            className="pt-6 sm:pt-8"
+          />
+        ) : null}
       </div>
     </>
   )

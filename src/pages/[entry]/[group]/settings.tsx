@@ -42,10 +42,10 @@ export default function GroupSettingsPage() {
         >
           <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
         </TextButton>
-        {query.entry && query.group ? (
+        {query.entry && query.group && community !== undefined ? (
           <WorkgroupForm
             author={query.entry}
-            initialValue={community || undefined}
+            initialValue={community}
             group={query.group}
             onArchive={handleArchive}
             preview={{

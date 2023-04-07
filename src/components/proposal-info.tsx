@@ -29,74 +29,77 @@ export default function ProposalInfo(props: {
     { enabled: !!props.proposal?.community, refetchOnWindowFocus: false },
   )
   const group = useGroup(community, props.proposal?.group)
+  const disabled = props.proposal?.permalink === previewPermalink
 
   return (
     <div
       className={clsx(
-        'relative w-full shrink-0 sm:mt-8 sm:w-80',
+        'w-full shrink-0 space-y-6 rounded-md border border-gray-200 p-6 sm:mt-8 sm:w-80',
         props.className,
       )}
     >
-      <div className="space-y-6 rounded-md border border-gray-200 p-6">
-        <ProposalProgress
-          proposal={props.proposal?.permalink}
-          duration={group?.duration}
-        />
-        <DetailList title="Criteria for approval">
-          <Article small className="pt-2">
-            <Markdown>{group?.extension.criteria_for_approval}</Markdown>
-          </Article>
+      <ProposalProgress
+        proposal={props.proposal?.permalink}
+        duration={group?.duration}
+      />
+      <DetailList title="Criteria for approval">
+        <Article small className="pt-2">
+          <Markdown>{group?.extension.criteria_for_approval}</Markdown>
+        </Article>
+      </DetailList>
+      <DetailList title="Information">
+        <DetailItem title="Community" className="truncate whitespace-nowrap">
+          {community ? (
+            <TextButton
+              disabled={disabled}
+              href={`/${community.authorship.author}`}
+            >
+              {community.name}
+            </TextButton>
+          ) : (
+            '...'
+          )}
+        </DetailItem>
+        <DetailItem title="Workgroup" className="truncate whitespace-nowrap">
+          {group && community ? (
+            <TextButton
+              disabled={disabled}
+              href={`/${community.authorship.author}/${group.id}`}
+            >
+              {group.name}
+            </TextButton>
+          ) : (
+            '...'
+          )}
+        </DetailItem>
+        <DetailItem title="Proposer" className="truncate whitespace-nowrap">
+          {props.proposal?.authorship?.author || '...'}
+        </DetailItem>
+      </DetailList>
+      {props.proposal?.snapshots ? (
+        <DetailList title="On-chain verification">
+          <DetailItem title="Snapshot">
+            <TextButton
+              disabled={disabled}
+              href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
+                props.proposal.snapshots[commonCoinTypes.CKB]
+              }`}
+            >
+              {formatNumber(
+                parseInt(props.proposal.snapshots[commonCoinTypes.CKB], 10),
+              )}
+            </TextButton>
+          </DetailItem>
+          <DetailItem title="Arweave TX">
+            <TextButton
+              disabled={disabled}
+              href={permalink2Explorer(props.proposal?.permalink)}
+            >
+              {props.proposal?.permalink.substring(40) || '...'}
+            </TextButton>
+          </DetailItem>
         </DetailList>
-        <DetailList title="Information">
-          <DetailItem title="Community" className="truncate whitespace-nowrap">
-            {community ? (
-              <TextButton href={`/${community.authorship.author}`}>
-                {community.name}
-              </TextButton>
-            ) : (
-              '...'
-            )}
-          </DetailItem>
-          <DetailItem title="Workgroup" className="truncate whitespace-nowrap">
-            {group && community ? (
-              <TextButton href={`/${community.authorship.author}/${group.id}`}>
-                {group.name}
-              </TextButton>
-            ) : (
-              '...'
-            )}
-          </DetailItem>
-          <DetailItem title="Proposer" className="truncate whitespace-nowrap">
-            {props.proposal?.authorship?.author || '...'}
-          </DetailItem>
-        </DetailList>
-        {props.proposal?.snapshots ? (
-          <DetailList title="On-chain verification">
-            <DetailItem title="Snapshot">
-              <TextButton
-                href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
-                  props.proposal.snapshots[commonCoinTypes.CKB]
-                }`}
-              >
-                {formatNumber(
-                  parseInt(props.proposal.snapshots[commonCoinTypes.CKB], 10),
-                )}
-              </TextButton>
-            </DetailItem>
-            <DetailItem title="Arweave TX">
-              <TextButton
-                href={
-                  props.proposal?.permalink === previewPermalink
-                    ? undefined
-                    : permalink2Explorer(props.proposal?.permalink)
-                }
-              >
-                {props.proposal?.permalink.substring(40) || '...'}
-              </TextButton>
-            </DetailItem>
-          </DetailList>
-        ) : null}
-      </div>
+      ) : null}
     </div>
   )
 }

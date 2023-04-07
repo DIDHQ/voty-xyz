@@ -24,7 +24,7 @@ const AvatarInput = dynamic(() => import('./basic/avatar-input'), {
 
 export default function CommunityForm(props: {
   author: string
-  initialValue?: Community
+  initialValue: Community | null
   preview: Preview
   className?: string
 }) {
