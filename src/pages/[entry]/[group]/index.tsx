@@ -74,7 +74,7 @@ export default function GroupIndexPage() {
           <CreateProposalButton
             entry={query.entry}
             group={group}
-            community={community?.entry.community}
+            community={community?.permalink}
           />
         </div>
         {proposals?.length === 0 ? (

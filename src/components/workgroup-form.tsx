@@ -76,7 +76,7 @@ export default function WorkgroupForm(props: {
     props.author,
     `You are archiving workgroup on Voty\n\nhash:\n{sha256}`,
   )
-  const { mutateAsync } = trpc.community.create.useMutation()
+  const { mutateAsync } = trpc.community.upsert.useMutation()
   const handleArchive = useMutation<void, Error, Community>(
     async (community) => {
       const signed = await signDocument({

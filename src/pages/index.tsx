@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
-import Button from '../components/basic/button'
 
+import Button from '../components/basic/button'
 import { Grid6, GridItem2 } from '../components/basic/grid'
 import LoadingBar from '../components/basic/loading-bar'
 import CommunityCard from '../components/community-card'
@@ -39,7 +39,7 @@ export default function IndexPage() {
       <h2 className="mt-7 text-xl font-semibold sm:mt-9">Communities</h2>
       <Grid6 className="w-full py-6">
         {communities?.map((community) => (
-          <GridItem2 key={community.entry.community}>
+          <GridItem2 key={community.authorship.author}>
             <CommunityCard community={community} />
           </GridItem2>
         ))}

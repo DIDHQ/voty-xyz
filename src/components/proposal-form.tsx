@@ -5,8 +5,6 @@ import { Controller, useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
 import { uniq } from 'lodash-es'
 import { EyeIcon } from '@heroicons/react/20/solid'
-import { Entry } from '@prisma/client'
-import type { Serialize } from '@trpc/server/dist/shared/internal/serialize'
 import clsx from 'clsx'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
@@ -39,7 +37,7 @@ import GroupPermission from './group-permission'
 
 export default function ProposalForm(props: {
   initialValue: Partial<Proposal>
-  community: Authorized<Community> & Serialize<{ entry: Entry }>
+  community: Authorized<Community> & { permalink: string }
   group: Group
   className?: string
 }) {
@@ -70,7 +68,7 @@ export default function ProposalForm(props: {
   )
   useEffect(() => {
     if (props.community) {
-      setValue('community', props.community.entry.community)
+      setValue('community', props.community.permalink)
     }
   }, [props.community, setValue])
   useEffect(() => {
@@ -141,7 +139,7 @@ export default function ProposalForm(props: {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
-  const { data: status } = useStatus(props.community.entry.community)
+  const { data: status } = useStatus(props.community.permalink)
   const options = watch('options') || []
   const disabled = useMemo(
     () => !status?.timestamp || !did || !props.community || !snapshots,
@@ -192,7 +190,7 @@ export default function ProposalForm(props: {
                     props.group ? (
                       <div className="space-y-6">
                         <GroupPermission
-                          entry={props.community.entry.did}
+                          entry={props.community.authorship.author}
                           group={props.group}
                         />
                       </div>
@@ -313,7 +311,7 @@ export default function ProposalForm(props: {
             setPreviewProposal({
               ...value,
               preview: {
-                from: `/${props.community.entry.did}/${props.group.id}/create`,
+                from: `/${props.community.authorship.author}/${props.group.id}/create`,
                 to: `/proposal/${previewPermalink}`,
                 template: `You are creating proposal on Voty\n\nhash:\n{sha256}`,
                 author: did,
