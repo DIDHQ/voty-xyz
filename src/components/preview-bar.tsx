@@ -41,50 +41,48 @@ export default function PreviewBar() {
   const { mutateAsync: mutateCommunity } = trpc.community.create.useMutation()
   const { mutateAsync: mutateProposal } = trpc.proposal.create.useMutation()
   const handleSubmit = useMutation<
-    void,
+    string,
     Error,
     object & { preview: Preview & { group?: string } }
   >(async ({ preview, ...document }) => {
     if (isCommunity(document)) {
       const signed = await signDocument(document)
-      if (signed) {
-        await mutateCommunity(signed)
-        await Promise.all([
-          utils.community.getByEntry.prefetch({
-            entry: signed.authorship.author,
-          }),
-          utils.proposal.list.prefetch({
-            entry: signed.authorship.author,
-            group: preview.group,
-            phase: undefined,
-          }),
-        ])
-        setPreviewCommunity(undefined)
-        router.push(
-          preview.group
-            ? `/${signed.authorship.author}/${preview.group}`
-            : `/${signed.authorship.author}`,
-        )
-      }
+      await mutateCommunity(signed)
+      await Promise.all([
+        utils.community.getByEntry.prefetch({
+          entry: signed.authorship.author,
+        }),
+        utils.proposal.list.prefetch({
+          entry: signed.authorship.author,
+          group: preview.group,
+          phase: undefined,
+        }),
+      ])
+      setPreviewCommunity(undefined)
+      router.push(
+        preview.group
+          ? `/${signed.authorship.author}/${preview.group}`
+          : `/${signed.authorship.author}`,
+      )
+      return preview.group ? 'workgroup' : 'community'
     }
     if (isProposal(document)) {
       const signed = await signDocument(document)
-      if (signed) {
-        const permalink = await mutateProposal(signed)
-        await Promise.all([
-          utils.proposal.getByPermalink.prefetch({ permalink }),
-          utils.community.getByPermalink.prefetch({
-            permalink: signed.community,
-          }),
-        ])
-        setPreviewProposal(undefined)
-        router.push(
-          preview.to.replace(
-            new RegExp(`\/${previewPermalink}\$`),
-            `/${permalink2Id(permalink)}`,
-          ),
-        )
-      }
+      const permalink = await mutateProposal(signed)
+      await Promise.all([
+        utils.proposal.getByPermalink.prefetch({ permalink }),
+        utils.community.getByPermalink.prefetch({
+          permalink: signed.community,
+        }),
+      ])
+      setPreviewProposal(undefined)
+      router.push(
+        preview.to.replace(
+          new RegExp(`\/${previewPermalink}\$`),
+          `/${permalink2Id(permalink)}`,
+        ),
+      )
+      return 'proposal'
     }
   })
 
@@ -93,8 +91,13 @@ export default function PreviewBar() {
       <Notification type="error" show={handleSubmit.isError}>
         {handleSubmit.error?.message}
       </Notification>
+      <Notification type="success" show={handleSubmit.isSuccess}>
+        {handleSubmit.data
+          ? `Your ${handleSubmit.data} has been submitted successfully`
+          : 'Submitted successfully'}
+      </Notification>
       {preview?.to === router.asPath ? (
-        <footer className="fixed inset-x-0 bottom-0 h-18 border-t bg-primary-500">
+        <footer className="fixed inset-x-0 bottom-0 h-18 border-t bg-primary-600">
           <div className="mx-auto flex h-18 max-w-5xl items-center justify-between px-6">
             <TextButton white href={preview.from}>
               ← Back

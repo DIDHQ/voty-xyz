@@ -55,9 +55,7 @@ export default function SubscriptionButton(props: {
       entry: props.entry,
       subscribe: true,
     })
-    if (signed) {
-      await mutateAsync(signed)
-    }
+    await mutateAsync(signed)
   })
   const handleUnsubscribe = useMutation<
     void,
@@ -71,9 +69,7 @@ export default function SubscriptionButton(props: {
       entry: props.entry,
       subscribe: false,
     })
-    if (signed) {
-      await mutateAsync(signed)
-    }
+    await mutateAsync(signed)
   })
   useEffect(() => {
     if (isSuccess) {

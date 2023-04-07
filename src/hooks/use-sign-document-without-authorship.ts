@@ -6,14 +6,14 @@ import useWallet from './use-wallet'
 
 export default function useSignDocumentWithoutAuthorship(
   template?: string,
-): <T extends object>(document: T) => Promise<Proved<T> | undefined> {
+): <T extends object>(document: T) => Promise<Proved<T>> {
   const { account, connect, signMessage } = useWallet()
 
   return useCallback(
     async (document) => {
       if (!account?.address) {
         connect()
-        return
+        throw new Error('Login required')
       }
 
       const proof = await signDocument(

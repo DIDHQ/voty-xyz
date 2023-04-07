@@ -83,10 +83,8 @@ export default function WorkgroupForm(props: {
         ...community,
         groups: community.groups?.filter(({ id }) => id !== props.group),
       })
-      if (signed) {
-        await mutateAsync(signed)
-        onArchive?.()
-      }
+      await mutateAsync(signed)
+      onArchive?.()
     },
   )
   const isManager = useIsManager(props.author)

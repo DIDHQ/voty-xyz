@@ -141,10 +141,8 @@ export default function VoteForm(props: {
   )
   const handleSubmit = useMutation<void, Error, Vote>(async (vote) => {
     const signed = await signDocument(vote)
-    if (signed) {
-      await mutateAsync(signed)
-      handleSuccess()
-    }
+    await mutateAsync(signed)
+    handleSuccess()
   })
   const defaultDid = useMemo(
     () => didOptions?.find(({ disabled }) => !disabled)?.did,
