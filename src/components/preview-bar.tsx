@@ -90,7 +90,7 @@ export default function PreviewBar() {
 
   return (
     <>
-      <Notification show={handleSubmit.isError}>
+      <Notification type="error" show={handleSubmit.isError}>
         {handleSubmit.error?.message}
       </Notification>
       {preview?.to === router.asPath ? (

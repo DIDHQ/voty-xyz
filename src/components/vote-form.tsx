@@ -164,8 +164,11 @@ export default function VoteForm(props: {
 
   return (
     <>
-      <Notification show={handleSubmit.isError}>
+      <Notification type="error" show={handleSubmit.isError}>
         {handleSubmit.error?.message}
+      </Notification>
+      <Notification type="success" show={handleSubmit.isSuccess}>
+        Your vote has been submitted successfully
       </Notification>
       <div className={clsx('mt-6 border-t border-gray-200', props.className)}>
         <FormItem error={errors.choice?.message}>

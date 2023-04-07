@@ -84,11 +84,13 @@ export default function SubscriptionButton(props: {
 
   return (
     <>
-      <Notification show={isError}>{error?.message}</Notification>
-      <Notification show={handleUnsubscribe.isError}>
+      <Notification type="error" show={isError}>
+        {error?.message}
+      </Notification>
+      <Notification type="error" show={handleUnsubscribe.isError}>
         {handleUnsubscribe.error?.message}
       </Notification>
-      <Notification show={handleSubscribe.isError}>
+      <Notification type="error" show={handleSubscribe.isError}>
         {handleSubscribe.error?.message}
       </Notification>
       {subscribed ? (

@@ -103,7 +103,7 @@ export default function WorkgroupForm(props: {
 
   return (
     <>
-      <Notification show={handleArchive.isError}>
+      <Notification type="error" show={handleArchive.isError}>
         {handleArchive.error?.message}
       </Notification>
       <Form

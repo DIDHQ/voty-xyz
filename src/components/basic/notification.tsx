@@ -1,10 +1,14 @@
 import { Fragment, ReactNode, useEffect, useState } from 'react'
 import { Portal, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import {
+  ExclamationTriangleIcon,
+  CheckCircleIcon,
+} from '@heroicons/react/24/outline'
 
 export default function Notification(props: {
   show: boolean
+  type: 'success' | 'error'
   children: ReactNode
 }) {
   const [show, setShow] = useState(props.show)
@@ -39,10 +43,17 @@ export default function Notification(props: {
               <div className="p-4">
                 <div className="flex items-start">
                   <div className="shrink-0">
-                    <ExclamationTriangleIcon
-                      className="h-6 w-6 text-red-400"
-                      aria-hidden="true"
-                    />
+                    {props.type === 'error' ? (
+                      <ExclamationTriangleIcon
+                        className="h-6 w-6 text-red-400"
+                        aria-hidden="true"
+                      />
+                    ) : props.type === 'success' ? (
+                      <CheckCircleIcon
+                        className="h-6 w-6 text-green-400"
+                        aria-hidden="true"
+                      />
+                    ) : null}
                   </div>
                   <div className="ml-3 w-0 flex-1 pt-0.5">
                     <p className="text-sm font-medium text-gray-900">Error</p>
