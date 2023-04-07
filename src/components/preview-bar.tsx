@@ -84,6 +84,7 @@ export default function PreviewBar() {
       )
       return 'proposal'
     }
+    throw new Error('')
   })
 
   return (
