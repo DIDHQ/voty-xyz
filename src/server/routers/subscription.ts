@@ -51,16 +51,20 @@ export const subscriptionRouter = router({
         where: { subscriber: JSON.stringify(input.subscriber) },
         orderBy: { ts: 'desc' },
       })
-      const communities = keyBy(
-        await database.community.findMany({
-          where: { entry: { in: subscriptions.map(({ entry }) => entry) } },
+      const entries = keyBy(
+        await database.entry.findMany({
+          where: { did: { in: subscriptions.map(({ entry }) => entry) } },
         }),
-        ({ entry }) => entry,
+        ({ did }) => did,
+      )
+      const communities = await mapByPermalinks(
+        DataType.COMMUNITY,
+        Object.values(entries).map(({ community }) => community),
       )
 
       return compact(
         subscriptions
-          .map(({ entry }) => communities[entry])
+          .map(({ entry }) => communities[entries[entry]?.community])
           .filter((community) => community)
           .map(({ permalink, data }) => {
             try {
@@ -93,8 +97,8 @@ export const subscriptionRouter = router({
           database.subscription.create({
             data: { entry: input.entry, subscriber, ts: new Date() },
           }),
-          database.community.update({
-            where: { entry: input.entry },
+          database.entry.update({
+            where: { did: input.entry },
             data: { subscribers: { increment: 1 } },
           }),
         ])
@@ -105,8 +109,8 @@ export const subscriptionRouter = router({
               entry_subscriber: { entry: input.entry, subscriber },
             },
           }),
-          database.community.update({
-            where: { entry: input.entry },
+          database.entry.update({
+            where: { did: input.entry },
             data: { subscribers: { decrement: 1 } },
           }),
         ])

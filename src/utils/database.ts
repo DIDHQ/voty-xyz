@@ -21,7 +21,7 @@ export async function getByPermalink<T extends DataType>(
 ) {
   const data =
     type === DataType.COMMUNITY
-      ? await database.community.findFirst({ where: { permalink } })
+      ? await database.community.findUnique({ where: { permalink } })
       : type === DataType.PROPOSAL
       ? await database.proposal.findUnique({ where: { permalink } })
       : type === DataType.VOTE

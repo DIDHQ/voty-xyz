@@ -3,7 +3,7 @@ import { compact, keyBy, last, mapValues } from 'lodash-es'
 import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
-import { database, getByPermalink } from '../../utils/database'
+import { database, getByPermalink, mapByPermalinks } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
 import { communitySchema } from '../../utils/schemas/community'
 import { procedure, router } from '../trpc'
@@ -15,24 +15,37 @@ import verifyProof from '../../utils/verifiers/verify-proof'
 
 const schema = proved(authorized(communitySchema))
 
+const entrySchema = z.object({
+  did: z.string(),
+  ts: z.string(),
+  community: z.string(),
+  subscribers: z.number().int(),
+  proposals: z.number().int(),
+  votes: z.number().int(),
+})
+
 export const communityRouter = router({
   getByEntry: procedure
     .input(z.object({ entry: z.string().optional() }))
-    .output(schema.extend({ permalink: z.string() }).nullable())
+    .output(schema.extend({ entry: entrySchema }).nullable())
     .query(async ({ input }) => {
       if (!input.entry) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const community = await database.community.findUnique({
-        where: { entry: input.entry },
+      const entry = await database.entry.findUnique({
+        where: { did: input.entry },
       })
+      if (!entry) {
+        return null
+      }
+      const community = await getByPermalink(
+        DataType.COMMUNITY,
+        entry.community,
+      )
 
       return community
-        ? {
-            ...schema.parse(community.data),
-            permalink: community.permalink,
-          }
+        ? { ...community.data, entry: { ...entry, ts: entry.ts.toString() } }
         : null
     }),
   checkExistences: procedure
@@ -43,13 +56,13 @@ export const communityRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const communities = await database.community.findMany({
-        where: { entry: { in: input.entries } },
-        select: { entry: true },
+      const entries = await database.entry.findMany({
+        where: { did: { in: input.entries } },
+        select: { did: true },
       })
 
       return mapValues(
-        keyBy(communities, ({ entry }) => entry),
+        keyBy(entries, ({ did }) => did),
         (entry) => !!entry,
       )
     }),
@@ -72,32 +85,41 @@ export const communityRouter = router({
     .input(z.object({ cursor: z.string().optional() }))
     .output(
       z.object({
-        data: z.array(schema),
+        data: z.array(schema.extend({ entry: entrySchema })),
         next: z.string().optional(),
       }),
     )
     .query(async ({ input }) => {
-      const communities = await database.community.findMany({
-        cursor: input.cursor ? { entry: input.cursor } : undefined,
+      const entries = await database.entry.findMany({
+        cursor: input.cursor ? { did: input.cursor } : undefined,
         take: 30,
         skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
+      const communities = await mapByPermalinks(
+        DataType.COMMUNITY,
+        entries.map(({ community }) => community),
+      )
 
       return {
         data: compact(
-          communities.map((community) => {
-            try {
-              return schema.parse(community)
-            } catch {
-              return
-            }
-          }),
+          entries
+            .filter(({ community }) => communities[community])
+            .map((entry) => {
+              try {
+                return {
+                  ...schema.parse(communities[entry.community].data),
+                  entry: { ...entry, ts: entry.ts.toString() },
+                }
+              } catch {
+                return
+              }
+            }),
         ),
-        next: last(communities)?.entry,
+        next: last(entries)?.did,
       }
     }),
-  upsert: procedure
+  create: procedure
     .input(
       schema
         .refine(
@@ -138,23 +160,26 @@ export const communityRouter = router({
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
-      await database.community.upsert({
-        where: { entry: input.authorship.author },
-        create: {
-          entry: input.authorship.author,
-          permalink,
-          ts,
-          data: input,
-          subscribers: 0,
-          proposals: 0,
-          votes: 0,
-        },
-        update: {
-          permalink,
-          ts,
-          data: input,
-        },
-      })
+      await database.$transaction([
+        database.community.create({
+          data: { permalink, ts, entry: input.authorship.author, data: input },
+        }),
+        database.entry.upsert({
+          where: { did: input.authorship.author },
+          create: {
+            did: input.authorship.author,
+            community: permalink,
+            subscribers: 0,
+            proposals: 0,
+            votes: 0,
+            ts,
+          },
+          update: {
+            community: permalink,
+            ts,
+          },
+        }),
+      ])
 
       return permalink
     }),

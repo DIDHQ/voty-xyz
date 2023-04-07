@@ -16,14 +16,10 @@ model Community {
 
   data Json
 
-  subscribers Int @default(0)
-  proposals   Int @default(0)
-  votes       Int @default(0)
-
   ts DateTime
 
-  @@id([entry])
-  @@index([permalink])
+  @@id([permalink])
+  @@index([entry])
 }
 
 model Proposal {
@@ -35,7 +31,7 @@ model Proposal {
 
   data Json
 
-  votes Int @default(0)
+  votes Int
 
   ts            DateTime
   ts_announcing DateTime?
@@ -61,6 +57,19 @@ model Vote {
   @@id([permalink])
   @@unique([proposal, author])
   @@index([author])
+}
+
+model Entry {
+  did       String
+  community String
+
+  subscribers Int
+  proposals   Int
+  votes       Int
+
+  ts DateTime
+
+  @@id([did])
 }
 
 model Choice {

@@ -188,6 +188,13 @@ export const proposalRouter = router({
       await verifyAuthorship(input.authorship, input.proof)
       const { community } = await verifyProposal(input)
 
+      const entry = await database.entry.findFirst({
+        where: { did: community.authorship.author },
+        orderBy: { ts: 'desc' },
+      })
+      if (entry && entry.community !== input.community) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
+      }
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
@@ -204,8 +211,8 @@ export const proposalRouter = router({
             ts,
           },
         }),
-        database.community.update({
-          where: { entry: community.authorship.author },
+        database.entry.update({
+          where: { did: community.authorship.author },
           data: { proposals: { increment: 1 } },
         }),
       ])

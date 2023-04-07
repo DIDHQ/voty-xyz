@@ -38,7 +38,7 @@ export default function PreviewBar() {
     }
   }, [router.events, preview, setPreviewCommunity, setPreviewProposal])
   const signDocument = useSignDocument(preview?.author, preview?.template)
-  const { mutateAsync: mutateCommunity } = trpc.community.upsert.useMutation()
+  const { mutateAsync: mutateCommunity } = trpc.community.create.useMutation()
   const { mutateAsync: mutateProposal } = trpc.proposal.create.useMutation()
   const handleSubmit = useMutation<
     string,

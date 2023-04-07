@@ -105,8 +105,8 @@ export const voteRouter = router({
           where: { permalink: input.proposal },
           data: { votes: { increment: 1 } },
         }),
-        database.community.update({
-          where: { entry: community.authorship.author },
+        database.entry.update({
+          where: { did: community.authorship.author },
           data: { votes: { increment: 1 } },
         }),
         ...Object.entries(

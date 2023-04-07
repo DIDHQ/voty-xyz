@@ -103,7 +103,7 @@ export default function CommunityInfo(props: { className?: string }) {
       <aside className={clsx('relative', props.className)}>
         {previewCommunity ? null : (
           <StatusIcon
-            permalink={data?.permalink}
+            permalink={data?.entry.community}
             className="absolute right-4 top-4"
           />
         )}
