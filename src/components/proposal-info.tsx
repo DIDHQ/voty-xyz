@@ -29,6 +29,7 @@ export default function ProposalInfo(props: {
     { enabled: !!props.proposal?.community, refetchOnWindowFocus: false },
   )
   const group = useGroup(community, props.proposal?.group)
+  const disabled = props.proposal?.permalink === previewPermalink
 
   return (
     <div
@@ -50,7 +51,10 @@ export default function ProposalInfo(props: {
         <DetailList title="Information">
           <DetailItem title="Community" className="truncate whitespace-nowrap">
             {community ? (
-              <TextButton href={`/${community.authorship.author}`}>
+              <TextButton
+                disabled={disabled}
+                href={`/${community.authorship.author}`}
+              >
                 {community.name}
               </TextButton>
             ) : (
@@ -59,7 +63,10 @@ export default function ProposalInfo(props: {
           </DetailItem>
           <DetailItem title="Workgroup" className="truncate whitespace-nowrap">
             {group && community ? (
-              <TextButton href={`/${community.authorship.author}/${group.id}`}>
+              <TextButton
+                disabled={disabled}
+                href={`/${community.authorship.author}/${group.id}`}
+              >
                 {group.name}
               </TextButton>
             ) : (
@@ -74,6 +81,7 @@ export default function ProposalInfo(props: {
           <DetailList title="On-chain verification">
             <DetailItem title="Snapshot">
               <TextButton
+                disabled={disabled}
                 href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
                   props.proposal.snapshots[commonCoinTypes.CKB]
                 }`}
@@ -85,11 +93,8 @@ export default function ProposalInfo(props: {
             </DetailItem>
             <DetailItem title="Arweave TX">
               <TextButton
-                href={
-                  props.proposal?.permalink === previewPermalink
-                    ? undefined
-                    : permalink2Explorer(props.proposal?.permalink)
-                }
+                disabled={disabled}
+                href={permalink2Explorer(props.proposal?.permalink)}
               >
                 {props.proposal?.permalink.substring(40) || '...'}
               </TextButton>

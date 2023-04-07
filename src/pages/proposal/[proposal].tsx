@@ -94,7 +94,7 @@ export default function ProposalPage() {
         <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
           <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
             <TextButton
-              disabled={!community || !group}
+              disabled={!community || !group || !!previewProposal}
               href={`/${community?.authorship.author}/${group?.id}`}
             >
               <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
@@ -177,6 +177,7 @@ export default function ProposalPage() {
                       >
                         <TextButton
                           primary
+                          disabled={!!previewProposal}
                           href={permalink2Explorer(vote.permalink)}
                         >
                           {vote.power}
