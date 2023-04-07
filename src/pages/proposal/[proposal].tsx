@@ -111,12 +111,14 @@ export default function ProposalPage() {
               proposal={proposal}
               className="mb-6 block sm:hidden"
             />
-            <VoteForm
-              entry={community?.authorship.author}
-              proposal={proposal}
-              group={group}
-              onSuccess={handleSuccess}
-            />
+            {community && group && proposal ? (
+              <VoteForm
+                entry={community.authorship.author}
+                group={group}
+                proposal={proposal}
+                onSuccess={handleSuccess}
+              />
+            ) : null}
             {proposal && 'votes' in proposal && proposal?.votes ? (
               <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
                 {proposal.votes === 1 ? '1 Vote' : `${proposal.votes} Votes`}

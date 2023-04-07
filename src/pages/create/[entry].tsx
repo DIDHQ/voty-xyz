@@ -22,6 +22,7 @@ export default function CreateEntryPage() {
         {query.entry ? (
           <CommunityForm
             author={query.entry}
+            initialValue={null}
             preview={{
               from: router.asPath,
               to: `/${query.entry}/about`,

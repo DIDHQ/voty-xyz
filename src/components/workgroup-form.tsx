@@ -32,18 +32,19 @@ import { Preview } from '../utils/types'
 
 export default function WorkgroupForm(props: {
   author: string
-  initialValue?: Community
-  group?: string
+  initialValue: Community | null
+  group: string
   onArchive?: () => void
   preview: Preview & { group: string }
   className?: string
 }) {
   const { onArchive } = props
   const router = useRouter()
-  const { data: community } = trpc.community.getByEntry.useQuery({
+  const { data } = trpc.community.getByEntry.useQuery({
     entry: props.author,
   })
   const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
+  const community = previewCommunity || data
   const methods = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
@@ -65,18 +66,11 @@ export default function WorkgroupForm(props: {
     return index
   }, [props.initialValue?.groups, props.group])
   useEffect(() => {
-    reset(previewCommunity || props.initialValue)
+    reset(community || props.initialValue || undefined)
     if (props.group) {
       setValue(`groups.${groupIndex}.id`, props.group)
     }
-  }, [
-    groupIndex,
-    previewCommunity,
-    props.group,
-    props.initialValue,
-    reset,
-    setValue,
-  ])
+  }, [groupIndex, community, props.group, props.initialValue, reset, setValue])
   const isNewGroup = !props.onArchive
   const signDocument = useSignDocument(
     props.author,

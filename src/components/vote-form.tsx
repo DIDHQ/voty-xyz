@@ -30,32 +30,28 @@ import { previewPermalink } from '../utils/constants'
 import GroupPermission from './group-permission'
 
 export default function VoteForm(props: {
-  entry?: string
-  initialValue?: Partial<Vote>
-  proposal?: Proposal & { permalink: string }
-  group?: Group
+  entry: string
+  group: Group
+  proposal: Proposal & { permalink: string }
   onSuccess: () => void
   className?: string
 }) {
   const { onSuccess } = props
   const { data: choices, refetch: refetchChoices } =
-    trpc.choice.groupByProposal.useQuery(
-      { proposal: props.proposal?.permalink },
-      { enabled: !!props.proposal?.permalink },
-    )
+    trpc.choice.groupByProposal.useQuery({ proposal: props.proposal.permalink })
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
-  const { data: dids } = useDids(account, props.proposal?.snapshots)
+  const { data: dids } = useDids(account, props.proposal.snapshots)
   const { data: powers } = useQuery(
-    [dids, props.group, props.proposal?.snapshots],
+    [dids, props.group, props.proposal.snapshots],
     async () => {
       const decimals = await pMap(
         dids!,
         (did) =>
           calculateDecimal(
-            props.group!.permission.voting,
+            props.group.permission.voting,
             did,
-            props.proposal?.snapshots!,
+            props.proposal.snapshots,
           ),
         { concurrency: 5 },
       )
@@ -64,12 +60,12 @@ export default function VoteForm(props: {
         return obj
       }, {} as { [key: string]: Decimal })
     },
-    { enabled: !!dids && !!props.group && !!props.proposal?.snapshots },
+    { enabled: !!dids },
   )
   const { data: voted, refetch: refetchVoted } =
     trpc.vote.groupByProposal.useQuery(
-      { proposal: props.proposal?.permalink },
-      { enabled: !!props.proposal?.permalink },
+      { proposal: props.proposal.permalink },
+      { enabled: !!props.proposal.permalink },
     )
   const methods = useForm<Vote>({
     resolver: zodResolver(voteSchema),
@@ -78,27 +74,23 @@ export default function VoteForm(props: {
     setValue,
     resetField,
     control,
-    reset,
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
   useEffect(() => {
-    reset(props.initialValue)
-  }, [props.initialValue, reset])
-  useEffect(() => {
-    if (props.proposal?.permalink) {
+    if (props.proposal.permalink) {
       setValue('proposal', props.proposal.permalink)
     }
-  }, [props.proposal?.permalink, setValue])
+  }, [props.proposal.permalink, setValue])
   const { data: votingPower } = useQuery(
     ['votingPower', props.group, did, props.proposal],
     () =>
       calculateDecimal(
-        props.group!.permission.voting,
+        props.group.permission.voting,
         did!,
-        props.proposal!.snapshots,
+        props.proposal.snapshots,
       ),
-    { enabled: !!props.group && !!did && !!props.proposal },
+    { enabled: !!did },
   )
   useEffect(() => {
     if (votingPower === undefined) {
@@ -113,11 +105,11 @@ export default function VoteForm(props: {
     setValue('choice', '')
     onSuccess()
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
-  const { data: status } = useStatus(props.proposal?.permalink)
+  const { data: status } = useStatus(props.proposal.permalink)
   const now = useMemo(() => new Date(), [])
   const phase = useMemo(
-    () => getPhase(now, status?.timestamp, props.group?.duration),
-    [now, props.group?.duration, status?.timestamp],
+    () => getPhase(now, status?.timestamp, props.group.duration),
+    [now, props.group.duration, status?.timestamp],
   )
   const disables = useCallback(
     (did?: string) =>
@@ -172,37 +164,35 @@ export default function VoteForm(props: {
       </Notification>
       <div className={clsx('mt-6 border-t border-gray-200', props.className)}>
         <FormItem error={errors.choice?.message}>
-          {props.initialValue ? null : (
-            <Controller
-              control={control}
-              name="choice"
-              render={({ field: { value, onChange } }) =>
-                props.proposal?.options?.length ? (
-                  <ul
-                    role="list"
-                    className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
-                  >
-                    {props.proposal?.options.map((option) => (
-                      <ChoiceListItem
-                        key={option}
-                        type={props.proposal!.voting_type}
-                        option={option}
-                        votingPower={votingPower}
-                        choices={choices}
-                        disabled={disables(did)}
-                        value={value}
-                        onChange={onChange}
-                      />
-                    ))}
-                  </ul>
-                ) : (
-                  <></>
-                )
-              }
-            />
-          )}
+          <Controller
+            control={control}
+            name="choice"
+            render={({ field: { value, onChange } }) =>
+              props.proposal.options.length ? (
+                <ul
+                  role="list"
+                  className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
+                >
+                  {props.proposal.options.map((option) => (
+                    <ChoiceListItem
+                      key={option}
+                      type={props.proposal.voting_type}
+                      option={option}
+                      votingPower={votingPower}
+                      choices={choices}
+                      disabled={disables(did)}
+                      value={value}
+                      onChange={onChange}
+                    />
+                  ))}
+                </ul>
+              ) : (
+                <></>
+              )
+            }
+          />
         </FormItem>
-        {props.proposal?.permalink === previewPermalink ? null : (
+        {props.proposal.permalink === previewPermalink ? null : (
           <div className="mt-6 flex w-full flex-col items-end">
             <div className="w-full flex-1 sm:w-64 sm:flex-none">
               <DidCombobox
