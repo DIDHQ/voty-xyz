@@ -10,11 +10,11 @@ export const groupSchema = z.object({
     voting: decimalSetsSchema,
   }),
   duration: z.object({
-    announcing: z.number().int().min(300, 'Minium 5 minutes'),
-    voting: z.number().int().min(300, 'Minium 5 minutes'),
+    announcing: z.number().int().min(60, 'Minium 1 minute'),
+    voting: z.number().int().min(60, 'Minium 1 minute'),
   }),
   extension: z.object({
-    introduction: z.string().max(160, 'Maximum 160 characters').optional(),
+    introduction: z.string().max(256, 'Maximum 256 characters').optional(),
     criteria_for_approval: z.string().min(1, 'Required'),
   }),
 })
