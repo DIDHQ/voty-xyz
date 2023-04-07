@@ -17,7 +17,7 @@ import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import TextButton from './basic/text-button'
 import { Form, FormItem, FormSection } from './basic/form'
-import { Grid6, GridItem2, GridItem3, GridItem6 } from './basic/grid'
+import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import useStatus from '../hooks/use-status'
 import { Community } from '../utils/schemas/community'
@@ -31,7 +31,7 @@ import {
   requiredCoinTypesOfBooleanSets,
 } from '../utils/functions/boolean'
 import Button from './basic/button'
-import RadioGroup from './basic/radio-group'
+import RadioGroup2 from './basic/radio-group2'
 import { previewProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
 import Slide from './basic/slide'
@@ -247,7 +247,7 @@ export default function ProposalForm(props: {
                 control={control}
                 name="voting_type"
                 render={({ field: { value, onChange } }) => (
-                  <RadioGroup
+                  <RadioGroup2
                     options={votingTypes}
                     value={value}
                     onChange={onChange}
