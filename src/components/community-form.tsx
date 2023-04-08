@@ -30,6 +30,7 @@ export default function CommunityForm(props: {
 }) {
   const router = useRouter()
   const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
+  const community = previewCommunity || props.initialValue || undefined
   const methods = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
@@ -42,8 +43,8 @@ export default function CommunityForm(props: {
     handleSubmit: onSubmit,
   } = methods
   useEffect(() => {
-    reset(previewCommunity || props.initialValue || undefined)
-  }, [previewCommunity, props.initialValue, reset])
+    reset(community)
+  }, [reset, community])
   const isNewCommunity = !props.initialValue
   const isManager = useIsManager(props.author)
 

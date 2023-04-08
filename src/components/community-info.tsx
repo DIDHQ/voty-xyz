@@ -4,6 +4,7 @@ import {
   BriefcaseIcon,
   DocumentTextIcon,
 } from '@heroicons/react/24/outline'
+import { PlusIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import Link from 'next/link'
@@ -22,16 +23,13 @@ import { documentTitle } from '../utils/constants'
 import TextButton from './basic/text-button'
 import { previewCommunityAtom } from '../utils/atoms'
 import Button from './basic/button'
+import useIsManager from '../hooks/use-is-manager'
 
 const StatusIcon = dynamic(() => import('./status-icon'), {
   ssr: false,
 })
 
 const SubscriptionButton = dynamic(() => import('./subscription-button'), {
-  ssr: false,
-})
-
-const CreateGroupButton = dynamic(() => import('./create-group-button'), {
   ssr: false,
 })
 
@@ -90,6 +88,7 @@ export default function CommunityInfo(props: { className?: string }) {
         : [],
     [community],
   )
+  const isManager = useIsManager(query.entry)
   const title = useMemo(
     () => compact([community?.name, documentTitle]).join(' - '),
     [community?.name],
@@ -147,31 +146,39 @@ export default function CommunityInfo(props: { className?: string }) {
               </LinkListItem>
             ))}
           </div>
-          <div className="mt-6 w-full">
-            <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
-              Workgroups
-              {previewCommunity ? null : (
-                <CreateGroupButton
-                  entry={query.entry}
-                  className="float-right"
-                />
-              )}
-            </h3>
-            <div>
-              {community?.groups?.map((group) => (
-                <LinkListItem
-                  key={group.id}
-                  href={
-                    previewCommunity ? undefined : `/${query.entry}/${group.id}`
-                  }
-                  icon={BriefcaseIcon}
-                  current={query.group === group.id}
-                >
-                  {group.name}
-                </LinkListItem>
-              ))}
+          {isManager || community?.groups?.length ? (
+            <div className="mt-6 w-full">
+              <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
+                Workgroups
+                {previewCommunity || !isManager ? null : (
+                  <TextButton
+                    primary
+                    href={`/${query.entry}/create`}
+                    className="float-right"
+                  >
+                    <PlusIcon className="h-5 w-5" />
+                  </TextButton>
+                )}
+              </h3>
+
+              <div>
+                {community?.groups?.map((group) => (
+                  <LinkListItem
+                    key={group.id}
+                    href={
+                      previewCommunity
+                        ? undefined
+                        : `/${query.entry}/${group.id}`
+                    }
+                    icon={BriefcaseIcon}
+                    current={query.group === group.id}
+                  >
+                    {group.name}
+                  </LinkListItem>
+                ))}
+              </div>
             </div>
-          </div>
+          ) : null}
           {externals.length ? (
             <>
               <div className="my-6 w-full px-6">
