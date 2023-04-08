@@ -79,7 +79,7 @@ export default function CommunityIndexPage() {
           className="mt-24"
           footer={
             community && !community?.groups?.length && isManager ? (
-              <Link href={`/${query.entry}/create?type=workgroup`}>
+              <Link href={`/${query.entry}/create`}>
                 <Button primary icon={PlusIcon}>
                   Workgroup
                 </Button>
