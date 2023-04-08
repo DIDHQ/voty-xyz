@@ -19,7 +19,7 @@ const types = [
   DurationType.MINUTE,
 ]
 
-export default function DurationInput(props: {
+export default function PhaseInput(props: {
   value?: number
   onChange(value: number): void
   error?: boolean

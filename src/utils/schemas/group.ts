@@ -9,7 +9,7 @@ export const groupSchema = z.object({
     proposing: booleanSetsSchema,
     voting: decimalSetsSchema,
   }),
-  duration: z.object({
+  phase: z.object({
     announcing: z.number().int().min(60, 'Minium 1 minute'),
     voting: z.number().int().min(60, 'Minium 1 minute'),
   }),

@@ -49,7 +49,7 @@ export default function CreateGroupPage() {
                     ],
                   },
                 },
-                duration: {
+                phase: {
                   announcing: 86400,
                   voting: 86400,
                 },

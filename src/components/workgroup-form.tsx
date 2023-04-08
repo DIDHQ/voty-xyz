@@ -14,7 +14,7 @@ import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 
 import { Community, communitySchema } from '../utils/schemas/community'
-import DurationInput from './basic/duration-input'
+import PhaseInput from './basic/phase-input'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
@@ -181,17 +181,17 @@ export default function WorkgroupForm(props: {
             <GridItem3>
               <FormItem
                 label="Announcing phase"
-                error={groupErrors?.duration?.announcing?.message}
+                error={groupErrors?.phase?.announcing?.message}
               >
                 <Controller
                   control={control}
-                  name={`groups.${groupIndex}.duration.announcing`}
+                  name={`groups.${groupIndex}.phase.announcing`}
                   render={({ field: { value, onChange } }) => (
-                    <DurationInput
+                    <PhaseInput
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={!!groupErrors?.duration?.announcing}
+                      error={!!groupErrors?.phase?.announcing}
                     />
                   )}
                 />
@@ -200,17 +200,17 @@ export default function WorkgroupForm(props: {
             <GridItem3>
               <FormItem
                 label="Voting phase"
-                error={groupErrors?.duration?.voting?.message}
+                error={groupErrors?.phase?.voting?.message}
               >
                 <Controller
                   control={control}
-                  name={`groups.${groupIndex}.duration.voting`}
+                  name={`groups.${groupIndex}.phase.voting`}
                   render={({ field: { value, onChange } }) => (
-                    <DurationInput
+                    <PhaseInput
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={!!groupErrors?.duration?.voting}
+                      error={!!groupErrors?.phase?.voting}
                     />
                   )}
                 />

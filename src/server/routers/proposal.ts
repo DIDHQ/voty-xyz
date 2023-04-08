@@ -60,11 +60,11 @@ export const proposalRouter = router({
               data: {
                 ts: timestamp,
                 ts_announcing: dayjs(timestamp)
-                  .add(group.duration.announcing * 1000)
+                  .add(group.phase.announcing * 1000)
                   .toDate(),
                 ts_voting: dayjs(timestamp)
-                  .add(group.duration.announcing * 1000)
-                  .add(group.duration.voting * 1000)
+                  .add(group.phase.announcing * 1000)
+                  .add(group.phase.voting * 1000)
                   .toDate(),
               },
             })

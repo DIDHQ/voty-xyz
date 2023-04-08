@@ -6,33 +6,30 @@ import ProposalPhaseText from './proposal-phase-text'
 
 export default function ProposalProgress(props: {
   proposal?: string
-  duration?: Group['duration']
+  phase?: Group['phase']
 }) {
   const { data: status } = useStatus(props.proposal)
 
   return (
     <DetailList title="Progress">
       <DetailItem title="Current phase" className="overflow-y-visible">
-        <ProposalPhaseText
-          proposal={props.proposal}
-          duration={props.duration}
-        />
+        <ProposalPhaseText proposal={props.proposal} phase={props.phase} />
       </DetailItem>
       <DetailItem title="Confirmed at">
         {status?.timestamp ? formatTime(status.timestamp) : '...'}
       </DetailItem>
       <DetailItem title="Voting start">
-        {status?.timestamp && props.duration
+        {status?.timestamp && props.phase
           ? formatTime(
-              status.timestamp.getTime() + props.duration.announcing * 1000,
+              status.timestamp.getTime() + props.phase.announcing * 1000,
             )
           : '...'}
       </DetailItem>
       <DetailItem title="Voting end">
-        {status?.timestamp && props.duration
+        {status?.timestamp && props.phase
           ? formatTime(
               status.timestamp.getTime() +
-                (props.duration.announcing + props.duration.voting) * 1000,
+                (props.phase.announcing + props.phase.voting) * 1000,
             )
           : '...'}
       </DetailItem>
