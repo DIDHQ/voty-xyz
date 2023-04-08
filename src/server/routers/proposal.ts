@@ -41,7 +41,7 @@ export const proposalRouter = router({
 
       const proposal = await getByPermalink(DataType.PROPOSAL, input.permalink)
 
-      if (proposal && (!proposal.ts_announcing || !proposal.ts_voting)) {
+      if (proposal && (!proposal.ts_pending || !proposal.ts_voting)) {
         try {
           const community = await getByPermalink(
             DataType.COMMUNITY,
@@ -59,11 +59,11 @@ export const proposalRouter = router({
               where: { permalink: proposal.permalink },
               data: {
                 ts: timestamp,
-                ts_announcing: dayjs(timestamp)
-                  .add(group.duration.announcing * 1000)
+                ts_pending: dayjs(timestamp)
+                  .add(group.duration.pending * 1000)
                   .toDate(),
                 ts_voting: dayjs(timestamp)
-                  .add(group.duration.announcing * 1000)
+                  .add(group.duration.pending * 1000)
                   .add(group.duration.voting * 1000)
                   .toDate(),
               },
@@ -100,7 +100,7 @@ export const proposalRouter = router({
             permalink: z.string(),
             votes: z.number().int(),
             ts: z.date(),
-            ts_announcing: z.date().nullable(),
+            ts_pending: z.date().nullable(),
             ts_voting: z.date().nullable(),
           }),
         ),
@@ -115,11 +115,11 @@ export const proposalRouter = router({
       const now = new Date()
       const filter =
         input.phase === Phase.CONFIRMING
-          ? { ts_announcing: null, ts_voting: null }
+          ? { ts_pending: null, ts_voting: null }
           : input.phase === Phase.ANNOUNCING
-          ? { ts: { lte: now }, ts_announcing: { gt: now } }
+          ? { ts: { lte: now }, ts_pending: { gt: now } }
           : input.phase === Phase.VOTING
-          ? { ts_announcing: { lte: now }, ts_voting: { gt: now } }
+          ? { ts_pending: { lte: now }, ts_voting: { gt: now } }
           : input.phase === Phase.ENDED
           ? { ts_voting: { lte: now } }
           : {}
@@ -153,7 +153,7 @@ export const proposalRouter = router({
               permalink,
               votes,
               ts,
-              ts_announcing,
+              ts_pending,
               ts_voting,
             }) => {
               try {
@@ -166,7 +166,7 @@ export const proposalRouter = router({
                       permalink,
                       votes,
                       ts,
-                      ts_announcing,
+                      ts_pending,
                       ts_voting,
                     }
                   : undefined

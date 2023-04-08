@@ -50,11 +50,11 @@ export default function CreateGroupPage() {
                   },
                 },
                 duration: {
-                  announcing: 86400,
+                  pending: 86400,
                   voting: 86400,
                 },
                 extension: {
-                  criteria_for_approval: '',
+                  terms_and_conditions: '',
                 },
               },
             ],

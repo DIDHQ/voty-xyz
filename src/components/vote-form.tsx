@@ -249,7 +249,7 @@ export default function VoteForm(props: {
                     : status?.timestamp && props.group
                     ? `Waiting for voting start (in ${formatDurationMs(
                         status.timestamp.getTime() +
-                          props.group.duration.announcing * 1000 -
+                          props.group.duration.pending * 1000 -
                           now.getTime(),
                       )})`
                     : 'Waiting for voting start'

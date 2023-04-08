@@ -6,12 +6,12 @@ import type { Group } from '../utils/schemas/group'
 
 export default function ProposalPhaseText(props: {
   proposal?: string
-  duration?: Group['duration']
+  phase?: Group['duration']
 }) {
   const { data: status, isLoading } = useStatus(props.proposal)
   const phase = useMemo(
-    () => getPhase(new Date(), status?.timestamp, props.duration),
-    [props.duration, status?.timestamp],
+    () => getPhase(new Date(), status?.timestamp, props.phase),
+    [props.phase, status?.timestamp],
   )
 
   return isLoading ? null : (

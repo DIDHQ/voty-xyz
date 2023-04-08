@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 
-enum DurationType {
+enum PhaseType {
   MINUTE = 60,
   HOUR = 60 * 60,
   DAY = 24 * 60 * 60,
@@ -11,15 +11,15 @@ enum DurationType {
 }
 
 const types = [
-  DurationType.YEAR,
-  DurationType.MONTH,
-  DurationType.WEEK,
-  DurationType.DAY,
-  DurationType.HOUR,
-  DurationType.MINUTE,
+  PhaseType.YEAR,
+  PhaseType.MONTH,
+  PhaseType.WEEK,
+  PhaseType.DAY,
+  PhaseType.HOUR,
+  PhaseType.MINUTE,
 ]
 
-export default function DurationInput(props: {
+export default function PhaseInput(props: {
   value?: number
   onChange(value: number): void
   error?: boolean
@@ -28,12 +28,12 @@ export default function DurationInput(props: {
 }) {
   const { onChange } = props
   const [value, setValue] = useState(0)
-  const [type, setType] = useState<DurationType>(DurationType.HOUR)
+  const [type, setType] = useState<PhaseType>(PhaseType.HOUR)
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.valueAsNumber)
   }, [])
   const handleTypeChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
-    setType(parseInt(e.target.value) as DurationType)
+    setType(parseInt(e.target.value) as PhaseType)
   }, [])
   const handleBlur = useCallback(() => {
     onChange(value * type)
@@ -41,7 +41,7 @@ export default function DurationInput(props: {
   useEffect(() => {
     if (!props.value) {
       setValue(0)
-      setType(DurationType.HOUR)
+      setType(PhaseType.HOUR)
       return
     }
     for (let type of types) {
@@ -77,12 +77,12 @@ export default function DurationInput(props: {
           disabled={props.disabled}
           className="h-full rounded-md border-transparent bg-transparent py-0 pl-2 pr-7 text-gray-500 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed sm:text-sm"
         >
-          <option value={DurationType.MINUTE}>Minutes</option>
-          <option value={DurationType.HOUR}>Hours</option>
-          <option value={DurationType.DAY}>Days</option>
-          <option value={DurationType.WEEK}>Weeks</option>
-          <option value={DurationType.MONTH}>Months</option>
-          <option value={DurationType.YEAR}>Years</option>
+          <option value={PhaseType.MINUTE}>Minutes</option>
+          <option value={PhaseType.HOUR}>Hours</option>
+          <option value={PhaseType.DAY}>Days</option>
+          <option value={PhaseType.WEEK}>Weeks</option>
+          <option value={PhaseType.MONTH}>Months</option>
+          <option value={PhaseType.YEAR}>Years</option>
         </select>
       </div>
     </div>

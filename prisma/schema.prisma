@@ -33,9 +33,9 @@ model Proposal {
 
   votes Int
 
-  ts            DateTime
-  ts_announcing DateTime?
-  ts_voting     DateTime?
+  ts         DateTime
+  ts_pending DateTime?
+  ts_voting  DateTime?
 
   @@id([permalink])
   @@index([entry, group])
