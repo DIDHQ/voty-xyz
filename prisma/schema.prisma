@@ -31,7 +31,7 @@ model Proposal {
 
   data Json
 
-  votes Int @default(0)
+  votes Int
 
   ts         DateTime
   ts_pending DateTime?
@@ -63,9 +63,9 @@ model Entry {
   did       String
   community String
 
-  subscribers Int @default(0)
-  proposals   Int @default(0)
-  votes       Int @default(0)
+  subscribers Int
+  proposals   Int
+  votes       Int
 
   ts DateTime
 
