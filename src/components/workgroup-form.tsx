@@ -44,7 +44,7 @@ export default function WorkgroupForm(props: {
     entry: props.author,
   })
   const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
-  const community = previewCommunity || data
+  const community = previewCommunity || props.initialValue || data || undefined
   const methods = useForm<Community>({
     resolver: zodResolver(communitySchema),
   })
@@ -66,11 +66,11 @@ export default function WorkgroupForm(props: {
     return index
   }, [props.initialValue?.groups, props.group])
   useEffect(() => {
-    reset(community || props.initialValue || undefined)
+    reset(community)
     if (props.group) {
       setValue(`groups.${groupIndex}.id`, props.group)
     }
-  }, [groupIndex, community, props.group, props.initialValue, reset, setValue])
+  }, [groupIndex, community, props.group, reset, setValue])
   const isNewGroup = !props.onArchive
   const signDocument = useSignDocument(
     props.author,

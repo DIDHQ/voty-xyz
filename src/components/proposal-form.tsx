@@ -45,6 +45,7 @@ export default function ProposalForm(props: {
 }) {
   const router = useRouter()
   const [previewProposal, setPreviewProposal] = useAtom(previewProposalAtom)
+  const proposal = previewProposal || props.initialValue
   const methods = useForm<Proposal>({
     resolver: zodResolver(proposalSchema),
   })
@@ -59,8 +60,8 @@ export default function ProposalForm(props: {
     handleSubmit: onSubmit,
   } = methods
   useEffect(() => {
-    reset(previewProposal || props.initialValue)
-  }, [previewProposal, props.initialValue, reset])
+    reset(proposal)
+  }, [proposal, reset])
   const handleOptionDelete = useCallback(
     (index: number) => {
       const options = getValues('options')?.filter((_, i) => i !== index)
