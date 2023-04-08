@@ -40,11 +40,11 @@ export default function ProposalInfo(props: {
     >
       <ProposalProgress
         proposal={props.proposal?.permalink}
-        phase={group?.phase}
+        phase={group?.duration}
       />
       <DetailList title="Criteria for approval">
         <Article small className="pt-2">
-          <Markdown>{group?.extension.criteria_for_approval}</Markdown>
+          <Markdown>{group?.extension.terms_and_conditions}</Markdown>
         </Article>
       </DetailList>
       <DetailList title="Information">

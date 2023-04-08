@@ -9,13 +9,13 @@ export const groupSchema = z.object({
     proposing: booleanSetsSchema,
     voting: decimalSetsSchema,
   }),
-  phase: z.object({
-    announcing: z.number().int().min(60, 'Minium 1 minute'),
+  duration: z.object({
+    pending: z.number().int().min(60, 'Minium 1 minute'),
     voting: z.number().int().min(60, 'Minium 1 minute'),
   }),
   extension: z.object({
     introduction: z.string().max(256, 'Maximum 256 characters').optional(),
-    criteria_for_approval: z.string().min(1, 'Required'),
+    terms_and_conditions: z.string().min(1, 'Required'),
   }),
 })
 

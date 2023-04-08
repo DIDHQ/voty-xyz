@@ -49,12 +49,12 @@ export default function CreateGroupPage() {
                     ],
                   },
                 },
-                phase: {
-                  announcing: 86400,
+                duration: {
+                  pending: 86400,
                   voting: 86400,
                 },
                 extension: {
-                  criteria_for_approval: '',
+                  terms_and_conditions: '',
                 },
               },
             ],

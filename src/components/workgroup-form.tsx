@@ -181,17 +181,17 @@ export default function WorkgroupForm(props: {
             <GridItem3>
               <FormItem
                 label="Announcing phase"
-                error={groupErrors?.phase?.announcing?.message}
+                error={groupErrors?.duration?.pending?.message}
               >
                 <Controller
                   control={control}
-                  name={`groups.${groupIndex}.phase.announcing`}
+                  name={`groups.${groupIndex}.duration.pending`}
                   render={({ field: { value, onChange } }) => (
                     <PhaseInput
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={!!groupErrors?.phase?.announcing}
+                      error={!!groupErrors?.duration?.pending}
                     />
                   )}
                 />
@@ -200,17 +200,17 @@ export default function WorkgroupForm(props: {
             <GridItem3>
               <FormItem
                 label="Voting phase"
-                error={groupErrors?.phase?.voting?.message}
+                error={groupErrors?.duration?.voting?.message}
               >
                 <Controller
                   control={control}
-                  name={`groups.${groupIndex}.phase.voting`}
+                  name={`groups.${groupIndex}.duration.voting`}
                   render={({ field: { value, onChange } }) => (
                     <PhaseInput
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={!!groupErrors?.phase?.voting}
+                      error={!!groupErrors?.duration?.voting}
                     />
                   )}
                 />
@@ -220,15 +220,15 @@ export default function WorkgroupForm(props: {
               <FormItem
                 label="Criteria for approval"
                 description="Markdown is supported"
-                error={groupErrors?.extension?.criteria_for_approval?.message}
+                error={groupErrors?.extension?.terms_and_conditions?.message}
               >
                 <Textarea
                   disabled={!isManager}
                   {...register(
-                    `groups.${groupIndex}.extension.criteria_for_approval`,
+                    `groups.${groupIndex}.extension.terms_and_conditions`,
                   )}
                   error={
-                    !!groupErrors?.extension?.criteria_for_approval?.message
+                    !!groupErrors?.extension?.terms_and_conditions?.message
                   }
                 />
               </FormItem>

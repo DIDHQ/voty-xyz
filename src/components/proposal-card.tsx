@@ -14,21 +14,21 @@ export default function ProposalCard(props: {
     permalink: string
     votes: number
     ts: Date
-    ts_announcing: Date | null
+    ts_pending: Date | null
     ts_voting: Date | null
   }
 }) {
   const now = useMemo(() => Date.now(), [])
   const phase = useMemo(
     () =>
-      props.proposal.ts_announcing && props.proposal.ts_voting
-        ? now < props.proposal.ts_announcing.getTime()
+      props.proposal.ts_pending && props.proposal.ts_voting
+        ? now < props.proposal.ts_pending.getTime()
           ? Phase.ANNOUNCING
           : now < props.proposal.ts_voting.getTime()
           ? Phase.VOTING
           : Phase.ENDED
         : Phase.CONFIRMING,
-    [props.proposal.ts_announcing, props.proposal.ts_voting, now],
+    [props.proposal.ts_pending, props.proposal.ts_voting, now],
   )
 
   return (
@@ -63,13 +63,13 @@ export default function ProposalCard(props: {
                 in about 5 minutes
               </p>
             </>
-          ) : phase === Phase.ANNOUNCING && props.proposal.ts_announcing ? (
+          ) : phase === Phase.ANNOUNCING && props.proposal.ts_pending ? (
             <>
               <p>Voting starts</p>
               <p className="text-gray-400">
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
-                {formatDurationMs(props.proposal.ts_announcing.getTime() - now)}
+                {formatDurationMs(props.proposal.ts_pending.getTime() - now)}
               </p>
             </>
           ) : phase === Phase.VOTING && props.proposal.ts_voting ? (

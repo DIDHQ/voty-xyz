@@ -32,7 +32,7 @@ export default async function verifyVote(
   const proposal = data.data
   const { community, group } = await verifyProposal(proposal)
 
-  if (getPhase(new Date(), timestamp, group.phase) !== Phase.VOTING) {
+  if (getPhase(new Date(), timestamp, group.duration) !== Phase.VOTING) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Not in voting phase',

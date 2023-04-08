@@ -108,8 +108,8 @@ export default function VoteForm(props: {
   const { data: status } = useStatus(props.proposal.permalink)
   const now = useMemo(() => new Date(), [])
   const phase = useMemo(
-    () => getPhase(now, status?.timestamp, props.group.phase),
-    [now, props.group.phase, status?.timestamp],
+    () => getPhase(now, status?.timestamp, props.group.duration),
+    [now, props.group.duration, status?.timestamp],
   )
   const disables = useCallback(
     (did?: string) =>
@@ -249,7 +249,7 @@ export default function VoteForm(props: {
                     : status?.timestamp && props.group
                     ? `Waiting for voting start (in ${formatDurationMs(
                         status.timestamp.getTime() +
-                          props.group.phase.announcing * 1000 -
+                          props.group.duration.pending * 1000 -
                           now.getTime(),
                       )})`
                     : 'Waiting for voting start'

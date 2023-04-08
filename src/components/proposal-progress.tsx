@@ -6,7 +6,7 @@ import ProposalPhaseText from './proposal-phase-text'
 
 export default function ProposalProgress(props: {
   proposal?: string
-  phase?: Group['phase']
+  phase?: Group['duration']
 }) {
   const { data: status } = useStatus(props.proposal)
 
@@ -20,16 +20,14 @@ export default function ProposalProgress(props: {
       </DetailItem>
       <DetailItem title="Voting start">
         {status?.timestamp && props.phase
-          ? formatTime(
-              status.timestamp.getTime() + props.phase.announcing * 1000,
-            )
+          ? formatTime(status.timestamp.getTime() + props.phase.pending * 1000)
           : '...'}
       </DetailItem>
       <DetailItem title="Voting end">
         {status?.timestamp && props.phase
           ? formatTime(
               status.timestamp.getTime() +
-                (props.phase.announcing + props.phase.voting) * 1000,
+                (props.phase.pending + props.phase.voting) * 1000,
             )
           : '...'}
       </DetailItem>

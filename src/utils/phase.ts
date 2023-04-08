@@ -10,17 +10,17 @@ export enum Phase {
 export function getPhase(
   now: Date,
   timestamp?: Date,
-  phase?: Group['phase'],
+  phase?: Group['duration'],
 ): Phase {
   if (!timestamp || !phase) {
     return Phase.CONFIRMING
   }
-  if (now.getTime() < timestamp.getTime() + phase.announcing * 1000) {
+  if (now.getTime() < timestamp.getTime() + phase.pending * 1000) {
     return Phase.ANNOUNCING
   }
   if (
     now.getTime() <
-    timestamp.getTime() + (phase.announcing + phase.voting) * 1000
+    timestamp.getTime() + (phase.pending + phase.voting) * 1000
   ) {
     return Phase.VOTING
   }
