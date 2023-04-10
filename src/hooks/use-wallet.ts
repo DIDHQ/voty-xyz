@@ -43,7 +43,7 @@ export default function useWallet() {
         }
         throw new Error(`sign message unsupported coin type: ${coinType}`)
       },
-      connect: () => setOpen(true),
+      connect: () => (account.address ? null : setOpen(true)),
       disconnect: () => disconnect(),
     }),
     [
