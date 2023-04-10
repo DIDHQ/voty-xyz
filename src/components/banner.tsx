@@ -11,8 +11,8 @@ export default function Banner() {
     <div className="z-50 flex items-center gap-x-6 bg-primary-600 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
       <p className="text-sm leading-6 text-white">
         Data will not be retained after Alpha testing.&nbsp;
-        <a href="https://discord.gg/8P6vSwwMzk">
-          Join our Discord to feedback and get future SBT airdrop!&nbsp;
+        <a href="https://twitter.com/voty_xyz">
+          Follow our Twitter to learn more!&nbsp;
           <span aria-hidden="true">&rarr;</span>
         </a>
       </p>
