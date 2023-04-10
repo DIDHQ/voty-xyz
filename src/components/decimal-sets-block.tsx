@@ -1,9 +1,16 @@
 import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import { useCallback, useEffect, useState } from 'react'
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import {
+  Controller,
+  useFieldArray,
+  useForm,
+  useFormContext,
+} from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Community } from '../utils/schemas/community'
+import { decimalUnitSchema, DecimalUnit } from '../utils/schemas/sets'
 import { FormItem } from './basic/form'
 import { Grid6, GridItem6 } from './basic/grid'
 import RadioGroup from './basic/radio-group'
@@ -18,37 +25,28 @@ export default function DecimalSetsBlock(props: {
   groupIndex: number
   disabled?: boolean
 }) {
-  const { watch, control } = useFormContext<Community>()
-  const { fields, append, remove } = useFieldArray({
+  const { control } = useFormContext<Community>()
+  const { fields, append, update, remove } = useFieldArray({
     control,
     name: `groups.${props.groupIndex}.permission.${props.name}.operands`,
   })
   const [open, setOpen] = useState<number | undefined>(0)
-  const operands = watch(
-    `groups.${props.groupIndex}.permission.${props.name}.operands`,
-    fields,
-  )
 
   return (
     <>
-      {operands.length ? (
+      {fields.length ? (
         <ul
           role="list"
           className="mb-4 divide-y divide-gray-200 overflow-hidden rounded-md border border-gray-200"
         >
-          {operands.map((operand, index) => (
+          {fields.map((operand, index) => (
             <DecimalUnitBlock
-              key={
-                'id' in operand && typeof operand.id === 'string'
-                  ? operand.id
-                  : index
-              }
-              name={props.name}
-              entry={props.entry}
-              groupIndex={props.groupIndex}
+              key={operand.id}
               index={index}
               open={open === index}
               setOpen={setOpen}
+              value={operand}
+              onChange={(v) => update(index, v)}
               onRemove={remove}
               disabled={props.disabled}
             />
@@ -62,7 +60,7 @@ export default function DecimalSetsBlock(props: {
               function: 'prefixes_dot_suffix_fixed_power',
               arguments: [props.entry, [''], '1'],
             })
-            setOpen(operands.length)
+            setOpen(fields.length)
           }}
         >
           Add
@@ -73,12 +71,11 @@ export default function DecimalSetsBlock(props: {
 }
 
 function DecimalUnitBlock(props: {
-  name: 'voting'
-  entry: string
-  groupIndex: number
   index: number
   open: boolean
   setOpen(index?: number): void
+  value: DecimalUnit
+  onChange(value: DecimalUnit): void
   onRemove(index: number): void
   disabled?: boolean
 }) {
@@ -87,26 +84,21 @@ function DecimalUnitBlock(props: {
     watch,
     register,
     formState: { errors },
-  } = useFormContext<Community>()
+    reset,
+    handleSubmit,
+  } = useForm<DecimalUnit>({ resolver: zodResolver(decimalUnitSchema) })
+  useEffect(() => {
+    reset(props.value)
+  }, [props.value, reset])
   const { setOpen, onRemove } = props
   const handleOpen = useCallback(() => {
     setOpen(props.open ? undefined : props.index)
   }, [setOpen, props.open, props.index])
   const handleRemove = useCallback(() => {
+    setOpen(undefined)
     onRemove(props.index)
-  }, [onRemove, props.index])
-  useEffect(() => {
-    if (
-      errors.groups?.[props.groupIndex]?.permission?.[props.name]?.operands?.[
-        props.index
-      ]
-    ) {
-      setOpen(props.index)
-    }
-  }, [errors.groups, props.index, props.name, props.groupIndex, setOpen])
-  const suffix = watch(
-    `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
-  )
+  }, [onRemove, props.index, setOpen])
+  const suffix = watch('arguments.0') ?? ''
   const regex = new RegExp(`\\.${suffix.replaceAll('.', '\\.')}\$`)
 
   return (
@@ -114,22 +106,11 @@ function DecimalUnitBlock(props: {
       {props.open ? (
         <Grid6 className="px-6 py-4">
           <GridItem6>
-            <FormItem
-              label="Voter group name"
-              error={
-                errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.name?.message
-              }
-            >
+            <FormItem label="Voter group name" error={errors.name?.message}>
               <TextInput
                 disabled={props.disabled}
-                {...register(
-                  `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
-                )}
-                error={
-                  !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                    ?.operands?.[props.index]?.name?.message
-                }
+                {...register('name')}
+                error={!!errors.name?.message}
                 placeholder={`Group ${props.index + 1}`}
               />
             </FormItem>
@@ -138,20 +119,12 @@ function DecimalUnitBlock(props: {
             <FormItem
               label="Voting power"
               description="Each SubDID in this voter group has an equal voting power"
-              error={
-                errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[2]?.message
-              }
+              error={errors.arguments?.[2]?.message}
             >
               <TextInput
                 disabled={props.disabled}
-                {...register(
-                  `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`,
-                )}
-                error={
-                  !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                    ?.operands?.[props.index]?.arguments?.[2]?.message
-                }
+                {...register('arguments.2')}
+                error={!!errors.arguments?.[2]?.message}
               />
             </FormItem>
           </GridItem6>
@@ -159,7 +132,7 @@ function DecimalUnitBlock(props: {
             <FormItem label="Voter group members">
               <Controller
                 control={control}
-                name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
+                name="arguments.1"
                 render={({ field: { value, onChange } }) => (
                   <RadioGroup
                     disabled={props.disabled}
@@ -173,28 +146,24 @@ function DecimalUnitBlock(props: {
                         name: `Some of ${suffix}'s SubDIDs`,
                       },
                     ]}
-                    value={value.length ? 'allowlist' : 'all'}
+                    value={value?.length ? 'allowlist' : 'all'}
                     onChange={(v) => onChange(v === 'allowlist' ? [''] : [])}
                   />
                 )}
               />
             </FormItem>
           </GridItem6>
-          {watch(
-            `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`,
-          )?.length ? (
+          {watch('arguments.1')?.length ? (
             <GridItem6>
               <FormItem
                 error={
-                  errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                    ?.operands?.[props.index]?.arguments?.[1]?.message ||
-                  errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                    ?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
+                  errors.arguments?.[1]?.message ||
+                  errors.arguments?.[1]?.[0]?.message
                 }
               >
                 <Controller
                   control={control}
-                  name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
+                  name="arguments.1"
                   render={({ field: { value, onChange } }) => (
                     <Textarea
                       autoCorrect="false"
@@ -221,12 +190,8 @@ function DecimalUnitBlock(props: {
                         onChange(array.length ? array : [''])
                       }}
                       error={
-                        !!errors.groups?.[props.groupIndex]?.permission?.[
-                          props.name
-                        ]?.operands?.[props.index]?.arguments?.[1]?.message ||
-                        !!errors.groups?.[props.groupIndex]?.permission?.[
-                          props.name
-                        ]?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
+                        !!errors.arguments?.[1]?.message ||
+                        !!errors.arguments?.[1]?.[0]?.message
                       }
                     />
                   )}
@@ -244,24 +209,28 @@ function DecimalUnitBlock(props: {
       >
         <div className="flex w-0 flex-1 items-center">
           <span className="w-0 flex-1 truncate">
-            {watch(
-              `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
-            ) || `Group ${props.index + 1}`}
+            {watch('name') || `Group ${props.index + 1}`}
           </span>
         </div>
         <div className="ml-6 flex shrink-0 space-x-6">
           {props.disabled || !props.open ? null : (
             <TextButton onClick={handleRemove}>Remove</TextButton>
           )}
-          <Button primary={props.open} onClick={handleOpen}>
-            {props.disabled
-              ? props.open
-                ? 'Hide'
-                : 'View'
-              : props.open
-              ? 'Done'
-              : 'Edit'}
-          </Button>
+          {props.open ? (
+            <Button
+              primary
+              onClick={handleSubmit((value) => {
+                props.onChange(value)
+                setOpen(undefined)
+              })}
+            >
+              {props.disabled ? 'Hide' : 'Done'}
+            </Button>
+          ) : (
+            <Button onClick={handleOpen}>
+              {props.disabled ? 'View' : 'Edit'}
+            </Button>
+          )}
         </div>
       </li>
     </>
