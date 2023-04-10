@@ -15,7 +15,7 @@ export default function RadioGroup(props: {
         <div
           key={option.value}
           onClick={() => (props.disabled ? null : onChange(option.value))}
-          className="relative flex cursor-pointer items-start"
+          className="relative flex w-fit cursor-pointer items-start"
         >
           <div className="flex h-5 items-center">
             <input
