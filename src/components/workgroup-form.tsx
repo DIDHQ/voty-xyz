@@ -122,7 +122,7 @@ export default function WorkgroupForm(props: {
             <GridItem6>
               <FormItem
                 label="Introduction"
-                description="The propose of this workgroup"
+                description="The purpose of this workgroup"
                 error={groupErrors?.extension?.introduction?.message}
               >
                 <TextInput
