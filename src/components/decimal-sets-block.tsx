@@ -1,5 +1,6 @@
+import clsx from 'clsx'
 import { compact } from 'lodash-es'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../utils/schemas/community'
@@ -22,6 +23,7 @@ export default function DecimalSetsBlock(props: {
     control,
     name: `groups.${props.groupIndex}.permission.${props.name}.operands`,
   })
+  const [open, setOpen] = useState<number | undefined>(0)
   const operands = watch(
     `groups.${props.groupIndex}.permission.${props.name}.operands`,
     fields,
@@ -30,7 +32,10 @@ export default function DecimalSetsBlock(props: {
   return (
     <>
       {operands.length ? (
-        <ul role="list" className="space-y-4">
+        <ul
+          role="list"
+          className="divide-y divide-gray-200 overflow-hidden rounded-md border border-gray-200"
+        >
           {operands.map((operand, index) => (
             <DecimalUnitBlock
               key={
@@ -42,7 +47,8 @@ export default function DecimalSetsBlock(props: {
               entry={props.entry}
               groupIndex={props.groupIndex}
               index={index}
-              length={operands.length}
+              open={open === index}
+              setOpen={setOpen}
               onRemove={remove}
               disabled={props.disabled}
             />
@@ -56,6 +62,7 @@ export default function DecimalSetsBlock(props: {
               function: 'prefixes_dot_suffix_fixed_power',
               arguments: [props.entry, [''], '1'],
             })
+            setOpen(operands.length)
           }}
           className="mt-4"
         >
@@ -71,7 +78,8 @@ function DecimalUnitBlock(props: {
   entry: string
   groupIndex: number
   index: number
-  length: number
+  open: boolean
+  setOpen(index?: number): void
   onRemove(index: number): void
   disabled?: boolean
 }) {
@@ -81,155 +89,183 @@ function DecimalUnitBlock(props: {
     register,
     formState: { errors },
   } = useFormContext<Community>()
-  const { onRemove } = props
+  const { setOpen, onRemove } = props
+  const handleOpen = useCallback(() => {
+    setOpen(props.open ? undefined : props.index)
+  }, [setOpen, props.open, props.index])
   const handleRemove = useCallback(() => {
     onRemove(props.index)
   }, [onRemove, props.index])
-  const suffix =
-    watch(
-      `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
-    ) || ''
+  useEffect(() => {
+    if (
+      errors.groups?.[props.groupIndex]?.permission?.[props.name]?.operands?.[
+        props.index
+      ]
+    ) {
+      setOpen(props.index)
+    }
+  }, [errors.groups, props.index, props.name, props.groupIndex, setOpen])
+  const suffix = watch(
+    `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
+  )
   const regex = new RegExp(`\\.${suffix.replaceAll('.', '\\.')}\$`)
 
   return (
-    <li className="overflow-hidden rounded-md border border-gray-200">
-      <div className="flex items-center justify-between border-b bg-gray-50 px-6 py-3 text-sm">
-        <span className="w-0 flex-1 truncate">
-          {watch(
-            `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
-          ) || `Group ${props.index + 1}`}
-        </span>
-        {props.disabled || props.length === 1 ? null : (
-          <TextButton
-            secondary
-            onClick={handleRemove}
-            className="ml-4 flex shrink-0"
-          >
-            Remove
-          </TextButton>
+    <>
+      <li
+        className={clsx(
+          'flex items-center justify-between px-4 py-3 text-sm',
+          props.open ? 'bg-gray-50' : undefined,
         )}
-      </div>
-      <Grid6 className="px-6 py-4">
-        <GridItem6>
-          <FormItem
-            label="Voter group name"
-            error={
-              errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                ?.operands?.[props.index]?.name?.message
-            }
-          >
-            <TextInput
-              disabled={props.disabled}
-              {...register(
-                `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
-              )}
-              error={
-                !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.name?.message
-              }
-              placeholder={`Group ${props.index + 1}`}
-            />
-          </FormItem>
-        </GridItem6>
-        <GridItem6>
-          <FormItem
-            label="Voting power"
-            description="Each SubDID in this voter group has an equal voting power"
-            error={
-              errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                ?.operands?.[props.index]?.arguments?.[2]?.message
-            }
-          >
-            <TextInput
-              disabled={props.disabled}
-              {...register(
-                `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`,
-              )}
-              error={
-                !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[2]?.message
-              }
-            />
-          </FormItem>
-        </GridItem6>
-        <GridItem6>
-          <FormItem label="Voter group members">
-            <Controller
-              control={control}
-              name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
-              render={({ field: { value, onChange } }) => (
-                <RadioGroup
-                  disabled={props.disabled}
-                  options={[
-                    {
-                      value: 'all',
-                      name: `All of ${suffix}'s SubDIDs`,
-                    },
-                    {
-                      value: 'allowlist',
-                      name: `Some of ${suffix}'s SubDIDs`,
-                    },
-                  ]}
-                  value={value.length ? 'allowlist' : 'all'}
-                  onChange={(v) => onChange(v === 'allowlist' ? [''] : [])}
-                />
-              )}
-            />
-          </FormItem>
-        </GridItem6>
-        {watch(
-          `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`,
-        )?.length ? (
+      >
+        <div className="flex w-0 flex-1 items-center">
+          <span className="w-0 flex-1 truncate">
+            {watch(
+              `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
+            ) || `Group ${props.index + 1}`}
+          </span>
+        </div>
+        <div className="ml-4 flex shrink-0 space-x-4">
+          <TextButton secondary onClick={handleOpen}>
+            {props.open ? 'Hide' : props.disabled ? 'View' : 'Edit'}
+          </TextButton>
+          {props.disabled ? null : (
+            <>
+              <span className="text-gray-300" aria-hidden="true">
+                |
+              </span>
+              <TextButton secondary onClick={handleRemove}>
+                Remove
+              </TextButton>
+            </>
+          )}
+        </div>
+      </li>
+      {props.open ? (
+        <Grid6 className="p-6">
           <GridItem6>
             <FormItem
+              label="Voter group name"
               error={
                 errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[1]?.message ||
-                errors.groups?.[props.groupIndex]?.permission?.[props.name]
-                  ?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
+                  ?.operands?.[props.index]?.name?.message
               }
             >
+              <TextInput
+                disabled={props.disabled}
+                {...register(
+                  `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
+                )}
+                error={
+                  !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                    ?.operands?.[props.index]?.name?.message
+                }
+                placeholder={`Group ${props.index + 1}`}
+              />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
+            <FormItem
+              label="Voting power"
+              description="Each SubDID in this voter group has an equal voting power"
+              error={
+                errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                  ?.operands?.[props.index]?.arguments?.[2]?.message
+              }
+            >
+              <TextInput
+                disabled={props.disabled}
+                {...register(
+                  `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.2`,
+                )}
+                error={
+                  !!errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                    ?.operands?.[props.index]?.arguments?.[2]?.message
+                }
+              />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
+            <FormItem label="Voter group members">
               <Controller
                 control={control}
                 name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
                 render={({ field: { value, onChange } }) => (
-                  <Textarea
-                    autoCorrect="false"
-                    autoCapitalize="false"
-                    autoComplete="false"
+                  <RadioGroup
                     disabled={props.disabled}
-                    placeholder={`e.g.\nsatoshi.${suffix}\nvitalik.${suffix}`}
-                    shadow={`.${suffix}`}
-                    value={
-                      Array.isArray(value) ? (value as string[]).join('\n') : ''
-                    }
-                    onChange={(e) => {
-                      const array = e.target.value.split(/[\t\n, ]/)
-                      onChange(array.length ? array : [''])
-                    }}
-                    onBlur={(e) => {
-                      const array = compact(
-                        e.target.value
-                          .split('\n')
-                          .map((line) => line.replace(regex, '').trim()),
-                      )
-                      onChange(array.length ? array : [''])
-                    }}
-                    error={
-                      !!errors.groups?.[props.groupIndex]?.permission?.[
-                        props.name
-                      ]?.operands?.[props.index]?.arguments?.[1]?.message ||
-                      !!errors.groups?.[props.groupIndex]?.permission?.[
-                        props.name
-                      ]?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
-                    }
+                    options={[
+                      {
+                        value: 'all',
+                        name: `All of ${suffix}'s SubDIDs`,
+                      },
+                      {
+                        value: 'allowlist',
+                        name: `Some of ${suffix}'s SubDIDs`,
+                      },
+                    ]}
+                    value={value.length ? 'allowlist' : 'all'}
+                    onChange={(v) => onChange(v === 'allowlist' ? [''] : [])}
                   />
                 )}
               />
             </FormItem>
           </GridItem6>
-        ) : null}
-      </Grid6>
-    </li>
+          {watch(
+            `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`,
+          )?.length ? (
+            <GridItem6>
+              <FormItem
+                error={
+                  errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                    ?.operands?.[props.index]?.arguments?.[1]?.message ||
+                  errors.groups?.[props.groupIndex]?.permission?.[props.name]
+                    ?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
+                }
+              >
+                <Controller
+                  control={control}
+                  name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
+                  render={({ field: { value, onChange } }) => (
+                    <Textarea
+                      autoCorrect="false"
+                      autoCapitalize="false"
+                      autoComplete="false"
+                      disabled={props.disabled}
+                      placeholder={`e.g.\nsatoshi.${suffix}\nvitalik.${suffix}`}
+                      shadow={`.${suffix}`}
+                      value={
+                        Array.isArray(value)
+                          ? (value as string[]).join('\n')
+                          : ''
+                      }
+                      onChange={(e) => {
+                        const array = e.target.value.split(/[\t\n, ]/)
+                        onChange(array.length ? array : [''])
+                      }}
+                      onBlur={(e) => {
+                        const array = compact(
+                          e.target.value
+                            .split('\n')
+                            .map((line) => line.replace(regex, '').trim()),
+                        )
+                        onChange(array.length ? array : [''])
+                      }}
+                      error={
+                        !!errors.groups?.[props.groupIndex]?.permission?.[
+                          props.name
+                        ]?.operands?.[props.index]?.arguments?.[1]?.message ||
+                        !!errors.groups?.[props.groupIndex]?.permission?.[
+                          props.name
+                        ]?.operands?.[props.index]?.arguments?.[1]?.[0]?.message
+                      }
+                    />
+                  )}
+                />
+              </FormItem>
+            </GridItem6>
+          ) : null}
+        </Grid6>
+      ) : null}
+    </>
   )
 }
