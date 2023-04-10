@@ -53,7 +53,7 @@ export default function DecimalSetsBlock(props: {
           onClick={() => {
             append({
               function: 'prefixes_dot_suffix_fixed_power',
-              arguments: [props.entry, [''], '1'],
+              arguments: [props.entry, [], '1'],
             })
             setOpen(fields.length)
           }}
@@ -122,13 +122,11 @@ function DecimalUnitBlock(props: {
           props.open ? 'bg-gray-50' : undefined,
         )}
       >
-        <div className="flex w-0 flex-1 items-center">
-          <span className="w-0 flex-1 truncate">
-            {watch(
-              `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
-            ) || `Group ${props.index + 1}`}
-          </span>
-        </div>
+        <span className="w-0 flex-1 truncate text-lg">
+          {watch(
+            `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
+          ) || `Group ${props.index + 1}`}
+        </span>
         <div className="ml-6 flex shrink-0 space-x-6">
           {props.open ? (
             <Button
