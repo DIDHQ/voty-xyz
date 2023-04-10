@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import { GetStaticProps } from 'next'
 
 import Article from '../components/basic/article'
 import Markdown from '../components/basic/markdown'
@@ -13,7 +14,7 @@ export default function AboutPage() {
         <title>{title}</title>
       </Head>
       <Article className="pt-8">
-        <Markdown>{`## Introduction
+        <Markdown>{`# Introduction
 
 Voty is a decentralized voting protocol based on DID, that aims to offer a fair and user-friendly governance system for all types of communities. Unlike token-based voting systems, Voty has proposed the idea of "DID-based Governance", which enables communities to obtain valuable opinions from all members, instead of concentrating power among a select few.
 
@@ -114,4 +115,8 @@ The Voty Protocol has achieved the seemingly obvious but yet unaccomplished goal
       </Article>
     </>
   )
+}
+
+export const getStaticProps: GetStaticProps = () => {
+  return { props: {} }
 }
