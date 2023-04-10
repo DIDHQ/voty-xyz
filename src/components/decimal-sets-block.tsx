@@ -34,7 +34,7 @@ export default function DecimalSetsBlock(props: {
       {operands.length ? (
         <ul
           role="list"
-          className="divide-y divide-gray-200 overflow-hidden rounded-md border border-gray-200"
+          className="mb-4 divide-y divide-gray-200 overflow-hidden rounded-md border border-gray-200"
         >
           {operands.map((operand, index) => (
             <DecimalUnitBlock
@@ -64,7 +64,6 @@ export default function DecimalSetsBlock(props: {
             })
             setOpen(operands.length)
           }}
-          className="mt-4"
         >
           Add
         </Button>
@@ -112,37 +111,8 @@ function DecimalUnitBlock(props: {
 
   return (
     <>
-      <li
-        className={clsx(
-          'flex items-center justify-between px-4 py-3 text-sm',
-          props.open ? 'bg-gray-50' : undefined,
-        )}
-      >
-        <div className="flex w-0 flex-1 items-center">
-          <span className="w-0 flex-1 truncate">
-            {watch(
-              `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
-            ) || `Group ${props.index + 1}`}
-          </span>
-        </div>
-        <div className="ml-4 flex shrink-0 space-x-4">
-          <TextButton secondary onClick={handleOpen}>
-            {props.open ? 'Hide' : props.disabled ? 'View' : 'Edit'}
-          </TextButton>
-          {props.disabled ? null : (
-            <>
-              <span className="text-gray-300" aria-hidden="true">
-                |
-              </span>
-              <TextButton secondary onClick={handleRemove}>
-                Remove
-              </TextButton>
-            </>
-          )}
-        </div>
-      </li>
       {props.open ? (
-        <Grid6 className="p-6">
+        <Grid6 className="px-6 py-4">
           <GridItem6>
             <FormItem
               label="Voter group name"
@@ -266,6 +236,34 @@ function DecimalUnitBlock(props: {
           ) : null}
         </Grid6>
       ) : null}
+      <li
+        className={clsx(
+          'flex items-center justify-between px-6 py-4 text-sm',
+          props.open ? 'bg-gray-50' : undefined,
+        )}
+      >
+        <div className="flex w-0 flex-1 items-center">
+          <span className="w-0 flex-1 truncate">
+            {watch(
+              `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
+            ) || `Group ${props.index + 1}`}
+          </span>
+        </div>
+        <div className="ml-6 flex shrink-0 space-x-6">
+          {props.disabled || !props.open ? null : (
+            <TextButton onClick={handleRemove}>Remove</TextButton>
+          )}
+          <Button primary={props.open} onClick={handleOpen}>
+            {props.disabled
+              ? props.open
+                ? 'Hide'
+                : 'View'
+              : props.open
+              ? 'Done'
+              : 'Edit'}
+          </Button>
+        </div>
+      </li>
     </>
   )
 }
