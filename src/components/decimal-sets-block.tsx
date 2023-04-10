@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../utils/schemas/community'
-import { FormItem } from './basic/form'
+import { FormFooter, FormItem } from './basic/form'
 import { Grid6, GridItem6 } from './basic/grid'
 import RadioGroup from './basic/radio-group'
 import TextButton from './basic/text-button'
@@ -39,6 +39,7 @@ export default function DecimalSetsBlock(props: {
               entry={props.entry}
               groupIndex={props.groupIndex}
               index={index}
+              length={fields.length}
               open={open === index}
               setOpen={setOpen}
               onRemove={remove}
@@ -69,6 +70,7 @@ function DecimalUnitBlock(props: {
   entry: string
   groupIndex: number
   index: number
+  length: number
   open: boolean
   setOpen(index?: number): void
   onRemove(index: number): void
@@ -114,8 +116,38 @@ function DecimalUnitBlock(props: {
 
   return (
     <>
+      <li
+        className={clsx(
+          'flex items-center justify-between px-6 py-4 text-sm',
+          props.open ? 'bg-gray-50' : undefined,
+        )}
+      >
+        <div className="flex w-0 flex-1 items-center">
+          <span className="w-0 flex-1 truncate">
+            {watch(
+              `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
+            ) || `Group ${props.index + 1}`}
+          </span>
+        </div>
+        <div className="ml-6 flex shrink-0 space-x-6">
+          {props.open ? (
+            <Button
+              disabled={!props.disabled}
+              onClick={() => setOpen(undefined)}
+            >
+              {props.disabled ? 'Hide' : 'Editing'}
+            </Button>
+          ) : (
+            <Button onClick={handleOpen}>
+              {props.disabled ? 'View' : 'Edit'}
+            </Button>
+          )}
+        </div>
+      </li>
       {props.open ? (
-        <Grid6 className="px-6 py-4">
+        <Grid6
+          className={clsx('px-6 py-4', props.open ? 'bg-gray-50' : undefined)}
+        >
           <GridItem6>
             <FormItem
               label="Voter group name"
@@ -237,36 +269,20 @@ function DecimalUnitBlock(props: {
               </FormItem>
             </GridItem6>
           ) : null}
+          {props.disabled ? null : (
+            <GridItem6>
+              <FormFooter>
+                <Button primary onClick={handleClose}>
+                  {props.disabled ? 'Hide' : 'Done'}
+                </Button>
+                {props.length > 1 ? (
+                  <TextButton onClick={handleRemove}>Remove</TextButton>
+                ) : null}
+              </FormFooter>
+            </GridItem6>
+          )}
         </Grid6>
       ) : null}
-      <li
-        className={clsx(
-          'flex items-center justify-between px-6 py-4 text-sm',
-          props.open ? 'bg-gray-50' : undefined,
-        )}
-      >
-        <div className="flex w-0 flex-1 items-center">
-          <span className="w-0 flex-1 truncate">
-            {watch(
-              `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
-            ) || `Group ${props.index + 1}`}
-          </span>
-        </div>
-        <div className="ml-6 flex shrink-0 space-x-6">
-          {props.disabled || !props.open ? null : (
-            <TextButton onClick={handleRemove}>Remove</TextButton>
-          )}
-          {props.open ? (
-            <Button primary onClick={handleClose}>
-              {props.disabled ? 'Hide' : 'Done'}
-            </Button>
-          ) : (
-            <Button onClick={handleOpen}>
-              {props.disabled ? 'View' : 'Edit'}
-            </Button>
-          )}
-        </div>
-      </li>
     </>
   )
 }
