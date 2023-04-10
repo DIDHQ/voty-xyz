@@ -4,7 +4,7 @@ import { Group } from '../utils/schemas/group'
 import { formatDuration } from '../utils/time'
 import Article from './basic/article'
 import Markdown from './basic/markdown'
-import GroupPermission from './group-permission'
+import PermissionCard from './permission-card'
 
 export default function GroupAbout(props: {
   entry?: string
@@ -15,7 +15,18 @@ export default function GroupAbout(props: {
 
   return (
     <div className={clsx('space-y-6', props.className)}>
-      <GroupPermission entry={props.entry} group={props.group} />
+      <PermissionCard
+        title="Proposers"
+        description="SubDIDs who can initiate proposals in this workgroup"
+        entry={props.entry}
+        value={props.group.permission.proposing}
+      />
+      <PermissionCard
+        title="Voters"
+        description="SubDIDs who can vote in this workgroup"
+        entry={props.entry}
+        value={props.group.permission.voting}
+      />
       <div className="rounded-md border p-4">
         <h3 className="text-xl font-semibold">Rules</h3>
         <nav className="mt-4 border-t pt-4">
