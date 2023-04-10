@@ -12,7 +12,7 @@ export default function ToolBar(props: { className?: string }) {
   return (
     <header
       className={clsx(
-        'w-full justify-center border-b border-gray-200 bg-white/80 backdrop-blur pt-safe',
+        'w-full justify-center border-b border-gray-200 pt-safe',
         props.className,
       )}
     >
