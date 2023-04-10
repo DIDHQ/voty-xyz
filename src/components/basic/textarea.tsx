@@ -23,9 +23,9 @@ export default forwardRef<
   }, [])
 
   return (
-    <div className={clsx('relative text-sm', className)}>
+    <div className={clsx('relative', className)}>
       {shadow && props.value ? (
-        <span className="absolute -z-10 select-none border border-transparent px-3 py-2 text-gray-400">
+        <span className="absolute -z-10 select-none border border-transparent px-3 py-2 text-base text-gray-400 sm:text-sm">
           {(props.value as string | undefined)
             ?.split('\n')
             .map((line, index) => (
@@ -44,7 +44,7 @@ export default forwardRef<
         minRows={7}
         {...restProps}
         className={clsx(
-          'block w-full rounded-md border bg-transparent disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
+          'block w-full rounded-md border bg-transparent placeholder:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
           error
             ? 'border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500'
             : 'border-gray-200 focus:border-primary-500 focus:ring-primary-300',
