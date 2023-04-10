@@ -23,7 +23,7 @@ export type BooleanUnit = z.infer<typeof booleanUnitSchema>
 
 export const booleanSetsSchema = z.object({
   operation: z.literal('or'),
-  operands: z.array(booleanUnitSchema).min(1, 'at least 1 group'),
+  operands: z.array(booleanUnitSchema).min(1, 'At least 1 group'),
 })
 
 export type BooleanSets = z.infer<typeof booleanSetsSchema>
@@ -58,7 +58,7 @@ export type DecimalUnit = z.infer<typeof decimalUnitSchema>
 
 export const decimalSetsSchema = z.object({
   operation: z.literal('max'),
-  operands: z.array(decimalUnitSchema).min(1, 'at least 1 group'),
+  operands: z.array(decimalUnitSchema).min(1, 'At least 1 group'),
 })
 
 export type DecimalSets = z.infer<typeof decimalSetsSchema>
