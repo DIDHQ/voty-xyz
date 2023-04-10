@@ -1,6 +1,8 @@
 import { Menu } from '@headlessui/react'
-import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
-import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import {
+  EllipsisVerticalIcon,
+  InformationCircleIcon,
+} from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 import Link from 'next/link'
 
