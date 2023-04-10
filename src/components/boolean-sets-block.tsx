@@ -47,7 +47,7 @@ function BooleanUnitBlock(props: {
   const suffix =
     watch(
       `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
-    ) || ''
+    ) ?? ''
   const regex = new RegExp(`\\.${suffix.replaceAll('.', '\\.')}\$`)
 
   return (
