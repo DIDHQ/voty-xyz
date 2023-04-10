@@ -98,7 +98,7 @@ export default function PreviewBar() {
           : 'Submitted successfully'}
       </Notification>
       {preview?.to === router.asPath ? (
-        <footer className="fixed inset-x-0 bottom-0 h-18 border-t bg-primary-600">
+        <footer className="fixed inset-x-0 bottom-0 h-18 border-t bg-primary-600 pb-safe">
           <div className="mx-auto flex h-18 max-w-5xl items-center justify-between px-6">
             <TextButton white href={preview.from}>
               ← Back
