@@ -1,11 +1,11 @@
 import { Menu } from '@headlessui/react'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
-import { BugAntIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import Link from 'next/link'
 
 import Dropdown from './basic/dropdown'
-import { DotbitIcon, GitHubIcon, TwitterIcon } from './icons'
+import { DiscordIcon, DotbitIcon, GitHubIcon, TwitterIcon } from './icons'
 
 export default function InfoButton() {
   return (
@@ -36,23 +36,6 @@ export default function InfoButton() {
               />
               About Voty
             </Link>
-          )}
-        </Menu.Item>
-        <Menu.Item>
-          {({ active }) => (
-            <a
-              href="https://discord.gg/8P6vSwwMzk"
-              className={clsx(
-                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                'group flex items-center px-4 py-2 text-sm',
-              )}
-            >
-              <BugAntIcon
-                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                aria-hidden="true"
-              />
-              Feedback
-            </a>
           )}
         </Menu.Item>
       </div>
@@ -105,6 +88,23 @@ export default function InfoButton() {
                 aria-hidden="true"
               />
               Twitter
+            </a>
+          )}
+        </Menu.Item>
+        <Menu.Item>
+          {({ active }) => (
+            <a
+              href="https://discord.gg/8P6vSwwMzk"
+              className={clsx(
+                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                'group flex items-center px-4 py-2 text-sm',
+              )}
+            >
+              <DiscordIcon
+                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                aria-hidden="true"
+              />
+              Discord
             </a>
           )}
         </Menu.Item>
