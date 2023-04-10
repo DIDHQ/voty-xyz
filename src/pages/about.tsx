@@ -6,17 +6,15 @@ import Markdown from '../components/basic/markdown'
 import { documentTitle } from '../utils/constants'
 
 export default function AboutPage() {
-  const title = `About - ${documentTitle}`
-
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{`About - ${documentTitle}`}</title>
       </Head>
       <Article className="pt-8">
         <Markdown>{`# Introduction
 
-Voty is a decentralized voting protocol based on DID, that aims to offer a fair and user-friendly governance system for all types of communities. Unlike token-based voting systems, Voty has proposed the idea of "DID-based Governance", which enables communities to obtain valuable opinions from all members, instead of concentrating power among a select few.
+Voty is a decentralized voting protocol based on DID, that aims to offer a fair and user-friendly governance system for all types of communities. Unlike token-based voting systems, Voty has proposed the idea of **"DID-based Governance"**, which enables communities to obtain valuable opinions from all members, instead of concentrating power among a select few.
 
 ## Defects in current voting systems
 
