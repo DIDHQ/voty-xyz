@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import { compact } from 'lodash-es'
 import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
@@ -115,37 +114,32 @@ function DecimalUnitBlock(props: {
   const regex = new RegExp(`\\.${suffix.replaceAll('.', '\\.')}\$`)
 
   return (
-    <>
-      <li
-        className={clsx(
-          'flex items-center justify-between px-6 py-4 text-sm',
-          props.open ? 'bg-gray-50' : undefined,
-        )}
-      >
-        <span className="w-0 flex-1 truncate text-lg">
+    <li className={props.open ? 'bg-gray-50' : undefined}>
+      <div className="flex items-center justify-between px-6 py-4 text-sm">
+        <span className="w-0 flex-1 truncate font-semibold">
           {watch(
             `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.name`,
           ) || `Group ${props.index + 1}`}
         </span>
         <div className="ml-6 flex shrink-0 space-x-6">
           {props.open ? (
-            <Button
-              disabled={!props.disabled}
-              onClick={() => setOpen(undefined)}
-            >
-              {props.disabled ? 'Hide' : 'Editing'}
-            </Button>
+            props.disabled ? (
+              <TextButton
+                disabled={!props.disabled}
+                onClick={() => setOpen(undefined)}
+              >
+                {props.disabled ? 'Hide' : 'Editing'}
+              </TextButton>
+            ) : null
           ) : (
-            <Button onClick={handleOpen}>
+            <TextButton primary onClick={handleOpen}>
               {props.disabled ? 'View' : 'Edit'}
-            </Button>
+            </TextButton>
           )}
         </div>
-      </li>
+      </div>
       {props.open ? (
-        <Grid6
-          className={clsx('px-6 py-4', props.open ? 'bg-gray-50' : undefined)}
-        >
+        <Grid6 className="px-6 pb-4 pt-2">
           <GridItem6>
             <FormItem
               label="Voter group name"
@@ -281,6 +275,6 @@ function DecimalUnitBlock(props: {
           )}
         </Grid6>
       ) : null}
-    </>
+    </li>
   )
 }
