@@ -27,7 +27,7 @@ import Tooltip from './basic/tooltip'
 import Slide from './basic/slide'
 import { formatDurationMs } from '../utils/time'
 import { previewPermalink } from '../utils/constants'
-import GroupPermission from './group-permission'
+import PermissionCard from './permission-card'
 
 export default function VoteForm(props: {
   entry: string
@@ -190,7 +190,10 @@ export default function VoteForm(props: {
             }
           />
         </FormItem>
-        {props.proposal.permalink === previewPermalink ? null : (
+        {props.proposal.permalink === previewPermalink ? null : phase ===
+          Phase.ENDED ? (
+          <p className="mt-6 text-end text-gray-500">Voting has ended</p>
+        ) : (
           <div className="mt-6 flex w-full flex-col items-end">
             <div className="w-full flex-1 sm:w-64 sm:flex-none">
               <DidCombobox
@@ -203,7 +206,7 @@ export default function VoteForm(props: {
               />
               {didOptions?.length === 0 && props.group ? (
                 <Slide
-                  title={`Permissions of ${props.group.name}`}
+                  title={`Voters of ${props.group.name}`}
                   trigger={({ handleOpen }) => (
                     <TextButton secondary onClick={handleOpen}>
                       Why I&#39;m not eligible to vote
@@ -212,12 +215,12 @@ export default function VoteForm(props: {
                 >
                   {() =>
                     props.group ? (
-                      <div className="space-y-6">
-                        <GroupPermission
-                          entry={props.entry}
-                          group={props.group}
-                        />
-                      </div>
+                      <PermissionCard
+                        title="Voters"
+                        description="SubDIDs who can vote in this workgroup"
+                        entry={props.entry}
+                        value={props.group.permission.voting}
+                      />
                     ) : null
                   }
                 </Slide>
@@ -244,8 +247,6 @@ export default function VoteForm(props: {
                 text={
                   phase === Phase.CONFIRMING
                     ? 'Waiting for proposal confirming (in about 5 minutes)'
-                    : phase === Phase.ENDED
-                    ? 'Voting ended'
                     : status?.timestamp && props.group
                     ? `Waiting for voting start (in ${formatDurationMs(
                         status.timestamp.getTime() +

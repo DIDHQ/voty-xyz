@@ -1,36 +1,11 @@
 import clsx from 'clsx'
 import { useMemo } from 'react'
 
-import { Group } from '../utils/schemas/group'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 import { BooleanSets, DecimalSets } from '../utils/schemas/sets'
 
-export default function GroupPermission(props: {
-  entry?: string
-  group: Group
-}) {
-  const { group } = props
-
-  return (
-    <>
-      <PermissionCard
-        title="Proposers"
-        description="SubDIDs who can initiate proposals in this workgroup"
-        entry={props.entry}
-        value={group.permission.proposing}
-      />
-      <PermissionCard
-        title="Voters"
-        description="SubDIDs who can vote in this workgroup"
-        entry={props.entry}
-        value={group.permission.voting}
-      />
-    </>
-  )
-}
-
-function PermissionCard(props: {
+export default function PermissionCard(props: {
   title: string
   description: string
   entry?: string

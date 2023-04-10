@@ -35,7 +35,7 @@ import RadioGroup2 from './basic/radio-group2'
 import { previewProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
 import Slide from './basic/slide'
-import GroupPermission from './group-permission'
+import PermissionCard from './permission-card'
 
 export default function ProposalForm(props: {
   initialValue: Partial<Proposal>
@@ -182,7 +182,7 @@ export default function ProposalForm(props: {
               />
               {didOptions?.length === 0 && props.group ? (
                 <Slide
-                  title={`Permissions of ${props.group.name}`}
+                  title={`Proposers of ${props.group.name}`}
                   trigger={({ handleOpen }) => (
                     <TextButton secondary onClick={handleOpen}>
                       Why I&#39;m not eligible to propose
@@ -191,12 +191,12 @@ export default function ProposalForm(props: {
                 >
                   {() =>
                     props.group ? (
-                      <div className="space-y-6">
-                        <GroupPermission
-                          entry={props.community.entry.did}
-                          group={props.group}
-                        />
-                      </div>
+                      <PermissionCard
+                        title="Proposers"
+                        description="SubDIDs who can initiate proposals in this workgroup"
+                        entry={props.community.entry.did}
+                        value={props.group.permission.proposing}
+                      />
                     ) : null
                   }
                 </Slide>

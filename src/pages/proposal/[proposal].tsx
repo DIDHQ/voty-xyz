@@ -125,25 +125,16 @@ export default function ProposalPage() {
               </h2>
             ) : null}
             {votes?.length ? (
-              <table className="my-6 w-full border-separate border-spacing-0">
+              <table className="my-6 w-full table-fixed border-separate border-spacing-0">
                 <thead>
                   <tr>
-                    <th
-                      scope="col"
-                      className="rounded-t-md border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
-                    >
-                      DID
+                    <th className="rounded-t-md border-b border-gray-200 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
+                      Voter
                     </th>
-                    <th
-                      scope="col"
-                      className="border-b border-gray-200 bg-white/80 px-3 py-2 text-left text-sm font-semibold text-gray-900 backdrop-blur"
-                    >
+                    <th className="border-b border-gray-200 px-3 py-2 text-left text-sm font-semibold text-gray-900">
                       Choice
                     </th>
-                    <th
-                      scope="col"
-                      className="rounded-t-md border-b border-gray-200 bg-white/80 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 backdrop-blur"
-                    >
+                    <th className="rounded-t-md border-b border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900">
                       Power
                     </th>
                   </tr>
@@ -160,6 +151,11 @@ export default function ProposalPage() {
                         {vote.authorship.author}
                       </td>
                       <td
+                        title={
+                          proposal
+                            ? stringifyChoice(proposal.voting_type, vote.choice)
+                            : vote.choice
+                        }
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
                           'truncate whitespace-nowrap border-gray-200 px-3 py-2 text-sm text-gray-500',
