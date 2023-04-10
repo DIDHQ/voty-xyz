@@ -18,31 +18,23 @@ export default function DecimalSetsBlock(props: {
   groupIndex: number
   disabled?: boolean
 }) {
-  const { watch, control } = useFormContext<Community>()
+  const { control } = useFormContext<Community>()
   const { fields, append, remove } = useFieldArray({
     control,
     name: `groups.${props.groupIndex}.permission.${props.name}.operands`,
   })
   const [open, setOpen] = useState<number | undefined>(0)
-  const operands = watch(
-    `groups.${props.groupIndex}.permission.${props.name}.operands`,
-    fields,
-  )
 
   return (
     <>
-      {operands.length ? (
+      {fields.length ? (
         <ul
           role="list"
           className="mb-4 divide-y divide-gray-200 overflow-hidden rounded-md border border-gray-200"
         >
-          {operands.map((operand, index) => (
+          {fields.map((operand, index) => (
             <DecimalUnitBlock
-              key={
-                'id' in operand && typeof operand.id === 'string'
-                  ? operand.id
-                  : index
-              }
+              key={operand.id}
               name={props.name}
               entry={props.entry}
               groupIndex={props.groupIndex}
@@ -62,7 +54,7 @@ export default function DecimalSetsBlock(props: {
               function: 'prefixes_dot_suffix_fixed_power',
               arguments: [props.entry, [''], '1'],
             })
-            setOpen(operands.length)
+            setOpen(fields.length)
           }}
         >
           Add
@@ -87,14 +79,25 @@ function DecimalUnitBlock(props: {
     watch,
     register,
     formState: { errors },
+    trigger,
   } = useFormContext<Community>()
   const { setOpen, onRemove } = props
   const handleOpen = useCallback(() => {
-    setOpen(props.open ? undefined : props.index)
-  }, [setOpen, props.open, props.index])
+    setOpen(props.index)
+  }, [setOpen, props.index])
+  const handleClose = useCallback(async () => {
+    if (
+      await trigger(
+        `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}`,
+      )
+    ) {
+      setOpen(undefined)
+    }
+  }, [props.groupIndex, props.index, props.name, setOpen, trigger])
   const handleRemove = useCallback(() => {
+    setOpen(undefined)
     onRemove(props.index)
-  }, [onRemove, props.index])
+  }, [onRemove, props.index, setOpen])
   useEffect(() => {
     if (
       errors.groups?.[props.groupIndex]?.permission?.[props.name]?.operands?.[
@@ -253,15 +256,15 @@ function DecimalUnitBlock(props: {
           {props.disabled || !props.open ? null : (
             <TextButton onClick={handleRemove}>Remove</TextButton>
           )}
-          <Button primary={props.open} onClick={handleOpen}>
-            {props.disabled
-              ? props.open
-                ? 'Hide'
-                : 'View'
-              : props.open
-              ? 'Done'
-              : 'Edit'}
-          </Button>
+          {props.open ? (
+            <Button primary onClick={handleClose}>
+              {props.disabled ? 'Hide' : 'Done'}
+            </Button>
+          ) : (
+            <Button onClick={handleOpen}>
+              {props.disabled ? 'View' : 'Edit'}
+            </Button>
+          )}
         </div>
       </li>
     </>
