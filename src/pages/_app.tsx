@@ -10,18 +10,8 @@ import {
   bscTestnet,
 } from 'wagmi/chains'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
-import {
-  connectorsForWallets,
-  lightTheme,
-  RainbowKitProvider,
-} from '@rainbow-me/rainbowkit'
-import {
-  injectedWallet,
-  metaMaskWallet,
-  walletConnectWallet,
-} from '@rainbow-me/rainbowkit/wallets'
-import { useMemo } from 'react'
 import { GoogleAnalytics, event } from 'nextjs-google-analytics'
+import { ConnectKitProvider, getDefaultClient } from 'connectkit'
 
 import ShellLayout from '../components/layouts/shell'
 import { trpc } from '../utils/trpc'
@@ -29,7 +19,7 @@ import { isTestnet, documentTitle } from '../utils/constants'
 import { chainIdToRpc } from '../utils/constants'
 import '../styles/globals.css'
 
-const { chains, provider } = configureChains(
+const { chains } = configureChains(
   (isTestnet
     ? [goerli, polygonMumbai, bscTestnet]
     : [mainnet, polygon, bsc]) as Chain[],
@@ -43,26 +33,14 @@ const { chains, provider } = configureChains(
   ],
 )
 
-const wallets = [
-  injectedWallet({ chains, shimDisconnect: true }),
-  metaMaskWallet({ chains, shimDisconnect: true }),
-  walletConnectWallet({ chains }),
-]
-
-const connectors = connectorsForWallets([{ groupName: 'Voty', wallets }])
-
-const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider,
-})
+const wagmiClient = createClient(
+  getDefaultClient({
+    appName: 'Voty',
+    chains,
+  }),
+)
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  const theme = useMemo(
-    () => lightTheme({ borderRadius: 'small', fontStack: 'system' }),
-    [],
-  )
-
   return (
     <>
       <Head>
@@ -74,11 +52,19 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       </Head>
       <GoogleAnalytics trackPageViews />
       <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider modalSize="compact" chains={chains} theme={theme}>
+        <ConnectKitProvider
+          theme="minimal"
+          mode="light"
+          customTheme={{
+            '--ck-border-radius': '6px',
+            '--ck-accent-color': '#1BA57F',
+            '--ck-accent-text-color': '#ffffff',
+          }}
+        >
           <ShellLayout>
             <Component {...pageProps} />
           </ShellLayout>
-        </RainbowKitProvider>
+        </ConnectKitProvider>
       </WagmiConfig>
     </>
   )

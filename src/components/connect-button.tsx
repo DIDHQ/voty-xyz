@@ -1,30 +1,19 @@
-import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
+import { ConnectKitButton } from 'connectkit'
 import { Menu } from '@headlessui/react'
 import clsx from 'clsx'
-import '@rainbow-me/rainbowkit/styles.css'
 
 import useWallet from '../hooks/use-wallet'
 import Button from './basic/button'
 import Avatar from './basic/avatar'
-import {
-  chainIdToCoinType,
-  coinTypeLogos,
-  coinTypeNames,
-} from '../utils/constants'
+import { coinTypeLogos, coinTypeNames } from '../utils/constants'
 import Dropdown from './basic/dropdown'
 
 export default function ConnectButton() {
   const { account, displayAddress, disconnect } = useWallet()
 
   return (
-    <RainbowConnectButton.Custom>
-      {({
-        openConnectModal,
-        openChainModal,
-        connectModalOpen,
-        chainModalOpen,
-        chain,
-      }) =>
+    <ConnectKitButton.Custom>
+      {({ show, chain, isConnecting }) =>
         account ? (
           <Dropdown
             trigger={
@@ -65,16 +54,12 @@ export default function ConnectButton() {
               </Menu.Item>
             </div>
           </Dropdown>
-        ) : !chain || chainIdToCoinType[chain.id] ? (
-          <Button primary loading={connectModalOpen} onClick={openConnectModal}>
-            Connect Wallet
-          </Button>
         ) : (
-          <Button primary loading={chainModalOpen} onClick={openChainModal}>
-            Switch Network
+          <Button primary loading={isConnecting} onClick={show}>
+            {chain?.unsupported ? 'Switch Network' : 'Connect Wallet'}
           </Button>
         )
       }
-    </RainbowConnectButton.Custom>
+    </ConnectKitButton.Custom>
   )
 }
