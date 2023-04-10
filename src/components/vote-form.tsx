@@ -190,7 +190,10 @@ export default function VoteForm(props: {
             }
           />
         </FormItem>
-        {props.proposal.permalink === previewPermalink ? null : (
+        {props.proposal.permalink === previewPermalink ? null : phase ===
+          Phase.ENDED ? (
+          <p className="mt-6 text-end text-gray-500">Voting has ended</p>
+        ) : (
           <div className="mt-6 flex w-full flex-col items-end">
             <div className="w-full flex-1 sm:w-64 sm:flex-none">
               <DidCombobox
@@ -244,8 +247,6 @@ export default function VoteForm(props: {
                 text={
                   phase === Phase.CONFIRMING
                     ? 'Waiting for proposal confirming (in about 5 minutes)'
-                    : phase === Phase.ENDED
-                    ? 'Voting ended'
                     : status?.timestamp && props.group
                     ? `Waiting for voting start (in ${formatDurationMs(
                         status.timestamp.getTime() +

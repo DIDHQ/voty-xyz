@@ -132,7 +132,7 @@ export default function ProposalPage() {
                       scope="col"
                       className="rounded-t-md border-b border-gray-200 bg-white/80 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur"
                     >
-                      DID
+                      Voter
                     </th>
                     <th
                       scope="col"
