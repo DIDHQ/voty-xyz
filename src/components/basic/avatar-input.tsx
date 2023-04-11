@@ -1,10 +1,12 @@
-import { ChangeEvent, MouseEvent, useCallback, useRef } from 'react'
+import { ChangeEvent, MouseEvent, Ref, useCallback, useRef } from 'react'
 import imageCompression from 'browser-image-compression'
+import { mergeRefs } from 'react-merge-refs'
 
 import Avatar from './avatar'
 import Button from './button'
 
 export default function AvatarInput(props: {
+  inputRef: Ref<HTMLInputElement>
   name?: string
   value?: string
   onChange?: (value?: string) => void
@@ -41,11 +43,11 @@ export default function AvatarInput(props: {
     <div className="flex items-center">
       <Avatar size={16} value={props.value} />
       <input
-        ref={inputRef}
+        ref={mergeRefs([inputRef, props.inputRef])}
         type="file"
         accept="image/*"
-        style={{ display: 'none' }}
         onChange={handleChange}
+        className="h-0 w-0"
       />
       {props.disabled ? null : (
         <Button onClick={handleClick} className="ml-4">

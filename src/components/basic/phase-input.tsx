@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { ChangeEvent, useCallback, useEffect, useState } from 'react'
+import { ChangeEvent, Ref, useCallback, useEffect, useState } from 'react'
 
 enum PhaseType {
   MINUTE = 60,
@@ -20,6 +20,7 @@ const types = [
 ]
 
 export default function PhaseInput(props: {
+  inputRef: Ref<HTMLInputElement>
   value?: number
   onChange(value: number): void
   error?: boolean
@@ -56,6 +57,7 @@ export default function PhaseInput(props: {
   return (
     <div className={clsx('relative', props.className)}>
       <input
+        ref={props.inputRef}
         type="number"
         value={value}
         onChange={handleChange}

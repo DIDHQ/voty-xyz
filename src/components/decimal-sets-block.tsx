@@ -222,8 +222,9 @@ function DecimalUnitBlock(props: {
                 <Controller
                   control={control}
                   name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { ref, value, onChange } }) => (
                     <Textarea
+                      ref={ref}
                       autoCorrect="false"
                       autoCapitalize="false"
                       autoComplete="false"

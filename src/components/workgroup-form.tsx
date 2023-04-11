@@ -186,8 +186,9 @@ export default function WorkgroupForm(props: {
                 <Controller
                   control={control}
                   name={`groups.${groupIndex}.duration.pending`}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { ref, value, onChange } }) => (
                     <PhaseInput
+                      inputRef={ref}
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
@@ -205,8 +206,9 @@ export default function WorkgroupForm(props: {
                 <Controller
                   control={control}
                   name={`groups.${groupIndex}.duration.voting`}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { ref, value, onChange } }) => (
                     <PhaseInput
+                      inputRef={ref}
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}

@@ -64,8 +64,9 @@ export default function CommunityForm(props: {
               <Controller
                 control={control}
                 name="extension.logo"
-                render={({ field: { value, onChange } }) => (
+                render={({ field: { ref, value, onChange } }) => (
                   <AvatarInput
+                    inputRef={ref}
                     value={value}
                     onChange={onChange}
                     disabled={!isManager}
