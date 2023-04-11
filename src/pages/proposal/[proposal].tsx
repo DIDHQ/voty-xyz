@@ -90,10 +90,10 @@ export default function ProposalPage() {
               disabled={!community || !group || !!previewProposal}
               href={`/${community?.authorship.author}/${group?.id}`}
             >
-              <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+              <h2 className="text-base font-semibold">← Back</h2>
             </TextButton>
             <div className="mb-6">
-              <h3 className="mt-4 line-clamp-2 break-words text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
+              <h3 className="mt-4 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
                 {proposal?.title || '...'}
               </h3>
               <Article className="mt-6 sm:mt-8">

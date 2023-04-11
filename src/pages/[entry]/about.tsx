@@ -35,7 +35,7 @@ export default function CommunityAboutPage() {
       <LoadingBar loading={isLoading} />
       {community?.extension.description ? (
         <>
-          <h3 className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8">
+          <h3 className="mt-6 text-lg font-medium text-gray-900 sm:mt-8">
             Description
           </h3>
           <Article className="w-full pt-6">
@@ -47,7 +47,7 @@ export default function CommunityAboutPage() {
         <>
           <h3
             id="how-to-join"
-            className="mt-6 text-lg font-medium leading-6 text-gray-900 sm:mt-8"
+            className="mt-6 text-lg font-medium text-gray-900 sm:mt-8"
           >
             How to join
           </h3>

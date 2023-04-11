@@ -8,7 +8,7 @@ export function Form(props: {
 }) {
   return (
     <div className={clsx('space-y-16', props.className)}>
-      <h2 className="text-center text-3xl font-semibold leading-6 text-gray-900">
+      <h2 className="text-center text-3xl font-semibold text-gray-900">
         {props.title}
       </h2>
       {props.children}
@@ -24,9 +24,7 @@ export function FormSection(props: {
 }) {
   return (
     <div className={props.className}>
-      <h3 className="text-xl font-semibold leading-6 text-gray-900">
-        {props.title}
-      </h3>
+      <h3 className="text-xl font-semibold text-gray-900">{props.title}</h3>
       <p className="mb-6 mt-2 text-sm text-gray-500">{props.description}</p>
       {props.children}
     </div>

@@ -76,7 +76,7 @@ export default function CreateGroupPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextButton href={`/${query.entry}`} className="mt-6 sm:mt-8">
-          <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+          <h2 className="text-base font-semibold">← Back</h2>
         </TextButton>
         {query.entry && initialValue !== undefined ? (
           <WorkgroupForm

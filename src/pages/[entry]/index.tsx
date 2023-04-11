@@ -56,9 +56,7 @@ export default function CommunityIndexPage() {
     <CommunityLayout>
       <LoadingBar loading={isLoading || isListLoading} />
       <div className="mt-6 flex justify-between sm:mt-8">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Timeline
-        </h3>
+        <h3 className="text-lg font-medium text-gray-900">Timeline</h3>
         <Select
           options={options}
           value={phase}

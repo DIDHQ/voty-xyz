@@ -41,7 +41,7 @@ export default function CreateProposalPage() {
           href={`/${query.entry}/${query.group}`}
           className="mt-6 sm:mt-8"
         >
-          <h2 className="text-[1rem] font-semibold leading-6">← Back</h2>
+          <h2 className="text-base font-semibold">← Back</h2>
         </TextButton>
         {community && group ? (
           <ProposalForm

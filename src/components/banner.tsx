@@ -9,7 +9,7 @@ export default function Banner() {
 
   return showBanner ? (
     <div className="z-50 flex items-center gap-x-6 bg-primary-600 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
-      <p className="text-sm leading-6 text-white">
+      <p className="text-sm text-white">
         Data will not be retained after Alpha testing.&nbsp;
         <a href="https://twitter.com/voty_xyz">
           Follow our Twitter to learn more!&nbsp;
