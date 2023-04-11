@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import { PencilIcon } from '@heroicons/react/20/solid'
 import { useAtomValue } from 'jotai'
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
 
 import CommunityLayout from '../../components/layouts/community'
 import Article from '../../components/basic/article'
@@ -16,7 +14,6 @@ import { previewCommunityAtom } from '../../utils/atoms'
 
 export default function CommunityAboutPage() {
   const query = useRouterQuery<['entry']>()
-  const router = useRouter()
   const { data, isLoading } = trpc.community.getByEntry.useQuery(
     { entry: query.entry },
     { enabled: !!query.entry },
@@ -24,11 +21,6 @@ export default function CommunityAboutPage() {
   const isManager = useIsManager(query.entry)
   const previewCommunity = useAtomValue(previewCommunityAtom)
   const community = previewCommunity || data
-  useEffect(() => {
-    if (community === null) {
-      router.push('/404')
-    }
-  }, [community, router])
 
   return (
     <CommunityLayout>

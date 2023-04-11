@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 
 import CommunityForm from '../../components/community-form'
 import useRouterQuery from '../../hooks/use-router-query'
@@ -14,11 +13,6 @@ export default function CommunitySettingsPage() {
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  useEffect(() => {
-    if (community === null) {
-      router.push('/404')
-    }
-  }, [community, router])
 
   return (
     <>
