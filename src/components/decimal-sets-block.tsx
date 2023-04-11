@@ -263,14 +263,16 @@ function DecimalUnitBlock(props: {
           ) : null}
           {props.disabled ? null : (
             <GridItem6>
-              <FormFooter>
+              <div className="flex items-center justify-end">
+                {props.length > 1 ? (
+                  <TextButton onClick={handleRemove} className="mr-6">
+                    Remove
+                  </TextButton>
+                ) : null}
                 <Button primary onClick={handleClose}>
                   {props.disabled ? 'Hide' : 'Done'}
                 </Button>
-                {props.length > 1 ? (
-                  <TextButton onClick={handleRemove}>Remove</TextButton>
-                ) : null}
-              </FormFooter>
+              </div>
             </GridItem6>
           )}
         </Grid6>
