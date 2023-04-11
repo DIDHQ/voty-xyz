@@ -114,10 +114,10 @@ export default function CommunityInfo(props: { className?: string }) {
               className="shrink-0"
             />
             <div className="sm:space-y-2">
-              <h3 className="line-clamp-2 w-full break-words text-xl font-bold text-gray-900 sm:text-center sm:text-2xl">
+              <h3 className="line-clamp-3 w-full break-words text-xl font-bold text-gray-900 sm:text-center sm:text-2xl">
                 {community?.name || '...'}
               </h3>
-              <p className="line-clamp-2 w-full text-sm text-gray-500 sm:text-center">
+              <p className="line-clamp-3 w-full text-sm text-gray-500 sm:text-center">
                 {community?.extension.slogan || '...'}
               </p>
             </div>
