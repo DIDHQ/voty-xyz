@@ -8,7 +8,6 @@ import { BooleanSets, DecimalSets } from '../utils/schemas/sets'
 export default function PermissionCard(props: {
   title: string
   description: string
-  entry?: string
   value: BooleanSets | DecimalSets
 }) {
   const { account } = useWallet()
@@ -32,9 +31,7 @@ export default function PermissionCard(props: {
                 {operand.arguments[1].map((argument) => (
                   <Tag
                     key={argument}
-                    highlight={didSet.has(
-                      `${argument}.${operand.arguments[0]}`,
-                    )}
+                    primary={didSet.has(`${argument}.${operand.arguments[0]}`)}
                     className="m-1"
                   >
                     {`${argument}.${operand.arguments[0]}`}
@@ -48,11 +45,7 @@ export default function PermissionCard(props: {
                 ) : (
                   <>
                     All SubDIDs of&nbsp;
-                    {
-                      <Tag highlight={props.entry === operand.arguments[0]}>
-                        {operand.arguments[0]}
-                      </Tag>
-                    }
+                    {<Tag>{operand.arguments[0]}</Tag>}
                   </>
                 )}
               </span>
@@ -70,7 +63,7 @@ export default function PermissionCard(props: {
 }
 
 function Tag(props: {
-  highlight?: boolean
+  primary?: boolean
   children: string
   className?: string
 }) {
@@ -78,7 +71,7 @@ function Tag(props: {
     <span
       className={clsx(
         'inline-flex items-center rounded-full px-3 py-0.5 text-sm',
-        props.highlight
+        props.primary
           ? 'bg-primary-100 text-primary-700'
           : 'bg-gray-100 text-gray-700',
         props.className,

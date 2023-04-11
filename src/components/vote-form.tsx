@@ -30,7 +30,6 @@ import { previewPermalink } from '../utils/constants'
 import PermissionCard from './permission-card'
 
 export default function VoteForm(props: {
-  entry: string
   group: Group
   proposal: Proposal & { permalink: string }
   onSuccess: () => void
@@ -218,7 +217,6 @@ export default function VoteForm(props: {
                       <PermissionCard
                         title="Voters"
                         description="SubDIDs who can vote in this workgroup"
-                        entry={props.entry}
                         value={props.group.permission.voting}
                       />
                     ) : null

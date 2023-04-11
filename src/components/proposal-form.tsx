@@ -194,7 +194,6 @@ export default function ProposalForm(props: {
                       <PermissionCard
                         title="Proposers"
                         description="SubDIDs who can initiate proposals in this workgroup"
-                        entry={props.community.entry.did}
                         value={props.group.permission.proposing}
                       />
                     ) : null

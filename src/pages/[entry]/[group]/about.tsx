@@ -60,9 +60,7 @@ export default function GroupAboutPage() {
               {group.extension.introduction}
             </p>
           ) : null}
-          {group ? (
-            <GroupAbout entry={query.entry} group={group} className="mt-6" />
-          ) : null}
+          {group ? <GroupAbout group={group} className="mt-6" /> : null}
           {isManager && !previewCommunity ? (
             <Link
               href={`/${query.entry}/${query.group}/settings`}

@@ -106,7 +106,6 @@ export default function ProposalPage() {
             />
             {community && group && proposal ? (
               <VoteForm
-                entry={community.authorship.author}
                 group={group}
                 proposal={proposal}
                 onSuccess={handleSuccess}

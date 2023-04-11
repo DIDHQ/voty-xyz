@@ -7,7 +7,6 @@ import Markdown from './basic/markdown'
 import PermissionCard from './permission-card'
 
 export default function GroupAbout(props: {
-  entry?: string
   group: Group
   className?: string
 }) {
@@ -18,13 +17,11 @@ export default function GroupAbout(props: {
       <PermissionCard
         title="Proposers"
         description="SubDIDs who can initiate proposals in this workgroup"
-        entry={props.entry}
         value={props.group.permission.proposing}
       />
       <PermissionCard
         title="Voters"
         description="SubDIDs who can vote in this workgroup"
-        entry={props.entry}
         value={props.group.permission.voting}
       />
       <div className="rounded-md border p-4">
