@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Community } from '../utils/schemas/community'
-import { FormFooter, FormItem } from './basic/form'
+import { FormItem } from './basic/form'
 import { Grid6, GridItem6 } from './basic/grid'
 import RadioGroup from './basic/radio-group'
 import TextButton from './basic/text-button'

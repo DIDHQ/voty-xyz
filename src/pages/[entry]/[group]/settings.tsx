@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../../hooks/use-router-query'
@@ -6,7 +6,6 @@ import WorkgroupForm from '../../../components/workgroup-form'
 import { trpc } from '../../../utils/trpc'
 import LoadingBar from '../../../components/basic/loading-bar'
 import TextButton from '../../../components/basic/text-button'
-import useGroup from '../../../hooks/use-group'
 
 export default function GroupSettingsPage() {
   const router = useRouter()
@@ -19,18 +18,12 @@ export default function GroupSettingsPage() {
     { entry: query.entry },
     { enabled: !!query.entry },
   )
-  const group = useGroup(community, query.group)
   const handleArchive = useCallback(() => {
     refetch()
     if (query.entry) {
-      router.push(`/${query.entry}/about`)
+      router.push(`/${query.entry}`)
     }
   }, [query.entry, refetch, router])
-  useEffect(() => {
-    if (community === null || (community && !group)) {
-      router.push('/404')
-    }
-  }, [community, group, router])
 
   return (
     <>
