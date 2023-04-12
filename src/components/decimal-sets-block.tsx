@@ -143,6 +143,7 @@ function DecimalUnitBlock(props: {
           <GridItem6>
             <FormItem
               label="Voter group name"
+              optional
               error={
                 errors.groups?.[props.groupIndex]?.permission?.[props.name]
                   ?.operands?.[props.index]?.name?.message
