@@ -42,6 +42,7 @@ export function FormFooter(props: { children: ReactNode }) {
 export function FormItem(
   props: {
     label?: string
+    optional?: boolean
     description?: ReactNode
     error?: string
   } & InputHTMLAttributes<HTMLInputElement>,
@@ -53,6 +54,9 @@ export function FormItem(
       {props.label ? (
         <label className="mb-2 block text-sm font-medium text-gray-700">
           {props.label}
+          {props.optional ? (
+            <span className="text-xs text-gray-400"> (optional)</span>
+          ) : null}
         </label>
       ) : null}
       {props.children}

@@ -103,6 +103,7 @@ export default function CommunityForm(props: {
           <GridItem6>
             <FormItem
               label="Description"
+              optional
               description="Provide a detailed description of your community to leave a lasting impression on people. Markdown is supported"
               error={errors.extension?.description?.message}
             >
@@ -116,6 +117,7 @@ export default function CommunityForm(props: {
           <GridItem6>
             <FormItem
               label="How to join"
+              optional
               description="Provide a guide on how to join this community for people"
               error={errors.extension?.how_to_join?.message}
             >
@@ -129,11 +131,12 @@ export default function CommunityForm(props: {
           </GridItem6>
         </Grid6>
       </FormSection>
-      <FormSection title="Links (optional)">
+      <FormSection title="Links">
         <Grid6>
           <GridItem6>
             <FormItem
               label="Website"
+              optional
               error={errors.extension?.website?.message}
             >
               <TextInput
@@ -146,6 +149,7 @@ export default function CommunityForm(props: {
           <GridItem2>
             <FormItem
               label="Twitter"
+              optional
               error={errors.extension?.twitter?.message}
             >
               <TextInput
@@ -164,6 +168,7 @@ export default function CommunityForm(props: {
           <GridItem2>
             <FormItem
               label="Discord"
+              optional
               error={errors.extension?.discord?.message}
             >
               <TextInput
@@ -182,7 +187,11 @@ export default function CommunityForm(props: {
             </FormItem>
           </GridItem2>
           <GridItem2>
-            <FormItem label="GitHub" error={errors.extension?.github?.message}>
+            <FormItem
+              label="GitHub"
+              optional
+              error={errors.extension?.github?.message}
+            >
               <TextInput
                 {...register('extension.github')}
                 onBlur={(e) =>

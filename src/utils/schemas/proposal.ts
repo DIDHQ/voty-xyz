@@ -12,11 +12,9 @@ export const proposalSchema = z.object({
       message: 'Options are not unique',
     }),
   snapshots: z.record(z.string(), z.string()),
-  extension: z
-    .object({
-      content: z.string().optional(),
-    })
-    .optional(),
+  extension: z.object({
+    content: z.string().min(1, 'Required'),
+  }),
 })
 
 export type Proposal = z.infer<typeof proposalSchema>
