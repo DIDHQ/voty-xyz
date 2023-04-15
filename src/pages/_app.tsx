@@ -12,6 +12,7 @@ import {
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { GoogleAnalytics, event } from 'nextjs-google-analytics'
 import { ConnectKitProvider, getDefaultClient } from 'connectkit'
+import 'react-tooltip/dist/react-tooltip.css'
 
 import ShellLayout from '../components/layouts/shell'
 import { trpc } from '../utils/trpc'
