@@ -8,7 +8,7 @@ export const description = 'Voice of your community'
 
 export const domain = isTestnet
   ? 'https://votyxyz.vercel.app'
-  : 'https://voty.xyz'
+  : 'https://alpha.voty.xyz'
 
 export const commonCoinTypes = {
   ETH: 60,
