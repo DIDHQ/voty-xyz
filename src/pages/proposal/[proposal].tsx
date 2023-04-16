@@ -74,9 +74,9 @@ export default function ProposalPage() {
       ]).join(' - '),
     [community?.name, proposal?.title, group?.name],
   )
-  const handleSuccess = useCallback(() => {
-    refetch()
-    refetchList()
+  const handleSuccess = useCallback(async () => {
+    await refetch()
+    await refetchList()
     router.reload()
   }, [refetch, refetchList, router])
 

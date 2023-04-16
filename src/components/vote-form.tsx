@@ -32,7 +32,7 @@ import PermissionCard from './permission-card'
 export default function VoteForm(props: {
   group: Group
   proposal: Proposal & { permalink: string }
-  onSuccess: () => void
+  onSuccess: () => Promise<void>
   className?: string
 }) {
   const { onSuccess } = props
@@ -98,11 +98,11 @@ export default function VoteForm(props: {
       setValue('power', votingPower.toString())
     }
   }, [resetField, setValue, votingPower])
-  const handleSuccess = useCallback(() => {
-    refetchChoices()
-    refetchVoted()
+  const handleSuccess = useCallback(async () => {
     setValue('choice', '')
-    onSuccess()
+    await refetchChoices()
+    await refetchVoted()
+    await onSuccess()
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
   const { data: status } = useStatus(props.proposal.permalink)
   const now = useMemo(() => new Date(), [])
