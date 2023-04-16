@@ -100,9 +100,7 @@ export default function VoteForm(props: {
   }, [resetField, setValue, votingPower])
   const handleSuccess = useCallback(async () => {
     setValue('choice', '')
-    await refetchChoices()
-    await refetchVoted()
-    await onSuccess()
+    await Promise.all([refetchChoices(), refetchVoted(), onSuccess()])
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
   const { data: status } = useStatus(props.proposal.permalink)
   const now = useMemo(() => new Date(), [])
