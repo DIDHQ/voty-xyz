@@ -27,7 +27,7 @@ export default function ProposalPage() {
   const previewProposal = useAtomValue(previewProposalAtom)
   const { data, isLoading, refetch } = trpc.proposal.getByPermalink.useQuery(
     { permalink: query.proposal },
-    { enabled: !!query.proposal, refetchOnWindowFocus: false },
+    { enabled: !!query.proposal },
   )
   const proposal = useMemo<
     | (Proposal & { permalink: string; authorship?: { author?: string } })
