@@ -4,6 +4,7 @@ import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
+import { useRouter } from 'next/router'
 
 import useGroup from '../../hooks/use-group'
 import { stringifyChoice } from '../../utils/choice'
@@ -22,6 +23,7 @@ import { Proposal } from '../../utils/schemas/proposal'
 
 export default function ProposalPage() {
   const query = useRouterQuery<['proposal']>()
+  const router = useRouter()
   const previewProposal = useAtomValue(previewProposalAtom)
   const { data, isLoading, refetch } = trpc.proposal.getByPermalink.useQuery(
     { permalink: query.proposal },
@@ -75,7 +77,8 @@ export default function ProposalPage() {
   const handleSuccess = useCallback(() => {
     refetch()
     refetchList()
-  }, [refetch, refetchList])
+    router.reload()
+  }, [refetch, refetchList, router])
 
   return (
     <>
