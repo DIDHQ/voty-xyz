@@ -111,7 +111,7 @@ function PhaseDot(props: { value?: Phase; className?: string }) {
               [Phase.CONFIRMING]: 'text-amber-400',
               [Phase.ANNOUNCING]: 'text-sky-400',
               [Phase.VOTING]: 'text-lime-400',
-              [Phase.ENDED]: 'text-stone-400',
+              [Phase.ENDED]: 'text-gray-400',
             }[props.value]
           : undefined,
         props.className,

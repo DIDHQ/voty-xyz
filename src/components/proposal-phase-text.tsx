@@ -22,7 +22,7 @@ export default function ProposalPhaseText(props: {
               [Phase.CONFIRMING]: 'text-amber-600',
               [Phase.ANNOUNCING]: 'text-sky-600',
               [Phase.VOTING]: 'text-lime-600',
-              [Phase.ENDED]: 'text-stone-600',
+              [Phase.ENDED]: 'text-gray-600',
             }[phase]
           : undefined
       }
