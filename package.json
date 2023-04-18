@@ -25,7 +25,7 @@
     "@trpc/next": "10.19.1",
     "@trpc/react-query": "10.19.1",
     "@trpc/server": "10.19.1",
-    "arweave": "1.13.5",
+    "arweave": "1.13.6",
     "browser-image-compression": "2.0.2",
     "clsx": "1.2.1",
     "connectkit": "1.2.2",
