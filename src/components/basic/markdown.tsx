@@ -26,7 +26,7 @@ export default function Markdown(props: { children?: string }) {
             <Link
               key={state.key}
               href={href}
-              className="break-words text-secondary-600 no-underline hover:text-secondary-700"
+              className="break-words text-secondary-600 no-underline hover:text-secondary-500"
             >
               {output((node as any).content, state)}
             </Link>
@@ -34,7 +34,7 @@ export default function Markdown(props: { children?: string }) {
             <a
               key={state.key}
               href={href}
-              className="break-words text-secondary-600 no-underline hover:text-secondary-700"
+              className="break-words text-secondary-600 no-underline hover:text-secondary-500"
             >
               {output((node as any).content, state)}
             </a>

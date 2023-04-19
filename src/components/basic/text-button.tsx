@@ -8,9 +8,10 @@ export default function TextButton(
     primary?: boolean
     secondary?: boolean
     white?: boolean
+    underline?: boolean
   },
 ) {
-  const { href, primary, secondary, white, ...restProps } = props
+  const { href, primary, secondary, white, underline, ...restProps } = props
   const renderButton = useMemo(
     () => (
       <button
@@ -25,13 +26,14 @@ export default function TextButton(
             : white
             ? 'text-gray-100 hover:text-gray-50 focus:ring-gray-300'
             : 'text-gray-600 hover:text-gray-500 focus:ring-gray-300',
+          underline ? 'underline' : 'no-underline',
           restProps.className,
         )}
       >
         {restProps.children}
       </button>
     ),
-    [restProps, primary, secondary, white],
+    [restProps, primary, secondary, white, underline],
   )
 
   return href && !props.disabled ? (

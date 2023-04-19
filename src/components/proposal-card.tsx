@@ -49,24 +49,22 @@ export default function ProposalCard(props: {
       </div>
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">
-          <p>Proposer</p>
-          <p className="truncate text-gray-400">
-            {props.proposal.authorship.author}
-          </p>
+          <p className="text-gray-400">Proposer</p>
+          <p className="truncate">{props.proposal.authorship.author}</p>
         </div>
         <div className="w-0 flex-1 px-4 py-2">
           {phase === Phase.CONFIRMING ? (
             <>
-              <p className="truncate">Transaction confirming</p>
-              <p className="truncate text-gray-400">
+              <p className="truncate text-gray-400">Transaction confirming</p>
+              <p className="truncate">
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in about 5 minutes
               </p>
             </>
           ) : phase === Phase.ANNOUNCING && props.proposal.ts_pending ? (
             <>
-              <p>Voting starts</p>
-              <p className="text-gray-400">
+              <p className="text-gray-400">Voting starts</p>
+              <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
                 {formatDurationMs(props.proposal.ts_pending.getTime() - now)}
@@ -74,8 +72,8 @@ export default function ProposalCard(props: {
             </>
           ) : phase === Phase.VOTING && props.proposal.ts_voting ? (
             <>
-              <p>Voting ends</p>
-              <p className="text-gray-400">
+              <p className="text-gray-400">Voting ends</p>
+              <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
                 {formatDurationMs(props.proposal.ts_voting.getTime() - now)}
@@ -83,8 +81,8 @@ export default function ProposalCard(props: {
             </>
           ) : phase === Phase.ENDED && props.proposal.ts_voting ? (
             <>
-              <p>Voting ended</p>
-              <p className="text-gray-400">
+              <p className="text-gray-400">Voting ended</p>
+              <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 {formatDurationMs(props.proposal.ts_voting.getTime() - now)}
                 &nbsp;ago
@@ -93,8 +91,8 @@ export default function ProposalCard(props: {
           ) : null}
         </div>
         <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
-          <p>Votes</p>
-          <p className="text-gray-400">{props.proposal.votes}</p>
+          <p className="text-gray-400">Votes</p>
+          <p>{props.proposal.votes}</p>
         </div>
       </div>
     </Link>

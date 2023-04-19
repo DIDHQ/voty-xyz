@@ -51,6 +51,7 @@ export default function ProposalInfo(props: {
         <DetailItem title="Community" className="truncate whitespace-nowrap">
           {community ? (
             <TextButton
+              underline
               disabled={disabled}
               href={`/${community.authorship.author}`}
             >
@@ -63,6 +64,7 @@ export default function ProposalInfo(props: {
         <DetailItem title="Workgroup" className="truncate whitespace-nowrap">
           {group && community ? (
             <TextButton
+              underline
               disabled={disabled}
               href={`/${community.authorship.author}/${group.id}`}
             >
@@ -80,6 +82,7 @@ export default function ProposalInfo(props: {
         <DetailList title="On-chain verification">
           <DetailItem title="Snapshot">
             <TextButton
+              underline
               disabled={disabled}
               href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
                 props.proposal.snapshots[commonCoinTypes.CKB]
@@ -92,6 +95,7 @@ export default function ProposalInfo(props: {
           </DetailItem>
           <DetailItem title="Arweave TX">
             <TextButton
+              underline
               disabled={disabled}
               href={permalink2Explorer(props.proposal?.permalink)}
             >
