@@ -5,7 +5,6 @@ import { useMemo } from 'react'
 import { Phase } from '../utils/phase'
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/authorship'
-import { Group } from '../utils/schemas/group'
 import { Proposal } from '../utils/schemas/proposal'
 import { formatDurationMs } from '../utils/time'
 
