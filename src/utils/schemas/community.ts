@@ -1,18 +1,8 @@
 import { z } from 'zod'
 
-import { groupSchema } from './group'
-
 export const communitySchema = z.object({
+  id: z.string().min(1, 'Required'),
   name: z.string().min(1, 'Required').max(32, 'Maximum 32 characters'),
-  groups: z
-    .array(groupSchema)
-    .optional()
-    .refine(
-      (groups) =>
-        !groups?.length ||
-        new Set(groups.map(({ id }) => id)).size === groups.length,
-      { message: 'Group ids are not unique' },
-    ),
   extension: z.object({
     logo: z.string(),
     slogan: z.string().min(1, 'Required').max(128, 'Maximum 128 characters'),

@@ -1,7 +1,6 @@
 import { z } from 'zod'
 
 export const proposalSchema = z.object({
-  community: z.string().min(1),
   group: z.string().min(1),
   title: z.string().min(1, 'Required'),
   voting_type: z.enum(['single', 'approval']),
