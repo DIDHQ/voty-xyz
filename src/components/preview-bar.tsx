@@ -20,8 +20,8 @@ export default function PreviewBar() {
   const [previewProposal, setPreviewProposal] = useAtom(previewProposalAtom)
   const document = previewCommunity || previewProposal
   const preview = document?.preview
-  const { data: community } = trpc.community.getByEntry.useQuery(
-    { entry: previewCommunity?.preview.author },
+  const { data: community } = trpc.community.getById.useQuery(
+    { id: previewCommunity?.preview.author },
     { enabled: !!previewCommunity?.preview.author },
   )
   const utils = trpc.useContext()
@@ -49,12 +49,12 @@ export default function PreviewBar() {
       const signed = await signDocument(document)
       await mutateCommunity(signed)
       await Promise.all([
-        utils.community.getByEntry.prefetch({
-          entry: signed.authorship.author,
+        utils.community.getById.prefetch({
+          id: signed.authorship.author,
         }),
         utils.proposal.list.prefetch({
-          entry: signed.authorship.author,
-          group: preview.group,
+          community_id: signed.authorship.author,
+          group_id: preview.group,
           phase: undefined,
         }),
       ])

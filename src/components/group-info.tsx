@@ -15,8 +15,8 @@ import { previewCommunityAtom } from '../utils/atoms'
 
 export default function GroupInfo(props: { className?: string }) {
   const query = useRouterQuery<['entry', 'group']>()
-  const { data } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
+  const { data } = trpc.community.getById.useQuery(
+    { id: query.entry },
     { enabled: !!query.entry },
   )
   const previewCommunity = useAtomValue(previewCommunityAtom)

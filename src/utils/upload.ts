@@ -1,8 +1,9 @@
 import { DataType } from './constants'
-import { isCommunity, isProposal, isVote } from './data-type'
+import { isCommunity, isGroup, isProposal, isVote } from './data-type'
 import { id2Permalink } from './permalink'
 import { Authorized } from './schemas/authorship'
 import { Community } from './schemas/community'
+import { Group } from './schemas/group'
 import { Proposal } from './schemas/proposal'
 import { Vote } from './schemas/vote'
 import { isTestnet } from './constants'
@@ -11,7 +12,7 @@ import arweave, { jwk } from './sdks/arweave'
 const textEncoder = new TextEncoder()
 
 export async function uploadToArweave(
-  document: Authorized<Community | Proposal | Vote>,
+  document: Authorized<Community | Group | Proposal | Vote>,
 ): Promise<string> {
   const transaction = await arweave.createTransaction({
     data: Buffer.from(textEncoder.encode(JSON.stringify(document))),
@@ -34,19 +35,27 @@ const defaultArweaveTags = {
   'App-Version': `0.0.0${isTestnet ? '-test' : ''}`,
 }
 
-function getArweaveTags(document: Authorized<Community | Proposal | Vote>) {
+function getArweaveTags(
+  document: Authorized<Community | Group | Proposal | Vote>,
+) {
   if (isCommunity(document)) {
     return {
       ...defaultArweaveTags,
       'App-Data-Type': DataType.COMMUNITY,
-      'App-Index-Entry': document.authorship.author,
+      'App-Index-Did': document.id,
+    }
+  }
+  if (isGroup(document)) {
+    return {
+      ...defaultArweaveTags,
+      'App-Data-Type': DataType.GROUP,
+      'App-Index-Community': document.community,
     }
   }
   if (isProposal(document)) {
     return {
       ...defaultArweaveTags,
       'App-Data-Type': DataType.PROPOSAL,
-      'App-Index-Community': document.community,
       'App-Index-Group': document.group,
     }
   }

@@ -18,8 +18,8 @@ import { extractStartEmoji } from '../../../utils/emoji'
 
 export default function GroupAboutPage() {
   const query = useRouterQuery<['entry', 'group']>()
-  const { data, isLoading } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
+  const { data, isLoading } = trpc.community.getById.useQuery(
+    { id: query.entry },
     { enabled: !!query.entry },
   )
   const previewCommunity = useAtomValue(previewCommunityAtom)

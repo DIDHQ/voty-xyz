@@ -1,16 +1,16 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, last, uniq } from 'lodash-es'
+import { compact, keyBy, last } from 'lodash-es'
 import { z } from 'zod'
 import dayjs from 'dayjs'
 
 import { uploadToArweave } from '../../utils/upload'
-import { database, getByPermalink } from '../../utils/database'
+import { database } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
 import { proposalSchema } from '../../utils/schemas/proposal'
 import verifyProposal from '../../utils/verifiers/verify-proposal'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
-import { commonCoinTypes, DataType } from '../../utils/constants'
+import { commonCoinTypes } from '../../utils/constants'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
@@ -19,37 +19,29 @@ import {
   getSnapshotTimestamp,
 } from '../../utils/snapshot'
 import { Phase } from '../../utils/phase'
-import { communitySchema } from '../../utils/schemas/community'
+import { groupSchema } from '../../utils/schemas/group'
 
 const schema = proved(authorized(proposalSchema))
 
 export const proposalRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(
-      schema
-        .extend({
-          permalink: z.string(),
-          votes: z.number().int(),
-        })
-        .nullable(),
-    )
+    .output(schema.nullable())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const proposal = await getByPermalink(DataType.PROPOSAL, input.permalink)
+      const proposal = await database.proposal.findUnique({
+        where: { permalink: input.permalink },
+      })
 
       if (proposal && (!proposal.ts_pending || !proposal.ts_voting)) {
         try {
-          const community = await getByPermalink(
-            DataType.COMMUNITY,
-            proposal.community,
-          )
-          const group = community?.data.groups?.find(
-            (w) => w.id === proposal.group,
-          )
+          const storage = await database.storage.findUnique({
+            where: { permalink: proposal.group_permalink },
+          })
+          const group = storage ? groupSchema.parse(storage.data) : null
           if (group) {
             const timestamp = await getSnapshotTimestamp(
               commonCoinTypes.AR,
@@ -74,19 +66,16 @@ export const proposalRouter = router({
         }
       }
 
-      return proposal
-        ? {
-            ...proposal.data,
-            permalink: proposal.permalink,
-            votes: proposal.votes,
-          }
-        : null
+      const storage = await database.storage.findUnique({
+        where: { permalink: input.permalink },
+      })
+      return storage ? schema.parse(storage) : null
     }),
   list: procedure
     .input(
       z.object({
-        entry: z.string().optional(),
-        group: z.string().optional(),
+        community_id: z.string().optional(),
+        group_id: z.string().optional(),
         phase: z
           .enum([Phase.CONFIRMING, Phase.ANNOUNCING, Phase.VOTING, Phase.ENDED])
           .optional(),
@@ -98,17 +87,13 @@ export const proposalRouter = router({
         data: z.array(
           schema.extend({
             permalink: z.string(),
-            votes: z.number().int(),
-            ts: z.date(),
-            ts_pending: z.date().nullable(),
-            ts_voting: z.date().nullable(),
           }),
         ),
         next: z.string().optional(),
       }),
     )
     .query(async ({ input }) => {
-      if (!input.entry) {
+      if (!input.community_id) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
@@ -124,20 +109,22 @@ export const proposalRouter = router({
           ? { ts_voting: { lte: now } }
           : {}
       const proposals = await database.proposal.findMany({
-        where: input.group
-          ? { entry: input.entry, group: input.group, ...filter }
-          : { entry: input.entry, ...filter },
+        where: input.group_id
+          ? {
+              community_id: input.community_id,
+              group_id: input.group_id,
+              ...filter,
+            }
+          : { community_id: input.community_id, ...filter },
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
         take: 20,
         skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
-      const communities = keyBy(
-        await database.community.findMany({
+      const storages = keyBy(
+        await database.storage.findMany({
           where: {
-            permalink: {
-              in: uniq(proposals.map(({ community }) => community)),
-            },
+            permalink: { in: proposals.map(({ permalink }) => permalink) },
           },
         }),
         ({ permalink }) => permalink,
@@ -145,36 +132,18 @@ export const proposalRouter = router({
 
       return {
         data: compact(
-          proposals.map(
-            ({
-              community,
-              group,
-              data,
-              permalink,
-              votes,
-              ts,
-              ts_pending,
-              ts_voting,
-            }) => {
+          proposals
+            .filter(({ permalink }) => storages[permalink])
+            .map(({ permalink }) => {
               try {
-                const g = communitySchema
-                  .parse(communities[community].data)
-                  .groups?.find(({ id }) => group === id)
-                return g
-                  ? {
-                      ...schema.parse(data),
-                      permalink,
-                      votes,
-                      ts,
-                      ts_pending,
-                      ts_voting,
-                    }
-                  : undefined
+                return {
+                  ...schema.parse(storages[permalink].data),
+                  permalink,
+                }
               } catch {
                 return
               }
-            },
-          ),
+            }),
         ),
         next: last(proposals)?.permalink,
       }
@@ -186,15 +155,8 @@ export const proposalRouter = router({
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
-      const { community } = await verifyProposal(input)
+      const { community, group } = await verifyProposal(input)
 
-      const entry = await database.entry.findFirst({
-        where: { did: community.authorship.author },
-        orderBy: { ts: 'desc' },
-      })
-      if (entry && entry.community !== input.community) {
-        throw new TRPCError({ code: 'BAD_REQUEST' })
-      }
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
@@ -202,19 +164,25 @@ export const proposalRouter = router({
         database.proposal.create({
           data: {
             permalink,
-            author: input.authorship.author,
-            entry: community.authorship.author,
-            community: input.community,
-            group: input.group,
-            data: input,
+            proposer: input.authorship.author,
+            community_id: community.id,
+            group_id: group.id,
+            group_permalink: input.group,
             votes: 0,
             ts,
           },
         }),
-        database.entry.update({
-          where: { did: community.authorship.author },
+        database.community.update({
+          where: { id: community.id },
           data: { proposals: { increment: 1 } },
         }),
+        database.group.update({
+          where: {
+            id_community_id: { community_id: community.id, id: group.id },
+          },
+          data: { proposals: { increment: 1 } },
+        }),
+        database.storage.create({ data: { permalink, data: input } }),
       ])
 
       return permalink

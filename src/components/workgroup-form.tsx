@@ -40,8 +40,8 @@ export default function WorkgroupForm(props: {
 }) {
   const { onArchive } = props
   const router = useRouter()
-  const { data } = trpc.community.getByEntry.useQuery({
-    entry: props.author,
+  const { data } = trpc.community.getById.useQuery({
+    id: props.author,
   })
   const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
   const community = previewCommunity || props.initialValue || data || undefined

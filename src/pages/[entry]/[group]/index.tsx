@@ -19,8 +19,8 @@ export default function GroupIndexPage() {
   const { data, fetchNextPage, hasNextPage, isLoading } =
     trpc.proposal.list.useInfiniteQuery(
       {
-        entry: query.entry,
-        group: query.group,
+        community_id: query.entry,
+        group_id: query.group,
         phase: phase === 'All' ? undefined : phase,
       },
       {
@@ -28,8 +28,8 @@ export default function GroupIndexPage() {
         getNextPageParam: ({ next }) => next,
       },
     )
-  const { data: community } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
+  const { data: community } = trpc.community.getById.useQuery(
+    { id: query.entry },
     { enabled: !!query.entry },
   )
   const group = useGroup(community, query.group)

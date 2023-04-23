@@ -17,8 +17,8 @@ import { Phase } from '../../utils/phase'
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['entry']>()
   const [phase, setPhase] = useState<Phase | 'All'>('All')
-  const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
+  const { data: community, isLoading } = trpc.community.getById.useQuery(
+    { id: query.entry },
     { enabled: !!query.entry },
   )
   const {
@@ -27,7 +27,7 @@ export default function CommunityIndexPage() {
     hasNextPage,
     isLoading: isListLoading,
   } = trpc.proposal.list.useInfiniteQuery(
-    { entry: query.entry, phase: phase === 'All' ? undefined : phase },
+    { community_id: query.entry, phase: phase === 'All' ? undefined : phase },
     { enabled: !!query.entry, getNextPageParam: ({ next }) => next },
   )
   const proposals = useMemo(

@@ -33,7 +33,7 @@ export default function SubscriptionButton(props: {
   } = trpc.subscription.get.useQuery(
     {
       subscriber: { type: 'eth_personal_sign', address: account?.address! },
-      entry: props.entry,
+      community_id: props.entry,
     },
     { enabled: !!account?.address && !!props.entry },
   )

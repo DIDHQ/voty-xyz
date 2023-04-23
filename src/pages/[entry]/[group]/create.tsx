@@ -12,8 +12,8 @@ import { Proposal } from '../../../utils/schemas/proposal'
 
 export default function CreateProposalPage() {
   const query = useRouterQuery<['entry', 'group']>()
-  const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
+  const { data: community, isLoading } = trpc.community.getById.useQuery(
+    { id: query.entry },
     { enabled: !!query.entry },
   )
   const group = useGroup(community, query.group)

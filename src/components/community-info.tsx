@@ -36,8 +36,8 @@ const SubscriptionButton = dynamic(() => import('./subscription-button'), {
 export default function CommunityInfo(props: { className?: string }) {
   const router = useRouter()
   const query = useRouterQuery<['entry', 'group']>()
-  const { data } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
+  const { data } = trpc.community.getById.useQuery(
+    { id: query.entry },
     { enabled: !!query.entry },
   )
   const previewCommunity = useAtomValue(previewCommunityAtom)

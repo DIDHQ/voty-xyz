@@ -14,8 +14,8 @@ import { previewCommunityAtom } from '../../utils/atoms'
 
 export default function CommunityAboutPage() {
   const query = useRouterQuery<['entry']>()
-  const { data, isLoading } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
+  const { data, isLoading } = trpc.community.getById.useQuery(
+    { id: query.entry },
     { enabled: !!query.entry },
   )
   const isManager = useIsManager(query.entry)

@@ -14,8 +14,8 @@ export default function GroupSettingsPage() {
     data: community,
     isLoading,
     refetch,
-  } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
+  } = trpc.community.getById.useQuery(
+    { id: query.entry },
     { enabled: !!query.entry },
   )
   const handleArchive = useCallback(() => {

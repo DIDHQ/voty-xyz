@@ -12,8 +12,8 @@ import TextButton from '../../components/basic/text-button'
 
 export default function CreateGroupPage() {
   const query = useRouterQuery<['entry']>()
-  const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
+  const { data: community, isLoading } = trpc.community.getById.useQuery(
+    { id: query.entry },
     { enabled: !!query.entry },
   )
   const newGroup = useMemo(() => nanoid(), [])

@@ -3,66 +3,53 @@ import { compact, keyBy, last, mapValues } from 'lodash-es'
 import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
-import { database, getByPermalink, mapByPermalinks } from '../../utils/database'
+import { database } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
 import { communitySchema } from '../../utils/schemas/community'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
-import { DataType } from '../../utils/constants'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 
 const schema = proved(authorized(communitySchema))
 
-const entrySchema = z.object({
-  did: z.string(),
-  ts: z.string(),
-  community: z.string(),
-  subscribers: z.number().int(),
-  proposals: z.number().int(),
-  votes: z.number().int(),
-})
-
 export const communityRouter = router({
-  getByEntry: procedure
-    .input(z.object({ entry: z.string().optional() }))
-    .output(schema.extend({ entry: entrySchema }).nullable())
+  getById: procedure
+    .input(z.object({ id: z.string().optional() }))
+    .output(schema.nullable())
     .query(async ({ input }) => {
-      if (!input.entry) {
+      if (!input.id) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const entry = await database.entry.findUnique({
-        where: { did: input.entry },
+      const community = await database.community.findUnique({
+        where: { id: input.id },
       })
-      if (!entry) {
+      if (!community) {
         return null
       }
-      const community = await getByPermalink(
-        DataType.COMMUNITY,
-        entry.community,
-      )
+      const storage = await database.storage.findUnique({
+        where: { permalink: community.permalink },
+      })
 
-      return community
-        ? { ...community.data, entry: { ...entry, ts: entry.ts.toString() } }
-        : null
+      return storage ? schema.parse(storage) : null
     }),
   checkExistences: procedure
-    .input(z.object({ entries: z.array(z.string()).optional() }))
+    .input(z.object({ ids: z.array(z.string()).optional() }))
     .output(z.record(z.string(), z.boolean()))
     .query(async ({ input }) => {
-      if (!input.entries?.length) {
+      if (!input.ids?.length) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const entries = await database.entry.findMany({
-        where: { did: { in: input.entries } },
-        select: { did: true },
+      const communities = await database.community.findMany({
+        where: { id: { in: input.ids } },
+        select: { id: true },
       })
 
       return mapValues(
-        keyBy(entries, ({ did }) => did),
+        keyBy(communities, ({ id }) => id),
         (entry) => !!entry,
       )
     }),
@@ -74,85 +61,61 @@ export const communityRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const community = await getByPermalink(
-        DataType.COMMUNITY,
-        input.permalink,
-      )
+      const storage = await database.storage.findUnique({
+        where: { permalink: input.permalink },
+      })
 
-      return community ? community.data : null
+      return storage ? schema.parse(storage) : null
     }),
   list: procedure
     .input(z.object({ cursor: z.string().optional() }))
-    .output(
-      z.object({
-        data: z.array(schema.extend({ entry: entrySchema })),
-        next: z.string().optional(),
-      }),
-    )
+    .output(z.object({ data: z.array(schema), next: z.string().optional() }))
     .query(async ({ input }) => {
-      const entries = await database.entry.findMany({
-        cursor: input.cursor ? { did: input.cursor } : undefined,
+      const communities = await database.community.findMany({
+        cursor: input.cursor ? { id: input.cursor } : undefined,
         take: 30,
         skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
-      const communities = await mapByPermalinks(
-        DataType.COMMUNITY,
-        entries.map(({ community }) => community),
+      const storages = keyBy(
+        await database.storage.findMany({
+          where: {
+            permalink: { in: communities.map(({ permalink }) => permalink) },
+          },
+        }),
+        ({ permalink }) => permalink,
       )
 
       return {
         data: compact(
-          entries
-            .filter(({ community }) => communities[community])
-            .map((entry) => {
+          communities
+            .filter(({ permalink }) => storages[permalink])
+            .map(({ permalink }) => {
               try {
-                return {
-                  ...schema.parse(communities[entry.community].data),
-                  entry: { ...entry, ts: entry.ts.toString() },
-                }
+                return schema.parse(storages[permalink].data)
               } catch {
                 return
               }
             }),
         ),
-        next: last(entries)?.did,
+        next: last(communities)?.id,
       }
     }),
   create: procedure
     .input(
       schema
         .refine(
-          (community) =>
-            !community.groups ||
-            community.groups.every(
-              (group) =>
-                group.permission.proposing.operands.length === 1 &&
-                group.permission.proposing.operands[0].arguments[0] ===
-                  community.authorship.author &&
-                group.permission.proposing.operands[0].arguments[1].length > 0,
-            ),
-          { message: 'Invalid proposing permission' },
+          (community) => community.id === community.authorship.author,
+          'Permission denied',
         )
         .refine(
           (community) =>
-            !community.groups ||
-            community.groups.every((group) =>
-              group.permission.voting.operands.every((operand) => {
-                return operand.arguments[0] === community.authorship.author
-              }),
-            ),
-          { message: 'Invalid voting permission' },
+            community.id.indexOf('.') === community.id.lastIndexOf('.'),
+          'Cannot create community with SubDID',
         ),
     )
     .output(z.string())
     .mutation(async ({ input }) => {
-      if (
-        input.authorship.author.indexOf('.') !==
-        input.authorship.author.lastIndexOf('.')
-      ) {
-        throw new TRPCError({ code: 'BAD_REQUEST' })
-      }
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
@@ -161,24 +124,8 @@ export const communityRouter = router({
       const ts = new Date()
 
       await database.$transaction([
-        database.community.create({
-          data: { permalink, ts, entry: input.authorship.author, data: input },
-        }),
-        database.entry.upsert({
-          where: { did: input.authorship.author },
-          create: {
-            did: input.authorship.author,
-            community: permalink,
-            subscribers: 0,
-            proposals: 0,
-            votes: 0,
-            ts,
-          },
-          update: {
-            community: permalink,
-            ts,
-          },
-        }),
+        database.community.create({ data: { id: input.id, permalink, ts } }),
+        database.storage.create({ data: { permalink, data: input } }),
       ])
 
       return permalink

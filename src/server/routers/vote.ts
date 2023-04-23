@@ -37,25 +37,34 @@ export const voteRouter = router({
       }
 
       const votes = await database.vote.findMany({
-        where: { proposal: input.proposal },
+        where: { proposal_permalink: input.proposal },
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
         take: 20,
         skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
 
+      const storages = keyBy(
+        await database.storage.findMany({
+          where: { permalink: { in: votes.map(({ permalink }) => permalink) } },
+        }),
+        ({ permalink }) => permalink,
+      )
+
       return {
         data: compact(
-          votes.map(({ permalink, data }) => {
-            try {
-              return {
-                ...schema.parse(data),
-                permalink,
+          votes
+            .filter(({ permalink }) => storages[permalink])
+            .map(({ permalink }) => {
+              try {
+                return {
+                  ...schema.parse(storages[permalink].data),
+                  permalink,
+                }
+              } catch {
+                return
               }
-            } catch {
-              return
-            }
-          }),
+            }),
         ),
         next: last(votes)?.permalink,
       }
@@ -69,12 +78,19 @@ export const voteRouter = router({
       }
 
       const votes = await database.vote.findMany({
-        where: { proposal: input.proposal },
+        where: { proposal_permalink: input.proposal },
       })
 
+      const storages = keyBy(
+        await database.storage.findMany({
+          where: { permalink: { in: votes.map(({ permalink }) => permalink) } },
+        }),
+        ({ permalink }) => permalink,
+      )
+
       return mapValues(
-        keyBy(votes, ({ author }) => author),
-        ({ data }) => schema.parse(data).power,
+        keyBy(votes, ({ voter }) => voter),
+        ({ permalink }) => schema.parse(storages[permalink]).power,
       )
     }),
   create: procedure
@@ -94,19 +110,17 @@ export const voteRouter = router({
           data: {
             permalink,
             ts,
-            author: input.authorship.author,
-            community: proposal.community,
-            group: proposal.group,
-            proposal: input.proposal,
-            data: input,
+            voter: input.authorship.author,
+            proposal_permalink: input.proposal,
           },
         }),
+        database.storage.create({ data: { permalink, data: input } }),
         database.proposal.update({
           where: { permalink: input.proposal },
           data: { votes: { increment: 1 } },
         }),
-        database.entry.update({
-          where: { did: community.authorship.author },
+        database.community.update({
+          where: { id: community.authorship.author },
           data: { votes: { increment: 1 } },
         }),
         ...Object.entries(
@@ -118,10 +132,13 @@ export const voteRouter = router({
         ).map(([option, power = 0]) =>
           database.choice.upsert({
             where: {
-              proposal_option: { proposal: input.proposal, option },
+              proposal_permalink_option: {
+                proposal_permalink: input.proposal,
+                option,
+              },
             },
             create: {
-              proposal: input.proposal,
+              proposal_permalink: input.proposal,
               option,
               power,
             },
