@@ -50,7 +50,7 @@ export const communityRouter = router({
 
       return mapValues(
         keyBy(communities, ({ id }) => id),
-        (entry) => !!entry,
+        (community) => !!community,
       )
     }),
   getByPermalink: procedure
