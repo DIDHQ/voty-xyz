@@ -11,12 +11,12 @@ export default function GroupSettingsPage() {
   const router = useRouter()
   const query = useRouterQuery<['entry', 'group']>()
   const {
-    data: community,
+    data: group,
     isLoading,
     refetch,
-  } = trpc.community.getById.useQuery(
-    { id: query.entry },
-    { enabled: !!query.entry },
+  } = trpc.group.getById.useQuery(
+    { community_id: query.entry, id: query.group },
+    { enabled: !!query.entry && !!query.group },
   )
   const handleArchive = useCallback(() => {
     refetch()
@@ -35,18 +35,16 @@ export default function GroupSettingsPage() {
         >
           <h2 className="text-base font-semibold">← Back</h2>
         </TextButton>
-        {query.entry && query.group && community !== undefined ? (
+        {query.entry && query.group && group !== undefined ? (
           <WorkgroupForm
             author={query.entry}
-            initialValue={community}
-            group={query.group}
+            initialValue={group}
             onArchive={handleArchive}
             preview={{
               from: `/${query.entry}/${query.group}/settings`,
               to: `/${query.entry}/${query.group}/about`,
               template: `You are updating workgroup on Voty\n\nhash:\n{sha256}`,
               author: query.entry,
-              group: query.group,
             }}
             className="pt-6 sm:pt-8"
           />
