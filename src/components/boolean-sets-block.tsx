@@ -1,27 +1,18 @@
 import { compact } from 'lodash-es'
-import {
-  Controller,
-  FieldError,
-  FieldErrorsImpl,
-  Merge,
-  useFormContext,
-} from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 
-import { Community } from '../utils/schemas/community'
 import { Group } from '../utils/schemas/group'
 import Textarea from './basic/textarea'
 
 export default function BooleanSetsBlock(props: {
   name: 'proposing'
   entry: string
-  groupIndex: number
   disabled?: boolean
 }) {
   return (
     <BooleanUnitBlock
       name={props.name}
       entry={props.entry}
-      groupIndex={props.groupIndex}
       index={0}
       disabled={props.disabled}
     />
@@ -31,7 +22,6 @@ export default function BooleanSetsBlock(props: {
 function BooleanUnitBlock(props: {
   name: 'proposing'
   entry: string
-  groupIndex: number
   index: number
   disabled?: boolean
 }) {
@@ -39,21 +29,16 @@ function BooleanUnitBlock(props: {
     control,
     watch,
     formState: { errors },
-  } = useFormContext<Community>()
-  const groupErrors = errors.groups?.[props.groupIndex] as Merge<
-    FieldError,
-    FieldErrorsImpl<NonNullable<Group>>
-  >
+  } = useFormContext<Group>()
+
   const suffix =
-    watch(
-      `groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.0`,
-    ) ?? ''
+    watch(`permission.${props.name}.operands.${props.index}.arguments.0`) ?? ''
   const regex = new RegExp(`\\.${suffix.replaceAll('.', '\\.')}\$`)
 
   return (
     <Controller
       control={control}
-      name={`groups.${props.groupIndex}.permission.${props.name}.operands.${props.index}.arguments.1`}
+      name={`permission.${props.name}.operands.${props.index}.arguments.1`}
       render={({ field: { ref, value, onChange } }) => (
         <Textarea
           ref={ref}
@@ -77,9 +62,9 @@ function BooleanUnitBlock(props: {
             onChange(array.length ? array : [''])
           }}
           error={
-            !!groupErrors?.permission?.[props.name]?.operands?.[props.index]
+            !!errors?.permission?.[props.name]?.operands?.[props.index]
               ?.arguments?.[1]?.message ||
-            !!groupErrors?.permission?.[props.name]?.operands?.[props.index]
+            !!errors?.permission?.[props.name]?.operands?.[props.index]
               ?.arguments?.[1]?.[0]?.message
           }
         />

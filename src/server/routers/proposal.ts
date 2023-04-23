@@ -20,6 +20,7 @@ import {
 } from '../../utils/snapshot'
 import { Phase } from '../../utils/phase'
 import { groupSchema } from '../../utils/schemas/group'
+import verifyGroup from '../../utils/verifiers/verify-group'
 
 const schema = proved(authorized(proposalSchema))
 
@@ -87,6 +88,10 @@ export const proposalRouter = router({
         data: z.array(
           schema.extend({
             permalink: z.string(),
+            votes: z.number(),
+            ts: z.date(),
+            ts_pending: z.date().nullable(),
+            ts_voting: z.date().nullable(),
           }),
         ),
         next: z.string().optional(),
@@ -134,11 +139,15 @@ export const proposalRouter = router({
         data: compact(
           proposals
             .filter(({ permalink }) => storages[permalink])
-            .map(({ permalink }) => {
+            .map(({ permalink, votes, ts, ts_pending, ts_voting }) => {
               try {
                 return {
                   ...schema.parse(storages[permalink].data),
                   permalink,
+                  votes,
+                  ts,
+                  ts_pending,
+                  ts_voting,
                 }
               } catch {
                 return
@@ -155,7 +164,8 @@ export const proposalRouter = router({
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
-      const { community, group } = await verifyProposal(input)
+      const { group } = await verifyProposal(input)
+      const { community } = await verifyGroup(group)
 
       const permalink = await uploadToArweave(input)
       const ts = new Date()

@@ -6,7 +6,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
-import { compact } from 'lodash-es'
+import { compact, uniqBy } from 'lodash-es'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ExoticComponent, useMemo } from 'react'
@@ -21,7 +21,7 @@ import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 import { documentTitle } from '../utils/constants'
 import TextButton from './basic/text-button'
-import { previewCommunityAtom } from '../utils/atoms'
+import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import Button from './basic/button'
 import useIsManager from '../hooks/use-is-manager'
 
@@ -40,8 +40,17 @@ export default function CommunityInfo(props: { className?: string }) {
     { id: query.entry },
     { enabled: !!query.entry },
   )
+  const { data: list } = trpc.group.listByCommunity.useQuery(
+    { community_id: query.entry },
+    { enabled: !!query.entry },
+  )
   const previewCommunity = useAtomValue(previewCommunityAtom)
+  const previewGroup = useAtomValue(previewGroupAtom)
   const community = previewCommunity || data
+  const groups = useMemo(
+    () => uniqBy(compact([...(list || []), previewGroup]), 'id'),
+    [list, previewGroup],
+  )
   const navigation = useMemo(
     () => [
       {
@@ -102,7 +111,7 @@ export default function CommunityInfo(props: { className?: string }) {
       <aside className={clsx('relative', props.className)}>
         {previewCommunity ? null : (
           <StatusIcon
-            permalink={data?.entry.community}
+            permalink={data?.permalink}
             className="absolute right-4 top-4"
           />
         )}
@@ -146,7 +155,7 @@ export default function CommunityInfo(props: { className?: string }) {
               </LinkListItem>
             ))}
           </div>
-          {isManager || community?.groups?.length ? (
+          {isManager || groups?.length ? (
             <div className="mt-6 w-full">
               <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
                 Workgroups
@@ -160,9 +169,8 @@ export default function CommunityInfo(props: { className?: string }) {
                   </TextButton>
                 )}
               </h3>
-
               <div>
-                {community?.groups?.map((group) => (
+                {groups?.map((group) => (
                   <LinkListItem
                     key={group.id}
                     href={

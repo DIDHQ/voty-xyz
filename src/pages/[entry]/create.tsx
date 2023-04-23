@@ -7,7 +7,7 @@ import WorkgroupForm from '../../components/workgroup-form'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
 import { documentTitle } from '../../utils/constants'
-import { Community } from '../../utils/schemas/community'
+import { Group } from '../../utils/schemas/group'
 import TextButton from '../../components/basic/text-button'
 
 export default function CreateGroupPage() {
@@ -21,43 +21,38 @@ export default function CreateGroupPage() {
     () =>
       community && query.entry
         ? ({
-            ...community,
-            groups: [
-              ...(community.groups || []),
-              {
-                id: newGroup,
-                name: '',
-                permission: {
-                  proposing: {
-                    operation: 'or',
-                    operands: [
-                      {
-                        function: 'prefixes_dot_suffix_exact_match',
-                        arguments: [query.entry, []],
-                      },
-                    ],
+            id: newGroup,
+            name: '',
+            community: community.permalink,
+            permission: {
+              proposing: {
+                operation: 'or',
+                operands: [
+                  {
+                    function: 'prefixes_dot_suffix_exact_match',
+                    arguments: [query.entry, []],
                   },
-                  voting: {
-                    operation: 'max',
-                    operands: [
-                      {
-                        function: 'prefixes_dot_suffix_fixed_power',
-                        arguments: [query.entry, [], '1'],
-                      },
-                    ],
-                  },
-                },
-                duration: {
-                  pending: 86400,
-                  voting: 86400,
-                },
-                extension: {
-                  terms_and_conditions: '',
-                },
+                ],
               },
-            ],
-          } satisfies Community)
-        : community,
+              voting: {
+                operation: 'max',
+                operands: [
+                  {
+                    function: 'prefixes_dot_suffix_fixed_power',
+                    arguments: [query.entry, [], '1'],
+                  },
+                ],
+              },
+            },
+            duration: {
+              pending: 86400,
+              voting: 86400,
+            },
+            extension: {
+              terms_and_conditions: '',
+            },
+          } satisfies Group)
+        : undefined,
     [community, newGroup, query.entry],
   )
 
@@ -75,13 +70,11 @@ export default function CreateGroupPage() {
           <WorkgroupForm
             author={query.entry}
             initialValue={initialValue}
-            group={newGroup}
             preview={{
               from: `/${query.entry}/create`,
               to: `/${query.entry}/${newGroup}/about`,
               template: `You are creating workgroup on Voty\n\nhash:\n{sha256}`,
               author: query.entry,
-              group: newGroup,
             }}
             className="pt-6 sm:pt-8"
           />

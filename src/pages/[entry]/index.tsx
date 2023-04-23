@@ -21,11 +21,16 @@ export default function CommunityIndexPage() {
     { id: query.entry },
     { enabled: !!query.entry },
   )
+  const { data: groups, isLoading: isGroupsLoading } =
+    trpc.group.listByCommunity.useQuery(
+      { community_id: query.entry },
+      { enabled: !!query.entry },
+    )
   const {
     data,
     fetchNextPage,
     hasNextPage,
-    isLoading: isListLoading,
+    isLoading: isProposalsLoading,
   } = trpc.proposal.list.useInfiniteQuery(
     { community_id: query.entry, phase: phase === 'All' ? undefined : phase },
     { enabled: !!query.entry, getNextPageParam: ({ next }) => next },
@@ -54,7 +59,9 @@ export default function CommunityIndexPage() {
 
   return (
     <CommunityLayout>
-      <LoadingBar loading={isLoading || isListLoading} />
+      <LoadingBar
+        loading={isLoading || isGroupsLoading || isProposalsLoading}
+      />
       <div className="mt-6 flex justify-between sm:mt-8">
         <h3 className="text-lg font-medium text-gray-900">Timeline</h3>
         <Select
@@ -69,7 +76,7 @@ export default function CommunityIndexPage() {
           title="No events"
           className="mt-24"
           footer={
-            community && !community?.groups?.length && isManager ? (
+            community && !groups?.length && isManager ? (
               <Link href={`/${query.entry}/create`}>
                 <Button primary icon={PlusIcon}>
                   Workgroup

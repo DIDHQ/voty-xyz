@@ -17,7 +17,7 @@ const schema = proved(authorized(communitySchema))
 export const communityRouter = router({
   getById: procedure
     .input(z.object({ id: z.string().optional() }))
-    .output(schema.nullable())
+    .output(schema.extend({ permalink: z.string() }).nullable())
     .query(async ({ input }) => {
       if (!input.id) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -33,7 +33,9 @@ export const communityRouter = router({
         where: { permalink: community.permalink },
       })
 
-      return storage ? schema.parse(storage) : null
+      return storage
+        ? { ...schema.parse(storage.data), permalink: storage.permalink }
+        : null
     }),
   checkExistences: procedure
     .input(z.object({ ids: z.array(z.string()).optional() }))
