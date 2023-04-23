@@ -9,22 +9,20 @@ import CommunityLayout from '../../../components/layouts/community'
 import GroupLayout from '../../../components/layouts/group'
 import { trpc } from '../../../utils/trpc'
 import LoadingBar from '../../../components/basic/loading-bar'
-import useGroup from '../../../hooks/use-group'
 import Button from '../../../components/basic/button'
 import useIsManager from '../../../hooks/use-is-manager'
-import { previewCommunityAtom } from '../../../utils/atoms'
+import { previewGroupAtom } from '../../../utils/atoms'
 import GroupAbout from '../../../components/group-about'
 import { extractStartEmoji } from '../../../utils/emoji'
 
 export default function GroupAboutPage() {
   const query = useRouterQuery<['entry', 'group']>()
-  const { data, isLoading } = trpc.community.getById.useQuery(
-    { id: query.entry },
-    { enabled: !!query.entry },
+  const previewGroup = useAtomValue(previewGroupAtom)
+  const { data, isLoading } = trpc.group.getById.useQuery(
+    { community_id: query.entry, id: query.group },
+    { enabled: !!query.entry && !!query.group },
   )
-  const previewCommunity = useAtomValue(previewCommunityAtom)
-  const community = previewCommunity || data
-  const group = useGroup(community, query.group)
+  const group = previewGroup || data
   const isManager = useIsManager(query.entry)
   const emoji = useMemo(() => extractStartEmoji(group?.name), [group?.name])
   const name = useMemo(
@@ -61,7 +59,7 @@ export default function GroupAboutPage() {
             </p>
           ) : null}
           {group ? <GroupAbout group={group} className="mt-6" /> : null}
-          {isManager && !previewCommunity ? (
+          {isManager && !previewGroup ? (
             <Link
               href={`/${query.entry}/${query.group}/settings`}
               className="mt-6 block w-fit sm:mt-8"

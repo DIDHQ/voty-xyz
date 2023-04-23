@@ -5,8 +5,6 @@ import { Controller, useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
 import { uniq } from 'lodash-es'
 import { EyeIcon } from '@heroicons/react/20/solid'
-import { Entry } from '@prisma/client'
-import type { Serialize } from '@trpc/server/dist/shared/internal/serialize'
 import clsx from 'clsx'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
@@ -20,8 +18,6 @@ import { Form, FormItem, FormSection } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import useStatus from '../hooks/use-status'
-import { Community } from '../utils/schemas/community'
-import { Authorized } from '../utils/schemas/authorship'
 import { Group } from '../utils/schemas/group'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
@@ -39,8 +35,8 @@ import PermissionCard from './permission-card'
 
 export default function ProposalForm(props: {
   initialValue: Partial<Proposal>
-  community: Authorized<Community> & Serialize<{ entry: Entry }>
-  group: Group
+  community: string
+  group: Group & { permalink: string }
   className?: string
 }) {
   const router = useRouter()
@@ -69,11 +65,6 @@ export default function ProposalForm(props: {
     },
     [setValue, getValues],
   )
-  useEffect(() => {
-    if (props.community) {
-      setValue('community', props.community.entry.community)
-    }
-  }, [props.community, setValue])
   useEffect(() => {
     if (props.group) {
       setValue('group', props.group.id)
@@ -142,11 +133,11 @@ export default function ProposalForm(props: {
       setValue('snapshots', snapshots)
     }
   }, [setValue, snapshots])
-  const { data: status } = useStatus(props.community.entry.community)
+  const { data: status } = useStatus(props.group.permalink)
   const options = watch('options') || []
   const disabled = useMemo(
-    () => !status?.timestamp || !did || !props.community || !snapshots,
-    [props.community, did, snapshots, status?.timestamp],
+    () => !status?.timestamp || !did || !snapshots,
+    [did, snapshots, status?.timestamp],
   )
   const votingTypes = useMemo(
     () => [
@@ -313,7 +304,7 @@ export default function ProposalForm(props: {
             setPreviewProposal({
               ...value,
               preview: {
-                from: `/${props.community.entry.did}/${props.group.id}/create`,
+                from: `/${props.community}/${props.group.id}/create`,
                 to: `/proposal/${previewPermalink}`,
                 template: `You are creating proposal on Voty\n\nhash:\n{sha256}`,
                 author: did,

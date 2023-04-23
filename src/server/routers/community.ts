@@ -67,7 +67,7 @@ export const communityRouter = router({
         where: { permalink: input.permalink },
       })
 
-      return storage ? schema.parse(storage) : null
+      return storage ? schema.parse(storage.data) : null
     }),
   list: procedure
     .input(z.object({ cursor: z.string().optional() }))

@@ -6,22 +6,24 @@ import { useMemo } from 'react'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 
-import useGroup from '../hooks/use-group'
 import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 import { documentTitle } from '../utils/constants'
-import { previewCommunityAtom } from '../utils/atoms'
+import { previewGroupAtom } from '../utils/atoms'
 
 export default function GroupInfo(props: { className?: string }) {
   const query = useRouterQuery<['entry', 'group']>()
-  const { data } = trpc.community.getById.useQuery(
+  const { data: community } = trpc.community.getById.useQuery(
     { id: query.entry },
     { enabled: !!query.entry },
   )
-  const previewCommunity = useAtomValue(previewCommunityAtom)
-  const community = previewCommunity || data
-  const group = useGroup(community, query.group)
+  const previewGroup = useAtomValue(previewGroupAtom)
+  const { data } = trpc.group.getById.useQuery(
+    { community_id: query.entry, id: query.group },
+    { enabled: !!query.entry && !!query.group },
+  )
+  const group = previewGroup || data
   const router = useRouter()
   const tabs = useMemo(
     () => [
@@ -57,7 +59,7 @@ export default function GroupInfo(props: { className?: string }) {
         {tabs.map((tab) => (
           <Tab
             key={tab.name}
-            href={previewCommunity ? undefined : tab.href}
+            href={previewGroup ? undefined : tab.href}
             current={tab.current}
           >
             {tab.name}

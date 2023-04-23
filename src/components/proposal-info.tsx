@@ -1,11 +1,11 @@
 import clsx from 'clsx'
 
-import useGroup from '../hooks/use-group'
 import {
   coinTypeExplorers,
   commonCoinTypes,
   previewPermalink,
 } from '../utils/constants'
+import { Community } from '../utils/schemas/community'
 import { Proposal } from '../utils/schemas/proposal'
 import { trpc } from '../utils/trpc'
 import Article from './basic/article'
@@ -18,17 +18,17 @@ import { permalink2Explorer } from '../utils/permalink'
 import { formatNumber } from '../utils/number'
 
 export default function ProposalInfo(props: {
+  community?: Community
   proposal?: Proposal & {
     permalink: string | PreviewPermalink
     authorship?: { author?: string }
   }
   className?: string
 }) {
-  const { data: community } = trpc.community.getByPermalink.useQuery(
-    { permalink: props.proposal?.community },
-    { enabled: !!props.proposal?.community, refetchOnWindowFocus: false },
+  const { data: group } = trpc.group.getById.useQuery(
+    { community_id: props.community?.id, id: props.proposal?.group },
+    { enabled: !!props.community?.id && !!props.proposal?.group },
   )
-  const group = useGroup(community, props.proposal?.group)
   const disabled = props.proposal?.permalink === previewPermalink
 
   return (
@@ -49,24 +49,24 @@ export default function ProposalInfo(props: {
       </DetailList>
       <DetailList title="Information">
         <DetailItem title="Community" className="truncate whitespace-nowrap">
-          {community ? (
+          {props.community ? (
             <TextButton
               underline
               disabled={disabled}
-              href={`/${community.authorship.author}`}
+              href={`/${props.community.id}`}
             >
-              {community.name}
+              {props.community.name}
             </TextButton>
           ) : (
             '...'
           )}
         </DetailItem>
         <DetailItem title="Workgroup" className="truncate whitespace-nowrap">
-          {group && community ? (
+          {group && props.community ? (
             <TextButton
               underline
               disabled={disabled}
-              href={`/${community.authorship.author}/${group.id}`}
+              href={`/${props.community.id}/${group.id}`}
             >
               {group.name}
             </TextButton>

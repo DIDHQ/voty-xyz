@@ -11,7 +11,6 @@ import EmptyState from '../../../components/empty-state'
 import CreateProposalButton from '../../../components/create-proposal-button'
 import Select from '../../../components/basic/select'
 import { Phase } from '../../../utils/phase'
-import useGroup from '../../../hooks/use-group'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['entry', 'group']>()
@@ -28,11 +27,10 @@ export default function GroupIndexPage() {
         getNextPageParam: ({ next }) => next,
       },
     )
-  const { data: community } = trpc.community.getById.useQuery(
-    { id: query.entry },
-    { enabled: !!query.entry },
+  const { data: group } = trpc.group.getById.useQuery(
+    { community_id: query.entry, id: query.group },
+    { enabled: !!query.entry && !!query.group },
   )
-  const group = useGroup(community, query.group)
   const proposals = useMemo(
     () => data?.pages.flatMap(({ data }) => data),
     [data],
@@ -66,8 +64,7 @@ export default function GroupIndexPage() {
           />
           <CreateProposalButton
             entry={query.entry}
-            group={group}
-            community={community?.entry.community}
+            group={group || undefined}
           />
         </div>
         {proposals?.length === 0 ? (

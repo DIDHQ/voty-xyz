@@ -8,11 +8,10 @@ import Tooltip from './basic/tooltip'
 
 export default function CreateProposalButton(props: {
   entry?: string
-  community?: string
-  group?: Group
+  group?: Group & { permalink: string }
   className?: string
 }) {
-  const { data: status } = useStatus(props.community)
+  const { data: status } = useStatus(props.group?.permalink)
 
   return status?.timestamp && props.group ? (
     <Link

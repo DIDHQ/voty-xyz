@@ -6,7 +6,6 @@ import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { useRouter } from 'next/router'
 
-import useGroup from '../../hooks/use-group'
 import { stringifyChoice } from '../../utils/choice'
 import { permalink2Explorer } from '../../utils/permalink'
 import { trpc } from '../../utils/trpc'
@@ -40,14 +39,20 @@ export default function ProposalPage() {
         authorship: { author: previewProposal.preview.author },
       }
     }
-    return data || undefined
-  }, [data, previewProposal])
+    return query.proposal && data
+      ? { ...data, permalink: query.proposal }
+      : undefined
+  }, [data, previewProposal, query.proposal])
+  const { data: group, isLoading: isGroupLoading } =
+    trpc.group.getByPermalink.useQuery(
+      { permalink: proposal?.group },
+      { enabled: !!proposal?.group, refetchOnWindowFocus: false },
+    )
   const { data: community, isLoading: isCommunityLoading } =
     trpc.community.getByPermalink.useQuery(
-      { permalink: proposal?.community },
-      { enabled: !!proposal?.community, refetchOnWindowFocus: false },
+      { permalink: group?.community },
+      { enabled: !!group?.community, refetchOnWindowFocus: false },
     )
-  const group = useGroup(community, proposal?.group)
   const {
     data: list,
     fetchNextPage,
@@ -87,7 +92,9 @@ export default function ProposalPage() {
         <title>{title}</title>
       </Head>
       <div className="w-full">
-        <LoadingBar loading={isLoading || isCommunityLoading} />
+        <LoadingBar
+          loading={isLoading || isGroupLoading || isCommunityLoading}
+        />
         <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
           <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
             <TextButton
@@ -105,6 +112,7 @@ export default function ProposalPage() {
               </Article>
             </div>
             <ProposalInfo
+              community={community || undefined}
               proposal={proposal}
               className="mb-6 block sm:hidden"
             />
@@ -181,7 +189,11 @@ export default function ProposalPage() {
               </table>
             ) : null}
           </div>
-          <ProposalInfo proposal={proposal} className="hidden sm:block" />
+          <ProposalInfo
+            community={community || undefined}
+            proposal={proposal}
+            className="hidden sm:block"
+          />
         </div>
         <div ref={ref} />
       </div>

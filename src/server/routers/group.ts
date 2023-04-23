@@ -23,7 +23,7 @@ export const groupRouter = router({
         id: z.string().optional(),
       }),
     )
-    .output(schema.nullable())
+    .output(schema.extend({ permalink: z.string() }).nullable())
     .query(async ({ input }) => {
       if (!input.community_id || !input.id) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -41,7 +41,9 @@ export const groupRouter = router({
         where: { permalink: group.permalink },
       })
 
-      return storage ? schema.parse(storage) : null
+      return storage
+        ? { ...schema.parse(storage.data), permalink: storage.permalink }
+        : null
     }),
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
@@ -55,7 +57,7 @@ export const groupRouter = router({
         where: { permalink: input.permalink },
       })
 
-      return storage ? schema.parse(storage) : null
+      return storage ? schema.parse(storage.data) : null
     }),
   listByCommunity: procedure
     .input(z.object({ community_id: z.string().optional() }))

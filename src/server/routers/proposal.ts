@@ -70,7 +70,7 @@ export const proposalRouter = router({
       const storage = await database.storage.findUnique({
         where: { permalink: input.permalink },
       })
-      return storage ? schema.parse(storage) : null
+      return storage ? schema.parse(storage.data) : null
     }),
   list: procedure
     .input(
