@@ -94,15 +94,10 @@ export const groupRouter = router({
     }),
   create: procedure
     .input(
-      schema
-        .refine(
-          (group) => group.id === group.authorship.author,
-          'Permission denied',
-        )
-        .refine(
-          (group) => group.id.indexOf('.') === group.id.lastIndexOf('.'),
-          'Cannot create group with SubDID',
-        ),
+      schema.refine(
+        (group) => group.id.indexOf('.') === group.id.lastIndexOf('.'),
+        'Cannot create group with SubDID',
+      ),
     )
     .output(z.string())
     .mutation(async ({ input }) => {

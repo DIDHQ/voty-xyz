@@ -18,7 +18,7 @@ export default async function verifyVote(
   vote: Proved<Authorized<Vote>>,
 ): Promise<{
   proposal: Proved<Authorized<Proposal>>
-  group: Group
+  group: Proved<Authorized<Group>>
 }> {
   const [timestamp, data] = await Promise.all([
     getPermalinkSnapshot(vote.proposal).then((snapshot) =>

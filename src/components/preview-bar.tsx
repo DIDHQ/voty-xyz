@@ -62,16 +62,14 @@ export default function PreviewBar() {
       const signed = await signDocument(document)
       await mutateCommunity(signed)
       await Promise.all([
-        utils.community.getById.prefetch({
-          id: signed.authorship.author,
-        }),
+        utils.community.getById.prefetch({ id: signed.id }),
         utils.proposal.list.prefetch({
-          community_id: signed.authorship.author,
+          community_id: signed.id,
           phase: undefined,
         }),
       ])
       setPreviewCommunity(undefined)
-      router.push(`/${signed.authorship.author}`)
+      router.push(`/${signed.id}`)
       return 'community'
     }
     if (isGroup(document)) {

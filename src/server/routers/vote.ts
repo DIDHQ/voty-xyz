@@ -14,6 +14,7 @@ import { proved } from '../../utils/schemas/proof'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
+import verifyGroup from '../../utils/verifiers/verify-group'
 
 const schema = proved(authorized(voteSchema))
 
@@ -100,7 +101,8 @@ export const voteRouter = router({
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
-      const { proposal, community } = await verifyVote(input)
+      const { proposal, group } = await verifyVote(input)
+      const { community } = await verifyGroup(group)
 
       const permalink = await uploadToArweave(input)
       const ts = new Date()
@@ -120,7 +122,7 @@ export const voteRouter = router({
           data: { votes: { increment: 1 } },
         }),
         database.community.update({
-          where: { id: community.authorship.author },
+          where: { id: community.id },
           data: { votes: { increment: 1 } },
         }),
         ...Object.entries(
