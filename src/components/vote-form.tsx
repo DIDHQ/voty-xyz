@@ -98,12 +98,6 @@ export default function VoteForm(props: {
       setValue('power', votingPower.toString())
     }
   }, [resetField, setValue, votingPower])
-  const handleSuccess = useCallback(async () => {
-    setValue('choice', '')
-    refetchChoices()
-    refetchVoted()
-    onSuccess()
-  }, [onSuccess, refetchVoted, refetchChoices, setValue])
   const { data: status } = useStatus(props.proposal.permalink)
   const now = useMemo(() => new Date(), [])
   const phase = useMemo(
@@ -151,9 +145,20 @@ export default function VoteForm(props: {
   }, [defaultDid])
   useEffect(() => {
     if (handleSubmit.isSuccess) {
-      handleSuccess()
+      setTimeout(() => {
+        setValue('choice', '')
+        refetchChoices()
+        refetchVoted()
+        onSuccess()
+      }, 5000)
     }
-  }, [handleSubmit.isSuccess, handleSuccess])
+  }, [
+    handleSubmit.isSuccess,
+    onSuccess,
+    refetchChoices,
+    refetchVoted,
+    setValue,
+  ])
 
   return (
     <>

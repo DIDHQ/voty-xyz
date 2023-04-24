@@ -121,7 +121,7 @@ export default function ProposalPage() {
               proposal={proposal}
               className="mb-6 block sm:hidden"
             />
-            {community && group && proposal ? (
+            {group && proposal ? (
               <VoteForm
                 group={group}
                 proposal={proposal}
