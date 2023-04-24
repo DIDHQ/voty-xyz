@@ -23,7 +23,7 @@ const AvatarInput = dynamic(() => import('./basic/avatar-input'), {
 })
 
 export default function CommunityForm(props: {
-  author: string
+  communityId: string
   initialValue: Community | null
   preview: Preview
   className?: string
@@ -44,16 +44,17 @@ export default function CommunityForm(props: {
   } = methods
   useEffect(() => {
     reset(community)
-  }, [reset, community])
+    setValue('id', props.communityId)
+  }, [reset, community, setValue, props.communityId])
   const isNewCommunity = !props.initialValue
-  const isManager = useIsManager(props.author)
+  const isManager = useIsManager(props.communityId)
 
   return (
     <Form
       title={
         isNewCommunity
           ? 'Import your community'
-          : `Edit community of ${props.author}`
+          : `Edit community of ${props.communityId}`
       }
       className={clsx('pt-8', props.className)}
     >
@@ -86,8 +87,11 @@ export default function CommunityForm(props: {
             </FormItem>
           </GridItem6>
           <GridItem6>
-            <FormItem label="Community entry">
-              <TextInput defaultValue={`${domain}/${props.author}`} disabled />
+            <FormItem label="Community entry link">
+              <TextInput
+                defaultValue={`${domain}/${props.communityId}`}
+                disabled
+              />
             </FormItem>
           </GridItem6>
           <GridItem6>

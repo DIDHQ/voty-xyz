@@ -47,24 +47,30 @@ export function FormItem(
     error?: string
   } & InputHTMLAttributes<HTMLInputElement>,
 ) {
-  const { children, className, ...restProps } = props
+  const {
+    label,
+    optional,
+    description,
+    error,
+    children,
+    className,
+    ...restProps
+  } = props
 
   return (
     <div {...restProps}>
-      {props.label ? (
+      {label ? (
         <label className="mb-2 block text-sm font-medium text-gray-700">
-          {props.label}
-          {props.optional ? (
+          {label}
+          {optional ? (
             <span className="text-xs text-gray-400"> (optional)</span>
           ) : null}
         </label>
       ) : null}
-      {props.children}
-      {props.error ? (
-        <p className="mt-2 text-sm text-red-600">{props.error}</p>
-      ) : null}
-      {props.description ? (
-        <p className="mt-2 text-sm text-gray-500">{props.description}</p>
+      {children}
+      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
+      {description ? (
+        <p className="mt-2 text-sm text-gray-500">{description}</p>
       ) : null}
     </div>
   )

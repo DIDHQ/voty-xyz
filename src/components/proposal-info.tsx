@@ -1,13 +1,13 @@
 import clsx from 'clsx'
 
-import useGroup from '../hooks/use-group'
 import {
   coinTypeExplorers,
   commonCoinTypes,
   previewPermalink,
 } from '../utils/constants'
+import { Community } from '../utils/schemas/community'
+import { Group } from '../utils/schemas/group'
 import { Proposal } from '../utils/schemas/proposal'
-import { trpc } from '../utils/trpc'
 import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import Markdown from './basic/markdown'
@@ -18,17 +18,14 @@ import { permalink2Explorer } from '../utils/permalink'
 import { formatNumber } from '../utils/number'
 
 export default function ProposalInfo(props: {
+  community?: Community
+  group?: Group
   proposal?: Proposal & {
     permalink: string | PreviewPermalink
     authorship?: { author?: string }
   }
   className?: string
 }) {
-  const { data: community } = trpc.community.getByPermalink.useQuery(
-    { permalink: props.proposal?.community },
-    { enabled: !!props.proposal?.community, refetchOnWindowFocus: false },
-  )
-  const group = useGroup(community, props.proposal?.group)
   const disabled = props.proposal?.permalink === previewPermalink
 
   return (
@@ -40,35 +37,35 @@ export default function ProposalInfo(props: {
     >
       <ProposalProgress
         proposal={props.proposal?.permalink}
-        phase={group?.duration}
+        phase={props.group?.duration}
       />
       <DetailList title="Criteria for approval">
         <Article small className="pt-2">
-          <Markdown>{group?.extension.terms_and_conditions}</Markdown>
+          <Markdown>{props.group?.extension.terms_and_conditions}</Markdown>
         </Article>
       </DetailList>
       <DetailList title="Information">
         <DetailItem title="Community" className="truncate whitespace-nowrap">
-          {community ? (
+          {props.community ? (
             <TextButton
               underline
               disabled={disabled}
-              href={`/${community.authorship.author}`}
+              href={`/${props.community.id}`}
             >
-              {community.name}
+              {props.community.name}
             </TextButton>
           ) : (
             '...'
           )}
         </DetailItem>
         <DetailItem title="Workgroup" className="truncate whitespace-nowrap">
-          {group && community ? (
+          {props.group && props.community ? (
             <TextButton
               underline
               disabled={disabled}
-              href={`/${community.authorship.author}/${group.id}`}
+              href={`/${props.community.id}/${props.group.id}`}
             >
-              {group.name}
+              {props.group.name}
             </TextButton>
           ) : (
             '...'

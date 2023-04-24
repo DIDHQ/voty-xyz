@@ -2,7 +2,6 @@ import Head from 'next/head'
 import { useMemo } from 'react'
 
 import useRouterQuery from '../../../hooks/use-router-query'
-import useGroup from '../../../hooks/use-group'
 import TextButton from '../../../components/basic/text-button'
 import { trpc } from '../../../utils/trpc'
 import LoadingBar from '../../../components/basic/loading-bar'
@@ -11,12 +10,11 @@ import { documentTitle } from '../../../utils/constants'
 import { Proposal } from '../../../utils/schemas/proposal'
 
 export default function CreateProposalPage() {
-  const query = useRouterQuery<['entry', 'group']>()
-  const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
-    { enabled: !!query.entry },
+  const query = useRouterQuery<['community_id', 'group_id']>()
+  const { data: group, isLoading } = trpc.group.getById.useQuery(
+    { community_id: query.community_id, id: query.group_id },
+    { enabled: !!query.community_id && !!query.group_id },
   )
-  const group = useGroup(community, query.group)
   const initialValue = useMemo<Partial<Proposal>>(
     () => ({ voting_type: 'single', options: ['', ''] }),
     [],
@@ -30,16 +28,16 @@ export default function CreateProposalPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextButton
-          disabled={!query.entry || !query.group}
-          href={`/${query.entry}/${query.group}`}
+          disabled={!query.community_id || !query.group_id}
+          href={`/${query.community_id}/${query.group_id}`}
           className="mt-6 sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
         </TextButton>
-        {community && group ? (
+        {query.community_id && group ? (
           <ProposalForm
             initialValue={initialValue}
-            community={community}
+            communityId={query.community_id}
             group={group}
             className="pt-6 sm:pt-8"
           />

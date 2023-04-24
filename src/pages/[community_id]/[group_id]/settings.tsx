@@ -9,44 +9,42 @@ import TextButton from '../../../components/basic/text-button'
 
 export default function GroupSettingsPage() {
   const router = useRouter()
-  const query = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['community_id', 'group_id']>()
   const {
-    data: community,
+    data: group,
     isLoading,
     refetch,
-  } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
-    { enabled: !!query.entry },
+  } = trpc.group.getById.useQuery(
+    { community_id: query.community_id, id: query.group_id },
+    { enabled: !!query.community_id && !!query.group_id },
   )
   const handleArchive = useCallback(() => {
     refetch()
-    if (query.entry) {
-      router.push(`/${query.entry}`)
+    if (query.community_id) {
+      router.push(`/${query.community_id}`)
     }
-  }, [query.entry, refetch, router])
+  }, [query.community_id, refetch, router])
 
   return (
     <>
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextButton
-          href={`/${query.entry}/${query.group}/about`}
+          href={`/${query.community_id}/${query.group_id}/about`}
           className="mt-6 sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
         </TextButton>
-        {query.entry && query.group && community !== undefined ? (
+        {query.community_id && query.group_id && group !== undefined ? (
           <WorkgroupForm
-            author={query.entry}
-            initialValue={community}
-            group={query.group}
+            communityId={query.community_id}
+            initialValue={group}
             onArchive={handleArchive}
             preview={{
-              from: `/${query.entry}/${query.group}/settings`,
-              to: `/${query.entry}/${query.group}/about`,
+              from: `/${query.community_id}/${query.group_id}/settings`,
+              to: `/${query.community_id}/${query.group_id}/about`,
               template: `You are updating workgroup on Voty\n\nhash:\n{sha256}`,
-              author: query.entry,
-              group: query.group,
+              author: query.community_id,
             }}
             className="pt-6 sm:pt-8"
           />

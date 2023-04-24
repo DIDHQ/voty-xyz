@@ -7,16 +7,15 @@ import Button from './basic/button'
 import Tooltip from './basic/tooltip'
 
 export default function CreateProposalButton(props: {
-  entry?: string
-  community?: string
-  group?: Group
+  communityId?: string
+  group?: Group & { permalink: string }
   className?: string
 }) {
-  const { data: status } = useStatus(props.community)
+  const { data: status } = useStatus(props.group?.permalink)
 
   return status?.timestamp && props.group ? (
     <Link
-      href={`/${props.entry}/${props.group.id}/create`}
+      href={`/${props.communityId}/${props.group.id}/create`}
       className={props.className}
     >
       <Button primary icon={PlusIcon}>

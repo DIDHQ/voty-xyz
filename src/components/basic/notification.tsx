@@ -17,7 +17,7 @@ export default function Notification(props: {
     setShow(!!props.show)
     const timer = setTimeout(() => {
       setShow(false)
-    }, 30000)
+    }, 5000)
     return () => {
       clearTimeout(timer)
     }

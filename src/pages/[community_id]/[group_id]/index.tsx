@@ -11,28 +11,26 @@ import EmptyState from '../../../components/empty-state'
 import CreateProposalButton from '../../../components/create-proposal-button'
 import Select from '../../../components/basic/select'
 import { Phase } from '../../../utils/phase'
-import useGroup from '../../../hooks/use-group'
 
 export default function GroupIndexPage() {
-  const query = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['community_id', 'group_id']>()
   const [phase, setPhase] = useState<Phase | 'All'>('All')
   const { data, fetchNextPage, hasNextPage, isLoading } =
     trpc.proposal.list.useInfiniteQuery(
       {
-        entry: query.entry,
-        group: query.group,
+        community_id: query.community_id,
+        group_id: query.group_id,
         phase: phase === 'All' ? undefined : phase,
       },
       {
-        enabled: !!query.entry && !!query.group,
+        enabled: !!query.community_id && !!query.group_id,
         getNextPageParam: ({ next }) => next,
       },
     )
-  const { data: community } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
-    { enabled: !!query.entry },
+  const { data: group } = trpc.group.getById.useQuery(
+    { community_id: query.community_id, id: query.group_id },
+    { enabled: !!query.community_id && !!query.group_id },
   )
-  const group = useGroup(community, query.group)
   const proposals = useMemo(
     () => data?.pages.flatMap(({ data }) => data),
     [data],
@@ -65,9 +63,8 @@ export default function GroupIndexPage() {
             onChange={(p) => setPhase(p as Phase | 'All')}
           />
           <CreateProposalButton
-            entry={query.entry}
-            group={group}
-            community={community?.entry.community}
+            communityId={query.community_id}
+            group={group || undefined}
           />
         </div>
         {proposals?.length === 0 ? (

@@ -1,19 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useMemo } from 'react'
-import {
-  Controller,
-  FieldError,
-  FieldErrorsImpl,
-  FormProvider,
-  Merge,
-  useForm,
-} from 'react-hook-form'
+import { useEffect } from 'react'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { ArchiveBoxIcon, EyeIcon } from '@heroicons/react/20/solid'
 import { useMutation } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 
-import { Community, communitySchema } from '../utils/schemas/community'
 import PhaseInput from './basic/phase-input'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
@@ -26,72 +18,57 @@ import useSignDocument from '../hooks/use-sign-document'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
 import useIsManager from '../hooks/use-is-manager'
-import { Group } from '../utils/schemas/group'
-import { previewCommunityAtom } from '../utils/atoms'
+import { Group, groupSchema } from '../utils/schemas/group'
+import { previewGroupAtom } from '../utils/atoms'
 import { Preview } from '../utils/types'
 
 export default function WorkgroupForm(props: {
-  author: string
-  initialValue: Community | null
-  group: string
+  communityId: string
+  initialValue: Group | null
   onArchive?: () => void
-  preview: Preview & { group: string }
+  preview: Preview
   className?: string
 }) {
   const { onArchive } = props
   const router = useRouter()
-  const { data } = trpc.community.getByEntry.useQuery({
-    entry: props.author,
-  })
-  const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
-  const community = previewCommunity || props.initialValue || data || undefined
-  const methods = useForm<Community>({
-    resolver: zodResolver(communitySchema),
+  const { data } = trpc.group.getById.useQuery(
+    { community_id: props.communityId, id: props.initialValue?.id },
+    { enabled: !!props.communityId && !!props.initialValue?.id },
+  )
+  const { data: community } = trpc.community.getById.useQuery(
+    { id: props.communityId },
+    { enabled: !!props.communityId },
+  )
+  const [previewGroup, setPreviewGroup] = useAtom(previewGroupAtom)
+  const group = previewGroup || props.initialValue || data || undefined
+  const methods = useForm<Group>({
+    resolver: zodResolver(groupSchema),
   })
   const {
     control,
     register,
     reset,
-    setValue,
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
-  const groupIndex = useMemo(() => {
-    const index = props.initialValue?.groups?.findIndex(
-      ({ id }) => id === props.group,
-    )
-    if (index === undefined || index === -1) {
-      return props.initialValue?.groups?.length || 0
-    }
-    return index
-  }, [props.initialValue?.groups, props.group])
   useEffect(() => {
-    reset(community)
-    if (props.group) {
-      setValue(`groups.${groupIndex}.id`, props.group)
-    }
-  }, [groupIndex, community, props.group, reset, setValue])
+    reset(group)
+  }, [group, reset])
   const isNewGroup = !props.onArchive
   const signDocument = useSignDocument(
-    props.author,
+    props.communityId,
     `You are archiving workgroup on Voty\n\nhash:\n{sha256}`,
   )
-  const { mutateAsync } = trpc.community.create.useMutation()
-  const handleArchive = useMutation<void, Error, Community>(
-    async (community) => {
-      const signed = await signDocument({
-        ...community,
-        groups: community.groups?.filter(({ id }) => id !== props.group),
-      })
-      await mutateAsync(signed)
-      onArchive?.()
-    },
-  )
-  const isManager = useIsManager(props.author)
-  const groupErrors = errors.groups?.[groupIndex] as Merge<
-    FieldError,
-    FieldErrorsImpl<NonNullable<Group>>
-  >
+  const { mutateAsync } = trpc.group.archive.useMutation()
+  const handleArchive = useMutation<void, Error, Group>(async (group) => {
+    if (!props.initialValue) {
+      return
+    }
+    const signed = await signDocument(group)
+    await mutateAsync(signed)
+    onArchive?.()
+  })
+  const isManager = useIsManager(props.communityId)
 
   return (
     <>
@@ -107,14 +84,11 @@ export default function WorkgroupForm(props: {
         <FormSection title="Basic information">
           <Grid6>
             <GridItem6>
-              <FormItem
-                label="Workgroup name"
-                error={groupErrors?.name?.message}
-              >
+              <FormItem label="Workgroup name" error={errors.name?.message}>
                 <TextInput
-                  {...register(`groups.${groupIndex}.name`)}
+                  {...register('name')}
                   placeholder="e.g. Marketing Team"
-                  error={!!groupErrors?.name?.message}
+                  error={!!errors.name?.message}
                   disabled={!isManager}
                 />
               </FormItem>
@@ -124,11 +98,11 @@ export default function WorkgroupForm(props: {
                 label="Introduction"
                 optional
                 description="The purpose of this workgroup"
-                error={groupErrors?.extension?.introduction?.message}
+                error={errors.extension?.introduction?.message}
               >
                 <TextInput
-                  {...register(`groups.${groupIndex}.extension.introduction`)}
-                  error={!!groupErrors?.extension?.introduction?.message}
+                  {...register('extension.introduction')}
+                  error={!!errors.extension?.introduction?.message}
                   disabled={!isManager}
                 />
               </FormItem>
@@ -141,14 +115,11 @@ export default function WorkgroupForm(props: {
         >
           <Grid6>
             <GridItem6>
-              <FormItem
-                error={groupErrors?.permission?.proposing?.operands?.message}
-              >
+              <FormItem error={errors.permission?.proposing?.operands?.message}>
                 <FormProvider {...methods}>
                   <BooleanSetsBlock
                     name="proposing"
-                    entry={props.author}
-                    groupIndex={groupIndex}
+                    communityId={props.communityId}
                     disabled={!isManager}
                   />
                 </FormProvider>
@@ -162,14 +133,11 @@ export default function WorkgroupForm(props: {
         >
           <Grid6>
             <GridItem6>
-              <FormItem
-                error={groupErrors?.permission?.voting?.operands?.message}
-              >
+              <FormItem error={errors.permission?.voting?.operands?.message}>
                 <FormProvider {...methods}>
                   <DecimalSetsBlock
                     name="voting"
-                    entry={props.author}
-                    groupIndex={groupIndex}
+                    communityId={props.communityId}
                     disabled={!isManager}
                   />
                 </FormProvider>
@@ -182,18 +150,18 @@ export default function WorkgroupForm(props: {
             <GridItem3>
               <FormItem
                 label="Announcing phase"
-                error={groupErrors?.duration?.pending?.message}
+                error={errors.duration?.pending?.message}
               >
                 <Controller
                   control={control}
-                  name={`groups.${groupIndex}.duration.pending`}
+                  name="duration.pending"
                   render={({ field: { ref, value, onChange } }) => (
                     <PhaseInput
                       inputRef={ref}
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={!!groupErrors?.duration?.pending}
+                      error={!!errors.duration?.pending}
                     />
                   )}
                 />
@@ -202,18 +170,18 @@ export default function WorkgroupForm(props: {
             <GridItem3>
               <FormItem
                 label="Voting phase"
-                error={groupErrors?.duration?.voting?.message}
+                error={errors.duration?.voting?.message}
               >
                 <Controller
                   control={control}
-                  name={`groups.${groupIndex}.duration.voting`}
+                  name="duration.voting"
                   render={({ field: { ref, value, onChange } }) => (
                     <PhaseInput
                       inputRef={ref}
                       value={value}
                       onChange={onChange}
                       disabled={!isManager}
-                      error={!!groupErrors?.duration?.voting}
+                      error={!!errors.duration?.voting}
                     />
                   )}
                 />
@@ -223,16 +191,12 @@ export default function WorkgroupForm(props: {
               <FormItem
                 label="Criteria for approval"
                 description="Markdown is supported"
-                error={groupErrors?.extension?.terms_and_conditions?.message}
+                error={errors.extension?.terms_and_conditions?.message}
               >
                 <Textarea
                   disabled={!isManager}
-                  {...register(
-                    `groups.${groupIndex}.extension.terms_and_conditions`,
-                  )}
-                  error={
-                    !!groupErrors?.extension?.terms_and_conditions?.message
-                  }
+                  {...register('extension.terms_and_conditions')}
+                  error={!!errors.extension?.terms_and_conditions?.message}
                 />
               </FormItem>
             </GridItem6>
@@ -244,7 +208,7 @@ export default function WorkgroupForm(props: {
               primary
               icon={EyeIcon}
               onClick={onSubmit((value) => {
-                setPreviewCommunity({
+                setPreviewGroup({
                   ...value,
                   preview: props.preview,
                 })

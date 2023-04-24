@@ -2,8 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { compact, keyBy } from 'lodash-es'
 import { z } from 'zod'
 
-import { DataType } from '../../utils/constants'
-import { database, mapByPermalinks } from '../../utils/database'
+import { database } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
 import { communitySchema } from '../../utils/schemas/community'
 import { proofSchema, proved } from '../../utils/schemas/proof'
@@ -18,20 +17,20 @@ export const subscriptionRouter = router({
   get: procedure
     .input(
       z.object({
-        entry: z.string().optional(),
+        community_id: z.string().optional(),
         subscriber: subscriberSchema.optional(),
       }),
     )
     .output(z.boolean())
     .query(async ({ input }) => {
-      if (!input.entry || !input.subscriber) {
+      if (!input.community_id || !input.subscriber) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
       const subscription = await database.subscription.findUnique({
         where: {
-          entry_subscriber: {
-            entry: input.entry,
+          community_id_subscriber: {
+            community_id: input.community_id,
             subscriber: JSON.stringify(input.subscriber),
           },
         },
@@ -51,20 +50,30 @@ export const subscriptionRouter = router({
         where: { subscriber: JSON.stringify(input.subscriber) },
         orderBy: { ts: 'desc' },
       })
-      const entries = keyBy(
-        await database.entry.findMany({
-          where: { did: { in: subscriptions.map(({ entry }) => entry) } },
+      const communities = keyBy(
+        await database.community.findMany({
+          where: {
+            id: { in: subscriptions.map(({ community_id }) => community_id) },
+          },
         }),
-        ({ did }) => did,
+        ({ id }) => id,
       )
-      const communities = await mapByPermalinks(
-        DataType.COMMUNITY,
-        Object.values(entries).map(({ community }) => community),
+      const storages = keyBy(
+        await database.storage.findMany({
+          where: {
+            permalink: {
+              in: Object.values(communities).map(({ permalink }) => permalink),
+            },
+          },
+        }),
+        ({ permalink }) => permalink,
       )
 
       return compact(
         subscriptions
-          .map(({ entry }) => communities[entries[entry]?.community])
+          .map(
+            ({ community_id }) => storages[communities[community_id].permalink],
+          )
           .filter((community) => community)
           .map(({ permalink, data }) => {
             try {
@@ -78,12 +87,15 @@ export const subscriptionRouter = router({
   set: procedure
     .input(
       proved(
-        z.object({ entry: z.string().optional(), subscribe: z.boolean() }),
+        z.object({
+          community_id: z.string().optional(),
+          subscribe: z.boolean(),
+        }),
       ),
     )
     .output(z.boolean())
     .mutation(async ({ input }) => {
-      if (!input.entry) {
+      if (!input.community_id) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
       await verifyProof(input)
@@ -95,10 +107,14 @@ export const subscriptionRouter = router({
       if (input.subscribe === true) {
         await database.$transaction([
           database.subscription.create({
-            data: { entry: input.entry, subscriber, ts: new Date() },
+            data: {
+              community_id: input.community_id,
+              subscriber,
+              ts: new Date(),
+            },
           }),
-          database.entry.update({
-            where: { did: input.entry },
+          database.community.update({
+            where: { id: input.community_id },
             data: { subscribers: { increment: 1 } },
           }),
         ])
@@ -106,11 +122,14 @@ export const subscriptionRouter = router({
         await database.$transaction([
           database.subscription.delete({
             where: {
-              entry_subscriber: { entry: input.entry, subscriber },
+              community_id_subscriber: {
+                community_id: input.community_id,
+                subscriber,
+              },
             },
           }),
-          database.entry.update({
-            where: { did: input.entry },
+          database.community.update({
+            where: { id: input.community_id },
             data: { subscribers: { decrement: 1 } },
           }),
         ])

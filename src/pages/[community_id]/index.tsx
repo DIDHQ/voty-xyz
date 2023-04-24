@@ -15,20 +15,28 @@ import Select from '../../components/basic/select'
 import { Phase } from '../../utils/phase'
 
 export default function CommunityIndexPage() {
-  const query = useRouterQuery<['entry']>()
+  const query = useRouterQuery<['community_id']>()
   const [phase, setPhase] = useState<Phase | 'All'>('All')
-  const { data: community, isLoading } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
-    { enabled: !!query.entry },
+  const { data: community, isLoading } = trpc.community.getById.useQuery(
+    { id: query.community_id },
+    { enabled: !!query.community_id },
   )
+  const { data: groups, isLoading: isGroupsLoading } =
+    trpc.group.listByCommunity.useQuery(
+      { community_id: query.community_id },
+      { enabled: !!query.community_id },
+    )
   const {
     data,
     fetchNextPage,
     hasNextPage,
-    isLoading: isListLoading,
+    isLoading: isProposalsLoading,
   } = trpc.proposal.list.useInfiniteQuery(
-    { entry: query.entry, phase: phase === 'All' ? undefined : phase },
-    { enabled: !!query.entry, getNextPageParam: ({ next }) => next },
+    {
+      community_id: query.community_id,
+      phase: phase === 'All' ? undefined : phase,
+    },
+    { enabled: !!query.community_id, getNextPageParam: ({ next }) => next },
   )
   const proposals = useMemo(
     () => data?.pages.flatMap(({ data }) => data),
@@ -40,7 +48,7 @@ export default function CommunityIndexPage() {
       fetchNextPage()
     }
   }, [fetchNextPage, hasNextPage, inView])
-  const isManager = useIsManager(query.entry)
+  const isManager = useIsManager(query.community_id)
   const options = useMemo(
     () => [
       'All',
@@ -54,7 +62,9 @@ export default function CommunityIndexPage() {
 
   return (
     <CommunityLayout>
-      <LoadingBar loading={isLoading || isListLoading} />
+      <LoadingBar
+        loading={isLoading || isGroupsLoading || isProposalsLoading}
+      />
       <div className="mt-6 flex justify-between sm:mt-8">
         <h3 className="text-lg font-medium text-gray-900">Timeline</h3>
         <Select
@@ -69,8 +79,8 @@ export default function CommunityIndexPage() {
           title="No events"
           className="mt-24"
           footer={
-            community && !community?.groups?.length && isManager ? (
-              <Link href={`/${query.entry}/create`}>
+            community && !groups?.length && isManager ? (
+              <Link href={`/${query.community_id}/create`}>
                 <Button primary icon={PlusIcon}>
                   Workgroup
                 </Button>

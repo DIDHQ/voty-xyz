@@ -6,7 +6,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
-import { compact } from 'lodash-es'
+import { compact, uniqBy } from 'lodash-es'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ExoticComponent, useMemo } from 'react'
@@ -21,7 +21,7 @@ import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 import { documentTitle } from '../utils/constants'
 import TextButton from './basic/text-button'
-import { previewCommunityAtom } from '../utils/atoms'
+import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import Button from './basic/button'
 import useIsManager from '../hooks/use-is-manager'
 
@@ -35,29 +35,38 @@ const SubscriptionButton = dynamic(() => import('./subscription-button'), {
 
 export default function CommunityInfo(props: { className?: string }) {
   const router = useRouter()
-  const query = useRouterQuery<['entry', 'group']>()
-  const { data } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
-    { enabled: !!query.entry },
+  const query = useRouterQuery<['community_id', 'group_id']>()
+  const { data } = trpc.community.getById.useQuery(
+    { id: query.community_id },
+    { enabled: !!query.community_id },
+  )
+  const { data: list } = trpc.group.listByCommunity.useQuery(
+    { community_id: query.community_id },
+    { enabled: !!query.community_id },
   )
   const previewCommunity = useAtomValue(previewCommunityAtom)
+  const previewGroup = useAtomValue(previewGroupAtom)
   const community = previewCommunity || data
+  const groups = useMemo(
+    () => uniqBy(compact([...(list || []), previewGroup]), 'id'),
+    [list, previewGroup],
+  )
   const navigation = useMemo(
     () => [
       {
         name: 'Timeline',
-        href: `/${query.entry}`,
+        href: `/${query.community_id}`,
         icon: ClockIcon,
-        current: router.pathname === '/[entry]',
+        current: router.pathname === '/[community_id]',
       },
       {
         name: 'About',
-        href: `/${query.entry}/about`,
+        href: `/${query.community_id}/about`,
         icon: DocumentTextIcon,
-        current: router.pathname === '/[entry]/about',
+        current: router.pathname === '/[community_id]/about',
       },
     ],
-    [query.entry, router.pathname],
+    [query.community_id, router.pathname],
   )
   const externals = useMemo(
     () =>
@@ -88,7 +97,7 @@ export default function CommunityInfo(props: { className?: string }) {
         : [],
     [community],
   )
-  const isManager = useIsManager(query.entry)
+  const isManager = useIsManager(query.community_id)
   const title = useMemo(
     () => compact([community?.name, documentTitle]).join(' - '),
     [community?.name],
@@ -102,7 +111,7 @@ export default function CommunityInfo(props: { className?: string }) {
       <aside className={clsx('relative', props.className)}>
         {previewCommunity ? null : (
           <StatusIcon
-            permalink={data?.entry.community}
+            permalink={data?.permalink}
             className="absolute right-4 top-4"
           />
         )}
@@ -130,7 +139,7 @@ export default function CommunityInfo(props: { className?: string }) {
               Community
               {previewCommunity ? null : (
                 <SubscriptionButton
-                  entry={query.entry}
+                  communityId={query.community_id}
                   className="float-right"
                 />
               )}
@@ -146,32 +155,31 @@ export default function CommunityInfo(props: { className?: string }) {
               </LinkListItem>
             ))}
           </div>
-          {isManager || community?.groups?.length ? (
+          {isManager || groups?.length ? (
             <div className="mt-6 w-full">
               <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
                 Workgroups
                 {previewCommunity || !isManager ? null : (
                   <TextButton
                     primary
-                    href={`/${query.entry}/create`}
+                    href={`/${query.community_id}/create`}
                     className="float-right"
                   >
                     <PlusIcon className="h-5 w-5" />
                   </TextButton>
                 )}
               </h3>
-
               <div>
-                {community?.groups?.map((group) => (
+                {groups?.map((group) => (
                   <LinkListItem
                     key={group.id}
                     href={
                       previewCommunity
                         ? undefined
-                        : `/${query.entry}/${group.id}`
+                        : `/${query.community_id}/${group.id}`
                     }
                     icon={BriefcaseIcon}
-                    current={query.group === group.id}
+                    current={query.group_id === group.id}
                   >
                     {group.name}
                   </LinkListItem>
@@ -199,7 +207,10 @@ export default function CommunityInfo(props: { className?: string }) {
                 Want to join?
               </Button>
             ) : (
-              <Link href={`/${query.entry}/about#how-to-join`} className="mt-4">
+              <Link
+                href={`/${query.community_id}/about#how-to-join`}
+                className="mt-4"
+              >
                 <Button primary>Want to join?</Button>
               </Link>
             )

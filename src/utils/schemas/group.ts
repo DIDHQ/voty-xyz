@@ -5,6 +5,7 @@ import { booleanSetsSchema, decimalSetsSchema } from './sets'
 export const groupSchema = z.object({
   id: z.string().min(1, 'Required'),
   name: z.string().min(1, 'Required'),
+  community: z.string().min(1),
   permission: z.object({
     proposing: booleanSetsSchema,
     voting: decimalSetsSchema,

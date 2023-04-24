@@ -4,9 +4,7 @@ import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
-import { useRouter } from 'next/router'
 
-import useGroup from '../../hooks/use-group'
 import { stringifyChoice } from '../../utils/choice'
 import { permalink2Explorer } from '../../utils/permalink'
 import { trpc } from '../../utils/trpc'
@@ -22,40 +20,53 @@ import { previewProposalAtom } from '../../utils/atoms'
 import { Proposal } from '../../utils/schemas/proposal'
 
 export default function ProposalPage() {
-  const query = useRouterQuery<['proposal']>()
-  const router = useRouter()
+  const query = useRouterQuery<['proposal_permalink']>()
   const previewProposal = useAtomValue(previewProposalAtom)
   const { data, isLoading, refetch } = trpc.proposal.getByPermalink.useQuery(
-    { permalink: query.proposal },
-    { enabled: !!query.proposal },
+    { permalink: query.proposal_permalink },
+    { enabled: !!query.proposal_permalink },
   )
   const proposal = useMemo<
-    | (Proposal & { permalink: string; authorship?: { author?: string } })
+    | (Proposal & {
+        votes: number
+        permalink: string
+        authorship?: { author?: string }
+      })
     | undefined
   >(() => {
     if (previewProposal) {
       return {
         ...previewProposal,
+        votes: 0,
         permalink: previewPermalink,
         authorship: { author: previewProposal.preview.author },
       }
     }
-    return data || undefined
-  }, [data, previewProposal])
+    return query.proposal_permalink && data
+      ? { ...data, permalink: query.proposal_permalink }
+      : undefined
+  }, [data, previewProposal, query.proposal_permalink])
+  const { data: group, isLoading: isGroupLoading } =
+    trpc.group.getByPermalink.useQuery(
+      { permalink: proposal?.group },
+      { enabled: !!proposal?.group, refetchOnWindowFocus: false },
+    )
   const { data: community, isLoading: isCommunityLoading } =
     trpc.community.getByPermalink.useQuery(
-      { permalink: proposal?.community },
-      { enabled: !!proposal?.community, refetchOnWindowFocus: false },
+      { permalink: group?.community },
+      { enabled: !!group?.community, refetchOnWindowFocus: false },
     )
-  const group = useGroup(community, proposal?.group)
   const {
     data: list,
     fetchNextPage,
     hasNextPage,
     refetch: refetchList,
   } = trpc.vote.list.useInfiniteQuery(
-    { proposal: query.proposal },
-    { enabled: !!query.proposal, getNextPageParam: ({ next }) => next },
+    { proposal: query.proposal_permalink },
+    {
+      enabled: !!query.proposal_permalink,
+      getNextPageParam: ({ next }) => next,
+    },
   )
   const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
   const { ref, inView } = useInView()
@@ -76,10 +87,7 @@ export default function ProposalPage() {
   )
   const handleSuccess = useCallback(async () => {
     await Promise.all([refetch(), refetchList()])
-    setTimeout(() => {
-      router.reload()
-    }, 5000)
-  }, [refetch, refetchList, router])
+  }, [refetch, refetchList])
 
   return (
     <>
@@ -87,12 +95,14 @@ export default function ProposalPage() {
         <title>{title}</title>
       </Head>
       <div className="w-full">
-        <LoadingBar loading={isLoading || isCommunityLoading} />
+        <LoadingBar
+          loading={isLoading || isGroupLoading || isCommunityLoading}
+        />
         <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
           <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
             <TextButton
               disabled={!community || !group || !!previewProposal}
-              href={`/${community?.authorship.author}/${group?.id}`}
+              href={`/${community?.id}/${group?.id}`}
             >
               <h2 className="text-base font-semibold">← Back</h2>
             </TextButton>
@@ -105,6 +115,8 @@ export default function ProposalPage() {
               </Article>
             </div>
             <ProposalInfo
+              community={community || undefined}
+              group={group || undefined}
               proposal={proposal}
               className="mb-6 block sm:hidden"
             />
@@ -115,7 +127,7 @@ export default function ProposalPage() {
                 onSuccess={handleSuccess}
               />
             ) : null}
-            {proposal && 'votes' in proposal && proposal?.votes ? (
+            {proposal?.votes ? (
               <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
                 {proposal.votes === 1 ? '1 Vote' : `${proposal.votes} Votes`}
               </h2>
@@ -181,7 +193,12 @@ export default function ProposalPage() {
               </table>
             ) : null}
           </div>
-          <ProposalInfo proposal={proposal} className="hidden sm:block" />
+          <ProposalInfo
+            community={community || undefined}
+            group={group || undefined}
+            proposal={proposal}
+            className="hidden sm:block"
+          />
         </div>
         <div ref={ref} />
       </div>

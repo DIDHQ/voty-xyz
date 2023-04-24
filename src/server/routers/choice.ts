@@ -22,7 +22,10 @@ export const choiceRouter = router({
 
       const choice = await database.choice.findUnique({
         where: {
-          proposal_option: { proposal: input.proposal, option: input.option },
+          proposal_permalink_option: {
+            proposal_permalink: input.proposal,
+            option: input.option,
+          },
         },
       })
 
@@ -41,7 +44,7 @@ export const choiceRouter = router({
       }
 
       const choices = await database.choice.findMany({
-        where: { proposal: input.proposal },
+        where: { proposal_permalink: input.proposal },
       })
 
       return {

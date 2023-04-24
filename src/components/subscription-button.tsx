@@ -10,7 +10,7 @@ import Notification from './basic/notification'
 import TextButton from './basic/text-button'
 
 export default function SubscriptionButton(props: {
-  entry?: string
+  communityId?: string
   className?: string
 }) {
   const { account } = useWallet()
@@ -33,9 +33,9 @@ export default function SubscriptionButton(props: {
   } = trpc.subscription.get.useQuery(
     {
       subscriber: { type: 'eth_personal_sign', address: account?.address! },
-      entry: props.entry,
+      community_id: props.communityId,
     },
-    { enabled: !!account?.address && !!props.entry },
+    { enabled: !!account?.address && !!props.communityId },
   )
   const signSubscribe = useSignDocumentWithoutAuthorship(
     `You are subscribing community on Voty\n\nhash:\n{sha256}`,
@@ -48,11 +48,11 @@ export default function SubscriptionButton(props: {
     Error,
     ReactMouseEvent<HTMLButtonElement, MouseEvent>
   >(async () => {
-    if (!props.entry) {
+    if (!props.communityId) {
       return
     }
     const signed = await signSubscribe({
-      entry: props.entry,
+      community_id: props.communityId,
       subscribe: true,
     })
     await mutateAsync(signed)
@@ -62,11 +62,11 @@ export default function SubscriptionButton(props: {
     Error,
     ReactMouseEvent<HTMLButtonElement, MouseEvent>
   >(async () => {
-    if (!props.entry) {
+    if (!props.communityId) {
       return
     }
     const signed = await signUnsubscribe({
-      entry: props.entry,
+      community_id: props.communityId,
       subscribe: false,
     })
     await mutateAsync(signed)
@@ -88,6 +88,12 @@ export default function SubscriptionButton(props: {
       </Notification>
       <Notification type="error" show={handleSubscribe.isError}>
         {handleSubscribe.error?.message}
+      </Notification>
+      <Notification type="success" show={handleUnsubscribe.isSuccess}>
+        Unsubscribed successfully
+      </Notification>
+      <Notification type="success" show={handleSubscribe.isSuccess}>
+        Subscribed successfully
       </Notification>
       {subscribed ? (
         <TextButton

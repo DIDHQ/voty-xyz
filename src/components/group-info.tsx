@@ -6,37 +6,39 @@ import { useMemo } from 'react'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 
-import useGroup from '../hooks/use-group'
 import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 import { documentTitle } from '../utils/constants'
-import { previewCommunityAtom } from '../utils/atoms'
+import { previewGroupAtom } from '../utils/atoms'
 
 export default function GroupInfo(props: { className?: string }) {
-  const query = useRouterQuery<['entry', 'group']>()
-  const { data } = trpc.community.getByEntry.useQuery(
-    { entry: query.entry },
-    { enabled: !!query.entry },
+  const query = useRouterQuery<['community_id', 'group_id']>()
+  const { data: community } = trpc.community.getById.useQuery(
+    { id: query.community_id },
+    { enabled: !!query.community_id },
   )
-  const previewCommunity = useAtomValue(previewCommunityAtom)
-  const community = previewCommunity || data
-  const group = useGroup(community, query.group)
+  const previewGroup = useAtomValue(previewGroupAtom)
+  const { data } = trpc.group.getById.useQuery(
+    { community_id: query.community_id, id: query.group_id },
+    { enabled: !!query.community_id && !!query.group_id },
+  )
+  const group = previewGroup || data
   const router = useRouter()
   const tabs = useMemo(
     () => [
       {
         name: 'Proposals',
-        href: `/${query.entry}/${query.group}`,
-        current: router.pathname === '/[entry]/[group]',
+        href: `/${query.community_id}/${query.group_id}`,
+        current: router.pathname === '/[community_id]/[group_id]',
       },
       {
         name: 'About',
-        href: `/${query.entry}/${query.group}/about`,
-        current: router.pathname === '/[entry]/[group]/about',
+        href: `/${query.community_id}/${query.group_id}/about`,
+        current: router.pathname === '/[community_id]/[group_id]/about',
       },
     ],
-    [query.entry, query.group, router.pathname],
+    [query.community_id, query.group_id, router.pathname],
   )
   const emoji = useMemo(() => extractStartEmoji(group?.name), [group?.name])
   const name = useMemo(
@@ -57,7 +59,7 @@ export default function GroupInfo(props: { className?: string }) {
         {tabs.map((tab) => (
           <Tab
             key={tab.name}
-            href={previewCommunity ? undefined : tab.href}
+            href={previewGroup ? undefined : tab.href}
             current={tab.current}
           >
             {tab.name}

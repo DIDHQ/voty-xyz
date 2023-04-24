@@ -10,82 +10,82 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Community {
+model Storage {
   permalink String
-  entry     String
 
   data Json
 
-  ts DateTime
+  @@id([permalink])
+}
+
+model Community {
+  id        String
+  permalink String
+
+  subscribers Int      @default(0)
+  proposals   Int      @default(0)
+  votes       Int      @default(0)
+  ts          DateTime
 
   @@id([permalink])
-  @@index([entry])
+  @@unique([id])
+}
+
+model Group {
+  id                  String
+  permalink           String
+  community_id        String
+  community_permalink String
+
+  proposals Int      @default(0)
+  votes     Int      @default(0)
+  ts        DateTime
+
+  @@id([permalink])
+  @@unique([id, community_id])
 }
 
 model Proposal {
-  permalink String
-  entry     String
-  author    String
-  community String
-  group     String
+  permalink       String
+  community_id    String
+  group_id        String
+  group_permalink String
 
-  data Json
-
-  votes Int
-
+  proposer   String
+  votes      Int       @default(0)
   ts         DateTime
   ts_pending DateTime?
   ts_voting  DateTime?
 
   @@id([permalink])
-  @@index([entry, group])
-  @@index([community, group])
-  @@index([author])
+  @@index([community_id, group_id])
 }
 
 model Vote {
-  permalink String
-  author    String
-  community String
-  group     String
-  proposal  String
+  permalink          String
+  proposal_permalink String
 
-  data Json
-
-  ts DateTime
+  voter String
+  ts    DateTime
 
   @@id([permalink])
-  @@unique([proposal, author])
-  @@index([author])
-}
-
-model Entry {
-  did       String
-  community String
-
-  subscribers Int
-  proposals   Int
-  votes       Int
-
-  ts DateTime
-
-  @@id([did])
+  @@unique([proposal_permalink, voter])
 }
 
 model Choice {
-  proposal String
-  option   String
+  proposal_permalink String
+  option             String
 
   power Decimal
 
-  @@id([proposal, option])
+  @@id([proposal_permalink, option])
 }
 
 model Subscription {
-  entry      String
-  subscriber String
+  community_id String
+  subscriber   String
 
   ts DateTime
 
-  @@id([entry, subscriber])
+  @@id([community_id, subscriber])
 }

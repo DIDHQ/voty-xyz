@@ -1,7 +1,6 @@
 import Link from 'next/link'
 
 import useWallet from '../hooks/use-wallet'
-import { Authorized } from '../utils/schemas/authorship'
 import { Community } from '../utils/schemas/community'
 import { trpc } from '../utils/trpc'
 import Avatar from './basic/avatar'
@@ -21,10 +20,7 @@ export default function SubscriptionList(props: { className?: string }) {
         {data ? (
           data.length ? (
             data.map((community) => (
-              <SubscriptionListItem
-                key={community.authorship.author}
-                value={community}
-              />
+              <SubscriptionListItem key={community.id} value={community} />
             ))
           ) : (
             <div className="h-16 text-sm text-gray-400">
@@ -39,11 +35,11 @@ export default function SubscriptionList(props: { className?: string }) {
   ) : null
 }
 
-function SubscriptionListItem(props: { value: Authorized<Community> }) {
+function SubscriptionListItem(props: { value: Community }) {
   return (
     <li className="rounded-full ring-2 ring-transparent ring-offset-2 hover:ring-gray-300">
       <Tooltip place="top" text={props.value.name}>
-        <Link href={`/${props.value.authorship.author}`}>
+        <Link href={`/${props.value.id}`}>
           <Avatar size={16} value={props.value.extension.logo} />
         </Link>
       </Tooltip>
