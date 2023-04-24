@@ -87,7 +87,7 @@ export default function CommunityForm(props: {
             </FormItem>
           </GridItem6>
           <GridItem6>
-            <FormItem label="Community entry">
+            <FormItem label="Community entry link">
               <TextInput defaultValue={`${domain}/${props.author}`} disabled />
             </FormItem>
           </GridItem6>
