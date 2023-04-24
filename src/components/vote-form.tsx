@@ -28,12 +28,11 @@ import Slide from './basic/slide'
 import { formatDurationMs } from '../utils/time'
 import { previewPermalink } from '../utils/constants'
 import PermissionCard from './permission-card'
-import sleep from '../utils/sleep'
 
 export default function VoteForm(props: {
   group: Group
   proposal: Proposal & { permalink: string }
-  onSuccess: () => Promise<void>
+  onSuccess: () => void
   className?: string
 }) {
   const { onSuccess } = props
@@ -101,9 +100,9 @@ export default function VoteForm(props: {
   }, [resetField, setValue, votingPower])
   const handleSuccess = useCallback(async () => {
     setValue('choice', '')
-    await refetchChoices()
-    await refetchVoted()
-    await onSuccess()
+    refetchChoices()
+    refetchVoted()
+    onSuccess()
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
   const { data: status } = useStatus(props.proposal.permalink)
   const now = useMemo(() => new Date(), [])
@@ -142,8 +141,6 @@ export default function VoteForm(props: {
   const handleSubmit = useMutation<void, Error, Vote>(async (vote) => {
     const signed = await signDocument(vote)
     await mutateAsync(signed)
-    await sleep(10000)
-    await handleSuccess()
   })
   const defaultDid = useMemo(
     () => didOptions?.find(({ disabled }) => !disabled)?.did,
@@ -152,6 +149,11 @@ export default function VoteForm(props: {
   useEffect(() => {
     setDid(defaultDid || '')
   }, [defaultDid])
+  useEffect(() => {
+    if (handleSubmit.isSuccess) {
+      handleSuccess()
+    }
+  }, [handleSubmit.isSuccess, handleSuccess])
 
   return (
     <>

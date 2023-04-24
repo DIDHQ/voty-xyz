@@ -63,9 +63,13 @@ export default function WorkgroupForm(props: {
   const handleArchive = useMutation<void, Error, Group>(async (group) => {
     const signed = await signDocument(group)
     await mutateAsync(signed)
-    onArchive?.()
   })
   const isManager = useIsManager(props.communityId)
+  useEffect(() => {
+    if (handleArchive.isSuccess) {
+      onArchive?.()
+    }
+  }, [handleArchive.isSuccess, onArchive])
 
   return (
     <>
