@@ -6,13 +6,13 @@ import Textarea from './basic/textarea'
 
 export default function BooleanSetsBlock(props: {
   name: 'proposing'
-  entry: string
+  communityId: string
   disabled?: boolean
 }) {
   return (
     <BooleanUnitBlock
       name={props.name}
-      entry={props.entry}
+      communityId={props.communityId}
       index={0}
       disabled={props.disabled}
     />
@@ -21,7 +21,7 @@ export default function BooleanSetsBlock(props: {
 
 function BooleanUnitBlock(props: {
   name: 'proposing'
-  entry: string
+  communityId: string
   index: number
   disabled?: boolean
 }) {

@@ -21,7 +21,7 @@ export default function CreateEntryPage() {
         </TextButton>
         {query.community_id ? (
           <CommunityForm
-            author={query.community_id}
+            communityId={query.community_id}
             initialValue={null}
             preview={{
               from: router.asPath,

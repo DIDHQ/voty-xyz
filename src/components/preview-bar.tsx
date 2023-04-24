@@ -26,8 +26,8 @@ export default function PreviewBar() {
   const document = previewCommunity || previewGroup || previewProposal
   const preview = document?.preview
   const { data: community } = trpc.community.getById.useQuery(
-    { id: previewCommunity?.preview.author },
-    { enabled: !!previewCommunity?.preview.author },
+    { id: previewCommunity?.id },
+    { enabled: !!previewCommunity?.id },
   )
   const utils = trpc.useContext()
   useEffect(() => {

@@ -7,7 +7,7 @@ import Button from './basic/button'
 import Tooltip from './basic/tooltip'
 
 export default function CreateProposalButton(props: {
-  entry?: string
+  communityId?: string
   group?: Group & { permalink: string }
   className?: string
 }) {
@@ -15,7 +15,7 @@ export default function CreateProposalButton(props: {
 
   return status?.timestamp && props.group ? (
     <Link
-      href={`/${props.entry}/${props.group.id}/create`}
+      href={`/${props.communityId}/${props.group.id}/create`}
       className={props.className}
     >
       <Button primary icon={PlusIcon}>

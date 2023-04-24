@@ -23,7 +23,7 @@ import { previewGroupAtom } from '../utils/atoms'
 import { Preview } from '../utils/types'
 
 export default function WorkgroupForm(props: {
-  author: string
+  communityId: string
   initialValue: Group | null
   onArchive?: () => void
   preview: Preview
@@ -32,12 +32,12 @@ export default function WorkgroupForm(props: {
   const { onArchive } = props
   const router = useRouter()
   const { data } = trpc.group.getById.useQuery(
-    { community_id: props.author, id: props.initialValue?.id },
-    { enabled: !!props.author && !!props.initialValue?.id },
+    { community_id: props.communityId, id: props.initialValue?.id },
+    { enabled: !!props.communityId && !!props.initialValue?.id },
   )
   const { data: community } = trpc.community.getById.useQuery(
-    { id: props.author },
-    { enabled: !!props.author },
+    { id: props.communityId },
+    { enabled: !!props.communityId },
   )
   const [previewGroup, setPreviewGroup] = useAtom(previewGroupAtom)
   const group = previewGroup || props.initialValue || data || undefined
@@ -56,7 +56,7 @@ export default function WorkgroupForm(props: {
   }, [group, reset])
   const isNewGroup = !props.onArchive
   const signDocument = useSignDocument(
-    props.author,
+    props.communityId,
     `You are archiving workgroup on Voty\n\nhash:\n{sha256}`,
   )
   const { mutateAsync } = trpc.group.archive.useMutation()
@@ -68,7 +68,7 @@ export default function WorkgroupForm(props: {
     await mutateAsync(signed)
     onArchive?.()
   })
-  const isManager = useIsManager(props.author)
+  const isManager = useIsManager(props.communityId)
 
   return (
     <>
@@ -119,7 +119,7 @@ export default function WorkgroupForm(props: {
                 <FormProvider {...methods}>
                   <BooleanSetsBlock
                     name="proposing"
-                    entry={props.author}
+                    communityId={props.communityId}
                     disabled={!isManager}
                   />
                 </FormProvider>
@@ -137,7 +137,7 @@ export default function WorkgroupForm(props: {
                 <FormProvider {...methods}>
                   <DecimalSetsBlock
                     name="voting"
-                    entry={props.author}
+                    communityId={props.communityId}
                     disabled={!isManager}
                   />
                 </FormProvider>

@@ -26,7 +26,7 @@ export default function CommunitySettingsPage() {
         </TextButton>
         {query.community_id && community !== undefined ? (
           <CommunityForm
-            author={query.community_id}
+            communityId={query.community_id}
             initialValue={community}
             preview={{
               from: router.asPath,

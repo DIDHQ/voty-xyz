@@ -68,7 +68,7 @@ export default function CreateGroupPage() {
         </TextButton>
         {query.community_id && initialValue !== undefined ? (
           <WorkgroupForm
-            author={query.community_id}
+            communityId={query.community_id}
             initialValue={initialValue}
             preview={{
               from: `/${query.community_id}/create`,

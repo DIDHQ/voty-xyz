@@ -13,7 +13,7 @@ import Button from './basic/button'
 
 export default function DecimalSetsBlock(props: {
   name: 'voting'
-  entry: string
+  communityId: string
   disabled?: boolean
 }) {
   const { control } = useFormContext<Group>()
@@ -34,7 +34,7 @@ export default function DecimalSetsBlock(props: {
             <DecimalUnitBlock
               key={operand.id}
               name={props.name}
-              entry={props.entry}
+              communityId={props.communityId}
               index={index}
               length={fields.length}
               open={open === index}
@@ -50,7 +50,7 @@ export default function DecimalSetsBlock(props: {
           onClick={() => {
             append({
               function: 'prefixes_dot_suffix_fixed_power',
-              arguments: [props.entry, [], '1'],
+              arguments: [props.communityId, [], '1'],
             })
             setOpen(fields.length)
           }}
@@ -64,7 +64,7 @@ export default function DecimalSetsBlock(props: {
 
 function DecimalUnitBlock(props: {
   name: 'voting'
-  entry: string
+  communityId: string
   index: number
   length: number
   open: boolean

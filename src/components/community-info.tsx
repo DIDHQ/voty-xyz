@@ -139,7 +139,7 @@ export default function CommunityInfo(props: { className?: string }) {
               Community
               {previewCommunity ? null : (
                 <SubscriptionButton
-                  community={query.community_id}
+                  communityId={query.community_id}
                   className="float-right"
                 />
               )}

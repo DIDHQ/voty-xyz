@@ -63,7 +63,7 @@ export default function GroupIndexPage() {
             onChange={(p) => setPhase(p as Phase | 'All')}
           />
           <CreateProposalButton
-            entry={query.community_id}
+            communityId={query.community_id}
             group={group || undefined}
           />
         </div>

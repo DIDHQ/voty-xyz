@@ -37,7 +37,7 @@ export default function GroupSettingsPage() {
         </TextButton>
         {query.community_id && query.group_id && group !== undefined ? (
           <WorkgroupForm
-            author={query.community_id}
+            communityId={query.community_id}
             initialValue={group}
             onArchive={handleArchive}
             preview={{

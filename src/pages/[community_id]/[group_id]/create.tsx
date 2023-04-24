@@ -37,7 +37,7 @@ export default function CreateProposalPage() {
         {query.community_id && group ? (
           <ProposalForm
             initialValue={initialValue}
-            community={query.community_id}
+            communityId={query.community_id}
             group={group}
             className="pt-6 sm:pt-8"
           />

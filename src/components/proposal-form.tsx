@@ -35,7 +35,7 @@ import PermissionCard from './permission-card'
 
 export default function ProposalForm(props: {
   initialValue: Partial<Proposal>
-  community: string
+  communityId: string
   group: Group & { permalink: string }
   className?: string
 }) {
@@ -304,7 +304,7 @@ export default function ProposalForm(props: {
             setPreviewProposal({
               ...value,
               preview: {
-                from: `/${props.community}/${props.group.id}/create`,
+                from: `/${props.communityId}/${props.group.id}/create`,
                 to: `/proposal/${previewPermalink}`,
                 template: `You are creating proposal on Voty\n\nhash:\n{sha256}`,
                 author: did,
