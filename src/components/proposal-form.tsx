@@ -67,7 +67,7 @@ export default function ProposalForm(props: {
   )
   useEffect(() => {
     if (props.group) {
-      setValue('group', props.group.id)
+      setValue('group', props.group.permalink)
     }
   }, [props.group, setValue])
   const [did, setDid] = useState('')
