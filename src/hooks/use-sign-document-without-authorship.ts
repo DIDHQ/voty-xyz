@@ -6,7 +6,9 @@ import useWallet from './use-wallet'
 
 export default function useSignDocumentWithoutAuthorship(
   template?: string,
-): <T extends object>(document: T) => Promise<Proved<T>> {
+): <T extends { community_id: string; subscribe: boolean }>(
+  document: T,
+) => Promise<Proved<T>> {
   const { account, connect, signMessage } = useWallet()
 
   return useCallback(

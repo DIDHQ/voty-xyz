@@ -139,7 +139,7 @@ export default function CommunityInfo(props: { className?: string }) {
               Community
               {previewCommunity ? null : (
                 <SubscriptionButton
-                  entry={query.entry}
+                  community={query.entry}
                   className="float-right"
                 />
               )}
