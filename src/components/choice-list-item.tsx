@@ -74,7 +74,7 @@ export function ChoiceListItem(props: {
           disabled={props.disabled}
           onChange={() => null}
           className={clsx(
-            'h-4 w-4 border border-gray-300 text-primary-600 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600',
+            'h-4 w-4 cursor-pointer border border-gray-300 text-primary-600 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600',
             props.disabled ? undefined : 'group-hover:border-primary-400',
             type === 'single' ? undefined : 'rounded',
           )}
