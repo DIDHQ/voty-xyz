@@ -10,10 +10,10 @@ import { documentTitle } from '../../../utils/constants'
 import { Proposal } from '../../../utils/schemas/proposal'
 
 export default function CreateProposalPage() {
-  const query = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['community_id', 'group_id']>()
   const { data: group, isLoading } = trpc.group.getById.useQuery(
-    { community_id: query.entry, id: query.group },
-    { enabled: !!query.entry && !!query.group },
+    { community_id: query.community_id, id: query.group_id },
+    { enabled: !!query.community_id && !!query.group_id },
   )
   const initialValue = useMemo<Partial<Proposal>>(
     () => ({ voting_type: 'single', options: ['', ''] }),
@@ -28,16 +28,16 @@ export default function CreateProposalPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextButton
-          disabled={!query.entry || !query.group}
-          href={`/${query.entry}/${query.group}`}
+          disabled={!query.community_id || !query.group_id}
+          href={`/${query.community_id}/${query.group_id}`}
           className="mt-6 sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
         </TextButton>
-        {query.entry && group ? (
+        {query.community_id && group ? (
           <ProposalForm
             initialValue={initialValue}
-            community={query.entry}
+            community={query.community_id}
             group={group}
             className="pt-6 sm:pt-8"
           />

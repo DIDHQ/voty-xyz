@@ -20,11 +20,11 @@ import { previewProposalAtom } from '../../utils/atoms'
 import { Proposal } from '../../utils/schemas/proposal'
 
 export default function ProposalPage() {
-  const query = useRouterQuery<['proposal']>()
+  const query = useRouterQuery<['proposal_permalink']>()
   const previewProposal = useAtomValue(previewProposalAtom)
   const { data, isLoading, refetch } = trpc.proposal.getByPermalink.useQuery(
-    { permalink: query.proposal },
-    { enabled: !!query.proposal },
+    { permalink: query.proposal_permalink },
+    { enabled: !!query.proposal_permalink },
   )
   const proposal = useMemo<
     | (Proposal & {
@@ -42,10 +42,10 @@ export default function ProposalPage() {
         authorship: { author: previewProposal.preview.author },
       }
     }
-    return query.proposal && data
-      ? { ...data, permalink: query.proposal }
+    return query.proposal_permalink && data
+      ? { ...data, permalink: query.proposal_permalink }
       : undefined
-  }, [data, previewProposal, query.proposal])
+  }, [data, previewProposal, query.proposal_permalink])
   const { data: group, isLoading: isGroupLoading } =
     trpc.group.getByPermalink.useQuery(
       { permalink: proposal?.group },
@@ -62,8 +62,11 @@ export default function ProposalPage() {
     hasNextPage,
     refetch: refetchList,
   } = trpc.vote.list.useInfiniteQuery(
-    { proposal: query.proposal },
-    { enabled: !!query.proposal, getNextPageParam: ({ next }) => next },
+    { proposal: query.proposal_permalink },
+    {
+      enabled: !!query.proposal_permalink,
+      getNextPageParam: ({ next }) => next,
+    },
   )
   const votes = useMemo(() => list?.pages.flatMap(({ data }) => data), [list])
   const { ref, inView } = useInView()

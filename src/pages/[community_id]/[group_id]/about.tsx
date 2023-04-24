@@ -16,14 +16,14 @@ import GroupAbout from '../../../components/group-about'
 import { extractStartEmoji } from '../../../utils/emoji'
 
 export default function GroupAboutPage() {
-  const query = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['community_id', 'group_id']>()
   const previewGroup = useAtomValue(previewGroupAtom)
   const { data, isLoading } = trpc.group.getById.useQuery(
-    { community_id: query.entry, id: query.group },
-    { enabled: !!query.entry && !!query.group },
+    { community_id: query.community_id, id: query.group_id },
+    { enabled: !!query.community_id && !!query.group_id },
   )
   const group = previewGroup || data
-  const isManager = useIsManager(query.entry)
+  const isManager = useIsManager(query.community_id)
   const emoji = useMemo(() => extractStartEmoji(group?.name), [group?.name])
   const name = useMemo(
     () => group?.name.replace(emoji || '', ''),
@@ -61,7 +61,7 @@ export default function GroupAboutPage() {
           {group ? <GroupAbout group={group} className="mt-6" /> : null}
           {isManager && !previewGroup ? (
             <Link
-              href={`/${query.entry}/${query.group}/settings`}
+              href={`/${query.community_id}/${query.group_id}/settings`}
               className="mt-6 block w-fit sm:mt-8"
             >
               <Button icon={PencilIcon}>Edit</Button>

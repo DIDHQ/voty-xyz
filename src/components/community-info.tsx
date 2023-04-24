@@ -35,14 +35,14 @@ const SubscriptionButton = dynamic(() => import('./subscription-button'), {
 
 export default function CommunityInfo(props: { className?: string }) {
   const router = useRouter()
-  const query = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['community_id', 'group_id']>()
   const { data } = trpc.community.getById.useQuery(
-    { id: query.entry },
-    { enabled: !!query.entry },
+    { id: query.community_id },
+    { enabled: !!query.community_id },
   )
   const { data: list } = trpc.group.listByCommunity.useQuery(
-    { community_id: query.entry },
-    { enabled: !!query.entry },
+    { community_id: query.community_id },
+    { enabled: !!query.community_id },
   )
   const previewCommunity = useAtomValue(previewCommunityAtom)
   const previewGroup = useAtomValue(previewGroupAtom)
@@ -55,18 +55,18 @@ export default function CommunityInfo(props: { className?: string }) {
     () => [
       {
         name: 'Timeline',
-        href: `/${query.entry}`,
+        href: `/${query.community_id}`,
         icon: ClockIcon,
-        current: router.pathname === '/[entry]',
+        current: router.pathname === '/[community_id]',
       },
       {
         name: 'About',
-        href: `/${query.entry}/about`,
+        href: `/${query.community_id}/about`,
         icon: DocumentTextIcon,
-        current: router.pathname === '/[entry]/about',
+        current: router.pathname === '/[community_id]/about',
       },
     ],
-    [query.entry, router.pathname],
+    [query.community_id, router.pathname],
   )
   const externals = useMemo(
     () =>
@@ -97,7 +97,7 @@ export default function CommunityInfo(props: { className?: string }) {
         : [],
     [community],
   )
-  const isManager = useIsManager(query.entry)
+  const isManager = useIsManager(query.community_id)
   const title = useMemo(
     () => compact([community?.name, documentTitle]).join(' - '),
     [community?.name],
@@ -139,7 +139,7 @@ export default function CommunityInfo(props: { className?: string }) {
               Community
               {previewCommunity ? null : (
                 <SubscriptionButton
-                  community={query.entry}
+                  community={query.community_id}
                   className="float-right"
                 />
               )}
@@ -162,7 +162,7 @@ export default function CommunityInfo(props: { className?: string }) {
                 {previewCommunity || !isManager ? null : (
                   <TextButton
                     primary
-                    href={`/${query.entry}/create`}
+                    href={`/${query.community_id}/create`}
                     className="float-right"
                   >
                     <PlusIcon className="h-5 w-5" />
@@ -176,10 +176,10 @@ export default function CommunityInfo(props: { className?: string }) {
                     href={
                       previewCommunity
                         ? undefined
-                        : `/${query.entry}/${group.id}`
+                        : `/${query.community_id}/${group.id}`
                     }
                     icon={BriefcaseIcon}
-                    current={query.group === group.id}
+                    current={query.group_id === group.id}
                   >
                     {group.name}
                   </LinkListItem>
@@ -207,7 +207,10 @@ export default function CommunityInfo(props: { className?: string }) {
                 Want to join?
               </Button>
             ) : (
-              <Link href={`/${query.entry}/about#how-to-join`} className="mt-4">
+              <Link
+                href={`/${query.community_id}/about#how-to-join`}
+                className="mt-4"
+              >
                 <Button primary>Want to join?</Button>
               </Link>
             )

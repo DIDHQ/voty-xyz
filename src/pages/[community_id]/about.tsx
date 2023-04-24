@@ -13,12 +13,12 @@ import Markdown from '../../components/basic/markdown'
 import { previewCommunityAtom } from '../../utils/atoms'
 
 export default function CommunityAboutPage() {
-  const query = useRouterQuery<['entry']>()
+  const query = useRouterQuery<['community_id']>()
   const { data, isLoading } = trpc.community.getById.useQuery(
-    { id: query.entry },
-    { enabled: !!query.entry },
+    { id: query.community_id },
+    { enabled: !!query.community_id },
   )
-  const isManager = useIsManager(query.entry)
+  const isManager = useIsManager(query.community_id)
   const previewCommunity = useAtomValue(previewCommunityAtom)
   const community = previewCommunity || data
 
@@ -50,7 +50,7 @@ export default function CommunityAboutPage() {
       ) : null}
       {isManager && !previewCommunity ? (
         <Link
-          href={`/${query.entry}/settings`}
+          href={`/${query.community_id}/settings`}
           className="mt-6 block w-fit sm:mt-8"
         >
           <Button icon={PencilIcon}>Edit</Button>

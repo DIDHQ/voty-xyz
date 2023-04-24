@@ -11,15 +11,15 @@ import { Group } from '../../utils/schemas/group'
 import TextButton from '../../components/basic/text-button'
 
 export default function CreateGroupPage() {
-  const query = useRouterQuery<['entry']>()
+  const query = useRouterQuery<['community_id']>()
   const { data: community, isLoading } = trpc.community.getById.useQuery(
-    { id: query.entry },
-    { enabled: !!query.entry },
+    { id: query.community_id },
+    { enabled: !!query.community_id },
   )
   const newGroup = useMemo(() => nanoid(), [])
   const initialValue = useMemo(
     () =>
-      community && query.entry
+      community && query.community_id
         ? ({
             id: newGroup,
             name: '',
@@ -30,7 +30,7 @@ export default function CreateGroupPage() {
                 operands: [
                   {
                     function: 'prefixes_dot_suffix_exact_match',
-                    arguments: [query.entry, []],
+                    arguments: [query.community_id, []],
                   },
                 ],
               },
@@ -39,7 +39,7 @@ export default function CreateGroupPage() {
                 operands: [
                   {
                     function: 'prefixes_dot_suffix_fixed_power',
-                    arguments: [query.entry, [], '1'],
+                    arguments: [query.community_id, [], '1'],
                   },
                 ],
               },
@@ -53,7 +53,7 @@ export default function CreateGroupPage() {
             },
           } satisfies Group)
         : undefined,
-    [community, newGroup, query.entry],
+    [community, newGroup, query.community_id],
   )
 
   return (
@@ -63,18 +63,18 @@ export default function CreateGroupPage() {
       </Head>
       <LoadingBar loading={isLoading} />
       <div className="w-full">
-        <TextButton href={`/${query.entry}`} className="mt-6 sm:mt-8">
+        <TextButton href={`/${query.community_id}`} className="mt-6 sm:mt-8">
           <h2 className="text-base font-semibold">← Back</h2>
         </TextButton>
-        {query.entry && initialValue !== undefined ? (
+        {query.community_id && initialValue !== undefined ? (
           <WorkgroupForm
-            author={query.entry}
+            author={query.community_id}
             initialValue={initialValue}
             preview={{
-              from: `/${query.entry}/create`,
-              to: `/${query.entry}/${newGroup}/about`,
+              from: `/${query.community_id}/create`,
+              to: `/${query.community_id}/${newGroup}/about`,
               template: `You are creating workgroup on Voty\n\nhash:\n{sha256}`,
-              author: query.entry,
+              author: query.community_id,
             }}
             className="pt-6 sm:pt-8"
           />

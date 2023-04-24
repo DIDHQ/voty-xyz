@@ -13,15 +13,15 @@ import { documentTitle } from '../utils/constants'
 import { previewGroupAtom } from '../utils/atoms'
 
 export default function GroupInfo(props: { className?: string }) {
-  const query = useRouterQuery<['entry', 'group']>()
+  const query = useRouterQuery<['community_id', 'group_id']>()
   const { data: community } = trpc.community.getById.useQuery(
-    { id: query.entry },
-    { enabled: !!query.entry },
+    { id: query.community_id },
+    { enabled: !!query.community_id },
   )
   const previewGroup = useAtomValue(previewGroupAtom)
   const { data } = trpc.group.getById.useQuery(
-    { community_id: query.entry, id: query.group },
-    { enabled: !!query.entry && !!query.group },
+    { community_id: query.community_id, id: query.group_id },
+    { enabled: !!query.community_id && !!query.group_id },
   )
   const group = previewGroup || data
   const router = useRouter()
@@ -29,16 +29,16 @@ export default function GroupInfo(props: { className?: string }) {
     () => [
       {
         name: 'Proposals',
-        href: `/${query.entry}/${query.group}`,
-        current: router.pathname === '/[entry]/[group]',
+        href: `/${query.community_id}/${query.group_id}`,
+        current: router.pathname === '/[community_id]/[group_id]',
       },
       {
         name: 'About',
-        href: `/${query.entry}/${query.group}/about`,
-        current: router.pathname === '/[entry]/[group]/about',
+        href: `/${query.community_id}/${query.group_id}/about`,
+        current: router.pathname === '/[community_id]/[group_id]/about',
       },
     ],
-    [query.entry, query.group, router.pathname],
+    [query.community_id, query.group_id, router.pathname],
   )
   const emoji = useMemo(() => extractStartEmoji(group?.name), [group?.name])
   const name = useMemo(

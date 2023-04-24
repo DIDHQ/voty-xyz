@@ -8,28 +8,31 @@ import TextButton from '../../components/basic/text-button'
 
 export default function CommunitySettingsPage() {
   const router = useRouter()
-  const query = useRouterQuery<['entry']>()
+  const query = useRouterQuery<['community_id']>()
   const { data: community, isLoading } = trpc.community.getById.useQuery(
-    { id: query.entry },
-    { enabled: !!query.entry },
+    { id: query.community_id },
+    { enabled: !!query.community_id },
   )
 
   return (
     <>
       <LoadingBar loading={isLoading} />
       <div className="w-full">
-        <TextButton href={`/${query.entry}/about`} className="mt-6 sm:mt-8">
+        <TextButton
+          href={`/${query.community_id}/about`}
+          className="mt-6 sm:mt-8"
+        >
           <h2 className="text-base font-semibold">← Back</h2>
         </TextButton>
-        {query.entry && community !== undefined ? (
+        {query.community_id && community !== undefined ? (
           <CommunityForm
-            author={query.entry}
+            author={query.community_id}
             initialValue={community}
             preview={{
               from: router.asPath,
-              to: `/${query.entry}/about`,
+              to: `/${query.community_id}/about`,
               template: `You are updating community on Voty\n\nhash:\n{sha256}`,
-              author: query.entry,
+              author: query.community_id,
             }}
             className="flex w-full flex-col"
           />
