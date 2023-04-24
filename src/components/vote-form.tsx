@@ -28,6 +28,7 @@ import Slide from './basic/slide'
 import { formatDurationMs } from '../utils/time'
 import { previewPermalink } from '../utils/constants'
 import PermissionCard from './permission-card'
+import sleep from '../utils/sleep'
 
 export default function VoteForm(props: {
   group: Group
@@ -100,7 +101,9 @@ export default function VoteForm(props: {
   }, [resetField, setValue, votingPower])
   const handleSuccess = useCallback(async () => {
     setValue('choice', '')
-    await Promise.all([refetchChoices(), refetchVoted(), onSuccess()])
+    await refetchChoices()
+    await refetchVoted()
+    await onSuccess()
   }, [onSuccess, refetchVoted, refetchChoices, setValue])
   const { data: status } = useStatus(props.proposal.permalink)
   const now = useMemo(() => new Date(), [])
@@ -139,7 +142,8 @@ export default function VoteForm(props: {
   const handleSubmit = useMutation<void, Error, Vote>(async (vote) => {
     const signed = await signDocument(vote)
     await mutateAsync(signed)
-    handleSuccess()
+    await sleep(2000)
+    await handleSuccess()
   })
   const defaultDid = useMemo(
     () => didOptions?.find(({ disabled }) => !disabled)?.did,

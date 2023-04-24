@@ -86,7 +86,8 @@ export default function ProposalPage() {
     [community?.name, proposal?.title, group?.name],
   )
   const handleSuccess = useCallback(async () => {
-    await Promise.all([refetch(), refetchList()])
+    await refetch()
+    await refetchList()
   }, [refetch, refetchList])
 
   return (

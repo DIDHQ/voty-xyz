@@ -125,6 +125,12 @@ export const voteRouter = router({
           where: { id: community.id },
           data: { votes: { increment: 1 } },
         }),
+        database.group.update({
+          where: {
+            id_community_id: { community_id: community.id, id: group.id },
+          },
+          data: { votes: { increment: 1 } },
+        }),
         ...Object.entries(
           powerOfChoice(
             proposal.voting_type,
