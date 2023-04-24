@@ -1,11 +1,19 @@
-import { createNextApiHandler } from '@trpc/server/adapters/next'
+import {
+  CreateNextContextOptions,
+  createNextApiHandler,
+} from '@trpc/server/adapters/next'
 import * as Sentry from '@sentry/nextjs'
 
 import { appRouter } from '../../../server/routers/_app'
 import { cacheControl } from '../../../utils/constants'
 
+export const createContext = async ({ req, res }: CreateNextContextOptions) => {
+  return { req, res }
+}
+
 export default createNextApiHandler({
   router: appRouter,
+  createContext,
   responseMeta({ type, errors }) {
     if (errors.length === 0 && type === 'query') {
       return { headers: { [cacheControl[0]]: cacheControl[1] } }
