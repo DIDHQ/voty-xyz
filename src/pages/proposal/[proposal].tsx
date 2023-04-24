@@ -113,6 +113,7 @@ export default function ProposalPage() {
             </div>
             <ProposalInfo
               community={community || undefined}
+              group={group || undefined}
               proposal={proposal}
               className="mb-6 block sm:hidden"
             />
@@ -191,6 +192,7 @@ export default function ProposalPage() {
           </div>
           <ProposalInfo
             community={community || undefined}
+            group={group || undefined}
             proposal={proposal}
             className="hidden sm:block"
           />

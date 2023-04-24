@@ -6,8 +6,8 @@ import {
   previewPermalink,
 } from '../utils/constants'
 import { Community } from '../utils/schemas/community'
+import { Group } from '../utils/schemas/group'
 import { Proposal } from '../utils/schemas/proposal'
-import { trpc } from '../utils/trpc'
 import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import Markdown from './basic/markdown'
@@ -19,16 +19,13 @@ import { formatNumber } from '../utils/number'
 
 export default function ProposalInfo(props: {
   community?: Community
+  group?: Group
   proposal?: Proposal & {
     permalink: string | PreviewPermalink
     authorship?: { author?: string }
   }
   className?: string
 }) {
-  const { data: group } = trpc.group.getById.useQuery(
-    { community_id: props.community?.id, id: props.proposal?.group },
-    { enabled: !!props.community?.id && !!props.proposal?.group },
-  )
   const disabled = props.proposal?.permalink === previewPermalink
 
   return (
@@ -40,11 +37,11 @@ export default function ProposalInfo(props: {
     >
       <ProposalProgress
         proposal={props.proposal?.permalink}
-        phase={group?.duration}
+        phase={props.group?.duration}
       />
       <DetailList title="Criteria for approval">
         <Article small className="pt-2">
-          <Markdown>{group?.extension.terms_and_conditions}</Markdown>
+          <Markdown>{props.group?.extension.terms_and_conditions}</Markdown>
         </Article>
       </DetailList>
       <DetailList title="Information">
@@ -62,13 +59,13 @@ export default function ProposalInfo(props: {
           )}
         </DetailItem>
         <DetailItem title="Workgroup" className="truncate whitespace-nowrap">
-          {group && props.community ? (
+          {props.group && props.community ? (
             <TextButton
               underline
               disabled={disabled}
-              href={`/${props.community.id}/${group.id}`}
+              href={`/${props.community.id}/${props.group.id}`}
             >
-              {group.name}
+              {props.group.name}
             </TextButton>
           ) : (
             '...'
