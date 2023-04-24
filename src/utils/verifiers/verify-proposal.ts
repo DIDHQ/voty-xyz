@@ -36,7 +36,7 @@ export default async function verifyProposal(
   ) {
     throw new TRPCError({
       code: 'FORBIDDEN',
-      message: 'Proposing permission denied',
+      message: 'Permission denied',
     })
   }
 

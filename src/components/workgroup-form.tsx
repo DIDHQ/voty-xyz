@@ -61,9 +61,6 @@ export default function WorkgroupForm(props: {
   )
   const { mutateAsync } = trpc.group.archive.useMutation()
   const handleArchive = useMutation<void, Error, Group>(async (group) => {
-    if (!props.initialValue) {
-      return
-    }
     const signed = await signDocument(group)
     await mutateAsync(signed)
     onArchive?.()

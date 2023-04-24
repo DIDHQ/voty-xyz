@@ -26,5 +26,12 @@ export default async function verifyGroup(
   }
   const community = schema.parse(storage.data)
 
+  if (community.id !== group.authorship.author) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'Permission denied',
+    })
+  }
+
   return { community }
 }

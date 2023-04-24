@@ -124,33 +124,21 @@ export const groupRouter = router({
 
       return permalink
     }),
-  archive: procedure
-    .input(
-      schema
-        .refine(
-          (group) => group.id === group.authorship.author,
-          'Permission denied',
-        )
-        .refine(
-          (group) => group.id.indexOf('.') === group.id.lastIndexOf('.'),
-          'Cannot create group with SubDID',
-        ),
-    )
-    .mutation(async ({ input }) => {
-      await verifySnapshot(input.authorship)
-      await verifyProof(input)
-      await verifyAuthorship(input.authorship, input.proof)
-      const { community } = await verifyGroup(input)
+  archive: procedure.input(schema).mutation(async ({ input }) => {
+    await verifySnapshot(input.authorship)
+    await verifyProof(input)
+    await verifyAuthorship(input.authorship, input.proof)
+    const { community } = await verifyGroup(input)
 
-      await database.group.delete({
-        where: {
-          id_community_id: {
-            community_id: community.id,
-            id: input.id,
-          },
+    await database.group.delete({
+      where: {
+        id_community_id: {
+          community_id: community.id,
+          id: input.id,
         },
-      })
-    }),
+      },
+    })
+  }),
 })
 
 export type GroupRouter = typeof groupRouter
