@@ -142,7 +142,7 @@ export default function VoteForm(props: {
   const handleSubmit = useMutation<void, Error, Vote>(async (vote) => {
     const signed = await signDocument(vote)
     await mutateAsync(signed)
-    await sleep(5000)
+    await sleep(10000)
     await handleSuccess()
   })
   const defaultDid = useMemo(
