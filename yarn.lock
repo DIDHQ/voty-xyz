@@ -4114,10 +4114,10 @@ domexception@^4.0.0:
   dependencies:
     webidl-conversions "^7.0.0"
 
-dotbit@0.4.19:
-  version "0.4.19"
-  resolved "https://registry.yarnpkg.com/dotbit/-/dotbit-0.4.19.tgz#bb253bbacaba11357f9bb085a7161fadf6ca1a1d"
-  integrity sha512-flLTUrf4oaeRDl4TjLH2mUc6zVyIWlRLyZF/ZJcB3mHL0fkHbKoVQfiTVqrIarJmqbR37KyYbGXbbZre9QUOuw==
+dotbit@0.4.20:
+  version "0.4.20"
+  resolved "https://registry.yarnpkg.com/dotbit/-/dotbit-0.4.20.tgz#e56c37da7c967e3a91a18587b6edc4a640848d0d"
+  integrity sha512-GEpyrSOr08QLUYv+7cjwrvPC6VWeiPowDfXndsZYyXCWFjHf+JpKj3Uv8SPfVIVX2wFX6EYBDXsXBpWpwT9sqg==
   dependencies:
     "@ethersproject/providers" "^5.7.2"
     "@metamask/eth-sig-util" "^5.0.2"

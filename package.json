@@ -31,7 +31,7 @@
     "connectkit": "1.2.3",
     "dayjs": "1.11.7",
     "decimal.js": "10.4.3",
-    "dotbit": "0.4.19",
+    "dotbit": "0.4.20",
     "emoji-regex": "10.2.1",
     "ethers": "5.7.2",
     "jotai": "2.0.4",
