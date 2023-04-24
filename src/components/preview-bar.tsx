@@ -80,6 +80,9 @@ export default function PreviewBar() {
           community_id: signed.authorship.author,
           id: signed.id,
         }),
+        utils.group.listByCommunity.prefetch({
+          community_id: signed.authorship.author,
+        }),
         utils.proposal.list.prefetch({
           community_id: signed.authorship.author,
           group_id: signed.id,

@@ -44,7 +44,8 @@ export default function CommunityForm(props: {
   } = methods
   useEffect(() => {
     reset(community)
-  }, [reset, community])
+    setValue('id', props.author)
+  }, [reset, community, setValue, props.author])
   const isNewCommunity = !props.initialValue
   const isManager = useIsManager(props.author)
 

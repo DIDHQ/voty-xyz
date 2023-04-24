@@ -31,12 +31,14 @@ export default function WorkgroupForm(props: {
 }) {
   const { onArchive } = props
   const router = useRouter()
-  const { data } = trpc.group.getById.useQuery({
-    id: props.author,
-  })
-  const { data: community } = trpc.community.getById.useQuery({
-    id: props.author,
-  })
+  const { data } = trpc.group.getById.useQuery(
+    { community_id: props.author, id: props.initialValue?.id },
+    { enabled: !!props.author && !!props.initialValue?.id },
+  )
+  const { data: community } = trpc.community.getById.useQuery(
+    { id: props.author },
+    { enabled: !!props.author },
+  )
   const [previewGroup, setPreviewGroup] = useAtom(previewGroupAtom)
   const group = previewGroup || props.initialValue || data || undefined
   const methods = useForm<Group>({
