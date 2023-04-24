@@ -20,16 +20,16 @@ export default async function verifyVote(
   proposal: Proved<Authorized<Proposal>>
   group: Proved<Authorized<Group>>
 }> {
-  const [timestamp, data] = await Promise.all([
+  const [timestamp, storage] = await Promise.all([
     getPermalinkSnapshot(vote.proposal).then((snapshot) =>
       getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
     ),
     database.storage.findUnique({ where: { permalink: vote.proposal } }),
   ])
-  if (!timestamp || !data) {
+  if (!timestamp || !storage) {
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Proposal not found' })
   }
-  const proposal = schema.parse(data.data)
+  const proposal = schema.parse(storage.data)
   const { group } = await verifyProposal(proposal)
 
   if (getPhase(new Date(), timestamp, group.duration) !== Phase.VOTING) {

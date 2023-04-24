@@ -91,7 +91,7 @@ export const voteRouter = router({
 
       return mapValues(
         keyBy(votes, ({ voter }) => voter),
-        ({ permalink }) => schema.parse(storages[permalink]).power,
+        ({ permalink }) => schema.parse(storages[permalink].data).power,
       )
     }),
   create: procedure

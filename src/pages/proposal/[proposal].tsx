@@ -4,7 +4,6 @@ import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
-import { useRouter } from 'next/router'
 
 import { stringifyChoice } from '../../utils/choice'
 import { permalink2Explorer } from '../../utils/permalink'
@@ -22,19 +21,23 @@ import { Proposal } from '../../utils/schemas/proposal'
 
 export default function ProposalPage() {
   const query = useRouterQuery<['proposal']>()
-  const router = useRouter()
   const previewProposal = useAtomValue(previewProposalAtom)
   const { data, isLoading, refetch } = trpc.proposal.getByPermalink.useQuery(
     { permalink: query.proposal },
     { enabled: !!query.proposal },
   )
   const proposal = useMemo<
-    | (Proposal & { permalink: string; authorship?: { author?: string } })
+    | (Proposal & {
+        votes: number
+        permalink: string
+        authorship?: { author?: string }
+      })
     | undefined
   >(() => {
     if (previewProposal) {
       return {
         ...previewProposal,
+        votes: 0,
         permalink: previewPermalink,
         authorship: { author: previewProposal.preview.author },
       }
@@ -81,10 +84,7 @@ export default function ProposalPage() {
   )
   const handleSuccess = useCallback(async () => {
     await Promise.all([refetch(), refetchList()])
-    setTimeout(() => {
-      router.reload()
-    }, 5000)
-  }, [refetch, refetchList, router])
+  }, [refetch, refetchList])
 
   return (
     <>
@@ -124,7 +124,7 @@ export default function ProposalPage() {
                 onSuccess={handleSuccess}
               />
             ) : null}
-            {proposal && 'votes' in proposal && proposal?.votes ? (
+            {proposal?.votes ? (
               <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
                 {proposal.votes === 1 ? '1 Vote' : `${proposal.votes} Votes`}
               </h2>

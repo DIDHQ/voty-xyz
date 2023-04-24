@@ -16,16 +16,16 @@ export default async function verifyProposal(
 ): Promise<{
   group: Proved<Authorized<Group>>
 }> {
-  const [timestamp, data] = await Promise.all([
+  const [timestamp, storage] = await Promise.all([
     getPermalinkSnapshot(proposal.group).then((snapshot) =>
       getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
     ),
     database.storage.findUnique({ where: { permalink: proposal.group } }),
   ])
-  if (!timestamp || !data) {
+  if (!timestamp || !storage) {
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Group not found' })
   }
-  const group = schema.parse(data.data)
+  const group = schema.parse(storage.data)
 
   if (
     !(await checkBoolean(

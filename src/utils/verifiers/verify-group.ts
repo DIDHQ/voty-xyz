@@ -15,16 +15,16 @@ export default async function verifyGroup(
 ): Promise<{
   community: Proved<Authorized<Community>>
 }> {
-  const [timestamp, data] = await Promise.all([
+  const [timestamp, storage] = await Promise.all([
     getPermalinkSnapshot(group.community).then((snapshot) =>
       getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
     ),
     database.storage.findUnique({ where: { permalink: group.community } }),
   ])
-  if (!timestamp || !data) {
+  if (!timestamp || !storage) {
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Community not found' })
   }
-  const community = schema.parse(data.data)
+  const community = schema.parse(storage.data)
 
   return { community }
 }

@@ -27,7 +27,7 @@ const schema = proved(authorized(proposalSchema))
 export const proposalRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(schema.nullable())
+    .output(schema.extend({ votes: z.number() }).nullable())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -70,7 +70,9 @@ export const proposalRouter = router({
       const storage = await database.storage.findUnique({
         where: { permalink: input.permalink },
       })
-      return storage ? schema.parse(storage.data) : null
+      return storage && proposal
+        ? { ...schema.parse(storage.data), votes: proposal.votes }
+        : null
     }),
   list: procedure
     .input(
