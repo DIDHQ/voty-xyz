@@ -62,23 +62,24 @@ model Proposal {
 }
 
 model Vote {
-  permalink          String
-  proposal_permalink String
+  permalink String
+  target    String
+  voter     String
 
-  voter String
+  power Decimal
   ts    DateTime
 
   @@id([permalink])
-  @@unique([proposal_permalink, voter])
+  @@unique([target, voter])
 }
 
 model Choice {
-  proposal_permalink String
-  option             String
+  target String
+  path   String
 
   power Decimal
 
-  @@id([proposal_permalink, option])
+  @@id([target, path])
 }
 
 model Subscription {
