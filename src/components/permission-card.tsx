@@ -45,7 +45,9 @@ export default function PermissionCard(props: {
                 ) : (
                   <>
                     All SubDIDs of&nbsp;
-                    {<Tag>{operand.arguments[0]}</Tag>}
+                    <Tag primary={didSet.has(operand.arguments[0])}>
+                      {operand.arguments[0]}
+                    </Tag>
                   </>
                 )}
               </span>
