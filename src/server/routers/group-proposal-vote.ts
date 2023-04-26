@@ -6,8 +6,8 @@ import Decimal from 'decimal.js'
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
-import { voteSchema } from '../../utils/schemas/vote'
-import verifyVote from '../../utils/verifiers/verify-vote'
+import { groupProposalVoteSchema } from '../../utils/schemas/group-proposal-vote'
+import verifyGroupProposalVote from '../../utils/verifiers/verify-group-proposal-vote'
 import { powerOfChoice } from '../../utils/choice'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
@@ -16,13 +16,13 @@ import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGroup from '../../utils/verifiers/verify-group'
 
-const schema = proved(authorized(voteSchema))
+const schema = proved(authorized(groupProposalVoteSchema))
 
-export const voteRouter = router({
+export const groupProposalVoteRouter = router({
   list: procedure
     .input(
       z.object({
-        proposal: z.string().optional(),
+        groupProposal: z.string().optional(),
         cursor: z.string().optional(),
       }),
     )
@@ -33,12 +33,12 @@ export const voteRouter = router({
       }),
     )
     .query(async ({ input }) => {
-      if (!input.proposal) {
+      if (!input.groupProposal) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const votes = await database.vote.findMany({
-        where: { proposal_permalink: input.proposal },
+      const groupProposalVotes = await database.groupProposalVote.findMany({
+        where: { proposalPermalink: input.groupProposal },
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
         take: 20,
         skip: input.cursor ? 1 : 0,
@@ -47,14 +47,18 @@ export const voteRouter = router({
 
       const storages = keyBy(
         await database.storage.findMany({
-          where: { permalink: { in: votes.map(({ permalink }) => permalink) } },
+          where: {
+            permalink: {
+              in: groupProposalVotes.map(({ permalink }) => permalink),
+            },
+          },
         }),
         ({ permalink }) => permalink,
       )
 
       return {
         data: compact(
-          votes
+          groupProposalVotes
             .filter(({ permalink }) => storages[permalink])
             .map(({ permalink }) => {
               try {
@@ -67,30 +71,34 @@ export const voteRouter = router({
               }
             }),
         ),
-        next: last(votes)?.permalink,
+        next: last(groupProposalVotes)?.permalink,
       }
     }),
-  groupByProposal: procedure
-    .input(z.object({ proposal: z.string().optional() }))
+  groupByVoter: procedure
+    .input(z.object({ groupProposal: z.string().optional() }))
     .output(z.record(z.string(), z.string()))
     .query(async ({ input }) => {
-      if (!input.proposal) {
+      if (!input.groupProposal) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const votes = await database.vote.findMany({
-        where: { proposal_permalink: input.proposal },
+      const groupProposalVotes = await database.groupProposalVote.findMany({
+        where: { proposalPermalink: input.groupProposal },
       })
 
       const storages = keyBy(
         await database.storage.findMany({
-          where: { permalink: { in: votes.map(({ permalink }) => permalink) } },
+          where: {
+            permalink: {
+              in: groupProposalVotes.map(({ permalink }) => permalink),
+            },
+          },
         }),
         ({ permalink }) => permalink,
       )
 
       return mapValues(
-        keyBy(votes, ({ voter }) => voter),
+        keyBy(groupProposalVotes, ({ voter }) => voter),
         ({ permalink }) => schema.parse(storages[permalink].data).power,
       )
     }),
@@ -101,52 +109,52 @@ export const voteRouter = router({
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
-      const { proposal, group } = await verifyVote(input)
+      const { groupProposal, group } = await verifyGroupProposalVote(input)
       const { community } = await verifyGroup(group)
 
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
       await database.$transaction([
-        database.vote.create({
+        database.groupProposalVote.create({
           data: {
             permalink,
             ts,
             voter: input.authorship.author,
-            proposal_permalink: input.proposal,
+            proposalPermalink: input.group_proposal,
           },
         }),
         database.storage.create({ data: { permalink, data: input } }),
-        database.proposal.update({
-          where: { permalink: input.proposal },
+        database.groupProposal.update({
+          where: { permalink: input.group_proposal },
           data: { votes: { increment: 1 } },
         }),
         database.community.update({
           where: { id: community.id },
-          data: { votes: { increment: 1 } },
+          data: { groupProposalVotes: { increment: 1 } },
         }),
         database.group.update({
           where: {
-            id_community_id: { community_id: community.id, id: group.id },
+            id_communityId: { communityId: community.id, id: group.id },
           },
           data: { votes: { increment: 1 } },
         }),
         ...Object.entries(
           powerOfChoice(
-            proposal.voting_type,
+            groupProposal.voting_type,
             input.choice,
             new Decimal(input.power),
           ),
         ).map(([option, power = 0]) =>
-          database.choice.upsert({
+          database.groupProposalVoteChoice.upsert({
             where: {
-              proposal_permalink_option: {
-                proposal_permalink: input.proposal,
+              proposalPermalink_option: {
+                proposalPermalink: input.group_proposal,
                 option,
               },
             },
             create: {
-              proposal_permalink: input.proposal,
+              proposalPermalink: input.group_proposal,
               option,
               power,
             },
@@ -161,4 +169,4 @@ export const voteRouter = router({
     }),
 })
 
-export type VoteRouter = typeof voteRouter
+export type GroupProposalVoteRouter = typeof groupProposalVoteRouter

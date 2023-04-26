@@ -40,8 +40,8 @@ export default function CommunityInfo(props: { className?: string }) {
     { id: query.community_id },
     { enabled: !!query.community_id },
   )
-  const { data: list } = trpc.group.listByCommunity.useQuery(
-    { community_id: query.community_id },
+  const { data: list } = trpc.group.listByCommunityId.useQuery(
+    { communityId: query.community_id },
     { enabled: !!query.community_id },
   )
   const previewCommunity = useAtomValue(previewCommunityAtom)

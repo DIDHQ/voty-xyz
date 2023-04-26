@@ -1,18 +1,18 @@
 import { router } from '../trpc'
-import { choiceRouter } from './choice'
+import { groupProposalVoteChoiceRouter } from './choice'
 import { communityRouter } from './community'
 import { groupRouter } from './group'
-import { proposalRouter } from './proposal'
+import { groupProposalRouter } from './group-proposal'
 import { subscriptionRouter } from './subscription'
-import { voteRouter } from './vote'
+import { groupProposalVoteRouter } from './group-proposal-vote'
 
 export const appRouter = router({
-  choice: choiceRouter,
   community: communityRouter,
   group: groupRouter,
-  proposal: proposalRouter,
+  groupProposal: groupProposalRouter,
+  groupProposalVote: groupProposalVoteRouter,
+  groupProposalVoteChoice: groupProposalVoteChoiceRouter,
   subscription: subscriptionRouter,
-  vote: voteRouter,
 })
 
 export type AppRouter = typeof appRouter

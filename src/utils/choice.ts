@@ -1,10 +1,10 @@
 import Decimal from 'decimal.js'
 import { uniq, without } from 'lodash-es'
 
-import { Proposal } from './schemas/proposal'
+import { GroupProposal } from './schemas/group-proposal'
 
 export function updateChoice(
-  type: Proposal['voting_type'],
+  type: GroupProposal['voting_type'],
   choice: string | undefined,
   option: string,
 ): string {
@@ -27,7 +27,7 @@ export function updateChoice(
 }
 
 export function checkChoice(
-  type: Proposal['voting_type'],
+  type: GroupProposal['voting_type'],
   choice: string,
   option: string,
 ): boolean {
@@ -45,7 +45,7 @@ export function checkChoice(
 }
 
 export function powerOfChoice(
-  type: Proposal['voting_type'],
+  type: GroupProposal['voting_type'],
   choice: string,
   power: Decimal,
 ): { [option: string]: Decimal | undefined } {
@@ -67,7 +67,7 @@ export function powerOfChoice(
 }
 
 export function choiceIsEmpty(
-  type: Proposal['voting_type'],
+  type: GroupProposal['voting_type'],
   choice: string | undefined,
 ): boolean {
   if (type === 'single') {
@@ -79,7 +79,10 @@ export function choiceIsEmpty(
   return true
 }
 
-export function stringifyChoice(type: Proposal['voting_type'], choice: string) {
+export function stringifyChoice(
+  type: GroupProposal['voting_type'],
+  choice: string,
+) {
   try {
     if (type === 'single') {
       return JSON.parse(choice) as string

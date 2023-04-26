@@ -6,7 +6,7 @@ import { Group } from '../utils/schemas/group'
 import Button from './basic/button'
 import Tooltip from './basic/tooltip'
 
-export default function CreateProposalButton(props: {
+export default function GroupProposalCreateButton(props: {
   communityId?: string
   group?: Group & { permalink: string }
   className?: string

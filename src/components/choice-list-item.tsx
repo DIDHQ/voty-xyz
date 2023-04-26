@@ -4,8 +4,8 @@ import Decimal from 'decimal.js'
 import { useMemo } from 'react'
 import { gray } from 'tailwindcss/colors'
 
-import { ChoiceRouter } from '../server/routers/choice'
-import { Proposal } from '../utils/schemas/proposal'
+import { GroupProposalVoteChoiceRouter } from '../server/routers/choice'
+import { GroupProposal } from '../utils/schemas/group-proposal'
 import {
   powerOfChoice,
   choiceIsEmpty,
@@ -14,10 +14,10 @@ import {
 } from '../utils/choice'
 
 export function ChoiceListItem(props: {
-  type: Proposal['voting_type']
+  type: GroupProposal['voting_type']
   option: string
   votingPower?: Decimal
-  choices?: inferRouterOutputs<ChoiceRouter>['groupByProposal']
+  choices?: inferRouterOutputs<GroupProposalVoteChoiceRouter>['groupByProposal']
   disabled?: boolean
   value: string
   onChange(value: string): void

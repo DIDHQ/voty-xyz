@@ -4,8 +4,8 @@ import { z } from 'zod'
 import { choiceIsEmpty } from '../choice'
 import { decimalSchema } from './decimal'
 
-export const voteSchema = z.object({
-  proposal: z.string().min(1),
+export const groupProposalVoteSchema = z.object({
+  group_proposal: z.string().min(1),
   choice: z
     .string()
     .refine(
@@ -18,4 +18,4 @@ export const voteSchema = z.object({
   }),
 })
 
-export type Vote = z.infer<typeof voteSchema>
+export type GroupProposalVote = z.infer<typeof groupProposalVoteSchema>

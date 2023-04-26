@@ -8,11 +8,14 @@ import pMap from 'p-map'
 import clsx from 'clsx'
 
 import { calculateDecimal } from '../utils/functions/number'
-import { Vote, voteSchema } from '../utils/schemas/vote'
+import {
+  GroupProposalVote,
+  groupProposalVoteSchema,
+} from '../utils/schemas/group-proposal-vote'
 import { trpc } from '../utils/trpc'
 import useStatus from '../hooks/use-status'
 import { getPhase, Phase } from '../utils/phase'
-import { Proposal } from '../utils/schemas/proposal'
+import { GroupProposal } from '../utils/schemas/group-proposal'
 import { Group } from '../utils/schemas/group'
 import { FormItem } from './basic/form'
 import useWallet from '../hooks/use-wallet'
@@ -29,20 +32,22 @@ import { formatDurationMs } from '../utils/time'
 import { previewPermalink } from '../utils/constants'
 import PermissionCard from './permission-card'
 
-export default function VoteForm(props: {
+export default function GroupProposalVoteForm(props: {
   group: Group
-  proposal: Proposal & { permalink: string }
+  groupProposal: GroupProposal & { permalink: string }
   onSuccess: () => void
   className?: string
 }) {
   const { onSuccess } = props
   const { data: choices, refetch: refetchChoices } =
-    trpc.choice.groupByProposal.useQuery({ proposal: props.proposal.permalink })
+    trpc.groupProposalVoteChoice.groupByProposal.useQuery({
+      groupProposal: props.groupProposal.permalink,
+    })
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
-  const { data: dids } = useDids(account, props.proposal.snapshots)
+  const { data: dids } = useDids(account, props.groupProposal.snapshots)
   const { data: powers } = useQuery(
-    [dids, props.group, props.proposal.snapshots],
+    [dids, props.group, props.groupProposal.snapshots],
     async () => {
       const decimals = await pMap(
         dids!,
@@ -50,7 +55,7 @@ export default function VoteForm(props: {
           calculateDecimal(
             props.group.permission.voting,
             did,
-            props.proposal.snapshots,
+            props.groupProposal.snapshots,
           ),
         { concurrency: 5 },
       )
@@ -62,12 +67,12 @@ export default function VoteForm(props: {
     { enabled: !!dids },
   )
   const { data: voted, refetch: refetchVoted } =
-    trpc.vote.groupByProposal.useQuery(
-      { proposal: props.proposal.permalink },
-      { enabled: !!props.proposal.permalink },
+    trpc.groupProposalVote.groupByVoter.useQuery(
+      { groupProposal: props.groupProposal.permalink },
+      { enabled: !!props.groupProposal.permalink },
     )
-  const methods = useForm<Vote>({
-    resolver: zodResolver(voteSchema),
+  const methods = useForm<GroupProposalVote>({
+    resolver: zodResolver(groupProposalVoteSchema),
   })
   const {
     setValue,
@@ -77,17 +82,17 @@ export default function VoteForm(props: {
     handleSubmit: onSubmit,
   } = methods
   useEffect(() => {
-    if (props.proposal.permalink) {
-      setValue('proposal', props.proposal.permalink)
+    if (props.groupProposal.permalink) {
+      setValue('group_proposal', props.groupProposal.permalink)
     }
-  }, [props.proposal.permalink, setValue])
+  }, [props.groupProposal.permalink, setValue])
   const { data: votingPower } = useQuery(
-    ['votingPower', props.group, did, props.proposal],
+    ['votingPower', props.group, did, props.groupProposal],
     () =>
       calculateDecimal(
         props.group.permission.voting,
         did!,
-        props.proposal.snapshots,
+        props.groupProposal.snapshots,
       ),
     { enabled: !!did },
   )
@@ -98,7 +103,7 @@ export default function VoteForm(props: {
       setValue('power', votingPower.toString())
     }
   }, [resetField, setValue, votingPower])
-  const { data: status } = useStatus(props.proposal.permalink)
+  const { data: status } = useStatus(props.groupProposal.permalink)
   const now = useMemo(() => new Date(), [])
   const phase = useMemo(
     () => getPhase(now, status?.timestamp, props.group.duration),
@@ -127,15 +132,17 @@ export default function VoteForm(props: {
         : undefined,
     [dids, powers, voted],
   )
-  const { mutateAsync } = trpc.vote.create.useMutation()
+  const { mutateAsync } = trpc.groupProposalVote.create.useMutation()
   const signDocument = useSignDocument(
     did,
     `You are voting on Voty\n\nhash:\n{sha256}`,
   )
-  const handleSubmit = useMutation<void, Error, Vote>(async (vote) => {
-    const signed = await signDocument(vote)
-    await mutateAsync(signed)
-  })
+  const handleSubmit = useMutation<void, Error, GroupProposalVote>(
+    async (vote) => {
+      const signed = await signDocument(vote)
+      await mutateAsync(signed)
+    },
+  )
   const defaultDid = useMemo(
     () => didOptions?.find(({ disabled }) => !disabled)?.did,
     [didOptions],
@@ -179,10 +186,10 @@ export default function VoteForm(props: {
                 role="list"
                 className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
               >
-                {props.proposal.options.map((option) => (
+                {props.groupProposal.options.map((option) => (
                   <ChoiceListItem
                     key={option}
-                    type={props.proposal.voting_type}
+                    type={props.groupProposal.voting_type}
                     option={option}
                     votingPower={votingPower}
                     choices={choices}
@@ -195,7 +202,7 @@ export default function VoteForm(props: {
             )}
           />
         </FormItem>
-        {props.proposal.permalink === previewPermalink ? null : phase ===
+        {props.groupProposal.permalink === previewPermalink ? null : phase ===
           Phase.ENDED ? (
           <p className="mt-6 text-end text-gray-500">Voting has ended</p>
         ) : (

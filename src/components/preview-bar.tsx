@@ -7,9 +7,9 @@ import useSignDocument from '../hooks/use-sign-document'
 import {
   previewCommunityAtom,
   previewGroupAtom,
-  previewProposalAtom,
+  previewGroupProposalAtom,
 } from '../utils/atoms'
-import { isCommunity, isGroup, isProposal } from '../utils/data-type'
+import { isCommunity, isGroup, isGroupProposal } from '../utils/data-type'
 import { trpc } from '../utils/trpc'
 import { Preview } from '../utils/types'
 import Button from './basic/button'
@@ -22,7 +22,9 @@ export default function PreviewBar() {
   const router = useRouter()
   const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
   const [previewGroup, setPreviewGroup] = useAtom(previewGroupAtom)
-  const [previewProposal, setPreviewProposal] = useAtom(previewProposalAtom)
+  const [previewProposal, setPreviewProposal] = useAtom(
+    previewGroupProposalAtom,
+  )
   const document = previewCommunity || previewGroup || previewProposal
   const preview = document?.preview
   const { data: community } = trpc.community.getById.useQuery(
@@ -52,7 +54,8 @@ export default function PreviewBar() {
   const signDocument = useSignDocument(preview?.author, preview?.template)
   const { mutateAsync: mutateCommunity } = trpc.community.create.useMutation()
   const { mutateAsync: mutateGroup } = trpc.group.create.useMutation()
-  const { mutateAsync: mutateProposal } = trpc.proposal.create.useMutation()
+  const { mutateAsync: mutateProposal } =
+    trpc.groupProposal.create.useMutation()
   const handleSubmit = useMutation<
     string,
     Error,
@@ -63,8 +66,8 @@ export default function PreviewBar() {
       await mutateCommunity(signed)
       await Promise.all([
         utils.community.getById.prefetch({ id: signed.id }),
-        utils.proposal.list.prefetch({
-          community_id: signed.id,
+        utils.groupProposal.list.prefetch({
+          communityId: signed.id,
           phase: undefined,
         }),
       ])
@@ -77,15 +80,15 @@ export default function PreviewBar() {
       await mutateGroup(signed)
       await Promise.all([
         utils.group.getById.prefetch({
-          community_id: signed.authorship.author,
+          communityId: signed.authorship.author,
           id: signed.id,
         }),
-        utils.group.listByCommunity.prefetch({
-          community_id: signed.authorship.author,
+        utils.group.listByCommunityId.prefetch({
+          communityId: signed.authorship.author,
         }),
-        utils.proposal.list.prefetch({
-          community_id: signed.authorship.author,
-          group_id: signed.id,
+        utils.groupProposal.list.prefetch({
+          communityId: signed.authorship.author,
+          groupId: signed.id,
           phase: undefined,
         }),
       ])
@@ -93,11 +96,11 @@ export default function PreviewBar() {
       router.push(`/${signed.authorship.author}/${signed.id}`)
       return 'workgroup'
     }
-    if (isProposal(document)) {
+    if (isGroupProposal(document)) {
       const signed = await signDocument(document)
       const permalink = await mutateProposal(signed)
       await Promise.all([
-        utils.proposal.getByPermalink.prefetch({ permalink }),
+        utils.groupProposal.getByPermalink.prefetch({ permalink }),
         utils.group.getByPermalink.prefetch({ permalink: signed.group }),
       ])
       setPreviewProposal(undefined)

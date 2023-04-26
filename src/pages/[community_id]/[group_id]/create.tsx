@@ -5,17 +5,17 @@ import useRouterQuery from '../../../hooks/use-router-query'
 import TextButton from '../../../components/basic/text-button'
 import { trpc } from '../../../utils/trpc'
 import LoadingBar from '../../../components/basic/loading-bar'
-import ProposalForm from '../../../components/proposal-form'
+import GroupProposalForm from '../../../components/group-proposal-form'
 import { documentTitle } from '../../../utils/constants'
-import { Proposal } from '../../../utils/schemas/proposal'
+import { GroupProposal } from '../../../utils/schemas/group-proposal'
 
 export default function CreateProposalPage() {
   const query = useRouterQuery<['community_id', 'group_id']>()
   const { data: group, isLoading } = trpc.group.getById.useQuery(
-    { community_id: query.community_id, id: query.group_id },
+    { communityId: query.community_id, id: query.group_id },
     { enabled: !!query.community_id && !!query.group_id },
   )
-  const initialValue = useMemo<Partial<Proposal>>(
+  const initialValue = useMemo<Partial<GroupProposal>>(
     () => ({ voting_type: 'single', options: ['', ''] }),
     [],
   )
@@ -35,7 +35,7 @@ export default function CreateProposalPage() {
           <h2 className="text-base font-semibold">← Back</h2>
         </TextButton>
         {query.community_id && group ? (
-          <ProposalForm
+          <GroupProposalForm
             initialValue={initialValue}
             communityId={query.community_id}
             group={group}

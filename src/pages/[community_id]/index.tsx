@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { PlusIcon } from '@heroicons/react/20/solid'
 
 import useRouterQuery from '../../hooks/use-router-query'
-import ProposalCard from '../../components/proposal-card'
+import GroupProposalCard from '../../components/group-proposal-card'
 import CommunityLayout from '../../components/layouts/community'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
@@ -22,8 +22,8 @@ export default function CommunityIndexPage() {
     { enabled: !!query.community_id },
   )
   const { data: groups, isLoading: isGroupsLoading } =
-    trpc.group.listByCommunity.useQuery(
-      { community_id: query.community_id },
+    trpc.group.listByCommunityId.useQuery(
+      { communityId: query.community_id },
       { enabled: !!query.community_id },
     )
   const {
@@ -31,14 +31,14 @@ export default function CommunityIndexPage() {
     fetchNextPage,
     hasNextPage,
     isLoading: isProposalsLoading,
-  } = trpc.proposal.list.useInfiniteQuery(
+  } = trpc.groupProposal.list.useInfiniteQuery(
     {
-      community_id: query.community_id,
+      communityId: query.community_id,
       phase: phase === 'All' ? undefined : phase,
     },
     { enabled: !!query.community_id, getNextPageParam: ({ next }) => next },
   )
-  const proposals = useMemo(
+  const groupProposals = useMemo(
     () => data?.pages.flatMap(({ data }) => data),
     [data],
   )
@@ -74,7 +74,7 @@ export default function CommunityIndexPage() {
           className="-mt-1 sm:-mt-2"
         />
       </div>
-      {proposals?.length === 0 ? (
+      {groupProposals?.length === 0 ? (
         <EmptyState
           title="No events"
           className="mt-24"
@@ -90,9 +90,9 @@ export default function CommunityIndexPage() {
         />
       ) : (
         <ul role="list" className="mt-5 space-y-5">
-          {proposals?.map((proposal) => (
-            <li key={proposal.permalink}>
-              <ProposalCard proposal={proposal} />
+          {groupProposals?.map((groupProposal) => (
+            <li key={groupProposal.permalink}>
+              <GroupProposalCard groupProposal={groupProposal} />
             </li>
           ))}
         </ul>

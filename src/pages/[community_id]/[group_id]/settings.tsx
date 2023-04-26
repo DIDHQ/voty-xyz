@@ -15,7 +15,7 @@ export default function GroupSettingsPage() {
     isLoading,
     refetch,
   } = trpc.group.getById.useQuery(
-    { community_id: query.community_id, id: query.group_id },
+    { communityId: query.community_id, id: query.group_id },
     { enabled: !!query.community_id && !!query.group_id },
   )
   const handleArchive = useCallback(() => {

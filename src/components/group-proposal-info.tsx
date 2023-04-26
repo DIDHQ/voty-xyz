@@ -7,26 +7,26 @@ import {
 } from '../utils/constants'
 import { Community } from '../utils/schemas/community'
 import { Group } from '../utils/schemas/group'
-import { Proposal } from '../utils/schemas/proposal'
+import { GroupProposal } from '../utils/schemas/group-proposal'
 import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import Markdown from './basic/markdown'
 import TextButton from './basic/text-button'
-import ProposalProgress from './proposal-progress'
+import GroupProposalProgress from './group-proposal-progress'
 import { PreviewPermalink } from '../utils/types'
 import { permalink2Explorer } from '../utils/permalink'
 import { formatNumber } from '../utils/number'
 
-export default function ProposalInfo(props: {
+export default function GroupProposalInfo(props: {
   community?: Community
   group?: Group
-  proposal?: Proposal & {
+  groupProposal?: GroupProposal & {
     permalink: string | PreviewPermalink
     authorship?: { author?: string }
   }
   className?: string
 }) {
-  const disabled = props.proposal?.permalink === previewPermalink
+  const disabled = props.groupProposal?.permalink === previewPermalink
 
   return (
     <div
@@ -35,8 +35,8 @@ export default function ProposalInfo(props: {
         props.className,
       )}
     >
-      <ProposalProgress
-        proposal={props.proposal?.permalink}
+      <GroupProposalProgress
+        groupProposal={props.groupProposal?.permalink}
         phase={props.group?.duration}
       />
       <DetailList title="Criteria for approval">
@@ -72,21 +72,24 @@ export default function ProposalInfo(props: {
           )}
         </DetailItem>
         <DetailItem title="Proposer" className="truncate whitespace-nowrap">
-          {props.proposal?.authorship?.author || '...'}
+          {props.groupProposal?.authorship?.author || '...'}
         </DetailItem>
       </DetailList>
-      {props.proposal?.snapshots ? (
+      {props.groupProposal?.snapshots ? (
         <DetailList title="On-chain verification">
           <DetailItem title="Snapshot">
             <TextButton
               underline
               disabled={disabled}
               href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
-                props.proposal.snapshots[commonCoinTypes.CKB]
+                props.groupProposal.snapshots[commonCoinTypes.CKB]
               }`}
             >
               {formatNumber(
-                parseInt(props.proposal.snapshots[commonCoinTypes.CKB], 10),
+                parseInt(
+                  props.groupProposal.snapshots[commonCoinTypes.CKB],
+                  10,
+                ),
               )}
             </TextButton>
           </DetailItem>
@@ -94,9 +97,9 @@ export default function ProposalInfo(props: {
             <TextButton
               underline
               disabled={disabled}
-              href={permalink2Explorer(props.proposal?.permalink)}
+              href={permalink2Explorer(props.groupProposal?.permalink)}
             >
-              {props.proposal?.permalink.substring(40) || '...'}
+              {props.groupProposal?.permalink.substring(40) || '...'}
             </TextButton>
           </DetailItem>
         </DetailList>

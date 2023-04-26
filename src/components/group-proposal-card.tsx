@@ -5,51 +5,51 @@ import { useMemo } from 'react'
 import { Phase } from '../utils/phase'
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/authorship'
-import { Proposal } from '../utils/schemas/proposal'
+import { GroupProposal } from '../utils/schemas/group-proposal'
 import { formatDurationMs } from '../utils/time'
 
-export default function ProposalCard(props: {
-  proposal: Authorized<Proposal> & {
+export default function GroupProposalCard(props: {
+  groupProposal: Authorized<GroupProposal> & {
     permalink: string
     votes: number
     ts: Date
-    ts_pending: Date | null
-    ts_voting: Date | null
+    tsPending: Date | null
+    tsVoting: Date | null
   }
 }) {
   const now = useMemo(() => Date.now(), [])
   const phase = useMemo(
     () =>
-      props.proposal.ts_pending && props.proposal.ts_voting
-        ? now < props.proposal.ts_pending.getTime()
+      props.groupProposal.tsPending && props.groupProposal.tsVoting
+        ? now < props.groupProposal.tsPending.getTime()
           ? Phase.ANNOUNCING
-          : now < props.proposal.ts_voting.getTime()
+          : now < props.groupProposal.tsVoting.getTime()
           ? Phase.VOTING
           : Phase.ENDED
         : Phase.CONFIRMING,
-    [props.proposal.ts_pending, props.proposal.ts_voting, now],
+    [props.groupProposal.tsPending, props.groupProposal.tsVoting, now],
   )
 
   return (
     <Link
       shallow
-      href={`/proposal/${permalink2Id(props.proposal.permalink)}`}
+      href={`/proposal/${permalink2Id(props.groupProposal.permalink)}`}
       className="block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-primary-300 focus-within:ring-offset-2 hover:border-primary-500 hover:bg-gray-50"
     >
       <div className="w-full p-4">
         <p className="truncate text-lg font-medium text-gray-800">
-          {props.proposal.title}
+          {props.groupProposal.title}
         </p>
-        {props.proposal.extension?.content ? (
+        {props.groupProposal.extension?.content ? (
           <p className="line-clamp-3 text-gray-600">
-            {props.proposal.extension.content}
+            {props.groupProposal.extension.content}
           </p>
         ) : null}
       </div>
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">
           <p className="text-gray-400">Proposer</p>
-          <p className="truncate">{props.proposal.authorship.author}</p>
+          <p className="truncate">{props.groupProposal.authorship.author}</p>
         </div>
         <div className="w-0 flex-1 px-4 py-2">
           {phase === Phase.CONFIRMING ? (
@@ -60,30 +60,32 @@ export default function ProposalCard(props: {
                 in about 5 minutes
               </p>
             </>
-          ) : phase === Phase.ANNOUNCING && props.proposal.ts_pending ? (
+          ) : phase === Phase.ANNOUNCING && props.groupProposal.tsPending ? (
             <>
               <p className="text-gray-400">Voting starts</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
-                {formatDurationMs(props.proposal.ts_pending.getTime() - now)}
+                {formatDurationMs(
+                  props.groupProposal.tsPending.getTime() - now,
+                )}
               </p>
             </>
-          ) : phase === Phase.VOTING && props.proposal.ts_voting ? (
+          ) : phase === Phase.VOTING && props.groupProposal.tsVoting ? (
             <>
               <p className="text-gray-400">Voting ends</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
-                {formatDurationMs(props.proposal.ts_voting.getTime() - now)}
+                {formatDurationMs(props.groupProposal.tsVoting.getTime() - now)}
               </p>
             </>
-          ) : phase === Phase.ENDED && props.proposal.ts_voting ? (
+          ) : phase === Phase.ENDED && props.groupProposal.tsVoting ? (
             <>
               <p className="text-gray-400">Voting ended</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                {formatDurationMs(props.proposal.ts_voting.getTime() - now)}
+                {formatDurationMs(props.groupProposal.tsVoting.getTime() - now)}
                 &nbsp;ago
               </p>
             </>
@@ -91,7 +93,7 @@ export default function ProposalCard(props: {
         </div>
         <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
           <p className="text-gray-400">Votes</p>
-          <p>{props.proposal.votes}</p>
+          <p>{props.groupProposal.votes}</p>
         </div>
       </div>
     </Link>

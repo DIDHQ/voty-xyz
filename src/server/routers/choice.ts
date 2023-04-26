@@ -6,24 +6,24 @@ import { z } from 'zod'
 import { database } from '../../utils/database'
 import { procedure, router } from '../trpc'
 
-export const choiceRouter = router({
+export const groupProposalVoteChoiceRouter = router({
   get: procedure
     .input(
       z.object({
-        proposal: z.string().optional(),
+        groupProposal: z.string().optional(),
         option: z.string().optional(),
       }),
     )
     .output(z.object({ power: z.string() }))
     .query(async ({ input }) => {
-      if (!input.proposal || !input.option) {
+      if (!input.groupProposal || !input.option) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const choice = await database.choice.findUnique({
+      const choice = await database.groupProposalVoteChoice.findUnique({
         where: {
-          proposal_permalink_option: {
-            proposal_permalink: input.proposal,
+          proposalPermalink_option: {
+            proposalPermalink: input.groupProposal,
             option: input.option,
           },
         },
@@ -34,17 +34,17 @@ export const choiceRouter = router({
       }
     }),
   groupByProposal: procedure
-    .input(z.object({ proposal: z.string().optional() }))
+    .input(z.object({ groupProposal: z.string().optional() }))
     .output(
       z.object({ powers: z.record(z.string(), z.string()), total: z.string() }),
     )
     .query(async ({ input }) => {
-      if (!input.proposal) {
+      if (!input.groupProposal) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const choices = await database.choice.findMany({
-        where: { proposal_permalink: input.proposal },
+      const choices = await database.groupProposalVoteChoice.findMany({
+        where: { proposalPermalink: input.groupProposal },
       })
 
       return {
@@ -59,4 +59,4 @@ export const choiceRouter = router({
     }),
 })
 
-export type ChoiceRouter = typeof choiceRouter
+export type GroupProposalVoteChoiceRouter = typeof groupProposalVoteChoiceRouter

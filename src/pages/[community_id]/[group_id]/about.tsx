@@ -19,7 +19,7 @@ export default function GroupAboutPage() {
   const query = useRouterQuery<['community_id', 'group_id']>()
   const previewGroup = useAtomValue(previewGroupAtom)
   const { data, isLoading } = trpc.group.getById.useQuery(
-    { community_id: query.community_id, id: query.group_id },
+    { communityId: query.community_id, id: query.group_id },
     { enabled: !!query.community_id && !!query.group_id },
   )
   const group = previewGroup || data

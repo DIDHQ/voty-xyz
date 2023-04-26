@@ -6,8 +6,8 @@ import dayjs from 'dayjs'
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
-import { proposalSchema } from '../../utils/schemas/proposal'
-import verifyProposal from '../../utils/verifiers/verify-proposal'
+import { groupProposalSchema } from '../../utils/schemas/group-proposal'
+import verifyGroupProposal from '../../utils/verifiers/verify-group-proposal'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
 import { commonCoinTypes } from '../../utils/constants'
@@ -22,9 +22,9 @@ import { Phase } from '../../utils/phase'
 import { groupSchema } from '../../utils/schemas/group'
 import verifyGroup from '../../utils/verifiers/verify-group'
 
-const schema = proved(authorized(proposalSchema))
+const schema = proved(authorized(groupProposalSchema))
 
-export const proposalRouter = router({
+export const groupProposalRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
     .output(schema.extend({ votes: z.number() }).nullable())
@@ -33,29 +33,32 @@ export const proposalRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const proposal = await database.proposal.findUnique({
+      const groupProposal = await database.groupProposal.findUnique({
         where: { permalink: input.permalink },
       })
 
-      if (proposal && (!proposal.ts_pending || !proposal.ts_voting)) {
+      if (
+        groupProposal &&
+        (!groupProposal.tsPending || !groupProposal.tsVoting)
+      ) {
         try {
           const storage = await database.storage.findUnique({
-            where: { permalink: proposal.group_permalink },
+            where: { permalink: groupProposal.groupPermalink },
           })
           const group = storage ? groupSchema.parse(storage.data) : null
           if (group) {
             const timestamp = await getSnapshotTimestamp(
               commonCoinTypes.AR,
-              await getPermalinkSnapshot(proposal.permalink),
+              await getPermalinkSnapshot(groupProposal.permalink),
             )
-            await database.proposal.update({
-              where: { permalink: proposal.permalink },
+            await database.groupProposal.update({
+              where: { permalink: groupProposal.permalink },
               data: {
                 ts: timestamp,
-                ts_pending: dayjs(timestamp)
+                tsPending: dayjs(timestamp)
                   .add(group.duration.pending * 1000)
                   .toDate(),
-                ts_voting: dayjs(timestamp)
+                tsVoting: dayjs(timestamp)
                   .add(group.duration.pending * 1000)
                   .add(group.duration.voting * 1000)
                   .toDate(),
@@ -70,15 +73,15 @@ export const proposalRouter = router({
       const storage = await database.storage.findUnique({
         where: { permalink: input.permalink },
       })
-      return storage && proposal
-        ? { ...schema.parse(storage.data), votes: proposal.votes }
+      return storage && groupProposal
+        ? { ...schema.parse(storage.data), votes: groupProposal.votes }
         : null
     }),
   list: procedure
     .input(
       z.object({
-        community_id: z.string().optional(),
-        group_id: z.string().optional(),
+        communityId: z.string().optional(),
+        groupId: z.string().optional(),
         phase: z
           .enum([Phase.CONFIRMING, Phase.ANNOUNCING, Phase.VOTING, Phase.ENDED])
           .optional(),
@@ -92,37 +95,37 @@ export const proposalRouter = router({
             permalink: z.string(),
             votes: z.number(),
             ts: z.date(),
-            ts_pending: z.date().nullable(),
-            ts_voting: z.date().nullable(),
+            tsPending: z.date().nullable(),
+            tsVoting: z.date().nullable(),
           }),
         ),
         next: z.string().optional(),
       }),
     )
     .query(async ({ input }) => {
-      if (!input.community_id) {
+      if (!input.communityId) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
       const now = new Date()
       const filter =
         input.phase === Phase.CONFIRMING
-          ? { ts_pending: null, ts_voting: null }
+          ? { tsPending: null, tsVoting: null }
           : input.phase === Phase.ANNOUNCING
-          ? { ts: { lte: now }, ts_pending: { gt: now } }
+          ? { ts: { lte: now }, tsPending: { gt: now } }
           : input.phase === Phase.VOTING
-          ? { ts_pending: { lte: now }, ts_voting: { gt: now } }
+          ? { tsPending: { lte: now }, tsVoting: { gt: now } }
           : input.phase === Phase.ENDED
-          ? { ts_voting: { lte: now } }
+          ? { tsVoting: { lte: now } }
           : {}
-      const proposals = await database.proposal.findMany({
-        where: input.group_id
+      const groupProposals = await database.groupProposal.findMany({
+        where: input.groupId
           ? {
-              community_id: input.community_id,
-              group_id: input.group_id,
+              communityId: input.communityId,
+              groupId: input.groupId,
               ...filter,
             }
-          : { community_id: input.community_id, ...filter },
+          : { communityId: input.communityId, ...filter },
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
         take: 20,
         skip: input.cursor ? 1 : 0,
@@ -131,7 +134,7 @@ export const proposalRouter = router({
       const storages = keyBy(
         await database.storage.findMany({
           where: {
-            permalink: { in: proposals.map(({ permalink }) => permalink) },
+            permalink: { in: groupProposals.map(({ permalink }) => permalink) },
           },
         }),
         ({ permalink }) => permalink,
@@ -139,24 +142,24 @@ export const proposalRouter = router({
 
       return {
         data: compact(
-          proposals
+          groupProposals
             .filter(({ permalink }) => storages[permalink])
-            .map(({ permalink, votes, ts, ts_pending, ts_voting }) => {
+            .map(({ permalink, votes, ts, tsPending, tsVoting }) => {
               try {
                 return {
                   ...schema.parse(storages[permalink].data),
                   permalink,
                   votes,
                   ts,
-                  ts_pending,
-                  ts_voting,
+                  tsPending,
+                  tsVoting,
                 }
               } catch {
                 return
               }
             }),
         ),
-        next: last(proposals)?.permalink,
+        next: last(groupProposals)?.permalink,
       }
     }),
   create: procedure
@@ -166,31 +169,31 @@ export const proposalRouter = router({
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
-      const { group } = await verifyProposal(input)
+      const { group } = await verifyGroupProposal(input)
       const { community } = await verifyGroup(group)
 
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
       await database.$transaction([
-        database.proposal.create({
+        database.groupProposal.create({
           data: {
             permalink,
             proposer: input.authorship.author,
-            community_id: community.id,
-            group_id: group.id,
-            group_permalink: input.group,
+            communityId: community.id,
+            groupId: group.id,
+            groupPermalink: input.group,
             votes: 0,
             ts,
           },
         }),
         database.community.update({
           where: { id: community.id },
-          data: { proposals: { increment: 1 } },
+          data: { groupProposals: { increment: 1 } },
         }),
         database.group.update({
           where: {
-            id_community_id: { community_id: community.id, id: group.id },
+            id_communityId: { communityId: community.id, id: group.id },
           },
           data: { proposals: { increment: 1 } },
         }),
@@ -201,4 +204,4 @@ export const proposalRouter = router({
     }),
 })
 
-export type ProposalRouter = typeof proposalRouter
+export type GroupProposalRouter = typeof groupProposalRouter

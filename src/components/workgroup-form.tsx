@@ -32,7 +32,7 @@ export default function WorkgroupForm(props: {
   const { onArchive } = props
   const router = useRouter()
   const { data } = trpc.group.getById.useQuery(
-    { community_id: props.communityId, id: props.initialValue?.id },
+    { communityId: props.communityId, id: props.initialValue?.id },
     { enabled: !!props.communityId && !!props.initialValue?.id },
   )
   const { data: community } = trpc.community.getById.useQuery(

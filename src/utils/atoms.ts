@@ -3,7 +3,7 @@ import { atomWithStorage } from 'jotai/utils'
 
 import { Community } from './schemas/community'
 import { Group } from './schemas/group'
-import { Proposal } from './schemas/proposal'
+import { GroupProposal } from './schemas/group-proposal'
 import { Preview } from './types'
 
 export const showBannerAtom = atomWithStorage('showBanner', true)
@@ -16,6 +16,6 @@ export const previewGroupAtom = atom<
   (Group & { preview: Preview }) | undefined
 >(undefined)
 
-export const previewProposalAtom = atom<
-  (Proposal & { preview: Preview }) | undefined
+export const previewGroupProposalAtom = atom<
+  (GroupProposal & { preview: Preview }) | undefined
 >(undefined)

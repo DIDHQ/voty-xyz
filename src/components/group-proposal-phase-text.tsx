@@ -4,11 +4,11 @@ import useStatus from '../hooks/use-status'
 import { getPhase, Phase } from '../utils/phase'
 import type { Group } from '../utils/schemas/group'
 
-export default function ProposalPhaseText(props: {
-  proposal?: string
+export default function GroupProposalPhaseText(props: {
+  groupProposalPermalink?: string
   phase?: Group['duration']
 }) {
-  const { data: status, isLoading } = useStatus(props.proposal)
+  const { data: status, isLoading } = useStatus(props.groupProposalPermalink)
   const phase = useMemo(
     () => getPhase(new Date(), status?.timestamp, props.phase),
     [props.phase, status?.timestamp],

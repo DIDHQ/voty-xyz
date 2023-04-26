@@ -22,70 +22,70 @@ model Community {
   id        String
   permalink String
 
-  subscribers Int      @default(0)
-  proposals   Int      @default(0)
-  votes       Int      @default(0)
-  ts          DateTime
+  subscribers        Int      @default(0)
+  groupProposals     Int      @default(0)
+  groupProposalVotes Int      @default(0)
+  ts                 DateTime
 
   @@id([permalink])
   @@unique([id])
 }
 
 model Group {
-  id                  String
-  permalink           String
-  community_id        String
-  community_permalink String
+  id                 String
+  permalink          String
+  communityId        String
+  communityPermalink String
 
   proposals Int      @default(0)
   votes     Int      @default(0)
   ts        DateTime
 
   @@id([permalink])
-  @@unique([id, community_id])
+  @@unique([id, communityId])
 }
 
-model Proposal {
-  permalink       String
-  community_id    String
-  group_id        String
-  group_permalink String
+model GroupProposal {
+  permalink      String
+  communityId    String
+  groupId        String
+  groupPermalink String
 
-  proposer   String
-  votes      Int       @default(0)
-  ts         DateTime
-  ts_pending DateTime?
-  ts_voting  DateTime?
+  proposer  String
+  votes     Int       @default(0)
+  ts        DateTime
+  tsPending DateTime?
+  tsVoting  DateTime?
 
   @@id([permalink])
-  @@index([community_id, group_id])
+  @@index([communityId, groupId])
 }
 
-model Vote {
-  permalink          String
-  proposal_permalink String
+model GroupProposalVote {
+  permalink         String
+  proposalPermalink String
 
   voter String
   ts    DateTime
 
   @@id([permalink])
-  @@unique([proposal_permalink, voter])
+  @@unique([proposalPermalink, voter])
 }
 
-model Choice {
-  proposal_permalink String
-  option             String
+model GroupProposalVoteChoice {
+  proposalPermalink String
+  option            String
 
   power Decimal
 
-  @@id([proposal_permalink, option])
+  @@id([proposalPermalink, option])
 }
 
 model Subscription {
-  community_id String
-  subscriber   String
+  communityId String
+  subscriber  String
 
   ts DateTime
 
-  @@id([community_id, subscriber])
+  @@id([communityId, subscriber])
 }

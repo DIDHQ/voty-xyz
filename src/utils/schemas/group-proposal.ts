@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const proposalSchema = z.object({
+export const groupProposalSchema = z.object({
   group: z.string().min(1),
   title: z.string().min(1, 'Required'),
   voting_type: z.enum(['single', 'approval']),
@@ -16,4 +16,4 @@ export const proposalSchema = z.object({
   }),
 })
 
-export type Proposal = z.infer<typeof proposalSchema>
+export type GroupProposal = z.infer<typeof groupProposalSchema>

@@ -78,10 +78,10 @@ export const coinTypeLogos: { [coinType: number]: string | undefined } = {
 }
 
 export enum DataType {
-  COMMUNITY = 'community',
-  GROUP = 'group',
-  PROPOSAL = 'proposal',
-  VOTE = 'vote',
+  COMMUNITY = 'COMMUNITY',
+  GROUP = 'GROUP',
+  GROUP_PROPOSAL = 'GROUP_PROPOSAL',
+  GROUP_PROPOSAL_VOTE = 'GROUP_PROPOSAL_VOTE',
 }
 
 export const cacheControl = [

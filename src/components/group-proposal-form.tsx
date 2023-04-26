@@ -9,7 +9,10 @@ import clsx from 'clsx'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 
-import { Proposal, proposalSchema } from '../utils/schemas/proposal'
+import {
+  GroupProposal,
+  groupProposalSchema,
+} from '../utils/schemas/group-proposal'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
@@ -28,22 +31,24 @@ import {
 } from '../utils/functions/boolean'
 import Button from './basic/button'
 import RadioGroup2 from './basic/radio-group2'
-import { previewProposalAtom } from '../utils/atoms'
+import { previewGroupProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
 import Slide from './basic/slide'
 import PermissionCard from './permission-card'
 
-export default function ProposalForm(props: {
-  initialValue: Partial<Proposal>
+export default function GroupProposalForm(props: {
+  initialValue: Partial<GroupProposal>
   communityId: string
   group: Group & { permalink: string }
   className?: string
 }) {
   const router = useRouter()
-  const [previewProposal, setPreviewProposal] = useAtom(previewProposalAtom)
-  const proposal = previewProposal || props.initialValue
-  const methods = useForm<Proposal>({
-    resolver: zodResolver(proposalSchema),
+  const [previewGroupProposal, setPreviewGroupProposal] = useAtom(
+    previewGroupProposalAtom,
+  )
+  const groupProposal = previewGroupProposal || props.initialValue
+  const methods = useForm<GroupProposal>({
+    resolver: zodResolver(groupProposalSchema),
   })
   const {
     register,
@@ -56,8 +61,8 @@ export default function ProposalForm(props: {
     handleSubmit: onSubmit,
   } = methods
   useEffect(() => {
-    reset(proposal)
-  }, [proposal, reset])
+    reset(groupProposal)
+  }, [groupProposal, reset])
   const handleOptionDelete = useCallback(
     (index: number) => {
       const options = getValues('options')?.filter((_, i) => i !== index)
@@ -301,7 +306,7 @@ export default function ProposalForm(props: {
           icon={EyeIcon}
           disabled={disabled}
           onClick={onSubmit((value) => {
-            setPreviewProposal({
+            setPreviewGroupProposal({
               ...value,
               preview: {
                 from: `/${props.communityId}/${props.group.id}/create`,

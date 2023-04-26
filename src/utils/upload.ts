@@ -1,18 +1,23 @@
 import { DataType } from './constants'
-import { isCommunity, isGroup, isProposal, isVote } from './data-type'
+import {
+  isCommunity,
+  isGroup,
+  isGroupProposal,
+  isGroupProposalVote,
+} from './data-type'
 import { id2Permalink } from './permalink'
 import { Authorized } from './schemas/authorship'
 import { Community } from './schemas/community'
 import { Group } from './schemas/group'
-import { Proposal } from './schemas/proposal'
-import { Vote } from './schemas/vote'
+import { GroupProposal } from './schemas/group-proposal'
+import { GroupProposalVote } from './schemas/group-proposal-vote'
 import { isTestnet } from './constants'
 import arweave, { jwk } from './sdks/arweave'
 
 const textEncoder = new TextEncoder()
 
 export async function uploadToArweave(
-  document: Authorized<Community | Group | Proposal | Vote>,
+  document: Authorized<Community | Group | GroupProposal | GroupProposalVote>,
 ): Promise<string> {
   const transaction = await arweave.createTransaction({
     data: Buffer.from(textEncoder.encode(JSON.stringify(document))),
@@ -36,13 +41,13 @@ const defaultArweaveTags = {
 }
 
 function getArweaveTags(
-  document: Authorized<Community | Group | Proposal | Vote>,
+  document: Authorized<Community | Group | GroupProposal | GroupProposalVote>,
 ) {
   if (isCommunity(document)) {
     return {
       ...defaultArweaveTags,
       'App-Data-Type': DataType.COMMUNITY,
-      'App-Index-Did': document.id,
+      'App-Index-Entry': document.id,
     }
   }
   if (isGroup(document)) {
@@ -52,18 +57,18 @@ function getArweaveTags(
       'App-Index-Community': document.community,
     }
   }
-  if (isProposal(document)) {
+  if (isGroupProposal(document)) {
     return {
       ...defaultArweaveTags,
-      'App-Data-Type': DataType.PROPOSAL,
+      'App-Data-Type': DataType.GROUP_PROPOSAL,
       'App-Index-Group': document.group,
     }
   }
-  if (isVote(document)) {
+  if (isGroupProposalVote(document)) {
     return {
       ...defaultArweaveTags,
-      'App-Data-Type': DataType.VOTE,
-      'App-Index-Proposal': document.proposal,
+      'App-Data-Type': DataType.GROUP_PROPOSAL_VOTE,
+      'App-Index-Group-Proposal': document.group_proposal,
     }
   }
   throw new Error('cannot get arweave tags')
