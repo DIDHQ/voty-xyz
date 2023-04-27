@@ -46,7 +46,7 @@ export default async function verifyGroupProposalVote(
     groupProposalVote.authorship.author,
     groupProposal.snapshots,
   )
-  if (!votingPower.eq(groupProposalVote.power)) {
+  if (!votingPower.eq(groupProposalVote.total_power)) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Voting power not match',

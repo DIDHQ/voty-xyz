@@ -1,18 +1,13 @@
 import { z } from 'zod'
 
-import { choiceIsEmpty } from '../choice'
 import { positiveDecimalSchema } from './positive-decimal'
 
 export const groupProposalVoteSchema = z.object({
   group_proposal: z.string().min(1),
-  choice: z
-    .string()
-    .refine(
-      (choice) =>
-        !choiceIsEmpty('single', choice) && !choiceIsEmpty('approval', choice),
-      { message: 'Empty choice' },
-    ),
-  power: positiveDecimalSchema,
+  powers: z
+    .record(z.string().min(1), positiveDecimalSchema)
+    .refine((powers) => Object.keys(powers).length > 0, 'Empty vote'),
+  total_power: positiveDecimalSchema,
 })
 
 export type GroupProposalVote = z.infer<typeof groupProposalVoteSchema>

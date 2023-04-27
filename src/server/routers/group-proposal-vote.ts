@@ -99,7 +99,7 @@ export const groupProposalVoteRouter = router({
 
       return mapValues(
         keyBy(groupProposalVotes, ({ voter }) => voter),
-        ({ permalink }) => schema.parse(storages[permalink].data).power,
+        ({ permalink }) => schema.parse(storages[permalink].data).total_power,
       )
     }),
   create: procedure
@@ -140,11 +140,7 @@ export const groupProposalVoteRouter = router({
           data: { votes: { increment: 1 } },
         }),
         ...Object.entries(
-          powerOfChoice(
-            groupProposal.voting_type,
-            input.choice,
-            new Decimal(input.power),
-          ),
+          powerOfChoice(input.powers, new Decimal(input.total_power)),
         ).map(([option, power = 0]) =>
           database.groupProposalVoteChoice.upsert({
             where: {
