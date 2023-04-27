@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 
-import { stringifyChoice } from '../../utils/choice'
+import { stringifyChoice, totalPower } from '../../utils/choice'
 import { permalink2Explorer } from '../../utils/permalink'
 import { trpc } from '../../utils/trpc'
 import Article from '../../components/basic/article'
@@ -166,25 +166,13 @@ export default function ProposalPage() {
                         {groupProposalVote.authorship.author}
                       </td>
                       <td
-                        title={
-                          groupProposal
-                            ? stringifyChoice(
-                                groupProposal.voting_type,
-                                groupProposalVote.choice,
-                              )
-                            : groupProposalVote.choice
-                        }
+                        title={stringifyChoice(groupProposalVote.powers)}
                         className={clsx(
                           index === 0 ? undefined : 'border-t',
                           'truncate whitespace-nowrap border-gray-200 px-3 py-2 text-sm text-gray-500',
                         )}
                       >
-                        {groupProposal
-                          ? stringifyChoice(
-                              groupProposal.voting_type,
-                              groupProposalVote.choice,
-                            )
-                          : groupProposalVote.choice}
+                        {stringifyChoice(groupProposalVote.powers)}
                       </td>
                       <td
                         className={clsx(
@@ -197,7 +185,7 @@ export default function ProposalPage() {
                           disabled={!!previewGroupProposal}
                           href={permalink2Explorer(groupProposalVote.permalink)}
                         >
-                          {groupProposalVote.power}
+                          {totalPower(groupProposalVote.powers)}
                         </TextButton>
                       </td>
                     </tr>

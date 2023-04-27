@@ -5,93 +5,36 @@ import { GroupProposal } from './schemas/group-proposal'
 
 export function updateChoice(
   type: GroupProposal['voting_type'],
-  choice: string | undefined,
+  powers: { [option: string]: string },
   option: string,
-): string {
+  power: string,
+): { [option: string]: string } {
   try {
     if (type === 'single') {
-      return JSON.stringify(option)
+      return { [option]: power }
     }
     if (type === 'approval') {
-      const array = JSON.parse(choice || '[]') as string[]
-      return JSON.stringify(
-        array.includes(option)
-          ? without(array, option)
-          : uniq([...array, option]),
-      )
-    }
-    return ''
-  } catch {
-    return ''
-  }
-}
-
-export function checkChoice(
-  type: GroupProposal['voting_type'],
-  choice: string,
-  option: string,
-): boolean {
-  try {
-    if (type === 'single') {
-      return JSON.parse(choice) === option
-    }
-    if (type === 'approval') {
-      return (JSON.parse(choice || '[]') as string[]).includes(option)
-    }
-    return false
-  } catch {
-    return false
-  }
-}
-
-export function powerOfChoice(
-  type: GroupProposal['voting_type'],
-  choice: string,
-  power: Decimal,
-): { [option: string]: Decimal | undefined } {
-  try {
-    if (type === 'single') {
-      return { [JSON.parse(choice) as string]: power }
-    }
-    if (type === 'approval') {
-      const array = JSON.parse(choice || '[]') as string[]
-      return array.reduce((obj, option) => {
-        obj[option] = power.dividedBy(array.length)
+      const options = powers[option]
+        ? without(Object.keys(powers), option)
+        : uniq([...Object.keys(powers), option])
+      const averagePower = new Decimal(power).dividedBy(options.length)
+      return options.reduce((obj, option) => {
+        obj[option] = averagePower.toString()
         return obj
-      }, {} as { [option: string]: Decimal })
+      }, {} as { [option: string]: string })
     }
-    return {}
+    return powers
   } catch {
-    return {}
+    return powers
   }
 }
 
-export function choiceIsEmpty(
-  type: GroupProposal['voting_type'],
-  choice: string | undefined,
-): boolean {
-  if (type === 'single') {
-    return !choice
-  }
-  if (type === 'approval') {
-    return !choice || choice === '[]'
-  }
-  return true
+export function totalPower(powers: { [option: string]: string }): string {
+  return Object.values(powers)
+    .reduce((sum, power) => sum.add(power), new Decimal(0))
+    .toString()
 }
 
-export function stringifyChoice(
-  type: GroupProposal['voting_type'],
-  choice: string,
-) {
-  try {
-    if (type === 'single') {
-      return JSON.parse(choice) as string
-    }
-    if (type === 'approval') {
-      return (JSON.parse(choice || '[]') as string[]).sort().join(', ')
-    }
-    return ''
-  } catch {
-    return ''
-  }
+export function stringifyChoice(powers: { [option: string]: string }): string {
+  return Object.keys(powers).sort().join(', ')
 }
