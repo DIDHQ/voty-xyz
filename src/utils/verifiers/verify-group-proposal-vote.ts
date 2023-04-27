@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server'
+import { uniq } from 'lodash-es'
 
 import { getPhase, Phase } from '../phase'
 import { calculateDecimal } from '../functions/number'
@@ -53,6 +54,15 @@ export default async function verifyGroupProposalVote(
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'More than 1 choice',
+    })
+  }
+  if (
+    groupProposal.voting_type === 'approval' &&
+    uniq(Object.values(groupProposalVote.powers)).length !== 1
+  ) {
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'Voting power not the same',
     })
   }
   if (!votingPower.eq(groupProposalVote.total_power)) {
