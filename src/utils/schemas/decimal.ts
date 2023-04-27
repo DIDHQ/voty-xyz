@@ -4,8 +4,7 @@ import { z } from 'zod'
 export const decimalSchema = z.string().refine(
   (power) => {
     try {
-      new Decimal(power)
-      return true
+      return new Decimal(power)
     } catch {
       return false
     }
