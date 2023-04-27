@@ -47,15 +47,6 @@ export default async function verifyGroupProposalVote(
     groupProposalVote.authorship.author,
     groupProposal.snapshots,
   )
-  if (
-    groupProposal.voting_type === 'single' &&
-    Object.keys(groupProposalVote.powers).length !== 1
-  ) {
-    throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message: 'More than 1 choice',
-    })
-  }
   if (!votingPower.eq(totalPower(groupProposalVote.powers))) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
