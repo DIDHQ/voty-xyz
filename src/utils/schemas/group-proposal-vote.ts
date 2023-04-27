@@ -1,8 +1,7 @@
-import Decimal from 'decimal.js'
 import { z } from 'zod'
 
 import { choiceIsEmpty } from '../choice'
-import { decimalSchema } from './decimal'
+import { positiveDecimalSchema } from './positive-decimal'
 
 export const groupProposalVoteSchema = z.object({
   group_proposal: z.string().min(1),
@@ -13,9 +12,7 @@ export const groupProposalVoteSchema = z.object({
         !choiceIsEmpty('single', choice) && !choiceIsEmpty('approval', choice),
       { message: 'Empty choice' },
     ),
-  power: decimalSchema.refine((power) => new Decimal(power).gt(0), {
-    message: 'Negative power not allowed',
-  }),
+  power: positiveDecimalSchema,
 })
 
 export type GroupProposalVote = z.infer<typeof groupProposalVoteSchema>
