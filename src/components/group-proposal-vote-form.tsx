@@ -96,6 +96,13 @@ export default function GroupProposalVoteForm(props: {
       ),
     { enabled: !!did },
   )
+  useEffect(() => {
+    if (votingPower === undefined) {
+      resetField('power')
+    } else {
+      setValue('power', votingPower.toString())
+    }
+  }, [resetField, setValue, votingPower])
   const { data: status } = useStatus(props.groupProposal.permalink)
   const now = useMemo(() => new Date(), [])
   const phase = useMemo(
@@ -146,7 +153,7 @@ export default function GroupProposalVoteForm(props: {
   useEffect(() => {
     if (handleSubmit.isSuccess) {
       setTimeout(() => {
-        setValue('powers', {})
+        setValue('choice', '')
         refetchChoices()
         refetchVoted()
         onSuccess()
@@ -169,10 +176,10 @@ export default function GroupProposalVoteForm(props: {
         Your vote has been submitted successfully
       </Notification>
       <div className={clsx('mt-6 border-t border-gray-200', props.className)}>
-        <FormItem error={errors.powers?.message?.message}>
+        <FormItem error={errors.choice?.message}>
           <Controller
             control={control}
-            name="powers"
+            name="choice"
             render={({ field: { ref, value, onChange } }) => (
               <ul
                 ref={ref}

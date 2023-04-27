@@ -1,19 +1,20 @@
 import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last, mapValues } from 'lodash-es'
 import { z } from 'zod'
+import Decimal from 'decimal.js'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
 import { authorized } from '../../utils/schemas/authorship'
 import { groupProposalVoteSchema } from '../../utils/schemas/group-proposal-vote'
 import verifyGroupProposalVote from '../../utils/verifiers/verify-group-proposal-vote'
+import { powerOfChoice } from '../../utils/choice'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGroup from '../../utils/verifiers/verify-group'
-import { totalPower } from '../../utils/choice'
 
 const schema = proved(authorized(groupProposalVoteSchema))
 
@@ -98,8 +99,7 @@ export const groupProposalVoteRouter = router({
 
       return mapValues(
         keyBy(groupProposalVotes, ({ voter }) => voter),
-        ({ permalink }) =>
-          totalPower(schema.parse(storages[permalink].data).powers),
+        ({ permalink }) => schema.parse(storages[permalink].data).power,
       )
     }),
   create: procedure
@@ -109,7 +109,7 @@ export const groupProposalVoteRouter = router({
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
-      const { group } = await verifyGroupProposalVote(input)
+      const { groupProposal, group } = await verifyGroupProposalVote(input)
       const { community } = await verifyGroup(group)
 
       const permalink = await uploadToArweave(input)
@@ -139,7 +139,13 @@ export const groupProposalVoteRouter = router({
           },
           data: { votes: { increment: 1 } },
         }),
-        ...Object.entries(input.powers).map(([option, power]) =>
+        ...Object.entries(
+          powerOfChoice(
+            groupProposal.voting_type,
+            input.choice,
+            new Decimal(input.power),
+          ),
+        ).map(([option, power = 0]) =>
           database.groupProposalVoteChoice.upsert({
             where: {
               proposalPermalink_option: {

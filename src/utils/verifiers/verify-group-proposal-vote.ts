@@ -11,7 +11,6 @@ import verifyGroupProposal from './verify-group-proposal'
 import { commonCoinTypes } from '../constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
 import { database } from '../database'
-import { totalPower } from '../choice'
 
 const schema = proved(authorized(groupProposalSchema))
 
@@ -47,7 +46,7 @@ export default async function verifyGroupProposalVote(
     groupProposalVote.authorship.author,
     groupProposal.snapshots,
   )
-  if (!votingPower.eq(totalPower(groupProposalVote.powers))) {
+  if (!votingPower.eq(groupProposalVote.power)) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Voting power not match',
