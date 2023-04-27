@@ -25,7 +25,7 @@ export default function GroupProposalCreateButton(props: {
   ) : (
     <Tooltip
       place="top"
-      text="Waiting for community changes to be confirmed (in about 5 minutes)"
+      text="Waiting for workgroup changes to be confirmed (in about 5 minutes)"
     >
       <Button primary disabled icon={PlusIcon}>
         Proposal
