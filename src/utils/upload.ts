@@ -1,6 +1,9 @@
 import { DataType } from './constants'
 import {
   isCommunity,
+  isGrant,
+  isGrantProposal,
+  isGrantProposalVote,
   isGroup,
   isGroupProposal,
   isGroupProposalVote,
@@ -8,6 +11,9 @@ import {
 import { id2Permalink } from './permalink'
 import { Authorized } from './schemas/authorship'
 import { Community } from './schemas/community'
+import { Grant } from './schemas/grant'
+import { GrantProposal } from './schemas/grant-proposal'
+import { GrantProposalVote } from './schemas/grant-proposal-vote'
 import { Group } from './schemas/group'
 import { GroupProposal } from './schemas/group-proposal'
 import { GroupProposalVote } from './schemas/group-proposal-vote'
@@ -17,7 +23,15 @@ import arweave, { jwk } from './sdks/arweave'
 const textEncoder = new TextEncoder()
 
 export async function uploadToArweave(
-  document: Authorized<Community | Group | GroupProposal | GroupProposalVote>,
+  document: Authorized<
+    | Community
+    | Grant
+    | GrantProposal
+    | GrantProposalVote
+    | Group
+    | GroupProposal
+    | GroupProposalVote
+  >,
 ): Promise<string> {
   const transaction = await arweave.createTransaction({
     data: Buffer.from(textEncoder.encode(JSON.stringify(document))),
@@ -41,13 +55,42 @@ const defaultArweaveTags = {
 }
 
 function getArweaveTags(
-  document: Authorized<Community | Group | GroupProposal | GroupProposalVote>,
+  document: Authorized<
+    | Community
+    | Grant
+    | GrantProposal
+    | GrantProposalVote
+    | Group
+    | GroupProposal
+    | GroupProposalVote
+  >,
 ) {
   if (isCommunity(document)) {
     return {
       ...defaultArweaveTags,
       'App-Data-Type': DataType.COMMUNITY,
       'App-Index-Entry': document.id,
+    }
+  }
+  if (isGrant(document)) {
+    return {
+      ...defaultArweaveTags,
+      'App-Data-Type': DataType.GRANT,
+      'App-Index-Community': document.community,
+    }
+  }
+  if (isGrantProposal(document)) {
+    return {
+      ...defaultArweaveTags,
+      'App-Data-Type': DataType.GRANT_PROPOSAL,
+      'App-Index-Grant': document.grant,
+    }
+  }
+  if (isGrantProposalVote(document)) {
+    return {
+      ...defaultArweaveTags,
+      'App-Data-Type': DataType.GRANT_PROPOSAL_VOTE,
+      'App-Index-Grant-Proposal': document.grant_proposal,
     }
   }
   if (isGroup(document)) {

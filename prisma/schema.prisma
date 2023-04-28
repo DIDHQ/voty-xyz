@@ -23,12 +23,61 @@ model Community {
   permalink String
 
   subscribers        Int      @default(0)
+  grants             Int      @default(0)
+  grantProposals     Int      @default(0)
+  grantProposalVotes Int      @default(0)
   groupProposals     Int      @default(0)
   groupProposalVotes Int      @default(0)
   ts                 DateTime
 
   @@id([permalink])
   @@unique([id])
+}
+
+model Grant {
+  permalink          String
+  communityId        String
+  communityPermalink String
+
+  proposals Int      @default(0)
+  votes     Int      @default(0)
+  ts        DateTime
+
+  @@id([permalink])
+}
+
+model GrantProposal {
+  permalink      String
+  grantPermalink String
+
+  proposer  String
+  votes     Int       @default(0)
+  ts        DateTime
+  tsPending DateTime?
+  tsVoting  DateTime?
+
+  @@id([permalink])
+  @@index([grantPermalink])
+}
+
+model GrantProposalVote {
+  permalink         String
+  proposalPermalink String
+
+  voter String
+  ts    DateTime
+
+  @@id([permalink])
+  @@unique([proposalPermalink, voter])
+}
+
+model GrantProposalVoteChoice {
+  proposalPermalink String
+  option            String
+
+  power Decimal
+
+  @@id([proposalPermalink, option])
 }
 
 model Group {

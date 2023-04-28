@@ -4,7 +4,7 @@ import Decimal from 'decimal.js'
 import { useMemo } from 'react'
 import { gray } from 'tailwindcss/colors'
 
-import { GroupProposalVoteChoiceRouter } from '../server/routers/choice'
+import { GroupProposalVoteChoiceRouter } from '../server/routers/group-proposal-vote-choice'
 import { GroupProposal } from '../utils/schemas/group-proposal'
 import {
   powerOfChoice,
