@@ -14,7 +14,7 @@ import {
 } from '../utils/schemas/group-proposal-vote'
 import { trpc } from '../utils/trpc'
 import useStatus from '../hooks/use-status'
-import { getPhase, Phase } from '../utils/phase'
+import { getGroupProposalPhase, GroupProposalPhase } from '../utils/phase'
 import { GroupProposal } from '../utils/schemas/group-proposal'
 import { Group } from '../utils/schemas/group'
 import { FormItem } from './basic/form'
@@ -106,7 +106,7 @@ export default function GroupProposalVoteForm(props: {
   const { data: status } = useStatus(props.groupProposal.permalink)
   const now = useMemo(() => new Date(), [])
   const phase = useMemo(
-    () => getPhase(now, status?.timestamp, props.group.duration),
+    () => getGroupProposalPhase(now, status?.timestamp, props.group.duration),
     [now, props.group.duration, status?.timestamp],
   )
   const disables = useCallback(
@@ -116,7 +116,7 @@ export default function GroupProposalVoteForm(props: {
       !powers ||
       !!voted[did] ||
       !powers[did] ||
-      phase !== Phase.VOTING,
+      phase !== GroupProposalPhase.VOTING,
     [voted, powers, phase],
   )
   const didOptions = useMemo(
@@ -203,7 +203,7 @@ export default function GroupProposalVoteForm(props: {
           />
         </FormItem>
         {props.groupProposal.permalink === previewPermalink ? null : phase ===
-          Phase.ENDED ? (
+          GroupProposalPhase.ENDED ? (
           <p className="mt-6 text-end text-gray-500">Voting has ended</p>
         ) : (
           <div className="mt-6 flex w-full flex-col items-end">
@@ -237,7 +237,7 @@ export default function GroupProposalVoteForm(props: {
                 </Slide>
               ) : null}
             </div>
-            {phase === Phase.VOTING ? (
+            {phase === GroupProposalPhase.VOTING ? (
               <Button
                 large
                 primary
@@ -256,7 +256,7 @@ export default function GroupProposalVoteForm(props: {
               <Tooltip
                 place="top"
                 text={
-                  phase === Phase.CONFIRMING
+                  phase === GroupProposalPhase.CONFIRMING
                     ? 'Waiting for proposal confirming (in about 5 minutes)'
                     : status?.timestamp && props.group
                     ? `Waiting for voting start (in ${formatDurationMs(

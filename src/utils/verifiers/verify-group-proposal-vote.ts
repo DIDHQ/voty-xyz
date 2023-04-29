@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { uniq } from 'lodash-es'
 
-import { getPhase, Phase } from '../phase'
+import { getGroupProposalPhase, GroupProposalPhase } from '../phase'
 import { calculateDecimal } from '../functions/number'
 import { authorized, Authorized } from '../schemas/authorship'
 import { Group } from '../schemas/group'
@@ -35,7 +35,10 @@ export default async function verifyGroupProposalVote(
   const groupProposal = schema.parse(storage.data)
   const { group } = await verifyGroupProposal(groupProposal)
 
-  if (getPhase(new Date(), timestamp, group.duration) !== Phase.VOTING) {
+  if (
+    getGroupProposalPhase(new Date(), timestamp, group.duration) !==
+    GroupProposalPhase.VOTING
+  ) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Not in voting phase',

@@ -12,11 +12,11 @@ import Button from '../../components/basic/button'
 import EmptyState from '../../components/empty-state'
 import useIsManager from '../../hooks/use-is-manager'
 import Select from '../../components/basic/select'
-import { Phase } from '../../utils/phase'
+import { GroupProposalPhase } from '../../utils/phase'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['community_id']>()
-  const [phase, setPhase] = useState<Phase | 'All'>('All')
+  const [phase, setPhase] = useState<GroupProposalPhase | 'All'>('All')
   const { data: community, isLoading } = trpc.community.getById.useQuery(
     { id: query.community_id },
     { enabled: !!query.community_id },
@@ -52,10 +52,10 @@ export default function CommunityIndexPage() {
   const options = useMemo(
     () => [
       'All',
-      Phase.CONFIRMING,
-      Phase.ANNOUNCING,
-      Phase.VOTING,
-      Phase.ENDED,
+      GroupProposalPhase.CONFIRMING,
+      GroupProposalPhase.ANNOUNCING,
+      GroupProposalPhase.VOTING,
+      GroupProposalPhase.ENDED,
     ],
     [],
   )
@@ -70,7 +70,7 @@ export default function CommunityIndexPage() {
         <Select
           options={options}
           value={phase}
-          onChange={(p) => setPhase(p as Phase | 'All')}
+          onChange={(p) => setPhase(p as GroupProposalPhase | 'All')}
           className="-mt-1 sm:-mt-2"
         />
       </div>

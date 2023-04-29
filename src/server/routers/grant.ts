@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy } from 'lodash-es'
+import { compact, keyBy, last } from 'lodash-es'
 import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
@@ -12,6 +12,7 @@ import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGrant from '../../utils/verifiers/verify-grant'
+import { GrantPhase } from '../../utils/phase'
 
 const schema = proved(authorized(grantSchema))
 
@@ -31,15 +32,60 @@ export const grantRouter = router({
       return storage ? schema.parse(storage.data) : null
     }),
   listByCommunityId: procedure
-    .input(z.object({ communityId: z.string().optional() }))
-    .output(z.array(schema))
+    .input(
+      z.object({
+        communityId: z.string().optional(),
+        phase: z
+          .enum([
+            GrantPhase.CONFIRMING,
+            GrantPhase.ANNOUNCING,
+            GrantPhase.PROPOSING,
+            GrantPhase.VOTING,
+            GrantPhase.ENDED,
+          ])
+          .optional(),
+        cursor: z.string().optional(),
+      }),
+    )
+    .output(
+      z.object({
+        data: z.array(
+          schema.extend({
+            permalink: z.string(),
+            proposals: z.number(),
+            ts: z.date(),
+            tsPending: z.date().nullable(),
+            tsProposing: z.date().nullable(),
+            tsVoting: z.date().nullable(),
+          }),
+        ),
+        next: z.string().optional(),
+      }),
+    )
     .query(async ({ input }) => {
       if (!input.communityId) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
+      const now = new Date()
+      const filter =
+        input.phase === GrantPhase.CONFIRMING
+          ? { tsPending: null, tsVoting: null }
+          : input.phase === GrantPhase.ANNOUNCING
+          ? { ts: { lte: now }, tsPending: { gt: now } }
+          : input.phase === GrantPhase.PROPOSING
+          ? { tsPending: { lte: now }, tsProposing: { gt: now } }
+          : input.phase === GrantPhase.VOTING
+          ? { tsProposing: { lte: now }, tsVoting: { gt: now } }
+          : input.phase === GrantPhase.ENDED
+          ? { tsVoting: { lte: now } }
+          : {}
       const grants = await database.grant.findMany({
-        where: { communityId: input.communityId },
+        where: { communityId: input.communityId, ...filter },
+        cursor: input.cursor ? { permalink: input.cursor } : undefined,
+        take: 20,
+        skip: input.cursor ? 1 : 0,
+        orderBy: { ts: 'desc' },
       })
       const storages = keyBy(
         await database.storage.findMany({
@@ -50,17 +96,37 @@ export const grantRouter = router({
         ({ permalink }) => permalink,
       )
 
-      return compact(
-        grants
-          .filter(({ permalink }) => storages[permalink])
-          .map(({ permalink }) => {
-            try {
-              return schema.parse(storages[permalink].data)
-            } catch {
-              return
-            }
-          }),
-      )
+      return {
+        data: compact(
+          grants
+            .filter(({ permalink }) => storages[permalink])
+            .map(
+              ({
+                permalink,
+                proposals,
+                ts,
+                tsPending,
+                tsProposing,
+                tsVoting,
+              }) => {
+                try {
+                  return {
+                    ...schema.parse(storages[permalink].data),
+                    permalink,
+                    proposals,
+                    ts,
+                    tsPending,
+                    tsProposing,
+                    tsVoting,
+                  }
+                } catch {
+                  return
+                }
+              },
+            ),
+        ),
+        next: last(grants)?.permalink,
+      }
     }),
   create: procedure
     .input(schema)

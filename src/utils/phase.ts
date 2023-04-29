@@ -1,28 +1,64 @@
+import type { Grant } from './schemas/grant'
 import type { Group } from './schemas/group'
 
-export enum Phase {
+export enum GrantPhase {
+  CONFIRMING = 'Confirming',
+  ANNOUNCING = 'Announcing',
+  PROPOSING = 'Proposing',
+  VOTING = 'Voting',
+  ENDED = 'Ended',
+}
+
+export function getGrantPhase(
+  now: Date,
+  timestamp?: Date,
+  phase?: Grant['duration'],
+): GroupProposalPhase {
+  if (!timestamp || !phase) {
+    return GroupProposalPhase.CONFIRMING
+  }
+  if (now.getTime() < timestamp.getTime() + phase.pending * 1000) {
+    return GroupProposalPhase.ANNOUNCING
+  }
+  if (
+    now.getTime() <
+    timestamp.getTime() + (phase.pending + phase.proposing) * 1000
+  ) {
+    return GroupProposalPhase.VOTING
+  }
+  if (
+    now.getTime() <
+    timestamp.getTime() +
+      (phase.pending + phase.proposing + phase.voting) * 1000
+  ) {
+    return GroupProposalPhase.VOTING
+  }
+  return GroupProposalPhase.ENDED
+}
+
+export enum GroupProposalPhase {
   CONFIRMING = 'Confirming',
   ANNOUNCING = 'Announcing',
   VOTING = 'Voting',
   ENDED = 'Ended',
 }
 
-export function getPhase(
+export function getGroupProposalPhase(
   now: Date,
   timestamp?: Date,
   phase?: Group['duration'],
-): Phase {
+): GroupProposalPhase {
   if (!timestamp || !phase) {
-    return Phase.CONFIRMING
+    return GroupProposalPhase.CONFIRMING
   }
   if (now.getTime() < timestamp.getTime() + phase.pending * 1000) {
-    return Phase.ANNOUNCING
+    return GroupProposalPhase.ANNOUNCING
   }
   if (
     now.getTime() <
     timestamp.getTime() + (phase.pending + phase.voting) * 1000
   ) {
-    return Phase.VOTING
+    return GroupProposalPhase.VOTING
   }
-  return Phase.ENDED
+  return GroupProposalPhase.ENDED
 }

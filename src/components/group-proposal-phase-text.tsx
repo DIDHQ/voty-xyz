@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import useStatus from '../hooks/use-status'
-import { getPhase, Phase } from '../utils/phase'
+import { getGroupProposalPhase, GroupProposalPhase } from '../utils/phase'
 import type { Group } from '../utils/schemas/group'
 
 export default function GroupProposalPhaseText(props: {
@@ -10,7 +10,7 @@ export default function GroupProposalPhaseText(props: {
 }) {
   const { data: status, isLoading } = useStatus(props.groupProposalPermalink)
   const phase = useMemo(
-    () => getPhase(new Date(), status?.timestamp, props.phase),
+    () => getGroupProposalPhase(new Date(), status?.timestamp, props.phase),
     [props.phase, status?.timestamp],
   )
 
@@ -19,10 +19,10 @@ export default function GroupProposalPhaseText(props: {
       className={
         phase
           ? {
-              [Phase.CONFIRMING]: 'text-amber-600',
-              [Phase.ANNOUNCING]: 'text-sky-600',
-              [Phase.VOTING]: 'text-lime-600',
-              [Phase.ENDED]: 'text-gray-600',
+              [GroupProposalPhase.CONFIRMING]: 'text-amber-600',
+              [GroupProposalPhase.ANNOUNCING]: 'text-sky-600',
+              [GroupProposalPhase.VOTING]: 'text-lime-600',
+              [GroupProposalPhase.ENDED]: 'text-gray-600',
             }[phase]
           : undefined
       }

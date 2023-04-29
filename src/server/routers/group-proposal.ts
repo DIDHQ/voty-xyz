@@ -18,7 +18,7 @@ import {
   getPermalinkSnapshot,
   getSnapshotTimestamp,
 } from '../../utils/snapshot'
-import { Phase } from '../../utils/phase'
+import { GroupProposalPhase } from '../../utils/phase'
 import { groupSchema } from '../../utils/schemas/group'
 import verifyGroup from '../../utils/verifiers/verify-group'
 
@@ -83,7 +83,12 @@ export const groupProposalRouter = router({
         communityId: z.string().optional(),
         groupId: z.string().optional(),
         phase: z
-          .enum([Phase.CONFIRMING, Phase.ANNOUNCING, Phase.VOTING, Phase.ENDED])
+          .enum([
+            GroupProposalPhase.CONFIRMING,
+            GroupProposalPhase.ANNOUNCING,
+            GroupProposalPhase.VOTING,
+            GroupProposalPhase.ENDED,
+          ])
           .optional(),
         cursor: z.string().optional(),
       }),
@@ -109,13 +114,13 @@ export const groupProposalRouter = router({
 
       const now = new Date()
       const filter =
-        input.phase === Phase.CONFIRMING
+        input.phase === GroupProposalPhase.CONFIRMING
           ? { tsPending: null, tsVoting: null }
-          : input.phase === Phase.ANNOUNCING
+          : input.phase === GroupProposalPhase.ANNOUNCING
           ? { ts: { lte: now }, tsPending: { gt: now } }
-          : input.phase === Phase.VOTING
+          : input.phase === GroupProposalPhase.VOTING
           ? { tsPending: { lte: now }, tsVoting: { gt: now } }
-          : input.phase === Phase.ENDED
+          : input.phase === GroupProposalPhase.ENDED
           ? { tsVoting: { lte: now } }
           : {}
       const groupProposals = await database.groupProposal.findMany({

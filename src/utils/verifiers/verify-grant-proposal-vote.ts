@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 
-import { getPhase, Phase } from '../phase'
+import { getGroupProposalPhase, GroupProposalPhase } from '../phase'
 import { calculateDecimal } from '../functions/number'
 import { authorized, Authorized } from '../schemas/authorship'
 import { Grant } from '../schemas/grant'
@@ -34,7 +34,10 @@ export default async function verifyGrantProposalVote(
   const grantProposal = schema.parse(storage.data)
   const { grant } = await verifyGrantProposal(grantProposal)
 
-  if (getPhase(new Date(), timestamp, grant.duration) !== Phase.VOTING) {
+  if (
+    getGroupProposalPhase(new Date(), timestamp, grant.duration) !==
+    GroupProposalPhase.VOTING
+  ) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Not in voting phase',

@@ -10,11 +10,12 @@ import LoadingBar from '../../../components/basic/loading-bar'
 import EmptyState from '../../../components/empty-state'
 import GroupProposalCreateButton from '../../../components/group-proposal-create-button'
 import Select from '../../../components/basic/select'
-import { Phase } from '../../../utils/phase'
+import { GroupProposalPhase } from '../../../utils/phase'
+import useIsManager from '../../../hooks/use-is-manager'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['community_id', 'group_id']>()
-  const [phase, setPhase] = useState<Phase | 'All'>('All')
+  const [phase, setPhase] = useState<GroupProposalPhase | 'All'>('All')
   const { data, fetchNextPage, hasNextPage, isLoading } =
     trpc.groupProposal.list.useInfiniteQuery(
       {
@@ -44,13 +45,14 @@ export default function GroupIndexPage() {
   const options = useMemo(
     () => [
       'All',
-      Phase.CONFIRMING,
-      Phase.ANNOUNCING,
-      Phase.VOTING,
-      Phase.ENDED,
+      GroupProposalPhase.CONFIRMING,
+      GroupProposalPhase.ANNOUNCING,
+      GroupProposalPhase.VOTING,
+      GroupProposalPhase.ENDED,
     ],
     [],
   )
+  const isManager = useIsManager(query.community_id)
 
   return (
     <CommunityLayout>
@@ -60,12 +62,14 @@ export default function GroupIndexPage() {
           <Select
             options={options}
             value={phase}
-            onChange={(p) => setPhase(p as Phase | 'All')}
+            onChange={(p) => setPhase(p as GroupProposalPhase | 'All')}
           />
-          <GroupProposalCreateButton
-            communityId={query.community_id}
-            group={group || undefined}
-          />
+          {isManager ? (
+            <GroupProposalCreateButton
+              communityId={query.community_id}
+              group={group || undefined}
+            />
+          ) : null}
         </div>
         {groupProposals?.length === 0 ? (
           <EmptyState title="No proposals" className="mt-24" />

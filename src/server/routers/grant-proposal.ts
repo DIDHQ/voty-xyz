@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last } from 'lodash-es'
 import { z } from 'zod'
-import dayjs from 'dayjs'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -10,16 +9,9 @@ import { grantProposalSchema } from '../../utils/schemas/grant-proposal'
 import verifyGrantProposal from '../../utils/verifiers/verify-grant-proposal'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/proof'
-import { commonCoinTypes } from '../../utils/constants'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
-import {
-  getPermalinkSnapshot,
-  getSnapshotTimestamp,
-} from '../../utils/snapshot'
-import { Phase } from '../../utils/phase'
-import { grantSchema } from '../../utils/schemas/grant'
 import verifyGrant from '../../utils/verifiers/verify-grant'
 
 const schema = proved(authorized(grantProposalSchema))
@@ -37,39 +29,6 @@ export const grantProposalRouter = router({
         where: { permalink: input.permalink },
       })
 
-      if (
-        grantProposal &&
-        (!grantProposal.tsPending || !grantProposal.tsVoting)
-      ) {
-        try {
-          const storage = await database.storage.findUnique({
-            where: { permalink: grantProposal.grantPermalink },
-          })
-          const grant = storage ? grantSchema.parse(storage.data) : null
-          if (grant) {
-            const timestamp = await getSnapshotTimestamp(
-              commonCoinTypes.AR,
-              await getPermalinkSnapshot(grantProposal.permalink),
-            )
-            await database.grantProposal.update({
-              where: { permalink: grantProposal.permalink },
-              data: {
-                ts: timestamp,
-                tsPending: dayjs(timestamp)
-                  .add(grant.duration.pending * 1000)
-                  .toDate(),
-                tsVoting: dayjs(timestamp)
-                  .add(grant.duration.pending * 1000)
-                  .add(grant.duration.voting * 1000)
-                  .toDate(),
-              },
-            })
-          }
-        } catch (err) {
-          console.error(err)
-        }
-      }
-
       const storage = await database.storage.findUnique({
         where: { permalink: input.permalink },
       })
@@ -81,23 +40,12 @@ export const grantProposalRouter = router({
     .input(
       z.object({
         grantPermalink: z.string().optional(),
-        phase: z
-          .enum([Phase.CONFIRMING, Phase.ANNOUNCING, Phase.VOTING, Phase.ENDED])
-          .optional(),
         cursor: z.string().optional(),
       }),
     )
     .output(
       z.object({
-        data: z.array(
-          schema.extend({
-            permalink: z.string(),
-            votes: z.number(),
-            ts: z.date(),
-            tsPending: z.date().nullable(),
-            tsVoting: z.date().nullable(),
-          }),
-        ),
+        data: z.array(schema.extend({ permalink: z.string() })),
         next: z.string().optional(),
       }),
     )
@@ -106,19 +54,8 @@ export const grantProposalRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const now = new Date()
-      const filter =
-        input.phase === Phase.CONFIRMING
-          ? { tsPending: null, tsVoting: null }
-          : input.phase === Phase.ANNOUNCING
-          ? { ts: { lte: now }, tsPending: { gt: now } }
-          : input.phase === Phase.VOTING
-          ? { tsPending: { lte: now }, tsVoting: { gt: now } }
-          : input.phase === Phase.ENDED
-          ? { tsVoting: { lte: now } }
-          : {}
       const grantProposals = await database.grantProposal.findMany({
-        where: { grantPermalink: input.grantPermalink, ...filter },
+        where: { grantPermalink: input.grantPermalink },
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
         take: 20,
         skip: input.cursor ? 1 : 0,
@@ -137,15 +74,11 @@ export const grantProposalRouter = router({
         data: compact(
           grantProposals
             .filter(({ permalink }) => storages[permalink])
-            .map(({ permalink, votes, ts, tsPending, tsVoting }) => {
+            .map(({ permalink }) => {
               try {
                 return {
                   ...schema.parse(storages[permalink].data),
                   permalink,
-                  votes,
-                  ts,
-                  tsPending,
-                  tsVoting,
                 }
               } catch {
                 return
