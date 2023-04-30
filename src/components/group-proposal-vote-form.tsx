@@ -40,7 +40,7 @@ export default function GroupProposalVoteForm(props: {
 }) {
   const { onSuccess } = props
   const { data: choices, refetch: refetchChoices } =
-    trpc.groupProposalVoteChoice.groupByProposal.useQuery({
+    trpc.groupProposalVoteChoice.groupByOption.useQuery({
       groupProposal: props.groupProposal.permalink,
     })
   const [did, setDid] = useState('')

@@ -74,7 +74,7 @@ export const grantProposalVoteRouter = router({
         next: last(grantProposalVotes)?.permalink,
       }
     }),
-  grantByVoter: procedure
+  groupByVoter: procedure
     .input(z.object({ grantProposal: z.string().optional() }))
     .output(z.record(z.string(), z.string()))
     .query(async ({ input }) => {

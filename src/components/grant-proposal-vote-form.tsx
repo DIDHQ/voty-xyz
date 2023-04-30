@@ -38,7 +38,7 @@ export default function GrantProposalVoteForm(props: {
 }) {
   const { onSuccess } = props
   const { data: choices, refetch: refetchChoices } =
-    trpc.grantProposalVoteChoice.grantByProposal.useQuery({
+    trpc.grantProposalVoteChoice.groupByOption.useQuery({
       grantProposal: props.grantProposal.permalink,
     })
   const [did, setDid] = useState('')
@@ -65,7 +65,7 @@ export default function GrantProposalVoteForm(props: {
     { enabled: !!dids },
   )
   const { data: voted, refetch: refetchVoted } =
-    trpc.grantProposalVote.grantByVoter.useQuery(
+    trpc.grantProposalVote.groupByVoter.useQuery(
       { grantProposal: props.grantProposal.permalink },
       { enabled: !!props.grantProposal.permalink },
     )
