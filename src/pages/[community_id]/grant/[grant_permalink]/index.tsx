@@ -108,18 +108,21 @@ export default function GrantPage() {
               grant={grant}
               className="mb-6 block sm:hidden"
             />
-            <GrantProposalCreateButton
-              communityId={query.community_id}
-              grant={grant}
-              className="my-6 flex justify-end border-t border-gray-200 pt-6"
-            />
-            {grant?.proposals ? (
-              <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
-                {grant.proposals === 1
-                  ? '1 Proposal'
-                  : `${grant.proposals} Proposals`}
-              </h2>
-            ) : null}
+            <div className="my-6 flex items-center justify-between border-t border-gray-200 pt-6">
+              {grant?.proposals ? (
+                <h2 className="text-2xl font-bold">
+                  {grant.proposals === 1
+                    ? '1 Proposal'
+                    : `${grant.proposals} Proposals`}
+                </h2>
+              ) : (
+                <h2 />
+              )}
+              <GrantProposalCreateButton
+                communityId={query.community_id}
+                grant={grant}
+              />
+            </div>
             {grantProposals?.length ? (
               <ul role="list" className="mt-5 space-y-5">
                 {grantProposals.map((grantProposal) => (

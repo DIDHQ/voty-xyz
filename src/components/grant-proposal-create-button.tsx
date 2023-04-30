@@ -13,7 +13,6 @@ import { formatDurationMs } from '../utils/time'
 export default function GrantProposalCreateButton(props: {
   communityId?: string
   grant?: Grant & { permalink: string }
-  className?: string
 }) {
   const now = useMemo(() => new Date(), [])
   const { data: status } = useStatus(props.grant?.permalink)
@@ -23,42 +22,36 @@ export default function GrantProposalCreateButton(props: {
   )
 
   return phase === GrantPhase.CONFIRMING ? (
-    <div className={props.className}>
-      <Tooltip
-        place="top"
-        text="Waiting for grant changes to be confirmed (in about 5 minutes)"
-      >
-        <Button primary disabled icon={PlusIcon}>
-          Proposal
-        </Button>
-      </Tooltip>
-    </div>
+    <Tooltip
+      place="top"
+      text="Waiting for grant changes to be confirmed (in about 5 minutes)"
+    >
+      <Button primary disabled icon={PlusIcon}>
+        Proposal
+      </Button>
+    </Tooltip>
   ) : phase === GrantPhase.ANNOUNCING && status?.timestamp && props.grant ? (
-    <div className={props.className}>
-      <Tooltip
-        place="top"
-        text={`Waiting for proposing start (in ${formatDurationMs(
-          status.timestamp.getTime() +
-            props.grant.duration.announcing * 1000 -
-            now.getTime(),
-        )})`}
-      >
-        <Button primary disabled icon={PlusIcon}>
-          Proposal
-        </Button>
-      </Tooltip>
-    </div>
+    <Tooltip
+      place="top"
+      text={`Waiting for proposing start (in ${formatDurationMs(
+        status.timestamp.getTime() +
+          props.grant.duration.announcing * 1000 -
+          now.getTime(),
+      )})`}
+    >
+      <Button primary disabled icon={PlusIcon}>
+        Proposal
+      </Button>
+    </Tooltip>
   ) : props.communityId && props.grant && phase === GrantPhase.PROPOSING ? (
-    <div className={props.className}>
-      <Link
-        href={`/${props.communityId}/grant/${permalink2Id(
-          props.grant.permalink,
-        )}/create`}
-      >
-        <Button primary icon={PlusIcon}>
-          Proposal
-        </Button>
-      </Link>
-    </div>
+    <Link
+      href={`/${props.communityId}/grant/${permalink2Id(
+        props.grant.permalink,
+      )}/create`}
+    >
+      <Button primary icon={PlusIcon}>
+        Proposal
+      </Button>
+    </Link>
   ) : null
 }
