@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { BoltIcon } from '@heroicons/react/20/solid'
 import type { Decimal } from 'decimal.js'
@@ -9,18 +9,16 @@ import clsx from 'clsx'
 
 import { calculateDecimal } from '../utils/functions/decimal'
 import {
-  GroupProposalVote,
-  groupProposalVoteSchema,
-} from '../utils/schemas/group-proposal-vote'
+  GrantProposalVote,
+  grantProposalVoteSchema,
+} from '../utils/schemas/grant-proposal-vote'
 import { trpc } from '../utils/trpc'
 import useStatus from '../hooks/use-status'
-import { getGroupProposalPhase, GroupProposalPhase } from '../utils/phase'
-import { GroupProposal } from '../utils/schemas/group-proposal'
-import { Group } from '../utils/schemas/group'
-import { FormItem } from './basic/form'
+import { getGrantPhase, GrantPhase } from '../utils/phase'
+import { GrantProposal } from '../utils/schemas/grant-proposal'
+import { Grant } from '../utils/schemas/grant'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
-import { ChoiceListItem } from './choice-list-item'
 import DidCombobox from './did-combobox'
 import Button from './basic/button'
 import useSignDocument from '../hooks/use-sign-document'
@@ -32,30 +30,30 @@ import { formatDurationMs } from '../utils/time'
 import { previewPermalink } from '../utils/constants'
 import PermissionCard from './permission-card'
 
-export default function GroupProposalVoteForm(props: {
-  group: Group
-  groupProposal: GroupProposal & { permalink: string }
+export default function GrantProposalVoteForm(props: {
+  grant: Grant
+  grantProposal: GrantProposal & { permalink: string }
   onSuccess: () => void
   className?: string
 }) {
   const { onSuccess } = props
   const { data: choices, refetch: refetchChoices } =
-    trpc.groupProposalVoteChoice.groupByProposal.useQuery({
-      groupProposal: props.groupProposal.permalink,
+    trpc.grantProposalVoteChoice.grantByProposal.useQuery({
+      grantProposal: props.grantProposal.permalink,
     })
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
-  const { data: dids } = useDids(account, props.groupProposal.snapshots)
+  const { data: dids } = useDids(account, props.grant.snapshots)
   const { data: powers } = useQuery(
-    [dids, props.group, props.groupProposal.snapshots],
+    [dids, props.grant, props.grant.snapshots],
     async () => {
       const decimals = await pMap(
         dids!,
         (did) =>
           calculateDecimal(
-            props.group.permission.voting,
+            props.grant.permission.voting,
             did,
-            props.groupProposal.snapshots,
+            props.grant.snapshots,
           ),
         { concurrency: 5 },
       )
@@ -67,32 +65,26 @@ export default function GroupProposalVoteForm(props: {
     { enabled: !!dids },
   )
   const { data: voted, refetch: refetchVoted } =
-    trpc.groupProposalVote.groupByVoter.useQuery(
-      { groupProposal: props.groupProposal.permalink },
-      { enabled: !!props.groupProposal.permalink },
+    trpc.grantProposalVote.grantByVoter.useQuery(
+      { grantProposal: props.grantProposal.permalink },
+      { enabled: !!props.grantProposal.permalink },
     )
-  const methods = useForm<GroupProposalVote>({
-    resolver: zodResolver(groupProposalVoteSchema),
+  const methods = useForm<GrantProposalVote>({
+    resolver: zodResolver(grantProposalVoteSchema),
   })
-  const {
-    setValue,
-    resetField,
-    control,
-    formState: { errors },
-    handleSubmit: onSubmit,
-  } = methods
+  const { setValue, resetField, handleSubmit: onSubmit } = methods
   useEffect(() => {
-    if (props.groupProposal.permalink) {
-      setValue('group_proposal', props.groupProposal.permalink)
+    if (props.grantProposal.permalink) {
+      setValue('grant_proposal', props.grantProposal.permalink)
     }
-  }, [props.groupProposal.permalink, setValue])
+  }, [props.grantProposal.permalink, setValue])
   const { data: totalPower } = useQuery(
-    ['votingPower', props.group, did, props.groupProposal],
+    ['votingPower', props.grant, did, props.grantProposal],
     () =>
       calculateDecimal(
-        props.group.permission.voting,
+        props.grant.permission.voting,
         did!,
-        props.groupProposal.snapshots,
+        props.grant.snapshots,
       ),
     { enabled: !!did },
   )
@@ -103,11 +95,11 @@ export default function GroupProposalVoteForm(props: {
       setValue('total_power', totalPower.toString())
     }
   }, [resetField, setValue, totalPower])
-  const { data: status } = useStatus(props.groupProposal.permalink)
+  const { data: status } = useStatus(props.grantProposal.permalink)
   const now = useMemo(() => new Date(), [])
   const phase = useMemo(
-    () => getGroupProposalPhase(now, status?.timestamp, props.group.duration),
-    [now, props.group.duration, status?.timestamp],
+    () => getGrantPhase(now, status?.timestamp, props.grant.duration),
+    [now, props.grant.duration, status?.timestamp],
   )
   const disables = useCallback(
     (did?: string) =>
@@ -116,7 +108,7 @@ export default function GroupProposalVoteForm(props: {
       !powers ||
       !!voted[did] ||
       !powers[did] ||
-      phase !== GroupProposalPhase.VOTING,
+      phase !== GrantPhase.VOTING,
     [voted, powers, phase],
   )
   const didOptions = useMemo(
@@ -130,12 +122,12 @@ export default function GroupProposalVoteForm(props: {
         : undefined,
     [dids, powers, voted],
   )
-  const { mutateAsync } = trpc.groupProposalVote.create.useMutation()
+  const { mutateAsync } = trpc.grantProposalVote.create.useMutation()
   const signDocument = useSignDocument(
     did,
     `You are voting on Voty\n\nhash:\n{sha256}`,
   )
-  const handleSubmit = useMutation<void, Error, GroupProposalVote>(
+  const handleSubmit = useMutation<void, Error, GrantProposalVote>(
     async (vote) => {
       const signed = await signDocument(vote)
       await mutateAsync(signed)
@@ -174,34 +166,8 @@ export default function GroupProposalVoteForm(props: {
         Your vote has been submitted successfully
       </Notification>
       <div className={clsx('mt-6 border-t border-gray-200', props.className)}>
-        <FormItem error={errors.powers?.message?.message}>
-          <Controller
-            control={control}
-            name="powers"
-            render={({ field: { ref, value, onChange } }) => (
-              <ul
-                ref={ref}
-                role="list"
-                className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
-              >
-                {props.groupProposal.options.map((option) => (
-                  <ChoiceListItem
-                    key={option}
-                    type={props.groupProposal.voting_type}
-                    option={option}
-                    votingPower={totalPower}
-                    choices={choices}
-                    disabled={disables(did)}
-                    value={value}
-                    onChange={onChange}
-                  />
-                ))}
-              </ul>
-            )}
-          />
-        </FormItem>
-        {props.groupProposal.permalink === previewPermalink ? null : phase ===
-          GroupProposalPhase.ENDED ? (
+        {props.grantProposal.permalink === previewPermalink ? null : phase ===
+          GrantPhase.ENDED ? (
           <p className="mt-6 text-end text-gray-500">Voting has ended</p>
         ) : (
           <div className="mt-6 flex w-full flex-col items-end">
@@ -214,9 +180,9 @@ export default function GroupProposalVoteForm(props: {
                 onChange={setDid}
                 onClick={connect}
               />
-              {didOptions?.length === 0 && props.group ? (
+              {didOptions?.length === 0 && props.grant ? (
                 <Slide
-                  title={`Voters of ${props.group.name}`}
+                  title={`Voters of ${props.grant.name}`}
                   trigger={({ handleOpen }) => (
                     <TextButton secondary onClick={handleOpen}>
                       Why I&#39;m not eligible to vote
@@ -226,14 +192,14 @@ export default function GroupProposalVoteForm(props: {
                   {() => (
                     <PermissionCard
                       title="Voters"
-                      description="SubDIDs who can vote in this workgroup"
-                      value={props.group.permission.voting}
+                      description="SubDIDs who can vote in this grant"
+                      value={props.grant.permission.voting}
                     />
                   )}
                 </Slide>
               ) : null}
             </div>
-            {phase === GroupProposalPhase.VOTING ? (
+            {phase === GrantPhase.VOTING ? (
               <Button
                 large
                 primary
@@ -252,12 +218,13 @@ export default function GroupProposalVoteForm(props: {
               <Tooltip
                 place="top"
                 text={
-                  phase === GroupProposalPhase.CONFIRMING
+                  phase === GrantPhase.CONFIRMING
                     ? 'Waiting for proposal confirming (in about 5 minutes)'
-                    : status?.timestamp && props.group
+                    : status?.timestamp && props.grant
                     ? `Waiting for voting start (in ${formatDurationMs(
                         status.timestamp.getTime() +
-                          props.group.duration.announcing * 1000 -
+                          props.grant.duration.announcing * 1000 +
+                          props.grant.duration.proposing * 1000 -
                           now.getTime(),
                       )})`
                     : 'Waiting for voting start'

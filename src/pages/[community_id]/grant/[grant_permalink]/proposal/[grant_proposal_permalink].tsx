@@ -20,6 +20,7 @@ import Markdown from '../../../../../components/basic/markdown'
 import GrantProposalInfo from '../../../../../components/grant-proposal-info'
 import { previewGrantProposalAtom } from '../../../../../utils/atoms'
 import { GrantProposal } from '../../../../../utils/schemas/grant-proposal'
+import GrantProposalVoteForm from '../../../../../components/grant-proposal-vote-form'
 
 export default function GrantProposalPage() {
   const query = useRouterQuery<['grant_proposal_permalink']>()
@@ -129,13 +130,13 @@ export default function GrantProposalPage() {
               grantProposal={grantProposal}
               className="mb-6 block sm:hidden"
             />
-            {/* {grant && grantProposal ? (
+            {grant && grantProposal ? (
               <GrantProposalVoteForm
                 grant={grant}
                 grantProposal={grantProposal}
                 onSuccess={handleSuccess}
               />
-            ) : null} */}
+            ) : null}
             {grantProposal?.votes ? (
               <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
                 {grantProposal.votes === 1
