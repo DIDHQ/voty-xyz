@@ -34,6 +34,7 @@ import { previewGrantProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
 import Slide from './basic/slide'
 import PermissionCard from './permission-card'
+import { permalink2Id } from '../utils/permalink'
 
 export default function GrantProposalForm(props: {
   initialValue: Partial<GrantProposal>
@@ -59,10 +60,8 @@ export default function GrantProposalForm(props: {
   } = methods
   useEffect(() => {
     reset(grantProposal)
-  }, [grantProposal, reset])
-  useEffect(() => {
     setValue('grant', props.grantPermalink)
-  }, [props.grantPermalink, setValue])
+  }, [grantProposal, props.grantPermalink, reset, setValue])
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account)
@@ -190,13 +189,21 @@ export default function GrantProposalForm(props: {
             setPreviewGrantProposal({
               ...value,
               preview: {
-                from: `/${props.communityId}/grant/${props.grantPermalink}/create`,
-                to: `/proposal/${previewPermalink}`,
+                from: `/${props.communityId}/grant/${permalink2Id(
+                  props.grantPermalink,
+                )}/create`,
+                to: `/${props.communityId}/grant/${permalink2Id(
+                  props.grantPermalink,
+                )}/proposal/${previewPermalink}`,
                 template: `You are creating proposal on Voty\n\nhash:\n{sha256}`,
                 author: did,
               },
             })
-            router.push(`/proposal/${previewPermalink}`)
+            router.push(
+              `/${props.communityId}/grant/${permalink2Id(
+                props.grantPermalink,
+              )}/proposal/${previewPermalink}`,
+            )
           }, console.error)}
         >
           Preview

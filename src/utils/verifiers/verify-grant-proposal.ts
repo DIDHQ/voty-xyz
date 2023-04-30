@@ -31,7 +31,7 @@ export default async function verifyGrantProposal(
     !(await checkBoolean(
       grant.permission.proposing,
       grantProposal.authorship.author,
-      grantProposal.snapshots,
+      grant.snapshots,
     ))
   ) {
     throw new TRPCError({

@@ -124,7 +124,12 @@ export default function GrantPage() {
               <ul role="list" className="mt-5 space-y-5">
                 {grantProposals.map((grantProposal) => (
                   <li key={grantProposal.permalink}>
-                    <GrantProposalCard grantProposal={grantProposal} />
+                    {query.community_id ? (
+                      <GrantProposalCard
+                        communityId={query.community_id}
+                        grantProposal={grantProposal}
+                      />
+                    ) : null}
                   </li>
                 ))}
               </ul>

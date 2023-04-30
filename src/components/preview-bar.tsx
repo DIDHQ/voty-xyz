@@ -7,12 +7,14 @@ import useSignDocument from '../hooks/use-sign-document'
 import {
   previewCommunityAtom,
   previewGrantAtom,
+  previewGrantProposalAtom,
   previewGroupAtom,
   previewGroupProposalAtom,
 } from '../utils/atoms'
 import {
   isCommunity,
   isGrant,
+  isGrantProposal,
   isGroup,
   isGroupProposal,
 } from '../utils/data-type'
@@ -28,12 +30,19 @@ export default function PreviewBar() {
   const router = useRouter()
   const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
   const [previewGrant, setPreviewGrant] = useAtom(previewGrantAtom)
+  const [previewGrantProposal, setPreviewGrantProposal] = useAtom(
+    previewGrantProposalAtom,
+  )
   const [previewGroup, setPreviewGroup] = useAtom(previewGroupAtom)
-  const [previewProposal, setPreviewProposal] = useAtom(
+  const [previewGroupProposal, setPreviewGroupProposal] = useAtom(
     previewGroupProposalAtom,
   )
   const document =
-    previewCommunity || previewGrant || previewGroup || previewProposal
+    previewCommunity ||
+    previewGrant ||
+    previewGrantProposal ||
+    previewGroup ||
+    previewGroupProposal
   const preview = document?.preview
   const { data: community } = trpc.community.getById.useQuery(
     { id: previewCommunity?.id },
@@ -45,8 +54,9 @@ export default function PreviewBar() {
       if (preview && url !== preview.from && url !== preview.to) {
         setPreviewCommunity(undefined)
         setPreviewGrant(undefined)
+        setPreviewGrantProposal(undefined)
         setPreviewGroup(undefined)
-        setPreviewProposal(undefined)
+        setPreviewGroupProposal(undefined)
       }
     }
     router.events.on('routeChangeComplete', handler)
@@ -58,14 +68,17 @@ export default function PreviewBar() {
     preview,
     setPreviewCommunity,
     setPreviewGrant,
+    setPreviewGrantProposal,
     setPreviewGroup,
-    setPreviewProposal,
+    setPreviewGroupProposal,
   ])
   const signDocument = useSignDocument(preview?.author, preview?.template)
   const { mutateAsync: mutateCommunity } = trpc.community.create.useMutation()
   const { mutateAsync: mutateGrant } = trpc.grant.create.useMutation()
+  const { mutateAsync: mutateGrantProposal } =
+    trpc.grantProposal.create.useMutation()
   const { mutateAsync: mutateGroup } = trpc.group.create.useMutation()
-  const { mutateAsync: mutateProposal } =
+  const { mutateAsync: mutateGroupProposal } =
     trpc.groupProposal.create.useMutation()
   const handleSubmit = useMutation<
     string,
@@ -99,6 +112,22 @@ export default function PreviewBar() {
       router.push(`/${signed.authorship.author}/grant`)
       return 'grant'
     }
+    if (isGrantProposal(document)) {
+      const signed = await signDocument(document)
+      const permalink = await mutateGrantProposal(signed)
+      await Promise.all([
+        utils.grantProposal.getByPermalink.prefetch({ permalink }),
+        utils.grant.getByPermalink.prefetch({ permalink: signed.grant }),
+      ])
+      setPreviewGrantProposal(undefined)
+      router.push(
+        preview.to.replace(
+          new RegExp(`\/${previewPermalink}\$`),
+          `/${permalink2Id(permalink)}`,
+        ),
+      )
+      return 'grant proposal'
+    }
     if (isGroup(document)) {
       const signed = await signDocument(document)
       await mutateGroup(signed)
@@ -122,19 +151,19 @@ export default function PreviewBar() {
     }
     if (isGroupProposal(document)) {
       const signed = await signDocument(document)
-      const permalink = await mutateProposal(signed)
+      const permalink = await mutateGroupProposal(signed)
       await Promise.all([
         utils.groupProposal.getByPermalink.prefetch({ permalink }),
         utils.group.getByPermalink.prefetch({ permalink: signed.group }),
       ])
-      setPreviewProposal(undefined)
+      setPreviewGroupProposal(undefined)
       router.push(
         preview.to.replace(
           new RegExp(`\/${previewPermalink}\$`),
           `/${permalink2Id(permalink)}`,
         ),
       )
-      return 'proposal'
+      return 'group proposal'
     }
     throw new Error('')
   })

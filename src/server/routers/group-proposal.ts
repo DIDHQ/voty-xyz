@@ -98,6 +98,8 @@ export const groupProposalRouter = router({
         data: z.array(
           schema.extend({
             permalink: z.string(),
+            communityId: z.string(),
+            groupId: z.string(),
             votes: z.number(),
             ts: z.date(),
             tsAnnouncing: z.date().nullable(),
@@ -149,20 +151,32 @@ export const groupProposalRouter = router({
         data: compact(
           groupProposals
             .filter(({ permalink }) => storages[permalink])
-            .map(({ permalink, votes, ts, tsAnnouncing, tsVoting }) => {
-              try {
-                return {
-                  ...schema.parse(storages[permalink].data),
-                  permalink,
-                  votes,
-                  ts,
-                  tsAnnouncing,
-                  tsVoting,
+            .map(
+              ({
+                permalink,
+                communityId,
+                groupId,
+                votes,
+                ts,
+                tsAnnouncing,
+                tsVoting,
+              }) => {
+                try {
+                  return {
+                    ...schema.parse(storages[permalink].data),
+                    permalink,
+                    communityId,
+                    groupId,
+                    votes,
+                    ts,
+                    tsAnnouncing,
+                    tsVoting,
+                  }
+                } catch {
+                  return
                 }
-              } catch {
-                return
-              }
-            }),
+              },
+            ),
         ),
         next: last(groupProposals)?.permalink,
       }

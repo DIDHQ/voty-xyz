@@ -7,6 +7,7 @@ import { GrantProposal } from '../utils/schemas/grant-proposal'
 import { formatDurationMs } from '../utils/time'
 
 export default function GrantProposalCard(props: {
+  communityId: string
   grantProposal: Authorized<GrantProposal> & {
     permalink: string
     votes: number
@@ -18,7 +19,9 @@ export default function GrantProposalCard(props: {
   return (
     <Link
       shallow
-      href={`/proposal/${permalink2Id(props.grantProposal.permalink)}`}
+      href={`/${props.communityId}/grant/${permalink2Id(
+        props.grantProposal.grant,
+      )}/proposal/${permalink2Id(props.grantProposal.permalink)}`}
       className="block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-primary-300 focus-within:ring-offset-2 hover:border-primary-500 hover:bg-gray-50"
     >
       <div className="w-full p-4">

@@ -313,12 +313,14 @@ export default function GroupProposalForm(props: {
               ...value,
               preview: {
                 from: `/${props.communityId}/group/${props.group.id}/create`,
-                to: `/proposal/${previewPermalink}`,
+                to: `/${props.communityId}/group/${props.group.id}/proposal/${previewPermalink}`,
                 template: `You are creating proposal on Voty\n\nhash:\n{sha256}`,
                 author: did,
               },
             })
-            router.push(`/proposal/${previewPermalink}`)
+            router.push(
+              `/${props.communityId}/group/${props.group.id}/proposal/${previewPermalink}`,
+            )
           }, console.error)}
         >
           Preview

@@ -47,7 +47,7 @@ export default async function verifyGrantProposalVote(
   const votingPower = await calculateDecimal(
     grant.permission.voting,
     grantProposalVote.authorship.author,
-    grantProposal.snapshots,
+    grant.snapshots,
   )
   if (Object.keys(grantProposalVote.powers).length !== 1) {
     throw new TRPCError({

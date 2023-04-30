@@ -11,6 +11,8 @@ import { formatDurationMs } from '../utils/time'
 export default function GroupProposalCard(props: {
   groupProposal: Authorized<GroupProposal> & {
     permalink: string
+    communityId: string
+    groupId: string
     votes: number
     ts: Date
     tsAnnouncing: Date | null
@@ -33,7 +35,9 @@ export default function GroupProposalCard(props: {
   return (
     <Link
       shallow
-      href={`/proposal/${permalink2Id(props.groupProposal.permalink)}`}
+      href={`/${props.groupProposal.communityId}/group/${
+        props.groupProposal.groupId
+      }/proposal/${permalink2Id(props.groupProposal.permalink)}`}
       className="block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-primary-300 focus-within:ring-offset-2 hover:border-primary-500 hover:bg-gray-50"
     >
       <div className="w-full p-4">

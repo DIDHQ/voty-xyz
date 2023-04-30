@@ -8,6 +8,7 @@ import LoadingBar from '../../../../components/basic/loading-bar'
 import GrantProposalForm from '../../../../components/grant-proposal-form'
 import { documentTitle } from '../../../../utils/constants'
 import { GrantProposal } from '../../../../utils/schemas/grant-proposal'
+import { permalink2Id } from '../../../../utils/permalink'
 
 export default function CreateGrantProposalPage() {
   const query = useRouterQuery<['community_id', 'grant_permalink']>()
@@ -26,7 +27,9 @@ export default function CreateGrantProposalPage() {
       <div className="w-full">
         <TextButton
           disabled={!query.community_id || !query.grant_permalink}
-          href={`/${query.community_id}/grant/${query.grant_permalink}`}
+          href={`/${query.community_id}/grant/${
+            query.grant_permalink ? permalink2Id(query.grant_permalink) : ''
+          }`}
           className="mt-6 sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
