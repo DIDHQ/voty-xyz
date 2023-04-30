@@ -1,46 +1,53 @@
-import { inferRouterOutputs } from '@trpc/server'
 import clsx from 'clsx'
 import Decimal from 'decimal.js'
 import { useMemo } from 'react'
 import { gray } from 'tailwindcss/colors'
 
-import { ChoiceRouter } from '../server/routers/choice'
-import { Proposal } from '../utils/schemas/proposal'
+import { GroupProposal } from '../utils/schemas/group-proposal'
 import {
   powerOfChoice,
   choiceIsEmpty,
   updateChoice,
   checkChoice,
 } from '../utils/choice'
+import { PositiveDecimal } from '../utils/schemas/positive-decimal'
 
 export function ChoiceListItem(props: {
-  type: Proposal['voting_type']
+  type: GroupProposal['voting_type']
   option: string
   votingPower?: Decimal
-  choices?: inferRouterOutputs<ChoiceRouter>['groupByProposal']
+  choices?: Record<string, PositiveDecimal>
   disabled?: boolean
-  value: string
-  onChange(value: string): void
+  value?: Record<string, PositiveDecimal>
+  onChange(value: Record<string, PositiveDecimal>): void
 }) {
   const { type, option, votingPower, choices, value, onChange } = props
   const newPower = useMemo(
     () =>
       votingPower
-        ? powerOfChoice(type, value, votingPower)[option] || new Decimal(0)
+        ? powerOfChoice(value, votingPower)[option] || new Decimal(0)
         : new Decimal(0),
-    [option, type, value, votingPower],
+    [option, value, votingPower],
+  )
+  const total = useMemo(
+    () =>
+      Object.values(choices || {}).reduce(
+        (sum, power) => sum.add(power),
+        new Decimal(0),
+      ),
+    [choices],
   )
   const percentage = useMemo(() => {
-    const denominator = new Decimal(choices?.total || 0).add(
-      new Decimal(choiceIsEmpty(type, value) ? 0 : votingPower || 0),
+    const denominator = total.add(
+      new Decimal(choiceIsEmpty(value) ? 0 : votingPower || 0),
     )
     if (denominator.isZero()) {
       return new Decimal(0)
     }
-    return new Decimal(new Decimal(choices?.powers[option] || 0).add(newPower))
+    return new Decimal(new Decimal(choices?.[option] || 0).add(newPower))
       .mul(100)
       .dividedBy(denominator)
-  }, [choices, newPower, option, type, value, votingPower])
+  }, [choices, newPower, option, total, value, votingPower])
 
   return (
     <li
@@ -55,22 +62,21 @@ export function ChoiceListItem(props: {
       }}
       onClick={() => {
         if (!props.disabled) {
-          onChange(updateChoice(type, value, option))
+          onChange(updateChoice(value, option))
         }
       }}
     >
       <span className="w-0 flex-1 truncate">{option}</span>
-      {choices?.powers[option] || newPower.gt(0) ? (
+      {choices?.[option] || newPower.gt(0) ? (
         <span className="text-xs text-gray-800">
-          {choices?.powers[option] || 0}
-          {newPower.gt(0) ? ` + ${newPower.toString()}` : ''}&nbsp;(
+          {newPower.add(choices?.[option] || 0).toString()}&nbsp;(
           {percentage.toFixed(1)}%)
         </span>
       ) : null}
       <div className="ml-4 shrink-0 leading-none">
         <input
           type={type === 'single' ? 'radio' : 'checkbox'}
-          checked={checkChoice(type, value, option)}
+          checked={checkChoice(value, option)}
           disabled={props.disabled}
           onChange={() => null}
           className={clsx(

@@ -19,19 +19,19 @@ export const groupRouter = router({
   getById: procedure
     .input(
       z.object({
-        community_id: z.string().optional(),
+        communityId: z.string().optional(),
         id: z.string().optional(),
       }),
     )
     .output(schema.extend({ permalink: z.string() }).nullable())
     .query(async ({ input }) => {
-      if (!input.community_id || !input.id) {
+      if (!input.communityId || !input.id) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
       const group = await database.group.findUnique({
         where: {
-          id_community_id: { community_id: input.community_id, id: input.id },
+          id_communityId: { communityId: input.communityId, id: input.id },
         },
       })
       if (!group) {
@@ -59,16 +59,16 @@ export const groupRouter = router({
 
       return storage ? schema.parse(storage.data) : null
     }),
-  listByCommunity: procedure
-    .input(z.object({ community_id: z.string().optional() }))
+  listByCommunityId: procedure
+    .input(z.object({ communityId: z.string().optional() }))
     .output(z.array(schema))
     .query(async ({ input }) => {
-      if (!input.community_id) {
+      if (!input.communityId) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
       const groups = await database.group.findMany({
-        where: { community_id: input.community_id },
+        where: { communityId: input.communityId },
         orderBy: { id: 'desc' },
       })
       const storages = keyBy(
@@ -94,10 +94,22 @@ export const groupRouter = router({
     }),
   create: procedure
     .input(
-      schema.refine(
-        (group) => group.id.indexOf('.') === group.id.lastIndexOf('.'),
-        'Cannot create group with SubDID',
-      ),
+      schema
+        .refine(
+          (group) => group.id.indexOf('.') === group.id.lastIndexOf('.'),
+          'Cannot create group with SubDID',
+        )
+        .refine(
+          (group) =>
+            group.permission.proposing.operands.length === 1 &&
+            group.permission.proposing.operands[0].arguments[0] ===
+              group.authorship.author,
+        )
+        .refine((group) =>
+          group.permission.voting.operands.every(
+            (operand) => operand.arguments[0] === group.authorship.author,
+          ),
+        ),
     )
     .output(z.string())
     .mutation(async ({ input }) => {
@@ -114,8 +126,8 @@ export const groupRouter = router({
           data: {
             id: input.id,
             permalink,
-            community_id: community.id,
-            community_permalink: input.community,
+            communityId: community.id,
+            communityPermalink: input.community,
             ts,
           },
         }),
@@ -132,8 +144,8 @@ export const groupRouter = router({
 
     await database.group.delete({
       where: {
-        id_community_id: {
-          community_id: community.id,
+        id_communityId: {
+          communityId: community.id,
           id: input.id,
         },
       },

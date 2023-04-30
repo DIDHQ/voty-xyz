@@ -1,94 +1,49 @@
 import Decimal from 'decimal.js'
-import { uniq, without } from 'lodash-es'
+import { mapValues, uniq, without } from 'lodash-es'
 
-import { Proposal } from './schemas/proposal'
+import { PositiveDecimal } from './schemas/positive-decimal'
 
 export function updateChoice(
-  type: Proposal['voting_type'],
-  choice: string | undefined,
+  powers: Record<string, PositiveDecimal> | undefined,
   option: string,
-): string {
-  try {
-    if (type === 'single') {
-      return JSON.stringify(option)
-    }
-    if (type === 'approval') {
-      const array = JSON.parse(choice || '[]') as string[]
-      return JSON.stringify(
-        array.includes(option)
-          ? without(array, option)
-          : uniq([...array, option]),
-      )
-    }
-    return ''
-  } catch {
-    return ''
-  }
+): Record<string, PositiveDecimal> {
+  const options = powers?.[option]
+    ? without(Object.keys(powers), option)
+    : uniq([...Object.keys(powers || {}), option])
+  return options.reduce((obj, option) => {
+    obj[option] = '1'
+    return obj
+  }, {} as Record<string, PositiveDecimal>)
 }
 
 export function checkChoice(
-  type: Proposal['voting_type'],
-  choice: string,
+  powers: Record<string, PositiveDecimal> | undefined,
   option: string,
 ): boolean {
-  try {
-    if (type === 'single') {
-      return JSON.parse(choice) === option
-    }
-    if (type === 'approval') {
-      return (JSON.parse(choice || '[]') as string[]).includes(option)
-    }
-    return false
-  } catch {
-    return false
-  }
+  return !!powers?.[option]
 }
 
 export function powerOfChoice(
-  type: Proposal['voting_type'],
-  choice: string,
-  power: Decimal,
+  powers: Record<string, PositiveDecimal> | undefined,
+  totalPower: Decimal,
 ): { [option: string]: Decimal | undefined } {
-  try {
-    if (type === 'single') {
-      return { [JSON.parse(choice) as string]: power }
-    }
-    if (type === 'approval') {
-      const array = JSON.parse(choice || '[]') as string[]
-      return array.reduce((obj, option) => {
-        obj[option] = power.dividedBy(array.length)
-        return obj
-      }, {} as { [option: string]: Decimal })
-    }
-    return {}
-  } catch {
-    return {}
-  }
+  const denominator = powers
+    ? Object.values(powers).reduce(
+        (sum, power) => sum.add(power),
+        new Decimal(0),
+      )
+    : new Decimal(1)
+  return mapValues(powers, (power) =>
+    totalPower.dividedBy(denominator).mul(power),
+  )
 }
 
 export function choiceIsEmpty(
-  type: Proposal['voting_type'],
-  choice: string | undefined,
+  powers: Record<string, PositiveDecimal> | undefined,
 ): boolean {
-  if (type === 'single') {
-    return !choice
-  }
-  if (type === 'approval') {
-    return !choice || choice === '[]'
-  }
-  return true
+  return !powers || Object.keys(powers).length === 0
 }
 
-export function stringifyChoice(type: Proposal['voting_type'], choice: string) {
-  try {
-    if (type === 'single') {
-      return JSON.parse(choice) as string
-    }
-    if (type === 'approval') {
-      return (JSON.parse(choice || '[]') as string[]).sort().join(', ')
-    }
-    return ''
-  } catch {
-    return ''
-  }
+export function stringifyChoice(powers: Record<string, PositiveDecimal>) {
+  return Object.keys(powers).sort().join(', ')
 }

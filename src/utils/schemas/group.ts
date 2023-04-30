@@ -11,7 +11,7 @@ export const groupSchema = z.object({
     voting: decimalSetsSchema,
   }),
   duration: z.object({
-    pending: z.number().int().min(60, 'Minium 1 minute'),
+    announcing: z.number().int().min(60, 'Minium 1 minute'),
     voting: z.number().int().min(60, 'Minium 1 minute'),
   }),
   extension: z.object({

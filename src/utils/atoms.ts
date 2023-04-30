@@ -2,8 +2,10 @@ import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 
 import { Community } from './schemas/community'
+import { Grant } from './schemas/grant'
+import { GrantProposal } from './schemas/grant-proposal'
 import { Group } from './schemas/group'
-import { Proposal } from './schemas/proposal'
+import { GroupProposal } from './schemas/group-proposal'
 import { Preview } from './types'
 
 export const showBannerAtom = atomWithStorage('showBanner', true)
@@ -12,10 +14,18 @@ export const previewCommunityAtom = atom<
   (Community & { preview: Preview }) | undefined
 >(undefined)
 
+export const previewGrantAtom = atom<
+  (Grant & { preview: Preview }) | undefined
+>(undefined)
+
+export const previewGrantProposalAtom = atom<
+  (GrantProposal & { preview: Preview }) | undefined
+>(undefined)
+
 export const previewGroupAtom = atom<
   (Group & { preview: Preview }) | undefined
 >(undefined)
 
-export const previewProposalAtom = atom<
-  (Proposal & { preview: Preview }) | undefined
+export const previewGroupProposalAtom = atom<
+  (GroupProposal & { preview: Preview }) | undefined
 >(undefined)

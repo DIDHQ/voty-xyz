@@ -1,7 +1,6 @@
-import Decimal from 'decimal.js'
 import { z } from 'zod'
 
-import { decimalSchema } from './decimal'
+import { positiveDecimalSchema } from './positive-decimal'
 
 export const booleanUnitSchema = z.discriminatedUnion('function', [
   z.object({
@@ -40,16 +39,7 @@ export const decimalUnitSchema = z.discriminatedUnion('function', [
           (did_list) => did_list.every((did) => did.indexOf('.') === -1),
           { message: 'Invalid DID list' },
         ),
-      decimalSchema.refine(
-        (power) => {
-          try {
-            return new Decimal(power).gt(0)
-          } catch {
-            return false
-          }
-        },
-        { message: 'Negative power not allowed' },
-      ),
+      positiveDecimalSchema,
     ]),
   }),
 ])

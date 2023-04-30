@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { PlusIcon } from '@heroicons/react/20/solid'
 
 import useRouterQuery from '../../hooks/use-router-query'
-import ProposalCard from '../../components/proposal-card'
+import GroupProposalCard from '../../components/group-proposal-card'
 import CommunityLayout from '../../components/layouts/community'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
@@ -12,18 +12,18 @@ import Button from '../../components/basic/button'
 import EmptyState from '../../components/empty-state'
 import useIsManager from '../../hooks/use-is-manager'
 import Select from '../../components/basic/select'
-import { Phase } from '../../utils/phase'
+import { GroupProposalPhase } from '../../utils/phase'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['community_id']>()
-  const [phase, setPhase] = useState<Phase | 'All'>('All')
+  const [phase, setPhase] = useState<GroupProposalPhase | 'All'>('All')
   const { data: community, isLoading } = trpc.community.getById.useQuery(
     { id: query.community_id },
     { enabled: !!query.community_id },
   )
   const { data: groups, isLoading: isGroupsLoading } =
-    trpc.group.listByCommunity.useQuery(
-      { community_id: query.community_id },
+    trpc.group.listByCommunityId.useQuery(
+      { communityId: query.community_id },
       { enabled: !!query.community_id },
     )
   const {
@@ -31,14 +31,14 @@ export default function CommunityIndexPage() {
     fetchNextPage,
     hasNextPage,
     isLoading: isProposalsLoading,
-  } = trpc.proposal.list.useInfiniteQuery(
+  } = trpc.groupProposal.list.useInfiniteQuery(
     {
-      community_id: query.community_id,
+      communityId: query.community_id,
       phase: phase === 'All' ? undefined : phase,
     },
     { enabled: !!query.community_id, getNextPageParam: ({ next }) => next },
   )
-  const proposals = useMemo(
+  const groupProposals = useMemo(
     () => data?.pages.flatMap(({ data }) => data),
     [data],
   )
@@ -52,10 +52,10 @@ export default function CommunityIndexPage() {
   const options = useMemo(
     () => [
       'All',
-      Phase.CONFIRMING,
-      Phase.ANNOUNCING,
-      Phase.VOTING,
-      Phase.ENDED,
+      GroupProposalPhase.CONFIRMING,
+      GroupProposalPhase.ANNOUNCING,
+      GroupProposalPhase.VOTING,
+      GroupProposalPhase.ENDED,
     ],
     [],
   )
@@ -70,11 +70,11 @@ export default function CommunityIndexPage() {
         <Select
           options={options}
           value={phase}
-          onChange={(p) => setPhase(p as Phase | 'All')}
+          onChange={(p) => setPhase(p as GroupProposalPhase | 'All')}
           className="-mt-1 sm:-mt-2"
         />
       </div>
-      {proposals?.length === 0 ? (
+      {groupProposals?.length === 0 ? (
         <EmptyState
           title="No events"
           className="mt-24"
@@ -90,9 +90,9 @@ export default function CommunityIndexPage() {
         />
       ) : (
         <ul role="list" className="mt-5 space-y-5">
-          {proposals?.map((proposal) => (
-            <li key={proposal.permalink}>
-              <ProposalCard proposal={proposal} />
+          {groupProposals?.map((groupProposal) => (
+            <li key={groupProposal.permalink}>
+              <GroupProposalCard groupProposal={groupProposal} />
             </li>
           ))}
         </ul>

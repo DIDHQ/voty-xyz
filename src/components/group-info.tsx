@@ -20,7 +20,7 @@ export default function GroupInfo(props: { className?: string }) {
   )
   const previewGroup = useAtomValue(previewGroupAtom)
   const { data } = trpc.group.getById.useQuery(
-    { community_id: query.community_id, id: query.group_id },
+    { communityId: query.community_id, id: query.group_id },
     { enabled: !!query.community_id && !!query.group_id },
   )
   const group = previewGroup || data
@@ -29,13 +29,13 @@ export default function GroupInfo(props: { className?: string }) {
     () => [
       {
         name: 'Proposals',
-        href: `/${query.community_id}/${query.group_id}`,
-        current: router.pathname === '/[community_id]/[group_id]',
+        href: `/${query.community_id}/group/${query.group_id}`,
+        current: router.pathname === '/[community_id]/group/[group_id]',
       },
       {
         name: 'About',
-        href: `/${query.community_id}/${query.group_id}/about`,
-        current: router.pathname === '/[community_id]/[group_id]/about',
+        href: `/${query.community_id}/group/${query.group_id}/about`,
+        current: router.pathname === '/[community_id]/group/[group_id]/about',
       },
     ],
     [query.community_id, query.group_id, router.pathname],

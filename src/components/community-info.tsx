@@ -3,6 +3,7 @@ import {
   GlobeAltIcon,
   BriefcaseIcon,
   DocumentTextIcon,
+  TrophyIcon,
 } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
@@ -40,8 +41,8 @@ export default function CommunityInfo(props: { className?: string }) {
     { id: query.community_id },
     { enabled: !!query.community_id },
   )
-  const { data: list } = trpc.group.listByCommunity.useQuery(
-    { community_id: query.community_id },
+  const { data: list } = trpc.group.listByCommunityId.useQuery(
+    { communityId: query.community_id },
     { enabled: !!query.community_id },
   )
   const previewCommunity = useAtomValue(previewCommunityAtom)
@@ -58,6 +59,12 @@ export default function CommunityInfo(props: { className?: string }) {
         href: `/${query.community_id}`,
         icon: ClockIcon,
         current: router.pathname === '/[community_id]',
+      },
+      {
+        name: 'Grants',
+        href: `/${query.community_id}/grant`,
+        icon: TrophyIcon,
+        current: router.pathname === '/[community_id]/grant',
       },
       {
         name: 'About',
@@ -176,7 +183,7 @@ export default function CommunityInfo(props: { className?: string }) {
                     href={
                       previewCommunity
                         ? undefined
-                        : `/${query.community_id}/${group.id}`
+                        : `/${query.community_id}/group/${group.id}`
                     }
                     icon={BriefcaseIcon}
                     current={query.group_id === group.id}

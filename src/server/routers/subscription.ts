@@ -17,20 +17,20 @@ export const subscriptionRouter = router({
   get: procedure
     .input(
       z.object({
-        community_id: z.string().optional(),
+        communityId: z.string().optional(),
         subscriber: subscriberSchema.optional(),
       }),
     )
     .output(z.boolean())
     .query(async ({ input }) => {
-      if (!input.community_id || !input.subscriber) {
+      if (!input.communityId || !input.subscriber) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
       const subscription = await database.subscription.findUnique({
         where: {
-          community_id_subscriber: {
-            community_id: input.community_id,
+          communityId_subscriber: {
+            communityId: input.communityId,
             subscriber: JSON.stringify(input.subscriber),
           },
         },
@@ -53,7 +53,7 @@ export const subscriptionRouter = router({
       const communities = keyBy(
         await database.community.findMany({
           where: {
-            id: { in: subscriptions.map(({ community_id }) => community_id) },
+            id: { in: subscriptions.map(({ communityId }) => communityId) },
           },
         }),
         ({ id }) => id,
@@ -72,7 +72,7 @@ export const subscriptionRouter = router({
       return compact(
         subscriptions
           .map(
-            ({ community_id }) => storages[communities[community_id].permalink],
+            ({ communityId }) => storages[communities[communityId].permalink],
           )
           .filter((community) => community)
           .map(({ permalink, data }) => {
@@ -88,14 +88,14 @@ export const subscriptionRouter = router({
     .input(
       proved(
         z.object({
-          community_id: z.string().optional(),
+          communityId: z.string().optional(),
           subscribe: z.boolean(),
         }),
       ),
     )
     .output(z.boolean())
     .mutation(async ({ input }) => {
-      if (!input.community_id) {
+      if (!input.communityId) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
       await verifyProof(input)
@@ -108,13 +108,13 @@ export const subscriptionRouter = router({
         await database.$transaction([
           database.subscription.create({
             data: {
-              community_id: input.community_id,
+              communityId: input.communityId,
               subscriber,
               ts: new Date(),
             },
           }),
           database.community.update({
-            where: { id: input.community_id },
+            where: { id: input.communityId },
             data: { subscribers: { increment: 1 } },
           }),
         ])
@@ -122,14 +122,14 @@ export const subscriptionRouter = router({
         await database.$transaction([
           database.subscription.delete({
             where: {
-              community_id_subscriber: {
-                community_id: input.community_id,
+              communityId_subscriber: {
+                communityId: input.communityId,
                 subscriber,
               },
             },
           }),
           database.community.update({
-            where: { id: input.community_id },
+            where: { id: input.communityId },
             data: { subscribers: { decrement: 1 } },
           }),
         ])
