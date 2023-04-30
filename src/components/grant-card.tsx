@@ -14,7 +14,7 @@ export default function GrantCard(props: {
     permalink: string
     proposals: number
     ts: Date
-    tsPending: Date | null
+    tsAnnouncing: Date | null
     tsProposing: Date | null
     tsVoting: Date | null
   }
@@ -22,8 +22,10 @@ export default function GrantCard(props: {
   const now = useMemo(() => Date.now(), [])
   const phase = useMemo(
     () =>
-      props.grant.tsPending && props.grant.tsProposing && props.grant.tsVoting
-        ? now < props.grant.tsPending.getTime()
+      props.grant.tsAnnouncing &&
+      props.grant.tsProposing &&
+      props.grant.tsVoting
+        ? now < props.grant.tsAnnouncing.getTime()
           ? GrantPhase.ANNOUNCING
           : now < props.grant.tsProposing.getTime()
           ? GrantPhase.PROPOSING
@@ -31,7 +33,12 @@ export default function GrantCard(props: {
           ? GrantPhase.VOTING
           : GrantPhase.ENDED
         : GrantPhase.CONFIRMING,
-    [props.grant.tsPending, props.grant.tsProposing, props.grant.tsVoting, now],
+    [
+      props.grant.tsAnnouncing,
+      props.grant.tsProposing,
+      props.grant.tsVoting,
+      now,
+    ],
   )
 
   return (
@@ -69,13 +76,13 @@ export default function GrantCard(props: {
                 in about 5 minutes
               </p>
             </>
-          ) : phase === GrantPhase.ANNOUNCING && props.grant.tsPending ? (
+          ) : phase === GrantPhase.ANNOUNCING && props.grant.tsAnnouncing ? (
             <>
               <p className="text-gray-400">Voting starts</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
-                {formatDurationMs(props.grant.tsPending.getTime() - now)}
+                {formatDurationMs(props.grant.tsAnnouncing.getTime() - now)}
               </p>
             </>
           ) : phase === GrantPhase.PROPOSING && props.grant.tsProposing ? (

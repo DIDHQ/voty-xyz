@@ -34,7 +34,7 @@ export default function CreateGrantPage() {
               },
             },
             duration: {
-              pending: 86400,
+              announcing: 86400,
               proposing: 86400,
               voting: 86400,
             },

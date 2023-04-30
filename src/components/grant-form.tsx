@@ -84,18 +84,18 @@ export default function GrantForm(props: {
           <GridItem2>
             <FormItem
               label="Announcing phase"
-              error={errors.duration?.pending?.message}
+              error={errors.duration?.announcing?.message}
             >
               <Controller
                 control={control}
-                name="duration.pending"
+                name="duration.announcing"
                 render={({ field: { ref, value, onChange } }) => (
                   <PhaseInput
                     inputRef={ref}
                     value={value}
                     onChange={onChange}
                     disabled={disabled}
-                    error={!!errors.duration?.pending}
+                    error={!!errors.duration?.announcing}
                   />
                 )}
               />

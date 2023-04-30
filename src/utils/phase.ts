@@ -17,19 +17,19 @@ export function getGrantPhase(
   if (!timestamp || !phase) {
     return GroupProposalPhase.CONFIRMING
   }
-  if (now.getTime() < timestamp.getTime() + phase.pending * 1000) {
+  if (now.getTime() < timestamp.getTime() + phase.announcing * 1000) {
     return GroupProposalPhase.ANNOUNCING
   }
   if (
     now.getTime() <
-    timestamp.getTime() + (phase.pending + phase.proposing) * 1000
+    timestamp.getTime() + (phase.announcing + phase.proposing) * 1000
   ) {
     return GroupProposalPhase.VOTING
   }
   if (
     now.getTime() <
     timestamp.getTime() +
-      (phase.pending + phase.proposing + phase.voting) * 1000
+      (phase.announcing + phase.proposing + phase.voting) * 1000
   ) {
     return GroupProposalPhase.VOTING
   }
@@ -51,12 +51,12 @@ export function getGroupProposalPhase(
   if (!timestamp || !phase) {
     return GroupProposalPhase.CONFIRMING
   }
-  if (now.getTime() < timestamp.getTime() + phase.pending * 1000) {
+  if (now.getTime() < timestamp.getTime() + phase.announcing * 1000) {
     return GroupProposalPhase.ANNOUNCING
   }
   if (
     now.getTime() <
-    timestamp.getTime() + (phase.pending + phase.voting) * 1000
+    timestamp.getTime() + (phase.announcing + phase.voting) * 1000
   ) {
     return GroupProposalPhase.VOTING
   }

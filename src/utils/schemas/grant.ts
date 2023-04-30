@@ -10,7 +10,7 @@ export const grantSchema = z.object({
     voting: decimalSetsSchema,
   }),
   duration: z.object({
-    pending: z.number().int().min(60, 'Minium 1 minute'),
+    announcing: z.number().int().min(60, 'Minium 1 minute'),
     proposing: z.number().int().min(60, 'Minium 1 minute'),
     voting: z.number().int().min(60, 'Minium 1 minute'),
   }),

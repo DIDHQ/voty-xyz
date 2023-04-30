@@ -39,12 +39,12 @@ model Grant {
   communityId        String
   communityPermalink String
 
-  proposals   Int       @default(0)
-  votes       Int       @default(0)
-  ts          DateTime
-  tsPending   DateTime?
-  tsProposing DateTime?
-  tsVoting    DateTime?
+  proposals    Int       @default(0)
+  votes        Int       @default(0)
+  ts           DateTime
+  tsAnnouncing DateTime?
+  tsProposing  DateTime?
+  tsVoting     DateTime?
 
   @@id([permalink])
 }
@@ -101,11 +101,11 @@ model GroupProposal {
   groupId        String
   groupPermalink String
 
-  proposer  String
-  votes     Int       @default(0)
-  ts        DateTime
-  tsPending DateTime?
-  tsVoting  DateTime?
+  proposer     String
+  votes        Int       @default(0)
+  ts           DateTime
+  tsAnnouncing DateTime?
+  tsVoting     DateTime?
 
   @@id([permalink])
   @@index([communityId, groupId])

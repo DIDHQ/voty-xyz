@@ -39,7 +39,7 @@ export const groupProposalRouter = router({
 
       if (
         groupProposal &&
-        (!groupProposal.tsPending || !groupProposal.tsVoting)
+        (!groupProposal.tsAnnouncing || !groupProposal.tsVoting)
       ) {
         try {
           const storage = await database.storage.findUnique({
@@ -55,11 +55,11 @@ export const groupProposalRouter = router({
               where: { permalink: groupProposal.permalink },
               data: {
                 ts: timestamp,
-                tsPending: dayjs(timestamp)
-                  .add(group.duration.pending * 1000)
+                tsAnnouncing: dayjs(timestamp)
+                  .add(group.duration.announcing * 1000)
                   .toDate(),
                 tsVoting: dayjs(timestamp)
-                  .add(group.duration.pending * 1000)
+                  .add(group.duration.announcing * 1000)
                   .add(group.duration.voting * 1000)
                   .toDate(),
               },
@@ -100,7 +100,7 @@ export const groupProposalRouter = router({
             permalink: z.string(),
             votes: z.number(),
             ts: z.date(),
-            tsPending: z.date().nullable(),
+            tsAnnouncing: z.date().nullable(),
             tsVoting: z.date().nullable(),
           }),
         ),
@@ -115,11 +115,11 @@ export const groupProposalRouter = router({
       const now = new Date()
       const filter =
         input.phase === GroupProposalPhase.CONFIRMING
-          ? { tsPending: null, tsVoting: null }
+          ? { tsAnnouncing: null, tsVoting: null }
           : input.phase === GroupProposalPhase.ANNOUNCING
-          ? { ts: { lte: now }, tsPending: { gt: now } }
+          ? { ts: { lte: now }, tsAnnouncing: { gt: now } }
           : input.phase === GroupProposalPhase.VOTING
-          ? { tsPending: { lte: now }, tsVoting: { gt: now } }
+          ? { tsAnnouncing: { lte: now }, tsVoting: { gt: now } }
           : input.phase === GroupProposalPhase.ENDED
           ? { tsVoting: { lte: now } }
           : {}
@@ -149,14 +149,14 @@ export const groupProposalRouter = router({
         data: compact(
           groupProposals
             .filter(({ permalink }) => storages[permalink])
-            .map(({ permalink, votes, ts, tsPending, tsVoting }) => {
+            .map(({ permalink, votes, ts, tsAnnouncing, tsVoting }) => {
               try {
                 return {
                   ...schema.parse(storages[permalink].data),
                   permalink,
                   votes,
                   ts,
-                  tsPending,
+                  tsAnnouncing,
                   tsVoting,
                 }
               } catch {

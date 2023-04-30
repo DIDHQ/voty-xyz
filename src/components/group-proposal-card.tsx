@@ -13,21 +13,21 @@ export default function GroupProposalCard(props: {
     permalink: string
     votes: number
     ts: Date
-    tsPending: Date | null
+    tsAnnouncing: Date | null
     tsVoting: Date | null
   }
 }) {
   const now = useMemo(() => Date.now(), [])
   const phase = useMemo(
     () =>
-      props.groupProposal.tsPending && props.groupProposal.tsVoting
-        ? now < props.groupProposal.tsPending.getTime()
+      props.groupProposal.tsAnnouncing && props.groupProposal.tsVoting
+        ? now < props.groupProposal.tsAnnouncing.getTime()
           ? GroupProposalPhase.ANNOUNCING
           : now < props.groupProposal.tsVoting.getTime()
           ? GroupProposalPhase.VOTING
           : GroupProposalPhase.ENDED
         : GroupProposalPhase.CONFIRMING,
-    [props.groupProposal.tsPending, props.groupProposal.tsVoting, now],
+    [props.groupProposal.tsAnnouncing, props.groupProposal.tsVoting, now],
   )
 
   return (
@@ -61,14 +61,14 @@ export default function GroupProposalCard(props: {
               </p>
             </>
           ) : phase === GroupProposalPhase.ANNOUNCING &&
-            props.groupProposal.tsPending ? (
+            props.groupProposal.tsAnnouncing ? (
             <>
               <p className="text-gray-400">Voting starts</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
                 {formatDurationMs(
-                  props.groupProposal.tsPending.getTime() - now,
+                  props.groupProposal.tsAnnouncing.getTime() - now,
                 )}
               </p>
             </>

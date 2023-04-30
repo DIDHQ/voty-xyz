@@ -54,7 +54,7 @@ export const grantRouter = router({
             permalink: z.string(),
             proposals: z.number(),
             ts: z.date(),
-            tsPending: z.date().nullable(),
+            tsAnnouncing: z.date().nullable(),
             tsProposing: z.date().nullable(),
             tsVoting: z.date().nullable(),
           }),
@@ -70,11 +70,11 @@ export const grantRouter = router({
       const now = new Date()
       const filter =
         input.phase === GrantPhase.CONFIRMING
-          ? { tsPending: null, tsVoting: null }
+          ? { tsAnnouncing: null, tsVoting: null }
           : input.phase === GrantPhase.ANNOUNCING
-          ? { ts: { lte: now }, tsPending: { gt: now } }
+          ? { ts: { lte: now }, tsAnnouncing: { gt: now } }
           : input.phase === GrantPhase.PROPOSING
-          ? { tsPending: { lte: now }, tsProposing: { gt: now } }
+          ? { tsAnnouncing: { lte: now }, tsProposing: { gt: now } }
           : input.phase === GrantPhase.VOTING
           ? { tsProposing: { lte: now }, tsVoting: { gt: now } }
           : input.phase === GrantPhase.ENDED
@@ -105,7 +105,7 @@ export const grantRouter = router({
                 permalink,
                 proposals,
                 ts,
-                tsPending,
+                tsAnnouncing,
                 tsProposing,
                 tsVoting,
               }) => {
@@ -115,7 +115,7 @@ export const grantRouter = router({
                     permalink,
                     proposals,
                     ts,
-                    tsPending,
+                    tsAnnouncing,
                     tsProposing,
                     tsVoting,
                   }
