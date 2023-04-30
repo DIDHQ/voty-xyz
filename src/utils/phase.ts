@@ -13,27 +13,27 @@ export function getGrantPhase(
   now: Date,
   timestamp?: Date,
   phase?: Grant['duration'],
-): GroupProposalPhase {
+): GrantPhase {
   if (!timestamp || !phase) {
-    return GroupProposalPhase.CONFIRMING
+    return GrantPhase.CONFIRMING
   }
   if (now.getTime() < timestamp.getTime() + phase.announcing * 1000) {
-    return GroupProposalPhase.ANNOUNCING
+    return GrantPhase.ANNOUNCING
   }
   if (
     now.getTime() <
     timestamp.getTime() + (phase.announcing + phase.proposing) * 1000
   ) {
-    return GroupProposalPhase.VOTING
+    return GrantPhase.PROPOSING
   }
   if (
     now.getTime() <
     timestamp.getTime() +
       (phase.announcing + phase.proposing + phase.voting) * 1000
   ) {
-    return GroupProposalPhase.VOTING
+    return GrantPhase.VOTING
   }
-  return GroupProposalPhase.ENDED
+  return GrantPhase.ENDED
 }
 
 export enum GroupProposalPhase {

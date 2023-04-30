@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last } from 'lodash-es'
 import { z } from 'zod'
+import dayjs from 'dayjs'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -13,6 +14,11 @@ import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGrant from '../../utils/verifiers/verify-grant'
 import { GrantPhase } from '../../utils/phase'
+import { commonCoinTypes } from '../../utils/constants'
+import {
+  getSnapshotTimestamp,
+  getPermalinkSnapshot,
+} from '../../utils/snapshot'
 
 const schema = proved(authorized(grantSchema))
 
@@ -32,9 +38,45 @@ export const grantRouter = router({
         where: { permalink: input.permalink },
       })
 
-      return grant && storage
-        ? { ...schema.parse(storage.data), proposals: grant.proposals }
-        : null
+      const json =
+        grant && storage
+          ? { ...schema.parse(storage.data), proposals: grant.proposals }
+          : null
+
+      if (
+        json &&
+        grant &&
+        (!grant.tsAnnouncing || !grant.tsProposing || !grant.tsVoting)
+      ) {
+        try {
+          const timestamp = await getSnapshotTimestamp(
+            commonCoinTypes.AR,
+            await getPermalinkSnapshot(grant.permalink),
+          )
+          await database.grant.update({
+            where: { permalink: grant.permalink },
+            data: {
+              ts: timestamp,
+              tsAnnouncing: dayjs(timestamp)
+                .add(json.duration.announcing * 1000)
+                .toDate(),
+              tsProposing: dayjs(timestamp)
+                .add(json.duration.announcing * 1000)
+                .add(json.duration.proposing * 1000)
+                .toDate(),
+              tsVoting: dayjs(timestamp)
+                .add(json.duration.announcing * 1000)
+                .add(json.duration.proposing * 1000)
+                .add(json.duration.voting * 1000)
+                .toDate(),
+            },
+          })
+        } catch (err) {
+          console.error(err)
+        }
+      }
+
+      return json
     }),
   listByCommunityId: procedure
     .input(

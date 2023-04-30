@@ -10,7 +10,12 @@ import {
   previewGroupAtom,
   previewGroupProposalAtom,
 } from '../utils/atoms'
-import { isCommunity, isGrant, isGroup, isGroupProposal } from '../utils/data-type'
+import {
+  isCommunity,
+  isGrant,
+  isGroup,
+  isGroupProposal,
+} from '../utils/data-type'
 import { trpc } from '../utils/trpc'
 import { Preview } from '../utils/types'
 import Button from './basic/button'
@@ -27,7 +32,8 @@ export default function PreviewBar() {
   const [previewProposal, setPreviewProposal] = useAtom(
     previewGroupProposalAtom,
   )
-  const document = previewCommunity ||previewGrant || previewGroup || previewProposal
+  const document =
+    previewCommunity || previewGrant || previewGroup || previewProposal
   const preview = document?.preview
   const { data: community } = trpc.community.getById.useQuery(
     { id: previewCommunity?.id },
