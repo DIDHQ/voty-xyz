@@ -117,7 +117,7 @@ export default function PreviewBar() {
         }),
       ])
       setPreviewGroup(undefined)
-      router.push(`/${signed.authorship.author}/${signed.id}`)
+      router.push(`/${signed.authorship.author}/group/${signed.id}`)
       return 'workgroup'
     }
     if (isGroupProposal(document)) {

@@ -1,17 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 
-import useRouterQuery from '../../../hooks/use-router-query'
-import GroupProposalCard from '../../../components/group-proposal-card'
-import CommunityLayout from '../../../components/layouts/community'
-import GroupLayout from '../../../components/layouts/group'
-import { trpc } from '../../../utils/trpc'
-import LoadingBar from '../../../components/basic/loading-bar'
-import EmptyState from '../../../components/empty-state'
-import GroupProposalCreateButton from '../../../components/group-proposal-create-button'
-import Select from '../../../components/basic/select'
-import { GroupProposalPhase } from '../../../utils/phase'
-import useIsManager from '../../../hooks/use-is-manager'
+import useRouterQuery from '../../../../hooks/use-router-query'
+import GroupProposalCard from '../../../../components/group-proposal-card'
+import CommunityLayout from '../../../../components/layouts/community'
+import GroupLayout from '../../../../components/layouts/group'
+import { trpc } from '../../../../utils/trpc'
+import LoadingBar from '../../../../components/basic/loading-bar'
+import EmptyState from '../../../../components/empty-state'
+import GroupProposalCreateButton from '../../../../components/group-proposal-create-button'
+import Select from '../../../../components/basic/select'
+import { GroupProposalPhase } from '../../../../utils/phase'
+import useIsManager from '../../../../hooks/use-is-manager'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['community_id', 'group_id']>()

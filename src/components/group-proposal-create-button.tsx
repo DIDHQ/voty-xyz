@@ -15,7 +15,7 @@ export default function GroupProposalCreateButton(props: {
 
   return status?.timestamp && props.group ? (
     <Link
-      href={`/${props.communityId}/${props.group.id}/create`}
+      href={`/${props.communityId}/group/${props.group.id}/create`}
       className={props.className}
     >
       <Button primary icon={PlusIcon}>

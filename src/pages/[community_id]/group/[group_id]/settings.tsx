@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 
-import useRouterQuery from '../../../hooks/use-router-query'
-import GroupForm from '../../../components/group-form'
-import { trpc } from '../../../utils/trpc'
-import LoadingBar from '../../../components/basic/loading-bar'
-import TextButton from '../../../components/basic/text-button'
+import useRouterQuery from '../../../../hooks/use-router-query'
+import GroupForm from '../../../../components/group-form'
+import { trpc } from '../../../../utils/trpc'
+import LoadingBar from '../../../../components/basic/loading-bar'
+import TextButton from '../../../../components/basic/text-button'
 
 export default function GroupSettingsPage() {
   const router = useRouter()
@@ -30,7 +30,7 @@ export default function GroupSettingsPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextButton
-          href={`/${query.community_id}/${query.group_id}/about`}
+          href={`/${query.community_id}/group/${query.group_id}/about`}
           className="mt-6 sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
@@ -41,8 +41,8 @@ export default function GroupSettingsPage() {
             initialValue={group}
             onArchive={handleArchive}
             preview={{
-              from: `/${query.community_id}/${query.group_id}/settings`,
-              to: `/${query.community_id}/${query.group_id}/about`,
+              from: `/${query.community_id}/group/${query.group_id}/settings`,
+              to: `/${query.community_id}/group/${query.group_id}/about`,
               template: `You are updating workgroup on Voty\n\nhash:\n{sha256}`,
               author: query.community_id,
             }}

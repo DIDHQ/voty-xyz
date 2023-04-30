@@ -107,7 +107,7 @@ export default function ProposalPage() {
           <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
             <TextButton
               disabled={!community || !group || !!previewGroupProposal}
-              href={`/${community?.id}/${group?.id}`}
+              href={`/${community?.id}/group/${group?.id}`}
             >
               <h2 className="text-base font-semibold">← Back</h2>
             </TextButton>

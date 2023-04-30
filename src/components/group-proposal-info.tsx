@@ -63,7 +63,7 @@ export default function GroupProposalInfo(props: {
             <TextButton
               underline
               disabled={disabled}
-              href={`/${props.community.id}/${props.group.id}`}
+              href={`/${props.community.id}/group/${props.group.id}`}
             >
               {props.group.name}
             </TextButton>

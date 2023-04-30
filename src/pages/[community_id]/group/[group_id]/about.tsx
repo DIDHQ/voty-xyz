@@ -4,16 +4,16 @@ import { useAtomValue } from 'jotai'
 import { BriefcaseIcon } from '@heroicons/react/24/outline'
 import { useMemo } from 'react'
 
-import useRouterQuery from '../../../hooks/use-router-query'
-import CommunityLayout from '../../../components/layouts/community'
-import GroupLayout from '../../../components/layouts/group'
-import { trpc } from '../../../utils/trpc'
-import LoadingBar from '../../../components/basic/loading-bar'
-import Button from '../../../components/basic/button'
-import useIsManager from '../../../hooks/use-is-manager'
-import { previewGroupAtom } from '../../../utils/atoms'
-import GroupAbout from '../../../components/group-about'
-import { extractStartEmoji } from '../../../utils/emoji'
+import useRouterQuery from '../../../../hooks/use-router-query'
+import CommunityLayout from '../../../../components/layouts/community'
+import GroupLayout from '../../../../components/layouts/group'
+import { trpc } from '../../../../utils/trpc'
+import LoadingBar from '../../../../components/basic/loading-bar'
+import Button from '../../../../components/basic/button'
+import useIsManager from '../../../../hooks/use-is-manager'
+import { previewGroupAtom } from '../../../../utils/atoms'
+import GroupAbout from '../../../../components/group-about'
+import { extractStartEmoji } from '../../../../utils/emoji'
 
 export default function GroupAboutPage() {
   const query = useRouterQuery<['community_id', 'group_id']>()
@@ -61,7 +61,7 @@ export default function GroupAboutPage() {
           {group ? <GroupAbout group={group} className="mt-6" /> : null}
           {isManager && !previewGroup ? (
             <Link
-              href={`/${query.community_id}/${query.group_id}/settings`}
+              href={`/${query.community_id}/group/${query.group_id}/settings`}
               className="mt-6 block w-fit sm:mt-8"
             >
               <Button icon={PencilIcon}>Edit</Button>

@@ -61,7 +61,7 @@ export default function CommunityInfo(props: { className?: string }) {
         current: router.pathname === '/[community_id]',
       },
       {
-        name: 'Topic Grants',
+        name: 'Grants',
         href: `/${query.community_id}/grant`,
         icon: TrophyIcon,
         current: router.pathname === '/[community_id]/grant',
@@ -183,7 +183,7 @@ export default function CommunityInfo(props: { className?: string }) {
                     href={
                       previewCommunity
                         ? undefined
-                        : `/${query.community_id}/${group.id}`
+                        : `/${query.community_id}/group/${group.id}`
                     }
                     icon={BriefcaseIcon}
                     current={query.group_id === group.id}
