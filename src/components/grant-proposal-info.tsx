@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-import { previewPermalink } from '../utils/constants'
+import { coinTypeExplorers, commonCoinTypes, previewPermalink } from '../utils/constants'
 import { Community } from '../utils/schemas/community'
 import { Grant } from '../utils/schemas/grant'
 import { GrantProposal } from '../utils/schemas/grant-proposal'
@@ -9,6 +9,8 @@ import { DetailItem, DetailList } from './basic/detail'
 import TextButton from './basic/text-button'
 import GrantProgress from './grant-progress'
 import { PreviewPermalink } from '../utils/types'
+import { formatNumber } from '../utils/number'
+import { permalink2Explorer } from '../utils/permalink'
 
 export default function GrantProposalInfo(props: {
   community?: Community
@@ -63,6 +65,35 @@ export default function GrantProposalInfo(props: {
           {props.grantProposal?.authorship?.author || '...'}
         </DetailItem>
       </DetailList>
+      {props.grant?.snapshots && props.grantProposal ? (
+        <DetailList title="On-chain verification">
+          <DetailItem title="Snapshot">
+            <TextButton
+              underline
+              disabled={disabled}
+              href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
+                props.grant.snapshots[commonCoinTypes.CKB]
+              }`}
+            >
+              {formatNumber(
+                parseInt(
+                  props.grant.snapshots[commonCoinTypes.CKB],
+                  10,
+                ),
+              )}
+            </TextButton>
+          </DetailItem>
+          <DetailItem title="Arweave TX">
+            <TextButton
+              underline
+              disabled={disabled}
+              href={permalink2Explorer(props.grantProposal.permalink)}
+            >
+              {props.grantProposal?.permalink.substring(40) || '...'}
+            </TextButton>
+          </DetailItem>
+        </DetailList>
+      ) : null}
     </div>
   )
 }
