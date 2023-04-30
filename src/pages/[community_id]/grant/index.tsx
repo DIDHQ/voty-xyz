@@ -12,6 +12,7 @@ import Select from '../../../components/basic/select'
 import { GrantPhase } from '../../../utils/phase'
 import GrantCard from '../../../components/grant-card'
 import Button from '../../../components/basic/button'
+import useIsManager from '../../../hooks/use-is-manager'
 
 export default function GrantsIndexPage() {
   const query = useRouterQuery<['community_id']>()
@@ -42,21 +43,27 @@ export default function GrantsIndexPage() {
     ],
     [],
   )
+  const isManager = useIsManager(query.community_id)
 
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
-      <div className="mb-5 mt-8 flex justify-between">
+      <div className="mt-6 flex items-center justify-between sm:mt-8">
+        <div className="flex items-center">
+          <h3 className="text-lg font-medium text-gray-900">Grants</h3>
+          {isManager ? (
+            <Link href={`/${query.community_id}/grant/create`} className="ml-8">
+              <Button primary icon={PlusIcon}>
+                Grant
+              </Button>
+            </Link>
+          ) : null}
+        </div>
         <Select
           options={options}
           value={phase}
           onChange={(p) => setPhase(p as GrantPhase | 'All')}
         />
-        <Link href={`/${query.community_id}/grant/create`}>
-          <Button primary icon={PlusIcon}>
-            Grant
-          </Button>
-        </Link>
       </div>
       {grants?.length === 0 ? (
         <EmptyState title="No proposals" className="mt-24" />
