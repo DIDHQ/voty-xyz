@@ -22,7 +22,7 @@ import { Group, groupSchema } from '../utils/schemas/group'
 import { previewGroupAtom } from '../utils/atoms'
 import { Preview } from '../utils/types'
 
-export default function WorkgroupForm(props: {
+export default function GroupForm(props: {
   communityId: string
   initialValue: Group | null
   onArchive?: () => void

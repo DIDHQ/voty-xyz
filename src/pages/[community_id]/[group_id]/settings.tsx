@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 
 import useRouterQuery from '../../../hooks/use-router-query'
-import WorkgroupForm from '../../../components/workgroup-form'
+import GroupForm from '../../../components/group-form'
 import { trpc } from '../../../utils/trpc'
 import LoadingBar from '../../../components/basic/loading-bar'
 import TextButton from '../../../components/basic/text-button'
@@ -36,7 +36,7 @@ export default function GroupSettingsPage() {
           <h2 className="text-base font-semibold">← Back</h2>
         </TextButton>
         {query.community_id && query.group_id && group !== undefined ? (
-          <WorkgroupForm
+          <GroupForm
             communityId={query.community_id}
             initialValue={group}
             onArchive={handleArchive}

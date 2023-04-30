@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid'
 import Head from 'next/head'
 
 import useRouterQuery from '../../hooks/use-router-query'
-import WorkgroupForm from '../../components/workgroup-form'
+import GroupForm from '../../components/group-form'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
 import { documentTitle } from '../../utils/constants'
@@ -67,7 +67,7 @@ export default function CreateGroupPage() {
           <h2 className="text-base font-semibold">← Back</h2>
         </TextButton>
         {query.community_id && initialValue !== undefined ? (
-          <WorkgroupForm
+          <GroupForm
             communityId={query.community_id}
             initialValue={initialValue}
             preview={{
