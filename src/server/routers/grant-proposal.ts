@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, last } from 'lodash-es'
+import { compact, keyBy, last, mapValues } from 'lodash-es'
 import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
@@ -35,6 +35,24 @@ export const grantProposalRouter = router({
       return storage && grantProposal
         ? { ...schema.parse(storage.data), votes: grantProposal.votes }
         : null
+    }),
+  groupByProposer: procedure
+    .input(z.object({ grantPermalink: z.string().optional() }))
+    .output(z.record(z.string(), z.boolean()))
+    .query(async ({ input }) => {
+      if (!input.grantPermalink) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
+      }
+
+      const grantProposals = await database.grantProposal.findMany({
+        where: { grantPermalink: input.grantPermalink },
+        select: { proposer: true },
+      })
+
+      return mapValues(
+        keyBy(grantProposals, ({ proposer }) => proposer),
+        () => true,
+      )
     }),
   list: procedure
     .input(

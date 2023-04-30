@@ -35,6 +35,7 @@ import { previewPermalink } from '../utils/constants'
 import Slide from './basic/slide'
 import PermissionCard from './permission-card'
 import { permalink2Id } from '../utils/permalink'
+import { trpc } from '../utils/trpc'
 
 export default function GrantProposalForm(props: {
   initialValue: Partial<GrantProposal>
@@ -65,6 +66,10 @@ export default function GrantProposalForm(props: {
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account)
+  const { data: proposed } = trpc.grantProposal.groupByProposer.useQuery(
+    { grantPermalink: props.grantPermalink },
+    { enabled: !!props.grantPermalink },
+  )
   const { data: disables } = useQuery(
     [dids, props.grant.permission],
     async () => {
@@ -91,11 +96,12 @@ export default function GrantProposalForm(props: {
   const didOptions = useMemo(
     () =>
       disables
-        ? dids
-            ?.map((did) => ({ did, disabled: disables[did] }))
-            .filter(({ disabled }) => !disabled)
+        ? dids?.map((did) => ({
+            did,
+            disabled: proposed?.[did] || disables[did],
+          }))
         : undefined,
-    [dids, disables],
+    [dids, disables, proposed],
   )
   const defaultDid = useMemo(
     () => didOptions?.find(({ disabled }) => !disabled)?.did,
