@@ -63,10 +63,6 @@ export default function GrantInfo(props: {
             '...'
           )}
         </DetailItem>
-
-        <DetailItem title="Manager" className="truncate whitespace-nowrap">
-          {props.grant?.authorship?.author || '...'}
-        </DetailItem>
       </DetailList>
       {props.grant?.snapshots ? (
         <DetailList title="On-chain verification">

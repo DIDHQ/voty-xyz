@@ -1,6 +1,10 @@
 import clsx from 'clsx'
 
-import { coinTypeExplorers, commonCoinTypes, previewPermalink } from '../utils/constants'
+import {
+  coinTypeExplorers,
+  commonCoinTypes,
+  previewPermalink,
+} from '../utils/constants'
 import { Community } from '../utils/schemas/community'
 import { Grant } from '../utils/schemas/grant'
 import { GrantProposal } from '../utils/schemas/grant-proposal'
@@ -10,7 +14,7 @@ import TextButton from './basic/text-button'
 import GrantProgress from './grant-progress'
 import { PreviewPermalink } from '../utils/types'
 import { formatNumber } from '../utils/number'
-import { permalink2Explorer } from '../utils/permalink'
+import { permalink2Explorer, permalink2Id } from '../utils/permalink'
 
 export default function GrantProposalInfo(props: {
   community?: Community
@@ -61,6 +65,21 @@ export default function GrantProposalInfo(props: {
             '...'
           )}
         </DetailItem>
+        <DetailItem title="Grant" className="truncate whitespace-nowrap">
+          {props.community && props.grant && props.grantProposal ? (
+            <TextButton
+              underline
+              disabled={disabled}
+              href={`/${props.community.id}/grant/${permalink2Id(
+                props.grantProposal.grant,
+              )}`}
+            >
+              {props.grant.name}
+            </TextButton>
+          ) : (
+            '...'
+          )}
+        </DetailItem>
         <DetailItem title="Proposer" className="truncate whitespace-nowrap">
           {props.grantProposal?.authorship?.author || '...'}
         </DetailItem>
@@ -76,10 +95,7 @@ export default function GrantProposalInfo(props: {
               }`}
             >
               {formatNumber(
-                parseInt(
-                  props.grant.snapshots[commonCoinTypes.CKB],
-                  10,
-                ),
+                parseInt(props.grant.snapshots[commonCoinTypes.CKB], 10),
               )}
             </TextButton>
           </DetailItem>
