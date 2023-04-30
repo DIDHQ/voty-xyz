@@ -4,20 +4,21 @@ import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 
-import { trpc } from '../../../utils/trpc'
-import Article from '../../../components/basic/article'
-import TextButton from '../../../components/basic/text-button'
-import LoadingBar from '../../../components/basic/loading-bar'
-import { documentTitle, previewPermalink } from '../../../utils/constants'
-import useRouterQuery from '../../../hooks/use-router-query'
-import Markdown from '../../../components/basic/markdown'
-import GrantInfo from '../../../components/grant-info'
-import { previewGrantAtom } from '../../../utils/atoms'
-import { Grant } from '../../../utils/schemas/grant'
-import GrantProposalCard from '../../../components/grant-proposal-card'
+import { trpc } from '../../../../utils/trpc'
+import Article from '../../../../components/basic/article'
+import TextButton from '../../../../components/basic/text-button'
+import LoadingBar from '../../../../components/basic/loading-bar'
+import { documentTitle, previewPermalink } from '../../../../utils/constants'
+import useRouterQuery from '../../../../hooks/use-router-query'
+import Markdown from '../../../../components/basic/markdown'
+import GrantInfo from '../../../../components/grant-info'
+import { previewGrantAtom } from '../../../../utils/atoms'
+import { Grant } from '../../../../utils/schemas/grant'
+import GrantProposalCard from '../../../../components/grant-proposal-card'
+import GrantProposalCreateButton from '../../../../components/grant-proposal-create-button'
 
-export default function ProposalPage() {
-  const query = useRouterQuery<['grant_permalink']>()
+export default function GrantPage() {
+  const query = useRouterQuery<['community_id', 'grant_permalink']>()
   const previewGrant = useAtomValue(previewGrantAtom)
   const { data, isLoading, refetch } = trpc.grant.getByPermalink.useQuery(
     { permalink: query.grant_permalink },
@@ -107,13 +108,11 @@ export default function ProposalPage() {
               grant={grant}
               className="mb-6 block sm:hidden"
             />
-            {/* {group && grant ? (
-              <GroupProposalVoteForm
-                group={group}
-                groupProposal={grant}
-                onSuccess={handleSuccess}
-              />
-            ) : null} */}
+            <GrantProposalCreateButton
+              communityId={query.community_id}
+              grant={grant}
+              className="my-6 flex justify-end border-t border-gray-200 pt-6"
+            />
             {grant?.proposals ? (
               <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
                 {grant.proposals === 1

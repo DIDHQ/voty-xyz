@@ -5,20 +5,17 @@ import useRouterQuery from '../../../../hooks/use-router-query'
 import TextButton from '../../../../components/basic/text-button'
 import { trpc } from '../../../../utils/trpc'
 import LoadingBar from '../../../../components/basic/loading-bar'
-import GroupProposalForm from '../../../../components/group-proposal-form'
+import GrantProposalForm from '../../../../components/grant-proposal-form'
 import { documentTitle } from '../../../../utils/constants'
-import { GroupProposal } from '../../../../utils/schemas/group-proposal'
+import { GrantProposal } from '../../../../utils/schemas/grant-proposal'
 
-export default function CreateGroupProposalPage() {
-  const query = useRouterQuery<['community_id', 'group_id']>()
-  const { data: group, isLoading } = trpc.group.getById.useQuery(
-    { communityId: query.community_id, id: query.group_id },
-    { enabled: !!query.community_id && !!query.group_id },
+export default function CreateGrantProposalPage() {
+  const query = useRouterQuery<['community_id', 'grant_permalink']>()
+  const { data: grant, isLoading } = trpc.grant.getByPermalink.useQuery(
+    { permalink: query.grant_permalink },
+    { enabled: !!query.grant_permalink },
   )
-  const initialValue = useMemo<Partial<GroupProposal>>(
-    () => ({ voting_type: 'single', options: ['', ''] }),
-    [],
-  )
+  const initialValue = useMemo<Partial<GrantProposal>>(() => ({}), [])
 
   return (
     <>
@@ -28,17 +25,18 @@ export default function CreateGroupProposalPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextButton
-          disabled={!query.community_id || !query.group_id}
-          href={`/${query.community_id}/group/${query.group_id}`}
+          disabled={!query.community_id || !query.grant_permalink}
+          href={`/${query.community_id}/grant/${query.grant_permalink}`}
           className="mt-6 sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
         </TextButton>
-        {query.community_id && group ? (
-          <GroupProposalForm
+        {query.community_id && query.grant_permalink && grant ? (
+          <GrantProposalForm
             initialValue={initialValue}
             communityId={query.community_id}
-            group={group}
+            grant={grant}
+            grantPermalink={query.grant_permalink}
             className="pt-6 sm:pt-8"
           />
         ) : null}
