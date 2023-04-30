@@ -14,6 +14,7 @@ import Markdown from '../../../components/basic/markdown'
 import GrantInfo from '../../../components/grant-info'
 import { previewGrantAtom } from '../../../utils/atoms'
 import { Grant } from '../../../utils/schemas/grant'
+import GrantProposalCard from '../../../components/grant-proposal-card'
 
 export default function ProposalPage() {
   const query = useRouterQuery<['grant_permalink']>()
@@ -121,58 +122,13 @@ export default function ProposalPage() {
               </h2>
             ) : null}
             {grantProposals?.length ? (
-              <table className="my-6 w-full table-fixed border-separate border-spacing-0">
-                <thead>
-                  <tr>
-                    <th className="rounded-t-md border-b border-gray-200 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
-                      Voter
-                    </th>
-                    <th className="border-b border-gray-200 px-3 py-2 text-left text-sm font-semibold text-gray-900">
-                      Choice
-                    </th>
-                    <th className="rounded-t-md border-b border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900">
-                      Power
-                    </th>
-                  </tr>
-                </thead>
-                {/* <tbody className="divide-y divide-gray-200">
-                  {grantProposals.map((groupProposalVote, index) => (
-                    <tr key={groupProposalVote.permalink}>
-                      <td
-                        className={clsx(
-                          index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
-                        )}
-                      >
-                        {groupProposalVote.authorship.author}
-                      </td>
-                      <td
-                        title={stringifyChoice(groupProposalVote.powers)}
-                        className={clsx(
-                          index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-gray-200 px-3 py-2 text-sm text-gray-500',
-                        )}
-                      >
-                        {stringifyChoice(groupProposalVote.powers)}
-                      </td>
-                      <td
-                        className={clsx(
-                          index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
-                        )}
-                      >
-                        <TextButton
-                          primary
-                          disabled={!!previewGrant}
-                          href={permalink2Explorer(groupProposalVote.permalink)}
-                        >
-                          {groupProposalVote.total_power}
-                        </TextButton>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody> */}
-              </table>
+              <ul role="list" className="mt-5 space-y-5">
+                {grantProposals.map((grantProposal) => (
+                  <li key={grantProposal.permalink}>
+                    <GrantProposalCard grantProposal={grantProposal} />
+                  </li>
+                ))}
+              </ul>
             ) : null}
           </div>
           <GrantInfo

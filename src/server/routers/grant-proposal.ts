@@ -45,7 +45,13 @@ export const grantProposalRouter = router({
     )
     .output(
       z.object({
-        data: z.array(schema.extend({ permalink: z.string() })),
+        data: z.array(
+          schema.extend({
+            permalink: z.string(),
+            votes: z.number(),
+            ts: z.date(),
+          }),
+        ),
         next: z.string().optional(),
       }),
     )
@@ -74,11 +80,13 @@ export const grantProposalRouter = router({
         data: compact(
           grantProposals
             .filter(({ permalink }) => storages[permalink])
-            .map(({ permalink }) => {
+            .map(({ permalink, votes, ts }) => {
               try {
                 return {
                   ...schema.parse(storages[permalink].data),
                   permalink,
+                  votes,
+                  ts,
                 }
               } catch {
                 return
