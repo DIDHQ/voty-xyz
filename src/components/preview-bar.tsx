@@ -6,10 +6,11 @@ import { useEffect } from 'react'
 import useSignDocument from '../hooks/use-sign-document'
 import {
   previewCommunityAtom,
+  previewGrantAtom,
   previewGroupAtom,
   previewGroupProposalAtom,
 } from '../utils/atoms'
-import { isCommunity, isGroup, isGroupProposal } from '../utils/data-type'
+import { isCommunity, isGrant, isGroup, isGroupProposal } from '../utils/data-type'
 import { trpc } from '../utils/trpc'
 import { Preview } from '../utils/types'
 import Button from './basic/button'
@@ -21,11 +22,12 @@ import { permalink2Id } from '../utils/permalink'
 export default function PreviewBar() {
   const router = useRouter()
   const [previewCommunity, setPreviewCommunity] = useAtom(previewCommunityAtom)
+  const [previewGrant, setPreviewGrant] = useAtom(previewGrantAtom)
   const [previewGroup, setPreviewGroup] = useAtom(previewGroupAtom)
   const [previewProposal, setPreviewProposal] = useAtom(
     previewGroupProposalAtom,
   )
-  const document = previewCommunity || previewGroup || previewProposal
+  const document = previewCommunity ||previewGrant || previewGroup || previewProposal
   const preview = document?.preview
   const { data: community } = trpc.community.getById.useQuery(
     { id: previewCommunity?.id },
@@ -36,6 +38,7 @@ export default function PreviewBar() {
     function handler(url: string) {
       if (preview && url !== preview.from && url !== preview.to) {
         setPreviewCommunity(undefined)
+        setPreviewGrant(undefined)
         setPreviewGroup(undefined)
         setPreviewProposal(undefined)
       }
@@ -48,11 +51,13 @@ export default function PreviewBar() {
     router.events,
     preview,
     setPreviewCommunity,
-    setPreviewProposal,
+    setPreviewGrant,
     setPreviewGroup,
+    setPreviewProposal,
   ])
   const signDocument = useSignDocument(preview?.author, preview?.template)
   const { mutateAsync: mutateCommunity } = trpc.community.create.useMutation()
+  const { mutateAsync: mutateGrant } = trpc.grant.create.useMutation()
   const { mutateAsync: mutateGroup } = trpc.group.create.useMutation()
   const { mutateAsync: mutateProposal } =
     trpc.groupProposal.create.useMutation()
@@ -74,6 +79,19 @@ export default function PreviewBar() {
       setPreviewCommunity(undefined)
       router.push(`/${signed.id}`)
       return 'community'
+    }
+    if (isGrant(document)) {
+      const signed = await signDocument(document)
+      await mutateGrant(signed)
+      await Promise.all([
+        utils.grant.listByCommunityId.prefetch({
+          communityId: signed.authorship.author,
+          phase: undefined,
+        }),
+      ])
+      setPreviewGrant(undefined)
+      router.push(`/${signed.authorship.author}/grant`)
+      return 'grant'
     }
     if (isGroup(document)) {
       const signed = await signDocument(document)

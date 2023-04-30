@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 
 import { getGroupProposalPhase, GroupProposalPhase } from '../phase'
-import { calculateDecimal } from '../functions/number'
+import { calculateDecimal } from '../functions/decimal'
 import { authorized, Authorized } from '../schemas/authorship'
 import { Grant } from '../schemas/grant'
 import { proved, Proved } from '../schemas/proof'

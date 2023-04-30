@@ -4,6 +4,9 @@ import { Controller, useForm } from 'react-hook-form'
 import { EyeIcon } from '@heroicons/react/20/solid'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
+import { useQuery } from '@tanstack/react-query'
+import { uniq } from 'lodash-es'
+import pMap from 'p-map'
 
 import PhaseInput from './basic/phase-input'
 import TextInput from './basic/text-input'
@@ -16,6 +19,10 @@ import { Grant, grantSchema } from '../utils/schemas/grant'
 import { previewGrantAtom } from '../utils/atoms'
 import { Preview } from '../utils/types'
 import Textarea from './basic/textarea'
+import { requiredCoinTypeOfDidChecker } from '../utils/did'
+import { getCurrentSnapshot } from '../utils/snapshot'
+import { requiredCoinTypesOfBooleanSets } from '../utils/functions/boolean'
+import { requiredCoinTypesOfDecimalSets } from '../utils/functions/decimal'
 
 export default function GrantForm(props: {
   communityId: string
@@ -37,12 +44,45 @@ export default function GrantForm(props: {
     control,
     register,
     reset,
+    setValue,
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
   useEffect(() => {
     reset(grant)
   }, [grant, reset])
+  useEffect(() => {
+    if (community) {
+      setValue('community', community.permalink)
+    }
+  }, [community, setValue])
+  const { data: snapshots } = useQuery(
+    ['snapshots', props.communityId, grant?.permission],
+    async () => {
+      const requiredCoinTypes = uniq([
+        ...[requiredCoinTypeOfDidChecker(props.communityId)],
+        ...(grant?.permission?.proposing
+          ? requiredCoinTypesOfBooleanSets(grant.permission.proposing)
+          : []),
+        ...(grant?.permission?.voting
+          ? requiredCoinTypesOfDecimalSets(grant.permission?.voting)
+          : []),
+      ])
+      const snapshots = await pMap(requiredCoinTypes, getCurrentSnapshot, {
+        concurrency: 5,
+      })
+      return snapshots.reduce((obj, snapshot, index) => {
+        obj[requiredCoinTypes[index]] = snapshot.toString()
+        return obj
+      }, {} as { [coinType: string]: string })
+    },
+    { enabled: !!grant?.permission, refetchInterval: 30000 },
+  )
+  useEffect(() => {
+    if (snapshots) {
+      setValue('snapshots', snapshots)
+    }
+  }, [setValue, snapshots])
   const isManager = useIsManager(props.communityId)
   const disabled = !isManager
 
@@ -54,7 +94,7 @@ export default function GrantForm(props: {
       <FormSection title="Basic information">
         <Grid6>
           <GridItem6>
-            <FormItem label="Grant name" error={errors.name?.message}>
+            <FormItem label="Grant topic" error={errors.name?.message}>
               <TextInput
                 {...register('name')}
                 placeholder="e.g. Hackathon"
@@ -66,7 +106,6 @@ export default function GrantForm(props: {
           <GridItem6>
             <FormItem
               label="Introduction"
-              optional
               description="The purpose of this grant. Markdown is supported"
               error={errors.extension?.introduction?.message}
             >

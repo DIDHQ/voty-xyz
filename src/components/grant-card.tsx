@@ -87,7 +87,7 @@ export default function GrantCard(props: {
             </>
           ) : phase === GrantPhase.PROPOSING && props.grant.tsProposing ? (
             <>
-              <p className="text-gray-400">Proposing deadline</p>
+              <p className="text-gray-400">Proposing ends</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;

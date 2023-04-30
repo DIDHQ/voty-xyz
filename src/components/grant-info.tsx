@@ -6,27 +6,24 @@ import {
   previewPermalink,
 } from '../utils/constants'
 import { Community } from '../utils/schemas/community'
-import { Group } from '../utils/schemas/group'
-import { GroupProposal } from '../utils/schemas/group-proposal'
+import { Grant } from '../utils/schemas/grant'
 import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
-import Markdown from './basic/markdown'
 import TextButton from './basic/text-button'
-import GroupProposalProgress from './group-proposal-progress'
+import GrantProgress from './grant-progress'
 import { PreviewPermalink } from '../utils/types'
 import { permalink2Explorer } from '../utils/permalink'
 import { formatNumber } from '../utils/number'
 
-export default function GroupProposalInfo(props: {
+export default function GrantInfo(props: {
   community?: Community
-  group?: Group
-  groupProposal?: GroupProposal & {
+  grant?: Grant & {
     permalink: string | PreviewPermalink
     authorship?: { author?: string }
   }
   className?: string
 }) {
-  const disabled = props.groupProposal?.permalink === previewPermalink
+  const disabled = props.grant?.permalink === previewPermalink
 
   return (
     <div
@@ -35,13 +32,21 @@ export default function GroupProposalInfo(props: {
         props.className,
       )}
     >
-      <GroupProposalProgress
-        groupProposalPermalink={props.groupProposal?.permalink}
-        phase={props.group?.duration}
+      <GrantProgress
+        grantPermalink={props.grant?.permalink}
+        phase={props.grant?.duration}
       />
-      <DetailList title="Criteria for approval">
+      <DetailList title="Funding">
         <Article small className="pt-2">
-          <Markdown>{props.group?.extension.terms_and_conditions}</Markdown>
+          <ul>
+            {props.grant?.extension?.funding?.map((funding, index) => (
+              <li key={index}>
+                {funding[0]}&nbsp;
+                <span className="text-gray-400">X</span>&nbsp;
+                {funding[1]}
+              </li>
+            ))}
+          </ul>
         </Article>
       </DetailList>
       <DetailList title="Information">
@@ -58,38 +63,23 @@ export default function GroupProposalInfo(props: {
             '...'
           )}
         </DetailItem>
-        <DetailItem title="Workgroup" className="truncate whitespace-nowrap">
-          {props.group && props.community ? (
-            <TextButton
-              underline
-              disabled={disabled}
-              href={`/${props.community.id}/${props.group.id}`}
-            >
-              {props.group.name}
-            </TextButton>
-          ) : (
-            '...'
-          )}
-        </DetailItem>
-        <DetailItem title="Proposer" className="truncate whitespace-nowrap">
-          {props.groupProposal?.authorship?.author || '...'}
+
+        <DetailItem title="Manager" className="truncate whitespace-nowrap">
+          {props.grant?.authorship?.author || '...'}
         </DetailItem>
       </DetailList>
-      {props.groupProposal?.snapshots ? (
+      {props.grant?.snapshots ? (
         <DetailList title="On-chain verification">
           <DetailItem title="Snapshot">
             <TextButton
               underline
               disabled={disabled}
               href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
-                props.groupProposal.snapshots[commonCoinTypes.CKB]
+                props.grant.snapshots[commonCoinTypes.CKB]
               }`}
             >
               {formatNumber(
-                parseInt(
-                  props.groupProposal.snapshots[commonCoinTypes.CKB],
-                  10,
-                ),
+                parseInt(props.grant.snapshots[commonCoinTypes.CKB], 10),
               )}
             </TextButton>
           </DetailItem>
@@ -97,9 +87,9 @@ export default function GroupProposalInfo(props: {
             <TextButton
               underline
               disabled={disabled}
-              href={permalink2Explorer(props.groupProposal?.permalink)}
+              href={permalink2Explorer(props.grant?.permalink)}
             >
-              {props.groupProposal?.permalink.substring(40) || '...'}
+              {props.grant?.permalink.substring(40) || '...'}
             </TextButton>
           </DetailItem>
         </DetailList>

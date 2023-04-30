@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { uniq } from 'lodash-es'
 
 import { getGroupProposalPhase, GroupProposalPhase } from '../phase'
-import { calculateDecimal } from '../functions/number'
+import { calculateDecimal } from '../functions/decimal'
 import { authorized, Authorized } from '../schemas/authorship'
 import { Group } from '../schemas/group'
 import { proved, Proved } from '../schemas/proof'

@@ -29,6 +29,7 @@ import {
   checkBoolean,
   requiredCoinTypesOfBooleanSets,
 } from '../utils/functions/boolean'
+import { requiredCoinTypesOfDecimalSets } from '../utils/functions/decimal'
 import Button from './basic/button'
 import RadioGroup2 from './basic/radio-group2'
 import { previewGroupProposalAtom } from '../utils/atoms'
@@ -77,11 +78,12 @@ export default function GroupProposalForm(props: {
   }, [props.group, setValue])
   const [did, setDid] = useState('')
   const { data: snapshots } = useQuery(
-    ['snapshots', did, props.group.permission.proposing],
+    ['snapshots', did, props.group.permission],
     async () => {
       const requiredCoinTypes = uniq([
         ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
         ...requiredCoinTypesOfBooleanSets(props.group.permission.proposing),
+        ...requiredCoinTypesOfDecimalSets(props.group.permission.voting),
       ])
       const snapshots = await pMap(requiredCoinTypes, getCurrentSnapshot, {
         concurrency: 5,
@@ -96,11 +98,12 @@ export default function GroupProposalForm(props: {
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account)
   const { data: disables } = useQuery(
-    [dids, props.group.permission.proposing],
+    [dids, props.group.permission],
     async () => {
       const requiredCoinTypes = uniq([
         ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
         ...requiredCoinTypesOfBooleanSets(props.group.permission.proposing),
+        ...requiredCoinTypesOfDecimalSets(props.group.permission.voting),
       ])
       const snapshots = await pMap(requiredCoinTypes, getCurrentSnapshot, {
         concurrency: 5,

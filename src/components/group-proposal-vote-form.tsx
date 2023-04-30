@@ -7,7 +7,7 @@ import type { Decimal } from 'decimal.js'
 import pMap from 'p-map'
 import clsx from 'clsx'
 
-import { calculateDecimal } from '../utils/functions/number'
+import { calculateDecimal } from '../utils/functions/decimal'
 import {
   GroupProposalVote,
   groupProposalVoteSchema,

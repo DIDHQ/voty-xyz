@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 
 import useRouterQuery from '../../../hooks/use-router-query'
 import TextButton from '../../../components/basic/text-button'
-import { documentTitle } from '../../../utils/constants'
+import { documentTitle, previewPermalink } from '../../../utils/constants'
 import GrantForm from '../../../components/grant-form'
 import { Grant } from '../../../utils/schemas/grant'
 
@@ -62,7 +62,7 @@ export default function CreateGrantPage() {
             initialValue={initialValue}
             preview={{
               from: `/${query.community_id}/grant/create`,
-              to: `/${query.community_id}/grant/preview`,
+              to: `/${query.community_id}/grant/${previewPermalink}`,
               template: `You are creating grant on Voty\n\nhash:\n{sha256}`,
               author: query.community_id,
             }}

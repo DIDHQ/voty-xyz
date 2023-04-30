@@ -19,17 +19,22 @@ const schema = proved(authorized(grantSchema))
 export const grantRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(schema.nullable())
+    .output(schema.extend({ proposals: z.number() }).nullable())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
+      const grant = await database.grant.findUnique({
+        where: { permalink: input.permalink },
+      })
       const storage = await database.storage.findUnique({
         where: { permalink: input.permalink },
       })
 
-      return storage ? schema.parse(storage.data) : null
+      return grant && storage
+        ? { ...schema.parse(storage.data), proposals: grant.proposals }
+        : null
     }),
   listByCommunityId: procedure
     .input(
