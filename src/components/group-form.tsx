@@ -65,6 +65,7 @@ export default function GroupForm(props: {
     await mutateAsync(signed)
   })
   const isManager = useIsManager(props.communityId)
+  const disabled = !isManager
   useEffect(() => {
     if (handleArchive.isSuccess) {
       onArchive?.()
@@ -90,7 +91,7 @@ export default function GroupForm(props: {
                   {...register('name')}
                   placeholder="e.g. Marketing Team"
                   error={!!errors.name?.message}
-                  disabled={!isManager}
+                  disabled={disabled}
                 />
               </FormItem>
             </GridItem6>
@@ -104,7 +105,7 @@ export default function GroupForm(props: {
                 <TextInput
                   {...register('extension.introduction')}
                   error={!!errors.extension?.introduction?.message}
-                  disabled={!isManager}
+                  disabled={disabled}
                 />
               </FormItem>
             </GridItem6>
@@ -121,7 +122,7 @@ export default function GroupForm(props: {
                   <BooleanSetsBlock
                     name="proposing"
                     communityId={props.communityId}
-                    disabled={!isManager}
+                    disabled={disabled}
                   />
                 </FormProvider>
               </FormItem>
@@ -139,7 +140,7 @@ export default function GroupForm(props: {
                   <DecimalSetsBlock
                     name="voting"
                     communityId={props.communityId}
-                    disabled={!isManager}
+                    disabled={disabled}
                   />
                 </FormProvider>
               </FormItem>
@@ -161,7 +162,7 @@ export default function GroupForm(props: {
                       inputRef={ref}
                       value={value}
                       onChange={onChange}
-                      disabled={!isManager}
+                      disabled={disabled}
                       error={!!errors.duration?.pending}
                     />
                   )}
@@ -181,7 +182,7 @@ export default function GroupForm(props: {
                       inputRef={ref}
                       value={value}
                       onChange={onChange}
-                      disabled={!isManager}
+                      disabled={disabled}
                       error={!!errors.duration?.voting}
                     />
                   )}
@@ -195,7 +196,7 @@ export default function GroupForm(props: {
                 error={errors.extension?.terms_and_conditions?.message}
               >
                 <Textarea
-                  disabled={!isManager}
+                  disabled={disabled}
                   {...register('extension.terms_and_conditions')}
                   error={!!errors.extension?.terms_and_conditions?.message}
                 />
