@@ -1,10 +1,8 @@
-import { inferRouterOutputs } from '@trpc/server'
 import clsx from 'clsx'
 import Decimal from 'decimal.js'
 import { useMemo } from 'react'
 import { gray } from 'tailwindcss/colors'
 
-import { GroupProposalVoteChoiceRouter } from '../server/routers/group-proposal-vote-choice'
 import { GroupProposal } from '../utils/schemas/group-proposal'
 import {
   powerOfChoice,
@@ -18,12 +16,11 @@ export function ChoiceListItem(props: {
   type: GroupProposal['voting_type']
   option: string
   votingPower?: Decimal
-  choices?: inferRouterOutputs<GroupProposalVoteChoiceRouter>['groupByProposal']
   disabled?: boolean
-  value: Record<string, PositiveDecimal>
+  value?: Record<string, PositiveDecimal>
   onChange(value: Record<string, PositiveDecimal>): void
 }) {
-  const { type, option, votingPower, choices, value, onChange } = props
+  const { type, option, votingPower, value, onChange } = props
   const newPower = useMemo(
     () =>
       votingPower
@@ -31,17 +28,25 @@ export function ChoiceListItem(props: {
         : new Decimal(0),
     [option, value, votingPower],
   )
+  const total = useMemo(
+    () =>
+      Object.values(value || {}).reduce(
+        (sum, power) => sum.add(power),
+        new Decimal(0),
+      ),
+    [value],
+  )
   const percentage = useMemo(() => {
-    const denominator = new Decimal(choices?.total || 0).add(
+    const denominator = total.add(
       new Decimal(choiceIsEmpty(value) ? 0 : votingPower || 0),
     )
     if (denominator.isZero()) {
       return new Decimal(0)
     }
-    return new Decimal(new Decimal(choices?.powers[option] || 0).add(newPower))
+    return new Decimal(new Decimal(value?.[option] || 0).add(newPower))
       .mul(100)
       .dividedBy(denominator)
-  }, [choices, newPower, option, value, votingPower])
+  }, [newPower, option, total, value, votingPower])
 
   return (
     <li
@@ -61,9 +66,9 @@ export function ChoiceListItem(props: {
       }}
     >
       <span className="w-0 flex-1 truncate">{option}</span>
-      {choices?.powers[option] || newPower.gt(0) ? (
+      {value?.[option] || newPower.gt(0) ? (
         <span className="text-xs text-gray-800">
-          {newPower.add(choices?.powers[option] || 0).toString()}&nbsp;(
+          {newPower.add(value?.[option] || 0).toString()}&nbsp;(
           {percentage.toFixed(1)}%)
         </span>
       ) : null}

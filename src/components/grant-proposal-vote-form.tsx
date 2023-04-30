@@ -37,10 +37,6 @@ export default function GrantProposalVoteForm(props: {
   className?: string
 }) {
   const { onSuccess } = props
-  const { data: choices, refetch: refetchChoices } =
-    trpc.grantProposalVoteChoice.grantByProposal.useQuery({
-      grantProposal: props.grantProposal.permalink,
-    })
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account, props.grant.snapshots)
@@ -144,18 +140,11 @@ export default function GrantProposalVoteForm(props: {
     if (handleSubmit.isSuccess) {
       setTimeout(() => {
         setValue('powers', {})
-        refetchChoices()
         refetchVoted()
         onSuccess()
       }, 5000)
     }
-  }, [
-    handleSubmit.isSuccess,
-    onSuccess,
-    refetchChoices,
-    refetchVoted,
-    setValue,
-  ])
+  }, [handleSubmit.isSuccess, onSuccess, refetchVoted, setValue])
 
   return (
     <>

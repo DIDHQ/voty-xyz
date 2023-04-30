@@ -39,10 +39,6 @@ export default function GroupProposalVoteForm(props: {
   className?: string
 }) {
   const { onSuccess } = props
-  const { data: choices, refetch: refetchChoices } =
-    trpc.groupProposalVoteChoice.groupByProposal.useQuery({
-      groupProposal: props.groupProposal.permalink,
-    })
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account, props.groupProposal.snapshots)
@@ -152,18 +148,11 @@ export default function GroupProposalVoteForm(props: {
     if (handleSubmit.isSuccess) {
       setTimeout(() => {
         setValue('powers', {})
-        refetchChoices()
         refetchVoted()
         onSuccess()
       }, 5000)
     }
-  }, [
-    handleSubmit.isSuccess,
-    onSuccess,
-    refetchChoices,
-    refetchVoted,
-    setValue,
-  ])
+  }, [handleSubmit.isSuccess, onSuccess, refetchVoted, setValue])
 
   return (
     <>
@@ -190,7 +179,6 @@ export default function GroupProposalVoteForm(props: {
                     type={props.groupProposal.voting_type}
                     option={option}
                     votingPower={totalPower}
-                    choices={choices}
                     disabled={disables(did)}
                     value={value}
                     onChange={onChange}
