@@ -94,10 +94,22 @@ export const groupRouter = router({
     }),
   create: procedure
     .input(
-      schema.refine(
-        (group) => group.id.indexOf('.') === group.id.lastIndexOf('.'),
-        'Cannot create group with SubDID',
-      ),
+      schema
+        .refine(
+          (group) => group.id.indexOf('.') === group.id.lastIndexOf('.'),
+          'Cannot create group with SubDID',
+        )
+        .refine(
+          (group) =>
+            group.permission.proposing.operands.length === 1 &&
+            group.permission.proposing.operands[0].arguments[0] ===
+              group.authorship.author,
+        )
+        .refine((group) =>
+          group.permission.voting.operands.every(
+            (operand) => operand.arguments[0] === group.authorship.author,
+          ),
+        ),
     )
     .output(z.string())
     .mutation(async ({ input }) => {

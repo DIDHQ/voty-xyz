@@ -176,7 +176,24 @@ export const grantRouter = router({
       }
     }),
   create: procedure
-    .input(schema)
+    .input(
+      schema
+        .refine(
+          (grant) =>
+            grant.permission.proposing.operands.length === 1 &&
+            grant.permission.proposing.operands[0].arguments[0] ===
+              grant.authorship.author &&
+            grant.permission.proposing.operands[0].arguments[1].length === 0,
+        )
+        .refine(
+          (grant) =>
+            grant.permission.voting.operands.length === 1 &&
+            grant.permission.voting.operands[0].arguments[0] ===
+              grant.authorship.author &&
+            grant.permission.voting.operands[0].arguments[1].length === 0 &&
+            grant.permission.voting.operands[0].arguments[2] === '0',
+        ),
+    )
     .output(z.string())
     .mutation(async ({ input }) => {
       await verifySnapshot(input.authorship)
