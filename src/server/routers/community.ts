@@ -126,7 +126,11 @@ export const communityRouter = router({
       const ts = new Date()
 
       await database.$transaction([
-        database.community.create({ data: { id: input.id, permalink, ts } }),
+        database.community.upsert({
+          where: { id: input.id },
+          create: { id: input.id, permalink, ts },
+          update: { permalink, ts },
+        }),
         database.storage.create({ data: { permalink, data: input } }),
       ])
 

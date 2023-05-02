@@ -122,11 +122,19 @@ export const groupRouter = router({
       const ts = new Date()
 
       await database.$transaction([
-        database.group.create({
-          data: {
-            id: input.id,
+        database.group.upsert({
+          where: {
+            id_communityId: { id: input.id, communityId: community.id },
+          },
+          create: {
             permalink,
+            id: input.id,
             communityId: community.id,
+            communityPermalink: input.community,
+            ts,
+          },
+          update: {
+            permalink,
             communityPermalink: input.community,
             ts,
           },
