@@ -5,6 +5,7 @@ import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/authorship'
 import { GrantProposal } from '../utils/schemas/grant-proposal'
 import { formatDurationMs } from '../utils/time'
+import { TrophyIcon } from '@heroicons/react/20/solid'
 
 export default function GrantProposalCard(props: {
   communityId: string
@@ -13,6 +14,7 @@ export default function GrantProposalCard(props: {
     votes: number
     ts: Date
   }
+  isWin: boolean
 }) {
   const now = useMemo(() => Date.now(), [])
 
@@ -25,6 +27,9 @@ export default function GrantProposalCard(props: {
       className="block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-primary-300 focus-within:ring-offset-2 hover:border-primary-500 hover:bg-gray-50"
     >
       <div className="w-full p-4">
+        {props.isWin ? (
+          <TrophyIcon className="float-right h-5 w-5 text-amber-600" />
+        ) : null}
         <p className="truncate text-lg font-medium text-gray-800">
           {props.grantProposal.title}
         </p>

@@ -12,24 +12,24 @@ export enum GrantPhase {
 export function getGrantPhase(
   now: Date,
   timestamp?: Date,
-  phase?: Grant['duration'],
+  duration?: Grant['duration'],
 ): GrantPhase {
-  if (!timestamp || !phase) {
+  if (!timestamp || !duration) {
     return GrantPhase.CONFIRMING
   }
-  if (now.getTime() < timestamp.getTime() + phase.announcing * 1000) {
+  if (now.getTime() < timestamp.getTime() + duration.announcing * 1000) {
     return GrantPhase.ANNOUNCING
   }
   if (
     now.getTime() <
-    timestamp.getTime() + (phase.announcing + phase.proposing) * 1000
+    timestamp.getTime() + (duration.announcing + duration.proposing) * 1000
   ) {
     return GrantPhase.PROPOSING
   }
   if (
     now.getTime() <
     timestamp.getTime() +
-      (phase.announcing + phase.proposing + phase.voting) * 1000
+      (duration.announcing + duration.proposing + duration.voting) * 1000
   ) {
     return GrantPhase.VOTING
   }
@@ -46,17 +46,17 @@ export enum GroupProposalPhase {
 export function getGroupProposalPhase(
   now: Date,
   timestamp?: Date,
-  phase?: Group['duration'],
+  duration?: Group['duration'],
 ): GroupProposalPhase {
-  if (!timestamp || !phase) {
+  if (!timestamp || !duration) {
     return GroupProposalPhase.CONFIRMING
   }
-  if (now.getTime() < timestamp.getTime() + phase.announcing * 1000) {
+  if (now.getTime() < timestamp.getTime() + duration.announcing * 1000) {
     return GroupProposalPhase.ANNOUNCING
   }
   if (
     now.getTime() <
-    timestamp.getTime() + (phase.announcing + phase.voting) * 1000
+    timestamp.getTime() + (duration.announcing + duration.voting) * 1000
   ) {
     return GroupProposalPhase.VOTING
   }

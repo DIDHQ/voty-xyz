@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
@@ -16,11 +16,13 @@ import { previewGrantAtom } from '../../../../utils/atoms'
 import { Grant } from '../../../../utils/schemas/grant'
 import GrantProposalCard from '../../../../components/grant-proposal-card'
 import GrantProposalCreateButton from '../../../../components/grant-proposal-create-button'
+import { GrantPhase, getGrantPhase } from '../../../../utils/phase'
+import useStatus from '../../../../hooks/use-status'
 
 export default function GrantPage() {
   const query = useRouterQuery<['community_id', 'grant_permalink']>()
   const previewGrant = useAtomValue(previewGrantAtom)
-  const { data, isLoading, refetch } = trpc.grant.getByPermalink.useQuery(
+  const { data, isLoading } = trpc.grant.getByPermalink.useQuery(
     { permalink: query.grant_permalink },
     { enabled: !!query.grant_permalink },
   )
@@ -53,7 +55,6 @@ export default function GrantPage() {
     data: list,
     fetchNextPage,
     hasNextPage,
-    refetch: refetchList,
   } = trpc.grantProposal.list.useInfiniteQuery(
     { grantPermalink: query.grant_permalink },
     {
@@ -75,10 +76,11 @@ export default function GrantPage() {
     () => compact([grant?.name, community?.name, documentTitle]).join(' - '),
     [community?.name, grant?.name],
   )
-  const handleSuccess = useCallback(() => {
-    refetch()
-    refetchList()
-  }, [refetch, refetchList])
+  const { data: status } = useStatus(grant?.permalink)
+  const phase = useMemo(
+    () => getGrantPhase(new Date(), status?.timestamp, grant?.duration),
+    [grant?.duration, status?.timestamp],
+  )
 
   return (
     <>
@@ -125,12 +127,17 @@ export default function GrantPage() {
             </div>
             {grantProposals?.length ? (
               <ul role="list" className="mt-5 space-y-5">
-                {grantProposals.map((grantProposal) => (
+                {grantProposals.map((grantProposal, index) => (
                   <li key={grantProposal.permalink}>
                     {query.community_id ? (
                       <GrantProposalCard
                         communityId={query.community_id}
                         grantProposal={grantProposal}
+                        isWin={
+                          phase === GrantPhase.ENDED &&
+                          !!grant &&
+                          index < grant.funding[0][1]
+                        }
                       />
                     ) : null}
                   </li>
