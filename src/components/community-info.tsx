@@ -1,9 +1,9 @@
 import {
-  ClockIcon,
   GlobeAltIcon,
   BriefcaseIcon,
   DocumentTextIcon,
   TrophyIcon,
+  QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
@@ -55,9 +55,9 @@ export default function CommunityInfo(props: { className?: string }) {
   const navigation = useMemo(
     () => [
       {
-        name: 'Timeline',
+        name: 'Proposals',
         href: `/${query.community_id}`,
-        icon: ClockIcon,
+        icon: DocumentTextIcon,
         current: router.pathname === '/[community_id]',
       },
       {
@@ -69,7 +69,7 @@ export default function CommunityInfo(props: { className?: string }) {
       {
         name: 'About',
         href: `/${query.community_id}/about`,
-        icon: DocumentTextIcon,
+        icon: QuestionMarkCircleIcon,
         current: router.pathname === '/[community_id]/about',
       },
     ],
