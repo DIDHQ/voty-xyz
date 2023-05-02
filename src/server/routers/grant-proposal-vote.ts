@@ -75,15 +75,15 @@ export const grantProposalVoteRouter = router({
       }
     }),
   groupByVoter: procedure
-    .input(z.object({ grantProposal: z.string().optional() }))
+    .input(z.object({ grant: z.string().optional() }))
     .output(z.record(z.string(), z.string()))
     .query(async ({ input }) => {
-      if (!input.grantProposal) {
+      if (!input.grant) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
       const grantProposalVotes = await database.grantProposalVote.findMany({
-        where: { proposalPermalink: input.grantProposal },
+        where: { grantPermalink: input.grant },
       })
 
       const storages = keyBy(
