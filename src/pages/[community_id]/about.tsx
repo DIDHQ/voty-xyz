@@ -25,17 +25,17 @@ export default function CommunityAboutPage() {
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
-      {community?.extension.description ? (
+      {community?.description ? (
         <>
           <h3 className="mt-6 text-lg font-medium text-gray-900 sm:mt-8">
             Description
           </h3>
           <Article className="w-full pt-6">
-            <Markdown>{community?.extension.description}</Markdown>
+            <Markdown>{community?.description}</Markdown>
           </Article>
         </>
       ) : null}
-      {community?.extension.how_to_join ? (
+      {community?.how_to_join ? (
         <>
           <h3
             id="how-to-join"
@@ -44,7 +44,7 @@ export default function CommunityAboutPage() {
             How to join
           </h3>
           <Article className="w-full pt-6">
-            <Markdown>{community?.extension.how_to_join}</Markdown>
+            <Markdown>{community?.how_to_join}</Markdown>
           </Article>
         </>
       ) : null}

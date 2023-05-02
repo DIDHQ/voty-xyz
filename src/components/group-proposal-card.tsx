@@ -44,9 +44,9 @@ export default function GroupProposalCard(props: {
         <p className="truncate text-lg font-medium text-gray-800">
           {props.groupProposal.title}
         </p>
-        {props.groupProposal.extension?.content ? (
+        {props.groupProposal?.content ? (
           <p className="line-clamp-3 text-gray-600">
-            {props.groupProposal.extension.content}
+            {props.groupProposal.content}
           </p>
         ) : null}
       </div>

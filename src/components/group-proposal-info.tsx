@@ -41,7 +41,7 @@ export default function GroupProposalInfo(props: {
       />
       <DetailList title="Criteria for approval">
         <Article small className="pt-2">
-          <Markdown>{props.group?.extension.terms_and_conditions}</Markdown>
+          <Markdown>{props.group?.terms_and_conditions}</Markdown>
         </Article>
       </DetailList>
       <DetailList title="Information">

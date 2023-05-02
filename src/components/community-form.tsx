@@ -61,10 +61,10 @@ export default function CommunityForm(props: {
       <FormSection title="Basic information">
         <Grid6>
           <GridItem6>
-            <FormItem label="Logo" error={errors.extension?.logo?.message}>
+            <FormItem label="Logo" error={errors?.logo?.message}>
               <Controller
                 control={control}
-                name="extension.logo"
+                name="logo"
                 render={({ field: { ref, value, onChange } }) => (
                   <AvatarInput
                     inputRef={ref}
@@ -95,11 +95,11 @@ export default function CommunityForm(props: {
             </FormItem>
           </GridItem6>
           <GridItem6>
-            <FormItem label="Slogan" error={errors.extension?.slogan?.message}>
+            <FormItem label="Slogan" error={errors?.slogan?.message}>
               <TextInput
-                {...register('extension.slogan')}
+                {...register('slogan')}
                 placeholder="e.g. Media and Social DAO onboarding 1 billion people to crypto"
-                error={!!errors.extension?.slogan?.message}
+                error={!!errors?.slogan?.message}
                 disabled={!isManager}
               />
             </FormItem>
@@ -109,11 +109,11 @@ export default function CommunityForm(props: {
               label="Description"
               optional
               description="Provide a detailed description of your community to leave a lasting impression on people. Markdown is supported"
-              error={errors.extension?.description?.message}
+              error={errors?.description?.message}
             >
               <Textarea
-                {...register('extension.description')}
-                error={!!errors.extension?.description?.message}
+                {...register('description')}
+                error={!!errors?.description?.message}
                 disabled={!isManager}
               />
             </FormItem>
@@ -123,12 +123,12 @@ export default function CommunityForm(props: {
               label="How to join"
               optional
               description="Provide a guide on how to join this community for people"
-              error={errors.extension?.how_to_join?.message}
+              error={errors?.how_to_join?.message}
             >
               <Textarea
-                {...register('extension.how_to_join')}
+                {...register('how_to_join')}
                 placeholder="e.g. Holding a SubDID is the only credential for being a community member"
-                error={!!errors.extension?.how_to_join?.message}
+                error={!!errors?.how_to_join?.message}
                 disabled={!isManager}
               />
             </FormItem>
@@ -141,11 +141,11 @@ export default function CommunityForm(props: {
             <FormItem
               label="Website"
               optional
-              error={errors.extension?.website?.message}
+              error={errors.links?.website?.message}
             >
               <TextInput
-                {...register('extension.website')}
-                error={!!errors.extension?.website?.message}
+                {...register('links.website')}
+                error={!!errors.links?.website?.message}
                 disabled={!isManager}
               />
             </FormItem>
@@ -154,17 +154,17 @@ export default function CommunityForm(props: {
             <FormItem
               label="Twitter"
               optional
-              error={errors.extension?.twitter?.message}
+              error={errors.links?.twitter?.message}
             >
               <TextInput
-                {...register('extension.twitter')}
+                {...register('links.twitter')}
                 onBlur={(e) =>
                   setValue(
-                    'extension.twitter',
+                    'links.twitter',
                     e.target.value.replace(/^.*twitter\.com\//, ''),
                   )
                 }
-                error={!!errors.extension?.twitter?.message}
+                error={!!errors.links?.twitter?.message}
                 disabled={!isManager}
               />
             </FormItem>
@@ -173,19 +173,19 @@ export default function CommunityForm(props: {
             <FormItem
               label="Discord"
               optional
-              error={errors.extension?.discord?.message}
+              error={errors.links?.discord?.message}
             >
               <TextInput
-                {...register('extension.discord')}
+                {...register('links.discord')}
                 onBlur={(e) =>
                   setValue(
-                    'extension.discord',
+                    'links.discord',
                     e.target.value
                       .replace(/^.*discord\.gg\//, '')
                       .replace(/^.*discord\.com\/invite\//, ''),
                   )
                 }
-                error={!!errors.extension?.discord?.message}
+                error={!!errors.links?.discord?.message}
                 disabled={!isManager}
               />
             </FormItem>
@@ -194,17 +194,17 @@ export default function CommunityForm(props: {
             <FormItem
               label="GitHub"
               optional
-              error={errors.extension?.github?.message}
+              error={errors.links?.github?.message}
             >
               <TextInput
-                {...register('extension.github')}
+                {...register('links.github')}
                 onBlur={(e) =>
                   setValue(
-                    'extension.github',
+                    'links.github',
                     e.target.value.replace(/^.*github\.com\//, ''),
                   )
                 }
-                error={!!errors.extension?.github?.message}
+                error={!!errors.links?.github?.message}
                 disabled={!isManager}
               />
             </FormItem>

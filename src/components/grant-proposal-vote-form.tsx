@@ -66,8 +66,8 @@ export default function GrantProposalVoteForm(props: {
   )
   const { data: voted, refetch: refetchVoted } =
     trpc.grantProposalVote.groupByVoter.useQuery(
-      { grantProposal: props.grantProposal.permalink },
-      { enabled: !!props.grantProposal.permalink },
+      { grant: props.grantProposal.grant },
+      { enabled: !!props.grantProposal.grant },
     )
   const methods = useForm<GrantProposalVote>({
     resolver: zodResolver(grantProposalVoteSchema),
@@ -79,7 +79,7 @@ export default function GrantProposalVoteForm(props: {
     }
   }, [props.grantProposal.permalink, setValue])
   const { data: totalPower } = useQuery(
-    ['votingPower', props.grant, did, props.grantProposal],
+    ['votingPower', props.grant, did],
     () =>
       calculateDecimal(
         props.grant.permission.voting,
@@ -140,6 +140,13 @@ export default function GrantProposalVoteForm(props: {
   useEffect(() => {
     setDid(defaultDid || '')
   }, [defaultDid])
+  useEffect(() => {
+    if (totalPower) {
+      setValue('powers', {
+        [props.grantProposal.permalink]: totalPower.toString(),
+      })
+    }
+  }, [props.grantProposal.permalink, setValue, totalPower])
   useEffect(() => {
     if (handleSubmit.isSuccess) {
       setTimeout(() => {

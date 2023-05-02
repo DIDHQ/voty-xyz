@@ -53,9 +53,9 @@ export default function GrantCard(props: {
         <p className="truncate text-lg font-medium text-gray-800">
           {props.grant.name}
         </p>
-        {props.grant.extension?.introduction ? (
+        {props.grant?.introduction ? (
           <p className="line-clamp-3 text-gray-600">
-            {props.grant.extension.introduction}
+            {props.grant.introduction}
           </p>
         ) : null}
       </div>
@@ -63,8 +63,9 @@ export default function GrantCard(props: {
         <div className="w-0 flex-1 px-4 py-2">
           <p className="text-gray-400">Funding</p>
           <p className="truncate">
-            {props.grant.extension.funding[0][0]}&nbsp;X&nbsp;
-            {props.grant.extension.funding[0][1]}
+            {props.grant.funding[0][0]}&nbsp;
+            <span className="text-gray-400">X</span>&nbsp;
+            {props.grant.funding[0][1]}
           </p>
         </div>
         <div className="w-0 flex-1 px-4 py-2">

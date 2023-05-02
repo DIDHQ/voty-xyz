@@ -5,7 +5,6 @@ import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 
-import { stringifyChoice } from '../../../../../utils/choice'
 import {
   permalink2Explorer,
   permalink2Id,
@@ -121,7 +120,7 @@ export default function GrantProposalPage() {
                 {grantProposal?.title || '...'}
               </h3>
               <Article className="mt-6 sm:mt-8">
-                <Markdown>{grantProposal?.extension?.content}</Markdown>
+                <Markdown>{grantProposal?.content}</Markdown>
               </Article>
             </div>
             <GrantProposalInfo
@@ -151,9 +150,6 @@ export default function GrantProposalPage() {
                     <th className="rounded-t-md border-b border-gray-200 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
                       Voter
                     </th>
-                    <th className="border-b border-gray-200 px-3 py-2 text-left text-sm font-semibold text-gray-900">
-                      Choice
-                    </th>
                     <th className="rounded-t-md border-b border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900">
                       Power
                     </th>
@@ -169,15 +165,6 @@ export default function GrantProposalPage() {
                         )}
                       >
                         {grantProposalVote.authorship.author}
-                      </td>
-                      <td
-                        title={stringifyChoice(grantProposalVote.powers)}
-                        className={clsx(
-                          index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-gray-200 px-3 py-2 text-sm text-gray-500',
-                        )}
-                      >
-                        {stringifyChoice(grantProposalVote.powers)}
                       </td>
                       <td
                         className={clsx(
