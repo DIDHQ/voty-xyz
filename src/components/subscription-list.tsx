@@ -40,7 +40,7 @@ function SubscriptionListItem(props: { value: Community }) {
     <li className="rounded-full ring-2 ring-transparent ring-offset-2 hover:ring-gray-300">
       <Tooltip place="top" text={props.value.name}>
         <Link href={`/${props.value.id}`}>
-          <Avatar size={16} value={props.value.extension.logo} />
+          <Avatar size={16} value={props.value.logo} />
         </Link>
       </Tooltip>
     </li>

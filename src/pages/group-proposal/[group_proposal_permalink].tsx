@@ -116,7 +116,7 @@ export default function ProposalPage() {
                 {groupProposal?.title || '...'}
               </h3>
               <Article className="mt-6 sm:mt-8">
-                <Markdown>{groupProposal?.extension?.content}</Markdown>
+                <Markdown>{groupProposal?.content}</Markdown>
               </Article>
             </div>
             <GroupProposalInfo

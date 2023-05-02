@@ -107,11 +107,11 @@ export default function GrantForm(props: {
             <FormItem
               label="Introduction"
               description="The purpose of this grant. Markdown is supported"
-              error={errors.extension?.introduction?.message}
+              error={errors?.introduction?.message}
             >
               <Textarea
-                {...register('extension.introduction')}
-                error={!!errors.extension?.introduction?.message}
+                {...register('introduction')}
+                error={!!errors?.introduction?.message}
                 disabled={disabled}
               />
             </FormItem>
@@ -184,29 +184,29 @@ export default function GrantForm(props: {
             <FormItem
               label="Funding"
               error={
-                errors?.extension?.funding?.[0]?.[0]?.message ||
-                errors?.extension?.funding?.[0]?.[1]?.message
+                errors?.funding?.[0]?.[0]?.message ||
+                errors?.funding?.[0]?.[1]?.message
               }
             >
               <div className="flex w-full items-center space-x-2">
                 <TextInput
                   disabled={disabled}
-                  {...register('extension.funding.0.0')}
-                  error={!!errors?.extension?.funding?.[0]?.[0]}
+                  {...register('funding.0.0')}
+                  error={!!errors?.funding?.[0]?.[0]}
                   placeholder="prize"
                   className="w-0 flex-1"
                 />{' '}
                 <span className="text-gray-400">X</span>
                 <Controller
                   control={control}
-                  name="extension.funding.0.1"
+                  name="funding.0.1"
                   render={({ field: { value, onChange } }) => (
                     <TextInput
                       disabled={disabled}
                       type="number"
                       value={value || ''}
                       onChange={(e) => onChange(e.target.valueAsNumber)}
-                      error={!!errors?.extension?.funding?.[0]?.[1]}
+                      error={!!errors?.funding?.[0]?.[1]}
                       placeholder="count"
                       className="shrink-0 basis-16"
                     />

@@ -49,7 +49,7 @@ export default function GroupAbout(props: {
         </nav>
         <Article small className="mt-4 border-t pt-4">
           <h4 className="mb-3 text-sm font-semibold">Criteria for approval</h4>
-          <Markdown>{group.extension.terms_and_conditions}</Markdown>
+          <Markdown>{group.terms_and_conditions}</Markdown>
         </Article>
       </div>
     </div>

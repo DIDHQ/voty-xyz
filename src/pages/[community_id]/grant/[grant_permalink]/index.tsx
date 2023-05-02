@@ -100,7 +100,7 @@ export default function GrantPage() {
                 {grant?.name || '...'}
               </h3>
               <Article className="mt-6 sm:mt-8">
-                <Markdown>{grant?.extension?.introduction}</Markdown>
+                <Markdown>{grant?.introduction}</Markdown>
               </Article>
             </div>
             <GrantInfo

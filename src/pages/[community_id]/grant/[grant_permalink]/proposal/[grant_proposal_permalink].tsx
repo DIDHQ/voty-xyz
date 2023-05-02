@@ -121,7 +121,7 @@ export default function GrantProposalPage() {
                 {grantProposal?.title || '...'}
               </h3>
               <Article className="mt-6 sm:mt-8">
-                <Markdown>{grantProposal?.extension?.content}</Markdown>
+                <Markdown>{grantProposal?.content}</Markdown>
               </Article>
             </div>
             <GrantProposalInfo

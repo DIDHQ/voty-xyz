@@ -53,10 +53,8 @@ export default function GroupAboutPage() {
               {name || '...'}
             </h3>
           </div>
-          {group?.extension.introduction ? (
-            <p className="mt-2 text-sm text-gray-500">
-              {group.extension.introduction}
-            </p>
+          {group?.introduction ? (
+            <p className="mt-2 text-sm text-gray-500">{group.introduction}</p>
           ) : null}
           {group ? <GroupAbout group={group} className="mt-6" /> : null}
           {isManager && !previewGroup ? (

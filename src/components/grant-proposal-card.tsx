@@ -28,9 +28,9 @@ export default function GrantProposalCard(props: {
         <p className="truncate text-lg font-medium text-gray-800">
           {props.grantProposal.title}
         </p>
-        {props.grantProposal.extension?.content ? (
+        {props.grantProposal?.content ? (
           <p className="line-clamp-3 text-gray-600">
-            {props.grantProposal.extension.content}
+            {props.grantProposal.content}
           </p>
         ) : null}
       </div>

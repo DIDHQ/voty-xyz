@@ -100,11 +100,11 @@ export default function GroupForm(props: {
                 label="Introduction"
                 optional
                 description="The purpose of this workgroup"
-                error={errors.extension?.introduction?.message}
+                error={errors?.introduction?.message}
               >
                 <TextInput
-                  {...register('extension.introduction')}
-                  error={!!errors.extension?.introduction?.message}
+                  {...register('introduction')}
+                  error={!!errors?.introduction?.message}
                   disabled={disabled}
                 />
               </FormItem>
@@ -193,12 +193,12 @@ export default function GroupForm(props: {
               <FormItem
                 label="Criteria for approval"
                 description="Markdown is supported"
-                error={errors.extension?.terms_and_conditions?.message}
+                error={errors?.terms_and_conditions?.message}
               >
                 <Textarea
                   disabled={disabled}
-                  {...register('extension.terms_and_conditions')}
-                  error={!!errors.extension?.terms_and_conditions?.message}
+                  {...register('terms_and_conditions')}
+                  error={!!errors?.terms_and_conditions?.message}
                 />
               </FormItem>
             </GridItem6>

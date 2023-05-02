@@ -41,7 +41,7 @@ export default function GrantProposalInfo(props: {
       <DetailList title="Funding">
         <Article small className="pt-2">
           <ul>
-            {props.grant?.extension?.funding?.map((funding, index) => (
+            {props.grant?.funding?.map((funding, index) => (
               <li key={index}>
                 {funding[0]}&nbsp;
                 <span className="text-gray-400">X</span>&nbsp;

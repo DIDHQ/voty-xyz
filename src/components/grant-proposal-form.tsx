@@ -175,12 +175,12 @@ export default function GrantProposalForm(props: {
             <FormItem
               label="Content"
               description="Markdown is supported"
-              error={errors.extension?.content?.message}
+              error={errors?.content?.message}
             >
               <Textarea
-                {...register('extension.content')}
+                {...register('content')}
                 disabled={disabled}
-                error={!!errors.extension?.content?.message}
+                error={!!errors?.content?.message}
               />
             </FormItem>
           </GridItem6>
