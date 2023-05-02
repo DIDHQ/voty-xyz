@@ -58,20 +58,16 @@ export const grantProposalRouter = router({
     .input(
       z.object({
         grantPermalink: z.string().optional(),
-        cursor: z.string().optional(),
       }),
     )
     .output(
-      z.object({
-        data: z.array(
-          schema.extend({
-            permalink: z.string(),
-            votes: z.number(),
-            ts: z.date(),
-          }),
-        ),
-        next: z.string().optional(),
-      }),
+      z.array(
+        schema.extend({
+          permalink: z.string(),
+          votes: z.number(),
+          ts: z.date(),
+        }),
+      ),
     )
     .query(async ({ input }) => {
       if (!input.grantPermalink) {
@@ -88,9 +84,6 @@ export const grantProposalRouter = router({
 
       const grantProposals = await database.grantProposal.findMany({
         where: { grantPermalink: input.grantPermalink },
-        cursor: input.cursor ? { permalink: input.cursor } : undefined,
-        take: 20,
-        skip: input.cursor ? 1 : 0,
         orderBy: isEnded ? { votes: 'desc' } : { ts: 'desc' },
       })
       const storages = keyBy(
@@ -102,25 +95,22 @@ export const grantProposalRouter = router({
         ({ permalink }) => permalink,
       )
 
-      return {
-        data: compact(
-          grantProposals
-            .filter(({ permalink }) => storages[permalink])
-            .map(({ permalink, votes, ts }) => {
-              try {
-                return {
-                  ...schema.parse(storages[permalink].data),
-                  permalink,
-                  votes,
-                  ts,
-                }
-              } catch {
-                return
+      return compact(
+        grantProposals
+          .filter(({ permalink }) => storages[permalink])
+          .map(({ permalink, votes, ts }) => {
+            try {
+              return {
+                ...schema.parse(storages[permalink].data),
+                permalink,
+                votes,
+                ts,
               }
-            }),
-        ),
-        next: last(grantProposals)?.permalink,
-      }
+            } catch {
+              return
+            }
+          }),
+      )
     }),
   create: procedure
     .input(schema)

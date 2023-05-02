@@ -101,100 +101,96 @@ export default function GrantProposalPage() {
       <Head>
         <title>{title}</title>
       </Head>
-      <div className="w-full">
-        <LoadingBar
-          loading={isLoading || isGrantLoading || isCommunityLoading}
-        />
-        <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
-          <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
-            <TextButton
-              disabled={!community || !grantProposal || !!previewGrantProposal}
-              href={`/${community?.id}/grant/${
-                grantProposal ? permalink2Id(grantProposal.grant) : ''
-              }`}
-            >
-              <h2 className="text-base font-semibold">← Back</h2>
-            </TextButton>
-            <div className="mb-6">
-              <h3 className="mt-4 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                {grantProposal?.title || '...'}
-              </h3>
-              <Article className="mt-6 sm:mt-8">
-                <Markdown>{grantProposal?.content}</Markdown>
-              </Article>
-            </div>
-            <GrantProposalInfo
-              community={community || undefined}
-              grant={grant || undefined}
-              grantProposal={grantProposal}
-              className="mb-6 block sm:hidden"
-            />
-            {grant && grantProposal ? (
-              <GrantProposalVoteForm
-                grant={grant}
-                grantProposal={grantProposal}
-                onSuccess={handleSuccess}
-              />
-            ) : null}
-            {grantProposal?.votes ? (
-              <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
-                {grantProposal.votes === 1
-                  ? '1 Vote'
-                  : `${grantProposal.votes} Votes`}
-              </h2>
-            ) : null}
-            {grantProposalVotes?.length ? (
-              <table className="my-6 w-full table-fixed border-separate border-spacing-0">
-                <thead>
-                  <tr>
-                    <th className="rounded-t-md border-b border-gray-200 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
-                      Voter
-                    </th>
-                    <th className="rounded-t-md border-b border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900">
-                      Power
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {grantProposalVotes.map((grantProposalVote, index) => (
-                    <tr key={grantProposalVote.permalink}>
-                      <td
-                        className={clsx(
-                          index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
-                        )}
-                      >
-                        {grantProposalVote.authorship.author}
-                      </td>
-                      <td
-                        className={clsx(
-                          index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
-                        )}
-                      >
-                        <TextButton
-                          primary
-                          disabled={!!previewGrantProposal}
-                          href={permalink2Explorer(grantProposalVote.permalink)}
-                        >
-                          {grantProposalVote.total_power}
-                        </TextButton>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : null}
+      <LoadingBar loading={isLoading || isGrantLoading || isCommunityLoading} />
+      <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
+        <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
+          <TextButton
+            disabled={!community || !grantProposal || !!previewGrantProposal}
+            href={`/${community?.id}/grant/${
+              grantProposal ? permalink2Id(grantProposal.grant) : ''
+            }`}
+          >
+            <h2 className="text-base font-semibold">← Back</h2>
+          </TextButton>
+          <div className="mb-6">
+            <h3 className="mt-4 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              {grantProposal?.title || '...'}
+            </h3>
+            <Article className="mt-6 sm:mt-8">
+              <Markdown>{grantProposal?.content}</Markdown>
+            </Article>
           </div>
           <GrantProposalInfo
             community={community || undefined}
             grant={grant || undefined}
             grantProposal={grantProposal}
-            className="hidden sm:block"
+            className="mb-6 block sm:hidden"
           />
+          {grant && grantProposal ? (
+            <GrantProposalVoteForm
+              grant={grant}
+              grantProposal={grantProposal}
+              onSuccess={handleSuccess}
+            />
+          ) : null}
+          {grantProposal?.votes ? (
+            <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
+              {grantProposal.votes === 1
+                ? '1 Vote'
+                : `${grantProposal.votes} Votes`}
+            </h2>
+          ) : null}
+          {grantProposalVotes?.length ? (
+            <table className="my-6 w-full table-fixed border-separate border-spacing-0">
+              <thead>
+                <tr>
+                  <th className="rounded-t-md border-b border-gray-200 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
+                    Voter
+                  </th>
+                  <th className="rounded-t-md border-b border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900">
+                    Power
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {grantProposalVotes.map((grantProposalVote, index) => (
+                  <tr key={grantProposalVote.permalink}>
+                    <td
+                      className={clsx(
+                        index === 0 ? undefined : 'border-t',
+                        'truncate whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
+                      )}
+                    >
+                      {grantProposalVote.authorship.author}
+                    </td>
+                    <td
+                      className={clsx(
+                        index === 0 ? undefined : 'border-t',
+                        'truncate whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
+                      )}
+                    >
+                      <TextButton
+                        primary
+                        disabled={!!previewGrantProposal}
+                        href={permalink2Explorer(grantProposalVote.permalink)}
+                      >
+                        {grantProposalVote.total_power}
+                      </TextButton>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : null}
         </div>
-        <div ref={ref} />
+        <GrantProposalInfo
+          community={community || undefined}
+          grant={grant || undefined}
+          grantProposal={grantProposal}
+          className="hidden sm:block"
+        />
       </div>
+      <div ref={ref} />
     </>
   )
 }

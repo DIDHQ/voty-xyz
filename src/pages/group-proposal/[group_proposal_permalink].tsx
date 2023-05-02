@@ -99,110 +99,106 @@ export default function ProposalPage() {
       <Head>
         <title>{title}</title>
       </Head>
-      <div className="w-full">
-        <LoadingBar
-          loading={isLoading || isGroupLoading || isCommunityLoading}
-        />
-        <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
-          <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
-            <TextButton
-              disabled={!community || !group || !!previewGroupProposal}
-              href={`/${community?.id}/group/${group?.id}`}
-            >
-              <h2 className="text-base font-semibold">← Back</h2>
-            </TextButton>
-            <div className="mb-6">
-              <h3 className="mt-4 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                {groupProposal?.title || '...'}
-              </h3>
-              <Article className="mt-6 sm:mt-8">
-                <Markdown>{groupProposal?.content}</Markdown>
-              </Article>
-            </div>
-            <GroupProposalInfo
-              community={community || undefined}
-              group={group || undefined}
-              groupProposal={groupProposal}
-              className="mb-6 block sm:hidden"
-            />
-            {group && groupProposal ? (
-              <GroupProposalVoteForm
-                group={group}
-                groupProposal={groupProposal}
-                onSuccess={handleSuccess}
-              />
-            ) : null}
-            {groupProposal?.votes ? (
-              <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
-                {groupProposal.votes === 1
-                  ? '1 Vote'
-                  : `${groupProposal.votes} Votes`}
-              </h2>
-            ) : null}
-            {groupProposalVotes?.length ? (
-              <table className="my-6 w-full table-fixed border-separate border-spacing-0">
-                <thead>
-                  <tr>
-                    <th className="rounded-t-md border-b border-gray-200 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
-                      Voter
-                    </th>
-                    <th className="border-b border-gray-200 px-3 py-2 text-left text-sm font-semibold text-gray-900">
-                      Choice
-                    </th>
-                    <th className="rounded-t-md border-b border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900">
-                      Power
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {groupProposalVotes.map((groupProposalVote, index) => (
-                    <tr key={groupProposalVote.permalink}>
-                      <td
-                        className={clsx(
-                          index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
-                        )}
-                      >
-                        {groupProposalVote.authorship.author}
-                      </td>
-                      <td
-                        title={stringifyChoice(groupProposalVote.powers)}
-                        className={clsx(
-                          index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-gray-200 px-3 py-2 text-sm text-gray-500',
-                        )}
-                      >
-                        {stringifyChoice(groupProposalVote.powers)}
-                      </td>
-                      <td
-                        className={clsx(
-                          index === 0 ? undefined : 'border-t',
-                          'truncate whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
-                        )}
-                      >
-                        <TextButton
-                          primary
-                          disabled={!!previewGroupProposal}
-                          href={permalink2Explorer(groupProposalVote.permalink)}
-                        >
-                          {groupProposalVote.total_power}
-                        </TextButton>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : null}
+      <LoadingBar loading={isLoading || isGroupLoading || isCommunityLoading} />
+      <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
+        <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
+          <TextButton
+            disabled={!community || !group || !!previewGroupProposal}
+            href={`/${community?.id}/group/${group?.id}`}
+          >
+            <h2 className="text-base font-semibold">← Back</h2>
+          </TextButton>
+          <div className="mb-6">
+            <h3 className="mt-4 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              {groupProposal?.title || '...'}
+            </h3>
+            <Article className="mt-6 sm:mt-8">
+              <Markdown>{groupProposal?.content}</Markdown>
+            </Article>
           </div>
           <GroupProposalInfo
             community={community || undefined}
             group={group || undefined}
             groupProposal={groupProposal}
-            className="hidden sm:block"
+            className="mb-6 block sm:hidden"
           />
+          {group && groupProposal ? (
+            <GroupProposalVoteForm
+              group={group}
+              groupProposal={groupProposal}
+              onSuccess={handleSuccess}
+            />
+          ) : null}
+          {groupProposal?.votes ? (
+            <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
+              {groupProposal.votes === 1
+                ? '1 Vote'
+                : `${groupProposal.votes} Votes`}
+            </h2>
+          ) : null}
+          {groupProposalVotes?.length ? (
+            <table className="my-6 w-full table-fixed border-separate border-spacing-0">
+              <thead>
+                <tr>
+                  <th className="rounded-t-md border-b border-gray-200 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
+                    Voter
+                  </th>
+                  <th className="border-b border-gray-200 px-3 py-2 text-left text-sm font-semibold text-gray-900">
+                    Choice
+                  </th>
+                  <th className="rounded-t-md border-b border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900">
+                    Power
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {groupProposalVotes.map((groupProposalVote, index) => (
+                  <tr key={groupProposalVote.permalink}>
+                    <td
+                      className={clsx(
+                        index === 0 ? undefined : 'border-t',
+                        'truncate whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
+                      )}
+                    >
+                      {groupProposalVote.authorship.author}
+                    </td>
+                    <td
+                      title={stringifyChoice(groupProposalVote.powers)}
+                      className={clsx(
+                        index === 0 ? undefined : 'border-t',
+                        'truncate whitespace-nowrap border-gray-200 px-3 py-2 text-sm text-gray-500',
+                      )}
+                    >
+                      {stringifyChoice(groupProposalVote.powers)}
+                    </td>
+                    <td
+                      className={clsx(
+                        index === 0 ? undefined : 'border-t',
+                        'truncate whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
+                      )}
+                    >
+                      <TextButton
+                        primary
+                        disabled={!!previewGroupProposal}
+                        href={permalink2Explorer(groupProposalVote.permalink)}
+                      >
+                        {groupProposalVote.total_power}
+                      </TextButton>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : null}
         </div>
-        <div ref={ref} />
+        <GroupProposalInfo
+          community={community || undefined}
+          group={group || undefined}
+          groupProposal={groupProposal}
+          className="hidden sm:block"
+        />
       </div>
+      <div ref={ref} />
     </>
   )
 }
