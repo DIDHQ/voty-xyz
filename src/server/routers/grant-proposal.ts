@@ -78,12 +78,20 @@ export const grantProposalRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
+      const grant = await database.grant.findUnique({
+        where: { permalink: input.grantPermalink },
+      })
+      if (!grant) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
+      }
+      const isEnded = !!grant.tsVoting && Date.now() > grant.tsVoting.getTime()
+
       const grantProposals = await database.grantProposal.findMany({
         where: { grantPermalink: input.grantPermalink },
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
         take: 20,
         skip: input.cursor ? 1 : 0,
-        orderBy: { ts: 'desc' },
+        orderBy: isEnded ? { votes: 'desc' } : { ts: 'desc' },
       })
       const storages = keyBy(
         await database.storage.findMany({
