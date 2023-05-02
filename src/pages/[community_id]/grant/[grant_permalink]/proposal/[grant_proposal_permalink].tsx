@@ -126,7 +126,8 @@ export default function GrantProposalPage() {
           currentIndex !== undefined ? (
             <div className="float-right flex items-center">
               <p className="mr-4 text-sm text-gray-600">
-                {currentIndex + 1} of {grantProposals.length}
+                {currentIndex >= 0 ? currentIndex + 1 : '?'} of{' '}
+                {grantProposals.length}
               </p>
               <span className="isolate inline-flex rounded-md">
                 {currentIndex > 0 ? (
