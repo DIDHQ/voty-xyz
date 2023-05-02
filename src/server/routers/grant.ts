@@ -191,7 +191,7 @@ export const grantRouter = router({
             grant.permission.voting.operands[0].arguments[0] ===
               grant.authorship.author &&
             grant.permission.voting.operands[0].arguments[1].length === 0 &&
-            grant.permission.voting.operands[0].arguments[2] === '0',
+            grant.permission.voting.operands[0].arguments[2] === '1',
         ),
     )
     .output(z.string())
