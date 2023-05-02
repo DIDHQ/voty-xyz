@@ -16,3 +16,12 @@ export function formatDurationMs(ms: number) {
 export function formatTime(date: Date | string | number) {
   return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
 }
+
+export function format2Time(
+  from: Date | string | number,
+  to: Date | string | number,
+) {
+  return `${dayjs(from).format('MM-DD HH:mm')} ~ ${dayjs(to).format(
+    'MM-DD HH:mm',
+  )}`
+}
