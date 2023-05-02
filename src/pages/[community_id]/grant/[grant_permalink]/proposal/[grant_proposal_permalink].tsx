@@ -4,6 +4,8 @@ import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
+import Link from 'next/link'
 
 import {
   permalink2Explorer,
@@ -22,7 +24,10 @@ import { GrantProposal } from '../../../../../utils/schemas/grant-proposal'
 import GrantProposalVoteForm from '../../../../../components/grant-proposal-vote-form'
 
 export default function GrantProposalPage() {
-  const query = useRouterQuery<['grant_proposal_permalink']>()
+  const query =
+    useRouterQuery<
+      ['community_id', 'grant_permalink', 'grant_proposal_permalink']
+    >()
   const previewGrantProposal = useAtomValue(previewGrantProposalAtom)
   const { data, isLoading, refetch } =
     trpc.grantProposal.getByPermalink.useQuery(
@@ -95,6 +100,17 @@ export default function GrantProposalPage() {
     refetch()
     refetchList()
   }, [refetch, refetchList])
+  const { data: grantProposals } = trpc.grantProposal.list.useQuery(
+    { grantPermalink: query.grant_permalink },
+    { enabled: !!query.grant_permalink },
+  )
+  const currentIndex = useMemo(
+    () =>
+      grantProposals?.findIndex(
+        ({ permalink }) => permalink === grantProposal?.permalink,
+      ),
+    [grantProposal?.permalink, grantProposals],
+  )
 
   return (
     <>
@@ -104,6 +120,71 @@ export default function GrantProposalPage() {
       <LoadingBar loading={isLoading || isGrantLoading || isCommunityLoading} />
       <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
         <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
+          {query.community_id &&
+          query.grant_permalink &&
+          grantProposals &&
+          currentIndex !== undefined ? (
+            <div className="float-right flex items-center">
+              <p className="mr-4 text-sm text-gray-600">
+                {currentIndex + 1} of {grantProposals.length}
+              </p>
+              <span className="isolate inline-flex rounded-md">
+                {currentIndex > 0 ? (
+                  <Link
+                    href={`/${query.community_id}/grant/${permalink2Id(
+                      query.grant_permalink,
+                    )}/proposal/${permalink2Id(
+                      grantProposals[currentIndex - 1].permalink,
+                    )}`}
+                  >
+                    <button
+                      type="button"
+                      className="relative inline-flex items-center rounded-l-md bg-white p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+                    >
+                      <span className="sr-only">Previous</span>
+                      <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    className="relative inline-flex cursor-not-allowed items-center rounded-l-md bg-gray-100 p-2 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10"
+                  >
+                    <span className="sr-only">Previous</span>
+                    <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                )}
+                {currentIndex < grantProposals.length - 1 ? (
+                  <Link
+                    href={`/${query.community_id}/grant/${permalink2Id(
+                      query.grant_permalink,
+                    )}/proposal/${permalink2Id(
+                      grantProposals[currentIndex + 1].permalink,
+                    )}`}
+                  >
+                    <button
+                      type="button"
+                      className="relative -ml-px inline-flex items-center rounded-r-md bg-white p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+                    >
+                      <span className="sr-only">Next</span>
+                      <ChevronRightIcon
+                        className="h-5 w-5"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    className="relative -ml-px inline-flex cursor-not-allowed items-center rounded-r-md bg-gray-100 p-2 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10"
+                  >
+                    <span className="sr-only">Next</span>
+                    <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                )}
+              </span>
+            </div>
+          ) : null}
           <TextButton
             disabled={!community || !grantProposal || !!previewGrantProposal}
             href={`/${community?.id}/grant/${
