@@ -121,6 +121,7 @@ export const grantProposalVoteRouter = router({
             permalink,
             ts,
             voter: input.authorship.author,
+            grantPermalink: grantProposal.grant,
             proposalPermalink: input.grant_proposal,
           },
         }),

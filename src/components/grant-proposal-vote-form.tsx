@@ -79,7 +79,7 @@ export default function GrantProposalVoteForm(props: {
     }
   }, [props.grantProposal.permalink, setValue])
   const { data: totalPower } = useQuery(
-    ['votingPower', props.grant, did, props.grantProposal],
+    ['votingPower', props.grant, did],
     () =>
       calculateDecimal(
         props.grant.permission.voting,
@@ -140,6 +140,13 @@ export default function GrantProposalVoteForm(props: {
   useEffect(() => {
     setDid(defaultDid || '')
   }, [defaultDid])
+  useEffect(() => {
+    if (totalPower) {
+      setValue('powers',{
+        [props.grantProposal.permalink]: totalPower.toString()
+      })
+    }
+  },[props.grantProposal.permalink, setValue, totalPower])
   useEffect(() => {
     if (handleSubmit.isSuccess) {
       setTimeout(() => {

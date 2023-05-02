@@ -58,18 +58,20 @@ model GrantProposal {
   ts       DateTime
 
   @@id([permalink])
-  @@index([grantPermalink])
+  @@unique([grantPermalink, proposer])
 }
 
 model GrantProposalVote {
   permalink         String
+  grantPermalink    String
   proposalPermalink String
 
   voter String
   ts    DateTime
 
   @@id([permalink])
-  @@unique([proposalPermalink, voter])
+  @@unique([grantPermalink, voter])
+  @@index([proposalPermalink])
 }
 
 model GrantProposalVoteChoice {
