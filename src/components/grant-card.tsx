@@ -61,7 +61,7 @@ export default function GrantCard(props: {
       </div>
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">
-          <p className="text-gray-400">Funding</p>
+          <p className="text-gray-400">Grant package</p>
           <p className="truncate">
             {props.grant.funding[0][0]}&nbsp;
             <span className="text-gray-400">X</span>&nbsp;

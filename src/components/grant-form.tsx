@@ -88,7 +88,9 @@ export default function GrantForm(props: {
 
   return (
     <Form
-      title={`Create grant${community?.name ? ` of ${community.name}` : ''}`}
+      title={`Create topic grant${
+        community?.name ? ` of ${community.name}` : ''
+      }`}
       className={props.className}
     >
       <FormSection title="Basic information">
@@ -182,7 +184,7 @@ export default function GrantForm(props: {
           </GridItem2>
           <GridItem3>
             <FormItem
-              label="Funding"
+              label="Grant package"
               error={
                 errors?.funding?.[0]?.[0]?.message ||
                 errors?.funding?.[0]?.[1]?.message
@@ -195,7 +197,7 @@ export default function GrantForm(props: {
                   error={!!errors?.funding?.[0]?.[0]}
                   placeholder="prize"
                   className="w-0 flex-1"
-                />{' '}
+                />
                 <span className="text-gray-400">X</span>
                 <Controller
                   control={control}

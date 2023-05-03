@@ -61,7 +61,7 @@ export default function CommunityInfo(props: { className?: string }) {
         current: router.pathname === '/[community_id]',
       },
       {
-        name: 'Grants',
+        name: 'Topic grants',
         href: `/${query.community_id}/grant`,
         icon: TrophyIcon,
         current: router.pathname === '/[community_id]/grant',

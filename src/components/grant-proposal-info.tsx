@@ -38,7 +38,7 @@ export default function GrantProposalInfo(props: {
         grantPermalink={props.grantProposal?.grant}
         phase={props.grant?.duration}
       />
-      <DetailList title="Funding">
+      <DetailList title="Grant package">
         <Article small className="pt-2">
           <ul>
             {props.grant?.funding?.map((funding, index) => (
