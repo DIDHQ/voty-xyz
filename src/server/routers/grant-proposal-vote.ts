@@ -5,12 +5,12 @@ import Decimal from 'decimal.js'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
-import { authorized } from '../../utils/schemas/authorship'
-import { grantProposalVoteSchema } from '../../utils/schemas/grant-proposal-vote'
+import { authorized } from '../../utils/schemas/basic/authorship'
+import { grantProposalVoteSchema } from '../../utils/schemas/v1/grant-proposal-vote'
 import verifyGrantProposalVote from '../../utils/verifiers/verify-grant-proposal-vote'
 import { powerOfChoice } from '../../utils/choice'
 import { procedure, router } from '../trpc'
-import { proved } from '../../utils/schemas/proof'
+import { proved } from '../../utils/schemas/basic/proof'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
@@ -140,17 +140,17 @@ export const grantProposalVoteRouter = router({
         }),
         ...Object.entries(
           powerOfChoice(input.powers, new Decimal(input.total_power)),
-        ).map(([option, power = 0]) =>
+        ).map(([choice, power = 0]) =>
           database.grantProposalVoteChoice.upsert({
             where: {
-              proposalPermalink_option: {
+              proposalPermalink_choice: {
                 proposalPermalink: input.grant_proposal,
-                option,
+                choice,
               },
             },
             create: {
               proposalPermalink: input.grant_proposal,
-              option,
+              choice,
               power,
             },
             update: {

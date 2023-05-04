@@ -17,7 +17,7 @@ import useRouterQuery from '../../../../../hooks/use-router-query'
 import Markdown from '../../../../../components/basic/markdown'
 import GroupProposalInfo from '../../../../../components/group-proposal-info'
 import { previewGroupProposalAtom } from '../../../../../utils/atoms'
-import { GroupProposal } from '../../../../../utils/schemas/group-proposal'
+import { GroupProposal } from '../../../../../utils/schemas/v1/group-proposal'
 
 export default function GroupProposalPage() {
   const query = useRouterQuery<['group_proposal_permalink']>()
@@ -109,7 +109,7 @@ export default function GroupProposalPage() {
             <h2 className="text-base font-semibold">← Back</h2>
           </TextButton>
           <div className="mb-6">
-            <h3 className="mt-4 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h3 className="mt-6 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               {groupProposal?.title || '...'}
             </h3>
             <Article className="mt-6 sm:mt-8">

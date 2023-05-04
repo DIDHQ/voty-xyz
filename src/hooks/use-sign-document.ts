@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
-import { Authorized, Authorship } from '../utils/schemas/authorship'
-import { Proved } from '../utils/schemas/proof'
+import { Authorized, Authorship } from '../utils/schemas/basic/authorship'
+import { Proved } from '../utils/schemas/basic/proof'
 import { signDocument } from '../utils/signature'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import { isTestnet } from '../utils/constants'

@@ -11,12 +11,12 @@ import { calculateDecimal } from '../utils/functions/decimal'
 import {
   GrantProposalVote,
   grantProposalVoteSchema,
-} from '../utils/schemas/grant-proposal-vote'
+} from '../utils/schemas/v1/grant-proposal-vote'
 import { trpc } from '../utils/trpc'
 import useStatus from '../hooks/use-status'
 import { getGrantPhase, GrantPhase } from '../utils/phase'
-import { GrantProposal } from '../utils/schemas/grant-proposal'
-import { Grant } from '../utils/schemas/grant'
+import { GrantProposal } from '../utils/schemas/v1/grant-proposal'
+import { Grant } from '../utils/schemas/v1/grant'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import DidCombobox from './did-combobox'
@@ -145,11 +145,9 @@ export default function GrantProposalVoteForm(props: {
   }, [props.grantProposal.permalink, setValue, totalPower])
   useEffect(() => {
     if (handleSubmit.isSuccess) {
-      setTimeout(() => {
-        setValue('powers', {})
-        refetchVoted()
-        onSuccess()
-      }, 5000)
+      setValue('powers', {})
+      refetchVoted()
+      onSuccess()
     }
   }, [handleSubmit.isSuccess, onSuccess, refetchVoted, setValue])
 
@@ -161,72 +159,39 @@ export default function GrantProposalVoteForm(props: {
       <Notification type="success" show={handleSubmit.isSuccess}>
         Your vote has been submitted successfully
       </Notification>
-      <div className={clsx('mt-6 border-t border-gray-200', props.className)}>
-        {props.grantProposal.permalink === previewPermalink ? null : phase ===
-          GrantPhase.ENDED ? (
-          <p className="mt-6 text-end text-gray-500">Voting has ended</p>
-        ) : (
-          <div className="mt-6 flex w-full flex-col items-end">
-            <div className="w-full flex-1 sm:w-64 sm:flex-none">
-              <DidCombobox
-                top
-                label="Select a DID as voter"
-                options={didOptions}
-                value={did}
-                onChange={setDid}
-                onClick={connect}
-              />
-              {didOptions?.length === 0 && props.grant ? (
-                <Slide
-                  title={`Voters of ${props.grant.name}`}
-                  trigger={({ handleOpen }) => (
-                    <TextButton secondary onClick={handleOpen}>
-                      Why I&#39;m not eligible to vote
-                    </TextButton>
-                  )}
-                >
-                  {() => (
-                    <PermissionCard
-                      title="Voters"
-                      description="SubDIDs who can vote in this grant"
-                      value={props.grant.permission.voting}
-                    />
-                  )}
-                </Slide>
-              ) : null}
-            </div>
-            {phase === GrantPhase.VOTING ? (
-              <Button
-                large
-                primary
-                icon={BoltIcon}
-                onClick={onSubmit(
-                  (value) => handleSubmit.mutate(value),
-                  console.error,
-                )}
-                disabled={disables(did)}
-                loading={handleSubmit.isLoading}
-                className="mt-6"
-              >
-                Vote{totalPower ? ` (${totalPower})` : null}
-              </Button>
-            ) : (
-              <Tooltip
-                place="top"
-                text={
-                  phase === GrantPhase.CONFIRMING
-                    ? 'Waiting for proposal confirming (in about 5 minutes)'
-                    : status?.timestamp && props.grant
-                    ? `Waiting for voting start (in ${formatDurationMs(
-                        status.timestamp.getTime() +
-                          props.grant.duration.announcing * 1000 +
-                          props.grant.duration.proposing * 1000 -
-                          now.getTime(),
-                      )})`
-                    : 'Waiting for voting start'
-                }
-                className="mt-6"
-              >
+      {phase === GrantPhase.ENDED ? null : (
+        <div className={clsx('mt-6 border-t border-gray-200', props.className)}>
+          {props.grantProposal.permalink === previewPermalink ? null : (
+            <div className="mt-6 flex w-full flex-col items-end">
+              <div className="w-full flex-1 sm:w-64 sm:flex-none">
+                <DidCombobox
+                  top
+                  label="Select a DID as voter"
+                  options={didOptions}
+                  value={did}
+                  onChange={setDid}
+                  onClick={connect}
+                />
+                {didOptions?.length === 0 && props.grant ? (
+                  <Slide
+                    title={`Voters of ${props.grant.name}`}
+                    trigger={({ handleOpen }) => (
+                      <TextButton secondary onClick={handleOpen}>
+                        Why I&#39;m not eligible to vote
+                      </TextButton>
+                    )}
+                  >
+                    {() => (
+                      <PermissionCard
+                        title="Voters"
+                        description="SubDIDs who can vote in this grant"
+                        value={props.grant.permission.voting}
+                      />
+                    )}
+                  </Slide>
+                ) : null}
+              </div>
+              {phase === GrantPhase.VOTING ? (
                 <Button
                   large
                   primary
@@ -237,14 +202,46 @@ export default function GrantProposalVoteForm(props: {
                   )}
                   disabled={disables(did)}
                   loading={handleSubmit.isLoading}
+                  className="mt-6"
                 >
                   Vote{totalPower ? ` (${totalPower})` : null}
                 </Button>
-              </Tooltip>
-            )}
-          </div>
-        )}
-      </div>
+              ) : (
+                <Tooltip
+                  place="top"
+                  text={
+                    phase === GrantPhase.CONFIRMING
+                      ? 'Waiting for proposal confirming (in about 5 minutes)'
+                      : status?.timestamp && props.grant
+                      ? `Waiting for voting start (in ${formatDurationMs(
+                          status.timestamp.getTime() +
+                            props.grant.duration.announcing * 1000 +
+                            props.grant.duration.proposing * 1000 -
+                            now.getTime(),
+                        )})`
+                      : 'Waiting for voting start'
+                  }
+                  className="mt-6"
+                >
+                  <Button
+                    large
+                    primary
+                    icon={BoltIcon}
+                    onClick={onSubmit(
+                      (value) => handleSubmit.mutate(value),
+                      console.error,
+                    )}
+                    disabled={disables(did)}
+                    loading={handleSubmit.isLoading}
+                  >
+                    Vote{totalPower ? ` (${totalPower})` : null}
+                  </Button>
+                </Tooltip>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </>
   )
 }

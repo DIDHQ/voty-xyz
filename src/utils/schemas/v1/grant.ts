@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
-import { booleanSetsSchema, decimalSetsSchema } from './sets'
+import { booleanSetsSchema, decimalSetsSchema } from '../basic/sets'
+import { miniumDuration } from '../basic/minium-duration'
 
 export const grantSchema = z.object({
   community: z.string().min(1, 'Required'),
@@ -12,9 +13,9 @@ export const grantSchema = z.object({
     voting: decimalSetsSchema,
   }),
   duration: z.object({
-    announcing: z.number().int().min(60, 'Minium 1 minute'),
-    proposing: z.number().int().min(60, 'Minium 1 minute'),
-    voting: z.number().int().min(60, 'Minium 1 minute'),
+    announcing: miniumDuration,
+    proposing: miniumDuration,
+    voting: miniumDuration,
   }),
   funding: z
     .array(z.tuple([z.string().min(1, 'Required'), z.number().int().min(1)]))

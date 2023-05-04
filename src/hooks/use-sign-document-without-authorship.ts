@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { Proved } from '../utils/schemas/proof'
+import { Proved } from '../utils/schemas/basic/proof'
 import { signDocument } from '../utils/signature'
 import useWallet from './use-wallet'
 

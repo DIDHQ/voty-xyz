@@ -5,8 +5,8 @@ import {
   commonCoinTypes,
   previewPermalink,
 } from '../utils/constants'
-import { Community } from '../utils/schemas/community'
-import { Grant } from '../utils/schemas/grant'
+import { Community } from '../utils/schemas/v1/community'
+import { Grant } from '../utils/schemas/v1/grant'
 import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import TextButton from './basic/text-button'

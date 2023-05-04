@@ -2,11 +2,14 @@ import { TRPCError } from '@trpc/server'
 
 import { getGroupProposalPhase, GroupProposalPhase } from '../phase'
 import { calculateDecimal } from '../functions/decimal'
-import { authorized, Authorized } from '../schemas/authorship'
-import { Grant } from '../schemas/grant'
-import { proved, Proved } from '../schemas/proof'
-import { GrantProposal, grantProposalSchema } from '../schemas/grant-proposal'
-import { GrantProposalVote } from '../schemas/grant-proposal-vote'
+import { authorized, Authorized } from '../schemas/basic/authorship'
+import { Grant } from '../schemas/v1/grant'
+import { proved, Proved } from '../schemas/basic/proof'
+import {
+  GrantProposal,
+  grantProposalSchema,
+} from '../schemas/v1/grant-proposal'
+import { GrantProposalVote } from '../schemas/v1/grant-proposal-vote'
 import verifyGrantProposal from './verify-grant-proposal'
 import { commonCoinTypes } from '../constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'

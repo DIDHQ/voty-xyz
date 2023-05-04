@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
-import { booleanSetsSchema, decimalSetsSchema } from './sets'
+import { booleanSetsSchema, decimalSetsSchema } from '../basic/sets'
+import { miniumDuration } from '../basic/minium-duration'
 
 export const groupSchema = z.object({
   id: z.string().min(1, 'Required'),
@@ -12,8 +13,8 @@ export const groupSchema = z.object({
     voting: decimalSetsSchema,
   }),
   duration: z.object({
-    announcing: z.number().int().min(60, 'Minium 1 minute'),
-    voting: z.number().int().min(60, 'Minium 1 minute'),
+    announcing: miniumDuration,
+    voting: miniumDuration,
   }),
   terms_and_conditions: z.string().min(1, 'Required'),
 })

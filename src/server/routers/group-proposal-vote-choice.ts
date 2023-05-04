@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { database } from '../../utils/database'
 import { procedure, router } from '../trpc'
-import { positiveDecimalSchema } from '../../utils/schemas/positive-decimal'
+import { positiveDecimalSchema } from '../../utils/schemas/basic/positive-decimal'
 
 export const groupProposalVoteChoiceRouter = router({
   groupByOption: procedure
@@ -20,7 +20,7 @@ export const groupProposalVoteChoiceRouter = router({
       })
 
       return mapValues(
-        keyBy(choices, ({ option }) => option),
+        keyBy(choices, ({ choice }) => choice),
         ({ power }) => power.toString(),
       )
     }),

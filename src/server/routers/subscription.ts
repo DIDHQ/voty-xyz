@@ -3,9 +3,9 @@ import { compact, keyBy } from 'lodash-es'
 import { z } from 'zod'
 
 import { database } from '../../utils/database'
-import { authorized } from '../../utils/schemas/authorship'
-import { communitySchema } from '../../utils/schemas/community'
-import { proofSchema, proved } from '../../utils/schemas/proof'
+import { authorized } from '../../utils/schemas/basic/authorship'
+import { communitySchema } from '../../utils/schemas/v1/community'
+import { proofSchema, proved } from '../../utils/schemas/basic/proof'
 import { procedure, router } from '../trpc'
 import verifyProof from '../../utils/verifiers/verify-proof'
 

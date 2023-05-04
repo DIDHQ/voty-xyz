@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
-import { BooleanSets, DecimalSets } from '../utils/schemas/sets'
+import { BooleanSets, DecimalSets } from '../utils/schemas/basic/sets'
 
 export default function PermissionCard(props: {
   title: string

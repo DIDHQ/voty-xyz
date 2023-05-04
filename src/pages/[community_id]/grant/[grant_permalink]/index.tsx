@@ -12,7 +12,7 @@ import useRouterQuery from '../../../../hooks/use-router-query'
 import Markdown from '../../../../components/basic/markdown'
 import GrantInfo from '../../../../components/grant-info'
 import { previewGrantAtom } from '../../../../utils/atoms'
-import { Grant } from '../../../../utils/schemas/grant'
+import { Grant } from '../../../../utils/schemas/v1/grant'
 import GrantProposalCard from '../../../../components/grant-proposal-card'
 import GrantProposalCreateButton from '../../../../components/grant-proposal-create-button'
 import { GrantPhase, getGrantPhase } from '../../../../utils/phase'
@@ -79,7 +79,7 @@ export default function GrantPage() {
             <h2 className="text-base font-semibold">← Back</h2>
           </TextButton>
           <div className="mb-6">
-            <h3 className="mt-4 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h3 className="mt-6 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               {grant?.name || '...'}
             </h3>
             <Article className="mt-6 sm:mt-8">
@@ -114,10 +114,12 @@ export default function GrantPage() {
                     <GrantProposalCard
                       communityId={query.community_id}
                       grantProposal={grantProposal}
-                      isWin={
+                      funding={
                         phase === GrantPhase.ENDED &&
                         !!grant &&
                         index < grant.funding[0][1]
+                          ? grant.funding[0][0]
+                          : undefined
                       }
                     />
                   ) : null}

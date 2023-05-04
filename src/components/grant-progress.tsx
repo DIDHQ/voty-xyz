@@ -1,5 +1,5 @@
 import useStatus from '../hooks/use-status'
-import { Grant } from '../utils/schemas/grant'
+import { Grant } from '../utils/schemas/v1/grant'
 import { format2Time, formatTime } from '../utils/time'
 import { DetailList, DetailItem } from './basic/detail'
 import GrantPhaseText from './grant-phase-text'
@@ -11,7 +11,7 @@ export default function GrantProgress(props: {
   const { data: status } = useStatus(props.grantPermalink)
 
   return (
-    <DetailList title="Progress">
+    <DetailList title="Grant progress">
       <DetailItem title="Current phase" className="overflow-y-visible">
         <GrantPhaseText
           grantPermalink={props.grantPermalink}

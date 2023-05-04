@@ -4,8 +4,8 @@ import { useMemo } from 'react'
 
 import { GroupProposalPhase } from '../utils/phase'
 import { permalink2Id } from '../utils/permalink'
-import { Authorized } from '../utils/schemas/authorship'
-import { GroupProposal } from '../utils/schemas/group-proposal'
+import { Authorized } from '../utils/schemas/basic/authorship'
+import { GroupProposal } from '../utils/schemas/v1/group-proposal'
 import { formatDurationMs } from '../utils/time'
 
 export default function GroupProposalCard(props: {

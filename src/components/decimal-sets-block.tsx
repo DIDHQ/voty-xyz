@@ -2,7 +2,7 @@ import { compact } from 'lodash-es'
 import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
-import { Group } from '../utils/schemas/group'
+import { Group } from '../utils/schemas/v1/group'
 import { FormItem } from './basic/form'
 import { Grid6, GridItem6 } from './basic/grid'
 import RadioGroup from './basic/radio-group'

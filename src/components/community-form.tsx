@@ -7,7 +7,7 @@ import { EyeIcon } from '@heroicons/react/20/solid'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 
-import { Community, communitySchema } from '../utils/schemas/community'
+import { Community, communitySchema } from '../utils/schemas/v1/community'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'

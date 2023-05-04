@@ -7,7 +7,7 @@ import { trpc } from '../../../../utils/trpc'
 import LoadingBar from '../../../../components/basic/loading-bar'
 import GroupProposalForm from '../../../../components/group-proposal-form'
 import { documentTitle } from '../../../../utils/constants'
-import { GroupProposal } from '../../../../utils/schemas/group-proposal'
+import { GroupProposal } from '../../../../utils/schemas/v1/group-proposal'
 
 export default function CreateGroupProposalPage() {
   const query = useRouterQuery<['community_id', 'group_id']>()
@@ -16,7 +16,7 @@ export default function CreateGroupProposalPage() {
     { enabled: !!query.community_id && !!query.group_id },
   )
   const initialValue = useMemo<Partial<GroupProposal>>(
-    () => ({ voting_type: 'single', options: ['', ''] }),
+    () => ({ voting_type: 'single', choices: ['', ''] }),
     [],
   )
 

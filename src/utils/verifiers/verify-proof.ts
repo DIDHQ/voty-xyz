@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 
-import { Proved } from '../schemas/proof'
+import { Proved } from '../schemas/basic/proof'
 import { verifyDocument } from '../signature'
 import { verifyMessage } from '../sdks/ethers'
 

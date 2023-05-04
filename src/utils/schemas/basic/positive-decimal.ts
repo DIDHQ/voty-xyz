@@ -6,8 +6,7 @@ export const positiveDecimalSchema = z
   .refine(
     (power) => {
       try {
-        new Decimal(power)
-        return true
+        return new Decimal(power)
       } catch {
         return false
       }

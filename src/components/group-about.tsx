@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-import { Group } from '../utils/schemas/group'
+import { Group } from '../utils/schemas/v1/group'
 import { formatDuration } from '../utils/time'
 import Article from './basic/article'
 import Markdown from './basic/markdown'

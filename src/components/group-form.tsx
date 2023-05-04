@@ -18,7 +18,7 @@ import useSignDocument from '../hooks/use-sign-document'
 import { trpc } from '../utils/trpc'
 import Notification from './basic/notification'
 import useIsManager from '../hooks/use-is-manager'
-import { Group, groupSchema } from '../utils/schemas/group'
+import { Group, groupSchema } from '../utils/schemas/v1/group'
 import { previewGroupAtom } from '../utils/atoms'
 import { Preview } from '../utils/types'
 

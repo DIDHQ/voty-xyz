@@ -2,7 +2,7 @@ import Decimal from 'decimal.js'
 import { uniq } from 'lodash-es'
 import pMap from 'p-map'
 
-import { DecimalSets, DecimalUnit } from '../../schemas/sets'
+import { DecimalSets, DecimalUnit } from '../../schemas/basic/sets'
 import { Snapshots, DecimalFunction } from '../../types'
 import { prefixes_dot_suffix_fixed_power } from './prefixes-dot-suffix-fixed-power'
 

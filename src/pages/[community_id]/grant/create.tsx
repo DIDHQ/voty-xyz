@@ -5,7 +5,7 @@ import useRouterQuery from '../../../hooks/use-router-query'
 import TextButton from '../../../components/basic/text-button'
 import { documentTitle, previewPermalink } from '../../../utils/constants'
 import GrantForm from '../../../components/grant-form'
-import { Grant } from '../../../utils/schemas/grant'
+import { Grant } from '../../../utils/schemas/v1/grant'
 
 export default function CreateGrantPage() {
   const query = useRouterQuery<['community_id']>()

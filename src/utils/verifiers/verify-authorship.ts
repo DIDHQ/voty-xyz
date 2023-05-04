@@ -1,8 +1,8 @@
 import { TRPCError } from '@trpc/server'
 
 import { checkDidAuthorshipProof } from '../did'
-import { Authorship } from '../schemas/authorship'
-import { Proof } from '../schemas/proof'
+import { Authorship } from '../schemas/basic/authorship'
+import { Proof } from '../schemas/basic/proof'
 import { isTestnet } from '../constants'
 
 export default async function verifyAuthorship(

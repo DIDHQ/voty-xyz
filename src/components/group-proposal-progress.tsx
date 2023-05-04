@@ -1,5 +1,5 @@
 import useStatus from '../hooks/use-status'
-import { Group } from '../utils/schemas/group'
+import { Group } from '../utils/schemas/v1/group'
 import { format2Time, formatTime } from '../utils/time'
 import { DetailList, DetailItem } from './basic/detail'
 import GroupProposalPhaseText from './group-proposal-phase-text'
@@ -11,7 +11,7 @@ export default function GroupProposalProgress(props: {
   const { data: status } = useStatus(props.groupProposalPermalink)
 
   return (
-    <DetailList title="Progress">
+    <DetailList title="Proposal progress">
       <DetailItem title="Current phase" className="overflow-y-visible">
         <GroupProposalPhaseText
           groupProposalPermalink={props.groupProposalPermalink}

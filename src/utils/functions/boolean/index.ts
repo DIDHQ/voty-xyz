@@ -1,7 +1,7 @@
 import { uniq } from 'lodash-es'
 import pMap from 'p-map'
 
-import { BooleanSets, BooleanUnit } from '../../schemas/sets'
+import { BooleanSets, BooleanUnit } from '../../schemas/basic/sets'
 import { Snapshots, BooleanFunction } from '../../types'
 import { prefixes_dot_suffix_exact_match } from './prefixes-dot-suffix-exact-match'
 
