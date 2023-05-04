@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import useStatus from '../hooks/use-status'
 import { getGroupProposalPhase, GroupProposalPhase } from '../utils/phase'
-import type { Group } from '../utils/schemas/group'
+import type { Group } from '../utils/schemas/v1/group'
 
 export default function GroupProposalPhaseText(props: {
   groupProposalPermalink?: string

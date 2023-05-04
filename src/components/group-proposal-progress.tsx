@@ -1,5 +1,5 @@
 import useStatus from '../hooks/use-status'
-import { Group } from '../utils/schemas/group'
+import { Group } from '../utils/schemas/v1/group'
 import { format2Time, formatTime } from '../utils/time'
 import { DetailList, DetailItem } from './basic/detail'
 import GroupProposalPhaseText from './group-proposal-phase-text'

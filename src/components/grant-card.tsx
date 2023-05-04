@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { GrantPhase } from '../utils/phase'
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/basic/authorship'
-import { Grant } from '../utils/schemas/grant'
+import { Grant } from '../utils/schemas/v1/grant'
 import { formatDurationMs } from '../utils/time'
 
 export default function GrantCard(props: {

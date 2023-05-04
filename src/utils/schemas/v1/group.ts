@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { booleanSetsSchema, decimalSetsSchema } from './basic/sets'
+import { booleanSetsSchema, decimalSetsSchema } from '../basic/sets'
 
 export const groupSchema = z.object({
   id: z.string().min(1, 'Required'),

@@ -7,7 +7,7 @@ import { trpc } from '../../../../utils/trpc'
 import LoadingBar from '../../../../components/basic/loading-bar'
 import GrantProposalForm from '../../../../components/grant-proposal-form'
 import { documentTitle } from '../../../../utils/constants'
-import { GrantProposal } from '../../../../utils/schemas/grant-proposal'
+import { GrantProposal } from '../../../../utils/schemas/v1/grant-proposal'
 import { permalink2Id } from '../../../../utils/permalink'
 
 export default function CreateGrantProposalPage() {

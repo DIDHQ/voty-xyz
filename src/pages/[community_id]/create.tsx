@@ -7,7 +7,7 @@ import GroupForm from '../../components/group-form'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
 import { documentTitle } from '../../utils/constants'
-import { Group } from '../../utils/schemas/group'
+import { Group } from '../../utils/schemas/v1/group'
 import TextButton from '../../components/basic/text-button'
 
 export default function CreateGroupPage() {

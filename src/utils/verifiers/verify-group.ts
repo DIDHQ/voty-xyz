@@ -1,10 +1,10 @@
 import { TRPCError } from '@trpc/server'
 
 import { Authorized, authorized } from '../schemas/basic/authorship'
-import { Group } from '../schemas/group'
+import { Group } from '../schemas/v1/group'
 import { Proved, proved } from '../schemas/basic/proof'
 import { database } from '../database'
-import { Community, communitySchema } from '../schemas/community'
+import { Community, communitySchema } from '../schemas/v1/community'
 
 const schema = proved(authorized(communitySchema))
 

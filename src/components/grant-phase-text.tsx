@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import useStatus from '../hooks/use-status'
 import { getGrantPhase, GrantPhase } from '../utils/phase'
-import type { Grant } from '../utils/schemas/grant'
+import type { Grant } from '../utils/schemas/v1/grant'
 
 export default function GrantPhaseText(props: {
   grantPermalink?: string

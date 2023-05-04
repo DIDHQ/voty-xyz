@@ -11,12 +11,12 @@ import { calculateDecimal } from '../utils/functions/decimal'
 import {
   GrantProposalVote,
   grantProposalVoteSchema,
-} from '../utils/schemas/grant-proposal-vote'
+} from '../utils/schemas/v1/grant-proposal-vote'
 import { trpc } from '../utils/trpc'
 import useStatus from '../hooks/use-status'
 import { getGrantPhase, GrantPhase } from '../utils/phase'
-import { GrantProposal } from '../utils/schemas/grant-proposal'
-import { Grant } from '../utils/schemas/grant'
+import { GrantProposal } from '../utils/schemas/v1/grant-proposal'
+import { Grant } from '../utils/schemas/v1/grant'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import DidCombobox from './did-combobox'

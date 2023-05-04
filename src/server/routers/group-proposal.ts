@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
 import { authorized } from '../../utils/schemas/basic/authorship'
-import { groupProposalSchema } from '../../utils/schemas/group-proposal'
+import { groupProposalSchema } from '../../utils/schemas/v1/group-proposal'
 import verifyGroupProposal from '../../utils/verifiers/verify-group-proposal'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/basic/proof'
@@ -19,7 +19,7 @@ import {
   getSnapshotTimestamp,
 } from '../../utils/snapshot'
 import { GroupProposalPhase } from '../../utils/phase'
-import { groupSchema } from '../../utils/schemas/group'
+import { groupSchema } from '../../utils/schemas/v1/group'
 import verifyGroup from '../../utils/verifiers/verify-group'
 
 const schema = proved(authorized(groupProposalSchema))

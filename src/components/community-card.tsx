@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { Community } from '../utils/schemas/community'
+import { Community } from '../utils/schemas/v1/community'
 import Avatar from './basic/avatar'
 
 export default function CommunityCard(props: { community: Community }) {

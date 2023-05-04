@@ -2,7 +2,7 @@ import { PlusIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 
 import useStatus from '../hooks/use-status'
-import { Group } from '../utils/schemas/group'
+import { Group } from '../utils/schemas/v1/group'
 import Button from './basic/button'
 import Tooltip from './basic/tooltip'
 

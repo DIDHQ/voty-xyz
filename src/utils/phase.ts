@@ -1,5 +1,5 @@
-import type { Grant } from './schemas/grant'
-import type { Group } from './schemas/group'
+import type { Grant } from './schemas/v1/grant'
+import type { Group } from './schemas/v1/group'
 
 export enum GrantPhase {
   CONFIRMING = 'Confirming',

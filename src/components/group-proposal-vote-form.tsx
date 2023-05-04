@@ -11,12 +11,12 @@ import { calculateDecimal } from '../utils/functions/decimal'
 import {
   GroupProposalVote,
   groupProposalVoteSchema,
-} from '../utils/schemas/group-proposal-vote'
+} from '../utils/schemas/v1/group-proposal-vote'
 import { trpc } from '../utils/trpc'
 import useStatus from '../hooks/use-status'
 import { getGroupProposalPhase, GroupProposalPhase } from '../utils/phase'
-import { GroupProposal } from '../utils/schemas/group-proposal'
-import { Group } from '../utils/schemas/group'
+import { GroupProposal } from '../utils/schemas/v1/group-proposal'
+import { Group } from '../utils/schemas/v1/group'
 import { FormItem } from './basic/form'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'

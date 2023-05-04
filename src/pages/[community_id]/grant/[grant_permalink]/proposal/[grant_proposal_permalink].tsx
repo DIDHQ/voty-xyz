@@ -20,7 +20,7 @@ import useRouterQuery from '../../../../../hooks/use-router-query'
 import Markdown from '../../../../../components/basic/markdown'
 import GrantProposalInfo from '../../../../../components/grant-proposal-info'
 import { previewGrantProposalAtom } from '../../../../../utils/atoms'
-import { GrantProposal } from '../../../../../utils/schemas/grant-proposal'
+import { GrantProposal } from '../../../../../utils/schemas/v1/grant-proposal'
 import GrantProposalVoteForm from '../../../../../components/grant-proposal-vote-form'
 
 export default function GrantProposalPage() {

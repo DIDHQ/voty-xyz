@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import useWallet from '../hooks/use-wallet'
-import { Community } from '../utils/schemas/community'
+import { Community } from '../utils/schemas/v1/community'
 import { trpc } from '../utils/trpc'
 import Avatar from './basic/avatar'
 import Tooltip from './basic/tooltip'

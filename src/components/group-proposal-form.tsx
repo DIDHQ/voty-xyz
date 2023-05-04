@@ -12,7 +12,7 @@ import { useRouter } from 'next/router'
 import {
   GroupProposal,
   groupProposalSchema,
-} from '../utils/schemas/group-proposal'
+} from '../utils/schemas/v1/group-proposal'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
@@ -21,7 +21,7 @@ import { Form, FormItem, FormSection } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import useStatus from '../hooks/use-status'
-import { Group } from '../utils/schemas/group'
+import { Group } from '../utils/schemas/v1/group'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import DidCombobox from './did-combobox'

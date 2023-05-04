@@ -5,9 +5,9 @@ import {
   commonCoinTypes,
   previewPermalink,
 } from '../utils/constants'
-import { Community } from '../utils/schemas/community'
-import { Group } from '../utils/schemas/group'
-import { GroupProposal } from '../utils/schemas/group-proposal'
+import { Community } from '../utils/schemas/v1/community'
+import { Group } from '../utils/schemas/v1/group'
+import { GroupProposal } from '../utils/schemas/v1/group-proposal'
 import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import Markdown from './basic/markdown'

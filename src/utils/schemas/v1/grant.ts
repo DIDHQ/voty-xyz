@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { booleanSetsSchema, decimalSetsSchema } from './basic/sets'
+import { booleanSetsSchema, decimalSetsSchema } from '../basic/sets'
 
 export const grantSchema = z.object({
   community: z.string().min(1, 'Required'),

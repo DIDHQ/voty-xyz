@@ -1,7 +1,7 @@
 import { compact } from 'lodash-es'
 import { Controller, useFormContext } from 'react-hook-form'
 
-import { Group } from '../utils/schemas/group'
+import { Group } from '../utils/schemas/v1/group'
 import Textarea from './basic/textarea'
 
 export default function BooleanSetsBlock(props: {

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { positiveDecimalSchema } from './basic/positive-decimal'
+import { positiveDecimalSchema } from '../basic/positive-decimal'
 
 export const grantProposalVoteSchema = z.object({
   grant_proposal: z.string().min(1),

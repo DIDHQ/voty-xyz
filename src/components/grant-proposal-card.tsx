@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/basic/authorship'
-import { GrantProposal } from '../utils/schemas/grant-proposal'
+import { GrantProposal } from '../utils/schemas/v1/grant-proposal'
 import { formatDurationMs } from '../utils/time'
 import { TrophyIcon } from '@heroicons/react/20/solid'
 

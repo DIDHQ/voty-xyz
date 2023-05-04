@@ -4,10 +4,13 @@ import { uniq } from 'lodash-es'
 import { getGroupProposalPhase, GroupProposalPhase } from '../phase'
 import { calculateDecimal } from '../functions/decimal'
 import { authorized, Authorized } from '../schemas/basic/authorship'
-import { Group } from '../schemas/group'
+import { Group } from '../schemas/v1/group'
 import { proved, Proved } from '../schemas/basic/proof'
-import { GroupProposal, groupProposalSchema } from '../schemas/group-proposal'
-import { GroupProposalVote } from '../schemas/group-proposal-vote'
+import {
+  GroupProposal,
+  groupProposalSchema,
+} from '../schemas/v1/group-proposal'
+import { GroupProposalVote } from '../schemas/v1/group-proposal-vote'
 import verifyGroupProposal from './verify-group-proposal'
 import { commonCoinTypes } from '../constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'

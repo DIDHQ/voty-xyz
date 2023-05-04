@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 import {
   GrantProposal,
   grantProposalSchema,
-} from '../utils/schemas/grant-proposal'
+} from '../utils/schemas/v1/grant-proposal'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
@@ -20,7 +20,7 @@ import { Form, FormItem, FormSection } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import useStatus from '../hooks/use-status'
-import { Grant } from '../utils/schemas/grant'
+import { Grant } from '../utils/schemas/v1/grant'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import DidCombobox from './did-combobox'

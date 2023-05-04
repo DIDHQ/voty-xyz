@@ -3,7 +3,7 @@ import Decimal from 'decimal.js'
 import { useMemo } from 'react'
 import { gray } from 'tailwindcss/colors'
 
-import { GroupProposal } from '../utils/schemas/group-proposal'
+import { GroupProposal } from '../utils/schemas/v1/group-proposal'
 import {
   powerOfChoice,
   choiceIsEmpty,
