@@ -16,7 +16,7 @@ export default function CreateGroupProposalPage() {
     { enabled: !!query.community_id && !!query.group_id },
   )
   const initialValue = useMemo<Partial<GroupProposal>>(
-    () => ({ voting_type: 'single', options: ['', ''] }),
+    () => ({ voting_type: 'single', choices: ['', ''] }),
     [],
   )
 

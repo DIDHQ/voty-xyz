@@ -14,20 +14,20 @@ import { PositiveDecimal } from '../utils/schemas/basic/positive-decimal'
 
 export function ChoiceListItem(props: {
   type: GroupProposal['voting_type']
-  option: string
+  choice: string
   votingPower?: Decimal
   choices?: Record<string, PositiveDecimal>
   disabled?: boolean
   value?: Record<string, PositiveDecimal>
   onChange(value: Record<string, PositiveDecimal>): void
 }) {
-  const { type, option, votingPower, choices, value, onChange } = props
+  const { type, choice, votingPower, choices, value, onChange } = props
   const newPower = useMemo(
     () =>
       votingPower
-        ? powerOfChoice(value, votingPower)[option] || new Decimal(0)
+        ? powerOfChoice(value, votingPower)[choice] || new Decimal(0)
         : new Decimal(0),
-    [option, value, votingPower],
+    [choice, value, votingPower],
   )
   const total = useMemo(
     () =>
@@ -44,10 +44,10 @@ export function ChoiceListItem(props: {
     if (denominator.isZero()) {
       return new Decimal(0)
     }
-    return new Decimal(new Decimal(choices?.[option] || 0).add(newPower))
+    return new Decimal(new Decimal(choices?.[choice] || 0).add(newPower))
       .mul(100)
       .dividedBy(denominator)
-  }, [choices, newPower, option, total, value, votingPower])
+  }, [choices, newPower, choice, total, value, votingPower])
 
   return (
     <li
@@ -62,21 +62,21 @@ export function ChoiceListItem(props: {
       }}
       onClick={() => {
         if (!props.disabled) {
-          onChange(updateChoice(value, option))
+          onChange(updateChoice(value, choice))
         }
       }}
     >
-      <span className="w-0 flex-1 truncate">{option}</span>
-      {choices?.[option] || newPower.gt(0) ? (
+      <span className="w-0 flex-1 truncate">{choice}</span>
+      {choices?.[choice] || newPower.gt(0) ? (
         <span className="text-xs text-gray-800">
-          {newPower.add(choices?.[option] || 0).toString()}&nbsp;(
+          {newPower.add(choices?.[choice] || 0).toString()}&nbsp;(
           {percentage.toFixed(1)}%)
         </span>
       ) : null}
       <div className="ml-4 shrink-0 leading-none">
         <input
           type={type === 'single' ? 'radio' : 'checkbox'}
-          checked={checkChoice(value, option)}
+          checked={checkChoice(value, choice)}
           disabled={props.disabled}
           onChange={() => null}
           className={clsx(

@@ -64,10 +64,10 @@ export default function GroupProposalForm(props: {
   useEffect(() => {
     reset(groupProposal)
   }, [groupProposal, reset])
-  const handleOptionDelete = useCallback(
+  const handleChoiceDelete = useCallback(
     (index: number) => {
-      const options = getValues('options')?.filter((_, i) => i !== index)
-      setValue('options', options && options.length > 0 ? options : [''])
+      const choices = getValues('choices')?.filter((_, i) => i !== index)
+      setValue('choices', choices && choices.length > 0 ? choices : [''])
     },
     [setValue, getValues],
   )
@@ -140,7 +140,7 @@ export default function GroupProposalForm(props: {
     }
   }, [setValue, snapshots])
   const { data: status } = useStatus(props.group.permalink)
-  const options = watch('options') || []
+  const choices = watch('choices') || []
   const disabled = useMemo(
     () => !status?.timestamp || !did || !snapshots,
     [did, snapshots, status?.timestamp],
@@ -150,12 +150,12 @@ export default function GroupProposalForm(props: {
       {
         value: 'single',
         name: 'Single choice',
-        description: 'Choose only one option',
+        description: 'Choose only one choice',
       },
       {
         value: 'approval',
         name: 'Approval',
-        description: 'Approve a certain number of options',
+        description: 'Approve a certain number of choices',
       },
     ],
     [],
@@ -252,35 +252,35 @@ export default function GroupProposalForm(props: {
             <FormItem
               label="Options"
               error={
-                errors.options?.message ||
-                errors.options?.find?.((option) => option?.message)?.message
+                errors.choices?.message ||
+                errors.choices?.find?.((choice) => choice?.message)?.message
               }
             >
               <div className="space-y-[-1px]">
-                {options.map((_, index) => (
+                {choices.map((_, index) => (
                   <div
                     key={index}
                     className="relative flex items-center justify-between text-sm"
                   >
                     <input
                       type="text"
-                      placeholder={`Option ${index + 1}`}
-                      {...register(`options.${index}`)}
+                      placeholder={`Choice ${index + 1}`}
+                      {...register(`choices.${index}`)}
                       disabled={disabled}
                       className={clsx(
                         'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600 sm:text-sm',
-                        options.length > 1 ? 'pr-20' : 'pr-3',
+                        choices.length > 1 ? 'pr-20' : 'pr-3',
                         index === 0 ? 'rounded-t-md' : undefined,
-                        index === options.length - 1
+                        index === choices.length - 1
                           ? 'rounded-b-md'
                           : undefined,
                       )}
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
-                      {options.length > 2 ? (
-                        <OptionRemove
+                      {choices.length > 2 ? (
+                        <ChoiceRemove
                           index={index}
-                          onDelete={handleOptionDelete}
+                          onDelete={handleChoiceDelete}
                         />
                       ) : null}
                     </div>
@@ -290,7 +290,7 @@ export default function GroupProposalForm(props: {
               {disabled ? null : (
                 <Button
                   onClick={() => {
-                    setValue('options', [...options, ''])
+                    setValue('choices', [...choices, ''])
                   }}
                   className="mt-4"
                 >
@@ -328,7 +328,7 @@ export default function GroupProposalForm(props: {
   )
 }
 
-function OptionRemove(props: {
+function ChoiceRemove(props: {
   index: number
   onDelete: (index: number) => void
 }) {

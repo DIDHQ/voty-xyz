@@ -141,17 +141,17 @@ export const groupProposalVoteRouter = router({
         }),
         ...Object.entries(
           powerOfChoice(input.powers, new Decimal(input.total_power)),
-        ).map(([option, power = 0]) =>
+        ).map(([choice, power = 0]) =>
           database.groupProposalVoteChoice.upsert({
             where: {
-              proposalPermalink_option: {
+              proposalPermalink_choice: {
                 proposalPermalink: input.group_proposal,
-                option,
+                choice,
               },
             },
             create: {
               proposalPermalink: input.group_proposal,
-              option,
+              choice,
               power,
             },
             update: {

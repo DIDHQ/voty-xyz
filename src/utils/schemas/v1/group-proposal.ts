@@ -6,11 +6,11 @@ export const groupProposalSchema = z.object({
   title: z.string().min(1, 'Required'),
   content: z.string().min(1, 'Required'),
   voting_type: z.enum(['single', 'approval']),
-  options: z
+  choices: z
     .array(z.string().min(1, 'Required'))
-    .min(2, 'At least 2 options')
-    .refine((options) => new Set(options).size === options.length, {
-      message: 'Options are not unique',
+    .min(2, 'At least 2 choices')
+    .refine((choices) => new Set(choices).size === choices.length, {
+      message: 'Choices are not unique',
     }),
 })
 

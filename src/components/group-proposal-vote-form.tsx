@@ -150,12 +150,10 @@ export default function GroupProposalVoteForm(props: {
   }, [defaultDid])
   useEffect(() => {
     if (handleSubmit.isSuccess) {
-      setTimeout(() => {
-        setValue('powers', {})
-        refetchChoices()
-        refetchVoted()
-        onSuccess()
-      }, 5000)
+      setValue('powers', {})
+      refetchChoices()
+      refetchVoted()
+      onSuccess()
     }
   }, [
     handleSubmit.isSuccess,
@@ -174,6 +172,7 @@ export default function GroupProposalVoteForm(props: {
         Your vote has been submitted successfully
       </Notification>
       <div className={clsx('mt-6 border-t border-gray-200', props.className)}>
+        <h2 className="pt-6 text-2xl font-bold">Choices</h2>
         <FormItem error={errors.powers?.message?.message}>
           <Controller
             control={control}
@@ -184,11 +183,11 @@ export default function GroupProposalVoteForm(props: {
                 role="list"
                 className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
               >
-                {props.groupProposal.options.map((option) => (
+                {props.groupProposal.choices.map((choice) => (
                   <ChoiceListItem
-                    key={option}
+                    key={choice}
                     type={props.groupProposal.voting_type}
-                    option={option}
+                    choice={choice}
                     votingPower={totalPower}
                     choices={choices}
                     disabled={disables(did)}
@@ -200,10 +199,8 @@ export default function GroupProposalVoteForm(props: {
             )}
           />
         </FormItem>
-        {props.groupProposal.permalink === previewPermalink ? null : phase ===
-          GroupProposalPhase.ENDED ? (
-          <p className="mt-6 text-end text-gray-500">Voting has ended</p>
-        ) : (
+        {props.groupProposal.permalink === previewPermalink ||
+        phase === GroupProposalPhase.ENDED ? null : (
           <div className="mt-6 flex w-full flex-col items-end">
             <div className="w-full flex-1 sm:w-64 sm:flex-none">
               <DidCombobox

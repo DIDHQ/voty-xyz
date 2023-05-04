@@ -5,28 +5,28 @@ import { PositiveDecimal } from './schemas/basic/positive-decimal'
 
 export function updateChoice(
   powers: Record<string, PositiveDecimal> | undefined,
-  option: string,
+  choice: string,
 ): Record<string, PositiveDecimal> {
-  const options = powers?.[option]
-    ? without(Object.keys(powers), option)
-    : uniq([...Object.keys(powers || {}), option])
-  return options.reduce((obj, option) => {
-    obj[option] = '1'
+  const choices = powers?.[choice]
+    ? without(Object.keys(powers), choice)
+    : uniq([...Object.keys(powers || {}), choice])
+  return choices.reduce((obj, choice) => {
+    obj[choice] = '1'
     return obj
   }, {} as Record<string, PositiveDecimal>)
 }
 
 export function checkChoice(
   powers: Record<string, PositiveDecimal> | undefined,
-  option: string,
+  choice: string,
 ): boolean {
-  return !!powers?.[option]
+  return !!powers?.[choice]
 }
 
 export function powerOfChoice(
   powers: Record<string, PositiveDecimal> | undefined,
   totalPower: Decimal,
-): { [option: string]: Decimal | undefined } {
+): { [choice: string]: Decimal | undefined } {
   const denominator = powers
     ? Object.values(powers).reduce(
         (sum, power) => sum.add(power),

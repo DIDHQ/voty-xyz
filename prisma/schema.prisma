@@ -76,11 +76,11 @@ model GrantProposalVote {
 
 model GrantProposalVoteChoice {
   proposalPermalink String
-  option            String
+  choice            String @map("option")
 
   power Decimal
 
-  @@id([proposalPermalink, option])
+  @@id([proposalPermalink, choice])
 }
 
 model Group {
@@ -126,11 +126,11 @@ model GroupProposalVote {
 
 model GroupProposalVoteChoice {
   proposalPermalink String
-  option            String
+  choice            String @map("option")
 
   power Decimal
 
-  @@id([proposalPermalink, option])
+  @@id([proposalPermalink, choice])
 }
 
 model Subscription {
