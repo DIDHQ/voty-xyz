@@ -1,4 +1,4 @@
-import { httpLink } from '@trpc/client'
+import { httpBatchLink } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
 import SuperJSON from 'superjson'
 
@@ -18,7 +18,7 @@ export const trpc = createTRPCNext<AppRouter>({
   config({}) {
     return {
       links: [
-        httpLink({
+        httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
         }),
       ],
