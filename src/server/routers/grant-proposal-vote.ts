@@ -140,17 +140,17 @@ export const grantProposalVoteRouter = router({
         }),
         ...Object.entries(
           powerOfChoice(input.powers, new Decimal(input.total_power)),
-        ).map(([option, power = 0]) =>
+        ).map(([choice, power = 0]) =>
           database.grantProposalVoteChoice.upsert({
             where: {
-              proposalPermalink_option: {
+              proposalPermalink_choice: {
                 proposalPermalink: input.grant_proposal,
-                option,
+                choice,
               },
             },
             create: {
               proposalPermalink: input.grant_proposal,
-              option,
+              choice,
               power,
             },
             update: {

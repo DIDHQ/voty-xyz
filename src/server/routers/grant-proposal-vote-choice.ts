@@ -20,7 +20,7 @@ export const grantProposalVoteChoiceRouter = router({
       })
 
       return mapValues(
-        keyBy(choices, ({ option }) => option),
+        keyBy(choices, ({ choice }) => choice),
         ({ power }) => power.toString(),
       )
     }),
