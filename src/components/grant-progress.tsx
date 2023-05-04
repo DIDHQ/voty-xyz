@@ -11,7 +11,7 @@ export default function GrantProgress(props: {
   const { data: status } = useStatus(props.grantPermalink)
 
   return (
-    <DetailList title="Progress">
+    <DetailList title="Grant progress">
       <DetailItem title="Current phase" className="overflow-y-visible">
         <GrantPhaseText
           grantPermalink={props.grantPermalink}

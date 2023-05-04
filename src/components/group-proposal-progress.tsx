@@ -11,7 +11,7 @@ export default function GroupProposalProgress(props: {
   const { data: status } = useStatus(props.groupProposalPermalink)
 
   return (
-    <DetailList title="Progress">
+    <DetailList title="Proposal progress">
       <DetailItem title="Current phase" className="overflow-y-visible">
         <GroupProposalPhaseText
           groupProposalPermalink={props.groupProposalPermalink}
