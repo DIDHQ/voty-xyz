@@ -114,10 +114,12 @@ export default function GrantPage() {
                     <GrantProposalCard
                       communityId={query.community_id}
                       grantProposal={grantProposal}
-                      isWin={
+                      funding={
                         phase === GrantPhase.ENDED &&
                         !!grant &&
                         index < grant.funding[0][1]
+                          ? grant.funding[0][0]
+                          : undefined
                       }
                     />
                   ) : null}

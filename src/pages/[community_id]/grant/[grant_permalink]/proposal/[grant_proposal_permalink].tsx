@@ -4,7 +4,11 @@ import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  TrophyIcon,
+} from '@heroicons/react/20/solid'
 import Link from 'next/link'
 
 import {
@@ -22,6 +26,9 @@ import GrantProposalInfo from '../../../../../components/grant-proposal-info'
 import { previewGrantProposalAtom } from '../../../../../utils/atoms'
 import { GrantProposal } from '../../../../../utils/schemas/v1/grant-proposal'
 import GrantProposalVoteForm from '../../../../../components/grant-proposal-vote-form'
+import Tooltip from '../../../../../components/basic/tooltip'
+import { GrantPhase, getGrantPhase } from '../../../../../utils/phase'
+import useStatus from '../../../../../hooks/use-status'
 
 export default function GrantProposalPage() {
   const query =
@@ -111,6 +118,21 @@ export default function GrantProposalPage() {
       ),
     [grantProposal?.permalink, grantProposals],
   )
+  const { data: status } = useStatus(query.grant_permalink)
+  const phase = useMemo(
+    () => getGrantPhase(new Date(), status?.timestamp, grant?.duration),
+    [grant?.duration, status?.timestamp],
+  )
+  const funding = useMemo(
+    () =>
+      phase === GrantPhase.ENDED &&
+      !!grant &&
+      currentIndex !== undefined &&
+      currentIndex < grant.funding[0][1]
+        ? grant.funding[0][0]
+        : undefined,
+    [currentIndex, grant, phase],
+  )
 
   return (
     <>
@@ -195,6 +217,15 @@ export default function GrantProposalPage() {
             <h2 className="text-base font-semibold">← Back</h2>
           </TextButton>
           <div className="mb-6">
+            {funding ? (
+              <Tooltip
+                place="top"
+                text={`This proposal won ${funding}`}
+                className="float-right"
+              >
+                <TrophyIcon className="mt-2 h-6 w-6 text-amber-600" />
+              </Tooltip>
+            ) : null}
             <h3 className="mt-4 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               {grantProposal?.title || '...'}
             </h3>
