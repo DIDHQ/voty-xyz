@@ -29,6 +29,7 @@ import Slide from './basic/slide'
 import { formatDurationMs } from '../utils/time'
 import { previewPermalink } from '../utils/constants'
 import PermissionCard from './permission-card'
+import sleep from '../utils/sleep'
 
 export default function GrantProposalVoteForm(props: {
   grant: Grant
@@ -127,6 +128,7 @@ export default function GrantProposalVoteForm(props: {
     async (vote) => {
       const signed = await signDocument(vote)
       await mutateAsync(signed)
+      await sleep(5000)
     },
   )
   const defaultDid = useMemo(

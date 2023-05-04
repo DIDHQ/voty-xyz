@@ -31,6 +31,7 @@ import Slide from './basic/slide'
 import { formatDurationMs } from '../utils/time'
 import { previewPermalink } from '../utils/constants'
 import PermissionCard from './permission-card'
+import sleep from '../utils/sleep'
 
 export default function GroupProposalVoteForm(props: {
   group: Group
@@ -139,6 +140,7 @@ export default function GroupProposalVoteForm(props: {
     async (vote) => {
       const signed = await signDocument(vote)
       await mutateAsync(signed)
+      await sleep(5000)
     },
   )
   const defaultDid = useMemo(
