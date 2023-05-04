@@ -6,7 +6,7 @@ import useWallet from './use-wallet'
 
 export default function useSignDocumentWithoutAuthorship(
   template?: string,
-): <T extends { community_id: string; subscribe: boolean }>(
+): <T extends { communityId: string; subscribe: boolean }>(
   document: T,
 ) => Promise<Proved<T>> {
   const { account, connect, signMessage } = useWallet()

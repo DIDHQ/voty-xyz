@@ -52,7 +52,7 @@ export default function SubscriptionButton(props: {
       return
     }
     const signed = await signSubscribe({
-      community_id: props.communityId,
+      communityId: props.communityId,
       subscribe: true,
     })
     await mutateAsync(signed)
@@ -66,7 +66,7 @@ export default function SubscriptionButton(props: {
       return
     }
     const signed = await signUnsubscribe({
-      community_id: props.communityId,
+      communityId: props.communityId,
       subscribe: false,
     })
     await mutateAsync(signed)
