@@ -1,5 +1,5 @@
-import { Authorship } from '../schemas/authorship'
-import { Proof } from '../schemas/proof'
+import { Authorship } from '../schemas/basic/authorship'
+import { Proof } from '../schemas/basic/proof'
 import { DID } from '../types'
 import { bitChecker } from './bit'
 import { ethChecker } from './eth'

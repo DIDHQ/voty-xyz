@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useMemo } from 'react'
 
 import { permalink2Id } from '../utils/permalink'
-import { Authorized } from '../utils/schemas/authorship'
+import { Authorized } from '../utils/schemas/basic/authorship'
 import { GrantProposal } from '../utils/schemas/grant-proposal'
 import { formatDurationMs } from '../utils/time'
 import { TrophyIcon } from '@heroicons/react/20/solid'

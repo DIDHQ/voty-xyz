@@ -1,8 +1,8 @@
 import { TRPCError } from '@trpc/server'
 
-import { Authorized, authorized } from '../schemas/authorship'
+import { Authorized, authorized } from '../schemas/basic/authorship'
 import { Group } from '../schemas/group'
-import { Proved, proved } from '../schemas/proof'
+import { Proved, proved } from '../schemas/basic/proof'
 import { database } from '../database'
 import { Community, communitySchema } from '../schemas/community'
 

@@ -1,4 +1,4 @@
-import { Proof } from './schemas/proof'
+import { Proof } from './schemas/basic/proof'
 import { getAddress, sha256 } from './sdks/ethers'
 
 export async function signDocument(

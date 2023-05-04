@@ -10,7 +10,7 @@ import {
   updateChoice,
   checkChoice,
 } from '../utils/choice'
-import { PositiveDecimal } from '../utils/schemas/positive-decimal'
+import { PositiveDecimal } from '../utils/schemas/basic/positive-decimal'
 
 export function ChoiceListItem(props: {
   type: GroupProposal['voting_type']

@@ -1,9 +1,9 @@
 import { TRPCError } from '@trpc/server'
 
 import { checkBoolean } from '../functions/boolean'
-import { Authorized, authorized } from '../schemas/authorship'
+import { Authorized, authorized } from '../schemas/basic/authorship'
 import { Group, groupSchema } from '../schemas/group'
-import { Proved, proved } from '../schemas/proof'
+import { Proved, proved } from '../schemas/basic/proof'
 import { GroupProposal } from '../schemas/group-proposal'
 import { database } from '../database'
 import { commonCoinTypes } from '../constants'

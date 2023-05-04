@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 
-import { Authorship } from '../schemas/authorship'
+import { Authorship } from '../schemas/basic/authorship'
 import { getSnapshotTimestamp } from '../snapshot'
 
 export default async function verifySnapshot(

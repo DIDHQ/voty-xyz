@@ -9,7 +9,7 @@ import {
   isGroupProposalVote,
 } from './data-type'
 import { id2Permalink } from './permalink'
-import { Authorized } from './schemas/authorship'
+import { Authorized } from './schemas/basic/authorship'
 import { Community } from './schemas/community'
 import { Grant } from './schemas/grant'
 import { GrantProposal } from './schemas/grant-proposal'

@@ -1,7 +1,7 @@
 import Decimal from 'decimal.js'
 import { mapValues, uniq, without } from 'lodash-es'
 
-import { PositiveDecimal } from './schemas/positive-decimal'
+import { PositiveDecimal } from './schemas/basic/positive-decimal'
 
 export function updateChoice(
   powers: Record<string, PositiveDecimal> | undefined,

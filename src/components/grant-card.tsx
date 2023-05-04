@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 
 import { GrantPhase } from '../utils/phase'
 import { permalink2Id } from '../utils/permalink'
-import { Authorized } from '../utils/schemas/authorship'
+import { Authorized } from '../utils/schemas/basic/authorship'
 import { Grant } from '../utils/schemas/grant'
 import { formatDurationMs } from '../utils/time'
 
