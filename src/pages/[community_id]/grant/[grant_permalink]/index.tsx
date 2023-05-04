@@ -79,7 +79,7 @@ export default function GrantPage() {
             <h2 className="text-base font-semibold">← Back</h2>
           </TextButton>
           <div className="mb-6">
-            <h3 className="mt-4 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h3 className="mt-6 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               {grant?.name || '...'}
             </h3>
             <Article className="mt-6 sm:mt-8">

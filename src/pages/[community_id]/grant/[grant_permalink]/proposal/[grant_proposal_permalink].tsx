@@ -223,10 +223,10 @@ export default function GrantProposalPage() {
                 text={`This proposal won ${funding}`}
                 className="float-right"
               >
-                <TrophyIcon className="mt-2 h-6 w-6 text-amber-600" />
+                <TrophyIcon className="mt-4 h-6 w-6 text-amber-600" />
               </Tooltip>
             ) : null}
-            <h3 className="mt-4 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h3 className="mt-6 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               {grantProposal?.title || '...'}
             </h3>
             <Article className="mt-6 sm:mt-8">
