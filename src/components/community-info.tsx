@@ -115,7 +115,7 @@ export default function CommunityInfo(props: { className?: string }) {
   const { data: dids } = useDids(account)
   const isMember = useMemo(
     () =>
-      dids?.find(
+      !!dids?.find(
         (did) => !!query.community_id && did.startsWith(query.community_id),
       ),
     [dids, query.community_id],
@@ -215,9 +215,9 @@ export default function CommunityInfo(props: { className?: string }) {
               </div>
             </>
           ) : null}
-          {!isMember && community?.how_to_join ? (
-            previewCommunity ? (
-              <Button primary className="mt-4">
+          {community?.how_to_join ? (
+            previewCommunity || isMember ? (
+              <Button primary disabled={isMember} className="mt-4">
                 Want to join?
               </Button>
             ) : (
@@ -225,7 +225,9 @@ export default function CommunityInfo(props: { className?: string }) {
                 href={`/${query.community_id}/about#how-to-join`}
                 className="mt-4"
               >
-                <Button primary>Want to join?</Button>
+                <Button primary disabled={isMember}>
+                  Want to join?
+                </Button>
               </Link>
             )
           ) : null}
