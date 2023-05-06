@@ -75,7 +75,7 @@ export default function CommunityIndexPage() {
       </div>
       {groupProposals?.length === 0 ? (
         <EmptyState
-          title="No events"
+          title="No proposals"
           className="mt-24"
           footer={
             community && !groups?.length && isManager ? (
