@@ -25,6 +25,8 @@ import TextButton from './basic/text-button'
 import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import Button from './basic/button'
 import useIsManager from '../hooks/use-is-manager'
+import useDids from '../hooks/use-dids'
+import useWallet from '../hooks/use-wallet'
 
 const StatusIcon = dynamic(() => import('./status-icon'), {
   ssr: false,
@@ -108,6 +110,15 @@ export default function CommunityInfo(props: { className?: string }) {
   const title = useMemo(
     () => compact([community?.name, documentTitle]).join(' - '),
     [community?.name],
+  )
+  const { account } = useWallet()
+  const { data: dids } = useDids(account)
+  const isMember = useMemo(
+    () =>
+      dids?.find(
+        (did) => !!query.community_id && did.indexOf(query.community_id) === 0,
+      ),
+    [dids, query.community_id],
   )
 
   return (
@@ -204,7 +215,7 @@ export default function CommunityInfo(props: { className?: string }) {
               </div>
             </>
           ) : null}
-          {community?.how_to_join ? (
+          {!isMember && community?.how_to_join ? (
             previewCommunity ? (
               <Button primary className="mt-4">
                 Want to join?
