@@ -131,7 +131,7 @@ export default function GroupForm(props: {
         </FormSection>
         <FormSection
           title="Voters"
-          description="SubDIDs who can vote in this workgroup. You can create multiple voter groups with different voting power assigned to each group"
+          description="SubDIDs who can vote in this workgroup. You can create multiple voter groups with different voting power assigned to each group. The greatest voting power will be allocated when a SubDID has multiple occurrence."
         >
           <Grid6>
             <GridItem6>

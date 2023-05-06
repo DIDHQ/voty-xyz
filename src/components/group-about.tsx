@@ -21,7 +21,7 @@ export default function GroupAbout(props: {
       />
       <PermissionCard
         title="Voters"
-        description="SubDIDs who can vote in this workgroup"
+        description="SubDIDs who can vote in this workgroup. The greatest voting power will be allocated when a SubDID has multiple occurrence."
         value={props.group.permission.voting}
       />
       <div className="rounded-md border p-4">

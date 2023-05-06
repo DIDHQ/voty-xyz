@@ -186,7 +186,7 @@ export default function GrantProposalVoteForm(props: {
                     {() => (
                       <PermissionCard
                         title="Voters"
-                        description="SubDIDs who can vote in this grant"
+                        description="SubDIDs who can vote in this grant. The greatest voting power will be allocated when a SubDID has multiple occurrence."
                         value={props.grant.permission.voting}
                       />
                     )}
