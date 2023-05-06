@@ -116,7 +116,7 @@ export default function CommunityInfo(props: { className?: string }) {
   const isMember = useMemo(
     () =>
       dids?.find(
-        (did) => !!query.community_id && did.indexOf(query.community_id) === 0,
+        (did) => !!query.community_id && did.startsWith(query.community_id),
       ),
     [dids, query.community_id],
   )
