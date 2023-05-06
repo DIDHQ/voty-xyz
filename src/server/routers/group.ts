@@ -103,7 +103,8 @@ export const groupRouter = router({
           (group) =>
             group.permission.proposing.operands.length === 1 &&
             group.permission.proposing.operands[0].arguments[0] ===
-              group.authorship.author,
+              group.authorship.author &&
+            group.permission.proposing.operands[0].arguments[1].length > 0,
         )
         .refine((group) =>
           group.permission.voting.operands.every(

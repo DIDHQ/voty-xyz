@@ -117,7 +117,12 @@ export default function GroupForm(props: {
         >
           <Grid6>
             <GridItem6>
-              <FormItem error={errors.permission?.proposing?.operands?.message}>
+              <FormItem
+                error={
+                  errors.permission?.proposing?.operands?.[0]
+                    ?.arguments?.[1]?.[0]?.message
+                }
+              >
                 <FormProvider {...methods}>
                   <BooleanSetsBlock
                     name="proposing"

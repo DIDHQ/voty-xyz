@@ -30,7 +30,7 @@ export default function CreateGroupPage() {
                 operands: [
                   {
                     function: 'prefixes_dot_suffix_exact_match',
-                    arguments: [query.community_id, []],
+                    arguments: [query.community_id, ['']],
                   },
                 ],
               },
