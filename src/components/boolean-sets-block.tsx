@@ -57,7 +57,7 @@ function BooleanUnitBlock(props: {
             const array = compact(
               e.target.value
                 .split('\n')
-                .map((line) => line.replace(regex, '').trim()),
+                .map((line) => line.replace(regex, '').trim().toLowerCase()),
             )
             onChange(array.length ? array : [''])
           }}
