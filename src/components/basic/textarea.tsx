@@ -25,7 +25,7 @@ export default forwardRef<
   return (
     <div className={clsx('relative', className)}>
       {shadow && props.value ? (
-        <span className="absolute z-0 select-none border border-transparent px-3 py-2 text-base text-gray-400 sm:text-sm">
+        <span className="pointer-events-none absolute z-0 select-none border border-transparent px-3 py-2 text-base text-gray-400 sm:text-sm">
           {(props.value as string | undefined)
             ?.split('\n')
             .map((line, index) => (
