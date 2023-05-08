@@ -195,7 +195,7 @@ export default function GrantForm(props: {
                   disabled={disabled}
                   {...register('funding.0.0')}
                   error={!!errors?.funding?.[0]?.[0]}
-                  placeholder="prize"
+                  placeholder="e.g. 100 USD"
                   className="w-0 flex-1"
                 />
                 <span className="text-gray-400">X</span>
