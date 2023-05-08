@@ -2,11 +2,11 @@ import Decimal from 'decimal.js'
 
 import type { Authorship } from './schemas'
 
-export type DID<S extends 'bit' | 'eth' = string> = `${string}.${S}`
+export type DID<S extends 'bit' = string> = `${string}.${S}`
 
 export type Snapshots = { [coinType: number]: string }
 
-export type DidChecker<S extends 'bit' | 'eth' = string> = (did: DID<S>) => {
+export type DidChecker<S extends 'bit' = string> = (did: DID<S>) => {
   requiredCoinType: number
   check: (
     coinType: number,
