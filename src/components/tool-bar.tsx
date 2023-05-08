@@ -47,7 +47,7 @@ export default function ToolBar(props: { className?: string }) {
             </span>
           ) : (
             <span className="ml-2 italic text-primary-600 group-hover:text-primary-500">
-              Alpha
+              Beta
             </span>
           )}
         </Link>

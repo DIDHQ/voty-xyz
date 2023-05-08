@@ -2,7 +2,7 @@ import { PreviewPermalink } from './types'
 
 export const isTestnet = !!process.env.NEXT_PUBLIC_TESTNET
 
-export const documentTitle = `Voty ${isTestnet ? 'Testnet' : 'Alpha'}`
+export const documentTitle = `Voty ${isTestnet ? 'Testnet' : 'Beta'}`
 
 export const description = 'Voice of your community'
 
