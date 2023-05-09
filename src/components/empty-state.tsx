@@ -26,9 +26,13 @@ export default function EmptyState(props: {
           fill="#22C493"
         />
       </svg>
-      <div className="flex flex-col items-center space-y-2">
+      <div className="flex max-w-xl flex-col items-center space-y-4">
         <h3 className="font-medium text-gray-800">{props.title}</h3>
-        {props.description ? <p>{props.description}</p> : null}
+        {props.description ? (
+          <p className="text-center text-sm text-gray-500">
+            {props.description}
+          </p>
+        ) : null}
       </div>
       {props.footer}
     </div>

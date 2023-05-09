@@ -76,6 +76,11 @@ export default function CommunityIndexPage() {
         <EmptyState
           title="No proposals"
           className="mt-24"
+          description={
+            community && !groups?.length && isManager
+              ? "Workgroup helps you categorize proposals with different focuses. You can also set up workgroups to your community structure's needs."
+              : undefined
+          }
           footer={
             community && !groups?.length && isManager ? (
               <Link href={`/${query.community_id}/create`}>
