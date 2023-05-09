@@ -16,20 +16,20 @@ export default function SubscriptionList(props: { className?: string }) {
   return account ? (
     <div className={props.className}>
       <h2 className="my-6 text-xl font-semibold sm:mt-8">Subscribed</h2>
-      <div className="-m-1 w-full overflow-x-auto overflow-y-visible">
-        <ul className="flex w-max items-center space-x-4  p-1">
+      <div className="-m-1 w-full snap-x overflow-x-auto overflow-y-visible">
+        <ul className="flex w-max items-center space-x-4 p-1">
           {data ? (
             data.length ? (
               data.map((community) => (
                 <SubscriptionListItem key={community.id} value={community} />
               ))
             ) : (
-              <div className="h-16 text-sm text-gray-400">
+              <li className="h-16 text-sm text-gray-400">
                 No subscribed communities
-              </div>
+              </li>
             )
           ) : (
-            <div className="h-16"></div>
+            <li className="h-16"></li>
           )}
         </ul>
       </div>
@@ -39,7 +39,7 @@ export default function SubscriptionList(props: { className?: string }) {
 
 function SubscriptionListItem(props: { value: Community }) {
   return (
-    <li className="rounded-full ring-2 ring-transparent ring-offset-2 hover:ring-gray-300">
+    <li className="snap-start rounded-full ring-2 ring-transparent ring-offset-2 hover:ring-gray-300">
       <Tooltip place="top" text={props.value.name}>
         <Link href={`/${props.value.id}`}>
           <Avatar size={16} value={props.value.logo} />

@@ -7,6 +7,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
