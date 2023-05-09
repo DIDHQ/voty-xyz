@@ -21,12 +21,16 @@ export default function GrantCurrentPhase(props: {
       <div className="flex flex-col space-y-1 border-l-4 border-amber-500 py-2 pl-4 font-medium">
         {phase === GrantPhase.CONFIRMING ? (
           <>
-            <span className="text-sm text-gray-400">Confirming</span>
+            <span className="text-sm text-gray-400">
+              Awaiting blockchain confirmation
+            </span>
             <span className="text-sm text-gray-600">in about 5 minutes</span>
           </>
         ) : phase === GrantPhase.ANNOUNCING ? (
           <>
-            <span className="text-sm text-gray-400">Announcing</span>
+            <span className="text-sm text-gray-400">
+              Announcing for publicity
+            </span>
             <span className="text-sm text-gray-600">
               {status?.timestamp && props.duration
                 ? format2Time(
@@ -72,16 +76,16 @@ export default function GrantCurrentPhase(props: {
           </>
         ) : phase === GrantPhase.ENDED ? (
           <>
-            <span className="text-sm text-gray-400">Ended at</span>
+            <span className="text-sm text-gray-400">Ended</span>
             <span className="text-sm text-gray-600">
               {status?.timestamp && props.duration
-                ? formatTime(
+                ? `at ${formatTime(
                     status.timestamp.getTime() +
                       (props.duration.announcing +
                         props.duration.proposing +
                         props.duration.voting) *
                         1000,
-                  )
+                  )}`
                 : '...'}
             </span>
           </>
