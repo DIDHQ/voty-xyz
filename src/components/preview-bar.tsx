@@ -167,6 +167,19 @@ export default function PreviewBar() {
     }
     throw new Error('')
   })
+  useEffect(() => {
+    if (!preview) {
+      return
+    }
+    const handleBeforeunload = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', handleBeforeunload)
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeunload)
+    }
+  }, [preview])
 
   return (
     <>
