@@ -67,7 +67,7 @@ export default function GrantsIndexPage() {
       {grants?.length === 0 ? (
         <EmptyState
           title="No topic grants"
-          description="Topic Grant helps you automate your project's funding process with ease, while also elevating member's engagement."
+          description="Topic grant helps you automate your project's funding process with ease, while also elevating member's engagement."
           className="mt-24"
         />
       ) : (
