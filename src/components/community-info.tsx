@@ -20,17 +20,14 @@ import useRouterQuery from '../hooks/use-router-query'
 import Avatar from './basic/avatar'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
-import { documentTitle } from '../utils/constants'
+import { documentTitle, domain } from '../utils/constants'
 import TextButton from './basic/text-button'
 import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import Button from './basic/button'
 import useIsManager from '../hooks/use-is-manager'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
-
-const StatusIcon = dynamic(() => import('./status-icon'), {
-  ssr: false,
-})
+import ShareLinkIcon from './share-link-icon'
 
 const SubscriptionButton = dynamic(() => import('./subscription-button'), {
   ssr: false,
@@ -128,8 +125,8 @@ export default function CommunityInfo(props: { className?: string }) {
       </Head>
       <aside className={clsx('relative', props.className)}>
         {previewCommunity ? null : (
-          <StatusIcon
-            permalink={data?.permalink}
+          <ShareLinkIcon
+            link={`${domain}/${query.community_id}`}
             className="absolute right-4 top-4"
           />
         )}
