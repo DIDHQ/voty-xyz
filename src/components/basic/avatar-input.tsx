@@ -47,7 +47,7 @@ export default function AvatarInput(props: {
         type="file"
         accept="image/*"
         onChange={handleChange}
-        className="h-0 w-0"
+        className="hidden h-0 w-0"
       />
       {props.disabled ? null : (
         <Button onClick={handleClick} className="ml-4">
