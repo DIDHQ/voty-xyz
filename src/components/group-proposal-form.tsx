@@ -177,7 +177,7 @@ export default function GroupProposalForm(props: {
                 onChange={setDid}
                 onClick={connect}
               />
-              {didOptions?.length === 0 && props.group ? (
+              {!defaultDid && props.group ? (
                 <Slide
                   title={`Proposers of ${props.group.name}`}
                   trigger={({ handleOpen }) => (

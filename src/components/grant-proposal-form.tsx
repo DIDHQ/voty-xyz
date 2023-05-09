@@ -133,7 +133,7 @@ export default function GrantProposalForm(props: {
                 onChange={setDid}
                 onClick={connect}
               />
-              {didOptions?.length === 0 && props.grant ? (
+              {!defaultDid && props.grant ? (
                 <Slide
                   title={`Proposers of ${props.grant.name}`}
                   trigger={({ handleOpen }) => (
