@@ -14,5 +14,9 @@ input::-webkit-inner-spin-button {
 }
 
 input[type='number'] {
-  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input {
+  opacity: 1; /* https://stackoverflow.com/questions/262158/disabled-input-text-color-on-ios */
 }
