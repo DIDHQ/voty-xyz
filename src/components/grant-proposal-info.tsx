@@ -11,7 +11,7 @@ import { GrantProposal } from '../utils/schemas/v1/grant-proposal'
 import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import TextButton from './basic/text-button'
-import GrantProgress from './grant-progress'
+import GrantCurrentPhase from './grant-current-phase'
 import { PreviewPermalink } from '../utils/types'
 import { formatNumber } from '../utils/number'
 import { permalink2Explorer, permalink2Id } from '../utils/permalink'
@@ -34,7 +34,7 @@ export default function GrantProposalInfo(props: {
         props.className,
       )}
     >
-      <GrantProgress
+      <GrantCurrentPhase
         grantPermalink={props.grantProposal?.grant}
         duration={props.grant?.duration}
       />

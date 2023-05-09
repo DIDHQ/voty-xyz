@@ -1,0 +1,92 @@
+import { useMemo } from 'react'
+
+import useStatus from '../hooks/use-status'
+import { GrantPhase, getGrantPhase } from '../utils/phase'
+import { Grant } from '../utils/schemas/v1/grant'
+import { format2Time, formatTime } from '../utils/time'
+import { DetailList } from './basic/detail'
+
+export default function GrantCurrentPhase(props: {
+  grantPermalink?: string
+  duration?: Grant['duration']
+}) {
+  const { data: status } = useStatus(props.grantPermalink)
+  const phase = useMemo(
+    () => getGrantPhase(new Date(), status?.timestamp, props.duration),
+    [props.duration, status?.timestamp],
+  )
+
+  return (
+    <DetailList title="Grant current phase">
+      <div className="flex flex-col space-y-1 border-l-4 border-amber-500 py-2 pl-4 font-medium">
+        {phase === GrantPhase.CONFIRMING ? (
+          <>
+            <span className="text-sm text-gray-400">Confirming</span>
+            <span className="text-sm text-gray-600">in about 5 minutes</span>
+          </>
+        ) : phase === GrantPhase.ANNOUNCING ? (
+          <>
+            <span className="text-sm text-gray-400">Announcing</span>
+            <span className="text-sm text-gray-600">
+              {status?.timestamp && props.duration
+                ? format2Time(
+                    status.timestamp.getTime(),
+                    status.timestamp.getTime() +
+                      props.duration.announcing * 1000,
+                  )
+                : '...'}
+            </span>
+          </>
+        ) : phase === GrantPhase.PROPOSING ? (
+          <>
+            <span className="text-sm text-gray-400">Proposing</span>
+            <span className="text-sm text-gray-600">
+              {status?.timestamp && props.duration
+                ? format2Time(
+                    status.timestamp.getTime() +
+                      props.duration.announcing * 1000,
+                    status.timestamp.getTime() +
+                      (props.duration.announcing + props.duration.proposing) *
+                        1000,
+                  )
+                : '...'}
+            </span>
+          </>
+        ) : phase === GrantPhase.VOTING ? (
+          <>
+            <span className="text-sm text-gray-400">Voting</span>
+            <span className="text-sm text-gray-600">
+              {status?.timestamp && props.duration
+                ? format2Time(
+                    status.timestamp.getTime() +
+                      (props.duration.announcing + props.duration.proposing) *
+                        1000,
+                    status.timestamp.getTime() +
+                      (props.duration.announcing +
+                        props.duration.proposing +
+                        props.duration.voting) *
+                        1000,
+                  )
+                : '...'}
+            </span>
+          </>
+        ) : phase === GrantPhase.ENDED ? (
+          <>
+            <span className="text-sm text-gray-400">Ended at</span>
+            <span className="text-sm text-gray-600">
+              {status?.timestamp && props.duration
+                ? formatTime(
+                    status.timestamp.getTime() +
+                      (props.duration.announcing +
+                        props.duration.proposing +
+                        props.duration.voting) *
+                        1000,
+                  )
+                : '...'}
+            </span>
+          </>
+        ) : null}
+      </div>
+    </DetailList>
+  )
+}
