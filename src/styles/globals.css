@@ -17,6 +17,6 @@ input[type='number'] {
   appearance: textfield;
 }
 
-input {
+input:disabled {
   opacity: 1; /* https://stackoverflow.com/questions/262158/disabled-input-text-color-on-ios */
 }
