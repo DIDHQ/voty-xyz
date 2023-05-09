@@ -61,6 +61,14 @@ export default function CommunityForm(props: {
       <FormSection title="Basic information">
         <Grid6>
           <GridItem6>
+            <FormItem label="Community entry link">
+              <TextInput
+                defaultValue={`${domain}/${props.communityId}`}
+                disabled
+              />
+            </FormItem>
+          </GridItem6>
+          <GridItem6>
             <FormItem label="Logo" error={errors?.logo?.message}>
               <Controller
                 control={control}
@@ -83,14 +91,6 @@ export default function CommunityForm(props: {
                 placeholder="e.g. Bankless DAO"
                 error={!!errors.name?.message}
                 disabled={!isManager}
-              />
-            </FormItem>
-          </GridItem6>
-          <GridItem6>
-            <FormItem label="Community entry link">
-              <TextInput
-                defaultValue={`${domain}/${props.communityId}`}
-                disabled
               />
             </FormItem>
           </GridItem6>

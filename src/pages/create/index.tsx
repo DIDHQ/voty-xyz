@@ -60,12 +60,12 @@ export default function CreateCommunityPage() {
         </TextButton>
         <div className="pt-8 sm:px-6 sm:pt-16">
           <div className="mx-auto text-center">
-            <h2 className="text-4xl font-bold tracking-tight text-gray-900">
+            <h2 className="text-3xl font-semibold text-gray-900">
               Import your community
+              <p className="mt-4 text-center text-sm font-normal text-gray-500">
+                to hear the real voices from your community members.
+              </p>
             </h2>
-            <p className="mx-auto mt-6 max-w-xl text-lg text-gray-600">
-              to hear the real voices from your community members
-            </p>
             <div className="mt-8 flex flex-col items-center space-y-8">
               {account ? (
                 didOptions?.length ? (
@@ -172,7 +172,7 @@ export default function CreateCommunityPage() {
                 <ConnectButton />
               )}
               <hr className="w-full max-w-xl border-t border-gray-200" />
-              <p className="mx-auto max-w-xl text-sm text-gray-600">
+              <p className="mx-auto max-w-xl text-sm text-gray-500">
                 Voty is a DID-based, free and open-sourced community management
                 platform.
                 <br />
