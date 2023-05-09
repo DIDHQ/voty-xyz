@@ -33,7 +33,7 @@ export default function GrantProposalCreateButton(props: {
   ) : phase === GrantPhase.ANNOUNCING && status?.timestamp && props.grant ? (
     <Tooltip
       place="top"
-      text={`Waiting for proposing start (in ${formatDurationMs(
+      text={`Waiting for propose starting (in ${formatDurationMs(
         status.timestamp.getTime() +
           props.grant.duration.announcing * 1000 -
           now.getTime(),

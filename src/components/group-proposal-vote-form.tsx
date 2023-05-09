@@ -254,12 +254,12 @@ export default function GroupProposalVoteForm(props: {
                   phase === GroupProposalPhase.CONFIRMING
                     ? 'Waiting for proposal confirming (in about 5 minutes)'
                     : status?.timestamp && props.group
-                    ? `Waiting for voting start (in ${formatDurationMs(
+                    ? `Waiting for vote starting (in ${formatDurationMs(
                         status.timestamp.getTime() +
                           props.group.duration.announcing * 1000 -
                           now.getTime(),
                       )})`
-                    : 'Waiting for voting start'
+                    : 'Waiting for vote starting'
                 }
                 className="mt-6"
               >
