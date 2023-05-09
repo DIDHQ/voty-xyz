@@ -91,6 +91,7 @@ export default function GrantForm(props: {
       title={`Create topic grant${
         community?.name ? ` of ${community.name}` : ''
       }`}
+      description="Topic grant helps you automate your project's funding process with ease, while also elevating member's engagement."
       className={props.className}
     >
       <FormSection title="Basic information">
@@ -198,7 +199,7 @@ export default function GrantForm(props: {
                   placeholder="e.g. 100 USD"
                   className="w-0 flex-1"
                 />
-                <span className="text-gray-400">X</span>
+                <span className="text-gray-400">✕</span>
                 <Controller
                   control={control}
                   name="funding.0.1"

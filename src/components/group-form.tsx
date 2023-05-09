@@ -81,6 +81,7 @@ export default function GroupForm(props: {
         title={`${isNewGroup ? 'Create' : 'Edit'} workgroup${
           community?.name ? ` of ${community.name}` : ''
         }`}
+        description="Workgroup helps you categorize proposals with different focuses. You can also set up workgroups to your community structure's needs."
         className={props.className}
       >
         <FormSection title="Basic information">
@@ -152,7 +153,7 @@ export default function GroupForm(props: {
             </GridItem6>
           </Grid6>
         </FormSection>
-        <FormSection title="Rules">
+        <FormSection title="Proposal rules">
           <Grid6>
             <GridItem3>
               <FormItem

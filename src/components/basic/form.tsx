@@ -3,6 +3,7 @@ import { InputHTMLAttributes, ReactNode } from 'react'
 
 export function Form(props: {
   title: string
+  description?: string
   className?: string
   children: ReactNode
 }) {
@@ -10,6 +11,11 @@ export function Form(props: {
     <div className={clsx('space-y-16', props.className)}>
       <h2 className="text-center text-3xl font-semibold text-gray-900">
         {props.title}
+        {props.description ? (
+          <p className="mt-4 text-center text-sm font-normal text-gray-500">
+            {props.description}
+          </p>
+        ) : null}
       </h2>
       {props.children}
     </div>

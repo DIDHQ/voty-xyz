@@ -44,7 +44,7 @@ export default function GrantProposalInfo(props: {
             {props.grant?.funding?.map((funding, index) => (
               <li key={index}>
                 {funding[0]}&nbsp;
-                <span className="text-gray-400">X</span>&nbsp;
+                <span className="text-gray-400">✕</span>&nbsp;
                 {funding[1]}
               </li>
             ))}
