@@ -66,7 +66,7 @@ export default function CreateCommunityPage() {
             <p className="mx-auto mt-6 max-w-xl text-lg text-gray-600">
               to hear the real voices from your community members
             </p>
-            <div className="mt-8 flex flex-col items-center space-y-6">
+            <div className="mt-8 flex flex-col items-center space-y-8">
               {account ? (
                 didOptions?.length ? (
                   <>
@@ -171,6 +171,20 @@ export default function CreateCommunityPage() {
               ) : (
                 <ConnectButton />
               )}
+              <hr className="w-full max-w-xl border-t border-gray-200" />
+              <p className="mx-auto max-w-xl text-sm text-gray-600">
+                Voty is a DID-based, free and open-sourced community management
+                platform.
+                <br />
+                We are dedicated to achieving a DID-based governance future.
+                <br />
+                Learn more about how Voty works and the thoughts behind
+                DID-based governance{' '}
+                <TextButton href="/about" secondary>
+                  here
+                </TextButton>
+                .
+              </p>
             </div>
           </div>
         </div>
