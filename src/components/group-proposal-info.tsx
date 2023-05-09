@@ -37,7 +37,7 @@ export default function GroupProposalInfo(props: {
     >
       <GroupProposalProgress
         groupProposalPermalink={props.groupProposal?.permalink}
-        phase={props.group?.duration}
+        duration={props.group?.duration}
       />
       <DetailList title="Criteria for approval">
         <Article small className="pt-2">

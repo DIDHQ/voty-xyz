@@ -6,12 +6,12 @@ import type { Grant } from '../utils/schemas/v1/grant'
 
 export default function GrantPhaseText(props: {
   grantPermalink?: string
-  phase?: Grant['duration']
+  duration?: Grant['duration']
 }) {
   const { data: status, isLoading } = useStatus(props.grantPermalink)
   const phase = useMemo(
-    () => getGrantPhase(new Date(), status?.timestamp, props.phase),
-    [props.phase, status?.timestamp],
+    () => getGrantPhase(new Date(), status?.timestamp, props.duration),
+    [props.duration, status?.timestamp],
   )
 
   return isLoading ? null : (

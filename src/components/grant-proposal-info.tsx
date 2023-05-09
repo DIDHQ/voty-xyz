@@ -36,7 +36,7 @@ export default function GrantProposalInfo(props: {
     >
       <GrantProgress
         grantPermalink={props.grantProposal?.grant}
-        phase={props.grant?.duration}
+        duration={props.grant?.duration}
       />
       <DetailList title="Grant package">
         <Article small className="pt-2">

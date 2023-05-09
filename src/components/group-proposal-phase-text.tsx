@@ -6,12 +6,12 @@ import type { Group } from '../utils/schemas/v1/group'
 
 export default function GroupProposalPhaseText(props: {
   groupProposalPermalink?: string
-  phase?: Group['duration']
+  duration?: Group['duration']
 }) {
   const { data: status, isLoading } = useStatus(props.groupProposalPermalink)
   const phase = useMemo(
-    () => getGroupProposalPhase(new Date(), status?.timestamp, props.phase),
-    [props.phase, status?.timestamp],
+    () => getGroupProposalPhase(new Date(), status?.timestamp, props.duration),
+    [props.duration, status?.timestamp],
   )
 
   return isLoading ? null : (
