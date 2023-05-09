@@ -152,7 +152,7 @@ export default function GroupForm(props: {
             </GridItem6>
           </Grid6>
         </FormSection>
-        <FormSection title="Rules">
+        <FormSection title="Proposal rules">
           <Grid6>
             <GridItem3>
               <FormItem
