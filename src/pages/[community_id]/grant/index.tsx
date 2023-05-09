@@ -35,7 +35,6 @@ export default function GrantsIndexPage() {
   const options = useMemo(
     () => [
       'All',
-      GrantPhase.CONFIRMING,
       GrantPhase.ANNOUNCING,
       GrantPhase.PROPOSING,
       GrantPhase.VOTING,

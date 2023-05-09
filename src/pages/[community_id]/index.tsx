@@ -52,7 +52,6 @@ export default function CommunityIndexPage() {
   const options = useMemo(
     () => [
       'All',
-      GroupProposalPhase.CONFIRMING,
       GroupProposalPhase.ANNOUNCING,
       GroupProposalPhase.VOTING,
       GroupProposalPhase.ENDED,
