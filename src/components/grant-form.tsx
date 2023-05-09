@@ -198,7 +198,7 @@ export default function GrantForm(props: {
                   placeholder="e.g. 100 USD"
                   className="w-0 flex-1"
                 />
-                <span className="text-gray-400">X</span>
+                <span className="text-gray-400">✕</span>
                 <Controller
                   control={control}
                   name="funding.0.1"

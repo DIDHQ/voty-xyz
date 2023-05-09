@@ -64,7 +64,7 @@ export default function GrantCard(props: {
           <p className="text-gray-400">Grant package</p>
           <p className="truncate">
             {props.grant.funding[0][0]}&nbsp;
-            <span className="text-gray-400">X</span>&nbsp;
+            <span className="text-gray-400">✕</span>&nbsp;
             {props.grant.funding[0][1]}
           </p>
         </div>
