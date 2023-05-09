@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import clsx from 'clsx'
 
 import useStatus from '../hooks/use-status'
 import { GrantPhase, getGrantPhase } from '../utils/phase'
@@ -18,8 +19,24 @@ export default function GrantCurrentPhase(props: {
 
   return (
     <DetailList title="Grant current phase">
-      <div className="flex flex-col space-y-1 border-l-4 border-amber-500 py-2 pl-4 font-medium">
-        {phase === GrantPhase.CONFIRMING ? (
+      <div
+        className={clsx(
+          'flex flex-col space-y-1 border-l-4 py-2 pl-4 font-medium',
+          {
+            [GrantPhase.CONFIRMING]: 'border-amber-500',
+            [GrantPhase.ANNOUNCING]: 'border-sky-500',
+            [GrantPhase.PROPOSING]: 'border-indigo-500',
+            [GrantPhase.VOTING]: 'border-lime-500',
+            [GrantPhase.ENDED]: 'border-gray-500',
+          }[phase],
+        )}
+      >
+        {!status ? (
+          <>
+            <span className="text-sm text-gray-400">...</span>
+            <span className="text-sm text-gray-600">...</span>
+          </>
+        ) : phase === GrantPhase.CONFIRMING ? (
           <>
             <span className="text-sm text-gray-400">
               Awaiting blockchain confirmation

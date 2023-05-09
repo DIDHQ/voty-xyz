@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import clsx from 'clsx'
 
 import useStatus from '../hooks/use-status'
 import { Group } from '../utils/schemas/v1/group'
@@ -18,8 +19,23 @@ export default function GroupProposalCurrentPhase(props: {
 
   return (
     <DetailList title="Proposal current phase">
-      <div className="flex flex-col space-y-1 border-l-4 border-amber-500 py-2 pl-4 font-medium">
-        {phase === GroupProposalPhase.CONFIRMING ? (
+      <div
+        className={clsx(
+          'flex flex-col space-y-1 border-l-4 py-2 pl-4 font-medium',
+          {
+            [GroupProposalPhase.CONFIRMING]: 'border-amber-500',
+            [GroupProposalPhase.ANNOUNCING]: 'border-sky-500',
+            [GroupProposalPhase.VOTING]: 'border-lime-500',
+            [GroupProposalPhase.ENDED]: 'border-gray-500',
+          }[phase],
+        )}
+      >
+        {!status ? (
+          <>
+            <span className="text-sm text-gray-400">...</span>
+            <span className="text-sm text-gray-600">...</span>
+          </>
+        ) : phase === GroupProposalPhase.CONFIRMING ? (
           <>
             <span className="text-sm text-gray-400">
               Awaiting blockchain confirmation
