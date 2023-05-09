@@ -79,7 +79,7 @@ export default function GrantCard(props: {
             </>
           ) : phase === GrantPhase.ANNOUNCING && props.grant.tsAnnouncing ? (
             <>
-              <p className="text-gray-400">Voting starts</p>
+              <p className="text-gray-400">Proposing starts</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;

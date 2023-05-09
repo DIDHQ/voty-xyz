@@ -12,7 +12,7 @@ import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import Markdown from './basic/markdown'
 import TextButton from './basic/text-button'
-import GroupProposalProgress from './group-proposal-progress'
+import GroupProposalCurrentPhase from './group-proposal-current-phase'
 import { PreviewPermalink } from '../utils/types'
 import { permalink2Explorer } from '../utils/permalink'
 import { formatNumber } from '../utils/number'
@@ -35,9 +35,9 @@ export default function GroupProposalInfo(props: {
         props.className,
       )}
     >
-      <GroupProposalProgress
+      <GroupProposalCurrentPhase
         groupProposalPermalink={props.groupProposal?.permalink}
-        phase={props.group?.duration}
+        duration={props.group?.duration}
       />
       <DetailList title="Criteria for approval">
         <Article small className="pt-2">

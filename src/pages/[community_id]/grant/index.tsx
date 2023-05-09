@@ -19,11 +19,11 @@ export default function GrantsIndexPage() {
   const [phase, setPhase] = useState<GrantPhase | 'All'>('All')
   const { data, fetchNextPage, hasNextPage, isLoading } =
     trpc.grant.listByCommunityId.useInfiniteQuery(
-      { communityId: query.community_id },
       {
-        enabled: !!query.community_id,
-        getNextPageParam: ({ next }) => next,
+        communityId: query.community_id,
+        phase: phase === 'All' ? undefined : phase,
       },
+      { enabled: !!query.community_id, getNextPageParam: ({ next }) => next },
     )
   const grants = useMemo(() => data?.pages.flatMap(({ data }) => data), [data])
   const { ref, inView } = useInView()

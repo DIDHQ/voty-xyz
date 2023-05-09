@@ -174,7 +174,7 @@ export default function GrantProposalVoteForm(props: {
                   onChange={setDid}
                   onClick={connect}
                 />
-                {didOptions?.length === 0 && props.grant ? (
+                {!defaultDid && props.grant ? (
                   <Slide
                     title={`Voters of ${props.grant.name}`}
                     trigger={({ handleOpen }) => (
@@ -215,13 +215,13 @@ export default function GrantProposalVoteForm(props: {
                     phase === GrantPhase.CONFIRMING
                       ? 'Waiting for proposal confirming (in about 5 minutes)'
                       : status?.timestamp && props.grant
-                      ? `Waiting for voting start (in ${formatDurationMs(
+                      ? `Waiting for vote starting (in ${formatDurationMs(
                           status.timestamp.getTime() +
                             props.grant.duration.announcing * 1000 +
                             props.grant.duration.proposing * 1000 -
                             now.getTime(),
                         )})`
-                      : 'Waiting for voting start'
+                      : 'Waiting for vote starting'
                   }
                   className="mt-6"
                 >

@@ -10,7 +10,7 @@ import { Grant } from '../utils/schemas/v1/grant'
 import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import TextButton from './basic/text-button'
-import GrantProgress from './grant-progress'
+import GrantCurrentPhase from './grant-current-phase'
 import { PreviewPermalink } from '../utils/types'
 import { permalink2Explorer } from '../utils/permalink'
 import { formatNumber } from '../utils/number'
@@ -32,9 +32,9 @@ export default function GrantInfo(props: {
         props.className,
       )}
     >
-      <GrantProgress
+      <GrantCurrentPhase
         grantPermalink={props.grant?.permalink}
-        phase={props.grant?.duration}
+        duration={props.grant?.duration}
       />
       <DetailList title="Grant package">
         <Article small className="pt-2">
