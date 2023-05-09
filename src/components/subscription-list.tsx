@@ -16,21 +16,23 @@ export default function SubscriptionList(props: { className?: string }) {
   return account ? (
     <div className={props.className}>
       <h2 className="my-6 text-xl font-semibold sm:mt-8">Subscribed</h2>
-      <ul className="-m-1 flex w-full items-center space-x-4 overflow-x-auto p-1">
-        {data ? (
-          data.length ? (
-            data.map((community) => (
-              <SubscriptionListItem key={community.id} value={community} />
-            ))
+      <div className="-m-1 w-full overflow-x-auto overflow-y-visible">
+        <ul className="flex w-max items-center space-x-4  p-1">
+          {data ? (
+            data.length ? (
+              data.map((community) => (
+                <SubscriptionListItem key={community.id} value={community} />
+              ))
+            ) : (
+              <div className="h-16 text-sm text-gray-400">
+                No subscribed communities
+              </div>
+            )
           ) : (
-            <div className="h-16 text-sm text-gray-400">
-              No subscribed communities
-            </div>
-          )
-        ) : (
-          <div className="h-16"></div>
-        )}
-      </ul>
+            <div className="h-16"></div>
+          )}
+        </ul>
+      </div>
     </div>
   ) : null
 }

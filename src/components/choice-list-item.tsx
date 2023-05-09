@@ -52,7 +52,7 @@ export function ChoiceListItem(props: {
   return (
     <li
       className={clsx(
-        'group flex items-center justify-between bg-no-repeat px-4 py-3 text-sm',
+        'group flex items-start justify-between bg-no-repeat px-4 py-3 text-sm',
         props.disabled ? 'cursor-not-allowed' : 'cursor-pointer',
       )}
       style={{
@@ -66,14 +66,14 @@ export function ChoiceListItem(props: {
         }
       }}
     >
-      <span className="w-0 flex-1 truncate">{choice}</span>
+      <span className="w-0 flex-1">{choice}</span>
       {choices?.[choice] || newPower.gt(0) ? (
-        <span className="text-xs text-gray-800">
+        <span className="mt-[0.09375rem] text-xs text-gray-800">
           {newPower.add(choices?.[choice] || 0).toString()}&nbsp;(
           {percentage.toFixed(1)}%)
         </span>
       ) : null}
-      <div className="ml-4 shrink-0 leading-none">
+      <div className="ml-4 mt-[0.09375rem] shrink-0 leading-none">
         <input
           type={type === 'single' ? 'radio' : 'checkbox'}
           checked={checkChoice(value, choice)}
