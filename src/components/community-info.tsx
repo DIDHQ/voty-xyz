@@ -215,7 +215,8 @@ export default function CommunityInfo(props: { className?: string }) {
               </div>
             </>
           ) : null}
-          {community?.how_to_join ? (
+          {community?.how_to_join &&
+          router.pathname !== '/[community_id]/about' ? (
             previewCommunity || isMember ? (
               <Button primary disabled={isMember} className="mt-4">
                 Want to join?
