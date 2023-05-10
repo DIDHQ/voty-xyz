@@ -25,13 +25,13 @@ export default function CommunityAboutPage() {
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
-      {community?.description ? (
+      {community?.about ? (
         <>
           <h3 className="mt-6 text-lg font-medium text-gray-900 sm:mt-8">
             Description
           </h3>
           <Article className="w-full pt-6">
-            <Markdown>{community?.description}</Markdown>
+            <Markdown>{community?.about}</Markdown>
           </Article>
         </>
       ) : null}

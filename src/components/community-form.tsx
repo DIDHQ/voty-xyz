@@ -106,14 +106,13 @@ export default function CommunityForm(props: {
           </GridItem6>
           <GridItem6>
             <FormItem
-              label="Description"
-              optional
+              label="About"
               description="Provide a detailed description of your community to leave a lasting impression on people. Markdown is supported"
-              error={errors?.description?.message}
+              error={errors?.about?.message}
             >
               <Textarea
-                {...register('description')}
-                error={!!errors?.description?.message}
+                {...register('about')}
+                error={!!errors?.about?.message}
                 disabled={!isManager}
               />
             </FormItem>
