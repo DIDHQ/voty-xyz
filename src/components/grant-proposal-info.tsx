@@ -65,7 +65,7 @@ export default function GrantProposalInfo(props: {
             '...'
           )}
         </DetailItem>
-        <DetailItem title="Grant" className="truncate whitespace-nowrap">
+        <DetailItem title="Topic grant" className="truncate whitespace-nowrap">
           {props.community && props.grant && props.grantProposal ? (
             <TextButton
               underline
