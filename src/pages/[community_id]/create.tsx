@@ -23,6 +23,7 @@ export default function CreateGroupPage() {
         ? ({
             id: newGroup,
             name: '',
+            introduction: '',
             community: community.permalink,
             permission: {
               proposing: {
