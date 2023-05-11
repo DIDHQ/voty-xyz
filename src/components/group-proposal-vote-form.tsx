@@ -219,7 +219,7 @@ export default function GroupProposalVoteForm(props: {
                   title={`Voters of ${props.group.name}`}
                   trigger={({ handleOpen }) => (
                     <TextButton secondary onClick={handleOpen}>
-                      Why I&#39;m not eligible to vote
+                      Why I&#39;m not eligible to vote?
                     </TextButton>
                   )}
                 >

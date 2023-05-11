@@ -182,7 +182,7 @@ export default function GroupProposalForm(props: {
                   title={`Proposers of ${props.group.name}`}
                   trigger={({ handleOpen }) => (
                     <TextButton secondary onClick={handleOpen}>
-                      Why I&#39;m not eligible to propose
+                      Why I&#39;m not eligible to propose?
                     </TextButton>
                   )}
                 >

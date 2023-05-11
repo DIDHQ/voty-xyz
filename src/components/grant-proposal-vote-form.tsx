@@ -180,7 +180,7 @@ export default function GrantProposalVoteForm(props: {
                     title={`Voters of ${props.grant.name}`}
                     trigger={({ handleOpen }) => (
                       <TextButton secondary onClick={handleOpen}>
-                        Why I&#39;m not eligible to vote
+                        Why I&#39;m not eligible to vote?
                       </TextButton>
                     )}
                   >
