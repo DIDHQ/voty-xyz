@@ -25,6 +25,7 @@ import Notification from './basic/notification'
 import TextButton from './basic/text-button'
 import { previewPermalink } from '../utils/constants'
 import { permalink2Id } from '../utils/permalink'
+import sleep from '../utils/sleep'
 
 export default function PreviewBar() {
   const router = useRouter()
@@ -95,6 +96,7 @@ export default function PreviewBar() {
           phase: undefined,
         }),
       ])
+      await sleep(5000)
       setPreviewCommunity(undefined)
       router.push(`/${signed.id}`)
       return 'community'
@@ -108,6 +110,7 @@ export default function PreviewBar() {
           phase: undefined,
         }),
       ])
+      await sleep(5000)
       setPreviewGrant(undefined)
       router.push(`/${signed.authorship.author}/grant`)
       return 'grant'
@@ -119,6 +122,7 @@ export default function PreviewBar() {
         utils.grantProposal.getByPermalink.prefetch({ permalink }),
         utils.grant.getByPermalink.prefetch({ permalink: signed.grant }),
       ])
+      await sleep(5000)
       setPreviewGrantProposal(undefined)
       router.push(
         preview.to.replace(
@@ -145,6 +149,7 @@ export default function PreviewBar() {
           phase: undefined,
         }),
       ])
+      await sleep(5000)
       setPreviewGroup(undefined)
       router.push(`/${signed.authorship.author}/group/${signed.id}`)
       return 'workgroup'
@@ -156,6 +161,7 @@ export default function PreviewBar() {
         utils.groupProposal.getByPermalink.prefetch({ permalink }),
         utils.group.getByPermalink.prefetch({ permalink: signed.group }),
       ])
+      await sleep(5000)
       setPreviewGroupProposal(undefined)
       router.push(
         preview.to.replace(
