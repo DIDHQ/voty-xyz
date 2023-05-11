@@ -100,7 +100,7 @@ export default function GrantForm(props: {
             <FormItem label="Grant topic" error={errors.name?.message}>
               <TextInput
                 {...register('name')}
-                placeholder="e.g. Hackathon season 1"
+                placeholder="e.g. Hackathon Season 1"
                 error={!!errors.name?.message}
                 disabled={disabled}
               />
