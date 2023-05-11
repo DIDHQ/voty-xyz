@@ -30,7 +30,7 @@ export default function ActivityListItem(props: {
     switch (activity.data.type) {
       case 'create_community': {
         return {
-          color: 'bg-green-100 text-green-500',
+          color: 'bg-orange-100 text-orange-500',
           icon: UserGroupIcon,
           children: 'imported community',
           permalink: activity.data.community_permalink,
@@ -38,7 +38,7 @@ export default function ActivityListItem(props: {
       }
       case 'update_community': {
         return {
-          color: 'bg-blue-100 text-blue-500',
+          color: 'bg-orange-100 text-orange-500',
           icon: UserGroupIcon,
           children: 'updated community',
           permalink: activity.data.community_permalink,
@@ -46,7 +46,7 @@ export default function ActivityListItem(props: {
       }
       case 'create_grant': {
         return {
-          color: 'bg-green-100 text-green-500',
+          color: 'bg-indigo-100 text-indigo-500',
           icon: TrophyIcon,
           children: (
             <>
@@ -133,7 +133,7 @@ export default function ActivityListItem(props: {
       }
       case 'create_group': {
         return {
-          color: 'bg-green-100 text-green-500',
+          color: 'bg-blue-100 text-blue-500',
           icon: BriefcaseIcon,
           children: (
             <>
