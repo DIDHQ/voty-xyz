@@ -50,7 +50,7 @@ export default function ActivityListItem(props: {
           icon: TrophyIcon,
           children: (
             <>
-              created grant{' '}
+              created topic grant{' '}
               <TextButton
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -83,7 +83,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.grant_name}
               </TextButton>{' '}
-              in grant{' '}
+              in topic grant{' '}
               <TextButton
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -116,7 +116,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.grant_name}
               </TextButton>{' '}
-              in grant{' '}
+              in topic grant{' '}
               <TextButton
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -137,7 +137,7 @@ export default function ActivityListItem(props: {
           icon: BriefcaseIcon,
           children: (
             <>
-              created group{' '}
+              created workgroup{' '}
               <TextButton
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline
@@ -156,7 +156,7 @@ export default function ActivityListItem(props: {
           icon: BriefcaseIcon,
           children: (
             <>
-              updated group{' '}
+              updated workgroup{' '}
               <TextButton
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline
@@ -175,7 +175,7 @@ export default function ActivityListItem(props: {
           icon: BriefcaseIcon,
           children: (
             <>
-              archived group{' '}
+              archived workgroup{' '}
               <span className="font-medium text-gray-900">
                 {activity.data.group_name}
               </span>
@@ -201,7 +201,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.group_name}
               </TextButton>{' '}
-              in group{' '}
+              in workgroup{' '}
               <TextButton
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline
@@ -232,7 +232,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.group_name}
               </TextButton>{' '}
-              in group{' '}
+              in workgroup{' '}
               <TextButton
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline

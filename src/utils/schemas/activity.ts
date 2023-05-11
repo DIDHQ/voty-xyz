@@ -91,6 +91,7 @@ export const activitySchema = z.discriminatedUnion('type', [
     group_proposal_permalink: z.string(),
     group_proposal_title: z.string(),
     group_proposal_vote_permalink: z.string(),
+    group_proposal_vote_choices: z.array(z.string()),
   }),
 ])
 

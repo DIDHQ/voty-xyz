@@ -176,6 +176,7 @@ export const groupProposalVoteRouter = router({
               group_proposal_permalink: input.group_proposal,
               group_proposal_title: groupProposal.title,
               group_proposal_vote_permalink: permalink,
+              group_proposal_vote_choices: Object.keys(input.powers),
             } satisfies Activity,
             ts,
           },
