@@ -103,7 +103,7 @@ export default function PreviewBar() {
     }
     if (isGrant(document)) {
       const signed = await signDocument(document)
-      await mutateGrant(signed)
+      const permalink = await mutateGrant(signed)
       await Promise.all([
         utils.grant.listByCommunityId.prefetch({
           communityId: signed.authorship.author,
@@ -112,7 +112,7 @@ export default function PreviewBar() {
       ])
       await sleep(5000)
       setPreviewGrant(undefined)
-      router.push(`/${signed.authorship.author}/grant`)
+      router.push(`/${signed.authorship.author}/grant/${permalink}`)
       return 'grant'
     }
     if (isGrantProposal(document)) {
