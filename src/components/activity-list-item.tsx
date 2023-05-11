@@ -7,6 +7,7 @@ import {
 } from '@heroicons/react/20/solid'
 import { useCallback, useMemo } from 'react'
 import { last } from 'lodash-es'
+import clsx from 'clsx'
 
 import { Activity } from '../utils/schemas/activity'
 import { formatDurationMs } from '../utils/time'
@@ -198,18 +199,32 @@ export default function ActivityListItem(props: {
   const icon = useMemo(
     () =>
       ({
-        community: <UserGroupIcon className="h-5 w-5 text-gray-500" />,
-        group: <BriefcaseIcon className="h-5 w-5 text-gray-500" />,
-        grant: <TrophyIcon className="h-5 w-5 text-gray-500" />,
-        proposal: <HandRaisedIcon className="h-5 w-5 text-gray-500" />,
-        vote: <BoltIcon className="h-5 w-5 text-gray-500" />,
+        community: <UserGroupIcon className="h-5 w-5" />,
+        group: <BriefcaseIcon className="h-5 w-5" />,
+        grant: <TrophyIcon className="h-5 w-5" />,
+        proposal: <HandRaisedIcon className="h-5 w-5" />,
+        vote: <BoltIcon className="h-5 w-5" />,
       }[last(activity.data.type.split('_'))!]),
+    [activity.data.type],
+  )
+  const color = useMemo(
+    () =>
+      ({
+        create: 'bg-green-100 text-green-500',
+        update: 'bg-blue-100 text-blue-500',
+        delete: 'bg-red-100 text-red-500',
+      }[activity.data.type.split('_')[0]]),
     [activity.data.type],
   )
 
   return (
     <div className="flex items-center space-x-2">
-      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 ring-8 ring-white">
+      <div
+        className={clsx(
+          'flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-white',
+          color,
+        )}
+      >
         {icon}
       </div>
       <div className="min-w-0 flex-1 py-1.5 text-sm text-gray-500">
