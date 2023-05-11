@@ -23,7 +23,7 @@ export default async function verifyGrantProposal(
     ),
     database.storage.findUnique({ where: { permalink: grantProposal.grant } }),
   ])
-  if (!timestamp || !storage) {
+  if (!storage) {
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Grant not found' })
   }
   const grant = schema.parse(storage.data)

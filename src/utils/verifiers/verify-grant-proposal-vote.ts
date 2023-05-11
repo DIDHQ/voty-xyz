@@ -23,20 +23,18 @@ export default async function verifyGrantProposalVote(
   grantProposal: Proved<Authorized<GrantProposal>>
   grant: Proved<Authorized<Grant>>
 }> {
-  const [timestamp, storage] = await Promise.all([
-    getPermalinkSnapshot(grantProposalVote.grant_proposal).then((snapshot) =>
-      getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
-    ),
-    database.storage.findUnique({
-      where: { permalink: grantProposalVote.grant_proposal },
-    }),
-  ])
-  if (!timestamp || !storage) {
+  const storage = await database.storage.findUnique({
+    where: { permalink: grantProposalVote.grant_proposal },
+  })
+  if (!storage) {
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Proposal not found' })
   }
   const grantProposal = schema.parse(storage.data)
   const { grant } = await verifyGrantProposal(grantProposal)
 
+  const timestamp = await getPermalinkSnapshot(grantProposal.grant).then(
+    (snapshot) => getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
+  )
   if (
     getGrantPhase(new Date(), timestamp, grant.duration) !== GrantPhase.VOTING
   ) {

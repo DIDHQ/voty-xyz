@@ -32,7 +32,7 @@ export default async function verifyGroupProposalVote(
       where: { permalink: groupProposalVote.group_proposal },
     }),
   ])
-  if (!timestamp || !storage) {
+  if (!storage) {
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Proposal not found' })
   }
   const groupProposal = schema.parse(storage.data)
