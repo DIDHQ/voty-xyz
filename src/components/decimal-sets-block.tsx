@@ -49,6 +49,7 @@ export default function DecimalSetsBlock(props: {
         <Button
           onClick={() => {
             append({
+              name: '',
               function: 'prefixes_dot_suffix_fixed_power',
               arguments: [props.communityId, [], '1'],
             })
@@ -131,7 +132,6 @@ function DecimalUnitBlock(props: {
           <GridItem6>
             <FormItem
               label="Voter group name"
-              optional
               error={
                 errors.permission?.[props.name]?.operands?.[props.index]?.name
                   ?.message
