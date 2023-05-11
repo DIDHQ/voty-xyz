@@ -39,6 +39,7 @@ export default function CreateGroupPage() {
                 operation: 'max',
                 operands: [
                   {
+                    name: '',
                     function: 'prefixes_dot_suffix_fixed_power',
                     arguments: [query.community_id, [], '1'],
                   },

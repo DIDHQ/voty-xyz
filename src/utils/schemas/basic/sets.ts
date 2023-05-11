@@ -29,7 +29,7 @@ export type BooleanSets = z.infer<typeof booleanSetsSchema>
 
 export const decimalUnitSchema = z.discriminatedUnion('function', [
   z.object({
-    name: z.string().optional(),
+    name: z.string().min(1, 'Required'),
     function: z.literal('prefixes_dot_suffix_fixed_power'),
     arguments: z.tuple([
       z.string().min(1),
