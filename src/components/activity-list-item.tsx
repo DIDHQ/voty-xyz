@@ -25,7 +25,7 @@ export default function ActivityListItem(props: {
       case 'create_community': {
         return (
           <>
-            imported community&nbsp;
+            imported community{' '}
             <TextButton
               href={`/${activity.data.community_id}`}
               underline
@@ -39,7 +39,7 @@ export default function ActivityListItem(props: {
       case 'update_community': {
         return (
           <>
-            updated community&nbsp;
+            updated community{' '}
             <TextButton
               href={`/${activity.data.community_id}`}
               underline
@@ -53,7 +53,7 @@ export default function ActivityListItem(props: {
       case 'create_grant': {
         return (
           <>
-            created grant&nbsp;
+            created grant{' '}
             <TextButton
               href={`/${activity.data.community_id}/grant/${permalink2Id(
                 activity.data.grant_permalink,
@@ -66,14 +66,40 @@ export default function ActivityListItem(props: {
           </>
         )
       }
+      case 'create_grant_proposal': {
+        return (
+          <>
+            made a proposal{' '}
+            <TextButton
+              href={`/${activity.data.community_id}/grant/${permalink2Id(
+                activity.data.grant_permalink,
+              )}/proposal/${permalink2Id(
+                activity.data.grant_proposal_permalink,
+              )}`}
+              underline
+              className="font-medium text-gray-900"
+            >
+              {activity.data.grant_name}
+            </TextButton>{' '}
+            for grant{' '}
+            <TextButton
+              href={`/${activity.data.community_id}/grant/${permalink2Id(
+                activity.data.grant_permalink,
+              )}`}
+              underline
+              className="font-medium text-gray-900"
+            >
+              {activity.data.grant_proposal_title}
+            </TextButton>
+          </>
+        )
+      }
       case 'create_group': {
         return (
           <>
-            created group&nbsp;
+            created group{' '}
             <TextButton
-              href={`/${activity.data.community_id}/group/${permalink2Id(
-                activity.data.group_id,
-              )}`}
+              href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
               underline
               className="font-medium text-gray-900"
             >
@@ -85,11 +111,9 @@ export default function ActivityListItem(props: {
       case 'update_group': {
         return (
           <>
-            updated group&nbsp;
+            updated group{' '}
             <TextButton
-              href={`/${activity.data.community_id}/group/${permalink2Id(
-                activity.data.group_id,
-              )}`}
+              href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
               underline
               className="font-medium text-gray-900"
             >
@@ -101,10 +125,36 @@ export default function ActivityListItem(props: {
       case 'delete_group': {
         return (
           <>
-            archived group&nbsp;
+            archived group{' '}
             <span className="font-medium text-gray-900">
               {activity.data.group_name}
             </span>
+          </>
+        )
+      }
+      case 'create_group_proposal': {
+        return (
+          <>
+            made a proposal{' '}
+            <TextButton
+              href={`/${activity.data.community_id}/group/${
+                activity.data.group_id
+              }/proposal/${permalink2Id(
+                activity.data.group_proposal_permalink,
+              )}`}
+              underline
+              className="font-medium text-gray-900"
+            >
+              {activity.data.group_name}
+            </TextButton>{' '}
+            in group{' '}
+            <TextButton
+              href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
+              underline
+              className="font-medium text-gray-900"
+            >
+              {activity.data.group_proposal_title}
+            </TextButton>
           </>
         )
       }
@@ -131,8 +181,8 @@ export default function ActivityListItem(props: {
         {icon}
       </div>
       <div className="min-w-0 flex-1 py-1.5 text-sm text-gray-500">
-        <span className="font-medium text-gray-900">{activity.actor}</span>
-        &nbsp;{renderAction()}&nbsp;
+        <span className="font-medium text-gray-900">{activity.actor}</span>{' '}
+        {renderAction()}{' '}
         <span className="whitespace-nowrap">
           {formatDurationMs(now.getTime() - activity.ts.getTime())} ago
         </span>
