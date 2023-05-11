@@ -7,7 +7,6 @@ import {
 } from '../utils/constants'
 import { Community } from '../utils/schemas/v1/community'
 import { Grant } from '../utils/schemas/v1/grant'
-import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import TextButton from './basic/text-button'
 import GrantCurrentPhase from './grant-current-phase'
@@ -37,17 +36,11 @@ export default function GrantInfo(props: {
         duration={props.grant?.duration}
       />
       <DetailList title="Grant package">
-        <Article small className="pt-2">
-          <ul>
-            {props.grant?.funding?.map((funding, index) => (
-              <li key={index}>
-                {funding[0]}&nbsp;
-                <span className="text-gray-400">✕</span>&nbsp;
-                {funding[1]}
-              </li>
-            ))}
-          </ul>
-        </Article>
+        <p className="my-2 text-sm font-medium text-gray-600">
+          {props.grant?.funding[0]?.[0] || '...'}&nbsp;
+          <span className="text-gray-400">✕</span>&nbsp;
+          {props.grant?.funding[0]?.[1] || '...'}
+        </p>
       </DetailList>
       <DetailList title="Information">
         <DetailItem title="Community" className="truncate whitespace-nowrap">
