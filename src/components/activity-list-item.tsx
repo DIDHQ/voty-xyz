@@ -60,7 +60,7 @@ export default function ActivityListItem(props: {
             >
               {activity.data.grant_name}
             </TextButton>{' '}
-            of grant{' '}
+            in grant{' '}
             <TextButton
               href={`/${activity.data.community_id}/grant/${permalink2Id(
                 activity.data.grant_permalink,
@@ -88,7 +88,7 @@ export default function ActivityListItem(props: {
             >
               {activity.data.grant_name}
             </TextButton>{' '}
-            of grant{' '}
+            in grant{' '}
             <TextButton
               href={`/${activity.data.community_id}/grant/${permalink2Id(
                 activity.data.grant_permalink,
@@ -154,7 +154,7 @@ export default function ActivityListItem(props: {
             >
               {activity.data.group_name}
             </TextButton>{' '}
-            of group{' '}
+            in group{' '}
             <TextButton
               href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
               underline
@@ -180,7 +180,7 @@ export default function ActivityListItem(props: {
             >
               {activity.data.group_name}
             </TextButton>{' '}
-            of group{' '}
+            in group{' '}
             <TextButton
               href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
               underline
