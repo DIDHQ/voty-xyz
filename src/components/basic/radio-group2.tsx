@@ -45,7 +45,6 @@ export default function RadioGroup2(props: {
                     'mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border',
                     disabled ? 'cursor-not-allowed' : 'cursor-pointer',
                   )}
-                  aria-hidden="true"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-white" />
                 </span>

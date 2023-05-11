@@ -19,6 +19,7 @@ import {
   getSnapshotTimestamp,
   getPermalinkSnapshot,
 } from '../../utils/snapshot'
+import { Activity } from '../../utils/schemas/activity'
 
 const schema = proved(authorized(grantSchema))
 
@@ -218,6 +219,22 @@ export const grantRouter = router({
           data: { grants: { increment: 1 } },
         }),
         database.storage.create({ data: { permalink, data: input } }),
+        database.activity.create({
+          data: {
+            communityId: community.id,
+            actor: input.authorship.author,
+            type: 'create_grant',
+            data: {
+              type: 'create_grant',
+              community_id: community.id,
+              community_permalink: input.community,
+              community_name: community.name,
+              grant_permalink: permalink,
+              grant_name: input.name,
+            } satisfies Activity,
+            ts,
+          },
+        }),
       ])
 
       return permalink

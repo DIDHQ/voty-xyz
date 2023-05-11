@@ -12,6 +12,7 @@ import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGroup from '../../utils/verifiers/verify-group'
+import { Activity } from '../../utils/schemas/activity'
 
 const schema = proved(authorized(groupSchema))
 
@@ -121,6 +122,9 @@ export const groupRouter = router({
 
       const permalink = await uploadToArweave(input)
       const ts = new Date()
+      const group = await database.group.findUnique({
+        where: { id_communityId: { id: input.id, communityId: community.id } },
+      })
 
       await database.$transaction([
         database.group.upsert({
@@ -141,6 +145,23 @@ export const groupRouter = router({
           },
         }),
         database.storage.create({ data: { permalink, data: input } }),
+        database.activity.create({
+          data: {
+            communityId: community.id,
+            actor: input.authorship.author,
+            type: group ? 'update_group' : 'create_group',
+            data: {
+              type: group ? 'update_group' : 'create_group',
+              community_id: community.id,
+              community_permalink: input.community,
+              community_name: community.name,
+              group_id: input.id,
+              group_permalink: permalink,
+              group_name: input.name,
+            } satisfies Activity,
+            ts,
+          },
+        }),
       ])
 
       return permalink
@@ -151,14 +172,42 @@ export const groupRouter = router({
     await verifyAuthorship(input.authorship, input.proof)
     const { community } = await verifyGroup(input)
 
-    await database.group.delete({
-      where: {
-        id_communityId: {
-          communityId: community.id,
-          id: input.id,
-        },
-      },
+    const group = await database.group.findUnique({
+      where: { id_communityId: { id: input.id, communityId: community.id } },
     })
+    if (!group) {
+      return
+    }
+
+    const ts = new Date()
+
+    await database.$transaction([
+      database.group.delete({
+        where: {
+          id_communityId: {
+            communityId: community.id,
+            id: input.id,
+          },
+        },
+      }),
+      database.activity.create({
+        data: {
+          communityId: community.id,
+          actor: input.authorship.author,
+          type: 'delete_group',
+          data: {
+            type: 'delete_group',
+            community_id: community.id,
+            community_permalink: input.community,
+            community_name: community.name,
+            group_id: input.id,
+            group_permalink: group.permalink,
+            group_name: input.name,
+          } satisfies Activity,
+          ts,
+        },
+      }),
+    ])
   }),
 })
 

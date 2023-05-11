@@ -11,6 +11,7 @@ import { proved } from '../../utils/schemas/basic/proof'
 import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
+import { Activity } from '../../utils/schemas/activity'
 
 const schema = proved(authorized(communitySchema))
 
@@ -124,6 +125,9 @@ export const communityRouter = router({
 
       const permalink = await uploadToArweave(input)
       const ts = new Date()
+      const community = await database.community.findUnique({
+        where: { id: input.id },
+      })
 
       await database.$transaction([
         database.community.upsert({
@@ -132,6 +136,20 @@ export const communityRouter = router({
           update: { permalink, ts },
         }),
         database.storage.create({ data: { permalink, data: input } }),
+        database.activity.create({
+          data: {
+            communityId: input.id,
+            actor: input.authorship.author,
+            type: community ? 'update_community' : 'create_community',
+            data: {
+              type: community ? 'update_community' : 'create_community',
+              community_id: input.id,
+              community_permalink: permalink,
+              community_name: input.name,
+            } satisfies Activity,
+            ts,
+          },
+        }),
       ])
 
       return permalink

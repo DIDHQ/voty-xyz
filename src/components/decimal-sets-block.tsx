@@ -26,10 +26,7 @@ export default function DecimalSetsBlock(props: {
   return (
     <>
       {fields.length ? (
-        <ul
-          role="list"
-          className="mb-4 divide-y divide-gray-200 overflow-hidden rounded-md border border-gray-200"
-        >
+        <ul className="mb-4 divide-y divide-gray-200 overflow-hidden rounded-md border border-gray-200">
           {fields.map((operand, index) => (
             <DecimalUnitBlock
               key={operand.id}

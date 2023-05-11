@@ -89,6 +89,7 @@ export default function PreviewBar() {
     if (isCommunity(document)) {
       const signed = await signDocument(document)
       await mutateCommunity(signed)
+      await sleep(5000)
       await Promise.all([
         utils.community.getById.prefetch({ id: signed.id }),
         utils.groupProposal.list.prefetch({
@@ -96,7 +97,6 @@ export default function PreviewBar() {
           phase: undefined,
         }),
       ])
-      await sleep(5000)
       setPreviewCommunity(undefined)
       router.push(`/${signed.id}`)
       return 'community'
@@ -104,13 +104,13 @@ export default function PreviewBar() {
     if (isGrant(document)) {
       const signed = await signDocument(document)
       const permalink = await mutateGrant(signed)
+      await sleep(5000)
       await Promise.all([
         utils.grant.listByCommunityId.prefetch({
           communityId: signed.authorship.author,
           phase: undefined,
         }),
       ])
-      await sleep(5000)
       setPreviewGrant(undefined)
       router.push(
         `/${signed.authorship.author}/grant/${permalink2Id(permalink)}`,
@@ -120,11 +120,11 @@ export default function PreviewBar() {
     if (isGrantProposal(document)) {
       const signed = await signDocument(document)
       const permalink = await mutateGrantProposal(signed)
+      await sleep(5000)
       await Promise.all([
         utils.grantProposal.getByPermalink.prefetch({ permalink }),
         utils.grant.getByPermalink.prefetch({ permalink: signed.grant }),
       ])
-      await sleep(5000)
       setPreviewGrantProposal(undefined)
       router.push(
         preview.to.replace(
@@ -137,6 +137,7 @@ export default function PreviewBar() {
     if (isGroup(document)) {
       const signed = await signDocument(document)
       await mutateGroup(signed)
+      await sleep(5000)
       await Promise.all([
         utils.group.getById.prefetch({
           communityId: signed.authorship.author,
@@ -151,7 +152,6 @@ export default function PreviewBar() {
           phase: undefined,
         }),
       ])
-      await sleep(5000)
       setPreviewGroup(undefined)
       router.push(`/${signed.authorship.author}/group/${signed.id}`)
       return 'workgroup'
@@ -159,11 +159,11 @@ export default function PreviewBar() {
     if (isGroupProposal(document)) {
       const signed = await signDocument(document)
       const permalink = await mutateGroupProposal(signed)
+      await sleep(5000)
       await Promise.all([
         utils.groupProposal.getByPermalink.prefetch({ permalink }),
         utils.group.getByPermalink.prefetch({ permalink: signed.group }),
       ])
-      await sleep(5000)
       setPreviewGroupProposal(undefined)
       router.push(
         preview.to.replace(

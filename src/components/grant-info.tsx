@@ -41,8 +41,8 @@ export default function GrantInfo(props: {
           <p className="py-2 text-sm font-medium text-gray-600">
             {props.grant?.funding[0] ? (
               <>
-                {props.grant.funding[0][0]}&nbsp;
-                <span className="text-gray-400">✕</span>&nbsp;
+                {props.grant.funding[0][0]}{' '}
+                <span className="text-gray-400">✕</span>{' '}
                 {props.grant.funding[0][1]}
               </>
             ) : (
@@ -97,17 +97,16 @@ export default function GrantInfo(props: {
         <Article small className="-ml-2">
           <ul>
             <li>
-              Any member can submit a proposal to get grant package during
-              the&nbsp;
+              Any member can submit a proposal to get grant package during the{' '}
               <span className="text-indigo-600">proposing</span> phase.
             </li>
             <li>
-              Any member will vote on the best proposals during the&nbsp;
+              Any member will vote on the best proposals during the{' '}
               <span className="text-lime-600">voting</span> phase.
             </li>
             <li>
               The top <b>{props.grant?.funding[0][1]}</b> proposal
-              {props.grant?.funding[0][1] === 1 ? '' : 's'} will get&nbsp;
+              {props.grant?.funding[0][1] === 1 ? '' : 's'} will get{' '}
               <b>{props.grant?.funding[0][0]}</b> each at the end.
             </li>
           </ul>

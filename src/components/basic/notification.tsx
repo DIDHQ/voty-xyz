@@ -45,15 +45,9 @@ export default function Notification(props: {
                 <div className="flex items-start">
                   <div className="shrink-0">
                     {props.type === 'error' ? (
-                      <ExclamationTriangleIcon
-                        className="h-6 w-6 text-red-400"
-                        aria-hidden="true"
-                      />
+                      <ExclamationTriangleIcon className="h-6 w-6 text-red-400" />
                     ) : props.type === 'success' ? (
-                      <CheckCircleIcon
-                        className="h-6 w-6 text-green-400"
-                        aria-hidden="true"
-                      />
+                      <CheckCircleIcon className="h-6 w-6 text-green-400" />
                     ) : null}
                   </div>
                   <div className="ml-3 w-0 flex-1 pt-0.5">
@@ -72,7 +66,7 @@ export default function Notification(props: {
                         setShow(false)
                       }}
                     >
-                      <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+                      <XMarkIcon className="h-5 w-5" />
                     </button>
                   </div>
                 </div>

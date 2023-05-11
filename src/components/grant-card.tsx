@@ -64,8 +64,7 @@ export default function GrantCard(props: {
         <div className="w-0 flex-1 px-4 py-2">
           <p className="text-gray-400">Grant package</p>
           <p className="truncate">
-            {props.grant.funding[0][0]}&nbsp;
-            <span className="text-gray-400">✕</span>&nbsp;
+            {props.grant.funding[0][0]} <span className="text-gray-400">✕</span>{' '}
             {props.grant.funding[0][1]}
           </p>
         </div>
@@ -83,7 +82,7 @@ export default function GrantCard(props: {
               <p className="text-gray-400">Proposing starts</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                in&nbsp;
+                in{' '}
                 {formatDurationMs(
                   props.grant.tsAnnouncing.getTime() - now.getTime(),
                 )}
@@ -94,7 +93,7 @@ export default function GrantCard(props: {
               <p className="text-gray-400">Proposing ends</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                in&nbsp;
+                in{' '}
                 {formatDurationMs(
                   props.grant.tsProposing.getTime() - now.getTime(),
                 )}
@@ -105,7 +104,7 @@ export default function GrantCard(props: {
               <p className="text-gray-400">Voting ends</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                in&nbsp;
+                in{' '}
                 {formatDurationMs(
                   props.grant.tsVoting.getTime() - now.getTime(),
                 )}
@@ -118,8 +117,8 @@ export default function GrantCard(props: {
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 {formatDurationMs(
                   props.grant.tsVoting.getTime() - now.getTime(),
-                )}
-                &nbsp;ago
+                )}{' '}
+                ago
               </p>
             </>
           ) : null}

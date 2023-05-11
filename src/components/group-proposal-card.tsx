@@ -71,7 +71,7 @@ export default function GroupProposalCard(props: {
               <p className="text-gray-400">Voting starts</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                in&nbsp;
+                in{' '}
                 {formatDurationMs(
                   props.groupProposal.tsAnnouncing.getTime() - now.getTime(),
                 )}
@@ -83,7 +83,7 @@ export default function GroupProposalCard(props: {
               <p className="text-gray-400">Voting ends</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                in&nbsp;
+                in{' '}
                 {formatDurationMs(
                   props.groupProposal.tsVoting.getTime() - now.getTime(),
                 )}
@@ -97,8 +97,8 @@ export default function GroupProposalCard(props: {
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 {formatDurationMs(
                   props.groupProposal.tsVoting.getTime() - now.getTime(),
-                )}
-                &nbsp;ago
+                )}{' '}
+                ago
               </p>
             </>
           ) : null}

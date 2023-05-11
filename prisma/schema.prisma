@@ -141,3 +141,16 @@ model Subscription {
 
   @@id([communityId, subscriber])
 }
+
+model Activity {
+  communityId String
+  type        String
+  actor       String
+
+  data Json
+
+  ts DateTime
+
+  @@id([ts, actor])
+  @@index([communityId, ts, type])
+}

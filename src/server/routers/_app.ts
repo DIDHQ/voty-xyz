@@ -1,4 +1,5 @@
 import { router } from '../trpc'
+import { activityRouter } from './activity'
 import { communityRouter } from './community'
 import { grantRouter } from './grant'
 import { grantProposalRouter } from './grant-proposal'
@@ -11,6 +12,7 @@ import { groupProposalVoteChoiceRouter } from './group-proposal-vote-choice'
 import { subscriptionRouter } from './subscription'
 
 export const appRouter = router({
+  activity: activityRouter,
   community: communityRouter,
   grant: grantRouter,
   grantProposal: grantProposalRouter,

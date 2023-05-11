@@ -64,10 +64,7 @@ export default function DidCombobox(props: {
           className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm"
         />
         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r px-2 focus:outline-none">
-          <ChevronUpDownIcon
-            className="h-5 w-5 text-gray-400"
-            aria-hidden="true"
-          />
+          <ChevronUpDownIcon className="h-5 w-5 text-gray-400" />
         </Combobox.Button>
         <Combobox.Options
           ref={parentRef}
@@ -140,7 +137,6 @@ export function DidOption(props: {
           'inline-block h-2 w-2 shrink-0 rounded-full',
           props.disabled ? 'bg-gray-200' : 'bg-primary-400',
         )}
-        aria-hidden="true"
       />
       <span
         className={clsx(

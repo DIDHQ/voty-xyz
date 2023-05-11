@@ -1,9 +1,9 @@
 import {
   GlobeAltIcon,
   BriefcaseIcon,
-  DocumentTextIcon,
   TrophyIcon,
   QuestionMarkCircleIcon,
+  BoltIcon,
 } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
@@ -54,9 +54,9 @@ export default function CommunityInfo(props: { className?: string }) {
   const navigation = useMemo(
     () => [
       {
-        name: 'Proposals',
+        name: 'Activities',
         href: `/${query.community_id}`,
-        icon: DocumentTextIcon,
+        icon: BoltIcon,
         current: router.pathname === '/[community_id]',
       },
       {
@@ -248,12 +248,7 @@ function LinkListItem(props: {
     () => (
       <>
         {emoji ? (
-          <span
-            className="mr-2 w-5 shrink-0 text-center text-lg"
-            aria-hidden="true"
-          >
-            {emoji}
-          </span>
+          <span className="mr-2 w-5 shrink-0 text-center text-lg">{emoji}</span>
         ) : props.icon ? (
           <props.icon
             className={clsx(
@@ -262,7 +257,6 @@ function LinkListItem(props: {
                 : 'text-gray-300 group-hover:text-gray-400',
               'mr-2 h-5 w-5 shrink-0',
             )}
-            aria-hidden="true"
           />
         ) : null}
         <span className="truncate">
