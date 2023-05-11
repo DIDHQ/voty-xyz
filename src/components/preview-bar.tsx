@@ -112,7 +112,9 @@ export default function PreviewBar() {
       ])
       await sleep(5000)
       setPreviewGrant(undefined)
-      router.push(`/${signed.authorship.author}/grant/${permalink}`)
+      router.push(
+        `/${signed.authorship.author}/grant/${permalink2Id(permalink)}`,
+      )
       return 'grant'
     }
     if (isGrantProposal(document)) {
