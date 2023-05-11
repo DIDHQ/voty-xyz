@@ -24,7 +24,7 @@ export default function GrantCurrentPhase(props: {
       <div className={clsx('flex flex-col space-y-2 py-2 font-medium')}>
         {!status ? (
           <>
-            <span className="text-sm">...</span>
+            <span className="text-sm text-gray-600">...</span>
             <span className="text-sm text-gray-600">...</span>
           </>
         ) : phase === GrantPhase.CONFIRMING ? (
