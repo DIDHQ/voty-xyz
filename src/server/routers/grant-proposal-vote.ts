@@ -15,6 +15,7 @@ import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGrant from '../../utils/verifiers/verify-grant'
+import { Activity } from '../../utils/schemas/activity'
 
 const schema = proved(authorized(grantProposalVoteSchema))
 
@@ -158,6 +159,25 @@ export const grantProposalVoteRouter = router({
             },
           }),
         ),
+        database.activity.create({
+          data: {
+            communityId: community.id,
+            actor: input.authorship.author,
+            type: 'create_grant_proposal_vote',
+            data: {
+              type: 'create_grant_proposal_vote',
+              community_id: community.id,
+              community_permalink: grant.community,
+              community_name: community.name,
+              grant_permalink: grantProposal.grant,
+              grant_name: grant.name,
+              grant_proposal_permalink: input.grant_proposal,
+              grant_proposal_title: grantProposal.title,
+              grant_proposal_vote_permalink: permalink,
+            } satisfies Activity,
+            ts,
+          },
+        }),
       ])
 
       return permalink

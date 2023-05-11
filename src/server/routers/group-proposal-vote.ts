@@ -15,6 +15,7 @@ import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGroup from '../../utils/verifiers/verify-group'
+import { Activity } from '../../utils/schemas/activity'
 
 const schema = proved(authorized(groupProposalVoteSchema))
 
@@ -109,7 +110,7 @@ export const groupProposalVoteRouter = router({
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
-      const { group } = await verifyGroupProposalVote(input)
+      const { group, groupProposal } = await verifyGroupProposalVote(input)
       const { community } = await verifyGroup(group)
 
       const permalink = await uploadToArweave(input)
@@ -159,6 +160,26 @@ export const groupProposalVoteRouter = router({
             },
           }),
         ),
+        database.activity.create({
+          data: {
+            communityId: community.id,
+            actor: input.authorship.author,
+            type: 'create_group_proposal_vote',
+            data: {
+              type: 'create_group_proposal_vote',
+              community_id: community.id,
+              community_permalink: group.community,
+              community_name: community.name,
+              group_id: group.id,
+              group_permalink: groupProposal.group,
+              group_name: group.name,
+              group_proposal_permalink: input.group_proposal,
+              group_proposal_title: groupProposal.title,
+              group_proposal_vote_permalink: permalink,
+            } satisfies Activity,
+            ts,
+          },
+        }),
       ])
 
       return permalink
