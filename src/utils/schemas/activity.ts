@@ -4,7 +4,7 @@ export const activitySchema = z.discriminatedUnion('type', [
   z.object({
     type: z.union([
       z.literal('create_community'),
-      z.literal('modify_community'),
+      z.literal('update_community'),
     ]),
     community_id: z.string(),
     community_permalink: z.string(),
@@ -31,8 +31,8 @@ export const activitySchema = z.discriminatedUnion('type', [
   z.object({
     type: z.union([
       z.literal('create_group'),
-      z.literal('modify_group'),
-      z.literal('archive_group'),
+      z.literal('update_group'),
+      z.literal('delete_group'),
     ]),
     community_id: z.string(),
     community_permalink: z.string(),

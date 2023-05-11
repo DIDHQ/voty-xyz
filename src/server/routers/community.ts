@@ -140,9 +140,9 @@ export const communityRouter = router({
           data: {
             communityId: input.id,
             actor: input.authorship.author,
-            type: community ? 'modify_community' : 'create_community',
+            type: community ? 'update_community' : 'create_community',
             data: {
-              type: community ? 'modify_community' : 'create_community',
+              type: community ? 'update_community' : 'create_community',
               community_id: input.id,
               community_permalink: permalink,
               community_name: input.name,

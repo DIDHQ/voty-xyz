@@ -149,9 +149,9 @@ export const groupRouter = router({
           data: {
             communityId: community.id,
             actor: input.authorship.author,
-            type: group ? 'modify_group' : 'create_group',
+            type: group ? 'update_group' : 'create_group',
             data: {
-              type: group ? 'modify_group' : 'create_group',
+              type: group ? 'update_group' : 'create_group',
               community_id: community.id,
               community_permalink: input.community,
               community_name: community.name,
@@ -194,9 +194,9 @@ export const groupRouter = router({
         data: {
           communityId: community.id,
           actor: input.authorship.author,
-          type: 'archive_group',
+          type: 'delete_group',
           data: {
-            type: 'archive_group',
+            type: 'delete_group',
             community_id: community.id,
             community_permalink: input.community,
             community_name: community.name,
