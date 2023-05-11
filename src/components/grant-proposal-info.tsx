@@ -41,8 +41,8 @@ export default function GrantProposalInfo(props: {
         <p className="py-2 text-sm font-medium text-gray-600">
           {props.grant?.funding[0] ? (
             <>
-              {props.grant.funding[0][0]}&nbsp;
-              <span className="text-gray-400">✕</span>&nbsp;
+              {props.grant.funding[0][0]}{' '}
+              <span className="text-gray-400">✕</span>{' '}
               {props.grant.funding[0][1]}
             </>
           ) : (

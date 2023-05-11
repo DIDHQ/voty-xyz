@@ -139,7 +139,7 @@ export default function CreateCommunityPage() {
                       </div>
                     </div>
                     <span className="mb-1 block text-sm font-medium text-gray-400">
-                      or&nbsp;
+                      or{' '}
                       <TextButton
                         secondary
                         href={
@@ -179,7 +179,7 @@ export default function CreateCommunityPage() {
                 We are dedicated to achieving a DID-based governance future.
                 <br />
                 Learn more about how Voty works and the thoughts behind
-                DID-based governance&nbsp;
+                DID-based governance{' '}
                 <TextButton href="/about" secondary>
                   here
                 </TextButton>

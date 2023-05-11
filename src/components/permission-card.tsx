@@ -42,7 +42,7 @@ export default function PermissionCard(props: {
                   'All .bit accounts'
                 ) : (
                   <>
-                    All SubDIDs of&nbsp;
+                    All SubDIDs of{' '}
                     <Tag primary={didSet.has(operand.arguments[0])}>
                       {operand.arguments[0]}
                     </Tag>

@@ -152,8 +152,7 @@ export default function GrantProposalPage() {
             <div className="float-right flex items-center">
               {currentIndex >= 0 ? (
                 <p className="mr-4 text-sm text-gray-600">
-                  {currentIndex + 1}&nbsp;of&nbsp;
-                  {grantProposals.length}
+                  {currentIndex + 1} of {grantProposals.length}
                 </p>
               ) : null}
               <span className="isolate inline-flex rounded-md">
