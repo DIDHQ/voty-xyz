@@ -10,6 +10,7 @@ export function formatDuration(seconds: number) {
     .duration(seconds, 'seconds')
     .humanize()
     .replace(/^a /, '1 ')
+    .replace(/^an /, '1 ')
     .replace(/^1 few /, 'a few ')
 }
 
@@ -18,6 +19,7 @@ export function formatDurationMs(ms: number) {
     .duration(ms, 'milliseconds')
     .humanize()
     .replace(/^a /, '1 ')
+    .replace(/^an /, '1 ')
     .replace(/^1 few /, 'a few ')
 }
 
