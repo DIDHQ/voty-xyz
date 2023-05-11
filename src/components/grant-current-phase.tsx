@@ -6,15 +6,17 @@ import { GrantPhase, getGrantPhase } from '../utils/phase'
 import { Grant } from '../utils/schemas/v1/grant'
 import { format2Time, formatTime } from '../utils/time'
 import { DetailList } from './basic/detail'
+import useNow from '../hooks/use-now'
 
 export default function GrantCurrentPhase(props: {
   grantPermalink?: string
   duration?: Grant['duration']
 }) {
   const { data: status } = useStatus(props.grantPermalink)
+  const now = useNow()
   const phase = useMemo(
-    () => getGrantPhase(new Date(), status?.timestamp, props.duration),
-    [props.duration, status?.timestamp],
+    () => getGrantPhase(now, status?.timestamp, props.duration),
+    [now, props.duration, status?.timestamp],
   )
 
   return (

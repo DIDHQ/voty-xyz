@@ -29,6 +29,7 @@ import GrantProposalVoteForm from '../../../../../components/grant-proposal-vote
 import Tooltip from '../../../../../components/basic/tooltip'
 import { GrantPhase, getGrantPhase } from '../../../../../utils/phase'
 import useStatus from '../../../../../hooks/use-status'
+import useNow from '../../../../../hooks/use-now'
 
 export default function GrantProposalPage() {
   const query =
@@ -119,9 +120,10 @@ export default function GrantProposalPage() {
     [grantProposal?.permalink, grantProposals],
   )
   const { data: status } = useStatus(query.grant_permalink)
+  const now = useNow()
   const phase = useMemo(
-    () => getGrantPhase(new Date(), status?.timestamp, grant?.duration),
-    [grant?.duration, status?.timestamp],
+    () => getGrantPhase(now, status?.timestamp, grant?.duration),
+    [grant?.duration, now, status?.timestamp],
   )
   const funding = useMemo(
     () =>

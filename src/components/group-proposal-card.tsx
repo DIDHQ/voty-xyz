@@ -7,6 +7,7 @@ import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/basic/authorship'
 import { GroupProposal } from '../utils/schemas/v1/group-proposal'
 import { formatDurationMs } from '../utils/time'
+import useNow from '../hooks/use-now'
 
 export default function GroupProposalCard(props: {
   groupProposal: Authorized<GroupProposal> & {
@@ -19,13 +20,13 @@ export default function GroupProposalCard(props: {
     tsVoting: Date | null
   }
 }) {
-  const now = useMemo(() => Date.now(), [])
+  const now = useNow()
   const phase = useMemo(
     () =>
       props.groupProposal.tsAnnouncing && props.groupProposal.tsVoting
-        ? now < props.groupProposal.tsAnnouncing.getTime()
+        ? now.getTime() < props.groupProposal.tsAnnouncing.getTime()
           ? GroupProposalPhase.ANNOUNCING
-          : now < props.groupProposal.tsVoting.getTime()
+          : now.getTime() < props.groupProposal.tsVoting.getTime()
           ? GroupProposalPhase.VOTING
           : GroupProposalPhase.ENDED
         : GroupProposalPhase.CONFIRMING,
@@ -72,7 +73,7 @@ export default function GroupProposalCard(props: {
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
                 {formatDurationMs(
-                  props.groupProposal.tsAnnouncing.getTime() - now,
+                  props.groupProposal.tsAnnouncing.getTime() - now.getTime(),
                 )}
               </p>
             </>
@@ -83,7 +84,9 @@ export default function GroupProposalCard(props: {
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
-                {formatDurationMs(props.groupProposal.tsVoting.getTime() - now)}
+                {formatDurationMs(
+                  props.groupProposal.tsVoting.getTime() - now.getTime(),
+                )}
               </p>
             </>
           ) : phase === GroupProposalPhase.ENDED &&
@@ -92,7 +95,9 @@ export default function GroupProposalCard(props: {
               <p className="text-gray-400">Voting ended</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                {formatDurationMs(props.groupProposal.tsVoting.getTime() - now)}
+                {formatDurationMs(
+                  props.groupProposal.tsVoting.getTime() - now.getTime(),
+                )}
                 &nbsp;ago
               </p>
             </>

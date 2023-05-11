@@ -6,15 +6,17 @@ import { Group } from '../utils/schemas/v1/group'
 import { format2Time, formatTime } from '../utils/time'
 import { DetailList } from './basic/detail'
 import { GroupProposalPhase, getGroupProposalPhase } from '../utils/phase'
+import useNow from '../hooks/use-now'
 
 export default function GroupProposalCurrentPhase(props: {
   groupProposalPermalink?: string
   duration?: Group['duration']
 }) {
   const { data: status } = useStatus(props.groupProposalPermalink)
+  const now = useNow()
   const phase = useMemo(
-    () => getGroupProposalPhase(new Date(), status?.timestamp, props.duration),
-    [props.duration, status?.timestamp],
+    () => getGroupProposalPhase(now, status?.timestamp, props.duration),
+    [now, props.duration, status?.timestamp],
   )
 
   return (

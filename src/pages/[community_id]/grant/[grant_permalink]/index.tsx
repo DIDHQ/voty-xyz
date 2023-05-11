@@ -17,6 +17,7 @@ import GrantProposalCard from '../../../../components/grant-proposal-card'
 import GrantProposalCreateButton from '../../../../components/grant-proposal-create-button'
 import { GrantPhase, getGrantPhase } from '../../../../utils/phase'
 import useStatus from '../../../../hooks/use-status'
+import useNow from '../../../../hooks/use-now'
 
 export default function GrantPage() {
   const query = useRouterQuery<['community_id', 'grant_permalink']>()
@@ -59,9 +60,10 @@ export default function GrantPage() {
     [community?.name, grant?.name],
   )
   const { data: status } = useStatus(grant?.permalink)
+  const now = useNow()
   const phase = useMemo(
-    () => getGrantPhase(new Date(), status?.timestamp, grant?.duration),
-    [grant?.duration, status?.timestamp],
+    () => getGrantPhase(now, status?.timestamp, grant?.duration),
+    [grant?.duration, now, status?.timestamp],
   )
 
   return (

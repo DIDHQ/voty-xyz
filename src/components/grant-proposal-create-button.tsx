@@ -9,12 +9,13 @@ import Tooltip from './basic/tooltip'
 import { permalink2Id } from '../utils/permalink'
 import { GrantPhase, getGrantPhase } from '../utils/phase'
 import { formatDurationMs } from '../utils/time'
+import useNow from '../hooks/use-now'
 
 export default function GrantProposalCreateButton(props: {
   communityId?: string
   grant?: Grant & { permalink: string }
 }) {
-  const now = useMemo(() => new Date(), [])
+  const now = useNow()
   const { data: status } = useStatus(props.grant?.permalink)
   const phase = useMemo(
     () => getGrantPhase(now, status?.timestamp, props.grant?.duration),
