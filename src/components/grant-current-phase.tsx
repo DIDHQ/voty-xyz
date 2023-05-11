@@ -21,33 +21,22 @@ export default function GrantCurrentPhase(props: {
 
   return (
     <DetailList title="Grant current phase">
-      <div
-        className={clsx(
-          'flex flex-col space-y-1 border-l-4 py-2 pl-4 font-medium',
-          {
-            [GrantPhase.CONFIRMING]: 'border-amber-500',
-            [GrantPhase.ANNOUNCING]: 'border-sky-500',
-            [GrantPhase.PROPOSING]: 'border-indigo-500',
-            [GrantPhase.VOTING]: 'border-lime-500',
-            [GrantPhase.ENDED]: 'border-gray-500',
-          }[phase],
-        )}
-      >
+      <div className={clsx('flex flex-col space-y-2 py-2 font-medium')}>
         {!status ? (
           <>
-            <span className="text-sm text-gray-400">...</span>
+            <span className="text-sm">...</span>
             <span className="text-sm text-gray-600">...</span>
           </>
         ) : phase === GrantPhase.CONFIRMING ? (
           <>
-            <span className="text-sm text-gray-400">
+            <span className="text-sm text-amber-600">
               Awaiting blockchain confirmation
             </span>
             <span className="text-sm text-gray-600">in about 5 minutes</span>
           </>
         ) : phase === GrantPhase.ANNOUNCING ? (
           <>
-            <span className="text-sm text-gray-400">
+            <span className="text-sm text-sky-600">
               Announcing for publicity
             </span>
             <span className="text-sm text-gray-600">
@@ -62,7 +51,7 @@ export default function GrantCurrentPhase(props: {
           </>
         ) : phase === GrantPhase.PROPOSING ? (
           <>
-            <span className="text-sm text-gray-400">Proposing</span>
+            <span className="text-sm text-indigo-600">Proposing</span>
             <span className="text-sm text-gray-600">
               {status?.timestamp && props.duration
                 ? format2Time(
@@ -77,7 +66,7 @@ export default function GrantCurrentPhase(props: {
           </>
         ) : phase === GrantPhase.VOTING ? (
           <>
-            <span className="text-sm text-gray-400">Voting</span>
+            <span className="text-sm text-lime-600">Voting</span>
             <span className="text-sm text-gray-600">
               {status?.timestamp && props.duration
                 ? format2Time(
@@ -95,7 +84,7 @@ export default function GrantCurrentPhase(props: {
           </>
         ) : phase === GrantPhase.ENDED ? (
           <>
-            <span className="text-sm text-gray-400">Ended</span>
+            <span className="text-sm text-gray-600">Ended</span>
             <span className="text-sm text-gray-600">
               {status?.timestamp && props.duration
                 ? `at ${formatTime(
