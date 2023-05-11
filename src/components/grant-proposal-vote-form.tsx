@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { BoltIcon } from '@heroicons/react/20/solid'
 import type { Decimal } from 'decimal.js'
 import pMap from 'p-map'
 import clsx from 'clsx'
@@ -198,7 +197,6 @@ export default function GrantProposalVoteForm(props: {
                 <Button
                   large
                   primary
-                  icon={BoltIcon}
                   onClick={onSubmit(
                     (value) => handleSubmit.mutate(value),
                     console.error,
@@ -229,7 +227,6 @@ export default function GrantProposalVoteForm(props: {
                   <Button
                     large
                     primary
-                    icon={BoltIcon}
                     onClick={onSubmit(
                       (value) => handleSubmit.mutate(value),
                       console.error,

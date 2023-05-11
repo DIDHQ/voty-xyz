@@ -2,7 +2,7 @@ import {
   UserGroupIcon,
   BriefcaseIcon,
   TrophyIcon,
-  BoltIcon,
+  TicketIcon,
   HandRaisedIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/react/20/solid'
@@ -46,11 +46,11 @@ export default function ActivityListItem(props: {
       }
       case 'create_grant': {
         return {
-          color: 'bg-indigo-100 text-indigo-500',
+          color: 'bg-amber-100 text-amber-500',
           icon: TrophyIcon,
           children: (
             <>
-              created grant{' '}
+              created topic grant{' '}
               <TextButton
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -67,7 +67,7 @@ export default function ActivityListItem(props: {
       }
       case 'create_grant_proposal': {
         return {
-          color: 'bg-green-100 text-green-500',
+          color: 'bg-sky-100 text-sky-500',
           icon: HandRaisedIcon,
           children: (
             <>
@@ -83,7 +83,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.grant_name}
               </TextButton>{' '}
-              in grant{' '}
+              in topic grant{' '}
               <TextButton
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -100,8 +100,8 @@ export default function ActivityListItem(props: {
       }
       case 'create_grant_proposal_vote': {
         return {
-          color: 'bg-yellow-100 text-yellow-500',
-          icon: BoltIcon,
+          color: 'bg-lime-100 text-lime-500',
+          icon: TicketIcon,
           children: (
             <>
               voted for proposal{' '}
@@ -116,7 +116,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.grant_name}
               </TextButton>{' '}
-              in grant{' '}
+              in topic grant{' '}
               <TextButton
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -133,11 +133,11 @@ export default function ActivityListItem(props: {
       }
       case 'create_group': {
         return {
-          color: 'bg-blue-100 text-blue-500',
+          color: 'bg-indigo-100 text-indigo-500',
           icon: BriefcaseIcon,
           children: (
             <>
-              created group{' '}
+              created workgroup{' '}
               <TextButton
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline
@@ -152,11 +152,11 @@ export default function ActivityListItem(props: {
       }
       case 'update_group': {
         return {
-          color: 'bg-blue-100 text-blue-500',
+          color: 'bg-indigo-100 text-indigo-500',
           icon: BriefcaseIcon,
           children: (
             <>
-              updated group{' '}
+              updated workgroup{' '}
               <TextButton
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline
@@ -175,7 +175,7 @@ export default function ActivityListItem(props: {
           icon: BriefcaseIcon,
           children: (
             <>
-              archived group{' '}
+              archived workgroup{' '}
               <span className="font-medium text-gray-900">
                 {activity.data.group_name}
               </span>
@@ -185,7 +185,7 @@ export default function ActivityListItem(props: {
       }
       case 'create_group_proposal': {
         return {
-          color: 'bg-green-100 text-green-500',
+          color: 'bg-sky-100 text-sky-500',
           icon: HandRaisedIcon,
           children: (
             <>
@@ -201,7 +201,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.group_name}
               </TextButton>{' '}
-              in group{' '}
+              in workgroup{' '}
               <TextButton
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline
@@ -216,11 +216,17 @@ export default function ActivityListItem(props: {
       }
       case 'create_group_proposal_vote': {
         return {
-          color: 'bg-yellow-100 text-yellow-500',
-          icon: BoltIcon,
+          color: 'bg-lime-100 text-lime-500',
+          icon: TicketIcon,
           children: (
             <>
-              voted in proposal{' '}
+              voted for{' '}
+              <span className="font-medium text-gray-900">
+                {activity.data.group_proposal_vote_choices.length === 1
+                  ? activity.data.group_proposal_vote_choices[0]
+                  : `${activity.data.group_proposal_vote_choices.length} choices`}
+              </span>{' '}
+              in proposal{' '}
               <TextButton
                 href={`/${activity.data.community_id}/group/${
                   activity.data.group_id
@@ -232,7 +238,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.group_name}
               </TextButton>{' '}
-              in group{' '}
+              of workgroup{' '}
               <TextButton
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline

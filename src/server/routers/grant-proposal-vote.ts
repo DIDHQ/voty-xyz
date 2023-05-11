@@ -104,7 +104,12 @@ export const grantProposalVoteRouter = router({
       )
     }),
   create: procedure
-    .input(schema)
+    .input(
+      schema.refine(
+        (vote) => vote.powers[Object.keys(vote.powers)[0]] === vote.total_power,
+        'Illegal vote',
+      ),
+    )
     .output(z.string())
     .mutation(async ({ input }) => {
       await verifySnapshot(input.authorship)
