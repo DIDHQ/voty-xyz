@@ -30,6 +30,7 @@ import { formatDurationMs } from '../utils/time'
 import { previewPermalink } from '../utils/constants'
 import PermissionCard from './permission-card'
 import sleep from '../utils/sleep'
+import useNow from '../hooks/use-now'
 
 export default function GrantProposalVoteForm(props: {
   grant: Grant
@@ -92,8 +93,8 @@ export default function GrantProposalVoteForm(props: {
       setValue('total_power', totalPower.toString())
     }
   }, [resetField, setValue, totalPower])
-  const { data: status } = useStatus(props.grantProposal.permalink)
-  const now = useMemo(() => new Date(), [])
+  const { data: status } = useStatus(props.grantProposal.grant)
+  const now = useNow()
   const phase = useMemo(
     () => getGrantPhase(now, status?.timestamp, props.grant.duration),
     [now, props.grant.duration, status?.timestamp],

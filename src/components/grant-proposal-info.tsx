@@ -8,7 +8,6 @@ import {
 import { Community } from '../utils/schemas/v1/community'
 import { Grant } from '../utils/schemas/v1/grant'
 import { GrantProposal } from '../utils/schemas/v1/grant-proposal'
-import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import TextButton from './basic/text-button'
 import GrantCurrentPhase from './grant-current-phase'
@@ -39,17 +38,17 @@ export default function GrantProposalInfo(props: {
         duration={props.grant?.duration}
       />
       <DetailList title="Grant package">
-        <Article small className="pt-2">
-          <ul>
-            {props.grant?.funding?.map((funding, index) => (
-              <li key={index}>
-                {funding[0]}&nbsp;
-                <span className="text-gray-400">✕</span>&nbsp;
-                {funding[1]}
-              </li>
-            ))}
-          </ul>
-        </Article>
+        <p className="py-2 text-sm font-medium text-gray-600">
+          {props.grant?.funding[0] ? (
+            <>
+              {props.grant.funding[0][0]}&nbsp;
+              <span className="text-gray-400">✕</span>&nbsp;
+              {props.grant.funding[0][1]}
+            </>
+          ) : (
+            '...'
+          )}
+        </p>
       </DetailList>
       <DetailList title="Information">
         <DetailItem title="Community" className="truncate whitespace-nowrap">
@@ -65,7 +64,7 @@ export default function GrantProposalInfo(props: {
             '...'
           )}
         </DetailItem>
-        <DetailItem title="Grant" className="truncate whitespace-nowrap">
+        <DetailItem title="Topic grant" className="truncate whitespace-nowrap">
           {props.community && props.grant && props.grantProposal ? (
             <TextButton
               underline

@@ -29,6 +29,7 @@ import GrantProposalVoteForm from '../../../../../components/grant-proposal-vote
 import Tooltip from '../../../../../components/basic/tooltip'
 import { GrantPhase, getGrantPhase } from '../../../../../utils/phase'
 import useStatus from '../../../../../hooks/use-status'
+import useNow from '../../../../../hooks/use-now'
 
 export default function GrantProposalPage() {
   const query =
@@ -119,9 +120,10 @@ export default function GrantProposalPage() {
     [grantProposal?.permalink, grantProposals],
   )
   const { data: status } = useStatus(query.grant_permalink)
+  const now = useNow()
   const phase = useMemo(
-    () => getGrantPhase(new Date(), status?.timestamp, grant?.duration),
-    [grant?.duration, status?.timestamp],
+    () => getGrantPhase(now, status?.timestamp, grant?.duration),
+    [grant?.duration, now, status?.timestamp],
   )
   const funding = useMemo(
     () =>
@@ -145,12 +147,15 @@ export default function GrantProposalPage() {
           {query.community_id &&
           query.grant_permalink &&
           grantProposals &&
-          currentIndex !== undefined ? (
+          currentIndex !== undefined &&
+          !previewGrantProposal ? (
             <div className="float-right flex items-center">
-              <p className="mr-4 text-sm text-gray-600">
-                {currentIndex >= 0 ? currentIndex + 1 : '?'} of{' '}
-                {grantProposals.length}
-              </p>
+              {currentIndex >= 0 ? (
+                <p className="mr-4 text-sm text-gray-600">
+                  {currentIndex + 1}&nbsp;of&nbsp;
+                  {grantProposals.length}
+                </p>
+              ) : null}
               <span className="isolate inline-flex rounded-md">
                 {currentIndex > 0 ? (
                   <Link
@@ -164,7 +169,6 @@ export default function GrantProposalPage() {
                       type="button"
                       className="relative inline-flex items-center rounded-l-md bg-white p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
                     >
-                      <span className="sr-only">Previous</span>
                       <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
                     </button>
                   </Link>
@@ -173,7 +177,6 @@ export default function GrantProposalPage() {
                     type="button"
                     className="relative inline-flex cursor-not-allowed items-center rounded-l-md bg-gray-100 p-2 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10"
                   >
-                    <span className="sr-only">Previous</span>
                     <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
                   </button>
                 )}
@@ -189,7 +192,6 @@ export default function GrantProposalPage() {
                       type="button"
                       className="relative -ml-px inline-flex items-center rounded-r-md bg-white p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
                     >
-                      <span className="sr-only">Next</span>
                       <ChevronRightIcon
                         className="h-5 w-5"
                         aria-hidden="true"
@@ -201,7 +203,6 @@ export default function GrantProposalPage() {
                     type="button"
                     className="relative -ml-px inline-flex cursor-not-allowed items-center rounded-r-md bg-gray-100 p-2 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10"
                   >
-                    <span className="sr-only">Next</span>
                     <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
                   </button>
                 )}

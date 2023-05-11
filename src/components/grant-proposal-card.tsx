@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { useMemo } from 'react'
 
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/basic/authorship'
@@ -7,6 +6,7 @@ import { GrantProposal } from '../utils/schemas/v1/grant-proposal'
 import { formatDurationMs } from '../utils/time'
 import { TrophyIcon } from '@heroicons/react/20/solid'
 import Tooltip from './basic/tooltip'
+import useNow from '../hooks/use-now'
 
 export default function GrantProposalCard(props: {
   communityId: string
@@ -17,7 +17,7 @@ export default function GrantProposalCard(props: {
   }
   funding?: string
 }) {
-  const now = useMemo(() => Date.now(), [])
+  const now = useNow()
 
   return (
     <Link
@@ -54,7 +54,7 @@ export default function GrantProposalCard(props: {
         <div className="w-0 flex-1 px-4 py-2">
           <p className="truncate text-gray-400">Proposed at</p>
           <p className="truncate">
-            {formatDurationMs(props.grantProposal.ts.getTime() - now)}
+            {formatDurationMs(props.grantProposal.ts.getTime() - now.getTime())}
             &nbsp;ago
           </p>
         </div>

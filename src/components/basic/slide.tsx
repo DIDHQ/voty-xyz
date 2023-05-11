@@ -47,7 +47,6 @@ export default function Slide(props: {
                               className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2"
                               onClick={() => setOpen(false)}
                             >
-                              <span className="sr-only">Close panel</span>
                               <XMarkIcon
                                 className="h-6 w-6"
                                 aria-hidden="true"

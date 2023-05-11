@@ -100,7 +100,7 @@ export default function GrantForm(props: {
             <FormItem label="Grant topic" error={errors.name?.message}>
               <TextInput
                 {...register('name')}
-                placeholder="e.g. Hackathon"
+                placeholder="e.g. Hackathon Season 1"
                 error={!!errors.name?.message}
                 disabled={disabled}
               />
@@ -109,7 +109,7 @@ export default function GrantForm(props: {
           <GridItem6>
             <FormItem
               label="Introduction"
-              description="The purpose of this grant. Markdown is supported"
+              description="The purpose of this grant. Markdown is supported."
               error={errors?.introduction?.message}
             >
               <Textarea

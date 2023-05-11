@@ -32,6 +32,7 @@ import { formatDurationMs } from '../utils/time'
 import { previewPermalink } from '../utils/constants'
 import PermissionCard from './permission-card'
 import sleep from '../utils/sleep'
+import useNow from '../hooks/use-now'
 
 export default function GroupProposalVoteForm(props: {
   group: Group
@@ -105,7 +106,7 @@ export default function GroupProposalVoteForm(props: {
     }
   }, [resetField, setValue, totalPower])
   const { data: status } = useStatus(props.groupProposal.permalink)
-  const now = useMemo(() => new Date(), [])
+  const now = useNow()
   const phase = useMemo(
     () => getGroupProposalPhase(now, status?.timestamp, props.group.duration),
     [now, props.group.duration, status?.timestamp],

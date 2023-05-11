@@ -16,7 +16,7 @@ export default function GroupAbout(props: {
     <div className={clsx('space-y-6', props.className)}>
       <PermissionCard
         title="Proposers"
-        description="SubDIDs who can initiate proposals in this workgroup"
+        description="SubDIDs who can initiate proposals in this workgroup."
         value={props.group.permission.proposing}
       />
       <PermissionCard

@@ -7,6 +7,7 @@ import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/basic/authorship'
 import { Grant } from '../utils/schemas/v1/grant'
 import { formatDurationMs } from '../utils/time'
+import useNow from '../hooks/use-now'
 
 export default function GrantCard(props: {
   communityId: string
@@ -19,17 +20,17 @@ export default function GrantCard(props: {
     tsVoting: Date | null
   }
 }) {
-  const now = useMemo(() => Date.now(), [])
+  const now = useNow()
   const phase = useMemo(
     () =>
       props.grant.tsAnnouncing &&
       props.grant.tsProposing &&
       props.grant.tsVoting
-        ? now < props.grant.tsAnnouncing.getTime()
+        ? now.getTime() < props.grant.tsAnnouncing.getTime()
           ? GrantPhase.ANNOUNCING
-          : now < props.grant.tsProposing.getTime()
+          : now.getTime() < props.grant.tsProposing.getTime()
           ? GrantPhase.PROPOSING
-          : now < props.grant.tsVoting.getTime()
+          : now.getTime() < props.grant.tsVoting.getTime()
           ? GrantPhase.VOTING
           : GrantPhase.ENDED
         : GrantPhase.CONFIRMING,
@@ -83,7 +84,9 @@ export default function GrantCard(props: {
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
-                {formatDurationMs(props.grant.tsAnnouncing.getTime() - now)}
+                {formatDurationMs(
+                  props.grant.tsAnnouncing.getTime() - now.getTime(),
+                )}
               </p>
             </>
           ) : phase === GrantPhase.PROPOSING && props.grant.tsProposing ? (
@@ -92,7 +95,9 @@ export default function GrantCard(props: {
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
-                {formatDurationMs(props.grant.tsProposing.getTime() - now)}
+                {formatDurationMs(
+                  props.grant.tsProposing.getTime() - now.getTime(),
+                )}
               </p>
             </>
           ) : phase === GrantPhase.VOTING && props.grant.tsVoting ? (
@@ -101,7 +106,9 @@ export default function GrantCard(props: {
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
                 in&nbsp;
-                {formatDurationMs(props.grant.tsVoting.getTime() - now)}
+                {formatDurationMs(
+                  props.grant.tsVoting.getTime() - now.getTime(),
+                )}
               </p>
             </>
           ) : phase === GrantPhase.ENDED && props.grant.tsVoting ? (
@@ -109,7 +116,9 @@ export default function GrantCard(props: {
               <p className="text-gray-400">Voting ended</p>
               <p>
                 <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                {formatDurationMs(props.grant.tsVoting.getTime() - now)}
+                {formatDurationMs(
+                  props.grant.tsVoting.getTime() - now.getTime(),
+                )}
                 &nbsp;ago
               </p>
             </>

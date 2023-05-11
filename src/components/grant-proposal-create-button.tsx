@@ -9,12 +9,13 @@ import Tooltip from './basic/tooltip'
 import { permalink2Id } from '../utils/permalink'
 import { GrantPhase, getGrantPhase } from '../utils/phase'
 import { formatDurationMs } from '../utils/time'
+import useNow from '../hooks/use-now'
 
 export default function GrantProposalCreateButton(props: {
   communityId?: string
   grant?: Grant & { permalink: string }
 }) {
-  const now = useMemo(() => new Date(), [])
+  const now = useNow()
   const { data: status } = useStatus(props.grant?.permalink)
   const phase = useMemo(
     () => getGrantPhase(now, status?.timestamp, props.grant?.duration),
@@ -24,7 +25,7 @@ export default function GrantProposalCreateButton(props: {
   return phase === GrantPhase.CONFIRMING ? (
     <Tooltip
       place="top"
-      text="Waiting for grant changes to be confirmed (in about 5 minutes)"
+      text="Waiting for grant to be confirmed (in about 5 minutes)"
     >
       <Button primary disabled icon={PlusIcon}>
         Proposal

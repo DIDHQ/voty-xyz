@@ -179,7 +179,7 @@ export default function CreateCommunityPage() {
                 We are dedicated to achieving a DID-based governance future.
                 <br />
                 Learn more about how Voty works and the thoughts behind
-                DID-based governance{' '}
+                DID-based governance&nbsp;
                 <TextButton href="/about" secondary>
                   here
                 </TextButton>

@@ -17,6 +17,7 @@ import GrantProposalCard from '../../../../components/grant-proposal-card'
 import GrantProposalCreateButton from '../../../../components/grant-proposal-create-button'
 import { GrantPhase, getGrantPhase } from '../../../../utils/phase'
 import useStatus from '../../../../hooks/use-status'
+import useNow from '../../../../hooks/use-now'
 
 export default function GrantPage() {
   const query = useRouterQuery<['community_id', 'grant_permalink']>()
@@ -59,9 +60,10 @@ export default function GrantPage() {
     [community?.name, grant?.name],
   )
   const { data: status } = useStatus(grant?.permalink)
+  const now = useNow()
   const phase = useMemo(
-    () => getGrantPhase(new Date(), status?.timestamp, grant?.duration),
-    [grant?.duration, status?.timestamp],
+    () => getGrantPhase(now, status?.timestamp, grant?.duration),
+    [grant?.duration, now, status?.timestamp],
   )
 
   return (
@@ -91,21 +93,23 @@ export default function GrantPage() {
             grant={grant}
             className="mb-6 block sm:hidden"
           />
-          <div className="my-6 flex items-center justify-between border-t border-gray-200 pt-6">
-            {grant?.proposals ? (
-              <h2 className="text-2xl font-bold">
-                {grant.proposals === 1
-                  ? '1 Proposal'
-                  : `${grant.proposals} Proposals`}
-              </h2>
-            ) : (
-              <h2 />
-            )}
-            <GrantProposalCreateButton
-              communityId={query.community_id}
-              grant={grant}
-            />
-          </div>
+          {previewGrant ? null : (
+            <div className="my-6 flex items-center justify-between border-t border-gray-200 pt-6">
+              {grant?.proposals ? (
+                <h2 className="text-2xl font-bold">
+                  {grant.proposals === 1
+                    ? '1 Proposal'
+                    : `${grant.proposals} Proposals`}
+                </h2>
+              ) : (
+                <h2 />
+              )}
+              <GrantProposalCreateButton
+                communityId={query.community_id}
+                grant={grant}
+              />
+            </div>
+          )}
           {grantProposals?.length ? (
             <ul role="list" className="mt-5 space-y-5">
               {grantProposals.map((grantProposal, index) => (

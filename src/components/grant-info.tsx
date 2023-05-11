@@ -7,13 +7,13 @@ import {
 } from '../utils/constants'
 import { Community } from '../utils/schemas/v1/community'
 import { Grant } from '../utils/schemas/v1/grant'
-import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import TextButton from './basic/text-button'
 import GrantCurrentPhase from './grant-current-phase'
 import { PreviewPermalink } from '../utils/types'
 import { permalink2Explorer } from '../utils/permalink'
 import { formatNumber } from '../utils/number'
+import Article from './basic/article'
 
 export default function GrantInfo(props: {
   community?: Community
@@ -28,68 +28,91 @@ export default function GrantInfo(props: {
   return (
     <div
       className={clsx(
-        'w-full shrink-0 space-y-6 rounded-md border border-gray-200 p-6 sm:mt-8 sm:w-80',
+        'w-full shrink-0 space-y-6 sm:mt-8 sm:w-80',
         props.className,
       )}
     >
-      <GrantCurrentPhase
-        grantPermalink={props.grant?.permalink}
-        duration={props.grant?.duration}
-      />
-      <DetailList title="Grant package">
-        <Article small className="pt-2">
-          <ul>
-            {props.grant?.funding?.map((funding, index) => (
-              <li key={index}>
-                {funding[0]}&nbsp;
+      <div className="w-full space-y-6 rounded-md border border-gray-200 p-6">
+        <GrantCurrentPhase
+          grantPermalink={props.grant?.permalink}
+          duration={props.grant?.duration}
+        />
+        <DetailList title="Grant package">
+          <p className="py-2 text-sm font-medium text-gray-600">
+            {props.grant?.funding[0] ? (
+              <>
+                {props.grant.funding[0][0]}&nbsp;
                 <span className="text-gray-400">✕</span>&nbsp;
-                {funding[1]}
-              </li>
-            ))}
-          </ul>
-        </Article>
-      </DetailList>
-      <DetailList title="Information">
-        <DetailItem title="Community" className="truncate whitespace-nowrap">
-          {props.community ? (
-            <TextButton
-              underline
-              disabled={disabled}
-              href={`/${props.community.id}`}
-            >
-              {props.community.name}
-            </TextButton>
-          ) : (
-            '...'
-          )}
-        </DetailItem>
-      </DetailList>
-      {props.grant?.snapshots ? (
-        <DetailList title="On-chain verification">
-          <DetailItem title="Snapshot">
-            <TextButton
-              underline
-              disabled={disabled}
-              href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
-                props.grant.snapshots[commonCoinTypes.CKB]
-              }`}
-            >
-              {formatNumber(
-                parseInt(props.grant.snapshots[commonCoinTypes.CKB], 10),
-              )}
-            </TextButton>
-          </DetailItem>
-          <DetailItem title="Arweave TX">
-            <TextButton
-              underline
-              disabled={disabled}
-              href={permalink2Explorer(props.grant?.permalink)}
-            >
-              {props.grant?.permalink.substring(40) || '...'}
-            </TextButton>
+                {props.grant.funding[0][1]}
+              </>
+            ) : (
+              '...'
+            )}
+          </p>
+        </DetailList>
+        <DetailList title="Information">
+          <DetailItem title="Community" className="truncate whitespace-nowrap">
+            {props.community ? (
+              <TextButton
+                underline
+                disabled={disabled}
+                href={`/${props.community.id}`}
+              >
+                {props.community.name}
+              </TextButton>
+            ) : (
+              '...'
+            )}
           </DetailItem>
         </DetailList>
-      ) : null}
+        {props.grant?.snapshots ? (
+          <DetailList title="On-chain verification">
+            <DetailItem title="Snapshot">
+              <TextButton
+                underline
+                disabled={disabled}
+                href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
+                  props.grant.snapshots[commonCoinTypes.CKB]
+                }`}
+              >
+                {formatNumber(
+                  parseInt(props.grant.snapshots[commonCoinTypes.CKB], 10),
+                )}
+              </TextButton>
+            </DetailItem>
+            <DetailItem title="Arweave TX">
+              <TextButton
+                underline
+                disabled={disabled}
+                href={permalink2Explorer(props.grant?.permalink)}
+              >
+                {props.grant?.permalink.substring(40) || '...'}
+              </TextButton>
+            </DetailItem>
+          </DetailList>
+        ) : null}
+      </div>
+      <div className="w-full rounded-md border border-gray-200 p-6">
+        <h3 className="font-semibold text-gray-900">How topic grant works:</h3>
+        <Article small className="-ml-2">
+          <ul>
+            <li>
+              Any member can submit a proposal to get grant package during
+              the&nbsp;
+              <span className="text-indigo-600">proposing</span> phase.
+            </li>
+            <li>
+              Any member will vote on the best proposals during the&nbsp;
+              <span className="text-lime-600">voting</span> phase.
+            </li>
+            <li>
+              The top <b>{props.grant?.funding[0][1]}</b> proposal
+              {props.grant?.funding[0][1] === 1 ? '' : 's'} will get&nbsp;
+              <b>{props.grant?.funding[0][0]}</b> each at the end.
+            </li>
+          </ul>
+        </Article>
+      </div>
     </div>
   )
 }

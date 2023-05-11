@@ -7,7 +7,10 @@ export const groupSchema = z.object({
   id: z.string().min(1, 'Required'),
   community: z.string().min(1),
   name: z.string().min(1, 'Required'),
-  introduction: z.string().max(256, 'Maximum 256 characters').optional(),
+  introduction: z
+    .string()
+    .min(1, 'Required')
+    .max(256, 'Maximum 256 characters'),
   permission: z.object({
     proposing: booleanSetsSchema,
     voting: decimalSetsSchema,

@@ -153,7 +153,7 @@ function DecimalUnitBlock(props: {
           <GridItem6>
             <FormItem
               label="Voting power"
-              description="Each SubDID in this voter group has an equal voting power"
+              description="Each SubDID in this voter group has an equal voting power."
               error={
                 errors.permission?.[props.name]?.operands?.[props.index]
                   ?.arguments?.[2]?.message

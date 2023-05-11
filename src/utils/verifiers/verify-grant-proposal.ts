@@ -8,6 +8,7 @@ import { GrantProposal } from '../schemas/v1/grant-proposal'
 import { database } from '../database'
 import { commonCoinTypes } from '../constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
+import { GrantPhase, getGrantPhase } from '../phase'
 
 const schema = proved(authorized(grantSchema))
 
@@ -26,6 +27,16 @@ export default async function verifyGrantProposal(
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Grant not found' })
   }
   const grant = schema.parse(storage.data)
+
+  if (
+    getGrantPhase(new Date(), timestamp, grant.duration) !==
+    GrantPhase.PROPOSING
+  ) {
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'Not in proposing phase',
+    })
+  }
 
   if (
     !(await checkBoolean(
