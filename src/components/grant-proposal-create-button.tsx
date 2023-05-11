@@ -25,7 +25,7 @@ export default function GrantProposalCreateButton(props: {
   return phase === GrantPhase.CONFIRMING ? (
     <Tooltip
       place="top"
-      text="Waiting for grant changes to be confirmed (in about 5 minutes)"
+      text="Waiting for grant to be confirmed (in about 5 minutes)"
     >
       <Button primary disabled icon={PlusIcon}>
         Proposal
