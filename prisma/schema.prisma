@@ -143,7 +143,6 @@ model Subscription {
 }
 
 model Activity {
-  permalink   String
   communityId String
   type        String
   actor       String
@@ -152,6 +151,6 @@ model Activity {
 
   ts DateTime
 
-  @@id([permalink])
+  @@id([ts, actor])
   @@index([communityId, ts, type])
 }

@@ -1,5 +1,5 @@
-import { Activity } from "../utils/schemas/activity";
+import { Activity } from '../utils/schemas/activity'
 
-export default function ActivityListItem(props: {activity:Activity}) {
+export default function ActivityListItem(props: { activity: Activity }) {
   return null
 }
