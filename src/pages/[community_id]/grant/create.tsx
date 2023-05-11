@@ -18,6 +18,7 @@ export default function CreateGrantPage() {
                 operation: 'or',
                 operands: [
                   {
+                    name: 'Any SubDID',
                     function: 'prefixes_dot_suffix_exact_match',
                     arguments: [query.community_id, []],
                   },
@@ -27,6 +28,7 @@ export default function CreateGrantPage() {
                 operation: 'max',
                 operands: [
                   {
+                    name: 'Any SubDID',
                     function: 'prefixes_dot_suffix_fixed_power',
                     arguments: [query.community_id, [], '1'],
                   },
