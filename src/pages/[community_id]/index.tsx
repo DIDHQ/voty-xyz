@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 import Link from 'next/link'
 import { PlusIcon } from '@heroicons/react/20/solid'
@@ -10,13 +10,13 @@ import LoadingBar from '../../components/basic/loading-bar'
 import Button from '../../components/basic/button'
 import EmptyState from '../../components/empty-state'
 import useIsManager from '../../hooks/use-is-manager'
-import Select from '../../components/basic/select'
-import { GroupProposalPhase } from '../../utils/phase'
+// import Select from '../../components/basic/select'
+// import { GroupProposalPhase } from '../../utils/phase'
 import ActivityListItem from '../../components/activity-list-item'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['community_id']>()
-  const [phase, setPhase] = useState<GroupProposalPhase | 'All'>('All')
+  // const [phase, setPhase] = useState<GroupProposalPhase | 'All'>('All')
   const { data: community, isLoading } = trpc.community.getById.useQuery(
     { id: query.community_id },
     { enabled: !!query.community_id },
@@ -46,15 +46,15 @@ export default function CommunityIndexPage() {
     }
   }, [fetchNextPage, hasNextPage, inView])
   const isManager = useIsManager(query.community_id)
-  const options = useMemo(
-    () => [
-      'All',
-      GroupProposalPhase.ANNOUNCING,
-      GroupProposalPhase.VOTING,
-      GroupProposalPhase.ENDED,
-    ],
-    [],
-  )
+  // const options = useMemo(
+  //   () => [
+  //     'All',
+  //     GroupProposalPhase.ANNOUNCING,
+  //     GroupProposalPhase.VOTING,
+  //     GroupProposalPhase.ENDED,
+  //   ],
+  //   [],
+  // )
 
   return (
     <CommunityLayout>
@@ -63,11 +63,11 @@ export default function CommunityIndexPage() {
       />
       <div className="mt-6 flex items-center justify-between sm:mt-8">
         <h3 className="text-lg font-medium text-gray-900">Activities</h3>
-        <Select
+        {/* <Select
           options={options}
           value={phase}
           onChange={(p) => setPhase(p as GroupProposalPhase | 'All')}
-        />
+        /> */}
       </div>
       {groups?.length === 0 && isManager ? (
         <EmptyState
