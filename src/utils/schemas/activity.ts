@@ -16,9 +16,20 @@ export const activitySchema = z.discriminatedUnion('type', [
       z.literal('modify_group'),
       z.literal('archive_group'),
     ]),
+    community_id: z.string(),
+    community_permalink: z.string(),
+    community_name: z.string(),
     group_id: z.string(),
     group_permalink: z.string(),
     group_name: z.string(),
+  }),
+  z.object({
+    type: z.literal('create_grant'),
+    community_id: z.string(),
+    community_permalink: z.string(),
+    community_name: z.string(),
+    grant_permalink: z.string(),
+    grant_name: z.string(),
   }),
 ])
 

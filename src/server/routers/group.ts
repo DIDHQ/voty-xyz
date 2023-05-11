@@ -147,11 +147,14 @@ export const groupRouter = router({
         database.storage.create({ data: { permalink, data: input } }),
         database.activity.create({
           data: {
-            communityId: input.id,
+            communityId: community.id,
             actor: input.authorship.author,
             type: group ? 'modify_group' : 'create_group',
             data: {
               type: group ? 'modify_group' : 'create_group',
+              community_id: community.id,
+              community_permalink: input.community,
+              community_name: community.name,
               group_id: input.id,
               group_permalink: permalink,
               group_name: input.name,
@@ -189,11 +192,14 @@ export const groupRouter = router({
       }),
       database.activity.create({
         data: {
-          communityId: input.id,
+          communityId: community.id,
           actor: input.authorship.author,
           type: 'archive_group',
           data: {
             type: 'archive_group',
+            community_id: community.id,
+            community_permalink: input.community,
+            community_name: community.name,
             group_id: input.id,
             group_permalink: group.permalink,
             group_name: input.name,
