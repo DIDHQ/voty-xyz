@@ -111,7 +111,7 @@ export default function GrantPage() {
             </div>
           )}
           {grantProposals?.length ? (
-            <ul role="list" className="mt-5 space-y-5">
+            <ul className="mt-5 space-y-5">
               {grantProposals.map((grantProposal, index) => (
                 <li key={grantProposal.permalink}>
                   {query.community_id ? (

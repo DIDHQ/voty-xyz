@@ -85,7 +85,7 @@ export default function CommunityIndexPage() {
       ) : activities?.length === 0 ? (
         <EmptyState title="No activities" className="mt-24" />
       ) : (
-        <ul role="list" className="mt-5 space-y-5">
+        <ul className="mt-5 space-y-5">
           {activities?.map((activity) => (
             <li key={activity.ts + activity.actor}>
               <ActivityListItem activity={activity} />

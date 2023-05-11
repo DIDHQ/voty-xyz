@@ -71,7 +71,7 @@ export default function GrantsIndexPage() {
           className="mt-24"
         />
       ) : (
-        <ul role="list" className="mt-5 space-y-5">
+        <ul className="mt-5 space-y-5">
           {grants?.map((grant) => (
             <li key={grant.permalink}>
               {query.community_id ? (

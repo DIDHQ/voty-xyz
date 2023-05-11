@@ -37,17 +37,11 @@ export default function GroupAboutPage() {
         <GroupLayout>
           <div className="mt-6 flex items-center">
             {emoji ? (
-              <span
-                className="mr-3 w-8 shrink-0 text-center text-3xl text-gray-400"
-                aria-hidden="true"
-              >
+              <span className="mr-3 w-8 shrink-0 text-center text-3xl text-gray-400">
                 {emoji}
               </span>
             ) : (
-              <BriefcaseIcon
-                className="mr-3 h-8 w-8 shrink-0 text-gray-400"
-                aria-hidden="true"
-              />
+              <BriefcaseIcon className="mr-3 h-8 w-8 shrink-0 text-gray-400" />
             )}
             <h3 className="mr-4 w-0 flex-1 truncate text-2xl font-medium text-gray-900">
               {name || '...'}

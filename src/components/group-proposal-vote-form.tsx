@@ -183,7 +183,6 @@ export default function GroupProposalVoteForm(props: {
             render={({ field: { ref, value, onChange } }) => (
               <ul
                 ref={ref}
-                role="list"
                 className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
               >
                 {props.groupProposal.choices.map((choice) => (

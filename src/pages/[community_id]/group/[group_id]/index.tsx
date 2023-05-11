@@ -69,7 +69,7 @@ export default function GroupIndexPage() {
         {groupProposals?.length === 0 ? (
           <EmptyState title="No proposals" className="mt-24" />
         ) : (
-          <ul role="list" className="mt-5 space-y-5">
+          <ul className="mt-5 space-y-5">
             {groupProposals?.map((groupProposal) => (
               <li key={groupProposal.permalink}>
                 <GroupProposalCard groupProposal={groupProposal} />

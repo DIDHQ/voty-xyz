@@ -19,7 +19,7 @@ function ErrorPage() {
             className="text-base font-medium text-primary-600 hover:text-primary-500"
           >
             Go back home
-            <span aria-hidden="true"> &rarr;</span>
+            <span> &rarr;</span>
           </Link>
         </div>
       </div>

@@ -14,7 +14,7 @@ export default function ActivityListItem(props: {
   return (
     <div className="flex items-center space-x-2">
       <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 ring-8 ring-white">
-        <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />
+        <UserCircleIcon className="h-5 w-5 text-gray-500" />
       </div>
       <div className="min-w-0 flex-1 py-1.5 text-sm text-gray-500">
         <span className="font-medium text-gray-900">{activity.actor}</span>

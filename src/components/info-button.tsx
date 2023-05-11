@@ -32,10 +32,7 @@ export default function InfoButton() {
                 'group flex items-center px-4 py-2 text-sm',
               )}
             >
-              <InformationCircleIcon
-                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                aria-hidden="true"
-              />
+              <InformationCircleIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
               About Voty
             </Link>
           )}
@@ -51,10 +48,7 @@ export default function InfoButton() {
                 'group flex items-center px-4 py-2 text-sm',
               )}
             >
-              <DotbitIcon
-                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                aria-hidden="true"
-              />
+              <DotbitIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
               .bit
             </a>
           )}
@@ -68,10 +62,7 @@ export default function InfoButton() {
                 'group flex items-center px-4 py-2 text-sm',
               )}
             >
-              <GitHubIcon
-                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                aria-hidden="true"
-              />
+              <GitHubIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
               GitHub
             </a>
           )}
@@ -85,10 +76,7 @@ export default function InfoButton() {
                 'group flex items-center px-4 py-2 text-sm',
               )}
             >
-              <TwitterIcon
-                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                aria-hidden="true"
-              />
+              <TwitterIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
               Twitter
             </a>
           )}
@@ -102,10 +90,7 @@ export default function InfoButton() {
                 'group flex items-center px-4 py-2 text-sm',
               )}
             >
-              <DiscordIcon
-                className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                aria-hidden="true"
-              />
+              <DiscordIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
               Discord
             </a>
           )}

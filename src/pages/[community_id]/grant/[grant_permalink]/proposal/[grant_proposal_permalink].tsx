@@ -169,7 +169,7 @@ export default function GrantProposalPage() {
                       type="button"
                       className="relative inline-flex items-center rounded-l-md bg-white p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
                     >
-                      <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                      <ChevronLeftIcon className="h-5 w-5" />
                     </button>
                   </Link>
                 ) : (
@@ -177,7 +177,7 @@ export default function GrantProposalPage() {
                     type="button"
                     className="relative inline-flex cursor-not-allowed items-center rounded-l-md bg-gray-100 p-2 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10"
                   >
-                    <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                    <ChevronLeftIcon className="h-5 w-5" />
                   </button>
                 )}
                 {currentIndex < grantProposals.length - 1 ? (
@@ -192,10 +192,7 @@ export default function GrantProposalPage() {
                       type="button"
                       className="relative -ml-px inline-flex items-center rounded-r-md bg-white p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
                     >
-                      <ChevronRightIcon
-                        className="h-5 w-5"
-                        aria-hidden="true"
-                      />
+                      <ChevronRightIcon className="h-5 w-5" />
                     </button>
                   </Link>
                 ) : (
@@ -203,7 +200,7 @@ export default function GrantProposalPage() {
                     type="button"
                     className="relative -ml-px inline-flex cursor-not-allowed items-center rounded-r-md bg-gray-100 p-2 text-gray-400 ring-1 ring-inset ring-gray-300 focus:z-10"
                   >
-                    <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                    <ChevronRightIcon className="h-5 w-5" />
                   </button>
                 )}
               </span>
