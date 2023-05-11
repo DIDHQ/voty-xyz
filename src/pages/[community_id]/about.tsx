@@ -26,28 +26,19 @@ export default function CommunityAboutPage() {
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
       {community?.about ? (
-        <>
-          <h3 className="mt-6 text-lg font-medium text-gray-900 sm:mt-8">
-            Description
-          </h3>
-          <Article className="w-full pt-6">
-            <Markdown>{community?.about}</Markdown>
-          </Article>
-        </>
+        <Article className="mt-6 w-full sm:mt-8">
+          <h1>About</h1>
+          <Markdown>{community?.about}</Markdown>
+        </Article>
       ) : null}
-      {community?.how_to_join ? (
-        <>
-          <h3
-            id="how-to-join"
-            className="mt-6 text-lg font-medium text-gray-900 sm:mt-8"
-          >
-            How to join
-          </h3>
-          <Article className="w-full pt-6">
-            <Markdown>{community?.how_to_join}</Markdown>
-          </Article>
-        </>
-      ) : null}
+      <Article className="mt-6 w-full sm:mt-8">
+        <h1 id="how-to-join">How to join</h1>
+        <Markdown>
+          {
+            'Please contact our community manager via Website, Twitter or Discord'
+          }
+        </Markdown>
+      </Article>
       {isManager && !previewCommunity ? (
         <Link
           href={`/${query.community_id}/settings`}
