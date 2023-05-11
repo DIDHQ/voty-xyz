@@ -107,8 +107,7 @@ function DecimalUnitBlock(props: {
     <li className={props.open ? 'bg-gray-50' : undefined}>
       <div className="flex items-center justify-between px-6 py-4 text-sm">
         <span className="w-0 flex-1 truncate font-semibold">
-          {watch(`permission.${props.name}.operands.${props.index}.name`) ||
-            `Group ${props.index + 1}`}
+          {watch(`permission.${props.name}.operands.${props.index}.name`)}
         </span>
         <div className="ml-6 flex shrink-0 space-x-6">
           {props.open ? (
@@ -146,7 +145,7 @@ function DecimalUnitBlock(props: {
                   !!errors.permission?.[props.name]?.operands?.[props.index]
                     ?.name?.message
                 }
-                placeholder={`Group ${props.index + 1}`}
+                placeholder={`e.g. Core members`}
               />
             </FormItem>
           </GridItem6>

@@ -21,10 +21,8 @@ export default function PermissionCard(props: {
       <ul className="mt-4 space-y-4 divide-y border-t">
         {props.value.operands.map((operand, index) => (
           <li key={index} className="pt-4">
-            {props.value.operands.length === 1 ? null : (
-              <h4 className="mb-3 text-sm font-semibold">
-                {operand.name || `Group ${index + 1}`}
-              </h4>
+            {props.value.operands.length === 1 || !operand.name ? null : (
+              <h4 className="mb-3 text-sm font-semibold">{operand.name}</h4>
             )}
             {operand.arguments[1].length ? (
               <div className="-m-1">
