@@ -21,6 +21,7 @@ import {
 import { GroupProposalPhase } from '../../utils/phase'
 import { groupSchema } from '../../utils/schemas/v1/group'
 import verifyGroup from '../../utils/verifiers/verify-group'
+import { Activity } from '../../utils/schemas/activity'
 
 const schema = proved(authorized(groupProposalSchema))
 
@@ -217,6 +218,25 @@ export const groupProposalRouter = router({
           data: { proposals: { increment: 1 } },
         }),
         database.storage.create({ data: { permalink, data: input } }),
+        database.activity.create({
+          data: {
+            communityId: community.id,
+            actor: input.authorship.author,
+            type: 'create_group_proposal',
+            data: {
+              type: 'create_group_proposal',
+              community_id: community.id,
+              community_permalink: group.community,
+              community_name: community.name,
+              group_id: group.id,
+              group_permalink: input.group,
+              group_name: group.name,
+              group_proposal_permalink: permalink,
+              group_proposal_title: input.title,
+            } satisfies Activity,
+            ts,
+          },
+        }),
       ])
 
       return permalink
