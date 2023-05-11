@@ -46,7 +46,7 @@ export default function ActivityListItem(props: {
       }
       case 'create_grant': {
         return {
-          color: 'bg-indigo-100 text-indigo-500',
+          color: 'bg-amber-100 text-amber-500',
           icon: TrophyIcon,
           children: (
             <>
@@ -67,7 +67,7 @@ export default function ActivityListItem(props: {
       }
       case 'create_grant_proposal': {
         return {
-          color: 'bg-green-100 text-green-500',
+          color: 'bg-sky-100 text-sky-500',
           icon: HandRaisedIcon,
           children: (
             <>
@@ -100,7 +100,7 @@ export default function ActivityListItem(props: {
       }
       case 'create_grant_proposal_vote': {
         return {
-          color: 'bg-yellow-100 text-yellow-500',
+          color: 'bg-lime-100 text-lime-500',
           icon: BoltIcon,
           children: (
             <>
@@ -133,7 +133,7 @@ export default function ActivityListItem(props: {
       }
       case 'create_group': {
         return {
-          color: 'bg-blue-100 text-blue-500',
+          color: 'bg-indigo-100 text-indigo-500',
           icon: BriefcaseIcon,
           children: (
             <>
@@ -152,7 +152,7 @@ export default function ActivityListItem(props: {
       }
       case 'update_group': {
         return {
-          color: 'bg-blue-100 text-blue-500',
+          color: 'bg-indigo-100 text-indigo-500',
           icon: BriefcaseIcon,
           children: (
             <>
@@ -185,7 +185,7 @@ export default function ActivityListItem(props: {
       }
       case 'create_group_proposal': {
         return {
-          color: 'bg-green-100 text-green-500',
+          color: 'bg-sky-100 text-sky-500',
           icon: HandRaisedIcon,
           children: (
             <>
@@ -216,7 +216,7 @@ export default function ActivityListItem(props: {
       }
       case 'create_group_proposal_vote': {
         return {
-          color: 'bg-yellow-100 text-yellow-500',
+          color: 'bg-lime-100 text-lime-500',
           icon: BoltIcon,
           children: (
             <>
