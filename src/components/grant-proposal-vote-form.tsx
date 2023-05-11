@@ -93,7 +93,7 @@ export default function GrantProposalVoteForm(props: {
       setValue('total_power', totalPower.toString())
     }
   }, [resetField, setValue, totalPower])
-  const { data: status } = useStatus(props.grantProposal.permalink)
+  const { data: status } = useStatus(props.grantProposal.grant)
   const now = useNow()
   const phase = useMemo(
     () => getGrantPhase(now, status?.timestamp, props.grant.duration),
