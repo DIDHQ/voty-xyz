@@ -2,7 +2,7 @@ import {
   UserGroupIcon,
   BriefcaseIcon,
   TrophyIcon,
-  BoltIcon,
+  TicketIcon,
   HandRaisedIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/react/20/solid'
@@ -101,7 +101,7 @@ export default function ActivityListItem(props: {
       case 'create_grant_proposal_vote': {
         return {
           color: 'bg-lime-100 text-lime-500',
-          icon: BoltIcon,
+          icon: TicketIcon,
           children: (
             <>
               voted for proposal{' '}
@@ -217,13 +217,15 @@ export default function ActivityListItem(props: {
       case 'create_group_proposal_vote': {
         return {
           color: 'bg-lime-100 text-lime-500',
-          icon: BoltIcon,
+          icon: TicketIcon,
           children: (
             <>
               voted for{' '}
-              {activity.data.group_proposal_vote_choices.length === 1
-                ? activity.data.group_proposal_vote_choices[0]
-                : `${activity.data.group_proposal_vote_choices.length} choices`}{' '}
+              <span className="font-medium text-gray-900">
+                {activity.data.group_proposal_vote_choices.length === 1
+                  ? activity.data.group_proposal_vote_choices[0]
+                  : `${activity.data.group_proposal_vote_choices.length} choices`}
+              </span>{' '}
               in proposal{' '}
               <TextButton
                 href={`/${activity.data.community_id}/group/${
@@ -236,7 +238,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.group_name}
               </TextButton>{' '}
-              in workgroup{' '}
+              of workgroup{' '}
               <TextButton
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline
