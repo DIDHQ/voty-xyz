@@ -1,9 +1,9 @@
 import {
   GlobeAltIcon,
   BriefcaseIcon,
-  DocumentTextIcon,
   TrophyIcon,
   QuestionMarkCircleIcon,
+  BoltIcon,
 } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
@@ -54,9 +54,9 @@ export default function CommunityInfo(props: { className?: string }) {
   const navigation = useMemo(
     () => [
       {
-        name: 'Proposals',
+        name: 'Activities',
         href: `/${query.community_id}`,
-        icon: DocumentTextIcon,
+        icon: BoltIcon,
         current: router.pathname === '/[community_id]',
       },
       {
