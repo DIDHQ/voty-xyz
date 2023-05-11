@@ -38,10 +38,16 @@ export default function GrantInfo(props: {
           duration={props.grant?.duration}
         />
         <DetailList title="Grant package">
-          <p className="my-2 text-sm font-medium text-gray-600">
-            {props.grant?.funding[0]?.[0] || '...'}&nbsp;
-            <span className="text-gray-400">✕</span>&nbsp;
-            {props.grant?.funding[0]?.[1] || '...'}
+          <p className="py-2 text-sm font-medium text-gray-600">
+            {props.grant?.funding[0] ? (
+              <>
+                {props.grant.funding[0][0]}&nbsp;
+                <span className="text-gray-400">✕</span>&nbsp;
+                {props.grant.funding[0][1]}
+              </>
+            ) : (
+              '...'
+            )}
           </p>
         </DetailList>
         <DetailList title="Information">
