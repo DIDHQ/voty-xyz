@@ -220,7 +220,11 @@ export default function ActivityListItem(props: {
           icon: BoltIcon,
           children: (
             <>
-              voted in proposal{' '}
+              voted for{' '}
+              {activity.data.group_proposal_vote_choices.length === 1
+                ? activity.data.group_proposal_vote_choices[0]
+                : `${activity.data.group_proposal_vote_choices.length} choices`}{' '}
+              in proposal{' '}
               <TextButton
                 href={`/${activity.data.community_id}/group/${
                   activity.data.group_id
