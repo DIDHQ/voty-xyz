@@ -122,7 +122,7 @@ export default function GrantProposalForm(props: {
       title={`New proposal for ${props.grant.name}`}
       className={props.className}
     >
-      <FormSection title="Proposer" description="Author of the proposal">
+      <FormSection title="Proposer" description="Author of the proposal.">
         <Grid6>
           <GridItem2>
             <FormItem>
@@ -146,7 +146,7 @@ export default function GrantProposalForm(props: {
                     props.grant ? (
                       <PermissionCard
                         title="Proposers"
-                        description="SubDIDs who can initiate proposals in this grant"
+                        description="SubDIDs who can initiate proposals in this grant."
                         value={props.grant.permission.proposing}
                       />
                     ) : null
@@ -159,7 +159,7 @@ export default function GrantProposalForm(props: {
       </FormSection>
       <FormSection
         title="Proposal"
-        description="Proposals that include a concise title and detailed content are more likely to capture member's attention"
+        description="Proposals that include a concise title and detailed content are more likely to capture member's attention."
       >
         <Grid6>
           <GridItem6>
@@ -174,7 +174,7 @@ export default function GrantProposalForm(props: {
           <GridItem6>
             <FormItem
               label="Content"
-              description="Markdown is supported"
+              description="Markdown is supported."
               error={errors?.content?.message}
             >
               <Textarea

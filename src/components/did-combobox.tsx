@@ -56,7 +56,7 @@ export default function DidCombobox(props: {
           placeholder={
             props.options
               ? disabled
-                ? 'No eligible DIDs'
+                ? 'No eligible DIDs.'
                 : undefined
               : 'Loading...'
           }

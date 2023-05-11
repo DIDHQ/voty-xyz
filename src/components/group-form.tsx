@@ -99,7 +99,7 @@ export default function GroupForm(props: {
             <GridItem6>
               <FormItem
                 label="Introduction"
-                description="The purpose of this workgroup"
+                description="The purpose of this workgroup."
                 error={errors?.introduction?.message}
               >
                 <TextInput
@@ -113,7 +113,7 @@ export default function GroupForm(props: {
         </FormSection>
         <FormSection
           title="Proposers"
-          description="SubDIDs who can initiate proposals in this workgroup"
+          description="SubDIDs who can initiate proposals in this workgroup."
         >
           <Grid6>
             <GridItem6>
@@ -197,7 +197,7 @@ export default function GroupForm(props: {
             <GridItem6>
               <FormItem
                 label="Criteria for approval"
-                description="Markdown is supported"
+                description="Markdown is supported."
                 error={errors?.terms_and_conditions?.message}
               >
                 <Textarea

@@ -98,7 +98,7 @@ export default function CommunityForm(props: {
             <FormItem label="Slogan" error={errors?.slogan?.message}>
               <TextInput
                 {...register('slogan')}
-                placeholder="e.g. Media and Social DAO onboarding 1 billion people to crypto"
+                placeholder="e.g. Media and Social DAO onboarding 1 billion people to crypto."
                 error={!!errors?.slogan?.message}
                 disabled={!isManager}
               />
@@ -107,7 +107,7 @@ export default function CommunityForm(props: {
           <GridItem6>
             <FormItem
               label="About"
-              description="Provide a detailed description of your community to leave a lasting impression on people. Markdown is supported"
+              description="Provide a detailed description of your community to leave a lasting impression on people. Markdown is supported."
               error={errors?.about?.message}
             >
               <Textarea
@@ -121,12 +121,12 @@ export default function CommunityForm(props: {
             <FormItem
               label="How to join"
               optional
-              description="Provide a guide on how to join this community for people"
+              description="Provide a guide on how to join this community for people."
               error={errors?.how_to_join?.message}
             >
               <Textarea
                 {...register('how_to_join')}
-                placeholder="e.g. Holding a SubDID is the only credential for being a community member"
+                placeholder="e.g. Holding a SubDID is the only credential for being a community member."
                 error={!!errors?.how_to_join?.message}
                 disabled={!isManager}
               />
