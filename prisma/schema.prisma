@@ -141,3 +141,17 @@ model Subscription {
 
   @@id([communityId, subscriber])
 }
+
+model Activity {
+  permalink   String
+  communityId String
+  type        String
+  actor       String
+
+  data Json
+
+  ts DateTime
+
+  @@id([permalink])
+  @@index([communityId, ts, type])
+}
