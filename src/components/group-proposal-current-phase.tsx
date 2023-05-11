@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import clsx from 'clsx'
 
 import useStatus from '../hooks/use-status'
 import { Group } from '../utils/schemas/v1/group'
@@ -21,35 +20,23 @@ export default function GroupProposalCurrentPhase(props: {
 
   return (
     <DetailList title="Proposal current phase">
-      <div
-        className={clsx(
-          'flex flex-col space-y-1 border-l-4 py-2 pl-4 font-medium',
-          {
-            [GroupProposalPhase.CONFIRMING]: 'border-amber-500',
-            [GroupProposalPhase.ANNOUNCING]: 'border-sky-500',
-            [GroupProposalPhase.VOTING]: 'border-lime-500',
-            [GroupProposalPhase.ENDED]: 'border-gray-500',
-          }[phase],
-        )}
-      >
+      <div className="flex flex-col space-y-2 py-2 text-sm font-medium">
         {!status ? (
           <>
-            <span className="text-sm text-gray-400">...</span>
-            <span className="text-sm text-gray-600">...</span>
+            <span className="text-gray-600">...</span>
+            <span className="text-gray-600">...</span>
           </>
         ) : phase === GroupProposalPhase.CONFIRMING ? (
           <>
-            <span className="text-sm text-gray-400">
+            <span className="text-amber-600">
               Awaiting blockchain confirmation
             </span>
-            <span className="text-sm text-gray-600">in about 5 minutes</span>
+            <span className="text-gray-600">in about 5 minutes</span>
           </>
         ) : phase === GroupProposalPhase.ANNOUNCING ? (
           <>
-            <span className="text-sm text-gray-400">
-              Announcing for publicity
-            </span>
-            <span className="text-sm text-gray-600">
+            <span className="text-sky-600">Announcing for publicity</span>
+            <span className="text-gray-600">
               {status?.timestamp && props.duration
                 ? format2Time(
                     status.timestamp.getTime(),
@@ -61,8 +48,8 @@ export default function GroupProposalCurrentPhase(props: {
           </>
         ) : phase === GroupProposalPhase.VOTING ? (
           <>
-            <span className="text-sm text-gray-400">Voting</span>
-            <span className="text-sm text-gray-600">
+            <span className="text-lime-600">Voting</span>
+            <span className="text-gray-600">
               {status?.timestamp && props.duration
                 ? format2Time(
                     status.timestamp.getTime(),
@@ -75,8 +62,8 @@ export default function GroupProposalCurrentPhase(props: {
           </>
         ) : phase === GroupProposalPhase.ENDED ? (
           <>
-            <span className="text-sm text-gray-400">Ended</span>
-            <span className="text-sm text-gray-600">
+            <span className="text-gray-600">Ended</span>
+            <span className="text-gray-600">
               {status?.timestamp && props.duration
                 ? `at ${formatTime(
                     status.timestamp.getTime() +
