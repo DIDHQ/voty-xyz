@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 
-import { getGroupProposalPhase, GroupProposalPhase } from '../phase'
+import { GrantPhase, getGrantPhase } from '../phase'
 import { calculateDecimal } from '../functions/decimal'
 import { authorized, Authorized } from '../schemas/basic/authorship'
 import { Grant } from '../schemas/v1/grant'
@@ -38,8 +38,7 @@ export default async function verifyGrantProposalVote(
   const { grant } = await verifyGrantProposal(grantProposal)
 
   if (
-    getGroupProposalPhase(new Date(), timestamp, grant.duration) !==
-    GroupProposalPhase.VOTING
+    getGrantPhase(new Date(), timestamp, grant.duration) !== GrantPhase.VOTING
   ) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
