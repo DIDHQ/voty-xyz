@@ -57,8 +57,7 @@ export default function MyDocument() {
         />
         <link rel="shortcut icon" href="/icons/favicon.ico" />
 
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:url" content={domain} />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={documentTitle} />
         <meta name="twitter:description" content={description} />
         <meta
