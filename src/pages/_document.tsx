@@ -63,7 +63,7 @@ export default function MyDocument() {
         <meta name="twitter:description" content={description} />
         <meta
           name="twitter:image"
-          content={`${domain}/icons/touch-icon-iphone.png`}
+          content={`${domain}/images/og.png`}
         />
         <meta name="twitter:creator" content="@voty_xyz" />
         <meta property="og:type" content="website" />
@@ -73,7 +73,7 @@ export default function MyDocument() {
         <meta property="og:url" content={domain} />
         <meta
           property="og:image"
-          content={`${domain}/icons/touch-icon-iphone.png`}
+          content={`${domain}/images/og.png`}
         />
       </Head>
       <body>
