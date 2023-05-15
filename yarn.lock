@@ -3821,10 +3821,10 @@ concat-map@0.0.1:
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==
 
-connectkit@1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/connectkit/-/connectkit-1.2.3.tgz#99afcfce6a9243e7ceb9b9d77cbb365209e2cb96"
-  integrity sha512-IZdfgbFMt0rPybJXmLSNDuvwFBF2Gh+9qjYxGN6EdWHPPKqXqdyOzrctQIHpr29JwqVT9jfsni2CNJPTSAjOsg==
+connectkit@1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/connectkit/-/connectkit-1.2.4.tgz#f5f6c84bb4065560a5e4671a0fbbdea3403a3e8e"
+  integrity sha512-8fVHOvBvdS3A+3NAiQ5C6TZQBv762qjTaA/RtioR8Sffj5qS0t1MfNeF6i6w4gWagqXSXofC0dLGn7l1YPu+zQ==
   dependencies:
     buffer "^6.0.3"
     detect-browser "^5.3.0"
@@ -6663,20 +6663,10 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.0.tgz#f67fa67c94da8f4d0cfff981aee4118064199b8f"
   integrity sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==
 
-qrcode@1.5.3:
+qrcode@1.5.3, qrcode@^1.5.0, qrcode@^1.5.1:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/qrcode/-/qrcode-1.5.3.tgz#03afa80912c0dccf12bc93f615a535aad1066170"
   integrity sha512-puyri6ApkEHYiVl4CFzo1tDkAZ+ATcnbJrJ6RiBM1Fhctdn/ix9MTE3hRph33omisEbC/2fcfemsseiKgBPKZg==
-  dependencies:
-    dijkstrajs "^1.0.1"
-    encode-utf8 "^1.0.3"
-    pngjs "^5.0.0"
-    yargs "^15.3.1"
-
-qrcode@^1.5.0, qrcode@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/qrcode/-/qrcode-1.5.1.tgz#0103f97317409f7bc91772ef30793a54cd59f0cb"
-  integrity sha512-nS8NJ1Z3md8uTjKtP+SGGhfqmTCs5flU/xR623oI0JX+Wepz9R8UrRVCTBTJm3qGw3rH6jJ6MUHjkDx15cxSSg==
   dependencies:
     dijkstrajs "^1.0.1"
     encode-utf8 "^1.0.3"
