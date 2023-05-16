@@ -33,7 +33,6 @@
     "decimal.js": "10.4.3",
     "dotbit": "0.4.20",
     "emoji-regex": "10.2.1",
-    "ethers": "5.7.2",
     "jotai": "2.1.0",
     "lodash-es": "4.17.21",
     "nanoid": "4.0.2",
