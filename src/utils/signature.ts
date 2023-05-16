@@ -1,5 +1,7 @@
+import { VerifyMessageParameters, VerifyMessageReturnType } from 'viem'
+
 import { Proof } from './schemas/basic/proof'
-import { getAddress, sha256 } from './sdks/ethers'
+import { getAddress, keccak256 } from './sdks/ethers'
 
 export async function signDocument(
   document: object,
@@ -21,19 +23,18 @@ export async function verifyDocument(
   document: object,
   proof: Proof,
   verifyMessage: (
-    message: string,
-    signature: Buffer,
-  ) => string | Promise<string>,
+    parameters: VerifyMessageParameters,
+  ) => Promise<VerifyMessageReturnType>,
 ): Promise<boolean> {
   if (proof.type !== 'eth_personal_sign') {
     return false
   }
   const message = encodeDocument(document, proof.template)
-  const address = await verifyMessage(
+  return verifyMessage({
     message,
-    Buffer.from(proof.signature, 'base64'),
-  )
-  return proof.address === address
+    address: proof.address as `0x${string}`,
+    signature: Buffer.from(proof.signature, 'base64'),
+  })
 }
 
 function encodeDocument(
@@ -44,8 +45,8 @@ function encodeDocument(
   const textEncoder = new TextEncoder()
   return template
     ? template.replace(
-        '{sha256}',
-        sha256(textEncoder.encode(JSON.stringify(rest))),
+        '{keccak256}',
+        keccak256(textEncoder.encode(JSON.stringify(rest))),
       )
     : JSON.stringify(rest)
 }

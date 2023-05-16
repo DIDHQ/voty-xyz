@@ -1,12 +1,17 @@
 import { mapValues } from 'lodash-es'
-import { StaticJsonRpcProvider } from '@ethersproject/providers'
-import { verifyMessage, getAddress, sha256 } from 'ethers/lib/utils.js'
+import {
+  verifyMessage,
+  getAddress,
+  keccak256,
+  http,
+  createPublicClient,
+} from 'viem'
 
 import { chainIdToRpc, coinTypeToChainId } from '../constants'
 
-export const providers = mapValues(coinTypeToChainId, (chainId) => {
+export const clients = mapValues(coinTypeToChainId, (chainId) => {
   const rpc = chainIdToRpc[chainId!]
-  return rpc ? new StaticJsonRpcProvider(rpc, chainId) : undefined
+  return rpc ? createPublicClient({ transport: http(rpc) }) : undefined
 })
 
-export { verifyMessage, getAddress, sha256 }
+export { verifyMessage, getAddress, keccak256 }
