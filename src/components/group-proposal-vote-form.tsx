@@ -134,7 +134,7 @@ export default function GroupProposalVoteForm(props: {
   const { mutateAsync } = trpc.groupProposalVote.create.useMutation()
   const signDocument = useSignDocument(
     did,
-    `You are voting on Voty\n\nhash:\n{sha256}`,
+    `You are voting on Voty\n\nhash:\n{keccak256}`,
   )
   const handleSubmit = useMutation<void, Error, GroupProposalVote>(
     async (vote) => {

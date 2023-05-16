@@ -312,7 +312,7 @@ export default function GroupProposalForm(props: {
               preview: {
                 from: `/${props.communityId}/group/${props.group.id}/create`,
                 to: `/${props.communityId}/group/${props.group.id}/proposal/${previewPermalink}`,
-                template: `You are creating proposal on Voty\n\nhash:\n{sha256}`,
+                template: `You are creating proposal on Voty\n\nhash:\n{keccak256}`,
                 author: did,
               },
             })

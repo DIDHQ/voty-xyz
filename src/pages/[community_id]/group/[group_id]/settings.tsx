@@ -43,7 +43,7 @@ export default function GroupSettingsPage() {
             preview={{
               from: `/${query.community_id}/group/${query.group_id}/settings`,
               to: `/${query.community_id}/group/${query.group_id}/about`,
-              template: `You are updating workgroup on Voty\n\nhash:\n{sha256}`,
+              template: `You are updating workgroup on Voty\n\nhash:\n{keccak256}`,
               author: query.community_id,
             }}
             className="pt-6 sm:pt-8"

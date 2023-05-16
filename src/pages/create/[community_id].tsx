@@ -26,7 +26,7 @@ export default function CreateEntryPage() {
             preview={{
               from: router.asPath,
               to: `/${query.community_id}/about`,
-              template: `You are creating community on Voty\n\nhash:\n{sha256}`,
+              template: `You are creating community on Voty\n\nhash:\n{keccak256}`,
               author: query.community_id,
             }}
             className="flex w-full flex-col"

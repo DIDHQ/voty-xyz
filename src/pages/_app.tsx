@@ -1,6 +1,6 @@
 import type { AppType, NextWebVitalsMetric } from 'next/app'
 import Head from 'next/head'
-import { Chain, configureChains, createClient, WagmiConfig } from 'wagmi'
+import { Chain, configureChains, createConfig, WagmiConfig } from 'wagmi'
 import {
   mainnet,
   goerli,
@@ -10,9 +10,12 @@ import {
   bscTestnet,
 } from 'wagmi/chains'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+import {
+  RainbowKitProvider,
+  getDefaultWallets,
+  lightTheme,
+} from '@rainbow-me/rainbowkit'
 import { GoogleAnalytics, event } from 'nextjs-google-analytics'
-import { ConnectKitProvider, getDefaultClient } from 'connectkit'
-import 'react-tooltip/dist/react-tooltip.css'
 
 import ShellLayout from '../components/layouts/shell'
 import { trpc } from '../utils/trpc'
@@ -20,7 +23,7 @@ import { isTestnet, documentTitle } from '../utils/constants'
 import { chainIdToRpc } from '../utils/constants'
 import '../styles/globals.css'
 
-const { chains } = configureChains(
+const { chains, publicClient } = configureChains(
   (isTestnet
     ? [goerli, polygonMumbai, bscTestnet]
     : [mainnet, polygon, bsc]) as Chain[],
@@ -29,17 +32,20 @@ const { chains } = configureChains(
       rpc(chain) {
         return { http: chainIdToRpc[chain.id] || '' }
       },
-      static: true,
     }),
   ],
 )
 
-const wagmiClient = createClient(
-  getDefaultClient({
-    appName: 'Voty',
-    chains,
-  }),
-)
+const { connectors } = getDefaultWallets({
+  appName: 'Voty',
+  chains,
+})
+
+const wagmiConfig = createConfig({
+  autoConnect: true,
+  connectors,
+  publicClient,
+})
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
@@ -48,24 +54,20 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <title>{documentTitle}</title>
         <meta
           name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
+          content="minimum-scale=1, maximum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
         />
       </Head>
       <GoogleAnalytics trackPageViews />
-      <WagmiConfig client={wagmiClient}>
-        <ConnectKitProvider
-          theme="minimal"
-          mode="light"
-          customTheme={{
-            '--ck-border-radius': '6px',
-            '--ck-accent-color': '#1BA57F',
-            '--ck-accent-text-color': '#ffffff',
-          }}
+      <WagmiConfig config={wagmiConfig}>
+        <RainbowKitProvider
+          chains={chains}
+          modalSize="compact"
+          theme={lightTheme({ borderRadius: 'small' })}
         >
           <ShellLayout>
             <Component {...pageProps} />
           </ShellLayout>
-        </ConnectKitProvider>
+        </RainbowKitProvider>
       </WagmiConfig>
     </>
   )

@@ -65,7 +65,7 @@ export default function CreateGrantPage() {
             preview={{
               from: `/${query.community_id}/grant/create`,
               to: `/${query.community_id}/grant/${previewPermalink}`,
-              template: `You are creating grant on Voty\n\nhash:\n{sha256}`,
+              template: `You are creating grant on Voty\n\nhash:\n{keccak256}`,
               author: query.community_id,
             }}
           />

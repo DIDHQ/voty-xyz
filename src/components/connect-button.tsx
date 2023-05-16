@@ -1,6 +1,7 @@
-import { ConnectKitButton } from 'connectkit'
+import { ConnectButton as RainbowKitConnectButton } from '@rainbow-me/rainbowkit'
 import { Menu } from '@headlessui/react'
 import clsx from 'clsx'
+import '@rainbow-me/rainbowkit/styles.css'
 
 import useWallet from '../hooks/use-wallet'
 import Button from './basic/button'
@@ -12,8 +13,8 @@ export default function ConnectButton() {
   const { account, displayAddress, disconnect } = useWallet()
 
   return (
-    <ConnectKitButton.Custom>
-      {({ show, chain, isConnecting }) =>
+    <RainbowKitConnectButton.Custom>
+      {({ chain, connectModalOpen, openConnectModal }) =>
         account ? (
           <Dropdown
             trigger={
@@ -55,11 +56,11 @@ export default function ConnectButton() {
             </div>
           </Dropdown>
         ) : (
-          <Button primary loading={isConnecting} onClick={show}>
+          <Button primary loading={connectModalOpen} onClick={openConnectModal}>
             {chain?.unsupported ? 'Switch Network' : 'Connect Wallet'}
           </Button>
         )
       }
-    </ConnectKitButton.Custom>
+    </RainbowKitConnectButton.Custom>
   )
 }

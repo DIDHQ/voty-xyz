@@ -9,11 +9,11 @@ export async function getCurrentSnapshot(coinType: number): Promise<string> {
     return parseInt(blockNumber).toString()
   }
   if (!coinTypeToChainId[coinType]) {
-    throw new Error('no provider')
+    throw new Error('no client')
   }
-  const { providers } = await import('./sdks/ethers')
-  const provider = providers[coinType]!
-  const blockNumber = await provider.getBlockNumber()
+  const { clients } = await import('./sdks/ethers')
+  const client = clients[coinType]!
+  const blockNumber = await client.getBlockNumber()
   return BigInt(blockNumber).toString()
 }
 

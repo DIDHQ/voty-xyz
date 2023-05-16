@@ -60,20 +60,14 @@ export default function MyDocument() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={documentTitle} />
         <meta name="twitter:description" content={description} />
-        <meta
-          name="twitter:image"
-          content={`${domain}/images/og.png`}
-        />
+        <meta name="twitter:image" content={`${domain}/images/og.png`} />
         <meta name="twitter:creator" content="@voty_xyz" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={documentTitle} />
         <meta property="og:description" content={description} />
         <meta property="og:site_name" content={documentTitle} />
         <meta property="og:url" content={domain} />
-        <meta
-          property="og:image"
-          content={`${domain}/images/og.png`}
-        />
+        <meta property="og:image" content={`${domain}/images/og.png`} />
       </Head>
       <body>
         <Main />
