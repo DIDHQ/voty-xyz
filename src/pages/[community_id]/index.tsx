@@ -1,7 +1,9 @@
 import { useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 import Link from 'next/link'
-import { PlusIcon } from '@heroicons/react/20/solid'
+import { ArrowUpRightIcon, PlusIcon } from '@heroicons/react/20/solid'
+import { useQuery } from '@tanstack/react-query'
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 import useRouterQuery from '../../hooks/use-router-query'
 import CommunityLayout from '../../components/layouts/community'
@@ -13,6 +15,8 @@ import useIsManager from '../../hooks/use-is-manager'
 // import Select from '../../components/basic/select'
 // import { GroupProposalPhase } from '../../utils/phase'
 import ActivityListItem from '../../components/activity-list-item'
+import { hasEnabledSubDID } from '../../utils/sdks/dotbit/subdid'
+import { subDIDWebsite } from '../../utils/constants'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['community_id']>()
@@ -55,6 +59,11 @@ export default function CommunityIndexPage() {
   //   ],
   //   [],
   // )
+  const { data: enabledSubDID } = useQuery(
+    ['hasEnabledSubDID', query.community_id],
+    () => hasEnabledSubDID(query.community_id!),
+    { enabled: !!query.community_id && isManager },
+  )
 
   return (
     <CommunityLayout>
@@ -69,7 +78,23 @@ export default function CommunityIndexPage() {
           onChange={(p) => setPhase(p as GroupProposalPhase | 'All')}
         /> */}
       </div>
-      {groups?.length === 0 && isManager ? (
+      {enabledSubDID === false ? (
+        <EmptyState
+          icon={
+            <ExclamationTriangleIcon className="h-9 w-9 rounded-lg bg-amber-100 p-1.5 text-amber-600" />
+          }
+          title="Last step"
+          className="mt-24"
+          description="You must enable SubDID for your community."
+          footer={
+            <Link href={`${subDIDWebsite}${query.community_id}`}>
+              <Button primary icon={ArrowUpRightIcon}>
+                Enable SubDID
+              </Button>
+            </Link>
+          }
+        />
+      ) : groups?.length === 0 && isManager ? (
         <EmptyState
           title="No workgroup"
           className="mt-24"
