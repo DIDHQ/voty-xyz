@@ -57,7 +57,7 @@ export default function GroupForm(props: {
   const isNewGroup = !props.onArchive
   const signDocument = useSignDocument(
     props.communityId,
-    `You are archiving workgroup on Voty\n\nhash:\n{sha256}`,
+    `You are archiving workgroup on Voty\n\nhash:\n{keccak256}`,
   )
   const { mutateAsync } = trpc.group.archive.useMutation()
   const handleArchive = useMutation<void, Error, Group>(async (group) => {

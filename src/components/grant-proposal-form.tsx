@@ -201,7 +201,7 @@ export default function GrantProposalForm(props: {
                 to: `/${props.communityId}/grant/${permalink2Id(
                   props.grantPermalink,
                 )}/proposal/${previewPermalink}`,
-                template: `You are creating proposal on Voty\n\nhash:\n{sha256}`,
+                template: `You are creating proposal on Voty\n\nhash:\n{keccak256}`,
                 author: did,
               },
             })
