@@ -14,6 +14,7 @@ import { ExoticComponent, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
+import { useQuery } from '@tanstack/react-query'
 
 import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
 import useRouterQuery from '../hooks/use-router-query'
@@ -28,6 +29,7 @@ import useIsManager from '../hooks/use-is-manager'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 import ShareLinkIcon from './share-link-icon'
+import { hasEnabledSubDID } from '../utils/sdks/dotbit/subdid'
 
 const SubscriptionButton = dynamic(() => import('./subscription-button'), {
   ssr: false,
@@ -117,6 +119,11 @@ export default function CommunityInfo(props: { className?: string }) {
       ),
     [dids, query.community_id],
   )
+  const { data: enabledSubDID } = useQuery(
+    ['hasEnabledSubDID', query.community_id],
+    () => hasEnabledSubDID(query.community_id!),
+    { enabled: !!query.community_id && isManager },
+  )
 
   return (
     <>
@@ -170,7 +177,9 @@ export default function CommunityInfo(props: { className?: string }) {
             <div className="mt-6 w-full">
               <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
                 Workgroups
-                {previewCommunity || !isManager ? null : (
+                {previewCommunity ||
+                !isManager ||
+                enabledSubDID === false ? null : (
                   <TextButton
                     primary
                     href={`/${query.community_id}/create`}
