@@ -14,7 +14,13 @@ export default function ConnectButton() {
 
   return (
     <RainbowKitConnectButton.Custom>
-      {({ chain, connectModalOpen, openConnectModal }) =>
+      {({
+        chain,
+        connectModalOpen,
+        openConnectModal,
+        chainModalOpen,
+        openChainModal,
+      }) =>
         account ? (
           <Dropdown
             trigger={
@@ -55,9 +61,13 @@ export default function ConnectButton() {
               </Menu.Item>
             </div>
           </Dropdown>
+        ) : chain?.unsupported ? (
+          <Button primary loading={chainModalOpen} onClick={openChainModal}>
+            Switch Network
+          </Button>
         ) : (
           <Button primary loading={connectModalOpen} onClick={openConnectModal}>
-            {chain?.unsupported ? 'Switch Network' : 'Connect Wallet'}
+            Connect Wallet
           </Button>
         )
       }
