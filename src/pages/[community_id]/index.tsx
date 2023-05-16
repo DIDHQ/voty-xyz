@@ -71,7 +71,11 @@ export default function CommunityIndexPage() {
         loading={isLoading || isGroupsLoading || isActivitiesLoading}
       />
       <div className="mt-6 flex items-center justify-between sm:mt-8">
-        <h3 className="text-lg font-medium text-gray-900">Activities</h3>
+        {enabledSubDID === false ? (
+          <div className="h-[38px]" />
+        ) : (
+          <h3 className="text-lg font-medium text-gray-900">Activities</h3>
+        )}
         {/* <Select
           options={options}
           value={phase}
