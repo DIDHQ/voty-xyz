@@ -10,7 +10,11 @@ import {
   bscTestnet,
 } from 'wagmi/chains'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
-import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit'
+import {
+  RainbowKitProvider,
+  getDefaultWallets,
+  lightTheme,
+} from '@rainbow-me/rainbowkit'
 import { GoogleAnalytics, event } from 'nextjs-google-analytics'
 
 import ShellLayout from '../components/layouts/shell'
@@ -55,7 +59,11 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       </Head>
       <GoogleAnalytics trackPageViews />
       <WagmiConfig config={wagmiConfig}>
-        <RainbowKitProvider chains={chains}>
+        <RainbowKitProvider
+          chains={chains}
+          modalSize="compact"
+          theme={lightTheme({ borderRadius: 'small' })}
+        >
           <ShellLayout>
             <Component {...pageProps} />
           </ShellLayout>
