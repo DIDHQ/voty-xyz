@@ -10,6 +10,10 @@ export const domain = isTestnet
   ? 'https://votyxyz.vercel.app'
   : 'https://voty.xyz'
 
+export const subDIDWebsite = isTestnet
+  ? 'https://testdata.did.id/sub-accounts/'
+  : 'https://data.did.id/sub-accounts/'
+
 export const commonCoinTypes = {
   ETH: 60,
   CKB: 309,
