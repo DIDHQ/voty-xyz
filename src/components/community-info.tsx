@@ -221,22 +221,18 @@ export default function CommunityInfo(props: { className?: string }) {
               </div>
             </>
           ) : null}
-          {router.pathname !== '/[community_id]/about' ? (
-            previewCommunity || isMember ? (
-              <Button primary disabled={isMember} className="mt-4">
+          {router.pathname === '/[community_id]/about' ||
+          previewCommunity ||
+          isMember ? null : (
+            <Link
+              href={`/${query.community_id}/about#how-to-join`}
+              className="mt-4"
+            >
+              <Button primary disabled={isMember}>
                 Want to join?
               </Button>
-            ) : (
-              <Link
-                href={`/${query.community_id}/about#how-to-join`}
-                className="mt-4"
-              >
-                <Button primary disabled={isMember}>
-                  Want to join?
-                </Button>
-              </Link>
-            )
-          ) : null}
+            </Link>
+          )}
         </div>
       </aside>
     </>
