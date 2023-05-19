@@ -8,7 +8,7 @@ import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
 import { documentTitle } from '../../utils/constants'
 import { Group } from '../../utils/schemas/v1/group'
-import TextButton from '../../components/basic/text-button'
+import TextLink from '../../components/basic/text-link'
 
 export default function CreateGroupPage() {
   const query = useRouterQuery<['community_id']>()
@@ -63,9 +63,12 @@ export default function CreateGroupPage() {
       </Head>
       <LoadingBar loading={isLoading} />
       <div className="w-full">
-        <TextButton href={`/${query.community_id}`} className="mt-6 sm:mt-8">
+        <TextLink
+          href={`/${query.community_id}`}
+          className="mt-6 inline-block sm:mt-8"
+        >
           <h2 className="text-base font-semibold">← Back</h2>
-        </TextButton>
+        </TextLink>
         {query.community_id && initialValue !== undefined ? (
           <GroupForm
             communityId={query.community_id}

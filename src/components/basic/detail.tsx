@@ -18,10 +18,9 @@ export function DetailItem(props: {
   return (
     <div className="flex justify-between py-2 text-sm font-medium">
       <dt className="mr-4 shrink-0 truncate text-gray-400">{props.title}</dt>
-      <div className="w-0 flex-1" />
       <dd
         className={clsx(
-          'whitespace-pre-wrap break-words text-right text-gray-600',
+          'w-0 flex-1 overflow-visible break-words text-right text-gray-600',
           props.className,
         )}
       >

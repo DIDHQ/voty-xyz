@@ -22,7 +22,7 @@ import Avatar from './basic/avatar'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 import { documentTitle, domain } from '../utils/constants'
-import TextButton from './basic/text-button'
+import TextLink from './basic/text-link'
 import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import Button from './basic/button'
 import useIsManager from '../hooks/use-is-manager'
@@ -180,13 +180,13 @@ export default function CommunityInfo(props: { className?: string }) {
                 {previewCommunity ||
                 !isManager ||
                 enabledSubDID === false ? null : (
-                  <TextButton
+                  <TextLink
                     primary
                     href={`/${query.community_id}/create`}
                     className="float-right"
                   >
                     <PlusIcon className="h-5 w-5" />
-                  </TextButton>
+                  </TextLink>
                 )}
               </h3>
               <div>
@@ -214,9 +214,9 @@ export default function CommunityInfo(props: { className?: string }) {
               </div>
               <div className="flex space-x-4">
                 {externals.map((item) => (
-                  <TextButton key={item.href} href={item.href}>
+                  <TextLink key={item.href} href={item.href}>
                     <item.icon className="h-7 w-7" />
-                  </TextButton>
+                  </TextLink>
                 ))}
               </div>
             </>

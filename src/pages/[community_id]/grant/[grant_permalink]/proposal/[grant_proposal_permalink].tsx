@@ -17,7 +17,7 @@ import {
 } from '../../../../../utils/permalink'
 import { trpc } from '../../../../../utils/trpc'
 import Article from '../../../../../components/basic/article'
-import TextButton from '../../../../../components/basic/text-button'
+import TextLink from '../../../../../components/basic/text-link'
 import LoadingBar from '../../../../../components/basic/loading-bar'
 import { documentTitle, previewPermalink } from '../../../../../utils/constants'
 import useRouterQuery from '../../../../../hooks/use-router-query'
@@ -205,14 +205,15 @@ export default function GrantProposalPage() {
               </span>
             </div>
           ) : null}
-          <TextButton
+          <TextLink
             disabled={!community || !grantProposal || !!previewGrantProposal}
             href={`/${community?.id}/grant/${
               grantProposal ? permalink2Id(grantProposal.grant) : ''
             }`}
+            className="inline-block"
           >
             <h2 className="text-base font-semibold">← Back</h2>
-          </TextButton>
+          </TextLink>
           <div className="mb-6">
             {funding ? (
               <Tooltip
@@ -279,13 +280,13 @@ export default function GrantProposalPage() {
                         'truncate whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
                       )}
                     >
-                      <TextButton
+                      <TextLink
                         primary
                         disabled={!!previewGrantProposal}
                         href={permalink2Explorer(grantProposalVote.permalink)}
                       >
                         {grantProposalVote.total_power}
-                      </TextButton>
+                      </TextLink>
                     </td>
                   </tr>
                 ))}

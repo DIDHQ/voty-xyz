@@ -12,7 +12,7 @@ import { documentTitle, isTestnet } from '../../utils/constants'
 import { trpc } from '../../utils/trpc'
 import ConnectButton from '../../components/connect-button'
 import TextInput from '../../components/basic/text-input'
-import TextButton from '../../components/basic/text-button'
+import TextLink from '../../components/basic/text-link'
 import Button from '../../components/basic/button'
 
 export default function CreateCommunityPage() {
@@ -55,9 +55,9 @@ export default function CreateCommunityPage() {
         loading={isLoading || (!!dids?.length && isExistencesLoading)}
       />
       <div className="w-full bg-white">
-        <TextButton href="/" className="mt-6 sm:mt-8">
+        <TextLink href="/" className="mt-6 inline-block sm:mt-8">
           <h2 className="text-base font-semibold">← Back</h2>
-        </TextButton>
+        </TextLink>
         <div className="pt-8 sm:px-6 sm:pt-16">
           <div className="mx-auto text-center">
             <h2 className="text-3xl font-semibold text-gray-900">
@@ -140,7 +140,7 @@ export default function CreateCommunityPage() {
                     </div>
                     <span className="mb-1 block text-sm font-medium text-gray-400">
                       or{' '}
-                      <TextButton
+                      <TextLink
                         secondary
                         href={
                           isTestnet
@@ -149,7 +149,7 @@ export default function CreateCommunityPage() {
                         }
                       >
                         Register a new .bit →
-                      </TextButton>
+                      </TextLink>
                     </span>
                   </>
                 ) : (
@@ -180,9 +180,9 @@ export default function CreateCommunityPage() {
                 <br />
                 Learn more about how Voty works and the thoughts behind
                 DID-based governance{' '}
-                <TextButton href="/about" secondary>
+                <TextLink href="/about" secondary>
                   here
-                </TextButton>
+                </TextLink>
                 .
               </p>
             </div>

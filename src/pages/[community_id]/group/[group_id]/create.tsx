@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useMemo } from 'react'
 
 import useRouterQuery from '../../../../hooks/use-router-query'
-import TextButton from '../../../../components/basic/text-button'
+import TextLink from '../../../../components/basic/text-link'
 import { trpc } from '../../../../utils/trpc'
 import LoadingBar from '../../../../components/basic/loading-bar'
 import GroupProposalForm from '../../../../components/group-proposal-form'
@@ -27,13 +27,13 @@ export default function CreateGroupProposalPage() {
       </Head>
       <LoadingBar loading={isLoading} />
       <div className="w-full">
-        <TextButton
+        <TextLink
           disabled={!query.community_id || !query.group_id}
           href={`/${query.community_id}/group/${query.group_id}`}
-          className="mt-6 sm:mt-8"
+          className="mt-6 inline-block sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
-        </TextButton>
+        </TextLink>
         {query.community_id && group ? (
           <GroupProposalForm
             initialValue={initialValue}

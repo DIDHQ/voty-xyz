@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useMemo } from 'react'
 
 import useRouterQuery from '../../../hooks/use-router-query'
-import TextButton from '../../../components/basic/text-button'
+import TextLink from '../../../components/basic/text-link'
 import { documentTitle, previewPermalink } from '../../../utils/constants'
 import GrantForm from '../../../components/grant-form'
 import { Grant } from '../../../utils/schemas/v1/grant'
@@ -51,13 +51,13 @@ export default function CreateGrantPage() {
         <title>{`New grant - ${documentTitle}`}</title>
       </Head>
       <div className="w-full">
-        <TextButton
+        <TextLink
           disabled={!query.community_id}
           href={`/${query.community_id}/grant`}
-          className="mt-6 sm:mt-8"
+          className="mt-6 inline-block sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
-        </TextButton>
+        </TextLink>
         {query.community_id ? (
           <GrantForm
             communityId={query.community_id}

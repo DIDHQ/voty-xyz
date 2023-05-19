@@ -5,7 +5,7 @@ import { useAtomValue } from 'jotai'
 
 import { trpc } from '../../../../utils/trpc'
 import Article from '../../../../components/basic/article'
-import TextButton from '../../../../components/basic/text-button'
+import TextLink from '../../../../components/basic/text-link'
 import LoadingBar from '../../../../components/basic/loading-bar'
 import { documentTitle, previewPermalink } from '../../../../utils/constants'
 import useRouterQuery from '../../../../hooks/use-router-query'
@@ -74,12 +74,13 @@ export default function GrantPage() {
       <LoadingBar loading={isLoading || isCommunityLoading} />
       <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
         <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
-          <TextButton
+          <TextLink
             disabled={!community || !!previewGrant}
             href={`/${community?.id}/grant`}
+            className="inline-block"
           >
             <h2 className="text-base font-semibold">← Back</h2>
-          </TextButton>
+          </TextLink>
           <div className="mb-6">
             <h3 className="mt-6 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               {grant?.name || '...'}

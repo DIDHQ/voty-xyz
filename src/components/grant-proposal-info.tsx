@@ -9,7 +9,7 @@ import { Community } from '../utils/schemas/v1/community'
 import { Grant } from '../utils/schemas/v1/grant'
 import { GrantProposal } from '../utils/schemas/v1/grant-proposal'
 import { DetailItem, DetailList } from './basic/detail'
-import TextButton from './basic/text-button'
+import TextLink from './basic/text-link'
 import GrantCurrentPhase from './grant-current-phase'
 import { PreviewPermalink } from '../utils/types'
 import { formatNumber } from '../utils/number'
@@ -51,30 +51,32 @@ export default function GrantProposalInfo(props: {
         </p>
       </DetailList>
       <DetailList title="Information">
-        <DetailItem title="Community" className="truncate whitespace-nowrap">
+        <DetailItem title="Community">
           {props.community ? (
-            <TextButton
+            <TextLink
               underline
               disabled={disabled}
               href={`/${props.community.id}`}
+              className="truncate whitespace-nowrap"
             >
               {props.community.name}
-            </TextButton>
+            </TextLink>
           ) : (
             '...'
           )}
         </DetailItem>
-        <DetailItem title="Topic grant" className="truncate whitespace-nowrap">
+        <DetailItem title="Topic grant">
           {props.community && props.grant && props.grantProposal ? (
-            <TextButton
+            <TextLink
               underline
               disabled={disabled}
               href={`/${props.community.id}/grant/${permalink2Id(
                 props.grantProposal.grant,
               )}`}
+              className="truncate whitespace-nowrap"
             >
               {props.grant.name}
-            </TextButton>
+            </TextLink>
           ) : (
             '...'
           )}
@@ -86,7 +88,7 @@ export default function GrantProposalInfo(props: {
       {props.grant?.snapshots && props.grantProposal ? (
         <DetailList title="On-chain verification">
           <DetailItem title="Snapshot">
-            <TextButton
+            <TextLink
               underline
               disabled={disabled}
               href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
@@ -96,16 +98,16 @@ export default function GrantProposalInfo(props: {
               {formatNumber(
                 parseInt(props.grant.snapshots[commonCoinTypes.CKB], 10),
               )}
-            </TextButton>
+            </TextLink>
           </DetailItem>
           <DetailItem title="Arweave TX">
-            <TextButton
+            <TextLink
               underline
               disabled={disabled}
               href={permalink2Explorer(props.grantProposal.permalink)}
             >
               {props.grantProposal?.permalink.substring(40) || '...'}
-            </TextButton>
+            </TextLink>
           </DetailItem>
         </DetailList>
       ) : null}

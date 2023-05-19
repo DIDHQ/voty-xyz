@@ -22,7 +22,7 @@ import { trpc } from '../utils/trpc'
 import { Preview } from '../utils/types'
 import Button from './basic/button'
 import Notification from './basic/notification'
-import TextButton from './basic/text-button'
+import TextLink from './basic/text-link'
 import { previewPermalink } from '../utils/constants'
 import { permalink2Id } from '../utils/permalink'
 import sleep from '../utils/sleep'
@@ -202,9 +202,9 @@ export default function PreviewBar() {
       {preview?.to === router.asPath ? (
         <footer className="fixed inset-x-0 bottom-0 h-18 border-t bg-primary-600 pb-safe">
           <div className="mx-auto flex h-18 max-w-5xl items-center justify-between px-6">
-            <TextButton white href={preview.from}>
+            <TextLink white href={preview.from}>
               ← Back
-            </TextButton>
+            </TextLink>
             <Button
               disabled={!preview}
               loading={handleSubmit.isLoading}

@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useMemo } from 'react'
 
 import useRouterQuery from '../../../../hooks/use-router-query'
-import TextButton from '../../../../components/basic/text-button'
+import TextLink from '../../../../components/basic/text-link'
 import { trpc } from '../../../../utils/trpc'
 import LoadingBar from '../../../../components/basic/loading-bar'
 import GrantProposalForm from '../../../../components/grant-proposal-form'
@@ -25,15 +25,15 @@ export default function CreateGrantProposalPage() {
       </Head>
       <LoadingBar loading={isLoading} />
       <div className="w-full">
-        <TextButton
+        <TextLink
           disabled={!query.community_id || !query.grant_permalink}
           href={`/${query.community_id}/grant/${
             query.grant_permalink ? permalink2Id(query.grant_permalink) : ''
           }`}
-          className="mt-6 sm:mt-8"
+          className="mt-6 inline-block sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
-        </TextButton>
+        </TextLink>
         {query.community_id && query.grant_permalink && grant ? (
           <GrantProposalForm
             initialValue={initialValue}

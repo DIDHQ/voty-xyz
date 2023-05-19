@@ -5,7 +5,7 @@ import useRouterQuery from '../../../../hooks/use-router-query'
 import GroupForm from '../../../../components/group-form'
 import { trpc } from '../../../../utils/trpc'
 import LoadingBar from '../../../../components/basic/loading-bar'
-import TextButton from '../../../../components/basic/text-button'
+import TextLink from '../../../../components/basic/text-link'
 
 export default function GroupSettingsPage() {
   const router = useRouter()
@@ -29,12 +29,12 @@ export default function GroupSettingsPage() {
     <>
       <LoadingBar loading={isLoading} />
       <div className="w-full">
-        <TextButton
+        <TextLink
           href={`/${query.community_id}/group/${query.group_id}/about`}
-          className="mt-6 sm:mt-8"
+          className="mt-6 inline-block sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
-        </TextButton>
+        </TextLink>
         {query.community_id && query.group_id && group !== undefined ? (
           <GroupForm
             communityId={query.community_id}

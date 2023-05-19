@@ -8,7 +8,7 @@ import {
 import { Community } from '../utils/schemas/v1/community'
 import { Grant } from '../utils/schemas/v1/grant'
 import { DetailItem, DetailList } from './basic/detail'
-import TextButton from './basic/text-button'
+import TextLink from './basic/text-link'
 import GrantCurrentPhase from './grant-current-phase'
 import { PreviewPermalink } from '../utils/types'
 import { permalink2Explorer } from '../utils/permalink'
@@ -51,15 +51,16 @@ export default function GrantInfo(props: {
           </p>
         </DetailList>
         <DetailList title="Information">
-          <DetailItem title="Community" className="truncate whitespace-nowrap">
+          <DetailItem title="Community">
             {props.community ? (
-              <TextButton
+              <TextLink
                 underline
                 disabled={disabled}
                 href={`/${props.community.id}`}
+                className="truncate whitespace-nowrap"
               >
                 {props.community.name}
-              </TextButton>
+              </TextLink>
             ) : (
               '...'
             )}
@@ -68,7 +69,7 @@ export default function GrantInfo(props: {
         {props.grant?.snapshots ? (
           <DetailList title="On-chain verification">
             <DetailItem title="Snapshot">
-              <TextButton
+              <TextLink
                 underline
                 disabled={disabled}
                 href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
@@ -78,16 +79,16 @@ export default function GrantInfo(props: {
                 {formatNumber(
                   parseInt(props.grant.snapshots[commonCoinTypes.CKB], 10),
                 )}
-              </TextButton>
+              </TextLink>
             </DetailItem>
             <DetailItem title="Arweave TX">
-              <TextButton
+              <TextLink
                 underline
                 disabled={disabled}
                 href={permalink2Explorer(props.grant?.permalink)}
               >
                 {props.grant?.permalink.substring(40) || '...'}
-              </TextButton>
+              </TextLink>
             </DetailItem>
           </DetailList>
         ) : null}

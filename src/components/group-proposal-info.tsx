@@ -11,7 +11,7 @@ import { GroupProposal } from '../utils/schemas/v1/group-proposal'
 import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import Markdown from './basic/markdown'
-import TextButton from './basic/text-button'
+import TextLink from './basic/text-link'
 import GroupProposalCurrentPhase from './group-proposal-current-phase'
 import { PreviewPermalink } from '../utils/types'
 import { permalink2Explorer } from '../utils/permalink'
@@ -45,28 +45,30 @@ export default function GroupProposalInfo(props: {
         </Article>
       </DetailList>
       <DetailList title="Information">
-        <DetailItem title="Community" className="truncate whitespace-nowrap">
+        <DetailItem title="Community">
           {props.community ? (
-            <TextButton
+            <TextLink
               underline
               disabled={disabled}
               href={`/${props.community.id}`}
+              className="truncate whitespace-nowrap"
             >
               {props.community.name}
-            </TextButton>
+            </TextLink>
           ) : (
             '...'
           )}
         </DetailItem>
-        <DetailItem title="Workgroup" className="truncate whitespace-nowrap">
+        <DetailItem title="Workgroup">
           {props.group && props.community ? (
-            <TextButton
+            <TextLink
               underline
               disabled={disabled}
               href={`/${props.community.id}/group/${props.group.id}`}
+              className="truncate whitespace-nowrap"
             >
               {props.group.name}
-            </TextButton>
+            </TextLink>
           ) : (
             '...'
           )}
@@ -78,7 +80,7 @@ export default function GroupProposalInfo(props: {
       {props.groupProposal?.snapshots ? (
         <DetailList title="On-chain verification">
           <DetailItem title="Snapshot">
-            <TextButton
+            <TextLink
               underline
               disabled={disabled}
               href={`${coinTypeExplorers[commonCoinTypes.CKB]}${
@@ -91,16 +93,16 @@ export default function GroupProposalInfo(props: {
                   10,
                 ),
               )}
-            </TextButton>
+            </TextLink>
           </DetailItem>
           <DetailItem title="Arweave TX">
-            <TextButton
+            <TextLink
               underline
               disabled={disabled}
               href={permalink2Explorer(props.groupProposal?.permalink)}
             >
               {props.groupProposal?.permalink.substring(40) || '...'}
-            </TextButton>
+            </TextLink>
           </DetailItem>
         </DetailList>
       ) : null}

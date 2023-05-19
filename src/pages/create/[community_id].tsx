@@ -3,7 +3,7 @@ import Head from 'next/head'
 
 import CommunityForm from '../../components/community-form'
 import useRouterQuery from '../../hooks/use-router-query'
-import TextButton from '../../components/basic/text-button'
+import TextLink from '../../components/basic/text-link'
 import { documentTitle } from '../../utils/constants'
 
 export default function CreateEntryPage() {
@@ -16,9 +16,9 @@ export default function CreateEntryPage() {
         <title>{`New community - ${documentTitle}`}</title>
       </Head>
       <div className="w-full">
-        <TextButton href="/create" className="mt-6 sm:mt-8">
+        <TextLink href="/create" className="mt-6 inline-block sm:mt-8">
           <h2 className="text-base font-semibold">← Back</h2>
-        </TextButton>
+        </TextLink>
         {query.community_id ? (
           <CommunityForm
             communityId={query.community_id}

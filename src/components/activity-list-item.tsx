@@ -11,7 +11,7 @@ import clsx from 'clsx'
 
 import { Activity } from '../utils/schemas/activity'
 import { formatDurationMs } from '../utils/time'
-import TextButton from './basic/text-button'
+import TextLink from './basic/text-link'
 import useNow from '../hooks/use-now'
 
 import { permalink2Explorer, permalink2Id } from '../utils/permalink'
@@ -51,7 +51,7 @@ export default function ActivityListItem(props: {
           children: (
             <>
               created topic grant{' '}
-              <TextButton
+              <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
                 )}`}
@@ -59,7 +59,7 @@ export default function ActivityListItem(props: {
                 className="font-medium text-gray-900"
               >
                 {activity.data.grant_name}
-              </TextButton>
+              </TextLink>
             </>
           ),
           permalink: activity.data.grant_permalink,
@@ -72,7 +72,7 @@ export default function ActivityListItem(props: {
           children: (
             <>
               made a proposal{' '}
-              <TextButton
+              <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
                 )}/proposal/${permalink2Id(
@@ -82,9 +82,9 @@ export default function ActivityListItem(props: {
                 className="font-medium text-gray-900"
               >
                 {activity.data.grant_name}
-              </TextButton>{' '}
+              </TextLink>{' '}
               in topic grant{' '}
-              <TextButton
+              <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
                 )}`}
@@ -92,7 +92,7 @@ export default function ActivityListItem(props: {
                 className="font-medium text-gray-900"
               >
                 {activity.data.grant_proposal_title}
-              </TextButton>
+              </TextLink>
             </>
           ),
           permalink: activity.data.grant_proposal_permalink,
@@ -105,7 +105,7 @@ export default function ActivityListItem(props: {
           children: (
             <>
               voted for proposal{' '}
-              <TextButton
+              <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
                 )}/proposal/${permalink2Id(
@@ -115,9 +115,9 @@ export default function ActivityListItem(props: {
                 className="font-medium text-gray-900"
               >
                 {activity.data.grant_name}
-              </TextButton>{' '}
+              </TextLink>{' '}
               in topic grant{' '}
-              <TextButton
+              <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
                 )}`}
@@ -125,7 +125,7 @@ export default function ActivityListItem(props: {
                 className="font-medium text-gray-900"
               >
                 {activity.data.grant_proposal_title}
-              </TextButton>
+              </TextLink>
             </>
           ),
           permalink: activity.data.grant_proposal_vote_permalink,
@@ -138,13 +138,13 @@ export default function ActivityListItem(props: {
           children: (
             <>
               created workgroup{' '}
-              <TextButton
+              <TextLink
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline
                 className="font-medium text-gray-900"
               >
                 {activity.data.group_name}
-              </TextButton>
+              </TextLink>
             </>
           ),
           permalink: activity.data.group_permalink,
@@ -157,13 +157,13 @@ export default function ActivityListItem(props: {
           children: (
             <>
               updated workgroup{' '}
-              <TextButton
+              <TextLink
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline
                 className="font-medium text-gray-900"
               >
                 {activity.data.group_name}
-              </TextButton>
+              </TextLink>
             </>
           ),
           permalink: activity.data.group_permalink,
@@ -190,7 +190,7 @@ export default function ActivityListItem(props: {
           children: (
             <>
               made a proposal{' '}
-              <TextButton
+              <TextLink
                 href={`/${activity.data.community_id}/group/${
                   activity.data.group_id
                 }/proposal/${permalink2Id(
@@ -200,15 +200,15 @@ export default function ActivityListItem(props: {
                 className="font-medium text-gray-900"
               >
                 {activity.data.group_name}
-              </TextButton>{' '}
+              </TextLink>{' '}
               in workgroup{' '}
-              <TextButton
+              <TextLink
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline
                 className="font-medium text-gray-900"
               >
                 {activity.data.group_proposal_title}
-              </TextButton>
+              </TextLink>
             </>
           ),
           permalink: activity.data.group_proposal_permalink,
@@ -227,7 +227,7 @@ export default function ActivityListItem(props: {
                   : `${activity.data.group_proposal_vote_choices.length} choices`}
               </span>{' '}
               in proposal{' '}
-              <TextButton
+              <TextLink
                 href={`/${activity.data.community_id}/group/${
                   activity.data.group_id
                 }/proposal/${permalink2Id(
@@ -237,15 +237,15 @@ export default function ActivityListItem(props: {
                 className="font-medium text-gray-900"
               >
                 {activity.data.group_name}
-              </TextButton>{' '}
+              </TextLink>{' '}
               of workgroup{' '}
-              <TextButton
+              <TextLink
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
                 underline
                 className="font-medium text-gray-900"
               >
                 {activity.data.group_proposal_title}
-              </TextButton>
+              </TextLink>
             </>
           ),
           permalink: activity.data.group_proposal_vote_permalink,
@@ -262,7 +262,7 @@ export default function ActivityListItem(props: {
   }, [activity.data])
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-start space-x-2">
       <div
         className={clsx(
           'flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-white',
@@ -271,7 +271,7 @@ export default function ActivityListItem(props: {
       >
         {<action.icon className="h-5 w-5" />}
       </div>
-      <div className="min-w-0 flex-1 py-1.5 text-sm text-gray-500">
+      <div className="w-0 flex-1 whitespace-normal break-words py-1.5 text-sm text-gray-500">
         <span className="font-medium text-gray-900">{activity.actor}</span>{' '}
         {action.children}{' '}
         {action.permalink ? (
