@@ -12,9 +12,16 @@ import {
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import {
   RainbowKitProvider,
-  getDefaultWallets,
+  connectorsForWallets,
   lightTheme,
 } from '@rainbow-me/rainbowkit'
+import {
+  walletConnectWallet,
+  trustWallet,
+  metaMaskWallet,
+  injectedWallet,
+  coinbaseWallet,
+} from '@rainbow-me/rainbowkit/wallets'
 import { GoogleAnalytics, event } from 'nextjs-google-analytics'
 
 import ShellLayout from '../components/layouts/shell'
@@ -36,10 +43,20 @@ const { chains, publicClient } = configureChains(
   ],
 )
 
-const { connectors } = getDefaultWallets({
-  appName: 'Voty',
-  chains,
-})
+const connectors = connectorsForWallets([
+  {
+    groupName: 'Popular',
+    wallets: [metaMaskWallet({ chains }), trustWallet({ chains })],
+  },
+  {
+    groupName: 'Other',
+    wallets: [
+      injectedWallet({ chains }),
+      walletConnectWallet({ projectId: '', chains }),
+      coinbaseWallet({ appName: documentTitle, chains }),
+    ],
+  },
+])
 
 const wagmiConfig = createConfig({
   autoConnect: true,
