@@ -25,7 +25,7 @@ export default function GroupAbout(props: {
         value={props.group.permission.voting}
       />
       <div className="rounded-md border p-4">
-        <h3 className="text-xl font-semibold">Rules</h3>
+        <h3 className="text-xl font-semibold">Proposal rules</h3>
         <nav className="mt-4 border-t pt-4">
           <h4 className="mb-3 text-sm font-semibold">Phases</h4>
           <ol className="md:flex">
