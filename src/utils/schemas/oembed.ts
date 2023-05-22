@@ -33,7 +33,7 @@ export const videoOembedDataSchema = basicOembedDataSchema.extend({
 
 export const richOembedDataSchema = basicOembedDataSchema.extend({
   type: z.literal('rich'),
-  url: z.string(),
+  html: z.string(),
   width: z.number(),
   height: z.number(),
 })

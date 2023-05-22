@@ -22,23 +22,25 @@ export default function OembedContainer(props: {
         ),
     [props.link],
   )
-  console.log('endpoint', endpoint)
-
   const { data } = useQuery(
     ['oembed', endpoint?.url, props.link],
     () =>
       fetchJson<OembedDataSchema>(
         `${endpoint?.url}?url=${encodeURIComponent(props.link)}`,
       ),
-    { enabled: !!endpoint },
+    { enabled: !!endpoint, refetchOnWindowFocus: false },
   )
 
-  console.log(data)
-
-  return data?.type === 'video' ? (
+  return data?.type === 'video' || data?.type === 'rich' ? (
     <div
       dangerouslySetInnerHTML={{ __html: data.html }}
       style={{ width: data.width, height: data.height }}
+    />
+  ) : data?.type === 'photo' ? (
+    <img
+      src={data.url}
+      style={{ width: data.width, height: data.height }}
+      alt={data.title}
     />
   ) : (
     props.fallback
