@@ -17,7 +17,7 @@ export default function TextLink(
   const className = useMemo(
     () =>
       clsx(
-        'rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'break-all rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
         primary
           ? 'text-primary-600 hover:text-primary-500 focus:ring-primary-300'
           : secondary

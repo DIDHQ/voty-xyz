@@ -47,17 +47,20 @@ export default function OembedContainer(props: {
         .process(html!),
     { enabled: !!html },
   )
+  const aspectRatio = useMemo(
+    () => (oembed && 'width' in oembed ? oembed.width / oembed.height : 1),
+    [oembed],
+  )
 
-  return (
-    children?.result ||
-    (oembed?.type === 'photo' ? (
-      <img
-        src={oembed.url}
-        style={{ width: oembed.width, height: oembed.height }}
-        alt={oembed.title}
-      />
-    ) : (
-      <>{props.fallback}</>
-    ))
+  return children?.result ? (
+    <div style={{ aspectRatio }}>{children.result}</div>
+  ) : oembed?.type === 'photo' ? (
+    <img
+      src={oembed.url}
+      style={{ width: oembed.width, height: oembed.height }}
+      alt={oembed.title}
+    />
+  ) : (
+    <>{props.fallback}</>
   )
 }

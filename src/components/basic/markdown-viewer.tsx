@@ -10,12 +10,16 @@ export default function MarkdownViewer(props: { children?: string }) {
       remarkPlugins={[remarkGfm]}
       sourcePos
       components={{
-        a({ href, children }) {
+        a({ href, children, title }) {
           if (href) {
             return (
               <OembedContainer
                 link={href}
-                fallback={<TextLink href={href}>{children}</TextLink>}
+                fallback={
+                  <TextLink href={href} secondary title={title}>
+                    {children}
+                  </TextLink>
+                }
               />
             )
           }
