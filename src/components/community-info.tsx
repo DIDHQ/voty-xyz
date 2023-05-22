@@ -24,10 +24,7 @@ import { trpc } from '../utils/trpc'
 import { documentTitle, domain } from '../utils/constants'
 import TextLink from './basic/text-link'
 import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
-import Button from './basic/button'
 import useIsManager from '../hooks/use-is-manager'
-import useDids from '../hooks/use-dids'
-import useWallet from '../hooks/use-wallet'
 import ShareLinkIcon from './share-link-icon'
 import { hasEnabledSubDID } from '../utils/sdks/dotbit/subdid'
 
@@ -110,15 +107,15 @@ export default function CommunityInfo(props: { className?: string }) {
     () => compact([community?.name, documentTitle]).join(' - '),
     [community?.name],
   )
-  const { account } = useWallet()
-  const { data: dids } = useDids(account)
-  const isMember = useMemo(
-    () =>
-      !!dids?.find(
-        (did) => !!query.community_id && did.startsWith(query.community_id),
-      ),
-    [dids, query.community_id],
-  )
+  // const { account } = useWallet()
+  // const { data: dids } = useDids(account)
+  // const isMember = useMemo(
+  //   () =>
+  //     !!dids?.find(
+  //       (did) => !!query.community_id && did.startsWith(query.community_id),
+  //     ),
+  //   [dids, query.community_id],
+  // )
   const { data: enabledSubDID } = useQuery(
     ['hasEnabledSubDID', query.community_id],
     () => hasEnabledSubDID(query.community_id!),
@@ -221,7 +218,7 @@ export default function CommunityInfo(props: { className?: string }) {
               </div>
             </>
           ) : null}
-          {router.pathname === '/[community_id]/about' ||
+          {/* {router.pathname === '/[community_id]/about' ||
           previewCommunity ||
           isMember ? null : (
             <Link
@@ -232,7 +229,7 @@ export default function CommunityInfo(props: { className?: string }) {
                 Want to join?
               </Button>
             </Link>
-          )}
+          )} */}
         </div>
       </aside>
     </>

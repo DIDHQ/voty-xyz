@@ -31,14 +31,6 @@ export default function CommunityAboutPage() {
           <MarkdownViewer>{community?.about}</MarkdownViewer>
         </Article>
       ) : null}
-      <Article className="mt-6 w-full sm:mt-8">
-        <h1 id="how-to-join">How to join</h1>
-        <MarkdownViewer>
-          {
-            'Please contact our community manager via Website, Twitter or Discord'
-          }
-        </MarkdownViewer>
-      </Article>
       {isManager && !previewCommunity ? (
         <Link
           href={`/${query.community_id}/settings`}
