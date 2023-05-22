@@ -43,6 +43,6 @@ export default function OembedContainer(props: {
       alt={data.title}
     />
   ) : (
-    props.fallback
+    <>{props.fallback}</>
   )
 }
