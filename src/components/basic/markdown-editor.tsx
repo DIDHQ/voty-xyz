@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import MdEditor from 'react-markdown-editor-lite'
 import clsx from 'clsx'
-import 'react-markdown-editor-lite/lib/index.css'
 
 import MarkdownViewer from './markdown-viewer'
 
@@ -48,12 +47,13 @@ export default function MarkdownEditor(props: {
       ]}
       style={{ height: 600 }}
       htmlClass="prose"
-      markdownClass="focus:ring-0"
+      markdownClass={
+        'focus:ring-0 placeholder:text-gray-400 read-only:cursor-not-allowed read-only:border-gray-200 read-only:bg-gray-50 read-only:text-gray-500 sm:text-sm'
+      }
       className={clsx(
-        'block w-full overflow-hidden rounded-md border placeholder:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
-        props.error
-          ? 'border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500'
-          : 'border-gray-200 focus:border-primary-500 focus:ring-primary-300',
+        'block w-full overflow-hidden rounded-md border',
+        props.disabled ? 'pointer-events-none' : undefined,
+        props.error ? 'border-red-300' : 'border-gray-200',
       )}
       placeholder="Markdown is supported"
     />
