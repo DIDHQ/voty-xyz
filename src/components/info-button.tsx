@@ -1,5 +1,6 @@
 import { Menu } from '@headlessui/react'
 import {
+  BookOpenIcon,
   EllipsisVerticalIcon,
   InformationCircleIcon,
 } from '@heroicons/react/20/solid'
@@ -33,8 +34,22 @@ export default function InfoButton() {
               )}
             >
               <InformationCircleIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
-              About Voty
+              About
             </Link>
+          )}
+        </Menu.Item>
+        <Menu.Item>
+          {({ active }) => (
+            <a
+              href="https://voty.gitbook.io/"
+              className={clsx(
+                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                'group flex items-center px-4 py-2 text-sm',
+              )}
+            >
+              <BookOpenIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
+              Document
+            </a>
           )}
         </Menu.Item>
       </div>
