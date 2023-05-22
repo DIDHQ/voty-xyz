@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { GetStaticProps } from 'next'
 
 import Article from '../components/basic/article'
-import Markdown from '../components/basic/markdown'
+import MarkdownViewer from '../components/basic/markdown-viewer'
 import { documentTitle } from '../utils/constants'
 
 export default function AboutPage() {
@@ -12,7 +12,7 @@ export default function AboutPage() {
         <title>{`About - ${documentTitle}`}</title>
       </Head>
       <Article className="pt-8">
-        <Markdown>{`# Introduction
+        <MarkdownViewer>{`# Introduction
 
 Voty is a decentralized voting protocol based on DID, that aims to offer a fair and user-friendly governance system for all types of communities. Unlike token-based voting systems, Voty has proposed the idea of **"DID-based Governance"**, which enables communities to obtain valuable opinions from all members, instead of concentrating power among a select few.
 
@@ -109,7 +109,7 @@ The Voty Protocol has achieved the seemingly obvious but yet unaccomplished goal
 
 "Transparent" in Voty means that all rules, proposals, and each vote are publicly displayed. Any changes are traceable, and votes can not be maliciously undercounted.
 
-"Unalterable" in Voty means that all rules, proposals, and votes contain cryptographic signatures are stored on the blockchain. As a result, any fraudulent data can be easily identified and excluded.`}</Markdown>
+"Unalterable" in Voty means that all rules, proposals, and votes contain cryptographic signatures are stored on the blockchain. As a result, any fraudulent data can be easily identified and excluded.`}</MarkdownViewer>
       </Article>
     </>
   )

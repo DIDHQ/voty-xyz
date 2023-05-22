@@ -108,7 +108,7 @@ export default function CommunityForm(props: {
           <GridItem6>
             <FormItem
               label="About"
-              description="Provide a detailed description of your community to leave a lasting impression on people. Markdown is supported."
+              description="Provide a detailed description of your community to leave a lasting impression on people."
               error={errors?.about?.message}
             >
               <Controller

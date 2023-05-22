@@ -15,7 +15,7 @@ import {
 } from '../utils/schemas/v1/group-proposal'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import TextInput from './basic/text-input'
-import Textarea from './basic/textarea'
+import MarkdownEditor from './basic/markdown-editor'
 import TextButton from './basic/text-button'
 import { Form, FormItem, FormSection } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
@@ -216,15 +216,18 @@ export default function GroupProposalForm(props: {
             </FormItem>
           </GridItem6>
           <GridItem6>
-            <FormItem
-              label="Content"
-              description="Markdown is supported."
-              error={errors?.content?.message}
-            >
-              <Textarea
-                {...register('content')}
-                disabled={disabled}
-                error={!!errors?.content?.message}
+            <FormItem label="Content" error={errors?.content?.message}>
+              <Controller
+                control={control}
+                name="content"
+                render={({ field: { value, onChange } }) => (
+                  <MarkdownEditor
+                    value={value}
+                    onChange={onChange}
+                    disabled={disabled}
+                    error={!!errors?.content?.message}
+                  />
+                )}
               />
             </FormItem>
           </GridItem6>

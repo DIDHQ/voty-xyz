@@ -9,7 +9,7 @@ import LoadingBar from '../../components/basic/loading-bar'
 import Button from '../../components/basic/button'
 import useRouterQuery from '../../hooks/use-router-query'
 import useIsManager from '../../hooks/use-is-manager'
-import Markdown from '../../components/basic/markdown'
+import MarkdownViewer from '../../components/basic/markdown-viewer'
 import { previewCommunityAtom } from '../../utils/atoms'
 
 export default function CommunityAboutPage() {
@@ -28,16 +28,16 @@ export default function CommunityAboutPage() {
       {community?.about ? (
         <Article className="mt-6 w-full sm:mt-8">
           <h1>About</h1>
-          <Markdown>{community?.about}</Markdown>
+          <MarkdownViewer>{community?.about}</MarkdownViewer>
         </Article>
       ) : null}
       <Article className="mt-6 w-full sm:mt-8">
         <h1 id="how-to-join">How to join</h1>
-        <Markdown>
+        <MarkdownViewer>
           {
             'Please contact our community manager via Website, Twitter or Discord'
           }
-        </Markdown>
+        </MarkdownViewer>
       </Article>
       {isManager && !previewCommunity ? (
         <Link

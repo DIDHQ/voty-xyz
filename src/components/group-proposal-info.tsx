@@ -10,7 +10,7 @@ import { Group } from '../utils/schemas/v1/group'
 import { GroupProposal } from '../utils/schemas/v1/group-proposal'
 import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
-import Markdown from './basic/markdown'
+import MarkdownViewer from './basic/markdown-viewer'
 import TextLink from './basic/text-link'
 import GroupProposalCurrentPhase from './group-proposal-current-phase'
 import { PreviewPermalink } from '../utils/types'
@@ -41,7 +41,7 @@ export default function GroupProposalInfo(props: {
       />
       <DetailList title="Criteria for approval">
         <Article small className="pt-2">
-          <Markdown>{props.group?.terms_and_conditions}</Markdown>
+          <MarkdownViewer>{props.group?.terms_and_conditions}</MarkdownViewer>
         </Article>
       </DetailList>
       <DetailList title="Information">

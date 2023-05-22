@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import pMap from 'p-map'
 import { useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
 import { uniq } from 'lodash-es'
 import { EyeIcon } from '@heroicons/react/20/solid'
@@ -14,7 +14,7 @@ import {
 } from '../utils/schemas/v1/grant-proposal'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import TextInput from './basic/text-input'
-import Textarea from './basic/textarea'
+import MarkdownEditor from './basic/markdown-editor'
 import TextButton from './basic/text-button'
 import { Form, FormItem, FormSection } from './basic/form'
 import { Grid6, GridItem2, GridItem6 } from './basic/grid'
@@ -53,6 +53,7 @@ export default function GrantProposalForm(props: {
     resolver: zodResolver(grantProposalSchema),
   })
   const {
+    control,
     register,
     setValue,
     reset,
@@ -172,15 +173,18 @@ export default function GrantProposalForm(props: {
             </FormItem>
           </GridItem6>
           <GridItem6>
-            <FormItem
-              label="Content"
-              description="Markdown is supported."
-              error={errors?.content?.message}
-            >
-              <Textarea
-                {...register('content')}
-                disabled={disabled}
-                error={!!errors?.content?.message}
+            <FormItem label="Content" error={errors?.content?.message}>
+              <Controller
+                control={control}
+                name="content"
+                render={({ field: { value, onChange } }) => (
+                  <MarkdownEditor
+                    value={value}
+                    onChange={onChange}
+                    disabled={disabled}
+                    error={!!errors?.content?.message}
+                  />
+                )}
               />
             </FormItem>
           </GridItem6>

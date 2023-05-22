@@ -18,7 +18,7 @@ import useIsManager from '../hooks/use-is-manager'
 import { Grant, grantSchema } from '../utils/schemas/v1/grant'
 import { previewGrantAtom } from '../utils/atoms'
 import { Preview } from '../utils/types'
-import Textarea from './basic/textarea'
+import MarkdownEditor from './basic/markdown-editor'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import { requiredCoinTypesOfBooleanSets } from '../utils/functions/boolean'
@@ -109,13 +109,20 @@ export default function GrantForm(props: {
           <GridItem6>
             <FormItem
               label="Introduction"
-              description="The purpose of this grant. Markdown is supported."
+              description="The purpose of this grant."
               error={errors?.introduction?.message}
             >
-              <Textarea
-                {...register('introduction')}
-                error={!!errors?.introduction?.message}
-                disabled={disabled}
+              <Controller
+                control={control}
+                name={'introduction'}
+                render={({ field: { value, onChange } }) => (
+                  <MarkdownEditor
+                    value={value}
+                    onChange={onChange}
+                    error={!!errors?.introduction?.message}
+                    disabled={disabled}
+                  />
+                )}
               />
             </FormItem>
           </GridItem6>

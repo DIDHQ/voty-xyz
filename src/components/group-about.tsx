@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { Group } from '../utils/schemas/v1/group'
 import { formatDuration } from '../utils/time'
 import Article from './basic/article'
-import Markdown from './basic/markdown'
+import MarkdownViewer from './basic/markdown-viewer'
 import PermissionCard from './permission-card'
 
 export default function GroupAbout(props: {
@@ -49,7 +49,7 @@ export default function GroupAbout(props: {
         </nav>
         <Article small className="mt-4 border-t pt-4">
           <h4 className="mb-3 text-sm font-semibold">Criteria for approval</h4>
-          <Markdown>{group.terms_and_conditions}</Markdown>
+          <MarkdownViewer>{group.terms_and_conditions}</MarkdownViewer>
         </Article>
       </div>
     </div>
