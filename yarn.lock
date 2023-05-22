@@ -8761,10 +8761,10 @@ vfile@^5.0.0:
     unist-util-stringify-position "^3.0.0"
     vfile-message "^3.0.0"
 
-viem@0.3.24:
-  version "0.3.24"
-  resolved "https://registry.yarnpkg.com/viem/-/viem-0.3.24.tgz#94530ec57f17469cd9c7216cb58290a739193f32"
-  integrity sha512-Oa2FgJ4mswl1I6nPPnyBnt+9+8w4/xcw4XjB1q115g9JJOqX8Ic9nq4Z31lDAonjtCca+K7u1M30t1lFXafqFg==
+viem@0.3.33:
+  version "0.3.33"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-0.3.33.tgz#baba139fc656cf66e3a58710fbf47e6c01627975"
+  integrity sha512-ITB7wiYIWMxSyOQePPVa+6YcCrQiBLY/S758iZcjIZFqyqF8i/9PBhAPiqbiUrdfydaqjjRtWR1PAaXlMxmgtg==
   dependencies:
     "@adraffy/ens-normalize" "1.9.0"
     "@noble/curves" "1.0.0"
