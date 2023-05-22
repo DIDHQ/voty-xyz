@@ -53,7 +53,7 @@ export default function OembedContainer(props: {
   )
 
   return children?.result ? (
-    <div style={{ aspectRatio }}>{children.result}</div>
+    <span style={{ aspectRatio }} className='block'>{children.result}</span>
   ) : oembed?.type === 'photo' ? (
     <img
       src={oembed.url}
