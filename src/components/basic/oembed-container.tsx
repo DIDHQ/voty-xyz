@@ -1,6 +1,10 @@
 import { ReactNode, useMemo } from 'react'
 import matchUrl from 'match-url-wildcard'
 import { useQuery } from '@tanstack/react-query'
+import { unified } from 'unified'
+import rehypeParse from 'rehype-parse'
+import rehypeReact from 'rehype-react'
+import { createElement, Fragment } from 'react'
 
 import providers from '../../utils/providers'
 import { fetchJson } from '../../utils/fetcher'
@@ -22,7 +26,7 @@ export default function OembedContainer(props: {
         ),
     [props.link],
   )
-  const { data } = useQuery(
+  const { data: oembed } = useQuery(
     ['oembed', endpoint?.url, props.link],
     () =>
       fetchJson<OembedDataSchema>(
@@ -30,19 +34,30 @@ export default function OembedContainer(props: {
       ),
     { enabled: !!endpoint, refetchOnWindowFocus: false },
   )
+  const html = useMemo(
+    () => (oembed && 'html' in oembed ? oembed.html : undefined),
+    [oembed],
+  )
+  const { data: children } = useQuery(
+    ['unified', html],
+    () =>
+      unified()
+        .use(rehypeParse, { fragment: true })
+        .use(rehypeReact, { createElement, Fragment })
+        .process(html!),
+    { enabled: !!html },
+  )
 
-  return data?.type === 'video' || data?.type === 'rich' ? (
-    <div
-      dangerouslySetInnerHTML={{ __html: data.html }}
-      style={{ width: data.width, height: data.height }}
-    />
-  ) : data?.type === 'photo' ? (
-    <img
-      src={data.url}
-      style={{ width: data.width, height: data.height }}
-      alt={data.title}
-    />
-  ) : (
-    <>{props.fallback}</>
+  return (
+    children?.result ||
+    (oembed?.type === 'photo' ? (
+      <img
+        src={oembed.url}
+        style={{ width: oembed.width, height: oembed.height }}
+        alt={oembed.title}
+      />
+    ) : (
+      <>{props.fallback}</>
+    ))
   )
 }
