@@ -15,7 +15,7 @@ export default function TextButton(
       type="button"
       {...restProps}
       className={clsx(
-        'rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-gray-400',
+        'rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-gray-400',
         primary
           ? 'text-primary-600 hover:text-primary-500 focus:ring-primary-300'
           : secondary
