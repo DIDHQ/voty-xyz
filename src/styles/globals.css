@@ -24,3 +24,11 @@ input[type='number'] {
 input:disabled {
   opacity: 1; /* https://stackoverflow.com/questions/262158/disabled-input-text-color-on-ios */
 }
+
+.rc-md-editor .editor-container > .section {
+  border-right: none !important;
+}
+
+.rc-md-editor .editor-container > section.visible ~ section.visible {
+  border-left: 1px solid rgb(229 231 235 / var(--tw-border-opacity));
+}

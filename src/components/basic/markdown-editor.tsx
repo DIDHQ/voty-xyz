@@ -48,7 +48,7 @@ export default function MarkdownEditor(props: {
       ]}
       style={{ height: 600 }}
       htmlClass="prose"
-      markdownClass="focus:ring-0 focus:outline-none focus:border-none"
+      markdownClass="focus:ring-0"
       className={clsx(
         'block w-full overflow-hidden rounded-md border placeholder:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
         props.error
