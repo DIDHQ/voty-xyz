@@ -15,6 +15,8 @@ import { Activity } from '../../utils/schemas/activity'
 
 const schema = proved(authorized(communitySchema))
 
+const pinnedDids = ['bitbuilder.bit']
+
 export const communityRouter = router({
   getById: procedure
     .input(z.object({ id: z.string().optional() }))
@@ -74,12 +76,20 @@ export const communityRouter = router({
     .input(z.object({ cursor: z.string().optional() }))
     .output(z.object({ data: z.array(schema), next: z.string().optional() }))
     .query(async ({ input }) => {
-      const communities = await database.community.findMany({
+      const pinnedCommunities = input.cursor
+        ? []
+        : await database.community.findMany({
+            where: { id: { in: pinnedDids } },
+            orderBy: { ts: 'desc' },
+          })
+      const commonCommunities = await database.community.findMany({
+        where: { id: { notIn: pinnedDids } },
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: 30,
         skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
+      const communities = [...pinnedCommunities, ...commonCommunities]
       const storages = keyBy(
         await database.storage.findMany({
           where: {
