@@ -17,6 +17,7 @@ import useIsManager from '../hooks/use-is-manager'
 import { previewCommunityAtom } from '../utils/atoms'
 import { Preview } from '../utils/types'
 import { domain } from '../utils/constants'
+import MarkdownEditor from './basic/markdown-editor'
 
 const AvatarInput = dynamic(() => import('./basic/avatar-input'), {
   ssr: false,
@@ -107,13 +108,20 @@ export default function CommunityForm(props: {
           <GridItem6>
             <FormItem
               label="About"
-              description="Provide a detailed description of your community to leave a lasting impression on people. Markdown is supported."
+              description="Provide a detailed description of your community to leave a lasting impression on people."
               error={errors?.about?.message}
             >
-              <Textarea
-                {...register('about')}
-                error={!!errors?.about?.message}
-                disabled={!isManager}
+              <Controller
+                control={control}
+                name="about"
+                render={({ field: { value, onChange } }) => (
+                  <MarkdownEditor
+                    value={value}
+                    onChange={onChange}
+                    error={!!errors?.about?.message}
+                    disabled={!isManager}
+                  />
+                )}
               />
             </FormItem>
           </GridItem6>

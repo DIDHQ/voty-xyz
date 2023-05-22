@@ -14,7 +14,7 @@ import LoadingBar from '../../../../../components/basic/loading-bar'
 import { documentTitle, previewPermalink } from '../../../../../utils/constants'
 import GroupProposalVoteForm from '../../../../../components/group-proposal-vote-form'
 import useRouterQuery from '../../../../../hooks/use-router-query'
-import Markdown from '../../../../../components/basic/markdown'
+import MarkdownViewer from '../../../../../components/basic/markdown-viewer'
 import GroupProposalInfo from '../../../../../components/group-proposal-info'
 import { previewGroupProposalAtom } from '../../../../../utils/atoms'
 import { GroupProposal } from '../../../../../utils/schemas/v1/group-proposal'
@@ -114,7 +114,7 @@ export default function GroupProposalPage() {
               {groupProposal?.title || '...'}
             </h3>
             <Article className="mt-6 sm:mt-8">
-              <Markdown>{groupProposal?.content}</Markdown>
+              <MarkdownViewer>{groupProposal?.content}</MarkdownViewer>
             </Article>
           </div>
           <GroupProposalInfo

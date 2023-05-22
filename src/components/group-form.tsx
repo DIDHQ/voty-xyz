@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 
 import PhaseInput from './basic/phase-input'
 import TextInput from './basic/text-input'
-import Textarea from './basic/textarea'
+import MarkdownEditor from './basic/markdown-editor'
 import BooleanSetsBlock from './boolean-sets-block'
 import DecimalSetsBlock from './decimal-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
@@ -197,13 +197,19 @@ export default function GroupForm(props: {
             <GridItem6>
               <FormItem
                 label="Criteria for approval"
-                description="Markdown is supported."
                 error={errors?.terms_and_conditions?.message}
               >
-                <Textarea
-                  disabled={disabled}
-                  {...register('terms_and_conditions')}
-                  error={!!errors?.terms_and_conditions?.message}
+                <Controller
+                  control={control}
+                  name="terms_and_conditions"
+                  render={({ field: { value, onChange } }) => (
+                    <MarkdownEditor
+                      value={value}
+                      onChange={onChange}
+                      error={!!errors?.terms_and_conditions?.message}
+                      disabled={disabled}
+                    />
+                  )}
                 />
               </FormItem>
             </GridItem6>

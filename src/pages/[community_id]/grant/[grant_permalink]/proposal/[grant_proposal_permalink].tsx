@@ -21,7 +21,7 @@ import TextLink from '../../../../../components/basic/text-link'
 import LoadingBar from '../../../../../components/basic/loading-bar'
 import { documentTitle, previewPermalink } from '../../../../../utils/constants'
 import useRouterQuery from '../../../../../hooks/use-router-query'
-import Markdown from '../../../../../components/basic/markdown'
+import MarkdownViewer from '../../../../../components/basic/markdown-viewer'
 import GrantProposalInfo from '../../../../../components/grant-proposal-info'
 import { previewGrantProposalAtom } from '../../../../../utils/atoms'
 import { GrantProposal } from '../../../../../utils/schemas/v1/grant-proposal'
@@ -228,7 +228,7 @@ export default function GrantProposalPage() {
               {grantProposal?.title || '...'}
             </h3>
             <Article className="mt-6 sm:mt-8">
-              <Markdown>{grantProposal?.content}</Markdown>
+              <MarkdownViewer>{grantProposal?.content}</MarkdownViewer>
             </Article>
           </div>
           <GrantProposalInfo

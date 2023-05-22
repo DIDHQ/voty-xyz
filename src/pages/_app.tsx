@@ -29,6 +29,7 @@ import { trpc } from '../utils/trpc'
 import { isTestnet, documentTitle } from '../utils/constants'
 import { chainIdToRpc } from '../utils/constants'
 import '../styles/globals.css'
+import '../styles/editor.css'
 
 const { chains, publicClient } = configureChains(
   (isTestnet
