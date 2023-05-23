@@ -52,7 +52,8 @@ export default function GroupProposalCurrentPhase(props: {
             <span className="text-gray-600">
               {status?.timestamp && props.duration
                 ? format2Time(
-                    status.timestamp.getTime(),
+                    status.timestamp.getTime() +
+                      props.duration.announcing * 1000,
                     status.timestamp.getTime() +
                       (props.duration.announcing + props.duration.voting) *
                         1000,
