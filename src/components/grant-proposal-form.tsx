@@ -138,7 +138,11 @@ export default function GrantProposalForm(props: {
                 <Slide
                   title={`Proposers of ${props.grant.name}`}
                   trigger={({ handleOpen }) => (
-                    <TextButton secondary onClick={handleOpen}>
+                    <TextButton
+                      secondary
+                      onClick={handleOpen}
+                      className="text-sm"
+                    >
                       Why I&#39;m not eligible to propose?
                     </TextButton>
                   )}

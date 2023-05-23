@@ -178,7 +178,11 @@ export default function GrantProposalVoteForm(props: {
                   <Slide
                     title={`Voters of ${props.grant.name}`}
                     trigger={({ handleOpen }) => (
-                      <TextButton secondary onClick={handleOpen}>
+                      <TextButton
+                        secondary
+                        onClick={handleOpen}
+                        className="text-sm"
+                      >
                         Why I&#39;m not eligible to vote?
                       </TextButton>
                     )}
