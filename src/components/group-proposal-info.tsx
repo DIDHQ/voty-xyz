@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 
 import {
   coinTypeExplorers,
@@ -8,15 +8,15 @@ import {
 import { Community } from '../utils/schemas/v1/community'
 import { Group } from '../utils/schemas/v1/group'
 import { GroupProposal } from '../utils/schemas/v1/group-proposal'
+import { PreviewPermalink } from '../utils/types'
+import { permalink2Explorer } from '../utils/permalink'
+import { formatNumber } from '../utils/number'
+import { formatDid } from '../utils/did/utils'
 import Article from './basic/article'
 import { DetailItem, DetailList } from './basic/detail'
 import MarkdownViewer from './basic/markdown-viewer'
 import TextLink from './basic/text-link'
 import GroupProposalCurrentPhase from './group-proposal-current-phase'
-import { PreviewPermalink } from '../utils/types'
-import { permalink2Explorer } from '../utils/permalink'
-import { formatNumber } from '../utils/number'
-import { formatDid } from '../utils/did/utils'
 
 export default function GroupProposalInfo(props: {
   community?: Community

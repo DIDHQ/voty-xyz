@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { ChangeEvent, Ref, useCallback, useEffect, useState } from 'react'
 
 enum PhaseType {

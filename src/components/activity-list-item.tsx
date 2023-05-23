@@ -7,14 +7,14 @@ import {
   QuestionMarkCircleIcon,
 } from '@heroicons/react/20/solid'
 import { ExoticComponent, ReactNode, useMemo } from 'react'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 
 import { Activity } from '../utils/schemas/activity'
 import { formatDurationMs } from '../utils/time'
-import TextLink from './basic/text-link'
 import useNow from '../hooks/use-now'
 import { permalink2Explorer, permalink2Id } from '../utils/permalink'
 import { formatDid } from '../utils/did/utils'
+import TextLink from './basic/text-link'
 
 export default function ActivityListItem(props: {
   activity: { data: Activity; ts: Date; actor: string }

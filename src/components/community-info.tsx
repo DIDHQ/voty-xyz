@@ -6,7 +6,7 @@ import {
   BoltIcon,
 } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { compact, uniqBy } from 'lodash-es'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -16,17 +16,17 @@ import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { useQuery } from '@tanstack/react-query'
 
-import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
 import useRouterQuery from '../hooks/use-router-query'
-import Avatar from './basic/avatar'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 import { documentTitle, domain } from '../utils/constants'
-import TextLink from './basic/text-link'
 import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import useIsManager from '../hooks/use-is-manager'
-import ShareLinkIcon from './share-link-icon'
 import { hasEnabledSubDID } from '../utils/sdks/dotbit/subdid'
+import ShareLinkIcon from './share-link-icon'
+import TextLink from './basic/text-link'
+import Avatar from './basic/avatar'
+import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
 
 const SubscriptionButton = dynamic(() => import('./subscription-button'), {
   ssr: false,

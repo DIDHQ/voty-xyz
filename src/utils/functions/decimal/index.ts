@@ -1,4 +1,4 @@
-import Decimal from 'decimal.js'
+import { Decimal } from 'decimal.js'
 import { uniq } from 'lodash-es'
 import pMap from 'p-map'
 

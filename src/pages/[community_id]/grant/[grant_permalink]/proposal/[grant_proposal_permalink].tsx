@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'

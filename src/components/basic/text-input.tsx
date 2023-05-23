@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { forwardRef, InputHTMLAttributes, useCallback, WheelEvent } from 'react'
 
 export default forwardRef<

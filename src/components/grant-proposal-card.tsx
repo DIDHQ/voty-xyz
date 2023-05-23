@@ -5,9 +5,9 @@ import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/basic/authorship'
 import { GrantProposal } from '../utils/schemas/v1/grant-proposal'
 import { formatDurationMs } from '../utils/time'
-import Tooltip from './basic/tooltip'
 import useNow from '../hooks/use-now'
 import { formatDid } from '../utils/did/utils'
+import Tooltip from './basic/tooltip'
 
 export default function GrantProposalCard(props: {
   communityId: string

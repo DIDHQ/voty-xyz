@@ -13,29 +13,29 @@ import {
   grantProposalSchema,
 } from '../utils/schemas/v1/grant-proposal'
 import { getCurrentSnapshot } from '../utils/snapshot'
-import TextInput from './basic/text-input'
-import MarkdownEditor from './basic/markdown-editor'
-import TextButton from './basic/text-button'
-import { Form, FormItem, FormSection } from './basic/form'
-import { Grid6, GridItem2, GridItem6 } from './basic/grid'
 import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import useStatus from '../hooks/use-status'
 import { Grant } from '../utils/schemas/v1/grant'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
-import DidCombobox from './did-combobox'
 import {
   checkBoolean,
   requiredCoinTypesOfBooleanSets,
 } from '../utils/functions/boolean'
 import { requiredCoinTypesOfDecimalSets } from '../utils/functions/decimal'
-import Button from './basic/button'
 import { previewGrantProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
-import Slide from './basic/slide'
-import PermissionCard from './permission-card'
 import { permalink2Id } from '../utils/permalink'
 import { trpc } from '../utils/trpc'
+import Slide from './basic/slide'
+import PermissionCard from './permission-card'
+import Button from './basic/button'
+import DidCombobox from './did-combobox'
+import { Grid6, GridItem2, GridItem6 } from './basic/grid'
+import { Form, FormItem, FormSection } from './basic/form'
+import TextButton from './basic/text-button'
+import MarkdownEditor from './basic/markdown-editor'
+import TextInput from './basic/text-input'
 
 export default function GrantProposalForm(props: {
   initialValue: Partial<GrantProposal>

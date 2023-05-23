@@ -4,8 +4,8 @@ import useStatus from '../hooks/use-status'
 import { GrantPhase, getGrantPhase } from '../utils/phase'
 import { Grant } from '../utils/schemas/v1/grant'
 import { format2Time, formatTime } from '../utils/time'
-import { DetailList } from './basic/detail'
 import useNow from '../hooks/use-now'
+import { DetailList } from './basic/detail'
 
 export default function GrantCurrentPhase(props: {
   grantPermalink?: string

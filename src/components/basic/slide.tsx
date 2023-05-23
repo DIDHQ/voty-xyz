@@ -1,6 +1,6 @@
 import { Transition, Dialog } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { Fragment, ReactNode, useState } from 'react'
 
 export default function Slide(props: {

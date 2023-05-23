@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 
 export default function RadioGroup(props: {
   options: { value: string; name: string }[]

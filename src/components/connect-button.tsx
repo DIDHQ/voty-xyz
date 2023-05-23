@@ -1,12 +1,12 @@
 import { ConnectButton as RainbowKitConnectButton } from '@rainbow-me/rainbowkit'
 import { Menu } from '@headlessui/react'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import '@rainbow-me/rainbowkit/styles.css'
 
 import useWallet from '../hooks/use-wallet'
+import { coinTypeLogos, coinTypeNames } from '../utils/constants'
 import Button from './basic/button'
 import Avatar from './basic/avatar'
-import { coinTypeLogos, coinTypeNames } from '../utils/constants'
 import Dropdown from './basic/dropdown'
 
 export default function ConnectButton() {

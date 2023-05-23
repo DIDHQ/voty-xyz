@@ -1,4 +1,4 @@
-import Decimal from 'decimal.js'
+import { Decimal } from 'decimal.js'
 import { mapValues, uniq, without } from 'lodash-es'
 
 import { PositiveDecimal } from './schemas/basic/positive-decimal'

@@ -4,7 +4,7 @@ import {
   EllipsisVerticalIcon,
   InformationCircleIcon,
 } from '@heroicons/react/20/solid'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import Link from 'next/link'
 
 import Dropdown from './basic/dropdown'

@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { forwardRef, Fragment, KeyboardEvent, useCallback } from 'react'
 import TextareaAutosize, {
   TextareaAutosizeProps,

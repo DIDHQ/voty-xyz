@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { ButtonHTMLAttributes } from 'react'
 
 export default function TextButton(

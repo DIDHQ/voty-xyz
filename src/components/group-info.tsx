@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { compact } from 'lodash-es'
 import Link from 'next/link'
 import { useRouter } from 'next/router'

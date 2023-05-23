@@ -4,12 +4,12 @@ import { useMemo } from 'react'
 
 import useStatus from '../hooks/use-status'
 import { Grant } from '../utils/schemas/v1/grant'
-import Button from './basic/button'
-import Tooltip from './basic/tooltip'
 import { permalink2Id } from '../utils/permalink'
 import { GrantPhase, getGrantPhase } from '../utils/phase'
 import { formatDurationMs } from '../utils/time'
 import useNow from '../hooks/use-now'
+import Tooltip from './basic/tooltip'
+import Button from './basic/button'
 
 export default function GrantProposalCreateButton(props: {
   communityId?: string

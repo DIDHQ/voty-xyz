@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 
 import {
   coinTypeExplorers,
@@ -7,12 +7,12 @@ import {
 } from '../utils/constants'
 import { Community } from '../utils/schemas/v1/community'
 import { Grant } from '../utils/schemas/v1/grant'
-import { DetailItem, DetailList } from './basic/detail'
-import TextLink from './basic/text-link'
-import GrantCurrentPhase from './grant-current-phase'
 import { PreviewPermalink } from '../utils/types'
 import { permalink2Explorer } from '../utils/permalink'
 import { formatNumber } from '../utils/number'
+import { DetailItem, DetailList } from './basic/detail'
+import TextLink from './basic/text-link'
+import GrantCurrentPhase from './grant-current-phase'
 import Article from './basic/article'
 
 export default function GrantInfo(props: {

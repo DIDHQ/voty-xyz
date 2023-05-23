@@ -10,10 +10,10 @@ import {
   grantProposalSchema,
 } from '../schemas/v1/grant-proposal'
 import { GrantProposalVote } from '../schemas/v1/grant-proposal-vote'
-import verifyGrantProposal from './verify-grant-proposal'
 import { commonCoinTypes } from '../constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
 import { database } from '../database'
+import verifyGrantProposal from './verify-grant-proposal'
 
 const schema = proved(authorized(grantProposalSchema))
 

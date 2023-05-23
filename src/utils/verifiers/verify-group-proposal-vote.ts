@@ -11,10 +11,10 @@ import {
   groupProposalSchema,
 } from '../schemas/v1/group-proposal'
 import { GroupProposalVote } from '../schemas/v1/group-proposal-vote'
-import verifyGroupProposal from './verify-group-proposal'
 import { commonCoinTypes } from '../constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
 import { database } from '../database'
+import verifyGroupProposal from './verify-group-proposal'
 
 const schema = proved(authorized(groupProposalSchema))
 

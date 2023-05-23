@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react'
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { Combobox } from '@headlessui/react'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { useVirtualizer } from '@tanstack/react-virtual'
 
 import { formatDid } from '../utils/did/utils'

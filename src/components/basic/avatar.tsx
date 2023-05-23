@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { useMemo } from 'react'
 
 export default function Avatar(props: {

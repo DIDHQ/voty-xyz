@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import Link from 'next/link'
 
 import { isTestnet } from '../utils/constants'

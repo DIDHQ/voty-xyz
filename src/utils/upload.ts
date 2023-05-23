@@ -1,4 +1,4 @@
-import { DataType } from './constants'
+import { DataType, isTestnet } from './constants'
 import {
   isCommunity,
   isGrant,
@@ -17,7 +17,6 @@ import { GrantProposalVote } from './schemas/v1/grant-proposal-vote'
 import { Group } from './schemas/v1/group'
 import { GroupProposal } from './schemas/v1/group-proposal'
 import { GroupProposalVote } from './schemas/v1/group-proposal-vote'
-import { isTestnet } from './constants'
 import arweave, { jwk } from './sdks/arweave'
 
 const textEncoder = new TextEncoder()

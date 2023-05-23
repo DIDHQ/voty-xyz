@@ -20,12 +20,12 @@ import {
 } from '../utils/data-type'
 import { trpc } from '../utils/trpc'
 import { Preview } from '../utils/types'
-import Button from './basic/button'
-import Notification from './basic/notification'
-import TextLink from './basic/text-link'
 import { previewPermalink } from '../utils/constants'
 import { permalink2Id } from '../utils/permalink'
 import sleep from '../utils/sleep'
+import Button from './basic/button'
+import Notification from './basic/notification'
+import TextLink from './basic/text-link'
 
 export default function PreviewBar() {
   const router = useRouter()

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import MdEditor from 'react-markdown-editor-lite'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 
 import MarkdownViewer from './markdown-viewer'
 

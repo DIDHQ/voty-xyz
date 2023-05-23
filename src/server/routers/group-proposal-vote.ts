@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last, mapValues } from 'lodash-es'
 import { z } from 'zod'
-import Decimal from 'decimal.js'
+import { Decimal } from 'decimal.js'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'

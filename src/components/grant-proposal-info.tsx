@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 
 import {
   coinTypeExplorers,
@@ -8,13 +8,13 @@ import {
 import { Community } from '../utils/schemas/v1/community'
 import { Grant } from '../utils/schemas/v1/grant'
 import { GrantProposal } from '../utils/schemas/v1/grant-proposal'
-import { DetailItem, DetailList } from './basic/detail'
-import TextLink from './basic/text-link'
-import GrantCurrentPhase from './grant-current-phase'
 import { PreviewPermalink } from '../utils/types'
 import { formatNumber } from '../utils/number'
 import { permalink2Explorer, permalink2Id } from '../utils/permalink'
 import { formatDid } from '../utils/did/utils'
+import GrantCurrentPhase from './grant-current-phase'
+import TextLink from './basic/text-link'
+import { DetailItem, DetailList } from './basic/detail'
 
 export default function GrantProposalInfo(props: {
   community?: Community

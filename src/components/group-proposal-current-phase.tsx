@@ -3,9 +3,9 @@ import { useMemo } from 'react'
 import useStatus from '../hooks/use-status'
 import { Group } from '../utils/schemas/v1/group'
 import { format2Time, formatTime } from '../utils/time'
-import { DetailList } from './basic/detail'
 import { GroupProposalPhase, getGroupProposalPhase } from '../utils/phase'
 import useNow from '../hooks/use-now'
+import { DetailList } from './basic/detail'
 
 export default function GroupProposalCurrentPhase(props: {
   groupProposalPermalink?: string

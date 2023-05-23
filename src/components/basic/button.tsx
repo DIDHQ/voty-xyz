@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { ButtonHTMLAttributes, ExoticComponent } from 'react'
 
 export default function Button(

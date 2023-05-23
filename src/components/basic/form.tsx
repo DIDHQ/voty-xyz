@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { InputHTMLAttributes, ReactNode } from 'react'
 
 export function Form(props: {
