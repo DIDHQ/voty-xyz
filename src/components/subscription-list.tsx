@@ -9,7 +9,7 @@ import Tooltip from './basic/tooltip'
 export default function SubscriptionList(props: { className?: string }) {
   const { account } = useWallet()
   const { data } = trpc.subscription.list.useQuery(
-    { subscriber: { type: 'eth_personal_sign', address: account!.address } },
+    { subscriber: { type: 'eth_personal_sign', address: account?.address! } },
     { enabled: !!account?.address },
   )
 

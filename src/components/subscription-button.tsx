@@ -15,7 +15,7 @@ export default function SubscriptionButton(props: {
 }) {
   const { account } = useWallet()
   const { refetch: refetchList } = trpc.subscription.list.useQuery(
-    { subscriber: { type: 'eth_personal_sign', address: account!.address } },
+    { subscriber: { type: 'eth_personal_sign', address: account?.address! } },
     { enabled: !!account?.address },
   )
   const {
@@ -32,7 +32,7 @@ export default function SubscriptionButton(props: {
     isFetching,
   } = trpc.subscription.get.useQuery(
     {
-      subscriber: { type: 'eth_personal_sign', address: account!.address },
+      subscriber: { type: 'eth_personal_sign', address: account?.address! },
       communityId: props.communityId,
     },
     { enabled: !!account?.address && !!props.communityId },

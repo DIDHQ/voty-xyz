@@ -12,6 +12,7 @@
   "rules": {
     "@next/next/no-img-element": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
     "import/order": "warn"
   }
 }
