@@ -53,15 +53,7 @@ export function FormItem(
     error?: string
   } & InputHTMLAttributes<HTMLInputElement>,
 ) {
-  const {
-    label,
-    optional,
-    description,
-    error,
-    children,
-    className,
-    ...restProps
-  } = props
+  const { label, optional, description, error, children, ...restProps } = props
 
   return (
     <div {...restProps}>

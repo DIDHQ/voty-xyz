@@ -6,7 +6,7 @@ import { Snapshots, BooleanFunction } from '../../types'
 import { prefixes_dot_suffix_exact_match } from './prefixes-dot-suffix-exact-match'
 
 export const checkBooleanFunctions: {
-  [name: string]: BooleanFunction<any[]>
+  [name: string]: BooleanFunction<[string, string[]]>
 } = {
   prefixes_dot_suffix_exact_match,
 }

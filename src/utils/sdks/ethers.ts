@@ -10,7 +10,7 @@ import {
 import { chainIdToRpc, coinTypeToChainId } from '../constants'
 
 export const clients = mapValues(coinTypeToChainId, (chainId) => {
-  const rpc = chainIdToRpc[chainId!]
+  const rpc = chainId === undefined ? undefined : chainIdToRpc[chainId]
   return rpc ? createPublicClient({ transport: http(rpc) }) : undefined
 })
 

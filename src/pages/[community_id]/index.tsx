@@ -12,19 +12,12 @@ import LoadingBar from '../../components/basic/loading-bar'
 import Button from '../../components/basic/button'
 import EmptyState from '../../components/empty-state'
 import useIsManager from '../../hooks/use-is-manager'
-// import Select from '../../components/basic/select'
-// import { GroupProposalPhase } from '../../utils/phase'
 import ActivityListItem from '../../components/activity-list-item'
 import { hasEnabledSubDID } from '../../utils/sdks/dotbit/subdid'
 import { subDIDWebsite } from '../../utils/constants'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['community_id']>()
-  // const [phase, setPhase] = useState<GroupProposalPhase | 'All'>('All')
-  const { data: community, isLoading } = trpc.community.getById.useQuery(
-    { id: query.community_id },
-    { enabled: !!query.community_id },
-  )
   const { data: groups, isLoading: isGroupsLoading } =
     trpc.group.listByCommunityId.useQuery(
       { communityId: query.community_id },
@@ -50,15 +43,6 @@ export default function CommunityIndexPage() {
     }
   }, [fetchNextPage, hasNextPage, inView])
   const isManager = useIsManager(query.community_id)
-  // const options = useMemo(
-  //   () => [
-  //     'All',
-  //     GroupProposalPhase.ANNOUNCING,
-  //     GroupProposalPhase.VOTING,
-  //     GroupProposalPhase.ENDED,
-  //   ],
-  //   [],
-  // )
   const { data: enabledSubDID } = useQuery(
     ['hasEnabledSubDID', query.community_id],
     () => hasEnabledSubDID(query.community_id!),
@@ -67,20 +51,13 @@ export default function CommunityIndexPage() {
 
   return (
     <CommunityLayout>
-      <LoadingBar
-        loading={isLoading || isGroupsLoading || isActivitiesLoading}
-      />
+      <LoadingBar loading={isGroupsLoading || isActivitiesLoading} />
       <div className="mt-6 flex items-center justify-between sm:mt-8">
         {enabledSubDID === false ? (
           <div className="h-[38px]" />
         ) : (
           <h3 className="text-lg font-medium text-gray-900">Activities</h3>
         )}
-        {/* <Select
-          options={options}
-          value={phase}
-          onChange={(p) => setPhase(p as GroupProposalPhase | 'All')}
-        /> */}
       </div>
       {enabledSubDID === false ? (
         <EmptyState

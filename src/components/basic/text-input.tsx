@@ -5,7 +5,7 @@ export default forwardRef<
   HTMLInputElement,
   InputHTMLAttributes<HTMLInputElement> & { error?: boolean }
 >(function TextInput(props, ref) {
-  const { error, children, className, ...restProps } = props
+  const { error, className, ...restProps } = props
   const handleWheel = useCallback(
     (e: WheelEvent<HTMLInputElement>) => {
       if (props.type === 'number') {

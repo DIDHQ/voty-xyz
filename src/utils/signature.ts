@@ -41,7 +41,8 @@ function encodeDocument(
   document: object & { proof?: Proof },
   template?: string,
 ): string {
-  const { proof, ...rest } = document
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { proof: _omitted, ...rest } = document
   const textEncoder = new TextEncoder()
   return template
     ? template.replace(

@@ -45,7 +45,7 @@ export default function PhaseInput(props: {
       setType(PhaseType.HOUR)
       return
     }
-    for (let type of types) {
+    for (const type of types) {
       if (props.value % type === 0) {
         setValue(props.value / type)
         setType(type)

@@ -8,7 +8,7 @@ export default forwardRef<
   HTMLTextAreaElement,
   TextareaAutosizeProps & { shadow?: string; error?: boolean }
 >(function Textarea(props, ref) {
-  const { shadow, error, children, className, ...restProps } = props
+  const { shadow, error, className, ...restProps } = props
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key == 'Tab') {
       e.preventDefault()

@@ -7,7 +7,7 @@ import { Snapshots, DecimalFunction } from '../../types'
 import { prefixes_dot_suffix_fixed_power } from './prefixes-dot-suffix-fixed-power'
 
 export const calculateDecimalFunctions: {
-  [name: string]: DecimalFunction<any[]>
+  [name: string]: DecimalFunction<[string, string[], string]>
 } = {
   prefixes_dot_suffix_fixed_power,
 }
