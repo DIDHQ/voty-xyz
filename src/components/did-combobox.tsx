@@ -4,6 +4,8 @@ import { Combobox } from '@headlessui/react'
 import clsx from 'clsx'
 import { useVirtualizer } from '@tanstack/react-virtual'
 
+import { formatDid } from '../utils/did/utils'
+
 type Option = {
   did: string
   label?: string
@@ -52,7 +54,7 @@ export default function DidCombobox(props: {
         </Combobox.Label>
       ) : null}
       <div className="relative">
-        <Combobox.Input
+        <Combobox.Input<string>
           placeholder={
             props.options
               ? disabled
@@ -60,6 +62,7 @@ export default function DidCombobox(props: {
                 : undefined
               : 'Loading...'
           }
+          displayValue={formatDid}
           onChange={(event) => setQuery(event.target.value)}
           className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm"
         />
@@ -149,7 +152,7 @@ export function DidOption(props: {
             : 'text-gray-800',
         )}
       >
-        {props.text}
+        {props.text ? formatDid(props.text) : null}
       </span>
       {props.label ? (
         <span

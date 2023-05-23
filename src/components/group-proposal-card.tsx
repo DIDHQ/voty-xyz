@@ -8,6 +8,7 @@ import { Authorized } from '../utils/schemas/basic/authorship'
 import { GroupProposal } from '../utils/schemas/v1/group-proposal'
 import { formatDurationMs } from '../utils/time'
 import useNow from '../hooks/use-now'
+import { formatDid } from '../utils/did/utils'
 
 export default function GroupProposalCard(props: {
   groupProposal: Authorized<GroupProposal> & {
@@ -54,7 +55,9 @@ export default function GroupProposalCard(props: {
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">
           <p className="text-gray-400">Proposer</p>
-          <p className="truncate">{props.groupProposal.authorship.author}</p>
+          <p className="truncate">
+            {formatDid(props.groupProposal.authorship.author)}
+          </p>
         </div>
         <div className="w-0 flex-1 px-4 py-2">
           {phase === GroupProposalPhase.CONFIRMING ? (

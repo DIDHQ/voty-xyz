@@ -13,8 +13,8 @@ import { Activity } from '../utils/schemas/activity'
 import { formatDurationMs } from '../utils/time'
 import TextLink from './basic/text-link'
 import useNow from '../hooks/use-now'
-
 import { permalink2Explorer, permalink2Id } from '../utils/permalink'
+import { formatDid } from '../utils/did/utils'
 
 export default function ActivityListItem(props: {
   activity: { data: Activity; ts: Date; actor: string }
@@ -272,7 +272,9 @@ export default function ActivityListItem(props: {
         {<action.icon className="h-5 w-5" />}
       </div>
       <div className="w-0 flex-1 whitespace-normal break-words py-1.5 text-sm text-gray-500">
-        <span className="font-medium text-gray-900">{activity.actor}</span>{' '}
+        <span className="font-medium text-gray-900">
+          {formatDid(activity.actor)}
+        </span>{' '}
         {action.children}{' '}
         {action.permalink ? (
           <a

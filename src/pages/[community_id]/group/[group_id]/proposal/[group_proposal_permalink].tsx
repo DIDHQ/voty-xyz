@@ -18,6 +18,7 @@ import MarkdownViewer from '../../../../../components/basic/markdown-viewer'
 import GroupProposalInfo from '../../../../../components/group-proposal-info'
 import { previewGroupProposalAtom } from '../../../../../utils/atoms'
 import { GroupProposal } from '../../../../../utils/schemas/v1/group-proposal'
+import { formatDid } from '../../../../../utils/did/utils'
 
 export default function GroupProposalPage() {
   const query = useRouterQuery<['group_proposal_permalink']>()
@@ -161,7 +162,7 @@ export default function GroupProposalPage() {
                         'truncate whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
                       )}
                     >
-                      {groupProposalVote.authorship.author}
+                      {formatDid(groupProposalVote.authorship.author)}
                     </td>
                     <td
                       title={stringifyChoice(groupProposalVote.powers)}

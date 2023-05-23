@@ -14,15 +14,13 @@ import ConnectButton from '../../components/connect-button'
 import TextInput from '../../components/basic/text-input'
 import TextLink from '../../components/basic/text-link'
 import Button from '../../components/basic/button'
+import { isSubDID } from '../../utils/did/utils'
 
 export default function CreateCommunityPage() {
   const router = useRouter()
   const { account } = useWallet()
   const { data, isLoading } = useDids(account)
-  const dids = useMemo(
-    () => data?.filter((did) => did.indexOf('.') === did.lastIndexOf('.')),
-    [data],
-  )
+  const dids = useMemo(() => data?.filter((did) => !isSubDID(did)), [data])
   const { data: existences, isLoading: isExistencesLoading } =
     trpc.community.checkExistences.useQuery(
       { ids: dids },

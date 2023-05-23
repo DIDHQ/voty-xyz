@@ -30,6 +30,7 @@ import Tooltip from '../../../../../components/basic/tooltip'
 import { GrantPhase, getGrantPhase } from '../../../../../utils/phase'
 import useStatus from '../../../../../hooks/use-status'
 import useNow from '../../../../../hooks/use-now'
+import { formatDid } from '../../../../../utils/did/utils'
 
 export default function GrantProposalPage() {
   const query =
@@ -272,7 +273,7 @@ export default function GrantProposalPage() {
                         'truncate whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
                       )}
                     >
-                      {grantProposalVote.authorship.author}
+                      {formatDid(grantProposalVote.authorship.author)}
                     </td>
                     <td
                       className={clsx(

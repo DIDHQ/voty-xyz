@@ -12,6 +12,7 @@ import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import { Activity } from '../../utils/schemas/activity'
+import { isSubDID } from '../../utils/did/utils'
 
 const schema = proved(authorized(communitySchema))
 
@@ -122,8 +123,7 @@ export const communityRouter = router({
           'Permission denied',
         )
         .refine(
-          (community) =>
-            community.id.indexOf('.') === community.id.lastIndexOf('.'),
+          (community) => !isSubDID(community.id),
           'Cannot create community with SubDID',
         ),
     )

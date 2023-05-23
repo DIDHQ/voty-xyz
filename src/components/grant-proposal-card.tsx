@@ -1,12 +1,13 @@
 import Link from 'next/link'
+import { TrophyIcon } from '@heroicons/react/20/solid'
 
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/basic/authorship'
 import { GrantProposal } from '../utils/schemas/v1/grant-proposal'
 import { formatDurationMs } from '../utils/time'
-import { TrophyIcon } from '@heroicons/react/20/solid'
 import Tooltip from './basic/tooltip'
 import useNow from '../hooks/use-now'
+import { formatDid } from '../utils/did/utils'
 
 export default function GrantProposalCard(props: {
   communityId: string
@@ -49,7 +50,9 @@ export default function GrantProposalCard(props: {
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">
           <p className="text-gray-400">Proposer</p>
-          <p className="truncate">{props.grantProposal.authorship.author}</p>
+          <p className="truncate">
+            {formatDid(props.grantProposal.authorship.author)}
+          </p>
         </div>
         <div className="w-0 flex-1 px-4 py-2">
           <p className="truncate text-gray-400">Proposed at</p>

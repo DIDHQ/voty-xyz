@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 import { BooleanSets, DecimalSets } from '../utils/schemas/basic/sets'
+import { formatDid } from '../utils/did/utils'
 
 export default function PermissionCard(props: {
   title: string
@@ -32,7 +33,7 @@ export default function PermissionCard(props: {
                     primary={didSet.has(`${argument}.${operand.arguments[0]}`)}
                     className="m-1"
                   >
-                    {`${argument}.${operand.arguments[0]}`}
+                    {formatDid(`${argument}.${operand.arguments[0]}`)}
                   </Tag>
                 ))}
               </div>

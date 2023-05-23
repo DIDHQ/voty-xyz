@@ -16,6 +16,7 @@ import GroupProposalCurrentPhase from './group-proposal-current-phase'
 import { PreviewPermalink } from '../utils/types'
 import { permalink2Explorer } from '../utils/permalink'
 import { formatNumber } from '../utils/number'
+import { formatDid } from '../utils/did/utils'
 
 export default function GroupProposalInfo(props: {
   community?: Community
@@ -74,7 +75,9 @@ export default function GroupProposalInfo(props: {
           )}
         </DetailItem>
         <DetailItem title="Proposer" className="truncate whitespace-nowrap">
-          {props.groupProposal?.authorship?.author || '...'}
+          {props.groupProposal?.authorship?.author
+            ? formatDid(props.groupProposal.authorship.author)
+            : '...'}
         </DetailItem>
       </DetailList>
       {props.groupProposal?.snapshots ? (

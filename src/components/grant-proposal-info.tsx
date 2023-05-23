@@ -14,6 +14,7 @@ import GrantCurrentPhase from './grant-current-phase'
 import { PreviewPermalink } from '../utils/types'
 import { formatNumber } from '../utils/number'
 import { permalink2Explorer, permalink2Id } from '../utils/permalink'
+import { formatDid } from '../utils/did/utils'
 
 export default function GrantProposalInfo(props: {
   community?: Community
@@ -82,7 +83,9 @@ export default function GrantProposalInfo(props: {
           )}
         </DetailItem>
         <DetailItem title="Proposer" className="truncate whitespace-nowrap">
-          {props.grantProposal?.authorship?.author || '...'}
+          {props.grantProposal?.authorship?.author
+            ? formatDid(props.grantProposal.authorship.author)
+            : '...'}
         </DetailItem>
       </DetailList>
       {props.grant?.snapshots && props.grantProposal ? (
