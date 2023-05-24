@@ -226,7 +226,9 @@ export default function GrantProposalPage() {
               </Tooltip>
             ) : null}
             <h1>{grantProposal?.title || '...'}</h1>
-            <MarkdownViewer>{grantProposal?.content}</MarkdownViewer>
+            <MarkdownViewer preview={!!previewGrantProposal}>
+              {grantProposal?.content}
+            </MarkdownViewer>
           </Article>
           <GrantProposalInfo
             community={community || undefined}

@@ -83,7 +83,9 @@ export default function GrantPage() {
           </TextLink>
           <Article className="my-6 sm:my-8">
             <h1>{grant?.name || '...'}</h1>
-            <MarkdownViewer>{grant?.introduction}</MarkdownViewer>
+            <MarkdownViewer preview={!!previewGrant}>
+              {grant?.introduction}
+            </MarkdownViewer>
           </Article>
           <GrantInfo
             community={community || undefined}

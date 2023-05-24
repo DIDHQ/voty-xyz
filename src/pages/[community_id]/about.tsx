@@ -28,7 +28,9 @@ export default function CommunityAboutPage() {
       {community?.about ? (
         <Article className="mt-6 w-full sm:mt-8">
           <h1>About</h1>
-          <MarkdownViewer>{community?.about}</MarkdownViewer>
+          <MarkdownViewer preview={!!previewCommunity}>
+            {community?.about}
+          </MarkdownViewer>
         </Article>
       ) : null}
       {isManager && !previewCommunity ? (
