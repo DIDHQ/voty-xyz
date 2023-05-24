@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import MdEditor from 'react-markdown-editor-lite'
 import { clsx } from 'clsx'
 
+import { trpc } from '../../utils/trpc'
 import MarkdownViewer from './markdown-viewer'
 
 export default function MarkdownEditor(props: {
@@ -17,6 +18,7 @@ export default function MarkdownEditor(props: {
     },
     [onChange],
   )
+  const utils = trpc.useContext()
 
   return (
     <MdEditor
@@ -46,13 +48,11 @@ export default function MarkdownEditor(props: {
         'tab-insert',
       ]}
       imageAccept=".jpg,.png,.svg"
-      onImageUpload={(file: File, callback) => {
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          console.log(reader.result)
-          callback(reader.result as string)
-        }
-        reader.readAsDataURL(file)
+      onImageUpload={async (file: File) => {
+        return utils.image.calcPermalink.fetch({
+          data: Buffer.from(await file.arrayBuffer()).toString('base64'),
+          type: file.type,
+        })
       }}
       style={{ height: 600 }}
       htmlClass="prose"

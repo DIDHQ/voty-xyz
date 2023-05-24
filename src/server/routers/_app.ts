@@ -9,6 +9,7 @@ import { groupRouter } from './group'
 import { groupProposalRouter } from './group-proposal'
 import { groupProposalVoteRouter } from './group-proposal-vote'
 import { groupProposalVoteChoiceRouter } from './group-proposal-vote-choice'
+import { imageRouter } from './image'
 import { subscriptionRouter } from './subscription'
 
 export const appRouter = router({
@@ -22,6 +23,7 @@ export const appRouter = router({
   groupProposal: groupProposalRouter,
   groupProposalVote: groupProposalVoteRouter,
   groupProposalVoteChoice: groupProposalVoteChoiceRouter,
+  image: imageRouter,
   subscription: subscriptionRouter,
 })
 

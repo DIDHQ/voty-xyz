@@ -21,6 +21,15 @@ import arweave, { jwk } from './sdks/arweave'
 
 const textEncoder = new TextEncoder()
 
+export async function getUploader(data: Buffer, tags: Record<string, string>) {
+  const transaction = await arweave.createTransaction({ data })
+  Object.entries(tags).forEach(([key, value]) => {
+    transaction.addTag(key, value)
+  })
+  await arweave.transactions.sign(transaction, jwk)
+  return arweave.transactions.getUploader(transaction)
+}
+
 export async function uploadToArweave(
   document: Authorized<
     | Community
@@ -32,23 +41,17 @@ export async function uploadToArweave(
     | GroupProposalVote
   >,
 ): Promise<string> {
-  const transaction = await arweave.createTransaction({
-    data: Buffer.from(textEncoder.encode(JSON.stringify(document))),
-  })
-  const tags = getArweaveTags(document)
-  Object.entries(tags).forEach(([key, value]) => {
-    transaction.addTag(key, value)
-  })
-  await arweave.transactions.sign(transaction, jwk)
-  const uploader = await arweave.transactions.getUploader(transaction)
+  const uploader = await getUploader(
+    Buffer.from(textEncoder.encode(JSON.stringify(document))),
+    getArweaveTags(document),
+  )
   while (!uploader.isComplete) {
     await uploader.uploadChunk()
   }
-  return id2Permalink(transaction.id)
+  return id2Permalink(uploader.toJSON().transaction.id)
 }
 
-const defaultArweaveTags = {
-  'Content-Type': 'application/json',
+export const defaultArweaveTags = {
   'App-Name': 'Voty',
   'App-Version': `0.0.1${isTestnet ? '-test' : ''}`,
 }
@@ -67,6 +70,7 @@ function getArweaveTags(
   if (isCommunity(document)) {
     return {
       ...defaultArweaveTags,
+      'Content-Type': 'application/json',
       'App-Data-Type': DataType.COMMUNITY,
       'App-Index-Entry': document.id,
     }
@@ -74,6 +78,7 @@ function getArweaveTags(
   if (isGrant(document)) {
     return {
       ...defaultArweaveTags,
+      'Content-Type': 'application/json',
       'App-Data-Type': DataType.GRANT,
       'App-Index-Community': document.community,
     }
@@ -81,6 +86,7 @@ function getArweaveTags(
   if (isGrantProposal(document)) {
     return {
       ...defaultArweaveTags,
+      'Content-Type': 'application/json',
       'App-Data-Type': DataType.GRANT_PROPOSAL,
       'App-Index-Grant': document.grant,
     }
@@ -88,6 +94,7 @@ function getArweaveTags(
   if (isGrantProposalVote(document)) {
     return {
       ...defaultArweaveTags,
+      'Content-Type': 'application/json',
       'App-Data-Type': DataType.GRANT_PROPOSAL_VOTE,
       'App-Index-Grant-Proposal': document.grant_proposal,
     }
@@ -95,6 +102,7 @@ function getArweaveTags(
   if (isGroup(document)) {
     return {
       ...defaultArweaveTags,
+      'Content-Type': 'application/json',
       'App-Data-Type': DataType.GROUP,
       'App-Index-Community': document.community,
     }
@@ -102,6 +110,7 @@ function getArweaveTags(
   if (isGroupProposal(document)) {
     return {
       ...defaultArweaveTags,
+      'Content-Type': 'application/json',
       'App-Data-Type': DataType.GROUP_PROPOSAL,
       'App-Index-Group': document.group,
     }
@@ -109,6 +118,7 @@ function getArweaveTags(
   if (isGroupProposalVote(document)) {
     return {
       ...defaultArweaveTags,
+      'Content-Type': 'application/json',
       'App-Data-Type': DataType.GROUP_PROPOSAL_VOTE,
       'App-Index-Group-Proposal': document.group_proposal,
     }
