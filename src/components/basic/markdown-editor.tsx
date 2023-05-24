@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react'
 import MdEditor from 'react-markdown-editor-lite'
 import { clsx } from 'clsx'
+import { useMutation } from '@tanstack/react-query'
 
-import { trpc } from '../../utils/trpc'
 import sleep from '../../utils/sleep'
 import MarkdownViewer from './markdown-viewer'
 
@@ -19,17 +19,30 @@ export default function MarkdownEditor(props: {
     },
     [onChange],
   )
-  const utils = trpc.useContext()
+  const { mutateAsync } = useMutation<
+    string,
+    Error,
+    { data: Buffer; type: string }
+  >({
+    async mutationFn({ data, type }) {
+      const response = await fetch('/api/upload-buffer', {
+        method: 'POST',
+        body: data,
+        headers: { 'Content-Type': type },
+      })
+      return response.text()
+    },
+  })
   const handleImageUpload = useCallback(
     async (file: File) => {
-      const key = await utils.uploadBuffer.getKey.fetch({
-        data: Buffer.from(await file.arrayBuffer()).toString('base64'),
+      const key = await mutateAsync({
+        data: Buffer.from(await file.arrayBuffer()),
         type: file.type,
       })
       await sleep(5000)
       return key
     },
-    [utils.uploadBuffer.getKey],
+    [mutateAsync],
   )
 
   return (

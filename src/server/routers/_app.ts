@@ -10,7 +10,6 @@ import { groupProposalRouter } from './group-proposal'
 import { groupProposalVoteRouter } from './group-proposal-vote'
 import { groupProposalVoteChoiceRouter } from './group-proposal-vote-choice'
 import { subscriptionRouter } from './subscription'
-import { uploadBufferRouter } from './upload-buffer'
 
 export const appRouter = router({
   activity: activityRouter,
@@ -24,7 +23,6 @@ export const appRouter = router({
   groupProposalVote: groupProposalVoteRouter,
   groupProposalVoteChoice: groupProposalVoteChoiceRouter,
   subscription: subscriptionRouter,
-  uploadBuffer: uploadBufferRouter,
 })
 
 export type AppRouter = typeof appRouter
