@@ -14,7 +14,7 @@ import { previewGroupAtom } from '../utils/atoms'
 import { Preview } from '../utils/types'
 import PhaseInput from './basic/phase-input'
 import TextInput from './basic/text-input'
-import MarkdownEditor from './basic/markdown-editor'
+import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import DecimalSetsBlock from './decimal-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
@@ -197,19 +197,12 @@ export default function GroupForm(props: {
             <GridItem6>
               <FormItem
                 label="Criteria for approval"
-                error={errors?.terms_and_conditions?.message}
+                error={errors?.criteria_for_approval?.message}
               >
-                <Controller
-                  control={control}
-                  name="terms_and_conditions"
-                  render={({ field: { value, onChange } }) => (
-                    <MarkdownEditor
-                      value={value}
-                      onChange={onChange}
-                      error={!!errors?.terms_and_conditions?.message}
-                      disabled={disabled}
-                    />
-                  )}
+                <Textarea
+                  {...register('criteria_for_approval')}
+                  error={!!errors?.criteria_for_approval?.message}
+                  disabled={disabled}
                 />
               </FormItem>
             </GridItem6>
