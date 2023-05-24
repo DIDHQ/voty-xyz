@@ -6,7 +6,7 @@ import { id2Permalink } from '../../utils/permalink'
 import { database } from '../../utils/database'
 
 export const uploadBufferRouter = router({
-  calcPermalink: procedure
+  getKey: procedure
     .input(
       z.object({
         data: z.string(),

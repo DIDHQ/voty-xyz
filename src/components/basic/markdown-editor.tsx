@@ -3,6 +3,7 @@ import MdEditor from 'react-markdown-editor-lite'
 import { clsx } from 'clsx'
 
 import { trpc } from '../../utils/trpc'
+import sleep from '../../utils/sleep'
 import MarkdownViewer from './markdown-viewer'
 
 export default function MarkdownEditor(props: {
@@ -19,6 +20,17 @@ export default function MarkdownEditor(props: {
     [onChange],
   )
   const utils = trpc.useContext()
+  const handleImageUpload = useCallback(
+    async (file: File) => {
+      const key = await utils.uploadBuffer.getKey.fetch({
+        data: Buffer.from(await file.arrayBuffer()).toString('base64'),
+        type: file.type,
+      })
+      await sleep(5000)
+      return key
+    },
+    [utils.uploadBuffer.getKey],
+  )
 
   return (
     <MdEditor
@@ -48,12 +60,7 @@ export default function MarkdownEditor(props: {
         'tab-insert',
       ]}
       imageAccept=".jpg,.png,.svg"
-      onImageUpload={async (file: File) => {
-        return utils.uploadBuffer.calcPermalink.fetch({
-          data: Buffer.from(await file.arrayBuffer()).toString('base64'),
-          type: file.type,
-        })
-      }}
+      onImageUpload={handleImageUpload}
       style={{ height: 600 }}
       htmlClass="prose"
       markdownClass={
