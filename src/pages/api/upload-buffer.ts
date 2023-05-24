@@ -40,6 +40,7 @@ export default async function handler(
       update: { metadata, type, data, ts },
       create: { key, metadata, type, data, ts },
     })
+    res.send(key)
   } else {
     res.status(405).send(null)
   }
