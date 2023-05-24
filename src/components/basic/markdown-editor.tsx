@@ -45,6 +45,15 @@ export default function MarkdownEditor(props: {
         'full-screen',
         'tab-insert',
       ]}
+      imageAccept=".jpg,.png,.svg"
+      onImageUpload={(file: File, callback) => {
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          console.log(reader.result)
+          callback(reader.result as string)
+        }
+        reader.readAsDataURL(file)
+      }}
       style={{ height: 600 }}
       htmlClass="prose"
       markdownClass={
