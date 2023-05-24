@@ -112,7 +112,9 @@ export default function GroupProposalPage() {
           </TextLink>
           <Article className="my-6 sm:my-8">
             <h1>{groupProposal?.title || '...'}</h1>
-            <MarkdownViewer>{groupProposal?.content}</MarkdownViewer>
+            <MarkdownViewer preview={!!previewGroupProposal}>
+              {groupProposal?.content}
+            </MarkdownViewer>
           </Article>
           <GroupProposalInfo
             community={community || undefined}

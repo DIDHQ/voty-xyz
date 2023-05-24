@@ -1,7 +1,9 @@
 import React, { useCallback } from 'react'
 import MdEditor from 'react-markdown-editor-lite'
 import { clsx } from 'clsx'
+import { useMutation } from '@tanstack/react-query'
 
+import sleep from '../../utils/sleep'
 import MarkdownViewer from './markdown-viewer'
 
 export default function MarkdownEditor(props: {
@@ -17,13 +19,38 @@ export default function MarkdownEditor(props: {
     },
     [onChange],
   )
+  const { mutateAsync } = useMutation<
+    string,
+    Error,
+    { data: Buffer; type: string }
+  >({
+    async mutationFn({ data, type }) {
+      const response = await fetch('/api/upload-buffer', {
+        method: 'POST',
+        body: data,
+        headers: { 'Content-Type': type },
+      })
+      return response.text()
+    },
+  })
+  const handleImageUpload = useCallback(
+    async (file: File) => {
+      const key = await mutateAsync({
+        data: Buffer.from(await file.arrayBuffer()),
+        type: file.type,
+      })
+      await sleep(5000)
+      return key
+    },
+    [mutateAsync],
+  )
 
   return (
     <MdEditor
       value={props.value}
       onChange={handleEditorChange}
       readOnly={props.disabled}
-      renderHTML={(text) => <MarkdownViewer>{text}</MarkdownViewer>}
+      renderHTML={(text) => <MarkdownViewer preview>{text}</MarkdownViewer>}
       shortcuts={true}
       plugins={[
         'header',
@@ -45,15 +72,8 @@ export default function MarkdownEditor(props: {
         'full-screen',
         'tab-insert',
       ]}
-      imageAccept=".jpg,.png,.svg"
-      onImageUpload={(file: File, callback) => {
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          console.log(reader.result)
-          callback(reader.result as string)
-        }
-        reader.readAsDataURL(file)
-      }}
+      imageAccept=".jpg,.png,.svg,.gif"
+      onImageUpload={handleImageUpload}
       style={{ height: 600 }}
       htmlClass="prose"
       markdownClass={

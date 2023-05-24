@@ -20,6 +20,10 @@ import {
   getPermalinkSnapshot,
 } from '../../utils/snapshot'
 import { Activity } from '../../utils/schemas/activity'
+import {
+  flushUploadBuffers,
+  getAllUploadBufferKeys,
+} from '../../utils/upload-buffer'
 
 const schema = proved(authorized(grantSchema))
 
@@ -202,6 +206,7 @@ export const grantRouter = router({
       await verifyAuthorship(input.authorship, input.proof)
       const { community } = await verifyGrant(input)
 
+      await flushUploadBuffers(getAllUploadBufferKeys(input.introduction))
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 

@@ -14,6 +14,10 @@ import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGrant from '../../utils/verifiers/verify-grant'
 import { Activity } from '../../utils/schemas/activity'
+import {
+  flushUploadBuffers,
+  getAllUploadBufferKeys,
+} from '../../utils/upload-buffer'
 
 const schema = proved(authorized(grantProposalSchema))
 
@@ -123,6 +127,7 @@ export const grantProposalRouter = router({
       const { grant } = await verifyGrantProposal(input)
       const { community } = await verifyGrant(grant)
 
+      await flushUploadBuffers(getAllUploadBufferKeys(input.content))
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 

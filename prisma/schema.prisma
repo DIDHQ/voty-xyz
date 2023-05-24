@@ -154,3 +154,15 @@ model Activity {
   @@id([ts, actor])
   @@index([communityId, ts, type])
 }
+
+model UploadBuffer {
+  key String
+
+  metadata Json
+  type     String
+  data     Bytes
+
+  ts DateTime
+
+  @@id([key])
+}
