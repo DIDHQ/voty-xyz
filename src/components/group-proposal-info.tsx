@@ -55,7 +55,7 @@ export default function GroupProposalInfo(props: {
               underline
               disabled={disabled}
               href={`/${props.community.id}`}
-              className="truncate whitespace-nowrap"
+              className="block truncate whitespace-nowrap"
             >
               {props.community.name}
             </TextLink>
@@ -69,7 +69,7 @@ export default function GroupProposalInfo(props: {
               underline
               disabled={disabled}
               href={`/${props.community.id}/group/${props.group.id}`}
-              className="truncate whitespace-nowrap"
+              className="block truncate whitespace-nowrap"
             >
               {props.group.name}
             </TextLink>
@@ -77,7 +77,10 @@ export default function GroupProposalInfo(props: {
             '...'
           )}
         </DetailItem>
-        <DetailItem title="Proposer" className="truncate whitespace-nowrap">
+        <DetailItem
+          title="Proposer"
+          className="block truncate whitespace-nowrap"
+        >
           {props.groupProposal?.authorship?.author
             ? formatDid(props.groupProposal.authorship.author)
             : '...'}

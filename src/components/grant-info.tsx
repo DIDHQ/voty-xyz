@@ -61,7 +61,7 @@ export default function GrantInfo(props: {
                 underline
                 disabled={disabled}
                 href={`/${props.community.id}`}
-                className="truncate whitespace-nowrap"
+                className="block truncate whitespace-nowrap"
               >
                 {props.community.name}
               </TextLink>
