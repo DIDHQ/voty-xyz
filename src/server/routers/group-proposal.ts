@@ -22,6 +22,10 @@ import { GroupProposalPhase } from '../../utils/phase'
 import { groupSchema } from '../../utils/schemas/v1/group'
 import verifyGroup from '../../utils/verifiers/verify-group'
 import { Activity } from '../../utils/schemas/activity'
+import {
+  flushUploadBuffers,
+  getAllUploadBufferKeys,
+} from '../../utils/upload-buffer'
 
 const schema = proved(authorized(groupProposalSchema))
 
@@ -192,6 +196,7 @@ export const groupProposalRouter = router({
       const { group } = await verifyGroupProposal(input)
       const { community } = await verifyGroup(group)
 
+      await flushUploadBuffers(getAllUploadBufferKeys(input.content))
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 

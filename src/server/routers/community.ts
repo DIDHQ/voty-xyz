@@ -13,6 +13,10 @@ import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import { Activity } from '../../utils/schemas/activity'
 import { isSubDID } from '../../utils/did/utils'
+import {
+  flushUploadBuffers,
+  getAllUploadBufferKeys,
+} from '../../utils/upload-buffer'
 
 const schema = proved(authorized(communitySchema))
 
@@ -133,6 +137,7 @@ export const communityRouter = router({
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
 
+      await flushUploadBuffers(getAllUploadBufferKeys(input.about))
       const permalink = await uploadToArweave(input)
       const ts = new Date()
       const community = await database.community.findUnique({
