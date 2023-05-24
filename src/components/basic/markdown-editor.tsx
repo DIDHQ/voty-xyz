@@ -59,7 +59,7 @@ export default function MarkdownEditor(props: {
         'full-screen',
         'tab-insert',
       ]}
-      imageAccept=".jpg,.png,.svg"
+      imageAccept=".jpg,.png,.svg,.gif"
       onImageUpload={handleImageUpload}
       style={{ height: 600 }}
       htmlClass="prose"
