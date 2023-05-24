@@ -16,18 +16,23 @@ export default function AvatarInput(props: {
   const { onChange } = props
   const handleChange = useCallback(
     async (e: ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files?.[0]) {
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          onChange?.(reader.result as string)
-        }
-        reader.readAsDataURL(
-          await imageCompression(e.target.files[0], {
-            maxSizeMB: 0.05,
-            maxWidthOrHeight: 320,
-          }),
-        )
+      const file = e.target.files?.[0]
+      if (!file) {
+        return
       }
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        onChange?.(reader.result as string)
+      }
+      reader.readAsDataURL(
+        file.size <= 0.05 * 1024 * 1024 &&
+          (file.type === 'image/jpeg' || file.type === 'image/png')
+          ? file
+          : await imageCompression(file, {
+              maxSizeMB: 0.05,
+              maxWidthOrHeight: 320,
+            }),
+      )
     },
     [onChange],
   )

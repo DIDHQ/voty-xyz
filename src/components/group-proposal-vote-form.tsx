@@ -216,7 +216,11 @@ export default function GroupProposalVoteForm(props: {
                 <Slide
                   title={`Voters of ${props.group.name}`}
                   trigger={({ handleOpen }) => (
-                    <TextButton secondary onClick={handleOpen}className='text-sm'>
+                    <TextButton
+                      secondary
+                      onClick={handleOpen}
+                      className="text-sm"
+                    >
                       Why I&#39;m not eligible to vote?
                     </TextButton>
                   )}
