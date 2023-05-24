@@ -215,23 +215,19 @@ export default function GrantProposalPage() {
           >
             <h2 className="text-base font-semibold">← Back</h2>
           </TextLink>
-          <div className="mb-6">
+          <Article className="my-6 sm:my-8">
             {funding ? (
               <Tooltip
                 place="top"
                 text={`This proposal won ${funding}`}
-                className="float-right"
+                className="float-right mt-2"
               >
-                <TrophyIcon className="mt-4 h-6 w-6 text-amber-600" />
+                <TrophyIcon className="h-6 w-6 text-amber-600" />
               </Tooltip>
             ) : null}
-            <h3 className="mt-6 line-clamp-2 break-words text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              {grantProposal?.title || '...'}
-            </h3>
-            <Article className="mt-6 sm:mt-8">
-              <MarkdownViewer>{grantProposal?.content}</MarkdownViewer>
-            </Article>
-          </div>
+            <h1>{grantProposal?.title || '...'}</h1>
+            <MarkdownViewer>{grantProposal?.content}</MarkdownViewer>
+          </Article>
           <GrantProposalInfo
             community={community || undefined}
             grant={grant || undefined}
