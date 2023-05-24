@@ -31,7 +31,7 @@ export function format2Time(
   from: Date | string | number,
   to: Date | string | number,
 ) {
-  return `${dayjs(from).format('MM-DD HH:mm')} ~ ${dayjs(to).format(
-    'MM-DD HH:mm',
+  return `${dayjs(from).format('YYYY-MM-DD HH:mm')} ~ ${dayjs(to).format(
+    'YYYY-MM-DD HH:mm',
   )}`
 }

@@ -10,10 +10,13 @@ import { Grant } from '../utils/schemas/v1/grant'
 import { PreviewPermalink } from '../utils/types'
 import { permalink2Explorer } from '../utils/permalink'
 import { formatNumber } from '../utils/number'
+import { format2Time } from '../utils/time'
+import useStatus from '../hooks/use-status'
 import { DetailItem, DetailList } from './basic/detail'
 import TextLink from './basic/text-link'
 import GrantCurrentPhase from './grant-current-phase'
 import Article from './basic/article'
+import Tooltip from './basic/tooltip'
 
 export default function GrantInfo(props: {
   community?: Community
@@ -23,6 +26,7 @@ export default function GrantInfo(props: {
   }
   className?: string
 }) {
+  const { data: status } = useStatus(props.grant?.permalink)
   const disabled = props.grant?.permalink === previewPermalink
 
   return (
@@ -98,12 +102,51 @@ export default function GrantInfo(props: {
         <Article small className="-ml-2">
           <ul>
             <li>
-              Any member can submit a proposal to get grant package during the{' '}
-              <span className="text-indigo-600">proposing</span> phase.
+              Any member can submit a proposal to get grant package during the
+              <Tooltip
+                text={
+                  props.grant && status?.timestamp
+                    ? format2Time(
+                        status.timestamp.getTime() +
+                          props.grant.duration.announcing * 1000,
+                        status.timestamp.getTime() +
+                          (props.grant.duration.announcing +
+                            props.grant.duration.proposing) *
+                            1000,
+                      )
+                    : '...'
+                }
+                place="top"
+                className="inline"
+              >
+                <span className="text-indigo-600"> proposing </span>
+              </Tooltip>
+              phase.
             </li>
             <li>
-              Any member will vote on the best proposals during the{' '}
-              <span className="text-lime-600">voting</span> phase.
+              Any member will vote on the best proposals during the
+              <Tooltip
+                text={
+                  props.grant && status?.timestamp
+                    ? format2Time(
+                        status.timestamp.getTime() +
+                          (props.grant.duration.announcing +
+                            props.grant.duration.proposing) *
+                            1000,
+                        status.timestamp.getTime() +
+                          (props.grant.duration.announcing +
+                            props.grant.duration.proposing +
+                            props.grant.duration.voting) *
+                            1000,
+                      )
+                    : '...'
+                }
+                place="top"
+                className='inline'
+              >
+                <span className="text-lime-600"> voting </span>
+              </Tooltip>
+              phase.
             </li>
             <li>
               The top <b>{props.grant?.funding[0][1]}</b> proposal
