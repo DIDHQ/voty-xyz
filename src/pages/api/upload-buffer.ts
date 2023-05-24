@@ -4,7 +4,6 @@ import getRawBody from 'raw-body'
 import { database } from '../../utils/database'
 import { id2Permalink, permalink2Gateway } from '../../utils/permalink'
 import { defaultArweaveTags, getUploader } from '../../utils/upload'
-import { cacheControl } from '../../utils/constants'
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,7 +16,7 @@ export default async function handler(
     })
     if (uploadBuffer) {
       res.setHeader('Content-Type', uploadBuffer.type)
-      res.setHeader(...cacheControl)
+      res.setHeader('Cache-Control', 'max-age=86400')
       res.send(uploadBuffer.data)
     } else {
       res.redirect(permalink2Gateway(key))
@@ -41,7 +40,6 @@ export default async function handler(
       update: { metadata, type, data, ts },
       create: { key, metadata, type, data, ts },
     })
-    res.send(key)
   } else {
     res.status(405).send(null)
   }
