@@ -50,7 +50,7 @@ export default function CreateGroupPage() {
               announcing: 86400,
               voting: 86400,
             },
-            terms_and_conditions: '',
+            criteria_for_approval: '',
           } satisfies Group)
         : undefined,
     [community, newGroup, query.community_id],

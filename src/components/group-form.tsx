@@ -197,11 +197,11 @@ export default function GroupForm(props: {
             <GridItem6>
               <FormItem
                 label="Criteria for approval"
-                error={errors?.terms_and_conditions?.message}
+                error={errors?.criteria_for_approval?.message}
               >
                 <Textarea
-                  {...register('terms_and_conditions')}
-                  error={!!errors?.terms_and_conditions?.message}
+                  {...register('criteria_for_approval')}
+                  error={!!errors?.criteria_for_approval?.message}
                   disabled={disabled}
                 />
               </FormItem>
