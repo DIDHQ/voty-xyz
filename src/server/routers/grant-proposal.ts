@@ -1,6 +1,8 @@
 import { TRPCError } from '@trpc/server'
 import { compact, keyBy, mapValues } from 'lodash-es'
 import { z } from 'zod'
+import { fromMarkdown } from 'mdast-util-from-markdown'
+import { toString } from 'mdast-util-to-string'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -105,8 +107,14 @@ export const grantProposalRouter = router({
           .filter(({ permalink }) => storages[permalink])
           .map(({ permalink, votes, ts }) => {
             try {
+              const grantProposal = schema.parse(storages[permalink].data)
               return {
-                ...schema.parse(storages[permalink].data),
+                ...grantProposal,
+                content:
+                  toString(fromMarkdown(grantProposal.content), {
+                    includeImageAlt: false,
+                    includeHtml: false,
+                  }) || ' ',
                 permalink,
                 votes,
                 ts,

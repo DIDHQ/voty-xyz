@@ -2,6 +2,8 @@ import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last } from 'lodash-es'
 import { z } from 'zod'
 import dayjs from 'dayjs'
+import { fromMarkdown } from 'mdast-util-from-markdown'
+import { toString } from 'mdast-util-to-string'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -162,8 +164,14 @@ export const grantRouter = router({
                 tsVoting,
               }) => {
                 try {
+                  const grant = schema.parse(storages[permalink].data)
                   return {
-                    ...schema.parse(storages[permalink].data),
+                    ...grant,
+                    introduction:
+                      toString(fromMarkdown(grant.introduction), {
+                        includeImageAlt: false,
+                        includeHtml: false,
+                      }) || ' ',
                     permalink,
                     proposals,
                     ts,

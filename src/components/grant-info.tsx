@@ -142,7 +142,7 @@ export default function GrantInfo(props: {
                     : '...'
                 }
                 place="top"
-                className='inline'
+                className="inline"
               >
                 <span className="text-lime-600"> voting </span>
               </Tooltip>

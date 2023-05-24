@@ -2,6 +2,8 @@ import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last } from 'lodash-es'
 import { z } from 'zod'
 import dayjs from 'dayjs'
+import { fromMarkdown } from 'mdast-util-from-markdown'
+import { toString } from 'mdast-util-to-string'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -167,8 +169,14 @@ export const groupProposalRouter = router({
                 tsVoting,
               }) => {
                 try {
+                  const groupProposal = schema.parse(storages[permalink].data)
                   return {
-                    ...schema.parse(storages[permalink].data),
+                    ...groupProposal,
+                    content:
+                      toString(fromMarkdown(groupProposal.content), {
+                        includeImageAlt: false,
+                        includeHtml: false,
+                      }) || ' ',
                     permalink,
                     communityId,
                     groupId,
