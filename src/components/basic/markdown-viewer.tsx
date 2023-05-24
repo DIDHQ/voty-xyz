@@ -1,4 +1,5 @@
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown, { Components } from 'react-markdown'
+import { useMemo } from 'react'
 import remarkGfm from 'remark-gfm'
 
 import { isPermalink, permalink2Gateway } from '../../utils/permalink'
@@ -9,12 +10,10 @@ export default function MarkdownViewer(props: {
   preview?: boolean
   children?: string
 }) {
-  return props.children ? (
-    <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
-      sourcePos
-      components={{
-        img({ src, ...restProps }) {
+  const components = useMemo(
+    () =>
+      ({
+        img({ src, alt }) {
           return (
             // eslint-disable-next-line jsx-a11y/alt-text
             <img
@@ -25,26 +24,34 @@ export default function MarkdownViewer(props: {
                     : permalink2Gateway(src)
                   : src
               }
-              {...restProps}
+              alt={alt}
             />
           )
         },
-        a({ href, children, ...restProps }) {
+        a({ href, children, title }) {
           if (href) {
             return (
               <OembedContainer
                 link={href}
                 fallback={
-                  <TextLink href={href} secondary {...restProps}>
+                  <TextLink href={href} secondary title={title}>
                     {children}
                   </TextLink>
                 }
               />
             )
           }
-          return <a {...restProps} />
+          return <>{children}</>
         },
-      }}
+      } satisfies Components),
+    [props.preview],
+  )
+
+  return props.children ? (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      sourcePos
+      components={components}
     >
       {props.children}
     </ReactMarkdown>
