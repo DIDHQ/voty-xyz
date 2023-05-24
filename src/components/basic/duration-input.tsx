@@ -5,21 +5,11 @@ enum PhaseType {
   MINUTE = 60,
   HOUR = 60 * 60,
   DAY = 24 * 60 * 60,
-  WEEK = 7 * 24 * 60 * 60,
-  MONTH = 30 * 24 * 60 * 60,
-  YEAR = 364 * 24 * 60 * 60,
 }
 
-const types = [
-  PhaseType.YEAR,
-  PhaseType.MONTH,
-  PhaseType.WEEK,
-  PhaseType.DAY,
-  PhaseType.HOUR,
-  PhaseType.MINUTE,
-]
+const types = [PhaseType.DAY, PhaseType.HOUR, PhaseType.MINUTE]
 
-export default function PhaseInput(props: {
+export default function DurationInput(props: {
   inputRef: Ref<HTMLInputElement>
   value?: number
   onChange(value: number): void
@@ -82,9 +72,6 @@ export default function PhaseInput(props: {
           <option value={PhaseType.MINUTE}>Minutes</option>
           <option value={PhaseType.HOUR}>Hours</option>
           <option value={PhaseType.DAY}>Days</option>
-          <option value={PhaseType.WEEK}>Weeks</option>
-          <option value={PhaseType.MONTH}>Months</option>
-          <option value={PhaseType.YEAR}>Years</option>
         </select>
       </div>
     </div>

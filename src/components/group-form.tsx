@@ -12,7 +12,7 @@ import useIsManager from '../hooks/use-is-manager'
 import { Group, groupSchema } from '../utils/schemas/v1/group'
 import { previewGroupAtom } from '../utils/atoms'
 import { Preview } from '../utils/types'
-import PhaseInput from './basic/phase-input'
+import DurationInput from './basic/duration-input'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
@@ -163,7 +163,7 @@ export default function GroupForm(props: {
                   control={control}
                   name="duration.announcing"
                   render={({ field: { ref, value, onChange } }) => (
-                    <PhaseInput
+                    <DurationInput
                       inputRef={ref}
                       value={value}
                       onChange={onChange}
@@ -183,7 +183,7 @@ export default function GroupForm(props: {
                   control={control}
                   name="duration.voting"
                   render={({ field: { ref, value, onChange } }) => (
-                    <PhaseInput
+                    <DurationInput
                       inputRef={ref}
                       value={value}
                       onChange={onChange}

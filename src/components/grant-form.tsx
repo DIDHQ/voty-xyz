@@ -22,7 +22,7 @@ import Button from './basic/button'
 import { Grid6, GridItem2, GridItem3, GridItem6 } from './basic/grid'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import TextInput from './basic/text-input'
-import PhaseInput from './basic/phase-input'
+import DurationInput from './basic/duration-input'
 
 export default function GrantForm(props: {
   communityId: string
@@ -139,7 +139,7 @@ export default function GrantForm(props: {
                 control={control}
                 name="duration.announcing"
                 render={({ field: { ref, value, onChange } }) => (
-                  <PhaseInput
+                  <DurationInput
                     inputRef={ref}
                     value={value}
                     onChange={onChange}
@@ -159,7 +159,7 @@ export default function GrantForm(props: {
                 control={control}
                 name="duration.proposing"
                 render={({ field: { ref, value, onChange } }) => (
-                  <PhaseInput
+                  <DurationInput
                     inputRef={ref}
                     value={value}
                     onChange={onChange}
@@ -179,7 +179,7 @@ export default function GrantForm(props: {
                 control={control}
                 name="duration.voting"
                 render={({ field: { ref, value, onChange } }) => (
-                  <PhaseInput
+                  <DurationInput
                     inputRef={ref}
                     value={value}
                     onChange={onChange}
