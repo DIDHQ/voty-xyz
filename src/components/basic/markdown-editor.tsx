@@ -25,7 +25,7 @@ export default function MarkdownEditor(props: {
       value={props.value}
       onChange={handleEditorChange}
       readOnly={props.disabled}
-      renderHTML={(text) => <MarkdownViewer>{text}</MarkdownViewer>}
+      renderHTML={(text) => <MarkdownViewer preview>{text}</MarkdownViewer>}
       shortcuts={true}
       plugins={[
         'header',
@@ -49,7 +49,7 @@ export default function MarkdownEditor(props: {
       ]}
       imageAccept=".jpg,.png,.svg"
       onImageUpload={async (file: File) => {
-        return utils.image.calcPermalink.fetch({
+        return utils.uploadBuffer.calcPermalink.fetch({
           data: Buffer.from(await file.arrayBuffer()).toString('base64'),
           type: file.type,
         })
