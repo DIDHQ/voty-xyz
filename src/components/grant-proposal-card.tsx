@@ -71,18 +71,14 @@ export default function GrantProposalCard(props: {
             {formatDid(props.grantProposal.authorship.author)}
           </p>
         </div>
-        <div className="w-0 flex-1 px-4 py-2">
-          <p className="text-gray-400">Reading time</p>
-          <p>{formatDurationMs(props.grantProposal.readingTime)}</p>
-        </div>
         {props.phase === GrantPhase.VOTING ||
         props.phase === GrantPhase.ENDED ? (
-          <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
+          <div className="w-0 flex-1 px-4 py-2">
             <p className="text-gray-400">Votes</p>
             <p>{props.grantProposal.votes}</p>
           </div>
         ) : (
-          <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
+          <div className="w-0 flex-1 px-4 py-2">
             <p className="truncate text-gray-400">Proposed at</p>
             <p className="truncate">
               {formatDurationMs(
@@ -92,6 +88,10 @@ export default function GrantProposalCard(props: {
             </p>
           </div>
         )}
+        <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
+          <p className="text-gray-400">Reading time</p>
+          <p>{formatDurationMs(props.grantProposal.readingTime)}</p>
+        </div>
       </div>
     </Link>
   )
