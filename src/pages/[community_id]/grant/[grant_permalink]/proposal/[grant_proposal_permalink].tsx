@@ -24,7 +24,6 @@ import GrantProposalInfo from '../../../../../components/grant-proposal-info'
 import { previewGrantProposalAtom } from '../../../../../utils/atoms'
 import { GrantProposal } from '../../../../../utils/schemas/v1/grant-proposal'
 import GrantProposalVoteForm from '../../../../../components/grant-proposal-vote-form'
-import Tooltip from '../../../../../components/basic/tooltip'
 import { GrantPhase, getGrantPhase } from '../../../../../utils/phase'
 import useStatus from '../../../../../hooks/use-status'
 import useNow from '../../../../../hooks/use-now'
@@ -238,16 +237,10 @@ export default function GrantProposalPage() {
             <h1>{grantProposal?.title || '...'}</h1>
             {funding ? (
               <div className="flex items-center space-x-1 text-sm">
-                <Tooltip
-                  place="top"
-                  text={`This proposal won ${funding}`}
-                  className="mr-2"
-                >
-                  <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-1 font-medium text-amber-700">
-                    <CrownIcon className="mr-1 h-5 w-5 text-amber-700" />
-                    WON
-                  </span>
-                </Tooltip>
+                <span className="mr-2 inline-flex items-center rounded-full bg-amber-100 px-2 py-1 font-medium text-amber-700">
+                  <CrownIcon className="mr-1 h-5 w-5 text-amber-700" />
+                  WON
+                </span>
                 <span>This proposal won</span>
                 <span className="font-bold text-gray-900">{funding}</span>
               </div>
