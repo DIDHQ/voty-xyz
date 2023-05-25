@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { TrophyIcon } from '@heroicons/react/20/solid'
+import { clsx } from 'clsx'
 
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/basic/authorship'
@@ -9,6 +9,7 @@ import useNow from '../hooks/use-now'
 import { formatDid } from '../utils/did/utils'
 import { GrantPhase } from '../utils/phase'
 import Tooltip from './basic/tooltip'
+import { CrownIcon } from './icons'
 
 export default function GrantProposalCard(props: {
   communityId: string
@@ -29,7 +30,12 @@ export default function GrantProposalCard(props: {
       href={`/${props.communityId}/grant/${permalink2Id(
         props.grantProposal.grant,
       )}/proposal/${permalink2Id(props.grantProposal.permalink)}`}
-      className="block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-primary-300 focus-within:ring-offset-2 hover:border-primary-500 hover:bg-gray-50"
+      className={clsx(
+        'group block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-offset-2',
+        props.funding
+          ? 'focus-within:ring-amber-300 hover:border-amber-500 hover:bg-amber-50'
+          : 'focus-within:ring-primary-300 hover:border-primary-500 hover:bg-gray-50',
+      )}
     >
       <div className="w-full p-4">
         {props.funding ? (
@@ -38,10 +44,18 @@ export default function GrantProposalCard(props: {
             text={`This proposal won ${props.funding}`}
             className="float-right"
           >
-            <TrophyIcon className="h-5 w-5 text-amber-600" />
+            <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/10 group-hover:bg-amber-100">
+              <CrownIcon className="mr-0.5 h-4 w-4 text-amber-700" />
+              WON
+            </span>
           </Tooltip>
         ) : null}
-        <p className="truncate text-lg font-medium text-gray-800">
+        <p
+          className={clsx(
+            'truncate text-lg font-medium',
+            props.funding ? 'text-amber-600' : 'text-gray-800',
+          )}
+        >
           {props.grantProposal.title}
         </p>
         {props.grantProposal?.content ? (
