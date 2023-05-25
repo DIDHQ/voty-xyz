@@ -113,10 +113,11 @@ export default function GrantPage() {
             <ul className="mt-5 space-y-5">
               {grantProposals.map((grantProposal, index) => (
                 <li key={grantProposal.permalink}>
-                  {query.community_id ? (
+                  {query.community_id && grant ? (
                     <GrantProposalCard
                       communityId={query.community_id}
                       grantProposal={grantProposal}
+                      phase={phase}
                       funding={
                         phase === GrantPhase.ENDED &&
                         !!grant &&

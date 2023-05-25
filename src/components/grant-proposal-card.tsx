@@ -7,13 +7,16 @@ import { GrantProposal } from '../utils/schemas/v1/grant-proposal'
 import { formatDurationMs } from '../utils/time'
 import useNow from '../hooks/use-now'
 import { formatDid } from '../utils/did/utils'
+import { GrantPhase } from '../utils/phase'
 import Tooltip from './basic/tooltip'
 
 export default function GrantProposalCard(props: {
   communityId: string
+  phase: GrantPhase
   grantProposal: Authorized<GrantProposal> & {
     permalink: string
     votes: number
+    readingTime: number
     ts: Date
   }
   funding?: string
@@ -55,16 +58,26 @@ export default function GrantProposalCard(props: {
           </p>
         </div>
         <div className="w-0 flex-1 px-4 py-2">
-          <p className="truncate text-gray-400">Proposed at</p>
-          <p className="truncate">
-            {formatDurationMs(props.grantProposal.ts.getTime() - now.getTime())}{' '}
-            ago
-          </p>
+          <p className="text-gray-400">Reading time</p>
+          <p>{formatDurationMs(props.grantProposal.readingTime)}</p>
         </div>
-        <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
-          <p className="text-gray-400">Votes</p>
-          <p>{props.grantProposal.votes}</p>
-        </div>
+        {props.phase === GrantPhase.VOTING ||
+        props.phase === GrantPhase.ENDED ? (
+          <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
+            <p className="text-gray-400">Votes</p>
+            <p>{props.grantProposal.votes}</p>
+          </div>
+        ) : (
+          <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
+            <p className="truncate text-gray-400">Proposed at</p>
+            <p className="truncate">
+              {formatDurationMs(
+                props.grantProposal.ts.getTime() - now.getTime(),
+              )}{' '}
+              ago
+            </p>
+          </div>
+        )}
       </div>
     </Link>
   )

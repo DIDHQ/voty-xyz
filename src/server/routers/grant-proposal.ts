@@ -3,6 +3,7 @@ import { compact, keyBy, mapValues } from 'lodash-es'
 import { z } from 'zod'
 import { fromMarkdown } from 'mdast-util-from-markdown'
 import { toString } from 'mdast-util-to-string'
+import readingTime from 'reading-time'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -72,6 +73,7 @@ export const grantProposalRouter = router({
         schema.extend({
           permalink: z.string(),
           votes: z.number(),
+          readingTime: z.number(),
           ts: z.date(),
         }),
       ),
@@ -115,6 +117,7 @@ export const grantProposalRouter = router({
                     includeImageAlt: false,
                     includeHtml: false,
                   }) || ' ',
+                readingTime: readingTime(grantProposal.content).time,
                 permalink,
                 votes,
                 ts,
