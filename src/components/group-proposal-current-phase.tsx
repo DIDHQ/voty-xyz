@@ -19,7 +19,7 @@ export default function GroupProposalCurrentPhase(props: {
   )
 
   return (
-    <DetailList title="Proposal current phase">
+    <DetailList title="Proposal phase">
       <div className="flex flex-col space-y-2 py-2 text-sm font-medium">
         {!status ? (
           <>
@@ -46,7 +46,7 @@ export default function GroupProposalCurrentPhase(props: {
                 : '...'}
             </span>
             <span className="text-gray-400">Upcoming: Proposing</span>
-            <span className="text-gray-600">
+            <span className="text-gray-400">
               {status?.timestamp && props.duration
                 ? format2Time(
                     status.timestamp.getTime() +

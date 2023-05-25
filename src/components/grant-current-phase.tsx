@@ -19,7 +19,7 @@ export default function GrantCurrentPhase(props: {
   )
 
   return (
-    <DetailList title="Grant current phase">
+    <DetailList title="Grant phase">
       <div className="flex flex-col space-y-2 py-2 text-sm font-medium">
         {!status ? (
           <>
@@ -46,7 +46,7 @@ export default function GrantCurrentPhase(props: {
                 : '...'}
             </span>
             <span className="text-gray-400">Upcoming: Proposing</span>
-            <span className="text-gray-600">
+            <span className="text-gray-400">
               {status?.timestamp && props.duration
                 ? format2Time(
                     status.timestamp.getTime() +
@@ -73,7 +73,7 @@ export default function GrantCurrentPhase(props: {
                 : '...'}
             </span>
             <span className="text-gray-400">Upcoming: Voting</span>
-            <span className="text-gray-600">
+            <span className="text-gray-400">
               {status?.timestamp && props.duration
                 ? format2Time(
                     status.timestamp.getTime() +
