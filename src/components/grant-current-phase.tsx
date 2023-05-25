@@ -45,6 +45,18 @@ export default function GrantCurrentPhase(props: {
                   )
                 : '...'}
             </span>
+            <span className="text-gray-400">Upcoming: Proposing</span>
+            <span className="text-gray-600">
+              {status?.timestamp && props.duration
+                ? format2Time(
+                    status.timestamp.getTime() +
+                      props.duration.announcing * 1000,
+                    status.timestamp.getTime() +
+                      (props.duration.announcing + props.duration.proposing) *
+                        1000,
+                  )
+                : '...'}
+            </span>
           </>
         ) : phase === GrantPhase.PROPOSING ? (
           <>
@@ -56,6 +68,21 @@ export default function GrantCurrentPhase(props: {
                       props.duration.announcing * 1000,
                     status.timestamp.getTime() +
                       (props.duration.announcing + props.duration.proposing) *
+                        1000,
+                  )
+                : '...'}
+            </span>
+            <span className="text-gray-400">Upcoming: Voting</span>
+            <span className="text-gray-600">
+              {status?.timestamp && props.duration
+                ? format2Time(
+                    status.timestamp.getTime() +
+                      (props.duration.announcing + props.duration.proposing) *
+                        1000,
+                    status.timestamp.getTime() +
+                      (props.duration.announcing +
+                        props.duration.proposing +
+                        props.duration.voting) *
                         1000,
                   )
                 : '...'}

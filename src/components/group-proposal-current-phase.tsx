@@ -45,6 +45,18 @@ export default function GroupProposalCurrentPhase(props: {
                   )
                 : '...'}
             </span>
+            <span className="text-gray-400">Upcoming: Proposing</span>
+            <span className="text-gray-600">
+              {status?.timestamp && props.duration
+                ? format2Time(
+                    status.timestamp.getTime() +
+                      props.duration.announcing * 1000,
+                    status.timestamp.getTime() +
+                      (props.duration.announcing + props.duration.voting) *
+                        1000,
+                  )
+                : '...'}
+            </span>
           </>
         ) : phase === GroupProposalPhase.VOTING ? (
           <>
