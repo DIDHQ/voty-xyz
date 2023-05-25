@@ -44,7 +44,7 @@ export default function GrantProposalCard(props: {
             text={`This proposal won ${props.funding}`}
             className="float-right"
           >
-            <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/10 group-hover:bg-amber-100">
+            <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/10 transition-colors group-hover:bg-amber-100">
               <CrownIcon className="mr-0.5 h-4 w-4 text-amber-700" />
               WON
             </span>
