@@ -1,16 +1,32 @@
 import { ConnectButton as RainbowKitConnectButton } from '@rainbow-me/rainbowkit'
 import { Menu } from '@headlessui/react'
 import { clsx } from 'clsx'
+import { event } from 'nextjs-google-analytics'
+import { useEffect } from 'react'
 import '@rainbow-me/rainbowkit/styles.css'
 
 import useWallet from '../hooks/use-wallet'
 import { coinTypeLogos, coinTypeNames } from '../utils/constants'
+import useRouterQuery from '../hooks/use-router-query'
+import useIsManager from '../hooks/use-is-manager'
 import Button from './basic/button'
 import Avatar from './basic/avatar'
 import Dropdown from './basic/dropdown'
 
 export default function ConnectButton() {
   const { account, displayAddress, disconnect } = useWallet()
+  const query = useRouterQuery<['community_id']>()
+  const isManager = useIsManager(query.community_id)
+  useEffect(() => {
+    if (account && query.community_id) {
+      event('connect_wallet', {
+        address: account.address,
+        coinType: account.coinType,
+        communityId: query.community_id,
+        isManager,
+      })
+    }
+  }, [account, isManager, query.community_id])
 
   return (
     <RainbowKitConnectButton.Custom>
