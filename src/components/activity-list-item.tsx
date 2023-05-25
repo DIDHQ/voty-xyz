@@ -114,7 +114,7 @@ export default function ActivityListItem(props: {
                 underline
                 className="font-medium text-gray-900"
               >
-                {activity.data.grant_name}
+                {activity.data.grant_proposal_title}
               </TextLink>{' '}
               in topic grant{' '}
               <TextLink
@@ -124,7 +124,7 @@ export default function ActivityListItem(props: {
                 underline
                 className="font-medium text-gray-900"
               >
-                {activity.data.grant_proposal_title}
+                {activity.data.grant_name}
               </TextLink>
             </>
           ),
@@ -236,7 +236,7 @@ export default function ActivityListItem(props: {
                 underline
                 className="font-medium text-gray-900"
               >
-                {activity.data.group_name}
+                {activity.data.group_proposal_title}
               </TextLink>{' '}
               of workgroup{' '}
               <TextLink
@@ -244,7 +244,7 @@ export default function ActivityListItem(props: {
                 underline
                 className="font-medium text-gray-900"
               >
-                {activity.data.group_proposal_title}
+                {activity.data.group_name}
               </TextLink>
             </>
           ),
