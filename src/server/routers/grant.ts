@@ -2,8 +2,6 @@ import { TRPCError } from '@trpc/server'
 import { compact, keyBy, last } from 'lodash-es'
 import { z } from 'zod'
 import dayjs from 'dayjs'
-import { fromMarkdown } from 'mdast-util-from-markdown'
-import { toString } from 'mdast-util-to-string'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -26,6 +24,7 @@ import {
   flushUploadBuffers,
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
+import { getImages, getSummary } from '../../utils/markdown'
 
 const schema = proved(authorized(grantSchema))
 
@@ -105,6 +104,7 @@ export const grantRouter = router({
       z.object({
         data: z.array(
           schema.extend({
+            images: z.array(z.string()),
             permalink: z.string(),
             proposals: z.number(),
             ts: z.date(),
@@ -167,11 +167,8 @@ export const grantRouter = router({
                   const grant = schema.parse(storages[permalink].data)
                   return {
                     ...grant,
-                    introduction:
-                      toString(fromMarkdown(grant.introduction), {
-                        includeImageAlt: false,
-                        includeHtml: false,
-                      }) || ' ',
+                    images: getImages(grant.introduction),
+                    introduction: getSummary(grant.introduction),
                     permalink,
                     proposals,
                     ts,

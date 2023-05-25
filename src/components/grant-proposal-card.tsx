@@ -10,11 +10,13 @@ import { formatDid } from '../utils/did/utils'
 import { GrantPhase } from '../utils/phase'
 import Tooltip from './basic/tooltip'
 import { CrownIcon } from './icons'
+import Thumbnail from './basic/thumbnail'
 
 export default function GrantProposalCard(props: {
   communityId: string
   phase: GrantPhase
   grantProposal: Authorized<GrantProposal> & {
+    images: string[]
     permalink: string
     votes: number
     readingTime: number
@@ -59,9 +61,15 @@ export default function GrantProposalCard(props: {
           {props.grantProposal.title}
         </p>
         {props.grantProposal?.content ? (
-          <p className="line-clamp-3 text-gray-600">
-            {props.grantProposal.content}
-          </p>
+          <div className="flex">
+            <p className="line-clamp-3 w-0 flex-1 text-gray-600">
+              {props.grantProposal.content}
+            </p>
+            <Thumbnail
+              src={props.grantProposal.images[0]}
+              className="h-24 max-w-[128px] shrink-0"
+            />
+          </div>
         ) : null}
       </div>
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">

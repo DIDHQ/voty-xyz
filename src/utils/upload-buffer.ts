@@ -1,23 +1,13 @@
-import { unified } from 'unified'
-import remarkGfm from 'remark-gfm'
-import remarkParse from 'remark-parse'
-import { visit } from 'unist-util-visit'
 import pMap from 'p-map'
 import { SerializedUploader } from 'arweave/node/lib/transaction-uploader'
 
 import { isPermalink } from './permalink'
 import { database } from './database'
 import arweave from './sdks/arweave'
+import { getImages } from './markdown'
 
 export function getAllUploadBufferKeys(markdown: string): string[] {
-  const data = unified().use(remarkParse).use(remarkGfm).parse(markdown)
-  const set = new Set<string>()
-  visit(data, (node) => {
-    if (node.type === 'image' && isPermalink(node.url)) {
-      set.add(node.url)
-    }
-  })
-  return Array.from(set.values())
+  return getImages(markdown).filter(isPermalink)
 }
 
 export async function flushUploadBuffers(keys: string[]): Promise<void> {

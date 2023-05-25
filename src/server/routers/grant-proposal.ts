@@ -1,8 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { compact, keyBy, mapValues } from 'lodash-es'
 import { z } from 'zod'
-import { fromMarkdown } from 'mdast-util-from-markdown'
-import { toString } from 'mdast-util-to-string'
 import readingTime from 'reading-time'
 
 import { uploadToArweave } from '../../utils/upload'
@@ -21,6 +19,7 @@ import {
   flushUploadBuffers,
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
+import { getImages, getSummary } from '../../utils/markdown'
 
 const schema = proved(authorized(grantProposalSchema))
 
@@ -71,6 +70,7 @@ export const grantProposalRouter = router({
     .output(
       z.array(
         schema.extend({
+          images: z.array(z.string()),
           permalink: z.string(),
           votes: z.number(),
           readingTime: z.number(),
@@ -112,11 +112,8 @@ export const grantProposalRouter = router({
               const grantProposal = schema.parse(storages[permalink].data)
               return {
                 ...grantProposal,
-                content:
-                  toString(fromMarkdown(grantProposal.content), {
-                    includeImageAlt: false,
-                    includeHtml: false,
-                  }) || ' ',
+                images: getImages(grantProposal.content),
+                content: getSummary(grantProposal.content),
                 readingTime: readingTime(grantProposal.content).time,
                 permalink,
                 votes,

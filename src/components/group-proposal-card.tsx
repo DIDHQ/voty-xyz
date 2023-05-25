@@ -9,9 +9,11 @@ import { GroupProposal } from '../utils/schemas/v1/group-proposal'
 import { formatDurationMs } from '../utils/time'
 import useNow from '../hooks/use-now'
 import { formatDid } from '../utils/did/utils'
+import Thumbnail from './basic/thumbnail'
 
 export default function GroupProposalCard(props: {
   groupProposal: Authorized<GroupProposal> & {
+    images: string[]
     permalink: string
     communityId: string
     groupId: string
@@ -47,9 +49,15 @@ export default function GroupProposalCard(props: {
           {props.groupProposal.title}
         </p>
         {props.groupProposal?.content ? (
-          <p className="line-clamp-3 text-gray-600">
-            {props.groupProposal.content}
-          </p>
+          <div className="flex">
+            <p className="line-clamp-3 w-0 flex-1 text-gray-600">
+              {props.groupProposal.content}
+            </p>
+            <Thumbnail
+              src={props.groupProposal.images[0]}
+              className="h-24 max-w-[128px] shrink-0"
+            />
+          </div>
         ) : null}
       </div>
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">

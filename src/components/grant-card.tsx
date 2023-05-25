@@ -8,10 +8,12 @@ import { Authorized } from '../utils/schemas/basic/authorship'
 import { Grant } from '../utils/schemas/v1/grant'
 import { formatDurationMs } from '../utils/time'
 import useNow from '../hooks/use-now'
+import Thumbnail from './basic/thumbnail'
 
 export default function GrantCard(props: {
   communityId: string
   grant: Authorized<Grant> & {
+    images: string[]
     permalink: string
     proposals: number
     ts: Date
@@ -55,9 +57,15 @@ export default function GrantCard(props: {
           {props.grant.name}
         </p>
         {props.grant?.introduction ? (
-          <p className="line-clamp-3 text-gray-600">
-            {props.grant.introduction}
-          </p>
+          <div className="flex">
+            <p className="line-clamp-3 w-0 flex-1 text-gray-600">
+              {props.grant.introduction}
+            </p>
+            <Thumbnail
+              src={props.grant.images[0]}
+              className="h-24 max-w-[128px] shrink-0"
+            />
+          </div>
         ) : null}
       </div>
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
