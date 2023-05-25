@@ -6,6 +6,8 @@ import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
+import Confetti from 'react-confetti'
+import { useWindowSize } from 'usehooks-ts'
 
 import {
   permalink2Explorer,
@@ -28,6 +30,8 @@ import useStatus from '../../../../../hooks/use-status'
 import useNow from '../../../../../hooks/use-now'
 import { formatDid } from '../../../../../utils/did/utils'
 import { CrownIcon } from '../../../../../components/icons'
+import useWallet from '../../../../../hooks/use-wallet'
+import useDids from '../../../../../hooks/use-dids'
 
 export default function GrantProposalPage() {
   const query =
@@ -133,6 +137,15 @@ export default function GrantProposalPage() {
         : undefined,
     [currentIndex, grant, phase],
   )
+  const { width, height } = useWindowSize()
+  const { account } = useWallet()
+  const { data: dids } = useDids(account)
+  const isAuthor = useMemo(
+    () =>
+      !!grantProposal &&
+      !!dids?.find((did) => did === grantProposal?.authorship?.author),
+    [dids, grantProposal],
+  )
 
   return (
     <>
@@ -140,6 +153,15 @@ export default function GrantProposalPage() {
         <title>{title}</title>
       </Head>
       <LoadingBar loading={isLoading || isGrantLoading || isCommunityLoading} />
+      {funding && isAuthor ? (
+        <Confetti
+          width={width}
+          height={height}
+          numberOfPieces={(width * height) / 1500}
+          tweenDuration={15000}
+          recycle={false}
+        />
+      ) : null}
       <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
         <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
           {query.community_id &&
