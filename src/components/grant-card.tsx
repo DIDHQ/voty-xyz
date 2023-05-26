@@ -52,21 +52,16 @@ export default function GrantCard(props: {
       )}`}
       className="block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-primary-300 focus-within:ring-offset-2 hover:border-primary-500 hover:bg-gray-50"
     >
-      <div className="w-full p-4">
-        <p className="truncate text-lg font-medium text-gray-800">
-          {props.grant.name}
-        </p>
-        {props.grant?.introduction ? (
-          <div className="flex">
-            <p className="line-clamp-3 w-0 flex-1 text-gray-600">
-              {props.grant.introduction}
-            </p>
-            <Thumbnail
-              src={props.grant.images[0]}
-              className="h-24 max-w-[128px] shrink-0"
-            />
-          </div>
-        ) : null}
+      <div className="flex w-full p-4">
+        <div className="w-0 flex-1">
+          <p className="truncate text-lg font-medium text-gray-800">
+            {props.grant.name}
+          </p>
+          <p className="line-clamp-3 text-gray-600">
+            {props.grant.introduction}
+          </p>
+        </div>
+        <Thumbnail src={props.grant.images[0]} className="ml-4 shrink-0" />
       </div>
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">

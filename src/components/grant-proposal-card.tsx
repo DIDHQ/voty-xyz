@@ -39,38 +39,31 @@ export default function GrantProposalCard(props: {
           : 'focus-within:ring-primary-300 hover:border-primary-500 hover:bg-gray-50',
       )}
     >
-      <div className="w-full p-4">
-        {props.funding ? (
-          <Tooltip
-            place="top"
-            text={`This proposal won ${props.funding}`}
-            className="float-right"
-          >
-            <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/10 transition-colors group-hover:bg-amber-100">
-              <CrownIcon className="mr-0.5 h-4 w-4 text-amber-700" />
-              WON
-            </span>
-          </Tooltip>
-        ) : null}
-        <p
-          className={clsx(
-            'truncate text-lg font-medium',
-            props.funding ? 'text-amber-600' : 'text-gray-800',
-          )}
-        >
-          {props.grantProposal.title}
-        </p>
-        {props.grantProposal?.content ? (
-          <div className="flex">
-            <p className="line-clamp-3 w-0 flex-1 text-gray-600">
-              {props.grantProposal.content}
-            </p>
-            <Thumbnail
-              src={props.grantProposal.images[0]}
-              className="h-24 max-w-[128px] shrink-0"
-            />
-          </div>
-        ) : null}
+      <div className="flex w-full p-4">
+        <div className="w-0 flex-1">
+          {props.funding ? (
+            <Tooltip
+              place="top"
+              text={`This proposal won ${props.funding}`}
+              className="float-right ml-4"
+            >
+              <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/10 transition-colors group-hover:bg-amber-100">
+                <CrownIcon className="mr-0.5 h-4 w-4 text-amber-700" />
+                WON
+              </span>
+            </Tooltip>
+          ) : null}
+          <p className="truncate text-lg font-medium text-gray-800">
+            {props.grantProposal.title}
+          </p>
+          <p className="line-clamp-3 text-gray-600">
+            {props.grantProposal.content}
+          </p>
+        </div>
+        <Thumbnail
+          src={props.grantProposal.images[0]}
+          className="ml-4 shrink-0"
+        />
       </div>
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">

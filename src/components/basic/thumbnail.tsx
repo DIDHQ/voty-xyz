@@ -7,7 +7,10 @@ export default function Thumbnail(props: { src?: string; className?: string }) {
     <img
       src={isPermalink(props.src) ? permalink2Gateway(props.src) : props.src}
       alt={props.src}
-      className={clsx('object-contain', props.className)}
+      className={clsx(
+        'h-[100px] w-[100px] rounded-md border object-cover object-center',
+        props.className,
+      )}
     />
   ) : null
 }
