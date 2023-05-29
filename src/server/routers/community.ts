@@ -20,7 +20,7 @@ import {
 
 const schema = proved(authorized(communitySchema))
 
-const pinnedDids = ['bitbuilder.bit']
+const selectedCommunities = process.env.SELECTED_COMMUNITIES?.split(',') || []
 
 export const communityRouter = router({
   getById: procedure
@@ -84,11 +84,11 @@ export const communityRouter = router({
       const pinnedCommunities = input.cursor
         ? []
         : await database.community.findMany({
-            where: { id: { in: pinnedDids } },
+            where: { id: { in: selectedCommunities } },
             orderBy: { ts: 'desc' },
           })
       const commonCommunities = await database.community.findMany({
-        where: { id: { notIn: pinnedDids } },
+        where: { id: { notIn: selectedCommunities } },
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: 30,
         skip: input.cursor ? 1 : 0,
