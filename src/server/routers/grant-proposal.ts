@@ -24,17 +24,9 @@ import { permalink2Id } from '../../utils/permalink'
 
 const schema = proved(authorized(grantProposalSchema))
 
-const selectedGrantProposals = process.env.SELECTED_GRANT_PROPOSALS?.split(
-  ',',
-).reduce((obj, str) => {
-  const [grant, grantProposal] = str.split('/')
-  if (obj[grant]) {
-    obj[grant].add(grantProposal)
-  } else {
-    obj[grant] = new Set([grantProposal])
-  }
-  return obj
-}, {} as Record<string, Set<string>>)
+const selectedGrantProposals = new Set(
+  process.env.SELECTED_GRANT_PROPOSALS?.split(','),
+)
 
 export const grantProposalRouter = router({
   getByPermalink: procedure
@@ -117,21 +109,15 @@ export const grantProposalRouter = router({
         ({ permalink }) => permalink,
       )
 
-      const sortedGrantProposals = selectedGrantProposals
-        ? orderBy(
-            grantProposals,
-            (grantProposal) =>
-              selectedGrantProposals[
-                permalink2Id(grantProposal.grantPermalink)
-              ]?.has(permalink2Id(grantProposal.permalink))
-                ? 1
-                : 0,
-            'desc',
-          )
-        : grantProposals
-
       return compact(
-        sortedGrantProposals
+        orderBy(
+          grantProposals,
+          (grantProposal) =>
+            selectedGrantProposals.has(permalink2Id(grantProposal.permalink))
+              ? 1
+              : 0,
+          'desc',
+        )
           .filter(({ permalink }) => storages[permalink])
           .map(({ permalink, votes, ts }) => {
             try {
