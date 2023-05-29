@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, mapValues } from 'lodash-es'
+import { compact, keyBy, mapValues, orderBy } from 'lodash-es'
 import { z } from 'zod'
 import readingTime from 'reading-time'
 
@@ -20,8 +20,21 @@ import {
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
 import { getImages, getSummary } from '../../utils/markdown'
+import { permalink2Id } from '../../utils/permalink'
 
 const schema = proved(authorized(grantProposalSchema))
+
+const selectedGrantProposals = process.env.SELECTED_GRANT_PROPOSALS?.split(
+  ',',
+).reduce((obj, str) => {
+  const [grant, grantProposal] = str.split('/')
+  if (obj[grant]) {
+    obj[grant].add(grantProposal)
+  } else {
+    obj[grant] = new Set([grantProposal])
+  }
+  return obj
+}, {} as Record<string, Set<string>>)
 
 export const grantProposalRouter = router({
   getByPermalink: procedure
@@ -104,8 +117,21 @@ export const grantProposalRouter = router({
         ({ permalink }) => permalink,
       )
 
+      const sortedGrantProposals = selectedGrantProposals
+        ? orderBy(
+            grantProposals,
+            (grantProposal) =>
+              selectedGrantProposals[
+                permalink2Id(grantProposal.grantPermalink)
+              ]?.has(permalink2Id(grantProposal.permalink))
+                ? 1
+                : 0,
+            'desc',
+          )
+        : grantProposals
+
       return compact(
-        grantProposals
+        sortedGrantProposals
           .filter(({ permalink }) => storages[permalink])
           .map(({ permalink, votes, ts }) => {
             try {
