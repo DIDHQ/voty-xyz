@@ -10,6 +10,7 @@ export const grantSchema = z.object({
   introduction: z.string().min(1, 'Required'),
   permission: z.object({
     proposing: booleanSetsSchema,
+    selecting: booleanSetsSchema.optional(),
     voting: decimalSetsSchema,
   }),
   duration: z.object({

@@ -55,6 +55,7 @@ model GrantProposal {
 
   proposer String
   votes    Int      @default(0)
+  selected String?
   ts       DateTime
 
   @@id([permalink])
