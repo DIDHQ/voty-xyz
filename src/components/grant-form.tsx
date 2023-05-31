@@ -46,6 +46,7 @@ export default function GrantForm(props: {
     register,
     reset,
     setValue,
+    getValues,
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
@@ -252,13 +253,31 @@ export default function GrantForm(props: {
           <Button
             primary
             icon={EyeIcon}
-            onClick={onSubmit((value) => {
-              setPreviewGrant({
-                ...value,
-                preview: props.preview,
-              })
-              router.push(props.preview.to)
-            }, console.error)}
+            onClick={(e) => {
+              const argument =
+                getValues().permission.selecting?.operands[0].arguments[1]
+              if (argument?.join('').length === 0) {
+                setValue('permission.selecting', undefined)
+              } else {
+                setValue('permission.selecting', {
+                  operation: 'or',
+                  operands: [
+                    {
+                      name: 'Committee',
+                      function: 'prefixes_dot_suffix_exact_match',
+                      arguments: [props.communityId, argument || []],
+                    },
+                  ],
+                })
+              }
+              onSubmit((value) => {
+                setPreviewGrant({
+                  ...value,
+                  preview: props.preview,
+                })
+                router.push(props.preview.to)
+              }, console.error)(e)
+            }}
           >
             Preview
           </Button>
