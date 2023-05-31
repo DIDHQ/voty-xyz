@@ -14,6 +14,7 @@ import Button from './basic/button'
 export default function GrantProposalCreateButton(props: {
   communityId?: string
   grant?: Grant & { permalink: string }
+  className?: string
 }) {
   const now = useNow()
   const { data: status } = useStatus(props.grant?.permalink)
@@ -27,7 +28,7 @@ export default function GrantProposalCreateButton(props: {
       place="top"
       text="Waiting for grant to be confirmed (in about 5 minutes)"
     >
-      <Button primary disabled icon={PlusIcon}>
+      <Button primary disabled icon={PlusIcon} className={props.className}>
         Proposal
       </Button>
     </Tooltip>
@@ -40,7 +41,7 @@ export default function GrantProposalCreateButton(props: {
           now.getTime(),
       )})`}
     >
-      <Button primary disabled icon={PlusIcon}>
+      <Button primary disabled icon={PlusIcon} className={props.className}>
         Proposal
       </Button>
     </Tooltip>
@@ -50,7 +51,7 @@ export default function GrantProposalCreateButton(props: {
         props.grant.permalink,
       )}/create`}
     >
-      <Button primary icon={PlusIcon}>
+      <Button primary icon={PlusIcon} className={props.className}>
         Proposal
       </Button>
     </Link>

@@ -42,6 +42,10 @@ export const grantProposalSelectRouter = router({
           where: { permalink: input.grant_proposal },
           data: { selected: permalink },
         }),
+        database.grant.update({
+          where: { permalink: grantProposal.grant },
+          data: { selectedProposals: { increment: 1 } },
+        }),
       ])
 
       return permalink

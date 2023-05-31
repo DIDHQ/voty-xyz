@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { compact } from 'lodash-es'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
@@ -18,6 +18,7 @@ import GrantProposalCreateButton from '../../../../components/grant-proposal-cre
 import { GrantPhase, getGrantPhase } from '../../../../utils/phase'
 import useStatus from '../../../../hooks/use-status'
 import useNow from '../../../../hooks/use-now'
+import Select from '../../../../components/basic/select'
 
 export default function GrantPage() {
   const query = useRouterQuery<['community_id', 'grant_permalink']>()
@@ -28,8 +29,9 @@ export default function GrantPage() {
   )
   const grant = useMemo<
     | (Grant & {
-        proposals: number
         permalink: string
+        proposals: number
+        selectedProposals: number
         authorship?: { author?: string }
       })
     | undefined
@@ -37,8 +39,9 @@ export default function GrantPage() {
     if (previewGrant) {
       return {
         ...previewGrant,
-        proposals: 0,
         permalink: previewPermalink,
+        proposals: 0,
+        selectedProposals: 0,
         authorship: { author: previewGrant.preview.author },
       }
     }
@@ -65,6 +68,11 @@ export default function GrantPage() {
     () => getGrantPhase(now, status?.timestamp, grant?.duration),
     [grant?.duration, now, status?.timestamp],
   )
+  const options = useMemo(() => ['All', 'Selected'], [])
+  const [option, setOption] = useState(options[0])
+  useEffect(() => {
+    setOption(options[grant?.selectedProposals ? 1 : 0])
+  }, [grant?.selectedProposals, options])
 
   return (
     <>
@@ -96,22 +104,34 @@ export default function GrantPage() {
             <div className="my-6 flex items-center justify-between border-t border-gray-200 pt-6">
               {grant?.proposals ? (
                 <h2 className="text-2xl font-bold">
-                  {grant.proposals === 1
-                    ? '1 Proposal'
-                    : `${grant.proposals} Proposals`}
+                  {option === options[0]
+                    ? grant.proposals === 1
+                      ? '1 Proposal'
+                      : `${grant.proposals} Proposals`
+                    : grant.selectedProposals === 1
+                    ? '1 Selected proposal'
+                    : `${grant.selectedProposals} Selected proposals`}
                 </h2>
               ) : (
                 <h2 />
               )}
-              <GrantProposalCreateButton
-                communityId={query.community_id}
-                grant={grant}
-              />
+              <div className="flex items-center">
+                <Select options={options} value={option} onChange={setOption} />
+                <GrantProposalCreateButton
+                  communityId={query.community_id}
+                  grant={grant}
+                  className="ml-5"
+                />
+              </div>
             </div>
           )}
-          {grantProposals?.length ? (
-            <ul className="mt-5 space-y-5">
-              {grantProposals.map((grantProposal, index) => (
+          <ul className="mt-5 space-y-5">
+            {grantProposals
+              ?.filter(
+                (grantProposal) =>
+                  option === options[0] || grantProposal.selected,
+              )
+              .map((grantProposal, index) => (
                 <li key={grantProposal.permalink}>
                   {query.community_id && grant ? (
                     <GrantProposalCard
@@ -129,8 +149,7 @@ export default function GrantPage() {
                   ) : null}
                 </li>
               ))}
-            </ul>
-          ) : null}
+          </ul>
         </div>
         <GrantInfo
           community={community || undefined}

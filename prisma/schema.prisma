@@ -39,12 +39,13 @@ model Grant {
   communityId        String
   communityPermalink String
 
-  proposals    Int       @default(0)
-  votes        Int       @default(0)
-  ts           DateTime
-  tsAnnouncing DateTime?
-  tsProposing  DateTime?
-  tsVoting     DateTime?
+  proposals         Int       @default(0)
+  selectedProposals Int       @default(0)
+  votes             Int       @default(0)
+  ts                DateTime
+  tsAnnouncing      DateTime?
+  tsProposing       DateTime?
+  tsVoting          DateTime?
 
   @@id([permalink])
 }

@@ -75,6 +75,7 @@ export const grantProposalRouter = router({
     .output(
       z.array(
         schema.extend({
+          selected: z.string().nullable(),
           images: z.array(z.string()),
           permalink: z.string(),
           votes: z.number(),
@@ -119,11 +120,12 @@ export const grantProposalRouter = router({
           'desc',
         )
           .filter(({ permalink }) => storages[permalink])
-          .map(({ permalink, votes, ts }) => {
+          .map(({ permalink, selected, votes, ts }) => {
             try {
               const grantProposal = schema.parse(storages[permalink].data)
               return {
                 ...grantProposal,
+                selected,
                 images: getImages(grantProposal.content),
                 content: getSummary(grantProposal.content),
                 readingTime: readingTime(grantProposal.content).time,
