@@ -3,6 +3,7 @@ import {
   isCommunity,
   isGrant,
   isGrantProposal,
+  isGrantProposalSelect,
   isGrantProposalVote,
   isGroup,
   isGroupProposal,
@@ -13,6 +14,7 @@ import { Authorized } from './schemas/basic/authorship'
 import { Community } from './schemas/v1/community'
 import { Grant } from './schemas/v1/grant'
 import { GrantProposal } from './schemas/v1/grant-proposal'
+import { GrantProposalSelect } from './schemas/v1/grant-proposal-select'
 import { GrantProposalVote } from './schemas/v1/grant-proposal-vote'
 import { Group } from './schemas/v1/group'
 import { GroupProposal } from './schemas/v1/group-proposal'
@@ -35,6 +37,7 @@ export async function uploadToArweave(
     | Community
     | Grant
     | GrantProposal
+    | GrantProposalSelect
     | GrantProposalVote
     | Group
     | GroupProposal
@@ -61,6 +64,7 @@ function getArweaveTags(
     | Community
     | Grant
     | GrantProposal
+    | GrantProposalSelect
     | GrantProposalVote
     | Group
     | GroupProposal
@@ -89,6 +93,14 @@ function getArweaveTags(
       'Content-Type': 'application/json',
       'App-Data-Type': DataType.GRANT_PROPOSAL,
       'App-Index-Grant': document.grant,
+    }
+  }
+  if (isGrantProposalSelect(document)) {
+    return {
+      ...defaultArweaveTags,
+      'Content-Type': 'application/json',
+      'App-Data-Type': DataType.GRANT_PROPOSAL_SELECT,
+      'App-Index-Grant-Proposal': document.grant_proposal,
     }
   }
   if (isGrantProposalVote(document)) {
