@@ -37,7 +37,7 @@ export default function GrantProposalSelectForm(props: {
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account, props.grant.snapshots)
   const { data } = useQuery(
-    [dids, props.grant, props.grant.snapshots],
+    [dids, props.grant],
     async () => {
       const booleans = await pMap(
         dids!,

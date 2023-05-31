@@ -8,6 +8,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 import Confetti from 'react-confetti'
 import { useWindowSize } from 'usehooks-ts'
+import pMap from 'p-map'
+import { useQuery } from '@tanstack/react-query'
 
 import {
   permalink2Explorer,
@@ -32,6 +34,7 @@ import { CrownIcon } from '../../../../../components/icons'
 import useWallet from '../../../../../hooks/use-wallet'
 import useDids from '../../../../../hooks/use-dids'
 import GrantProposalSelectForm from '../../../../../components/grant-proposal-select-form'
+import { checkBoolean } from '../../../../../utils/functions/boolean'
 
 export default function GrantProposalPage() {
   const query =
@@ -146,7 +149,24 @@ export default function GrantProposalPage() {
       !!dids?.find((did) => did === grantProposal?.authorship?.author),
     [dids, grantProposal],
   )
-  const showSelect = useMemo(() => true, [])
+  const { data: showSelect } = useQuery(
+    [dids, grant],
+    async () => {
+      const booleans = await pMap(
+        dids!,
+        (did) =>
+          checkBoolean(grant!.permission.selecting!, did, grant!.snapshots),
+        { concurrency: 5 },
+      )
+      return booleans.some((boolean) => boolean)
+    },
+    {
+      enabled:
+        !!dids &&
+        !!grant?.permission.selecting &&
+        phase === GrantPhase.PROPOSING,
+    },
+  )
 
   return (
     <>

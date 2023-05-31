@@ -42,7 +42,7 @@ export default function GrantProposalVoteForm(props: {
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account, props.grant.snapshots)
   const { data: powers } = useQuery(
-    [dids, props.grant, props.grant.snapshots],
+    [dids, props.grant],
     async () => {
       const decimals = await pMap(
         dids!,
