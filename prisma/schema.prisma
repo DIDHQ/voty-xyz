@@ -62,6 +62,18 @@ model GrantProposal {
   @@unique([grantPermalink, proposer])
 }
 
+model GrantProposalSelect {
+  permalink         String
+  grantPermalink    String
+  proposalPermalink String
+
+  selector String
+  ts       DateTime
+
+  @@id([permalink])
+  @@unique([proposalPermalink])
+}
+
 model GrantProposalVote {
   permalink         String
   grantPermalink    String

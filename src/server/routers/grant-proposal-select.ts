@@ -22,15 +22,27 @@ export const grantProposalSelectRouter = router({
       await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
-      const { grant } = await verifyGrantProposalSelect(input)
+      const { grant, grantProposal } = await verifyGrantProposalSelect(input)
       await verifyGrant(grant)
 
       const permalink = await uploadToArweave(input)
+      const ts = new Date()
 
-      await database.grantProposal.update({
-        where: { permalink: input.grant_proposal },
-        data: { selected: permalink },
-      })
+      await database.$transaction([
+        database.grantProposalSelect.create({
+          data: {
+            permalink,
+            ts,
+            selector: input.authorship.author,
+            grantPermalink: grantProposal.grant,
+            proposalPermalink: input.grant_proposal,
+          },
+        }),
+        database.grantProposal.update({
+          where: { permalink: input.grant_proposal },
+          data: { selected: permalink },
+        }),
+      ])
 
       return permalink
     }),
