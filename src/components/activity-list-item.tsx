@@ -98,6 +98,39 @@ export default function ActivityListItem(props: {
           permalink: activity.data.grant_proposal_permalink,
         }
       }
+      case 'create_grant_proposal_select': {
+        return {
+          color: 'bg-lime-100 text-lime-500',
+          icon: TicketIcon,
+          children: (
+            <>
+              selected proposal{' '}
+              <TextLink
+                href={`/${activity.data.community_id}/grant/${permalink2Id(
+                  activity.data.grant_permalink,
+                )}/proposal/${permalink2Id(
+                  activity.data.grant_proposal_permalink,
+                )}`}
+                underline
+                className="font-medium text-gray-900"
+              >
+                {activity.data.grant_proposal_title}
+              </TextLink>{' '}
+              in topic grant{' '}
+              <TextLink
+                href={`/${activity.data.community_id}/grant/${permalink2Id(
+                  activity.data.grant_permalink,
+                )}`}
+                underline
+                className="font-medium text-gray-900"
+              >
+                {activity.data.grant_name}
+              </TextLink>
+            </>
+          ),
+          permalink: activity.data.grant_proposal_select_permalink,
+        }
+      }
       case 'create_grant_proposal_vote': {
         return {
           color: 'bg-lime-100 text-lime-500',
