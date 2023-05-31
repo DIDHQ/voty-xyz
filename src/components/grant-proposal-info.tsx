@@ -90,7 +90,7 @@ export default function GrantProposalInfo(props: {
                   props.grant?.permission.selecting ? (
                     <PermissionCard
                       title="Committee"
-                      description="Only the proposals selected by the committees can be voted on by other voters."
+                      description="Only proposals selected by committee members are eligible to be voted on."
                       value={props.grant.permission.selecting}
                     />
                   ) : null

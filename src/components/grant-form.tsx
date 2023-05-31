@@ -230,7 +230,7 @@ export default function GrantForm(props: {
           <GridItem6>
             <FormItem
               label="Committee"
-              description="If set, only the proposals selected by the committees can be voted on by other voters."
+              description="If set, only proposals selected by committee members are eligible to be voted on."
               optional
               error={
                 errors.permission?.selecting?.operands?.[0]?.arguments?.[1]?.[0]
