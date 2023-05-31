@@ -158,6 +158,30 @@ export default function GrantInfo(props: {
               </Tooltip>
               phase.
             </li>
+            {props.grant?.permission.selecting ? (
+              <li>
+                Committees can select proposals can be voted on during the
+                <Tooltip
+                  text={
+                    props.grant && status?.timestamp
+                      ? format2Time(
+                          status.timestamp.getTime() +
+                            props.grant.duration.announcing * 1000,
+                          status.timestamp.getTime() +
+                            (props.grant.duration.announcing +
+                              props.grant.duration.proposing) *
+                              1000,
+                        )
+                      : '...'
+                  }
+                  place="top"
+                  className="inline"
+                >
+                  <span className="text-indigo-600"> proposing </span>
+                </Tooltip>
+                phase.
+              </li>
+            ) : null}
             <li>
               Any member will vote on the best proposals during the
               <Tooltip
