@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { EyeIcon } from '@heroicons/react/20/solid'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
@@ -23,6 +23,7 @@ import { Grid6, GridItem2, GridItem3, GridItem6 } from './basic/grid'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import TextInput from './basic/text-input'
 import DurationInput from './basic/duration-input'
+import BooleanSetsBlock from './boolean-sets-block'
 
 export default function GrantForm(props: {
   communityId: string
@@ -225,6 +226,25 @@ export default function GrantForm(props: {
               </div>
             </FormItem>
           </GridItem3>
+          <GridItem6>
+            <FormItem
+              label="Committee"
+              description="If set, only the proposals selected by the committees can be voted on by other voters."
+              optional
+              error={
+                errors.permission?.selecting?.operands?.[0]?.arguments?.[1]?.[0]
+                  ?.message
+              }
+            >
+              <FormProvider {...methods}>
+                <BooleanSetsBlock
+                  name="selecting"
+                  communityId={props.communityId}
+                  disabled={disabled}
+                />
+              </FormProvider>
+            </FormItem>
+          </GridItem6>
         </Grid6>
       </FormSection>
       {isManager ? (

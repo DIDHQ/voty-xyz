@@ -1,11 +1,11 @@
 import { compact } from 'lodash-es'
 import { Controller, useFormContext } from 'react-hook-form'
 
-import { Group } from '../utils/schemas/v1/group'
+import { Grant } from '../utils/schemas/v1/grant'
 import Textarea from './basic/textarea'
 
 export default function BooleanSetsBlock(props: {
-  name: 'proposing'
+  name: 'proposing' | 'selecting'
   communityId: string
   disabled?: boolean
 }) {
@@ -20,7 +20,7 @@ export default function BooleanSetsBlock(props: {
 }
 
 function BooleanUnitBlock(props: {
-  name: 'proposing'
+  name: 'proposing' | 'selecting'
   communityId: string
   index: number
   disabled?: boolean
@@ -29,7 +29,7 @@ function BooleanUnitBlock(props: {
     control,
     watch,
     formState: { errors },
-  } = useFormContext<Group>()
+  } = useFormContext<Grant>()
 
   const suffix =
     watch(`permission.${props.name}.operands.${props.index}.arguments.0`) ?? ''

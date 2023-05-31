@@ -202,6 +202,14 @@ export const grantRouter = router({
               grant.authorship.author &&
             grant.permission.voting.operands[0].arguments[1].length === 0 &&
             grant.permission.voting.operands[0].arguments[2] === '1',
+        )
+        .refine(
+          (grant) =>
+            !grant.permission.selecting ||
+            (grant.permission.selecting.operands.length === 1 &&
+              grant.permission.selecting.operands[0].arguments[0] ===
+                grant.authorship.author &&
+              grant.permission.selecting.operands[0].arguments[1].length > 0),
         ),
     )
     .output(z.string())
