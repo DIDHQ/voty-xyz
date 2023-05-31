@@ -31,6 +31,7 @@ import { formatDid } from '../../../../../utils/did/utils'
 import { CrownIcon } from '../../../../../components/icons'
 import useWallet from '../../../../../hooks/use-wallet'
 import useDids from '../../../../../hooks/use-dids'
+import GrantProposalSelectForm from '../../../../../components/grant-proposal-select-form'
 
 export default function GrantProposalPage() {
   const query =
@@ -145,6 +146,7 @@ export default function GrantProposalPage() {
       !!dids?.find((did) => did === grantProposal?.authorship?.author),
     [dids, grantProposal],
   )
+  const showSelect = useMemo(() => true, [])
 
   return (
     <>
@@ -256,11 +258,19 @@ export default function GrantProposalPage() {
             className="mb-6 block sm:hidden"
           />
           {grant && grantProposal ? (
-            <GrantProposalVoteForm
-              grant={grant}
-              grantProposal={grantProposal}
-              onSuccess={handleSuccess}
-            />
+            showSelect ? (
+              <GrantProposalSelectForm
+                grant={grant}
+                grantProposal={grantProposal}
+                onSuccess={handleSuccess}
+              />
+            ) : (
+              <GrantProposalVoteForm
+                grant={grant}
+                grantProposal={grantProposal}
+                onSuccess={handleSuccess}
+              />
+            )
           ) : null}
           {grantProposal?.votes ? (
             <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
