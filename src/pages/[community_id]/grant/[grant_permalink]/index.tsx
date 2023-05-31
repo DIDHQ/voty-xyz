@@ -116,7 +116,13 @@ export default function GrantPage() {
                 <h2 />
               )}
               <div className="flex items-center">
-                <Select options={options} value={option} onChange={setOption} />
+                {grant?.permission.selecting ? (
+                  <Select
+                    options={options}
+                    value={option}
+                    onChange={setOption}
+                  />
+                ) : null}
                 <GrantProposalCreateButton
                   communityId={query.community_id}
                   grant={grant}
