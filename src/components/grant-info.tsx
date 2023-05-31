@@ -17,6 +17,9 @@ import TextLink from './basic/text-link'
 import GrantCurrentPhase from './grant-current-phase'
 import Article from './basic/article'
 import Tooltip from './basic/tooltip'
+import TextButton from './basic/text-button'
+import Slide from './basic/slide'
+import PermissionCard from './permission-card'
 
 export default function GrantInfo(props: {
   community?: Community
@@ -69,6 +72,38 @@ export default function GrantInfo(props: {
               '...'
             )}
           </DetailItem>
+          {props.grant?.permission.selecting ? (
+            <DetailItem title="Committee">
+              {props.community ? (
+                <Slide
+                  title={`Committee of ${props.grant.name}`}
+                  trigger={({ handleOpen }) => (
+                    <TextButton
+                      onClick={handleOpen}
+                      className="truncate whitespace-nowrap underline"
+                    >
+                      {
+                        props.grant?.permission.selecting?.operands[0]
+                          .arguments[1].length
+                      }
+                    </TextButton>
+                  )}
+                >
+                  {() =>
+                    props.grant?.permission.selecting ? (
+                      <PermissionCard
+                        title="Committee"
+                        description="Only the proposals selected by the committees can be voted on by other voters."
+                        value={props.grant.permission.selecting}
+                      />
+                    ) : null
+                  }
+                </Slide>
+              ) : (
+                '...'
+              )}
+            </DetailItem>
+          ) : null}
         </DetailList>
         {props.grant?.snapshots ? (
           <DetailList title="On-chain verification">
