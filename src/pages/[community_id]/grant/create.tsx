@@ -24,6 +24,16 @@ export default function CreateGrantPage() {
                   },
                 ],
               },
+              selecting: {
+                operation: 'or',
+                operands: [
+                  {
+                    name: 'Committee',
+                    function: 'prefixes_dot_suffix_exact_match',
+                    arguments: [query.community_id, []],
+                  },
+                ],
+              },
               voting: {
                 operation: 'max',
                 operands: [
