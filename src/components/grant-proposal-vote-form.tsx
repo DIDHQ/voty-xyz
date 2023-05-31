@@ -114,7 +114,7 @@ export default function GrantProposalVoteForm(props: {
         ? dids?.map((did) => ({
             did,
             label: `${voted[did] ? '(voted) ' : ''}${powers[did]}`,
-            disabled: !!voted[did] || !powers[did].gt(0),
+            disabled: !!voted[did] || !powers[did]?.gt(0),
           }))
         : undefined,
     [dids, powers, voted],
