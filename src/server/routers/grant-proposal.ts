@@ -31,7 +31,11 @@ const selectedGrantProposals = new Set(
 export const grantProposalRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(schema.extend({ votes: z.number() }).nullable())
+    .output(
+      schema
+        .extend({ selected: z.string().nullable(), votes: z.number() })
+        .nullable(),
+    )
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -45,7 +49,11 @@ export const grantProposalRouter = router({
         where: { permalink: input.permalink },
       })
       return storage && grantProposal
-        ? { ...schema.parse(storage.data), votes: grantProposal.votes }
+        ? {
+            ...schema.parse(storage.data),
+            selected: grantProposal.selected,
+            votes: grantProposal.votes,
+          }
         : null
     }),
   groupByProposer: procedure

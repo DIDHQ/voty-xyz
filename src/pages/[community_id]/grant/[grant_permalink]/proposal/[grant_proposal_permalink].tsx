@@ -49,6 +49,7 @@ export default function GrantProposalPage() {
     )
   const grantProposal = useMemo<
     | (GrantProposal & {
+        selected: string | null
         votes: number
         permalink: string
         authorship?: { author?: string }
@@ -58,6 +59,7 @@ export default function GrantProposalPage() {
     if (previewGrantProposal) {
       return {
         ...previewGrantProposal,
+        selected: null,
         votes: 0,
         permalink: previewPermalink,
         authorship: { author: previewGrantProposal.preview.author },
@@ -150,8 +152,11 @@ export default function GrantProposalPage() {
     [dids, grantProposal],
   )
   const { data: showSelect } = useQuery(
-    [dids, grant],
+    [dids, grant, grantProposal],
     async () => {
+      if (grantProposal?.selected) {
+        return false
+      }
       const booleans = await pMap(
         dids!,
         (did) =>
