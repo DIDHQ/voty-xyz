@@ -3,6 +3,7 @@ import {
   BriefcaseIcon,
   TrophyIcon,
   TicketIcon,
+  StarIcon,
   HandRaisedIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/react/20/solid'
@@ -100,8 +101,8 @@ export default function ActivityListItem(props: {
       }
       case 'create_grant_proposal_select': {
         return {
-          color: 'bg-lime-100 text-lime-500',
-          icon: TicketIcon,
+          color: 'bg-yellow-100 text-yellow-500',
+          icon: StarIcon,
           children: (
             <>
               selected proposal{' '}
