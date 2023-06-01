@@ -42,7 +42,7 @@ export default function GrantProposalVoteForm(props: {
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account, props.grant.snapshots)
   const { data: powers } = useQuery(
-    [dids, props.grant],
+    ['voting', dids, props.grant],
     async () => {
       const decimals = await pMap(
         dids!,
@@ -108,13 +108,14 @@ export default function GrantProposalVoteForm(props: {
       phase !== GrantPhase.VOTING,
     [voted, powers, phase],
   )
+  console.log(powers)
   const didOptions = useMemo(
     () =>
       voted && powers
         ? dids?.map((did) => ({
             did,
             label: `${voted[did] ? '(voted) ' : ''}${powers[did]}`,
-            disabled: !!voted[did] || !powers[did]?.gt(0),
+            disabled: !!voted[did] || !powers[did].gt(0),
           }))
         : undefined,
     [dids, powers, voted],
