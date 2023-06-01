@@ -13,7 +13,7 @@
     "postinstall": "yarn run prisma"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.14",
+    "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.1.0",
     "@nervosnetwork/ckb-sdk-core": "^0.109.0",
