@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { TRPCError } from '@trpc/server'
 
 import { procedure, router } from '../trpc'
 import { grantProposalSelectSchema } from '../../utils/schemas/v1/grant-proposal-select'
@@ -16,6 +17,20 @@ import { Activity } from '../../utils/schemas/activity'
 const schema = proved(authorized(grantProposalSelectSchema))
 
 export const grantProposalSelectRouter = router({
+  getByPermalink: procedure
+    .input(z.object({ permalink: z.string().optional() }))
+    .output(schema.nullable())
+    .query(async ({ input }) => {
+      if (!input.permalink) {
+        throw new TRPCError({ code: 'BAD_REQUEST' })
+      }
+
+      const storage = await database.storage.findUnique({
+        where: { permalink: input.permalink },
+      })
+
+      return storage ? schema.parse(storage.data) : null
+    }),
   create: procedure
     .input(schema)
     .output(z.string())
@@ -39,6 +54,7 @@ export const grantProposalSelectRouter = router({
             proposalPermalink: input.grant_proposal,
           },
         }),
+        database.storage.create({ data: { permalink, data: input } }),
         database.grantProposal.update({
           where: { permalink: input.grant_proposal },
           data: { selected: permalink },

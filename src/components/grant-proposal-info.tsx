@@ -12,23 +12,31 @@ import { PreviewPermalink } from '../utils/types'
 import { formatNumber } from '../utils/number'
 import { permalink2Explorer, permalink2Id } from '../utils/permalink'
 import { formatDid } from '../utils/did/utils'
+import { trpc } from '../utils/trpc'
 import GrantCurrentPhase from './grant-current-phase'
 import TextLink from './basic/text-link'
 import { DetailItem, DetailList } from './basic/detail'
-import Slide from './basic/slide'
-import TextButton from './basic/text-button'
-import PermissionCard from './permission-card'
 
 export default function GrantProposalInfo(props: {
   community?: Community
   grant?: Grant
   grantProposal?: GrantProposal & {
+    selected: string | null
     permalink: string | PreviewPermalink
     authorship?: { author?: string }
   }
   className?: string
 }) {
   const disabled = props.grantProposal?.permalink === previewPermalink
+  const { data: grantProposalSelect } =
+    trpc.grantProposalSelect.getByPermalink.useQuery(
+      { permalink: props.grantProposal?.selected || undefined },
+      {
+        enabled:
+          !!props.grantProposal?.selected &&
+          !!props.grant?.permission.selecting,
+      },
+    )
 
   return (
     <div
@@ -69,38 +77,6 @@ export default function GrantProposalInfo(props: {
             '...'
           )}
         </DetailItem>
-        {props.grant?.permission.selecting ? (
-          <DetailItem title="Committee">
-            {props.community ? (
-              <Slide
-                title={`Committee of ${props.grant.name}`}
-                trigger={({ handleOpen }) => (
-                  <TextButton
-                    onClick={handleOpen}
-                    className="truncate whitespace-nowrap underline"
-                  >
-                    {
-                      props.grant?.permission.selecting?.operands[0]
-                        .arguments[1].length
-                    }
-                  </TextButton>
-                )}
-              >
-                {() =>
-                  props.grant?.permission.selecting ? (
-                    <PermissionCard
-                      title="Committee"
-                      description="Only proposals selected by committee members are eligible to be voted on."
-                      value={props.grant.permission.selecting}
-                    />
-                  ) : null
-                }
-              </Slide>
-            ) : (
-              '...'
-            )}
-          </DetailItem>
-        ) : null}
         <DetailItem title="Topic grant">
           {props.community && props.grant && props.grantProposal ? (
             <TextLink
@@ -125,6 +101,16 @@ export default function GrantProposalInfo(props: {
             ? formatDid(props.grantProposal.authorship.author)
             : '...'}
         </DetailItem>
+        {grantProposalSelect ? (
+          <DetailItem
+            title="Selected by"
+            className="block truncate whitespace-nowrap"
+          >
+            {grantProposalSelect?.authorship?.author
+              ? formatDid(grantProposalSelect.authorship.author)
+              : '...'}
+          </DetailItem>
+        ) : null}
       </DetailList>
       {props.grant?.snapshots && props.grantProposal ? (
         <DetailList title="On-chain verification">

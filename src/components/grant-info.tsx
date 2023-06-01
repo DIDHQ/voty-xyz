@@ -73,7 +73,7 @@ export default function GrantInfo(props: {
             )}
           </DetailItem>
           {props.grant?.permission.selecting ? (
-            <DetailItem title="Committee">
+            <DetailItem title="Committees">
               {props.community ? (
                 <Slide
                   title={`Committee of ${props.grant.name}`}
