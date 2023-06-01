@@ -19,7 +19,7 @@
     "@nervosnetwork/ckb-sdk-core": "^0.109.0",
     "@prisma/client": "^4.15.0",
     "@rainbow-me/rainbowkit": "^1.0.1",
-    "@sentry/nextjs": "^7.53.1",
+    "@sentry/nextjs": "^7.54.0",
     "@tanstack/react-query": "^4.29.12",
     "@tanstack/react-virtual": "^3.0.0-beta.54",
     "@trpc/client": "^10.28.1",
