@@ -72,7 +72,7 @@ export default function ActivityListItem(props: {
           icon: HandRaisedIcon,
           children: (
             <>
-              made a proposal{' '}
+              wrote a proposal{' '}
               <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -223,7 +223,7 @@ export default function ActivityListItem(props: {
           icon: HandRaisedIcon,
           children: (
             <>
-              made a proposal{' '}
+              wrote a proposal{' '}
               <TextLink
                 href={`/${activity.data.community_id}/group/${
                   activity.data.group_id
