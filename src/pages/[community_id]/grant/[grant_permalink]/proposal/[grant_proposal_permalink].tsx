@@ -111,14 +111,16 @@ export default function GrantProposalPage() {
       ]).join(' - '),
     [community?.name, grantProposal?.title, grant?.name],
   )
+  const { data: grantProposals, refetch: refetchProposals } =
+    trpc.grantProposal.list.useQuery(
+      { grantPermalink: query.grant_permalink },
+      { enabled: !!query.grant_permalink },
+    )
   const handleSuccess = useCallback(() => {
     refetch()
     refetchList()
-  }, [refetch, refetchList])
-  const { data: grantProposals } = trpc.grantProposal.list.useQuery(
-    { grantPermalink: query.grant_permalink },
-    { enabled: !!query.grant_permalink },
-  )
+    refetchProposals()
+  }, [refetch, refetchList, refetchProposals])
   const currentIndex = useMemo(
     () =>
       grantProposals?.findIndex(
