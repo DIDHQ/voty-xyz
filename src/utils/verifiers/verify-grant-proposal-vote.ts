@@ -35,7 +35,7 @@ export default async function verifyGrantProposalVote(
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Proposal not found' })
   }
   const grantProposal = schema.parse(storage.data)
-  const { grant } = await verifyGrantProposal(grantProposal)
+  const { grant } = await verifyGrantProposal(grantProposal, true)
 
   if (grant.permission.selecting && !grantProposalSelect) {
     throw new TRPCError({
