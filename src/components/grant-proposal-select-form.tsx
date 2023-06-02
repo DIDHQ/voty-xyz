@@ -126,7 +126,7 @@ export default function GrantProposalSelectForm(props: {
               <div className="w-full flex-1 sm:w-64 sm:flex-none">
                 <DidCombobox
                   top
-                  label="Select a DID as committee"
+                  label="Choose a DID as committee"
                   options={didOptions}
                   value={did}
                   onChange={setDid}
