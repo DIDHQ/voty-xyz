@@ -116,7 +116,7 @@ export default function GrantPage() {
                 <h2 />
               )}
               <div className="flex items-center">
-                {grant?.permission.selecting ? (
+                {grant?.permission.selecting && grant?.proposals ? (
                   <Select
                     options={options}
                     value={option}
