@@ -30,9 +30,10 @@ function BooleanUnitBlock(props: {
     watch,
     formState: { errors },
   } = useFormContext<Grant>()
-
   const suffix =
-    watch(`permission.${props.name}.operands.${props.index}.arguments.0`) ?? ''
+    watch(
+      `permission.${props.name}.operands.${props.index}.arguments.0`,
+    )?.replace(/\.bit$/, '') ?? ''
   const regex = new RegExp(`\\.${suffix.replaceAll('.', '\\.')}\$`)
 
   return (
