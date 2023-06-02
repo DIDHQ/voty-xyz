@@ -156,11 +156,8 @@ export default function GrantProposalPage() {
     [dids, grantProposal],
   )
   const { data: showSelect } = useQuery(
-    [dids, grant, grantProposal],
+    [dids, grant],
     async () => {
-      if (grantProposal?.selected) {
-        return false
-      }
       const booleans = await pMap(
         dids!,
         (did) =>
@@ -287,7 +284,7 @@ export default function GrantProposalPage() {
             className="mb-6 block sm:hidden"
           />
           {grant && grantProposal ? (
-            phase === GrantPhase.PROPOSING ? (
+            phase === GrantPhase.PROPOSING && !grantProposal.selected ? (
               showSelect ? (
                 <GrantProposalSelectForm
                   grant={grant}
