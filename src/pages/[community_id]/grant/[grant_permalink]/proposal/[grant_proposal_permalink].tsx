@@ -296,6 +296,10 @@ export default function GrantProposalPage() {
                   This proposal is not selected for voting yet.
                 </p>
               )
+            ) : grant.permission.selecting && !grantProposal.selected ? (
+              <p className="text-end text-gray-400">
+                This proposal is not selected for voting.
+              </p>
             ) : (
               <GrantProposalVoteForm
                 grant={grant}
