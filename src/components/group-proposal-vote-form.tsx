@@ -123,11 +123,13 @@ export default function GroupProposalVoteForm(props: {
   const didOptions = useMemo(
     () =>
       voted && powers
-        ? dids?.map((did) => ({
-            did,
-            label: `${voted[did] ? '(voted) ' : ''}${powers[did]}`,
-            disabled: !!voted[did] || !powers[did].gt(0),
-          }))
+        ? dids
+            ?.filter((did) => powers[did].gt(0))
+            .map((did) => ({
+              did,
+              label: `${voted[did] ? '(voted) ' : ''}${powers[did]}`,
+              disabled: !!voted[did],
+            }))
         : undefined,
     [dids, powers, voted],
   )

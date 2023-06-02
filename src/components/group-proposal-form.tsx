@@ -123,7 +123,9 @@ export default function GroupProposalForm(props: {
   const didOptions = useMemo(
     () =>
       disables
-        ? dids?.map((did) => ({ did, disabled: disables[did] }))
+        ? dids
+            ?.filter((did) => !disables[did])
+            .map((did) => ({ did, disabled: false }))
         : undefined,
     [dids, disables],
   )
