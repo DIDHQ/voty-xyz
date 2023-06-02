@@ -136,16 +136,6 @@ export default function GrantProposalPage() {
     () => getGrantPhase(now, status?.timestamp, grant?.duration),
     [grant?.duration, now, status?.timestamp],
   )
-  const funding = useMemo(
-    () =>
-      phase === GrantPhase.ENDED &&
-      !!grant &&
-      currentIndex !== -1 &&
-      currentIndex < grant.funding[0][1]
-        ? grant.funding[0][0]
-        : undefined,
-    [currentIndex, grant, phase],
-  )
   const { width, height } = useWindowSize()
   const { account } = useWallet()
   const { data: dids } = useDids(account)
@@ -173,6 +163,7 @@ export default function GrantProposalPage() {
         phase === GrantPhase.PROPOSING,
     },
   )
+  const funding = grantProposals?.[currentIndex]?.funding
 
   return (
     <>
@@ -194,7 +185,7 @@ export default function GrantProposalPage() {
           {query.community_id &&
           query.grant_permalink &&
           grantProposals &&
-          currentIndex !== undefined &&
+          currentIndex !== -1 &&
           !previewGrantProposal ? (
             <div className="float-right flex items-center">
               {currentIndex >= 0 ? (

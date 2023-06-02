@@ -21,6 +21,8 @@ import {
 } from '../../utils/upload-buffer'
 import { getImages, getSummary } from '../../utils/markdown'
 import { permalink2Id } from '../../utils/permalink'
+import { grantSchema } from '../../utils/schemas/v1/grant'
+import { GrantPhase, getGrantPhase } from '../../utils/phase'
 
 const schema = proved(authorized(grantProposalSchema))
 
@@ -89,6 +91,7 @@ export const grantProposalRouter = router({
           votes: z.number(),
           readingTime: z.number(),
           ts: z.date(),
+          funding: z.string().optional(),
         }),
       ),
     )
@@ -97,13 +100,24 @@ export const grantProposalRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const grant = await database.grant.findUnique({
-        where: { permalink: input.grantPermalink },
-      })
+      const grant = grantSchema.parse(
+        (
+          await database.storage.findUnique({
+            where: { permalink: input.grantPermalink },
+          })
+        )?.data,
+      )
       if (!grant) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
-      const isEnded = !!grant.tsVoting && Date.now() > grant.tsVoting.getTime()
+      const timestamp = (
+        await database.grant.findUnique({
+          where: { permalink: input.grantPermalink },
+        })
+      )?.ts
+      const isEnded =
+        getGrantPhase(new Date(), timestamp, grant.duration) ===
+        GrantPhase.ENDED
 
       const grantProposals = await database.grantProposal.findMany({
         where: { grantPermalink: input.grantPermalink },
@@ -128,7 +142,7 @@ export const grantProposalRouter = router({
           'desc',
         )
           .filter(({ permalink }) => storages[permalink])
-          .map(({ permalink, selected, votes, ts }) => {
+          .map(({ permalink, selected, votes, ts }, index) => {
             try {
               const grantProposal = schema.parse(storages[permalink].data)
               return {
@@ -140,6 +154,12 @@ export const grantProposalRouter = router({
                 permalink,
                 votes,
                 ts,
+                funding:
+                  isEnded &&
+                  index < grant.funding[0][1] &&
+                  (!grant.permission.selecting || selected)
+                    ? grant.funding[0][0]
+                    : undefined,
               }
             } catch {
               return

@@ -15,7 +15,7 @@ import { previewGrantAtom } from '../../../../utils/atoms'
 import { Grant } from '../../../../utils/schemas/v1/grant'
 import GrantProposalCard from '../../../../components/grant-proposal-card'
 import GrantProposalCreateButton from '../../../../components/grant-proposal-create-button'
-import { GrantPhase, getGrantPhase } from '../../../../utils/phase'
+import { getGrantPhase } from '../../../../utils/phase'
 import useStatus from '../../../../hooks/use-status'
 import useNow from '../../../../hooks/use-now'
 import Select from '../../../../components/basic/select'
@@ -137,23 +137,13 @@ export default function GrantPage() {
                 (grantProposal) =>
                   option === options[0] || grantProposal.selected,
               )
-              .map((grantProposal, index) => (
+              .map((grantProposal) => (
                 <li key={grantProposal.permalink}>
                   {query.community_id && grant ? (
                     <GrantProposalCard
                       communityId={query.community_id}
                       grantProposal={grantProposal}
                       phase={phase}
-                      funding={
-                        phase === GrantPhase.ENDED &&
-                        !!grant &&
-                        (grant.permission.selecting
-                          ? grantProposal.selected
-                          : true) &&
-                        index < grant.funding[0][1]
-                          ? grant.funding[0][0]
-                          : undefined
-                      }
                     />
                   ) : null}
                 </li>

@@ -21,8 +21,8 @@ export default function GrantProposalCard(props: {
     votes: number
     readingTime: number
     ts: Date
+    funding?: string
   }
-  funding?: string
 }) {
   const now = useNow()
 
@@ -34,17 +34,17 @@ export default function GrantProposalCard(props: {
       )}/proposal/${permalink2Id(props.grantProposal.permalink)}`}
       className={clsx(
         'group block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-offset-2',
-        props.funding
+        props.grantProposal.funding
           ? 'focus-within:ring-amber-300 hover:border-amber-500 hover:bg-amber-50'
           : 'focus-within:ring-primary-300 hover:border-primary-500 hover:bg-gray-50',
       )}
     >
       <div className="flex w-full p-4">
         <div className="w-0 flex-1">
-          {props.funding ? (
+          {props.grantProposal.funding ? (
             <Tooltip
               place="top"
-              text={`This proposal won ${props.funding}`}
+              text={`This proposal won ${props.grantProposal.funding}`}
               className="float-right ml-4"
             >
               <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/10 transition-colors group-hover:bg-amber-100">
