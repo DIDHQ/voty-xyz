@@ -124,9 +124,11 @@ export default function GrantProposalPage() {
   const currentIndex = useMemo(
     () =>
       grantProposals?.findIndex(
-        ({ permalink }) => permalink === grantProposal?.permalink,
-      ),
-    [grantProposal?.permalink, grantProposals],
+        ({ permalink, selected }) =>
+          (grant?.permission.selecting ? selected : true) &&
+          permalink === grantProposal?.permalink,
+      ) || -1,
+    [grant?.permission.selecting, grantProposal?.permalink, grantProposals],
   )
   const { data: status } = useStatus(query.grant_permalink)
   const now = useNow()
@@ -138,7 +140,7 @@ export default function GrantProposalPage() {
     () =>
       phase === GrantPhase.ENDED &&
       !!grant &&
-      currentIndex !== undefined &&
+      currentIndex !== -1 &&
       currentIndex < grant.funding[0][1]
         ? grant.funding[0][0]
         : undefined,

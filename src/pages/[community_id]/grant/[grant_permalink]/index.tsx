@@ -147,6 +147,9 @@ export default function GrantPage() {
                       funding={
                         phase === GrantPhase.ENDED &&
                         !!grant &&
+                        (grant.permission.selecting
+                          ? grantProposal.selected
+                          : true) &&
                         index < grant.funding[0][1]
                           ? grant.funding[0][0]
                           : undefined
