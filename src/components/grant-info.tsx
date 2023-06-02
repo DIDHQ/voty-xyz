@@ -85,7 +85,14 @@ export default function GrantInfo(props: {
                       {
                         props.grant?.permission.selecting?.operands[0]
                           .arguments[1].length
-                      }
+                      }{' '}
+                      member
+                      {props.grant?.permission.selecting?.operands[0]
+                        .arguments[1].length &&
+                      props.grant?.permission.selecting?.operands[0]
+                        .arguments[1].length > 1
+                        ? 's'
+                        : ''}
                     </TextButton>
                   )}
                 >
