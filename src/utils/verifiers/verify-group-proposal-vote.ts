@@ -4,7 +4,7 @@ import { uniq } from 'lodash-es'
 import { getGroupProposalPhase, GroupProposalPhase } from '../phase'
 import { calculateDecimal } from '../functions/decimal'
 import { authorized, Authorized } from '../schemas/basic/authorship'
-import { Group } from '../schemas/v1/group'
+import { Group, groupSchema } from '../schemas/v1/group'
 import { proved, Proved } from '../schemas/basic/proof'
 import {
   GroupProposal,
@@ -14,9 +14,12 @@ import { GroupProposalVote } from '../schemas/v1/group-proposal-vote'
 import { commonCoinTypes } from '../constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
 import { database } from '../database'
-import verifyGroupProposal from './verify-group-proposal'
 
-const schema = proved(authorized(groupProposalSchema))
+const groupProposalSchemaProvedAuthorized = proved(
+  authorized(groupProposalSchema),
+)
+
+const groupSchemaProvedAuthorized = proved(authorized(groupSchema))
 
 export default async function verifyGroupProposalVote(
   groupProposalVote: Proved<Authorized<GroupProposalVote>>,
@@ -24,20 +27,25 @@ export default async function verifyGroupProposalVote(
   groupProposal: Proved<Authorized<GroupProposal>>
   group: Proved<Authorized<Group>>
 }> {
-  const [timestamp, storage] = await Promise.all([
-    getPermalinkSnapshot(groupProposalVote.group_proposal).then((snapshot) =>
-      getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
-    ),
-    database.storage.findUnique({
-      where: { permalink: groupProposalVote.group_proposal },
-    }),
-  ])
-  if (!storage) {
-    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Proposal not found' })
-  }
-  const groupProposal = schema.parse(storage.data)
-  const { group } = await verifyGroupProposal(groupProposal)
+  const groupProposal = groupProposalSchemaProvedAuthorized.parse(
+    (
+      await database.storage.findUnique({
+        where: { permalink: groupProposalVote.group_proposal },
+      })
+    )?.data,
+  )
 
+  const group = groupSchemaProvedAuthorized.parse(
+    (
+      await database.storage.findUnique({
+        where: { permalink: groupProposal.group },
+      })
+    )?.data,
+  )
+
+  const timestamp = await getPermalinkSnapshot(
+    groupProposalVote.group_proposal,
+  ).then((snapshot) => getSnapshotTimestamp(commonCoinTypes.AR, snapshot))
   if (
     getGroupProposalPhase(new Date(), timestamp, group.duration) !==
     GroupProposalPhase.VOTING

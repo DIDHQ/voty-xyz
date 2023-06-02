@@ -10,7 +10,7 @@ import { commonCoinTypes } from '../constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
 import { GrantPhase, getGrantPhase } from '../phase'
 
-const schema = proved(authorized(grantSchema))
+const grantSchemaProvedAuthorized = proved(authorized(grantSchema))
 
 export default async function verifyGrantProposal(
   grantProposal: Proved<Authorized<GrantProposal>>,
@@ -18,17 +18,17 @@ export default async function verifyGrantProposal(
 ): Promise<{
   grant: Proved<Authorized<Grant>>
 }> {
-  const [timestamp, storage] = await Promise.all([
-    getPermalinkSnapshot(grantProposal.grant).then((snapshot) =>
-      getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
-    ),
-    database.storage.findUnique({ where: { permalink: grantProposal.grant } }),
-  ])
-  if (!storage) {
-    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Grant not found' })
-  }
-  const grant = schema.parse(storage.data)
+  const grant = grantSchemaProvedAuthorized.parse(
+    (
+      await database.storage.findUnique({
+        where: { permalink: grantProposal.grant },
+      })
+    )?.data,
+  )
 
+  const timestamp = await getPermalinkSnapshot(grantProposal.grant).then(
+    (snapshot) => getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
+  )
   if (
     !ignorePhase &&
     getGrantPhase(new Date(), timestamp, grant.duration) !==

@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server'
 import { GrantPhase, getGrantPhase } from '../phase'
 import { checkBoolean } from '../functions/boolean'
 import { authorized, Authorized } from '../schemas/basic/authorship'
-import { Grant } from '../schemas/v1/grant'
+import { Grant, grantSchema } from '../schemas/v1/grant'
 import { proved, Proved } from '../schemas/basic/proof'
 import {
   GrantProposal,
@@ -13,9 +13,12 @@ import { GrantProposalSelect } from '../schemas/v1/grant-proposal-select'
 import { commonCoinTypes } from '../constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
 import { database } from '../database'
-import verifyGrantProposal from './verify-grant-proposal'
 
-const schema = proved(authorized(grantProposalSchema))
+const grantProposalSchemaProvedAuthorized = proved(
+  authorized(grantProposalSchema),
+)
+
+const grantSchemaProvedAuthorized = proved(authorized(grantSchema))
 
 export default async function verifyGrantProposalSelect(
   grantProposalSelect: Proved<Authorized<GrantProposalSelect>>,
@@ -23,14 +26,21 @@ export default async function verifyGrantProposalSelect(
   grantProposal: Proved<Authorized<GrantProposal>>
   grant: Proved<Authorized<Grant>>
 }> {
-  const storage = await database.storage.findUnique({
-    where: { permalink: grantProposalSelect.grant_proposal },
-  })
-  if (!storage) {
-    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Proposal not found' })
-  }
-  const grantProposal = schema.parse(storage.data)
-  const { grant } = await verifyGrantProposal(grantProposal)
+  const grantProposal = grantProposalSchemaProvedAuthorized.parse(
+    (
+      await database.storage.findUnique({
+        where: { permalink: grantProposalSelect.grant_proposal },
+      })
+    )?.data,
+  )
+
+  const grant = grantSchemaProvedAuthorized.parse(
+    (
+      await database.storage.findUnique({
+        where: { permalink: grantProposal.grant },
+      })
+    )?.data,
+  )
 
   if (!grant.permission.selecting) {
     throw new TRPCError({

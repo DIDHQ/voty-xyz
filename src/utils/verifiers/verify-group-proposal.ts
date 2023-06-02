@@ -9,23 +9,24 @@ import { database } from '../database'
 import { commonCoinTypes } from '../constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
 
-const schema = proved(authorized(groupSchema))
+const groupSchemaProvedAuthorized = proved(authorized(groupSchema))
 
 export default async function verifyGroupProposal(
   groupProposal: Proved<Authorized<GroupProposal>>,
 ): Promise<{
   group: Proved<Authorized<Group>>
 }> {
-  const [, storage] = await Promise.all([
-    getPermalinkSnapshot(groupProposal.group).then((snapshot) =>
-      getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
-    ),
-    database.storage.findUnique({ where: { permalink: groupProposal.group } }),
-  ])
-  if (!storage) {
-    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Group not found' })
-  }
-  const group = schema.parse(storage.data)
+  const group = groupSchemaProvedAuthorized.parse(
+    (
+      await database.storage.findUnique({
+        where: { permalink: groupProposal.group },
+      })
+    )?.data,
+  )
+
+  await getPermalinkSnapshot(groupProposal.group).then((snapshot) =>
+    getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
+  )
 
   if (
     !(await checkBoolean(

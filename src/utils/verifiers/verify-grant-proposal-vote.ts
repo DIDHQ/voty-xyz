@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server'
 import { GrantPhase, getGrantPhase } from '../phase'
 import { calculateDecimal } from '../functions/decimal'
 import { authorized, Authorized } from '../schemas/basic/authorship'
-import { Grant } from '../schemas/v1/grant'
+import { Grant, grantSchema } from '../schemas/v1/grant'
 import { proved, Proved } from '../schemas/basic/proof'
 import {
   GrantProposal,
@@ -13,9 +13,12 @@ import { GrantProposalVote } from '../schemas/v1/grant-proposal-vote'
 import { commonCoinTypes } from '../constants'
 import { getPermalinkSnapshot, getSnapshotTimestamp } from '../snapshot'
 import { database } from '../database'
-import verifyGrantProposal from './verify-grant-proposal'
 
-const schema = proved(authorized(grantProposalSchema))
+const grantProposalSchemaProvedAuthorized = proved(
+  authorized(grantProposalSchema),
+)
+
+const grantSchemaProvedAuthorized = proved(authorized(grantSchema))
 
 export default async function verifyGrantProposalVote(
   grantProposalVote: Proved<Authorized<GrantProposalVote>>,
@@ -23,20 +26,25 @@ export default async function verifyGrantProposalVote(
   grantProposal: Proved<Authorized<GrantProposal>>
   grant: Proved<Authorized<Grant>>
 }> {
-  const [storage, grantProposalSelect] = await Promise.all([
-    database.storage.findUnique({
-      where: { permalink: grantProposalVote.grant_proposal },
-    }),
-    database.grantProposalSelect.findUnique({
-      where: { proposalPermalink: grantProposalVote.grant_proposal },
-    }),
-  ])
-  if (!storage) {
-    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Proposal not found' })
-  }
-  const grantProposal = schema.parse(storage.data)
-  const { grant } = await verifyGrantProposal(grantProposal, true)
+  const grantProposal = grantProposalSchemaProvedAuthorized.parse(
+    (
+      await database.storage.findUnique({
+        where: { permalink: grantProposalVote.grant_proposal },
+      })
+    )?.data,
+  )
 
+  const grant = grantSchemaProvedAuthorized.parse(
+    (
+      await database.storage.findUnique({
+        where: { permalink: grantProposal.grant },
+      })
+    )?.data,
+  )
+
+  const grantProposalSelect = await database.grantProposalSelect.findUnique({
+    where: { proposalPermalink: grantProposalVote.grant_proposal },
+  })
   if (grant.permission.selecting && !grantProposalSelect) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
