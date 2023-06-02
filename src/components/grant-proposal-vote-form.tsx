@@ -108,7 +108,6 @@ export default function GrantProposalVoteForm(props: {
       phase !== GrantPhase.VOTING,
     [voted, powers, phase],
   )
-  console.log(powers)
   const didOptions = useMemo(
     () =>
       voted && powers
