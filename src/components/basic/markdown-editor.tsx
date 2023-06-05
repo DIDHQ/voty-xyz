@@ -80,6 +80,7 @@ export default function MarkdownEditor(props: {
           'full-screen',
           'tab-insert',
         ]}
+        allowPasteImage
         imageAccept=".jpg,.png,.svg,.gif"
         onImageUpload={handleImageUpload}
         style={{ height: 600 }}
