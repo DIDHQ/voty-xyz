@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { compact } from 'lodash-es'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
+import { useCollapse } from 'react-collapsed'
 
 import { trpc } from '../../../../utils/trpc'
 import Article from '../../../../components/basic/article'
@@ -19,6 +20,7 @@ import { getGrantPhase } from '../../../../utils/phase'
 import useStatus from '../../../../hooks/use-status'
 import useNow from '../../../../hooks/use-now'
 import Select from '../../../../components/basic/select'
+import TextButton from '../../../../components/basic/text-button'
 
 export default function GrantPage() {
   const query = useRouterQuery<['community_id', 'grant_permalink']>()
@@ -73,6 +75,11 @@ export default function GrantPage() {
   useEffect(() => {
     setOption(options[grant?.selectedProposals ? 1 : 0])
   }, [grant?.selectedProposals, options])
+  const [isExpanded, setExpanded] = useState(false)
+  const { getCollapseProps, getToggleProps } = useCollapse({
+    isExpanded,
+    collapsedHeight: 300,
+  })
 
   return (
     <>
@@ -89,12 +96,33 @@ export default function GrantPage() {
           >
             <h2 className="text-base font-semibold">← Back</h2>
           </TextLink>
-          <Article className="my-6 sm:my-8">
-            <h1>{grant?.name || '...'}</h1>
-            <MarkdownViewer preview={!!previewGrant}>
-              {grant?.introduction}
-            </MarkdownViewer>
-          </Article>
+          {grant && grant?.introduction.split('\n').length >= 4 ? (
+            <>
+              <section {...getCollapseProps()}>
+                <Article className="my-6 sm:my-8">
+                  <h1>{grant?.name || '...'}</h1>
+                  <MarkdownViewer preview={!!previewGrant}>
+                    {grant?.introduction}
+                  </MarkdownViewer>
+                </Article>
+              </section>
+              <TextButton
+                secondary
+                {...getToggleProps({
+                  onClick: () => setExpanded((prevExpanded) => !prevExpanded),
+                })}
+              >
+                {isExpanded ? '↑ Collapse' : '↓ Expand'}
+              </TextButton>
+            </>
+          ) : (
+            <Article className="my-6 sm:my-8">
+              <h1>{grant?.name || '...'}</h1>
+              <MarkdownViewer preview={!!previewGrant}>
+                {grant?.introduction}
+              </MarkdownViewer>
+            </Article>
+          )}
           <GrantInfo
             community={community || undefined}
             grant={grant}

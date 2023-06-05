@@ -41,6 +41,7 @@
     "nextjs-google-analytics": "^2.3.3",
     "p-map": "^6.0.0",
     "raw-body": "^2.5.2",
+    "react-collapsed": "^4.0.2",
     "react-confetti": "^6.1.0",
     "react-hook-form": "^7.44.2",
     "react-intersection-observer": "^9.4.4",
