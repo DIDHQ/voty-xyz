@@ -32,7 +32,7 @@ export default function MarkdownEditor(props: {
         headers: { 'Content-Type': type },
       })
       if (!response.ok) {
-        throw new Error(response.statusText)
+        throw new Error('Image upload failed')
       }
       return response.text()
     },
