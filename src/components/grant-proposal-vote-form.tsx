@@ -132,6 +132,13 @@ export default function GrantProposalVoteForm(props: {
       await mutateAsync(signed)
       await sleep(5000)
     },
+    {
+      onSuccess() {
+        setValue('powers', {})
+        refetchVoted()
+        onSuccess()
+      },
+    },
   )
   const defaultDid = useMemo(
     () => didOptions?.find(({ disabled }) => !disabled)?.did,
@@ -147,13 +154,6 @@ export default function GrantProposalVoteForm(props: {
       })
     }
   }, [props.grantProposal.permalink, setValue, totalPower])
-  useEffect(() => {
-    if (handleSubmit.isSuccess) {
-      setValue('powers', {})
-      refetchVoted()
-      onSuccess()
-    }
-  }, [handleSubmit.isSuccess, onSuccess, refetchVoted, setValue])
 
   return (
     <>

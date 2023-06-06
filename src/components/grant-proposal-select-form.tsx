@@ -36,7 +36,7 @@ export default function GrantProposalSelectForm(props: {
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account, props.grant.snapshots)
-  const { data } = useQuery(
+  const { data, refetch } = useQuery(
     ['selecting', dids, props.grant],
     async () => {
       const booleans = await pMap(
@@ -97,6 +97,12 @@ export default function GrantProposalSelectForm(props: {
       await mutateAsync(signed)
       await sleep(5000)
     },
+    {
+      onSuccess() {
+        refetch()
+        onSuccess()
+      },
+    },
   )
   const defaultDid = useMemo(
     () => didOptions?.find(({ disabled }) => !disabled)?.did,
@@ -105,11 +111,6 @@ export default function GrantProposalSelectForm(props: {
   useEffect(() => {
     setDid(defaultDid || '')
   }, [defaultDid])
-  useEffect(() => {
-    if (handleSubmit.isSuccess) {
-      onSuccess()
-    }
-  }, [handleSubmit.isSuccess, onSuccess])
 
   return (
     <>

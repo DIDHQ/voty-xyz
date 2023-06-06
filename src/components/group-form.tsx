@@ -60,17 +60,15 @@ export default function GroupForm(props: {
     `You are archiving workgroup on Voty\n\nhash:\n{keccak256}`,
   )
   const { mutateAsync } = trpc.group.archive.useMutation()
-  const handleArchive = useMutation<void, Error, Group>(async (group) => {
-    const signed = await signDocument(group)
-    await mutateAsync(signed)
-  })
+  const handleArchive = useMutation<void, Error, Group>(
+    async (group) => {
+      const signed = await signDocument(group)
+      await mutateAsync(signed)
+    },
+    { onSuccess: onArchive },
+  )
   const isManager = useIsManager(props.communityId)
   const disabled = !isManager
-  useEffect(() => {
-    if (handleArchive.isSuccess) {
-      onArchive?.()
-    }
-  }, [handleArchive.isSuccess, onArchive])
 
   return (
     <>

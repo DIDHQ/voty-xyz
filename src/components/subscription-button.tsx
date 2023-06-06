@@ -22,10 +22,14 @@ export default function SubscriptionButton(props: {
     data,
     mutateAsync,
     isLoading: isSetting,
-    isSuccess,
     isError,
     error,
-  } = trpc.subscription.set.useMutation()
+  } = trpc.subscription.set.useMutation({
+    onSuccess() {
+      refetch()
+      refetchList()
+    },
+  })
   const {
     data: subscribed = data,
     refetch,
@@ -71,12 +75,6 @@ export default function SubscriptionButton(props: {
     })
     await mutateAsync(signed)
   })
-  useEffect(() => {
-    if (isSuccess) {
-      refetch()
-      refetchList()
-    }
-  }, [isSuccess, refetch, refetchList])
 
   return (
     <>

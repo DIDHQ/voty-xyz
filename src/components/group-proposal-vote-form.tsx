@@ -144,6 +144,14 @@ export default function GroupProposalVoteForm(props: {
       await mutateAsync(signed)
       await sleep(5000)
     },
+    {
+      onSuccess() {
+        setValue('powers', {})
+        refetchChoices()
+        refetchVoted()
+        onSuccess()
+      },
+    },
   )
   const defaultDid = useMemo(
     () => didOptions?.find(({ disabled }) => !disabled)?.did,
@@ -152,20 +160,6 @@ export default function GroupProposalVoteForm(props: {
   useEffect(() => {
     setDid(defaultDid || '')
   }, [defaultDid])
-  useEffect(() => {
-    if (handleSubmit.isSuccess) {
-      setValue('powers', {})
-      refetchChoices()
-      refetchVoted()
-      onSuccess()
-    }
-  }, [
-    handleSubmit.isSuccess,
-    onSuccess,
-    refetchChoices,
-    refetchVoted,
-    setValue,
-  ])
 
   return (
     <>
