@@ -3,7 +3,6 @@ import { createTRPCNext } from '@trpc/next'
 import SuperJSON from 'superjson'
 
 import type { AppRouter } from '../server/routers/_app'
-import { cacheControl } from './constants'
 
 function getBaseUrl() {
   if (typeof window !== 'undefined') {
@@ -32,16 +31,5 @@ export const trpc = createTRPCNext<AppRouter>({
       transformer: SuperJSON,
     }
   },
-  ssr: true,
-  responseMeta(opts) {
-    const { clientErrors } = opts
-    if (clientErrors.length) {
-      return {
-        status: clientErrors[0].data?.httpStatus ?? 500,
-      }
-    }
-    return {
-      [cacheControl[0]]: cacheControl[1],
-    }
-  },
+  ssr: false,
 })
