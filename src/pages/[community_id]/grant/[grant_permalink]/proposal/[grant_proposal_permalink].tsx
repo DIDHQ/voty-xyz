@@ -275,18 +275,20 @@ export default function GrantProposalPage() {
             className="mb-6 block sm:hidden"
           />
           {grant && grantProposal ? (
-            phase === GrantPhase.PROPOSING && !grantProposal.selected ? (
+            phase === GrantPhase.PROPOSING &&
+            grant.permission.selecting &&
+            !grantProposal.selected ? (
               showSelect ? (
                 <GrantProposalSelectForm
                   grant={grant}
                   grantProposal={grantProposal}
                   onSuccess={handleSuccess}
                 />
-              ) : grant?.permission.selecting ? (
+              ) : (
                 <p className="text-end text-gray-400">
                   This proposal is not selected for voting yet.
                 </p>
-              ) : null
+              )
             ) : grant.permission.selecting && !grantProposal.selected ? (
               <p className="text-end text-gray-400">
                 This proposal is not selected for voting.
