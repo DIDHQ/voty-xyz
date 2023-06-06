@@ -256,7 +256,7 @@ export default function GrantForm(props: {
             onClick={(e) => {
               const argument =
                 getValues().permission.selecting?.operands[0].arguments[1]
-              if (argument?.join('').length === 0) {
+              if (!argument?.join('').length) {
                 setValue('permission.selecting', undefined)
               } else {
                 setValue('permission.selecting', {
