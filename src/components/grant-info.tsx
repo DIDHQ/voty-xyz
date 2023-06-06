@@ -167,26 +167,8 @@ export default function GrantInfo(props: {
             </li>
             {props.grant?.permission.selecting ? (
               <li>
-                Committees can select proposals can be voted on during the
-                <Tooltip
-                  text={
-                    props.grant && status?.timestamp
-                      ? format2Time(
-                          status.timestamp.getTime() +
-                            props.grant.duration.announcing * 1000,
-                          status.timestamp.getTime() +
-                            (props.grant.duration.announcing +
-                              props.grant.duration.proposing) *
-                              1000,
-                        )
-                      : '...'
-                  }
-                  place="top"
-                  className="inline"
-                >
-                  <span className="text-indigo-600"> proposing </span>
-                </Tooltip>
-                phase.
+                Only proposals selected by committee members are eligible to be
+                voted on.
               </li>
             ) : null}
             <li>

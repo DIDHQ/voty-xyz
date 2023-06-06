@@ -286,12 +286,14 @@ export default function GrantProposalPage() {
                 />
               ) : (
                 <p className="text-end text-gray-400">
-                  This proposal is not selected for voting yet.
+                  This proposal has not been selected by the grant committee for
+                  voting yet.
                 </p>
               )
             ) : grant.permission.selecting && !grantProposal.selected ? (
               <p className="text-end text-gray-400">
-                This proposal is not selected for voting.
+                This proposal has not been selected by the grant committee for
+                voting.
               </p>
             ) : (
               <GrantProposalVoteForm
