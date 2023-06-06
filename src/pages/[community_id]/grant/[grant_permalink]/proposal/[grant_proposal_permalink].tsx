@@ -282,11 +282,11 @@ export default function GrantProposalPage() {
                   grantProposal={grantProposal}
                   onSuccess={handleSuccess}
                 />
-              ) : (
+              ) : grant?.permission.selecting ? (
                 <p className="text-end text-gray-400">
                   This proposal is not selected for voting yet.
                 </p>
-              )
+              ) : null
             ) : grant.permission.selecting && !grantProposal.selected ? (
               <p className="text-end text-gray-400">
                 This proposal is not selected for voting.
