@@ -1,7 +1,7 @@
 import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/20/solid'
 import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline'
 import { useMutation } from '@tanstack/react-query'
-import { MouseEvent as ReactMouseEvent, useEffect } from 'react'
+import { MouseEvent as ReactMouseEvent } from 'react'
 
 import useSignDocumentWithoutAuthorship from '../hooks/use-sign-document-without-authorship'
 import useWallet from '../hooks/use-wallet'
