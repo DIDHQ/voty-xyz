@@ -94,7 +94,7 @@ export enum DataType {
 
 export const cacheControl = [
   'Cache-Control',
-  's-maxage=1, stale-while-revalidate',
+  'maxage=1, stale-while-revalidate',
 ] satisfies [string, string]
 
 export const previewPermalink: PreviewPermalink = 'preview'
