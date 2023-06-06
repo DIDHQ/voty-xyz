@@ -16,7 +16,7 @@ function getBaseUrl() {
 }
 
 export const trpc = createTRPCNext<AppRouter>({
-  config({}) {
+  config() {
     return {
       links: [
         loggerLink({
@@ -27,15 +27,21 @@ export const trpc = createTRPCNext<AppRouter>({
         }),
         httpLink({
           url: `${getBaseUrl()}/api/trpc`,
-          headers() {
-            return {
-              [cacheControl[0]]: cacheControl[1],
-            }
-          },
         }),
       ],
       transformer: SuperJSON,
     }
   },
-  ssr: false,
+  ssr: true,
+  responseMeta(opts) {
+    const { clientErrors } = opts
+    if (clientErrors.length) {
+      return {
+        status: clientErrors[0].data?.httpStatus ?? 500,
+      }
+    }
+    return {
+      [cacheControl[0]]: cacheControl[1],
+    }
+  },
 })
