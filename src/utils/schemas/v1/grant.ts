@@ -7,9 +7,19 @@ export const grantSchema = z.object({
   community: z.string().min(1, 'Required'),
   snapshots: z.record(z.string(), z.string()),
   name: z.string().min(1, 'Required'),
-  introduction: z.string().min(1, 'Required'),
+  introduction: z
+    .string()
+    .min(1, 'Required')
+    .refine(
+      (introduction) =>
+        !introduction.match(
+          /\!\[Uploading_\w{8}-\w{4}-\w{4}-\w{4}-\w{12}\]\(\)/,
+        ),
+      'Images are not fully uploaded yet',
+    ),
   permission: z.object({
     proposing: booleanSetsSchema,
+    selecting: booleanSetsSchema.optional(),
     voting: decimalSetsSchema,
   }),
   duration: z.object({

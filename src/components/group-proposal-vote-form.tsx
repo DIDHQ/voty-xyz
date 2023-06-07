@@ -123,11 +123,13 @@ export default function GroupProposalVoteForm(props: {
   const didOptions = useMemo(
     () =>
       voted && powers
-        ? dids?.map((did) => ({
-            did,
-            label: `${voted[did] ? '(voted) ' : ''}${powers[did]}`,
-            disabled: !!voted[did] || !powers[did].gt(0),
-          }))
+        ? dids
+            ?.filter((did) => powers[did].gt(0))
+            .map((did) => ({
+              did,
+              label: `${voted[did] ? '(voted) ' : ''}${powers[did]}`,
+              disabled: !!voted[did],
+            }))
         : undefined,
     [dids, powers, voted],
   )
@@ -142,6 +144,14 @@ export default function GroupProposalVoteForm(props: {
       await mutateAsync(signed)
       await sleep(5000)
     },
+    {
+      onSuccess() {
+        setValue('powers', {})
+        refetchChoices()
+        refetchVoted()
+        onSuccess()
+      },
+    },
   )
   const defaultDid = useMemo(
     () => didOptions?.find(({ disabled }) => !disabled)?.did,
@@ -150,20 +160,6 @@ export default function GroupProposalVoteForm(props: {
   useEffect(() => {
     setDid(defaultDid || '')
   }, [defaultDid])
-  useEffect(() => {
-    if (handleSubmit.isSuccess) {
-      setValue('powers', {})
-      refetchChoices()
-      refetchVoted()
-      onSuccess()
-    }
-  }, [
-    handleSubmit.isSuccess,
-    onSuccess,
-    refetchChoices,
-    refetchVoted,
-    setValue,
-  ])
 
   return (
     <>
@@ -206,7 +202,7 @@ export default function GroupProposalVoteForm(props: {
             <div className="w-full flex-1 sm:w-64 sm:flex-none">
               <DidCombobox
                 top
-                label="Select a DID as voter"
+                label="Choose a DID as voter"
                 options={didOptions}
                 value={did}
                 onChange={setDid}

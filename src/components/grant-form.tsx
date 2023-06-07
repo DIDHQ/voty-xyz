@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { EyeIcon } from '@heroicons/react/20/solid'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
@@ -23,6 +23,7 @@ import { Grid6, GridItem2, GridItem3, GridItem6 } from './basic/grid'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import TextInput from './basic/text-input'
 import DurationInput from './basic/duration-input'
+import BooleanSetsBlock from './boolean-sets-block'
 
 export default function GrantForm(props: {
   communityId: string
@@ -45,6 +46,7 @@ export default function GrantForm(props: {
     register,
     reset,
     setValue,
+    getValues,
     formState: { errors },
     handleSubmit: onSubmit,
   } = methods
@@ -88,10 +90,10 @@ export default function GrantForm(props: {
 
   return (
     <Form
-      title={`Create topic grant${
+      title={`Create Topic Grant${
         community?.name ? ` of ${community.name}` : ''
       }`}
-      description="Topic grant helps you automate your project's funding process with ease, while also elevating member's engagement."
+      description="Topic Grant helps you automate your project's funding process with ease, while also elevating member's engagement."
       className={props.className}
     >
       <FormSection title="Basic information">
@@ -225,6 +227,25 @@ export default function GrantForm(props: {
               </div>
             </FormItem>
           </GridItem3>
+          <GridItem6>
+            <FormItem
+              label="Committee"
+              description="If set, only proposals selected by committee members are eligible to be voted on."
+              optional
+              error={
+                errors.permission?.selecting?.operands?.[0]?.arguments?.[1]?.[0]
+                  ?.message
+              }
+            >
+              <FormProvider {...methods}>
+                <BooleanSetsBlock
+                  name="selecting"
+                  communityId={props.communityId}
+                  disabled={disabled}
+                />
+              </FormProvider>
+            </FormItem>
+          </GridItem6>
         </Grid6>
       </FormSection>
       {isManager ? (
@@ -232,13 +253,31 @@ export default function GrantForm(props: {
           <Button
             primary
             icon={EyeIcon}
-            onClick={onSubmit((value) => {
-              setPreviewGrant({
-                ...value,
-                preview: props.preview,
-              })
-              router.push(props.preview.to)
-            }, console.error)}
+            onClick={(e) => {
+              const argument =
+                getValues().permission.selecting?.operands[0].arguments[1]
+              if (!argument?.join('').length) {
+                setValue('permission.selecting', undefined)
+              } else {
+                setValue('permission.selecting', {
+                  operation: 'or',
+                  operands: [
+                    {
+                      name: 'Committee',
+                      function: 'prefixes_dot_suffix_exact_match',
+                      arguments: [props.communityId, argument || []],
+                    },
+                  ],
+                })
+              }
+              onSubmit((value) => {
+                setPreviewGrant({
+                  ...value,
+                  preview: props.preview,
+                })
+                router.push(props.preview.to)
+              }, console.error)(e)
+            }}
           >
             Preview
           </Button>

@@ -12,6 +12,7 @@ import { PreviewPermalink } from '../utils/types'
 import { formatNumber } from '../utils/number'
 import { permalink2Explorer, permalink2Id } from '../utils/permalink'
 import { formatDid } from '../utils/did/utils'
+import { trpc } from '../utils/trpc'
 import GrantCurrentPhase from './grant-current-phase'
 import TextLink from './basic/text-link'
 import { DetailItem, DetailList } from './basic/detail'
@@ -20,12 +21,22 @@ export default function GrantProposalInfo(props: {
   community?: Community
   grant?: Grant
   grantProposal?: GrantProposal & {
+    selected: string | null
     permalink: string | PreviewPermalink
     authorship?: { author?: string }
   }
   className?: string
 }) {
   const disabled = props.grantProposal?.permalink === previewPermalink
+  const { data: grantProposalSelect } =
+    trpc.grantProposalSelect.getByPermalink.useQuery(
+      { permalink: props.grantProposal?.selected || undefined },
+      {
+        enabled:
+          !!props.grantProposal?.selected &&
+          !!props.grant?.permission.selecting,
+      },
+    )
 
   return (
     <div
@@ -66,7 +77,7 @@ export default function GrantProposalInfo(props: {
             '...'
           )}
         </DetailItem>
-        <DetailItem title="Topic grant">
+        <DetailItem title="Topic Grant">
           {props.community && props.grant && props.grantProposal ? (
             <TextLink
               underline
@@ -90,6 +101,16 @@ export default function GrantProposalInfo(props: {
             ? formatDid(props.grantProposal.authorship.author)
             : '...'}
         </DetailItem>
+        {grantProposalSelect ? (
+          <DetailItem
+            title="Selected by"
+            className="block truncate whitespace-nowrap"
+          >
+            {grantProposalSelect?.authorship?.author
+              ? formatDid(grantProposalSelect.authorship.author)
+              : '...'}
+          </DetailItem>
+        ) : null}
       </DetailList>
       {props.grant?.snapshots && props.grantProposal ? (
         <DetailList title="On-chain verification">

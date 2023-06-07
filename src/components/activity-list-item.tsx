@@ -3,6 +3,7 @@ import {
   BriefcaseIcon,
   TrophyIcon,
   TicketIcon,
+  StarIcon,
   HandRaisedIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/react/20/solid'
@@ -50,7 +51,7 @@ export default function ActivityListItem(props: {
           icon: TrophyIcon,
           children: (
             <>
-              created topic grant{' '}
+              created Topic Grant{' '}
               <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -71,7 +72,7 @@ export default function ActivityListItem(props: {
           icon: HandRaisedIcon,
           children: (
             <>
-              made a proposal{' '}
+              wrote a proposal{' '}
               <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -83,7 +84,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.grant_proposal_title}
               </TextLink>{' '}
-              in topic grant{' '}
+              in Topic Grant{' '}
               <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -96,6 +97,39 @@ export default function ActivityListItem(props: {
             </>
           ),
           permalink: activity.data.grant_proposal_permalink,
+        }
+      }
+      case 'create_grant_proposal_select': {
+        return {
+          color: 'bg-yellow-100 text-yellow-500',
+          icon: StarIcon,
+          children: (
+            <>
+              selected proposal{' '}
+              <TextLink
+                href={`/${activity.data.community_id}/grant/${permalink2Id(
+                  activity.data.grant_permalink,
+                )}/proposal/${permalink2Id(
+                  activity.data.grant_proposal_permalink,
+                )}`}
+                underline
+                className="font-medium text-gray-900"
+              >
+                {activity.data.grant_proposal_title}
+              </TextLink>{' '}
+              in Topic Grant{' '}
+              <TextLink
+                href={`/${activity.data.community_id}/grant/${permalink2Id(
+                  activity.data.grant_permalink,
+                )}`}
+                underline
+                className="font-medium text-gray-900"
+              >
+                {activity.data.grant_name}
+              </TextLink>
+            </>
+          ),
+          permalink: activity.data.grant_proposal_select_permalink,
         }
       }
       case 'create_grant_proposal_vote': {
@@ -116,7 +150,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.grant_proposal_title}
               </TextLink>{' '}
-              in topic grant{' '}
+              in Topic Grant{' '}
               <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -189,7 +223,7 @@ export default function ActivityListItem(props: {
           icon: HandRaisedIcon,
           children: (
             <>
-              made a proposal{' '}
+              wrote a proposal{' '}
               <TextLink
                 href={`/${activity.data.community_id}/group/${
                   activity.data.group_id

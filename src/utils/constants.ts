@@ -83,17 +83,18 @@ export const coinTypeLogos: { [coinType: number]: string | undefined } = {
 
 export enum DataType {
   COMMUNITY = 'COMMUNITY',
+  GRANT = 'GRANT',
+  GRANT_PROPOSAL = 'GRANT_PROPOSAL',
+  GRANT_PROPOSAL_SELECT = 'GRANT_PROPOSAL_SELECT',
+  GRANT_PROPOSAL_VOTE = 'GRANT_PROPOSAL_VOTE',
   GROUP = 'GROUP',
   GROUP_PROPOSAL = 'GROUP_PROPOSAL',
   GROUP_PROPOSAL_VOTE = 'GROUP_PROPOSAL_VOTE',
-  GRANT = 'GRANT',
-  GRANT_PROPOSAL = 'GRANT_PROPOSAL',
-  GRANT_PROPOSAL_VOTE = 'GRANT_PROPOSAL_VOTE',
 }
 
 export const cacheControl = [
   'Cache-Control',
-  's-maxage=1, stale-while-revalidate',
+  'maxage=1, stale-while-revalidate',
 ] satisfies [string, string]
 
 export const previewPermalink: PreviewPermalink = 'preview'

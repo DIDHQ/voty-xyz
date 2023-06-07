@@ -32,6 +32,17 @@ export const activitySchema = z.discriminatedUnion('type', [
     grant_proposal_title: z.string(),
   }),
   z.object({
+    type: z.literal('create_grant_proposal_select'),
+    community_id: z.string(),
+    community_permalink: z.string(),
+    community_name: z.string(),
+    grant_permalink: z.string(),
+    grant_name: z.string(),
+    grant_proposal_permalink: z.string(),
+    grant_proposal_title: z.string(),
+    grant_proposal_select_permalink: z.string(),
+  }),
+  z.object({
     type: z.literal('create_grant_proposal_vote'),
     community_id: z.string(),
     community_permalink: z.string(),

@@ -31,7 +31,7 @@ export default function GroupProposalCurrentPhase(props: {
             <span className="text-amber-600">
               Awaiting blockchain confirmation
             </span>
-            <span className="text-gray-600">in about 5 minutes</span>
+            <span className="text-gray-600">about 5 minutes</span>
           </>
         ) : phase === GroupProposalPhase.ANNOUNCING ? (
           <>

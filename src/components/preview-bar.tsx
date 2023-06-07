@@ -91,8 +91,8 @@ export default function PreviewBar() {
       await mutateCommunity(signed)
       await sleep(5000)
       await Promise.all([
-        utils.community.getById.prefetch({ id: signed.id }),
-        utils.groupProposal.list.prefetch({
+        utils.community.getById.refetch({ id: signed.id }),
+        utils.groupProposal.list.refetch({
           communityId: signed.id,
           phase: undefined,
         }),
@@ -106,7 +106,7 @@ export default function PreviewBar() {
       const permalink = await mutateGrant(signed)
       await sleep(5000)
       await Promise.all([
-        utils.grant.listByCommunityId.prefetch({
+        utils.grant.listByCommunityId.refetch({
           communityId: signed.authorship.author,
           phase: undefined,
         }),
@@ -122,8 +122,8 @@ export default function PreviewBar() {
       const permalink = await mutateGrantProposal(signed)
       await sleep(5000)
       await Promise.all([
-        utils.grantProposal.getByPermalink.prefetch({ permalink }),
-        utils.grant.getByPermalink.prefetch({ permalink: signed.grant }),
+        utils.grantProposal.getByPermalink.refetch({ permalink }),
+        utils.grant.getByPermalink.refetch({ permalink: signed.grant }),
       ])
       setPreviewGrantProposal(undefined)
       router.push(
@@ -139,14 +139,14 @@ export default function PreviewBar() {
       await mutateGroup(signed)
       await sleep(5000)
       await Promise.all([
-        utils.group.getById.prefetch({
+        utils.group.getById.refetch({
           communityId: signed.authorship.author,
           id: signed.id,
         }),
-        utils.group.listByCommunityId.prefetch({
+        utils.group.listByCommunityId.refetch({
           communityId: signed.authorship.author,
         }),
-        utils.groupProposal.list.prefetch({
+        utils.groupProposal.list.refetch({
           communityId: signed.authorship.author,
           groupId: signed.id,
           phase: undefined,
@@ -161,8 +161,8 @@ export default function PreviewBar() {
       const permalink = await mutateGroupProposal(signed)
       await sleep(5000)
       await Promise.all([
-        utils.groupProposal.getByPermalink.prefetch({ permalink }),
-        utils.group.getByPermalink.prefetch({ permalink: signed.group }),
+        utils.groupProposal.getByPermalink.refetch({ permalink }),
+        utils.group.getByPermalink.refetch({ permalink: signed.group }),
       ])
       setPreviewGroupProposal(undefined)
       router.push(

@@ -39,12 +39,13 @@ model Grant {
   communityId        String
   communityPermalink String
 
-  proposals    Int       @default(0)
-  votes        Int       @default(0)
-  ts           DateTime
-  tsAnnouncing DateTime?
-  tsProposing  DateTime?
-  tsVoting     DateTime?
+  proposals         Int       @default(0)
+  selectedProposals Int       @default(0)
+  votes             Int       @default(0)
+  ts                DateTime
+  tsAnnouncing      DateTime?
+  tsProposing       DateTime?
+  tsVoting          DateTime?
 
   @@id([permalink])
 }
@@ -55,10 +56,23 @@ model GrantProposal {
 
   proposer String
   votes    Int      @default(0)
+  selected String?
   ts       DateTime
 
   @@id([permalink])
   @@unique([grantPermalink, proposer])
+}
+
+model GrantProposalSelect {
+  permalink         String
+  grantPermalink    String
+  proposalPermalink String
+
+  selector String
+  ts       DateTime
+
+  @@id([permalink])
+  @@unique([proposalPermalink])
 }
 
 model GrantProposalVote {

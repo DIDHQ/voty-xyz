@@ -3,7 +3,6 @@ import { createTRPCNext } from '@trpc/next'
 import SuperJSON from 'superjson'
 
 import type { AppRouter } from '../server/routers/_app'
-import { cacheControl } from './constants'
 
 function getBaseUrl() {
   if (typeof window !== 'undefined') {
@@ -16,7 +15,7 @@ function getBaseUrl() {
 }
 
 export const trpc = createTRPCNext<AppRouter>({
-  config({}) {
+  config() {
     return {
       links: [
         loggerLink({
@@ -27,11 +26,6 @@ export const trpc = createTRPCNext<AppRouter>({
         }),
         httpLink({
           url: `${getBaseUrl()}/api/trpc`,
-          headers() {
-            return {
-              [cacheControl[0]]: cacheControl[1],
-            }
-          },
         }),
       ],
       transformer: SuperJSON,

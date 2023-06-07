@@ -97,10 +97,9 @@ export default function GrantProposalForm(props: {
   const didOptions = useMemo(
     () =>
       disables
-        ? dids?.map((did) => ({
-            did,
-            disabled: proposed?.[did] || disables[did],
-          }))
+        ? dids
+            ?.filter((did) => !disables[did])
+            .map((did) => ({ did, disabled: proposed?.[did] }))
         : undefined,
     [dids, disables, proposed],
   )

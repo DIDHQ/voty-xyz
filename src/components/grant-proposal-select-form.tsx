@@ -2,15 +2,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import type { Decimal } from 'decimal.js'
 import pMap from 'p-map'
 import { clsx } from 'clsx'
 
-import { calculateDecimal } from '../utils/functions/decimal'
 import {
-  GrantProposalVote,
-  grantProposalVoteSchema,
-} from '../utils/schemas/v1/grant-proposal-vote'
+  GrantProposalSelect,
+  grantProposalSelectSchema,
+} from '../utils/schemas/v1/grant-proposal-select'
 import { trpc } from '../utils/trpc'
 import useStatus from '../hooks/use-status'
 import { getGrantPhase, GrantPhase } from '../utils/phase'
@@ -19,19 +17,16 @@ import { Grant } from '../utils/schemas/v1/grant'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
 import useSignDocument from '../hooks/use-sign-document'
-import { formatDurationMs } from '../utils/time'
 import { previewPermalink } from '../utils/constants'
 import sleep from '../utils/sleep'
 import useNow from '../hooks/use-now'
+import { checkBoolean } from '../utils/functions/boolean'
 import DidCombobox from './did-combobox'
 import Button from './basic/button'
-import TextButton from './basic/text-button'
 import Notification from './basic/notification'
 import Tooltip from './basic/tooltip'
-import Slide from './basic/slide'
-import PermissionCard from './permission-card'
 
-export default function GrantProposalVoteForm(props: {
+export default function GrantProposalSelectForm(props: {
   grant: Grant
   grantProposal: GrantProposal & { permalink: string }
   onSuccess: () => void
@@ -41,57 +36,36 @@ export default function GrantProposalVoteForm(props: {
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
   const { data: dids } = useDids(account, props.grant.snapshots)
-  const { data: powers } = useQuery(
-    ['voting', dids, props.grant],
+  const { data, refetch } = useQuery(
+    ['selecting', dids, props.grant],
     async () => {
-      const decimals = await pMap(
+      const booleans = await pMap(
         dids!,
         (did) =>
-          calculateDecimal(
-            props.grant.permission.voting,
+          checkBoolean(
+            props.grant.permission.selecting!,
             did,
             props.grant.snapshots,
           ),
         { concurrency: 5 },
       )
       return dids!.reduce((obj, did, index) => {
-        obj[did] = decimals[index]
+        obj[did] = booleans[index]
         return obj
-      }, {} as { [key: string]: Decimal })
+      }, {} as { [key: string]: boolean })
     },
-    { enabled: !!dids },
+    { enabled: !!dids && !!props.grant.permission.selecting },
   )
-  const { data: voted, refetch: refetchVoted } =
-    trpc.grantProposalVote.groupByVoter.useQuery(
-      { grant: props.grantProposal.grant },
-      { enabled: !!props.grantProposal.grant },
-    )
-  const methods = useForm<GrantProposalVote>({
-    resolver: zodResolver(grantProposalVoteSchema),
+  const methods = useForm<GrantProposalSelect>({
+    resolver: zodResolver(grantProposalSelectSchema),
   })
-  const { setValue, resetField, handleSubmit: onSubmit } = methods
+  const { setValue, handleSubmit: onSubmit } = methods
   useEffect(() => {
     if (props.grantProposal.permalink) {
       setValue('grant_proposal', props.grantProposal.permalink)
+      setValue('selected', true)
     }
   }, [props.grantProposal.permalink, setValue])
-  const { data: totalPower } = useQuery(
-    ['votingPower', props.grant, did],
-    () =>
-      calculateDecimal(
-        props.grant.permission.voting,
-        did!,
-        props.grant.snapshots,
-      ),
-    { enabled: !!did },
-  )
-  useEffect(() => {
-    if (totalPower === undefined) {
-      resetField('total_power')
-    } else {
-      setValue('total_power', totalPower.toString())
-    }
-  }, [resetField, setValue, totalPower])
   const { data: status } = useStatus(props.grantProposal.grant)
   const now = useNow()
   const phase = useMemo(
@@ -100,42 +74,32 @@ export default function GrantProposalVoteForm(props: {
   )
   const disables = useCallback(
     (did?: string) =>
-      !did ||
-      !voted ||
-      !powers ||
-      !!voted[did] ||
-      !powers[did] ||
-      phase !== GrantPhase.VOTING,
-    [voted, powers, phase],
+      !did || !data || !data[did] || phase !== GrantPhase.PROPOSING,
+    [data, phase],
   )
   const didOptions = useMemo(
     () =>
-      voted && powers
+      data
         ? dids
-            ?.filter((did) => powers[did].gt(0))
-            .map((did) => ({
-              did,
-              label: `${voted[did] ? '(voted) ' : ''}${powers[did]}`,
-              disabled: !!voted[did],
-            }))
+            ?.filter((did) => data[did])
+            .map((did) => ({ did, disabled: false }))
         : undefined,
-    [dids, powers, voted],
+    [dids, data],
   )
-  const { mutateAsync } = trpc.grantProposalVote.create.useMutation()
+  const { mutateAsync } = trpc.grantProposalSelect.create.useMutation()
   const signDocument = useSignDocument(
     did,
-    `You are voting on Voty\n\nhash:\n{keccak256}`,
+    `You are selecting on Voty\n\nhash:\n{keccak256}`,
   )
-  const handleSubmit = useMutation<void, Error, GrantProposalVote>(
-    async (vote) => {
-      const signed = await signDocument(vote)
+  const handleSubmit = useMutation<void, Error, GrantProposalSelect>(
+    async (select) => {
+      const signed = await signDocument(select)
       await mutateAsync(signed)
       await sleep(5000)
     },
     {
       onSuccess() {
-        setValue('powers', {})
-        refetchVoted()
+        refetch()
         onSuccess()
       },
     },
@@ -147,13 +111,6 @@ export default function GrantProposalVoteForm(props: {
   useEffect(() => {
     setDid(defaultDid || '')
   }, [defaultDid])
-  useEffect(() => {
-    if (totalPower) {
-      setValue('powers', {
-        [props.grantProposal.permalink]: totalPower.toString(),
-      })
-    }
-  }, [props.grantProposal.permalink, setValue, totalPower])
 
   return (
     <>
@@ -161,7 +118,7 @@ export default function GrantProposalVoteForm(props: {
         {handleSubmit.error?.message}
       </Notification>
       <Notification type="success" show={handleSubmit.isSuccess}>
-        Your vote has been submitted successfully
+        Your selection has been submitted successfully
       </Notification>
       {phase === GrantPhase.ENDED ? null : (
         <div className={clsx('mt-6 border-t border-gray-200', props.className)}>
@@ -170,36 +127,14 @@ export default function GrantProposalVoteForm(props: {
               <div className="w-full flex-1 sm:w-64 sm:flex-none">
                 <DidCombobox
                   top
-                  label="Choose a DID as voter"
+                  label="Choose a DID as committee"
                   options={didOptions}
                   value={did}
                   onChange={setDid}
                   onClick={connect}
                 />
-                {!defaultDid && props.grant ? (
-                  <Slide
-                    title={`Voters of ${props.grant.name}`}
-                    trigger={({ handleOpen }) => (
-                      <TextButton
-                        secondary
-                        onClick={handleOpen}
-                        className="text-sm"
-                      >
-                        Why I&#39;m not eligible to vote?
-                      </TextButton>
-                    )}
-                  >
-                    {() => (
-                      <PermissionCard
-                        title="Voters"
-                        description="SubDIDs who can vote in this grant. The greatest voting power will be allocated when a SubDID has multiple occurrence."
-                        value={props.grant.permission.voting}
-                      />
-                    )}
-                  </Slide>
-                ) : null}
               </div>
-              {phase === GrantPhase.VOTING ? (
+              {phase === GrantPhase.PROPOSING ? (
                 <Button
                   large
                   primary
@@ -211,7 +146,7 @@ export default function GrantProposalVoteForm(props: {
                   loading={handleSubmit.isLoading}
                   className="mt-6"
                 >
-                  Vote{totalPower ? ` (${totalPower})` : null}
+                  Select
                 </Button>
               ) : (
                 <Tooltip
@@ -219,14 +154,7 @@ export default function GrantProposalVoteForm(props: {
                   text={
                     phase === GrantPhase.CONFIRMING
                       ? 'Waiting for proposal confirming (in about 5 minutes)'
-                      : status?.timestamp && props.grant
-                      ? `Waiting for vote starting (in ${formatDurationMs(
-                          status.timestamp.getTime() +
-                            props.grant.duration.announcing * 1000 +
-                            props.grant.duration.proposing * 1000 -
-                            now.getTime(),
-                        )})`
-                      : 'Waiting for vote starting'
+                      : 'Waiting for select starting'
                   }
                   className="mt-6"
                 >
@@ -240,7 +168,7 @@ export default function GrantProposalVoteForm(props: {
                     disabled={disables(did)}
                     loading={handleSubmit.isLoading}
                   >
-                    Vote{totalPower ? ` (${totalPower})` : null}
+                    Select
                   </Button>
                 </Tooltip>
               )}

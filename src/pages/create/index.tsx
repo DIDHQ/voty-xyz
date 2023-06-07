@@ -70,7 +70,7 @@ export default function CreateCommunityPage() {
                   <>
                     <div className="sm:min-w-[500px]">
                       <span className="mb-1 block text-sm font-medium text-gray-700">
-                        Select a .bit as your community entry on Voty
+                        Choose a .bit as your community entry on Voty
                       </span>
                       <TextInput
                         value={query}

@@ -31,7 +31,11 @@ const schema = proved(authorized(grantSchema))
 export const grantRouter = router({
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(schema.extend({ proposals: z.number() }).nullable())
+    .output(
+      schema
+        .extend({ proposals: z.number(), selectedProposals: z.number() })
+        .nullable(),
+    )
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -46,7 +50,11 @@ export const grantRouter = router({
 
       const json =
         grant && storage
-          ? { ...schema.parse(storage.data), proposals: grant.proposals }
+          ? {
+              ...schema.parse(storage.data),
+              proposals: grant.proposals,
+              selectedProposals: grant.selectedProposals,
+            }
           : null
 
       if (
@@ -202,6 +210,14 @@ export const grantRouter = router({
               grant.authorship.author &&
             grant.permission.voting.operands[0].arguments[1].length === 0 &&
             grant.permission.voting.operands[0].arguments[2] === '1',
+        )
+        .refine(
+          (grant) =>
+            !grant.permission.selecting ||
+            (grant.permission.selecting.operands.length === 1 &&
+              grant.permission.selecting.operands[0].arguments[0] ===
+                grant.authorship.author &&
+              grant.permission.selecting.operands[0].arguments[1].length > 0),
         ),
     )
     .output(z.string())

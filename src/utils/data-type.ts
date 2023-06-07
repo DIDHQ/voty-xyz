@@ -3,6 +3,10 @@ import { Community, communitySchema } from './schemas/v1/community'
 import { Grant, grantSchema } from './schemas/v1/grant'
 import { GrantProposal, grantProposalSchema } from './schemas/v1/grant-proposal'
 import {
+  GrantProposalSelect,
+  grantProposalSelectSchema,
+} from './schemas/v1/grant-proposal-select'
+import {
   GrantProposalVote,
   grantProposalVoteSchema,
 } from './schemas/v1/grant-proposal-vote'
@@ -23,6 +27,12 @@ export function isGrant(document: object): document is Grant {
 
 export function isGrantProposal(document: object): document is GrantProposal {
   return grantProposalSchema.safeParse(document).success
+}
+
+export function isGrantProposalSelect(
+  document: object,
+): document is GrantProposalSelect {
+  return grantProposalSelectSchema.safeParse(document).success
 }
 
 export function isGrantProposalVote(
@@ -54,6 +64,9 @@ export function dataTypeOf(document: object): DataType {
   }
   if (isGrantProposal(document)) {
     return DataType.GRANT_PROPOSAL
+  }
+  if (isGrantProposalSelect(document)) {
+    return DataType.GRANT_PROPOSAL_SELECT
   }
   if (isGrantProposalVote(document)) {
     return DataType.GRANT_PROPOSAL_VOTE

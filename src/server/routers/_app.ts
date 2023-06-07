@@ -3,6 +3,7 @@ import { activityRouter } from './activity'
 import { communityRouter } from './community'
 import { grantRouter } from './grant'
 import { grantProposalRouter } from './grant-proposal'
+import { grantProposalSelectRouter } from './grant-proposal-select'
 import { grantProposalVoteRouter } from './grant-proposal-vote'
 import { grantProposalVoteChoiceRouter } from './grant-proposal-vote-choice'
 import { groupRouter } from './group'
@@ -16,6 +17,7 @@ export const appRouter = router({
   community: communityRouter,
   grant: grantRouter,
   grantProposal: grantProposalRouter,
+  grantProposalSelect: grantProposalSelectRouter,
   grantProposalVote: grantProposalVoteRouter,
   grantProposalVoteChoice: grantProposalVoteChoiceRouter,
   group: groupRouter,

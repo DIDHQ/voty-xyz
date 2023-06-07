@@ -17,6 +17,9 @@ import TextLink from './basic/text-link'
 import GrantCurrentPhase from './grant-current-phase'
 import Article from './basic/article'
 import Tooltip from './basic/tooltip'
+import TextButton from './basic/text-button'
+import Slide from './basic/slide'
+import PermissionCard from './permission-card'
 
 export default function GrantInfo(props: {
   community?: Community
@@ -69,6 +72,45 @@ export default function GrantInfo(props: {
               '...'
             )}
           </DetailItem>
+          {props.grant?.permission.selecting ? (
+            <DetailItem title="Committees">
+              {props.community ? (
+                <Slide
+                  title={`Committee of ${props.grant.name}`}
+                  trigger={({ handleOpen }) => (
+                    <TextButton
+                      onClick={handleOpen}
+                      className="truncate whitespace-nowrap underline"
+                    >
+                      {
+                        props.grant?.permission.selecting?.operands[0]
+                          .arguments[1].length
+                      }{' '}
+                      member
+                      {props.grant?.permission.selecting?.operands[0]
+                        .arguments[1].length &&
+                      props.grant?.permission.selecting?.operands[0]
+                        .arguments[1].length > 1
+                        ? 's'
+                        : ''}
+                    </TextButton>
+                  )}
+                >
+                  {() =>
+                    props.grant?.permission.selecting ? (
+                      <PermissionCard
+                        title="Committee"
+                        description="Only proposals selected by committee members are eligible to be voted on."
+                        value={props.grant.permission.selecting}
+                      />
+                    ) : null
+                  }
+                </Slide>
+              ) : (
+                '...'
+              )}
+            </DetailItem>
+          ) : null}
         </DetailList>
         {props.grant?.snapshots ? (
           <DetailList title="On-chain verification">
@@ -98,7 +140,7 @@ export default function GrantInfo(props: {
         ) : null}
       </div>
       <div className="w-full rounded-md border border-gray-200 p-6">
-        <h3 className="font-semibold text-gray-900">How topic grant works:</h3>
+        <h3 className="font-semibold text-gray-900">How Topic Grant works:</h3>
         <Article small className="-ml-2">
           <ul>
             <li>
@@ -123,6 +165,12 @@ export default function GrantInfo(props: {
               </Tooltip>
               phase.
             </li>
+            {props.grant?.permission.selecting ? (
+              <li>
+                Only proposals selected by committee members are eligible to be
+                voted on.
+              </li>
+            ) : null}
             <li>
               Any member will vote on the best proposals during the
               <Tooltip
