@@ -48,7 +48,7 @@ export default function GrantsIndexPage() {
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
       <div className="mt-6 flex items-center justify-between sm:mt-8">
-        <h3 className="text-lg font-medium text-gray-900">Topic grants</h3>
+        <h3 className="text-lg font-medium text-gray-900">Topic Grants</h3>
         <div className="flex items-center">
           <Select
             options={options}
@@ -58,7 +58,7 @@ export default function GrantsIndexPage() {
           {isManager ? (
             <Link href={`/${query.community_id}/grant/create`} className="ml-5">
               <Button primary icon={PlusIcon}>
-                Topic grant
+                Topic Grant
               </Button>
             </Link>
           ) : null}
@@ -66,8 +66,8 @@ export default function GrantsIndexPage() {
       </div>
       {grants?.length === 0 ? (
         <EmptyState
-          title="No topic grants"
-          description="Topic grant helps you automate your project's funding process with ease, while also elevating member's engagement."
+          title="No Topic Grants"
+          description="Topic Grant helps you automate your project's funding process with ease, while also elevating member's engagement."
           className="mt-24"
         />
       ) : (

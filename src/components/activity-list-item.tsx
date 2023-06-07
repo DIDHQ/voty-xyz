@@ -51,7 +51,7 @@ export default function ActivityListItem(props: {
           icon: TrophyIcon,
           children: (
             <>
-              created topic grant{' '}
+              created Topic Grant{' '}
               <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -84,7 +84,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.grant_proposal_title}
               </TextLink>{' '}
-              in topic grant{' '}
+              in Topic Grant{' '}
               <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -117,7 +117,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.grant_proposal_title}
               </TextLink>{' '}
-              in topic grant{' '}
+              in Topic Grant{' '}
               <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
@@ -150,7 +150,7 @@ export default function ActivityListItem(props: {
               >
                 {activity.data.grant_proposal_title}
               </TextLink>{' '}
-              in topic grant{' '}
+              in Topic Grant{' '}
               <TextLink
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,

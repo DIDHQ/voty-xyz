@@ -90,10 +90,10 @@ export default function GrantForm(props: {
 
   return (
     <Form
-      title={`Create topic grant${
+      title={`Create Topic Grant${
         community?.name ? ` of ${community.name}` : ''
       }`}
-      description="Topic grant helps you automate your project's funding process with ease, while also elevating member's engagement."
+      description="Topic Grant helps you automate your project's funding process with ease, while also elevating member's engagement."
       className={props.className}
     >
       <FormSection title="Basic information">

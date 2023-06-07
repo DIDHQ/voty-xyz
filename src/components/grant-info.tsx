@@ -140,7 +140,7 @@ export default function GrantInfo(props: {
         ) : null}
       </div>
       <div className="w-full rounded-md border border-gray-200 p-6">
-        <h3 className="font-semibold text-gray-900">How topic grant works:</h3>
+        <h3 className="font-semibold text-gray-900">How Topic Grant works:</h3>
         <Article small className="-ml-2">
           <ul>
             <li>

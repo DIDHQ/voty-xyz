@@ -77,7 +77,7 @@ export default function GrantProposalInfo(props: {
             '...'
           )}
         </DetailItem>
-        <DetailItem title="Topic grant">
+        <DetailItem title="Topic Grant">
           {props.community && props.grant && props.grantProposal ? (
             <TextLink
               underline
