@@ -132,15 +132,8 @@ export const grantProposalRouter = router({
         ({ permalink }) => permalink,
       )
 
-      return compact(
-        orderBy(
-          grantProposals,
-          (grantProposal) =>
-            selectedGrantProposals.has(permalink2Id(grantProposal.permalink))
-              ? 1
-              : 0,
-          'desc',
-        )
+      const data = compact(
+        grantProposals
           .filter(({ permalink }) => storages[permalink])
           .map(({ permalink, selected, votes, ts }, index) => {
             try {
@@ -166,6 +159,17 @@ export const grantProposalRouter = router({
             }
           }),
       )
+
+      return isEnded
+        ? data
+        : orderBy(
+            data,
+            (grantProposal) =>
+              selectedGrantProposals.has(permalink2Id(grantProposal.permalink))
+                ? 1
+                : 0,
+            'desc',
+          )
     }),
   create: procedure
     .input(schema)
