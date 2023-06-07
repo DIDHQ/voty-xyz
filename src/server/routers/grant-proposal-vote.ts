@@ -41,7 +41,7 @@ export const grantProposalVoteRouter = router({
       const grantProposalVotes = await database.grantProposalVote.findMany({
         where: { proposalPermalink: input.grantProposal },
         cursor: input.cursor ? { permalink: input.cursor } : undefined,
-        take: 20,
+        take: 50,
         skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })

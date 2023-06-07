@@ -350,6 +350,7 @@ export default function GrantProposalPage() {
                   </tr>
                 ))}
               </tbody>
+              <tfoot ref={ref} />
             </table>
           ) : null}
         </div>
@@ -360,7 +361,6 @@ export default function GrantProposalPage() {
           className="hidden sm:block"
         />
       </div>
-      <div ref={ref} />
     </>
   )
 }

@@ -188,6 +188,7 @@ export default function GroupProposalPage() {
                   </tr>
                 ))}
               </tbody>
+              <tfoot ref={ref} />
             </table>
           ) : null}
         </div>
@@ -198,7 +199,6 @@ export default function GroupProposalPage() {
           className="hidden sm:block"
         />
       </div>
-      <div ref={ref} />
     </>
   )
 }
