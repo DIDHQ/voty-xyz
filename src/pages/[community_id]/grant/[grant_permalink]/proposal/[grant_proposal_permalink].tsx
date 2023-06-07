@@ -49,6 +49,7 @@ export default function GrantProposalPage() {
     )
   const grantProposal = useMemo<
     | (GrantProposal & {
+        ts: Date
         selected: string | null
         votes: number
         permalink: string
@@ -59,6 +60,7 @@ export default function GrantProposalPage() {
     if (previewGrantProposal) {
       return {
         ...previewGrantProposal,
+        ts: new Date(),
         selected: null,
         votes: 0,
         permalink: previewPermalink,

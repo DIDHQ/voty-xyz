@@ -35,7 +35,11 @@ export const grantProposalRouter = router({
     .input(z.object({ permalink: z.string().optional() }))
     .output(
       schema
-        .extend({ selected: z.string().nullable(), votes: z.number() })
+        .extend({
+          ts: z.date(),
+          selected: z.string().nullable(),
+          votes: z.number(),
+        })
         .nullable(),
     )
     .query(async ({ input }) => {
@@ -53,6 +57,7 @@ export const grantProposalRouter = router({
       return storage && grantProposal
         ? {
             ...schema.parse(storage.data),
+            ts: grantProposal.ts,
             selected: grantProposal.selected,
             votes: grantProposal.votes,
           }

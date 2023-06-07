@@ -13,6 +13,7 @@ import { formatNumber } from '../utils/number'
 import { permalink2Explorer, permalink2Id } from '../utils/permalink'
 import { formatDid } from '../utils/did/utils'
 import { trpc } from '../utils/trpc'
+import { formatTime } from '../utils/time'
 import GrantCurrentPhase from './grant-current-phase'
 import TextLink from './basic/text-link'
 import { DetailItem, DetailList } from './basic/detail'
@@ -21,6 +22,7 @@ export default function GrantProposalInfo(props: {
   community?: Community
   grant?: Grant
   grantProposal?: GrantProposal & {
+    ts: Date
     selected: string | null
     permalink: string | PreviewPermalink
     authorship?: { author?: string }
@@ -100,6 +102,12 @@ export default function GrantProposalInfo(props: {
           {props.grantProposal?.authorship?.author
             ? formatDid(props.grantProposal.authorship.author)
             : '...'}
+        </DetailItem>
+        <DetailItem
+          title="Proposed at"
+          className="block truncate whitespace-nowrap"
+        >
+          {props.grantProposal?.ts ? formatTime(props.grantProposal.ts) : '...'}
         </DetailItem>
         {grantProposalSelect ? (
           <DetailItem
