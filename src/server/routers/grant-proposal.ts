@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, mapValues, orderBy, shuffle } from 'lodash-es'
+import { compact, keyBy, mapValues, orderBy } from 'lodash-es'
 import { z } from 'zod'
 import readingTime from 'reading-time'
 
@@ -137,34 +137,32 @@ export const grantProposalRouter = router({
         ({ permalink }) => permalink,
       )
 
-      const data = shuffle(
-        compact(
-          grantProposals
-            .filter(({ permalink }) => storages[permalink])
-            .map(({ permalink, selected, votes, ts }, index) => {
-              try {
-                const grantProposal = schema.parse(storages[permalink].data)
-                return {
-                  ...grantProposal,
-                  selected,
-                  images: getImages(grantProposal.content),
-                  content: getSummary(grantProposal.content),
-                  readingTime: readingTime(grantProposal.content).time,
-                  permalink,
-                  votes,
-                  ts,
-                  funding:
-                    isEnded &&
-                    index < grant.funding[0][1] &&
-                    (!grant.permission.selecting || selected)
-                      ? grant.funding[0][0]
-                      : undefined,
-                }
-              } catch {
-                return
+      const data = compact(
+        grantProposals
+          .filter(({ permalink }) => storages[permalink])
+          .map(({ permalink, selected, votes, ts }, index) => {
+            try {
+              const grantProposal = schema.parse(storages[permalink].data)
+              return {
+                ...grantProposal,
+                selected,
+                images: getImages(grantProposal.content),
+                content: getSummary(grantProposal.content),
+                readingTime: readingTime(grantProposal.content).time,
+                permalink,
+                votes,
+                ts,
+                funding:
+                  isEnded &&
+                  index < grant.funding[0][1] &&
+                  (!grant.permission.selecting || selected)
+                    ? grant.funding[0][0]
+                    : undefined,
               }
-            }),
-        ),
+            } catch {
+              return
+            }
+          }),
       )
 
       return isEnded
