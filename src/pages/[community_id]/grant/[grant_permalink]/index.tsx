@@ -58,7 +58,7 @@ export default function GrantPage() {
     )
   const { data: grantProposals } = trpc.grantProposal.list.useQuery(
     { grantPermalink: query.grant_permalink },
-    { enabled: !!query.grant_permalink },
+    { enabled: !!query.grant_permalink, refetchOnWindowFocus: false },
   )
   const title = useMemo(
     () => compact([grant?.name, community?.name, documentTitle]).join(' - '),
