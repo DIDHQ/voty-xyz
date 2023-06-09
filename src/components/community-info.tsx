@@ -19,14 +19,17 @@ import { useQuery } from '@tanstack/react-query'
 import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
-import { documentTitle, domain } from '../utils/constants'
+import { documentTitle, domain, isTestnet } from '../utils/constants'
 import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import useIsManager from '../hooks/use-is-manager'
 import { hasEnabledSubDID } from '../utils/sdks/dotbit/subdid'
+import useWallet from '../hooks/use-wallet'
+import useDids from '../hooks/use-dids'
 import ShareLinkIcon from './share-link-icon'
 import TextLink from './basic/text-link'
 import Avatar from './basic/avatar'
 import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
+import Button from './basic/button'
 
 const SubscriptionButton = dynamic(() => import('./subscription-button'), {
   ssr: false,
@@ -107,15 +110,15 @@ export default function CommunityInfo(props: { className?: string }) {
     () => compact([community?.name, documentTitle]).join(' - '),
     [community?.name],
   )
-  // const { account } = useWallet()
-  // const { data: dids } = useDids(account)
-  // const isMember = useMemo(
-  //   () =>
-  //     !!dids?.find(
-  //       (did) => !!query.community_id && did.startsWith(query.community_id),
-  //     ),
-  //   [dids, query.community_id],
-  // )
+  const { account } = useWallet()
+  const { data: dids } = useDids(account)
+  const isMember = useMemo(
+    () =>
+      !!dids?.find(
+        (did) => !!query.community_id && did.endsWith(query.community_id),
+      ),
+    [dids, query.community_id],
+  )
   const { data: enabledSubDID } = useQuery(
     ['hasEnabledSubDID', query.community_id],
     () => hasEnabledSubDID(query.community_id!),
@@ -146,6 +149,24 @@ export default function CommunityInfo(props: { className?: string }) {
               </p>
             </div>
           </div>
+          {isMember || previewCommunity ? (
+            <Button disabled={isMember} className="mt-4">
+              {isMember ? 'Joined' : 'Join'}
+            </Button>
+          ) : (
+            <Link
+              href={`${
+                isTestnet
+                  ? '​https://test.topdid.com/mint/.'
+                  : 'https://topdid.com/mint/.'
+              }${query.community_id?.replace(/\.bit$/, '')}`}
+              className="mt-4"
+            >
+              <Button primary disabled={isMember}>
+                {isMember ? 'Joined' : 'Join'}
+              </Button>
+            </Link>
+          )}
           <div className="my-6 w-full px-6">
             <div className="w-full border-t" />
           </div>
@@ -218,18 +239,6 @@ export default function CommunityInfo(props: { className?: string }) {
               </div>
             </>
           ) : null}
-          {/* {router.pathname === '/[community_id]/about' ||
-          previewCommunity ||
-          isMember ? null : (
-            <Link
-              href={`/${query.community_id}/about#how-to-join`}
-              className="mt-4"
-            >
-              <Button primary disabled={isMember}>
-                Want to join?
-              </Button>
-            </Link>
-          )} */}
         </div>
       </aside>
     </>
