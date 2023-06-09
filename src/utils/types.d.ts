@@ -39,6 +39,7 @@ export type Preview = {
   to: string
   template: string
   author: string
+  snapshots?: Snapshots
 }
 
 export type PreviewPermalink = 'preview'

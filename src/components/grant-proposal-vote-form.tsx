@@ -125,6 +125,7 @@ export default function GrantProposalVoteForm(props: {
   const signDocument = useSignDocument(
     did,
     `You are voting on Voty\n\nhash:\n{keccak256}`,
+    props.grant.snapshots,
   )
   const handleSubmit = useMutation<void, Error, GrantProposalVote>(
     async (vote) => {

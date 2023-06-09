@@ -200,6 +200,7 @@ export default function GrantProposalForm(props: {
                 )}/proposal/${previewPermalink}`,
                 template: `You are creating proposal on Voty\n\nhash:\n{keccak256}`,
                 author: did,
+                snapshots: props.grant.snapshots,
               },
             })
             router.push(

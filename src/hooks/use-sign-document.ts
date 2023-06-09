@@ -6,11 +6,13 @@ import { Proved } from '../utils/schemas/basic/proof'
 import { signDocument } from '../utils/signature'
 import { getCurrentSnapshot } from '../utils/snapshot'
 import { isTestnet } from '../utils/constants'
+import { Snapshots } from '../utils/types'
 import useWallet from './use-wallet'
 
 export default function useSignDocument(
   did?: string,
   template?: string,
+  snapshots?: Snapshots,
 ): <T extends object>(document: T) => Promise<Proved<Authorized<T>>> {
   const { account, connect, signMessage } = useWallet()
 
@@ -24,7 +26,8 @@ export default function useSignDocument(
         throw new Error('Login required')
       }
       const coinType = requiredCoinTypeOfDidChecker(did)
-      const snapshot = await getCurrentSnapshot(coinType)
+      const snapshot =
+        snapshots?.[coinType] || (await getCurrentSnapshot(coinType))
       const authorship = isTestnet
         ? ({
             author: did,
@@ -45,6 +48,6 @@ export default function useSignDocument(
       )
       return { ...document, authorship, proof }
     },
-    [did, connect, account?.address, signMessage, template],
+    [did, account?.address, snapshots, signMessage, template, connect],
   )
 }
