@@ -56,7 +56,7 @@ export async function uploadToArweave(
 
 export const defaultArweaveTags = {
   'App-Name': 'Voty',
-  'App-Version': `0.0.1${isTestnet ? '-test' : ''}`,
+  'App-Version': `0.0.2${isTestnet ? '-test' : ''}`,
 }
 
 function getArweaveTags(
