@@ -9,7 +9,6 @@ import { authorized } from '../../utils/schemas/basic/authorship'
 import { grantSchema } from '../../utils/schemas/v1/grant'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/basic/proof'
-import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGrant from '../../utils/verifiers/verify-grant'
@@ -222,7 +221,6 @@ export const grantRouter = router({
     )
     .output(z.string())
     .mutation(async ({ input }) => {
-      await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
       const { community } = await verifyGrant(input)

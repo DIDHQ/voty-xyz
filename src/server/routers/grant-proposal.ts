@@ -10,7 +10,6 @@ import { grantProposalSchema } from '../../utils/schemas/v1/grant-proposal'
 import verifyGrantProposal from '../../utils/verifiers/verify-grant-proposal'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/basic/proof'
-import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGrant from '../../utils/verifiers/verify-grant'
@@ -180,11 +179,10 @@ export const grantProposalRouter = router({
     .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
-      await verifySnapshot(input.authorship)
       await verifyProof(input)
-      await verifyAuthorship(input.authorship, input.proof)
       const { grant } = await verifyGrantProposal(input)
       const { community } = await verifyGrant(grant)
+      await verifyAuthorship(input.authorship, input.proof, grant.snapshots)
 
       await flushUploadBuffers(getAllUploadBufferKeys(input.content))
       const permalink = await uploadToArweave(input)

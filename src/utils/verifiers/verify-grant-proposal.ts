@@ -14,7 +14,6 @@ const grantSchemaProvedAuthorized = proved(authorized(grantSchema))
 
 export default async function verifyGrantProposal(
   grantProposal: Proved<Authorized<GrantProposal>>,
-  ignorePhase?: boolean,
 ): Promise<{
   grant: Proved<Authorized<Grant>>
 }> {
@@ -30,9 +29,8 @@ export default async function verifyGrantProposal(
     (snapshot) => getSnapshotTimestamp(commonCoinTypes.AR, snapshot),
   )
   if (
-    !ignorePhase &&
     getGrantPhase(new Date(), timestamp, grant.duration) !==
-      GrantPhase.PROPOSING
+    GrantPhase.PROPOSING
   ) {
     throw new TRPCError({
       code: 'BAD_REQUEST',

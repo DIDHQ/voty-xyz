@@ -73,7 +73,11 @@ export default function PreviewBar() {
     setPreviewGroup,
     setPreviewGroupProposal,
   ])
-  const signDocument = useSignDocument(preview?.author, preview?.template)
+  const signDocument = useSignDocument(
+    preview?.author,
+    preview?.template,
+    preview?.snapshots,
+  )
   const { mutateAsync: mutateCommunity } = trpc.community.create.useMutation()
   const { mutateAsync: mutateGrant } = trpc.grant.create.useMutation()
   const { mutateAsync: mutateGrantProposal } =

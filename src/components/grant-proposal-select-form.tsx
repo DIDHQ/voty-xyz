@@ -90,6 +90,7 @@ export default function GrantProposalSelectForm(props: {
   const signDocument = useSignDocument(
     did,
     `You are selecting on Voty\n\nhash:\n{keccak256}`,
+    props.grant.snapshots,
   )
   const handleSubmit = useMutation<void, Error, GrantProposalSelect>(
     async (select) => {

@@ -8,7 +8,6 @@ import { authorized } from '../../utils/schemas/basic/authorship'
 import { groupSchema } from '../../utils/schemas/v1/group'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/basic/proof'
-import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGroup from '../../utils/verifiers/verify-group'
@@ -116,7 +115,6 @@ export const groupRouter = router({
     )
     .output(z.string())
     .mutation(async ({ input }) => {
-      await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
       const { community } = await verifyGroup(input)
@@ -168,7 +166,6 @@ export const groupRouter = router({
       return permalink
     }),
   archive: procedure.input(schema).mutation(async ({ input }) => {
-    await verifySnapshot(input.authorship)
     await verifyProof(input)
     await verifyAuthorship(input.authorship, input.proof)
     const { community } = await verifyGroup(input)

@@ -11,7 +11,6 @@ import verifyGroupProposalVote from '../../utils/verifiers/verify-group-proposal
 import { powerOfChoice } from '../../utils/choice'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/basic/proof'
-import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGroup from '../../utils/verifiers/verify-group'
@@ -107,10 +106,13 @@ export const groupProposalVoteRouter = router({
     .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
-      await verifySnapshot(input.authorship)
       await verifyProof(input)
-      await verifyAuthorship(input.authorship, input.proof)
       const { group, groupProposal } = await verifyGroupProposalVote(input)
+      await verifyAuthorship(
+        input.authorship,
+        input.proof,
+        groupProposal.snapshots,
+      )
       const { community } = await verifyGroup(group)
 
       const permalink = await uploadToArweave(input)

@@ -11,7 +11,6 @@ import verifyGroupProposal from '../../utils/verifiers/verify-group-proposal'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/basic/proof'
 import { commonCoinTypes } from '../../utils/constants'
-import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import {
@@ -195,7 +194,6 @@ export const groupProposalRouter = router({
     .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
-      await verifySnapshot(input.authorship)
       await verifyProof(input)
       await verifyAuthorship(input.authorship, input.proof)
       const { group } = await verifyGroupProposal(input)

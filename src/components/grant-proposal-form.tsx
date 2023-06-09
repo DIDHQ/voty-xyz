@@ -3,7 +3,6 @@ import pMap from 'p-map'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
-import { uniq } from 'lodash-es'
 import { EyeIcon } from '@heroicons/react/20/solid'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
@@ -12,17 +11,11 @@ import {
   GrantProposal,
   grantProposalSchema,
 } from '../utils/schemas/v1/grant-proposal'
-import { getCurrentSnapshot } from '../utils/snapshot'
-import { requiredCoinTypeOfDidChecker } from '../utils/did'
 import useStatus from '../hooks/use-status'
 import { Grant } from '../utils/schemas/v1/grant'
 import useWallet from '../hooks/use-wallet'
 import useDids from '../hooks/use-dids'
-import {
-  checkBoolean,
-  requiredCoinTypesOfBooleanSets,
-} from '../utils/functions/boolean'
-import { requiredCoinTypesOfDecimalSets } from '../utils/functions/decimal'
+import { checkBoolean } from '../utils/functions/boolean'
 import { previewGrantProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
 import { permalink2Id } from '../utils/permalink'
@@ -66,25 +59,22 @@ export default function GrantProposalForm(props: {
   }, [grantProposal, props.grantPermalink, reset, setValue])
   const [did, setDid] = useState('')
   const { account, connect } = useWallet()
-  const { data: dids } = useDids(account)
+  const { data: dids } = useDids(account, props.grant.snapshots)
   const { data: proposed } = trpc.grantProposal.groupByProposer.useQuery(
     { grantPermalink: props.grantPermalink },
     { enabled: !!props.grantPermalink },
   )
   const { data: disables } = useQuery(
-    [dids, props.grant.permission],
+    [dids, props.grant],
     async () => {
-      const requiredCoinTypes = uniq([
-        ...(did ? [requiredCoinTypeOfDidChecker(did)] : []),
-        ...requiredCoinTypesOfBooleanSets(props.grant.permission.proposing),
-        ...requiredCoinTypesOfDecimalSets(props.grant.permission.voting),
-      ])
-      const snapshots = await pMap(requiredCoinTypes, getCurrentSnapshot, {
-        concurrency: 5,
-      })
       const booleans = await pMap(
         dids!,
-        (did) => checkBoolean(props.grant.permission.proposing, did, snapshots),
+        (did) =>
+          checkBoolean(
+            props.grant.permission.proposing,
+            did,
+            props.grant.snapshots,
+          ),
         { concurrency: 5 },
       )
       return dids!.reduce((obj, did, index) => {
@@ -210,6 +200,7 @@ export default function GrantProposalForm(props: {
                 )}/proposal/${previewPermalink}`,
                 template: `You are creating proposal on Voty\n\nhash:\n{keccak256}`,
                 author: did,
+                snapshots: props.grant.snapshots,
               },
             })
             router.push(
