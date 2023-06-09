@@ -11,7 +11,6 @@ import verifyGrantProposalVote from '../../utils/verifiers/verify-grant-proposal
 import { powerOfChoice } from '../../utils/choice'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/basic/proof'
-import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGrant from '../../utils/verifiers/verify-grant'
@@ -112,10 +111,9 @@ export const grantProposalVoteRouter = router({
     )
     .output(z.string())
     .mutation(async ({ input }) => {
-      await verifySnapshot(input.authorship)
       await verifyProof(input)
-      await verifyAuthorship(input.authorship, input.proof)
       const { grantProposal, grant } = await verifyGrantProposalVote(input)
+      await verifyAuthorship(input.authorship, input.proof, grant.snapshots)
       const { community } = await verifyGrant(grant)
 
       const permalink = await uploadToArweave(input)

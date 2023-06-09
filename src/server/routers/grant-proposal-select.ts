@@ -9,7 +9,6 @@ import verifyGrantProposalSelect from '../../utils/verifiers/verify-grant-propos
 import verifyGrant from '../../utils/verifiers/verify-grant'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
-import verifySnapshot from '../../utils/verifiers/verify-snapshot'
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
 import { Activity } from '../../utils/schemas/activity'
@@ -35,10 +34,9 @@ export const grantProposalSelectRouter = router({
     .input(schema)
     .output(z.string())
     .mutation(async ({ input }) => {
-      await verifySnapshot(input.authorship)
       await verifyProof(input)
-      await verifyAuthorship(input.authorship, input.proof)
       const { grant, grantProposal } = await verifyGrantProposalSelect(input)
+      await verifyAuthorship(input.authorship, input.proof, grant.snapshots)
       const { community } = await verifyGrant(grant)
 
       const permalink = await uploadToArweave(input)
