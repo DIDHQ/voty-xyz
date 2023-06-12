@@ -195,19 +195,13 @@ export default function GrantProposalForm(props: {
                 from: `/${props.communityId}/grant/${permalink2Id(
                   props.grantPermalink,
                 )}/create`,
-                to: `/${props.communityId}/grant/${permalink2Id(
-                  props.grantPermalink,
-                )}/proposal/${previewPermalink}`,
+                to: `/grant-proposal/${previewPermalink}`,
                 template: `You are creating proposal on Voty\n\nhash:\n{keccak256}`,
                 author: did,
                 snapshots: props.grant.snapshots,
               },
             })
-            router.push(
-              `/${props.communityId}/grant/${permalink2Id(
-                props.grantPermalink,
-              )}/proposal/${previewPermalink}`,
-            )
+            router.push(`/grant-proposal/${previewPermalink}`)
           }, console.error)}
         >
           Preview

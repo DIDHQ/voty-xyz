@@ -39,9 +39,7 @@ export default function GroupProposalCard(props: {
   return (
     <Link
       shallow
-      href={`/${props.groupProposal.communityId}/group/${
-        props.groupProposal.groupId
-      }/proposal/${permalink2Id(props.groupProposal.permalink)}`}
+      href={`/group-proposal/${permalink2Id(props.groupProposal.permalink)}`}
       className="block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-primary-300 focus-within:ring-offset-2 hover:border-primary-500 hover:bg-gray-50"
     >
       <div className="flex w-full p-4">
