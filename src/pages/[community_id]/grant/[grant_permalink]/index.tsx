@@ -3,10 +3,6 @@ import { compact } from 'lodash-es'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { useCollapse } from 'react-collapsed'
-import SuperJSON from 'superjson'
-import { createServerSideHelpers } from '@trpc/react-query/server'
-import { GetServerSidePropsContext } from 'next'
-import dynamic from 'next/dynamic'
 
 import { trpc } from '@/src/utils/trpc'
 import Article from '@/src/components/basic/article'
@@ -28,47 +24,11 @@ import useNow from '@/src/hooks/use-now'
 import Select from '@/src/components/basic/select'
 import TextButton from '@/src/components/basic/text-button'
 import useWallet from '@/src/hooks/use-wallet'
-import {
-  id2Permalink,
-  isPermalink,
-  permalink2Gateway,
-} from '@/src/utils/permalink'
-import { appRouter } from '@/src/server/routers/_app'
+import { isPermalink, permalink2Gateway } from '@/src/utils/permalink'
 import { getImages, getSummary } from '@/src/utils/markdown'
-
-const MarkdownViewer = dynamic(
-  () => import('@/src/components/basic/markdown-viewer'),
-  { ssr: false },
-)
-
-const GrantProposalCreateButton = dynamic(
-  () => import('@/src/components/grant-proposal-create-button'),
-  { ssr: false },
-)
-
-const GrantInfo = dynamic(() => import('@/src/components/grant-info'), {
-  ssr: false,
-})
-
-export async function getServerSideProps(
-  context: GetServerSidePropsContext<{ grant_permalink: string }>,
-) {
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: {},
-    transformer: SuperJSON,
-  })
-  if (context.params?.grant_permalink) {
-    await helpers.grant.getByPermalink.prefetch({
-      permalink: id2Permalink(context.params?.grant_permalink),
-    })
-  }
-  return {
-    props: {
-      trpcState: helpers.dehydrate(),
-    },
-  }
-}
+import MarkdownViewer from '@/src/components/basic/markdown-viewer'
+import GrantInfo from '@/src/components/grant-info'
+import GrantProposalCreateButton from '@/src/components/grant-proposal-create-button'
 
 export default function GrantPage() {
   const query = useRouterQuery<['community_id', 'grant_permalink']>()

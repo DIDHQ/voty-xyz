@@ -10,12 +10,8 @@ import Confetti from 'react-confetti'
 import { useWindowSize } from 'usehooks-ts'
 import pMap from 'p-map'
 import { useQuery } from '@tanstack/react-query'
-import { GetServerSidePropsContext } from 'next'
-import { createServerSideHelpers } from '@trpc/react-query/server'
-import SuperJSON from 'superjson'
 
 import {
-  id2Permalink,
   isPermalink,
   permalink2Explorer,
   permalink2Gateway,
@@ -46,28 +42,7 @@ import useWallet from '@/src/hooks/use-wallet'
 import useDids from '@/src/hooks/use-dids'
 import GrantProposalSelectForm from '@/src/components/grant-proposal-select-form'
 import { checkBoolean } from '@/src/utils/functions/boolean'
-import { appRouter } from '@/src/server/routers/_app'
 import { getImages, getSummary } from '@/src/utils/markdown'
-
-export async function getServerSideProps(
-  context: GetServerSidePropsContext<{ grant_proposal_permalink: string }>,
-) {
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: {},
-    transformer: SuperJSON,
-  })
-  if (context.params?.grant_proposal_permalink) {
-    await helpers.grantProposal.getByPermalink.prefetch({
-      permalink: id2Permalink(context.params?.grant_proposal_permalink),
-    })
-  }
-  return {
-    props: {
-      trpcState: helpers.dehydrate(),
-    },
-  }
-}
 
 export default function GrantProposalPage() {
   const query = useRouterQuery<['grant_proposal_permalink']>()
