@@ -6,6 +6,7 @@ import { useCollapse } from 'react-collapsed'
 import SuperJSON from 'superjson'
 import { createServerSideHelpers } from '@trpc/react-query/server'
 import { GetServerSidePropsContext } from 'next'
+import dynamic from 'next/dynamic'
 
 import { trpc } from '@/src/utils/trpc'
 import Article from '@/src/components/basic/article'
@@ -18,12 +19,9 @@ import {
   previewPermalink,
 } from '@/src/utils/constants'
 import useRouterQuery from '@/src/hooks/use-router-query'
-import MarkdownViewer from '@/src/components/basic/markdown-viewer'
-import GrantInfo from '@/src/components/grant-info'
 import { previewGrantAtom } from '@/src/utils/atoms'
 import { Grant } from '@/src/utils/schemas/v1/grant'
 import GrantProposalCard from '@/src/components/grant-proposal-card'
-import GrantProposalCreateButton from '@/src/components/grant-proposal-create-button'
 import { getGrantPhase } from '@/src/utils/phase'
 import useStatus from '@/src/hooks/use-status'
 import useNow from '@/src/hooks/use-now'
@@ -37,6 +35,20 @@ import {
 } from '@/src/utils/permalink'
 import { appRouter } from '@/src/server/routers/_app'
 import { getImages, getSummary } from '@/src/utils/markdown'
+
+const MarkdownViewer = dynamic(
+  () => import('@/src/components/basic/markdown-viewer'),
+  { ssr: false },
+)
+
+const GrantProposalCreateButton = dynamic(
+  () => import('@/src/components/grant-proposal-create-button'),
+  { ssr: false },
+)
+
+const GrantInfo = dynamic(() => import('@/src/components/grant-info'), {
+  ssr: false,
+})
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ grant_permalink: string }>,
