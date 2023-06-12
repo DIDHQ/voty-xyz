@@ -1,12 +1,68 @@
 import type { AppType, NextWebVitalsMetric } from 'next/app'
 import Head from 'next/head'
+import { Chain, configureChains, createConfig, WagmiConfig } from 'wagmi'
+import {
+  mainnet,
+  goerli,
+  polygon,
+  polygonMumbai,
+  bsc,
+  bscTestnet,
+} from 'wagmi/chains'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+import {
+  RainbowKitProvider,
+  connectorsForWallets,
+  lightTheme,
+} from '@rainbow-me/rainbowkit'
+import {
+  walletConnectWallet,
+  trustWallet,
+  metaMaskWallet,
+  injectedWallet,
+  coinbaseWallet,
+} from '@rainbow-me/rainbowkit/wallets'
 import { GoogleAnalytics, event } from 'nextjs-google-analytics'
 
 import ShellLayout from '../components/layouts/shell'
 import { trpc } from '../utils/trpc'
-import { documentTitle } from '../utils/constants'
+import { isTestnet, documentTitle, chainIdToRpc } from '../utils/constants'
 import '../styles/globals.css'
 import '../styles/editor.css'
+
+const { chains, publicClient } = configureChains(
+  (isTestnet
+    ? [goerli, polygonMumbai, bscTestnet]
+    : [mainnet, polygon, bsc]) as Chain[],
+  [
+    jsonRpcProvider({
+      rpc(chain) {
+        return { http: chainIdToRpc[chain.id] || '' }
+      },
+    }),
+  ],
+)
+
+const connectors = connectorsForWallets([
+  {
+    groupName: 'Popular',
+    wallets: [metaMaskWallet({ chains }), trustWallet({ chains })],
+  },
+  {
+    groupName: 'Other',
+    wallets: [
+      injectedWallet({ chains }),
+      walletConnectWallet({ projectId: '', chains }),
+      coinbaseWallet({ appName: documentTitle, chains }),
+    ],
+  },
+])
+
+const wagmiConfig = createConfig({
+  autoConnect: true,
+  connectors,
+  publicClient,
+})
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
@@ -19,9 +75,17 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         />
       </Head>
       <GoogleAnalytics trackPageViews />
-      <ShellLayout>
-        <Component {...pageProps} />
-      </ShellLayout>
+      <WagmiConfig config={wagmiConfig}>
+        <RainbowKitProvider
+          chains={chains}
+          modalSize="compact"
+          theme={lightTheme({ borderRadius: 'small' })}
+        >
+          <ShellLayout>
+            <Component {...pageProps} />
+          </ShellLayout>
+        </RainbowKitProvider>
+      </WagmiConfig>
     </>
   )
 }
