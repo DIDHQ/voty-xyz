@@ -82,12 +82,20 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <meta name="twitter:description" content={documentDescription} />
         <meta name="twitter:image" content={documentImage} />
         <meta name="twitter:creator" content="@voty_xyz" />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={documentTitle} />
-        <meta property="og:description" content={documentDescription} />
-        <meta property="og:site_name" content={documentTitle} />
-        <meta property="og:url" content={domain} />
-        <meta property="og:image" content={documentImage} />
+        <meta key="og:type" property="og:type" content="website" />
+        <meta key="og:title" property="og:title" content={documentTitle} />
+        <meta
+          key="og:description"
+          property="og:description"
+          content={documentDescription}
+        />
+        <meta
+          key="og:site_name"
+          property="og:site_name"
+          content={documentTitle}
+        />
+        <meta key="og:url" property="og:url" content={domain} />
+        <meta key="og:image" property="og:image" content={documentImage} />
 
         <meta
           name="viewport"

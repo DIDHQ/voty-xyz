@@ -222,11 +222,15 @@ export default function GrantProposalPage() {
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image} />
         <meta name="twitter:creator" content="@voty_xyz" />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:site_name" content={title} />
-        <meta property="og:image" content={image} />
+        <meta key="og:type" property="og:type" content="website" />
+        <meta key="og:title" property="og:title" content={title} />
+        <meta
+          key="og:description"
+          property="og:description"
+          content={description}
+        />
+        <meta key="og:site_name" property="og:site_name" content={title} />
+        <meta key="og:image" property="og:image" content={image} />
       </Head>
       <LoadingBar loading={isLoading || isGrantLoading || isCommunityLoading} />
       {funding && isAuthor ? (
