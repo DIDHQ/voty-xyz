@@ -84,6 +84,7 @@ export const grantProposalRouter = router({
     .input(
       z.object({
         grantPermalink: z.string().optional(),
+        viewer: z.string().optional(),
       }),
     )
     .output(
@@ -168,11 +169,19 @@ export const grantProposalRouter = router({
         ? data
         : orderBy(
             data,
-            (grantProposal) =>
-              selectedGrantProposals.has(permalink2Id(grantProposal.permalink))
-                ? 1
-                : 0,
-            'desc',
+            [
+              (grantProposal) =>
+                selectedGrantProposals.has(
+                  permalink2Id(grantProposal.permalink),
+                )
+                  ? 1
+                  : 0,
+              // pseudo random order
+              (grantProposal) =>
+                grantProposal.permalink.charCodeAt(10) %
+                (input.viewer?.charCodeAt(0) || 1),
+            ],
+            ['desc', 'desc'],
           )
     }),
   create: procedure

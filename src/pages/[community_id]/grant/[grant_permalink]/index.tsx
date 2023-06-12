@@ -21,6 +21,7 @@ import useStatus from '../../../../hooks/use-status'
 import useNow from '../../../../hooks/use-now'
 import Select from '../../../../components/basic/select'
 import TextButton from '../../../../components/basic/text-button'
+import useWallet from '../../../../hooks/use-wallet'
 
 export default function GrantPage() {
   const query = useRouterQuery<['community_id', 'grant_permalink']>()
@@ -56,8 +57,9 @@ export default function GrantPage() {
       { permalink: grant?.community },
       { enabled: !!grant?.community, refetchOnWindowFocus: false },
     )
+  const { account } = useWallet()
   const { data: grantProposals } = trpc.grantProposal.list.useQuery(
-    { grantPermalink: query.grant_permalink },
+    { grantPermalink: query.grant_permalink, viewer: account?.address },
     { enabled: !!query.grant_permalink },
   )
   const title = useMemo(

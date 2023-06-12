@@ -113,9 +113,10 @@ export default function GrantProposalPage() {
       ]).join(' - '),
     [community?.name, grantProposal?.title, grant?.name],
   )
+  const { account } = useWallet()
   const { data: grantProposals, refetch: refetchProposals } =
     trpc.grantProposal.list.useQuery(
-      { grantPermalink: query.grant_permalink },
+      { grantPermalink: query.grant_permalink, viewer: account?.address },
       { enabled: !!query.grant_permalink },
     )
   const handleSuccess = useCallback(() => {
@@ -125,11 +126,13 @@ export default function GrantProposalPage() {
   }, [refetch, refetchList, refetchProposals])
   const currentIndex = useMemo(
     () =>
-      grantProposals?.findIndex(
-        ({ permalink, selected }) =>
-          (grant?.permission.selecting ? selected : true) &&
-          permalink === grantProposal?.permalink,
-      ) || -1,
+      grantProposals
+        ? grantProposals.findIndex(
+            ({ permalink, selected }) =>
+              (grant?.permission.selecting ? selected : true) &&
+              permalink === grantProposal?.permalink,
+          )
+        : -1,
     [grant?.permission.selecting, grantProposal?.permalink, grantProposals],
   )
   const { data: status } = useStatus(query.grant_permalink)
@@ -139,7 +142,6 @@ export default function GrantProposalPage() {
     [grant?.duration, now, status?.timestamp],
   )
   const { width, height } = useWindowSize()
-  const { account } = useWallet()
   const { data: dids } = useDids(account)
   const isAuthor = useMemo(
     () =>
