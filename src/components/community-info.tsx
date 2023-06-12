@@ -19,7 +19,7 @@ import { useQuery } from '@tanstack/react-query'
 import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
-import { documentTitle, domain, isTestnet } from '../utils/constants'
+import { documentTitle, domain } from '../utils/constants'
 import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import useIsManager from '../hooks/use-is-manager'
 import { hasEnabledSubDID } from '../utils/sdks/dotbit/subdid'
@@ -29,7 +29,6 @@ import ShareLinkIcon from './share-link-icon'
 import TextLink from './basic/text-link'
 import Avatar from './basic/avatar'
 import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
-import Button from './basic/button'
 
 const SubscriptionButton = dynamic(() => import('./subscription-button'), {
   ssr: false,
@@ -149,7 +148,7 @@ export default function CommunityInfo(props: { className?: string }) {
               </p>
             </div>
           </div>
-          {isMember || previewCommunity ? (
+          {/* {isMember || previewCommunity ? (
             <Button disabled={isMember} className="mt-4">
               {isMember ? 'Joined' : 'Join'}
             </Button>
@@ -166,7 +165,7 @@ export default function CommunityInfo(props: { className?: string }) {
                 {isMember ? 'Joined' : 'Join'}
               </Button>
             </Link>
-          )}
+          )} */}
           <div className="my-6 w-full px-6">
             <div className="w-full border-t" />
           </div>

@@ -10,8 +10,8 @@ import Confetti from 'react-confetti'
 import { useWindowSize } from 'usehooks-ts'
 import pMap from 'p-map'
 import { useQuery } from '@tanstack/react-query'
-import { GetServerSidePropsContext } from 'next'
 import { createServerSideHelpers } from '@trpc/react-query/server'
+import { GetServerSidePropsContext } from 'next'
 import SuperJSON from 'superjson'
 
 import {
@@ -46,8 +46,8 @@ import useWallet from '@/src/hooks/use-wallet'
 import useDids from '@/src/hooks/use-dids'
 import GrantProposalSelectForm from '@/src/components/grant-proposal-select-form'
 import { checkBoolean } from '@/src/utils/functions/boolean'
-import { appRouter } from '@/src/server/routers/_app'
 import { getImages, getSummary } from '@/src/utils/markdown'
+import { appRouter } from '@/src/server/routers/_app'
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ grant_proposal_permalink: string }>,

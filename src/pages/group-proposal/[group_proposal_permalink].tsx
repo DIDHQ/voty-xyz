@@ -4,8 +4,8 @@ import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
-import { GetServerSidePropsContext } from 'next'
 import { createServerSideHelpers } from '@trpc/react-query/server'
+import { GetServerSidePropsContext } from 'next'
 import SuperJSON from 'superjson'
 
 import { stringifyChoice } from '@/src/utils/choice'
@@ -32,8 +32,8 @@ import GroupProposalInfo from '@/src/components/group-proposal-info'
 import { previewGroupProposalAtom } from '@/src/utils/atoms'
 import { GroupProposal } from '@/src/utils/schemas/v1/group-proposal'
 import { formatDid } from '@/src/utils/did/utils'
-import { appRouter } from '@/src/server/routers/_app'
 import { getImages, getSummary } from '@/src/utils/markdown'
+import { appRouter } from '@/src/server/routers/_app'
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ group_proposal_permalink: string }>,
