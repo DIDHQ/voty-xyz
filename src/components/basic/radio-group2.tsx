@@ -1,5 +1,5 @@
 import { clsx } from 'clsx'
-import { RadioGroup } from '@headlessui/react'
+import { RadioGroup } from '@headlessui/react/dist/components/radio-group/radio-group'
 
 export default function RadioGroup2(props: {
   options: { value: string; name: string; description?: string }[]

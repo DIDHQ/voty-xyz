@@ -1,5 +1,6 @@
 import { Fragment, ReactNode, useEffect, useState } from 'react'
-import { Portal, Transition } from '@headlessui/react'
+import { Portal } from '@headlessui/react/dist/components/portal/portal'
+import { Transition } from '@headlessui/react/dist/components/transitions/transition'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import {
   ExclamationTriangleIcon,

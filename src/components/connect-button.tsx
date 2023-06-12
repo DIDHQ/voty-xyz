@@ -1,5 +1,5 @@
 import { ConnectButton as RainbowKitConnectButton } from '@rainbow-me/rainbowkit'
-import { Menu } from '@headlessui/react'
+import { Menu } from '@headlessui/react/dist/components/menu/menu'
 import { clsx } from 'clsx'
 import { event } from 'nextjs-google-analytics'
 import { useEffect, useMemo } from 'react'
