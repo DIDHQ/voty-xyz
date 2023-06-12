@@ -178,8 +178,8 @@ export const grantProposalRouter = router({
                   : 0,
               // pseudo random order
               (grantProposal) =>
-                grantProposal.permalink.charCodeAt(10) %
-                (input.viewer?.charCodeAt(0) || 1),
+                grantProposal.permalink.charCodeAt(10) ^
+                (input.viewer?.charCodeAt(10) || 1),
             ],
             ['desc', 'desc'],
           )
