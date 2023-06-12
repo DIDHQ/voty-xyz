@@ -65,7 +65,7 @@ export async function getServerSideProps(
       permalink: id2Permalink(context.params?.grant_proposal_permalink),
     })
   }
-  return { props: {} }
+  return { props: { trpcState: helpers.dehydrate() } }
 }
 
 export default function GrantProposalPage() {
