@@ -4,9 +4,13 @@ import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
+import { createServerSideHelpers } from '@trpc/react-query/server'
+import { GetServerSidePropsContext } from 'next'
+import SuperJSON from 'superjson'
 
 import { stringifyChoice } from '@/src/utils/choice'
 import {
+  id2Permalink,
   isPermalink,
   permalink2Explorer,
   permalink2Gateway,
@@ -29,6 +33,26 @@ import { previewGroupProposalAtom } from '@/src/utils/atoms'
 import { GroupProposal } from '@/src/utils/schemas/v1/group-proposal'
 import { formatDid } from '@/src/utils/did/utils'
 import { getImages, getSummary } from '@/src/utils/markdown'
+import { appRouter } from '@/src/server/routers/_app'
+
+export async function getServerSideProps(
+  context: GetServerSidePropsContext<{ group_proposal_permalink: string }>,
+) {
+  if (context.req.url?.startsWith('/_next')) {
+    return { props: {} }
+  }
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: {},
+    transformer: SuperJSON,
+  })
+  if (context.params?.group_proposal_permalink) {
+    await helpers.groupProposal.getByPermalink.prefetch({
+      permalink: id2Permalink(context.params?.group_proposal_permalink),
+    })
+  }
+  return { props: {} }
+}
 
 export default function GroupProposalPage() {
   const query = useRouterQuery<['group_proposal_permalink']>()

@@ -1,4 +1,4 @@
-const path = require('path')
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { withSentryConfig } = require('@sentry/nextjs')
 const withPWA = require('next-pwa')({
   dest: 'public',
@@ -12,22 +12,13 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: { scrollRestoration: true },
-  webpack(config) {
-    return {
-      ...config,
-      resolve: {
-        ...config.resolve,
-        alias: {
-          ...config.resolve.alias,
-          'bn.js': path.join(__dirname, 'node_modules/bn.js/lib/bn.js'),
-          '@tanstack/react-query': path.join(
-            __dirname,
-            'node_modules/@tanstack/react-query/build/lib/index.esm.js',
-          ),
-        },
-      },
-    }
+  modularizeImports: {
+    '@heroicons/react/20/solid': {
+      transform: '@heroicons/react/20/solid/{{member}}',
+    },
+    '@heroicons/react/24/outline': {
+      transform: '@heroicons/react/24/outline/{{member}}',
+    },
   },
 }
 

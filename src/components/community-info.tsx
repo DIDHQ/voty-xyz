@@ -23,8 +23,6 @@ import { documentTitle, domain } from '../utils/constants'
 import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import useIsManager from '../hooks/use-is-manager'
 import { hasEnabledSubDID } from '../utils/sdks/dotbit/subdid'
-import useWallet from '../hooks/use-wallet'
-import useDids from '../hooks/use-dids'
 import ShareLinkIcon from './share-link-icon'
 import TextLink from './basic/text-link'
 import Avatar from './basic/avatar'
@@ -109,15 +107,15 @@ export default function CommunityInfo(props: { className?: string }) {
     () => compact([community?.name, documentTitle]).join(' - '),
     [community?.name],
   )
-  const { account } = useWallet()
-  const { data: dids } = useDids(account)
-  const isMember = useMemo(
-    () =>
-      !!dids?.find(
-        (did) => !!query.community_id && did.endsWith(query.community_id),
-      ),
-    [dids, query.community_id],
-  )
+  // const { account } = useWallet()
+  // const { data: dids } = useDids(account)
+  // const isMember = useMemo(
+  //   () =>
+  //     !!dids?.find(
+  //       (did) => !!query.community_id && did.endsWith(query.community_id),
+  //     ),
+  //   [dids, query.community_id],
+  // )
   const { data: enabledSubDID } = useQuery(
     ['hasEnabledSubDID', query.community_id],
     () => hasEnabledSubDID(query.community_id!),
