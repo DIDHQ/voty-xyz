@@ -1,5 +1,4 @@
-import { Transition } from '@headlessui/react/dist/components/transitions/transition'
-import { Menu } from '@headlessui/react/dist/components/menu/menu'
+import { Menu, Transition } from '@headlessui/react'
 import { Fragment, ReactNode } from 'react'
 
 export default function Dropdown(props: {

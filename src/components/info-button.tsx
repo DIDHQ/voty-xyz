@@ -1,4 +1,4 @@
-import { Menu } from '@headlessui/react/dist/components/menu/menu'
+import { Menu } from '@headlessui/react'
 import {
   BookOpenIcon,
   EllipsisVerticalIcon,

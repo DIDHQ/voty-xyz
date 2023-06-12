@@ -1,5 +1,4 @@
-import { Listbox } from '@headlessui/react/dist/components/listbox/listbox'
-import { Transition } from '@headlessui/react/dist/components/transitions/transition'
+import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { clsx } from 'clsx'
 import { ReactNode } from 'react'

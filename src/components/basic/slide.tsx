@@ -1,5 +1,4 @@
-import { Transition } from '@headlessui/react/dist/components/transitions/transition'
-import { Dialog } from '@headlessui/react/dist/components/dialog/dialog'
+import { Transition, Dialog } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { clsx } from 'clsx'
 import { Fragment, ReactNode, useState } from 'react'
