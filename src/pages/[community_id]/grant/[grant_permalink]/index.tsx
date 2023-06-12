@@ -3,25 +3,60 @@ import { compact } from 'lodash-es'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { useCollapse } from 'react-collapsed'
+import SuperJSON from 'superjson'
+import { createServerSideHelpers } from '@trpc/react-query/server'
+import { GetServerSidePropsContext } from 'next'
 
-import { trpc } from '../../../../utils/trpc'
-import Article from '../../../../components/basic/article'
-import TextLink from '../../../../components/basic/text-link'
-import LoadingBar from '../../../../components/basic/loading-bar'
-import { documentTitle, previewPermalink } from '../../../../utils/constants'
-import useRouterQuery from '../../../../hooks/use-router-query'
-import MarkdownViewer from '../../../../components/basic/markdown-viewer'
-import GrantInfo from '../../../../components/grant-info'
-import { previewGrantAtom } from '../../../../utils/atoms'
-import { Grant } from '../../../../utils/schemas/v1/grant'
-import GrantProposalCard from '../../../../components/grant-proposal-card'
-import GrantProposalCreateButton from '../../../../components/grant-proposal-create-button'
-import { getGrantPhase } from '../../../../utils/phase'
-import useStatus from '../../../../hooks/use-status'
-import useNow from '../../../../hooks/use-now'
-import Select from '../../../../components/basic/select'
-import TextButton from '../../../../components/basic/text-button'
-import useWallet from '../../../../hooks/use-wallet'
+import { trpc } from '@/src/utils/trpc'
+import Article from '@/src/components/basic/article'
+import TextLink from '@/src/components/basic/text-link'
+import LoadingBar from '@/src/components/basic/loading-bar'
+import {
+  documentDescription,
+  documentImage,
+  documentTitle,
+  previewPermalink,
+} from '@/src/utils/constants'
+import useRouterQuery from '@/src/hooks/use-router-query'
+import MarkdownViewer from '@/src/components/basic/markdown-viewer'
+import GrantInfo from '@/src/components/grant-info'
+import { previewGrantAtom } from '@/src/utils/atoms'
+import { Grant } from '@/src/utils/schemas/v1/grant'
+import GrantProposalCard from '@/src/components/grant-proposal-card'
+import GrantProposalCreateButton from '@/src/components/grant-proposal-create-button'
+import { getGrantPhase } from '@/src/utils/phase'
+import useStatus from '@/src/hooks/use-status'
+import useNow from '@/src/hooks/use-now'
+import Select from '@/src/components/basic/select'
+import TextButton from '@/src/components/basic/text-button'
+import useWallet from '@/src/hooks/use-wallet'
+import {
+  id2Permalink,
+  isPermalink,
+  permalink2Gateway,
+} from '@/src/utils/permalink'
+import { appRouter } from '@/src/server/routers/_app'
+import { getImages, getSummary } from '@/src/utils/markdown'
+
+export async function getServerSideProps(
+  context: GetServerSidePropsContext<{ grant_permalink: string }>,
+) {
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: {},
+    transformer: SuperJSON,
+  })
+  if (context.params?.grant_permalink) {
+    await helpers.grant.getByPermalink.prefetch({
+      permalink: id2Permalink(context.params?.grant_permalink),
+    })
+  }
+  return {
+    props: {
+      trpcState: helpers.dehydrate(),
+    },
+  }
+}
 
 export default function GrantPage() {
   const query = useRouterQuery<['community_id', 'grant_permalink']>()
@@ -66,6 +101,20 @@ export default function GrantPage() {
     () => compact([grant?.name, community?.name, documentTitle]).join(' - '),
     [community?.name, grant?.name],
   )
+  const description = useMemo(
+    () =>
+      grant?.introduction
+        ? getSummary(grant?.introduction)
+        : documentDescription,
+    [grant?.introduction],
+  )
+  const image = useMemo(() => {
+    const image = getImages(grant?.introduction || '')[0]
+    if (!image) {
+      return documentImage
+    }
+    return isPermalink(image) ? permalink2Gateway(image) : image
+  }, [grant?.introduction])
   const { data: status } = useStatus(grant?.permalink)
   const now = useNow()
   const phase = useMemo(
@@ -87,6 +136,17 @@ export default function GrantPage() {
     <>
       <Head>
         <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+        <meta name="twitter:creator" content="@voty_xyz" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:site_name" content={title} />
+        <meta property="og:image" content={image} />
       </Head>
       <LoadingBar loading={isLoading || isCommunityLoading} />
       <div className="flex w-full flex-1 flex-col items-start sm:flex-row">

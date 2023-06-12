@@ -1,6 +1,11 @@
 import { Html, Head, Main, NextScript } from 'next/document'
 
-import { description, documentTitle, domain } from '../utils/constants'
+import {
+  documentDescription,
+  documentImage,
+  documentTitle,
+  domain,
+} from '../utils/constants'
 
 export default function MyDocument() {
   return (
@@ -16,7 +21,7 @@ export default function MyDocument() {
           content="black-translucent"
         />
         <meta name="apple-mobile-web-app-title" content={documentTitle} />
-        <meta name="description" content={description} />
+        <meta name="description" content={documentDescription} />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
 
@@ -59,15 +64,15 @@ export default function MyDocument() {
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={documentTitle} />
-        <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={`${domain}/images/og.png`} />
+        <meta name="twitter:description" content={documentDescription} />
+        <meta name="twitter:image" content={documentImage} />
         <meta name="twitter:creator" content="@voty_xyz" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={documentTitle} />
-        <meta property="og:description" content={description} />
+        <meta property="og:description" content={documentDescription} />
         <meta property="og:site_name" content={documentTitle} />
         <meta property="og:url" content={domain} />
-        <meta property="og:image" content={`${domain}/images/og.png`} />
+        <meta property="og:image" content={documentImage} />
       </Head>
       <body>
         <Main />

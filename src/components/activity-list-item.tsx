@@ -74,9 +74,7 @@ export default function ActivityListItem(props: {
             <>
               wrote a proposal{' '}
               <TextLink
-                href={`/${activity.data.community_id}/grant/${permalink2Id(
-                  activity.data.grant_permalink,
-                )}/proposal/${permalink2Id(
+                href={`/grant-proposal/${permalink2Id(
                   activity.data.grant_proposal_permalink,
                 )}`}
                 underline
@@ -107,9 +105,7 @@ export default function ActivityListItem(props: {
             <>
               selected proposal{' '}
               <TextLink
-                href={`/${activity.data.community_id}/grant/${permalink2Id(
-                  activity.data.grant_permalink,
-                )}/proposal/${permalink2Id(
+                href={`/grant-proposal/${permalink2Id(
                   activity.data.grant_proposal_permalink,
                 )}`}
                 underline
@@ -119,7 +115,7 @@ export default function ActivityListItem(props: {
               </TextLink>{' '}
               in Topic Grant{' '}
               <TextLink
-                href={`/${activity.data.community_id}/grant/${permalink2Id(
+                href={`/grant-proposal/${permalink2Id(
                   activity.data.grant_permalink,
                 )}`}
                 underline
@@ -140,9 +136,7 @@ export default function ActivityListItem(props: {
             <>
               voted for proposal{' '}
               <TextLink
-                href={`/${activity.data.community_id}/grant/${permalink2Id(
-                  activity.data.grant_permalink,
-                )}/proposal/${permalink2Id(
+                href={`/grant-proposal/${permalink2Id(
                   activity.data.grant_proposal_permalink,
                 )}`}
                 underline
@@ -225,9 +219,7 @@ export default function ActivityListItem(props: {
             <>
               wrote a proposal{' '}
               <TextLink
-                href={`/${activity.data.community_id}/group/${
-                  activity.data.group_id
-                }/proposal/${permalink2Id(
+                href={`/group-proposal/${permalink2Id(
                   activity.data.group_proposal_permalink,
                 )}`}
                 underline
@@ -262,9 +254,7 @@ export default function ActivityListItem(props: {
               </span>{' '}
               in proposal{' '}
               <TextLink
-                href={`/${activity.data.community_id}/group/${
-                  activity.data.group_id
-                }/proposal/${permalink2Id(
+                href={`/group-proposal/${permalink2Id(
                   activity.data.group_proposal_permalink,
                 )}`}
                 underline

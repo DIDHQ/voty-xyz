@@ -29,9 +29,7 @@ export default function GrantProposalCard(props: {
   return (
     <Link
       shallow
-      href={`/${props.communityId}/grant/${permalink2Id(
-        props.grantProposal.grant,
-      )}/proposal/${permalink2Id(props.grantProposal.permalink)}`}
+      href={`/grant-proposal/${permalink2Id(props.grantProposal.permalink)}`}
       className={clsx(
         'group block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-offset-2',
         props.grantProposal.funding
