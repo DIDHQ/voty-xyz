@@ -26,7 +26,14 @@ import { GoogleAnalytics, event } from 'nextjs-google-analytics'
 
 import ShellLayout from '../components/layouts/shell'
 import { trpc } from '../utils/trpc'
-import { isTestnet, documentTitle, chainIdToRpc } from '../utils/constants'
+import {
+  isTestnet,
+  documentTitle,
+  chainIdToRpc,
+  documentDescription,
+  documentImage,
+  domain,
+} from '../utils/constants'
 import '../styles/globals.css'
 import '../styles/editor.css'
 
@@ -69,6 +76,19 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     <>
       <Head>
         <title>{documentTitle}</title>
+        <meta name="description" content={documentDescription} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={documentTitle} />
+        <meta name="twitter:description" content={documentDescription} />
+        <meta name="twitter:image" content={documentImage} />
+        <meta name="twitter:creator" content="@voty_xyz" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={documentTitle} />
+        <meta property="og:description" content={documentDescription} />
+        <meta property="og:site_name" content={documentTitle} />
+        <meta property="og:url" content={domain} />
+        <meta property="og:image" content={documentImage} />
+
         <meta
           name="viewport"
           content="minimum-scale=1, maximum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
