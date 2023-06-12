@@ -48,11 +48,7 @@ export async function getServerSideProps(
       permalink: id2Permalink(context.params?.group_proposal_permalink),
     })
   }
-  return {
-    props: {
-      trpcState: helpers.dehydrate(),
-    },
-  }
+  return { props: {} }
 }
 
 export default function GroupProposalPage() {

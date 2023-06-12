@@ -6,7 +6,6 @@ import { useCollapse } from 'react-collapsed'
 import SuperJSON from 'superjson'
 import { createServerSideHelpers } from '@trpc/react-query/server'
 import { GetServerSidePropsContext } from 'next'
-import dynamic from 'next/dynamic'
 
 import { trpc } from '@/src/utils/trpc'
 import Article from '@/src/components/basic/article'
@@ -35,20 +34,9 @@ import {
 } from '@/src/utils/permalink'
 import { appRouter } from '@/src/server/routers/_app'
 import { getImages, getSummary } from '@/src/utils/markdown'
-
-const MarkdownViewer = dynamic(
-  () => import('@/src/components/basic/markdown-viewer'),
-  { ssr: false },
-)
-
-const GrantProposalCreateButton = dynamic(
-  () => import('@/src/components/grant-proposal-create-button'),
-  { ssr: false },
-)
-
-const GrantInfo = dynamic(() => import('@/src/components/grant-info'), {
-  ssr: false,
-})
+import MarkdownViewer from '@/src/components/basic/markdown-viewer'
+import GrantInfo from '@/src/components/grant-info'
+import GrantProposalCreateButton from '@/src/components/grant-proposal-create-button'
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ grant_permalink: string }>,
@@ -63,11 +51,7 @@ export async function getServerSideProps(
       permalink: id2Permalink(context.params?.grant_permalink),
     })
   }
-  return {
-    props: {
-      trpcState: helpers.dehydrate(),
-    },
-  }
+  return { props: {} }
 }
 
 export default function GrantPage() {
