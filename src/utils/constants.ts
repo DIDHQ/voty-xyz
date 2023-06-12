@@ -2,13 +2,15 @@ import { PreviewPermalink } from './types'
 
 export const isTestnet = !!process.env.NEXT_PUBLIC_TESTNET
 
-export const documentTitle = `Voty ${isTestnet ? 'Testnet' : 'Beta'}`
-
-export const description = 'Voice of your community'
-
 export const domain = isTestnet
   ? 'https://votyxyz.vercel.app'
   : 'https://voty.xyz'
+
+export const documentTitle = `Voty ${isTestnet ? 'Testnet' : 'Beta'}`
+
+export const documentDescription = 'Voice of your community'
+
+export const documentImage = `${domain}/images/og.png`
 
 export const subDIDWebsite = isTestnet
   ? 'https://testdata.did.id/sub-accounts/'

@@ -4,14 +4,27 @@ import { compact } from 'lodash-es'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
+import { GetServerSidePropsContext } from 'next'
+import { createServerSideHelpers } from '@trpc/react-query/server'
+import SuperJSON from 'superjson'
 
 import { stringifyChoice } from '@/src/utils/choice'
-import { permalink2Explorer } from '@/src/utils/permalink'
+import {
+  id2Permalink,
+  isPermalink,
+  permalink2Explorer,
+  permalink2Gateway,
+} from '@/src/utils/permalink'
 import { trpc } from '@/src/utils/trpc'
 import Article from '@/src/components/basic/article'
 import TextLink from '@/src/components/basic/text-link'
 import LoadingBar from '@/src/components/basic/loading-bar'
-import { documentTitle, previewPermalink } from '@/src/utils/constants'
+import {
+  documentDescription,
+  documentImage,
+  documentTitle,
+  previewPermalink,
+} from '@/src/utils/constants'
 import GroupProposalVoteForm from '@/src/components/group-proposal-vote-form'
 import useRouterQuery from '@/src/hooks/use-router-query'
 import MarkdownViewer from '@/src/components/basic/markdown-viewer'
@@ -19,6 +32,28 @@ import GroupProposalInfo from '@/src/components/group-proposal-info'
 import { previewGroupProposalAtom } from '@/src/utils/atoms'
 import { GroupProposal } from '@/src/utils/schemas/v1/group-proposal'
 import { formatDid } from '@/src/utils/did/utils'
+import { appRouter } from '@/src/server/routers/_app'
+import { getImages, getSummary } from '@/src/utils/markdown'
+
+export async function getServerSideProps(
+  context: GetServerSidePropsContext<{ group_proposal_permalink: string }>,
+) {
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: {},
+    transformer: SuperJSON,
+  })
+  if (context.params?.group_proposal_permalink) {
+    await helpers.groupProposal.getByPermalink.prefetch({
+      permalink: id2Permalink(context.params?.group_proposal_permalink),
+    })
+  }
+  return {
+    props: {
+      trpcState: helpers.dehydrate(),
+    },
+  }
+}
 
 export default function GroupProposalPage() {
   const query = useRouterQuery<['group_proposal_permalink']>()
@@ -90,6 +125,20 @@ export default function GroupProposalPage() {
       ]).join(' - '),
     [community?.name, groupProposal?.title, group?.name],
   )
+  const description = useMemo(
+    () =>
+      groupProposal?.content
+        ? getSummary(groupProposal?.content)
+        : documentDescription,
+    [groupProposal?.content],
+  )
+  const image = useMemo(() => {
+    const image = getImages(groupProposal?.content || '')[0]
+    if (!image) {
+      return documentImage
+    }
+    return isPermalink(image) ? permalink2Gateway(image) : image
+  }, [groupProposal?.content])
   const handleSuccess = useCallback(() => {
     refetch()
     refetchList()
@@ -99,6 +148,17 @@ export default function GroupProposalPage() {
     <>
       <Head>
         <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+        <meta name="twitter:creator" content="@voty_xyz" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:site_name" content={title} />
+        <meta property="og:image" content={image} />
       </Head>
       <LoadingBar loading={isLoading || isGroupLoading || isCommunityLoading} />
       <div className="flex w-full flex-1 flex-col items-start sm:flex-row">

@@ -10,7 +10,7 @@ export function getSummary(markdown: string) {
     toString(fromMarkdown(markdown), {
       includeImageAlt: false,
       includeHtml: false,
-    }) || ' '
+    }).substring(0, 200) || ' '
   )
 }
 

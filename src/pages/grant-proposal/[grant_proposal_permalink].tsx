@@ -10,13 +10,27 @@ import Confetti from 'react-confetti'
 import { useWindowSize } from 'usehooks-ts'
 import pMap from 'p-map'
 import { useQuery } from '@tanstack/react-query'
+import { GetServerSidePropsContext } from 'next'
+import { createServerSideHelpers } from '@trpc/react-query/server'
+import SuperJSON from 'superjson'
 
-import { permalink2Explorer, permalink2Id } from '@/src/utils/permalink'
+import {
+  id2Permalink,
+  isPermalink,
+  permalink2Explorer,
+  permalink2Gateway,
+  permalink2Id,
+} from '@/src/utils/permalink'
 import { trpc } from '@/src/utils/trpc'
 import Article from '@/src/components/basic/article'
 import TextLink from '@/src/components/basic/text-link'
 import LoadingBar from '@/src/components/basic/loading-bar'
-import { documentTitle, previewPermalink } from '@/src/utils/constants'
+import {
+  documentDescription,
+  documentImage,
+  documentTitle,
+  previewPermalink,
+} from '@/src/utils/constants'
 import useRouterQuery from '@/src/hooks/use-router-query'
 import MarkdownViewer from '@/src/components/basic/markdown-viewer'
 import GrantProposalInfo from '@/src/components/grant-proposal-info'
@@ -32,6 +46,28 @@ import useWallet from '@/src/hooks/use-wallet'
 import useDids from '@/src/hooks/use-dids'
 import GrantProposalSelectForm from '@/src/components/grant-proposal-select-form'
 import { checkBoolean } from '@/src/utils/functions/boolean'
+import { appRouter } from '@/src/server/routers/_app'
+import { getImages, getSummary } from '@/src/utils/markdown'
+
+export async function getServerSideProps(
+  context: GetServerSidePropsContext<{ grant_proposal_permalink: string }>,
+) {
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: {},
+    transformer: SuperJSON,
+  })
+  if (context.params?.grant_proposal_permalink) {
+    await helpers.grantProposal.getByPermalink.prefetch({
+      permalink: id2Permalink(context.params?.grant_proposal_permalink),
+    })
+  }
+  return {
+    props: {
+      trpcState: helpers.dehydrate(),
+    },
+  }
+}
 
 export default function GrantProposalPage() {
   const query = useRouterQuery<['grant_proposal_permalink']>()
@@ -107,6 +143,20 @@ export default function GrantProposalPage() {
       ]).join(' - '),
     [community?.name, grantProposal?.title, grant?.name],
   )
+  const description = useMemo(
+    () =>
+      grantProposal?.content
+        ? getSummary(grantProposal?.content)
+        : documentDescription,
+    [grantProposal?.content],
+  )
+  const image = useMemo(() => {
+    const image = getImages(grantProposal?.content || '')[0]
+    if (!image) {
+      return documentImage
+    }
+    return isPermalink(image) ? permalink2Gateway(image) : image
+  }, [grantProposal?.content])
   const { account } = useWallet()
   const { data: grantProposals, refetch: refetchProposals } =
     trpc.grantProposal.list.useQuery(
@@ -167,6 +217,17 @@ export default function GrantProposalPage() {
     <>
       <Head>
         <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+        <meta name="twitter:creator" content="@voty_xyz" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:site_name" content={title} />
+        <meta property="og:image" content={image} />
       </Head>
       <LoadingBar loading={isLoading || isGrantLoading || isCommunityLoading} />
       {funding && isAuthor ? (
