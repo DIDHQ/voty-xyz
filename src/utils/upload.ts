@@ -44,14 +44,19 @@ export async function uploadToArweave(
     | GroupProposalVote
   >,
 ): Promise<string> {
-  const uploader = await getUploader(
-    Buffer.from(textEncoder.encode(JSON.stringify(document))),
-    getArweaveTags(document),
-  )
-  while (!uploader.isComplete) {
-    await uploader.uploadChunk()
+  try {
+    const uploader = await getUploader(
+      Buffer.from(textEncoder.encode(JSON.stringify(document))),
+      getArweaveTags(document),
+    )
+    while (!uploader.isComplete) {
+      await uploader.uploadChunk()
+    }
+    return id2Permalink(uploader.toJSON().transaction.id)
+  } catch (err) {
+    console.error(err)
+    throw new Error('Arweave API error, please try again later.')
   }
-  return id2Permalink(uploader.toJSON().transaction.id)
 }
 
 export const defaultArweaveTags = {
