@@ -19,9 +19,7 @@ export const groupSchema = z.object({
     announcing: miniumDuration,
     voting: miniumDuration,
   }),
-  criteria_for_approval: z.string().optional(),
-  terms_and_conditions: z.string().optional(),
-  // criteria_for_approval: z.string().min(1, 'Required'),
+  criteria_for_approval: z.string().min(1, 'Required'),
 })
 
 export type Group = z.infer<typeof groupSchema>

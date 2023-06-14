@@ -110,8 +110,7 @@ export const groupRouter = router({
           group.permission.voting.operands.every(
             (operand) => operand.arguments[0] === group.authorship.author,
           ),
-        )
-        .refine((group) => group.criteria_for_approval?.length, 'Required'),
+        ),
     )
     .output(z.string())
     .mutation(async ({ input }) => {
