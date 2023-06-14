@@ -1,1 +1,1 @@
-# Voty XYZ
+# Voty
