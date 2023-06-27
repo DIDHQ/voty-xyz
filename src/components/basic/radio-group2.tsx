@@ -4,8 +4,8 @@ import { RadioGroup } from '@headlessui/react'
 export default function RadioGroup2(props: {
   options: { value: string; name: string; description?: string }[]
   disabled?: boolean
-  value: string
-  onChange(value: string): void
+  value: 'single' | 'approval'
+  onChange(value: 'single' | 'approval'): void
   className?: string
 }) {
   return (

@@ -50,16 +50,21 @@ const { chains, publicClient } = configureChains(
   ],
 )
 
+const projectId = process.env.NEXT_PUBLIC_PROJECT_ID!
+
 const connectors = connectorsForWallets([
   {
     groupName: 'Popular',
-    wallets: [metaMaskWallet({ chains }), trustWallet({ chains })],
+    wallets: [
+      metaMaskWallet({ projectId, chains }),
+      trustWallet({ projectId, chains }),
+    ],
   },
   {
     groupName: 'Other',
     wallets: [
       injectedWallet({ chains }),
-      walletConnectWallet({ projectId: '', chains }),
+      walletConnectWallet({ projectId, chains }),
       coinbaseWallet({ appName: documentTitle, chains }),
     ],
   },
