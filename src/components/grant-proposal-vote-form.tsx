@@ -131,7 +131,7 @@ export default function GrantProposalVoteForm(props: {
     async (vote) => {
       const signed = await signDocument(vote)
       await mutateAsync(signed)
-      await sleep(5000)
+      await sleep(500)
     },
     {
       onSuccess() {

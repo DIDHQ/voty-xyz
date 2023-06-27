@@ -96,7 +96,7 @@ export default function GrantProposalSelectForm(props: {
     async (select) => {
       const signed = await signDocument(select)
       await mutateAsync(signed)
-      await sleep(5000)
+      await sleep(500)
     },
     {
       onSuccess() {

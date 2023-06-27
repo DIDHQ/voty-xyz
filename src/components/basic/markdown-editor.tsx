@@ -43,7 +43,7 @@ export default function MarkdownEditor(props: {
         data: Buffer.from(await file.arrayBuffer()),
         type: file.type,
       })
-      await sleep(5000)
+      await sleep(500)
       return key
     },
     [mutateAsync],
