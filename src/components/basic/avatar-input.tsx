@@ -9,7 +9,7 @@ export default function AvatarInput(props: {
   inputRef: Ref<HTMLInputElement>
   name?: string
   value?: string
-  onChange?: (value?: string) => void
+  onChange?: (value: string) => void
   disabled?: boolean
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
