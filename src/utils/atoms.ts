@@ -1,4 +1,5 @@
 import { atom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 
 import { Community } from './schemas/v1/community'
 import { Grant } from './schemas/v1/grant'
@@ -6,6 +7,8 @@ import { GrantProposal } from './schemas/v1/grant-proposal'
 import { Group } from './schemas/v1/group'
 import { GroupProposal } from './schemas/v1/group-proposal'
 import { Preview } from './types'
+
+export const showBannerAtom = atomWithStorage('showBannerSchedule', true)
 
 export const previewCommunityAtom = atom<
   (Community & { preview: Preview }) | undefined
