@@ -66,6 +66,7 @@ export async function getServerSideProps(
       permalink: id2Permalink(context.params?.grant_proposal_permalink),
     })
   }
+  context.res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
   return { props: { trpcState: helpers.dehydrate() } }
 }
 
