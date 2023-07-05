@@ -39,9 +39,6 @@ import { appRouter } from '@/src/server/routers/_app'
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ group_proposal_permalink: string }>,
 ) {
-  if (context.req.url?.startsWith('/_next')) {
-    return { props: {} }
-  }
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {},
