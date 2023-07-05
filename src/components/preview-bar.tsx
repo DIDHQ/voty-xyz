@@ -93,7 +93,7 @@ export default function PreviewBar() {
     if (isCommunity(document)) {
       const signed = await signDocument(document)
       await mutateCommunity(signed)
-      await sleep(5000)
+      await sleep(500)
       await Promise.all([
         utils.community.getById.refetch({ id: signed.id }),
         utils.groupProposal.list.refetch({
@@ -108,7 +108,7 @@ export default function PreviewBar() {
     if (isGrant(document)) {
       const signed = await signDocument(document)
       const permalink = await mutateGrant(signed)
-      await sleep(5000)
+      await sleep(500)
       await Promise.all([
         utils.grant.listByCommunityId.refetch({
           communityId: signed.authorship.author,
@@ -124,7 +124,7 @@ export default function PreviewBar() {
     if (isGrantProposal(document)) {
       const signed = await signDocument(document)
       const permalink = await mutateGrantProposal(signed)
-      await sleep(5000)
+      await sleep(500)
       await Promise.all([
         utils.grantProposal.getByPermalink.refetch({ permalink }),
         utils.grant.getByPermalink.refetch({ permalink: signed.grant }),
@@ -141,7 +141,7 @@ export default function PreviewBar() {
     if (isGroup(document)) {
       const signed = await signDocument(document)
       await mutateGroup(signed)
-      await sleep(5000)
+      await sleep(500)
       await Promise.all([
         utils.group.getById.refetch({
           communityId: signed.authorship.author,
@@ -163,7 +163,7 @@ export default function PreviewBar() {
     if (isGroupProposal(document)) {
       const signed = await signDocument(document)
       const permalink = await mutateGroupProposal(signed)
-      await sleep(5000)
+      await sleep(500)
       await Promise.all([
         utils.groupProposal.getByPermalink.refetch({ permalink }),
         utils.group.getByPermalink.refetch({ permalink: signed.group }),

@@ -30,6 +30,7 @@ import {
   documentImage,
   documentTitle,
   previewPermalink,
+  twitterHandle,
 } from '@/src/utils/constants'
 import useRouterQuery from '@/src/hooks/use-router-query'
 import MarkdownViewer from '@/src/components/basic/markdown-viewer'
@@ -221,7 +222,7 @@ export default function GrantProposalPage() {
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image} />
-        <meta name="twitter:creator" content="@voty_xyz" />
+        <meta name="twitter:creator" content={`@${twitterHandle}`} />
         <meta key="og:type" property="og:type" content="website" />
         <meta key="og:title" property="og:title" content={title} />
         <meta

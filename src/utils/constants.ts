@@ -12,6 +12,8 @@ export const documentDescription = 'Voice of your community'
 
 export const documentImage = `${domain}/images/og.png`
 
+export const twitterHandle = 'VotyHQ'
+
 export const subDIDWebsite = isTestnet
   ? 'https://testdata.did.id/sub-accounts/'
   : 'https://data.did.id/sub-accounts/'
