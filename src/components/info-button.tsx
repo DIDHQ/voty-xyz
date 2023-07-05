@@ -9,6 +9,7 @@ import Link from 'next/link'
 
 import Dropdown from './basic/dropdown'
 import { DiscordIcon, DotbitIcon, GitHubIcon, TwitterIcon } from './icons'
+import { twitterHandle } from '../utils/constants'
 
 export default function InfoButton() {
   return (
@@ -85,7 +86,7 @@ export default function InfoButton() {
         <Menu.Item>
           {({ active }) => (
             <a
-              href="https://twitter.com/voty_xyz"
+              href={`https://twitter.com/${twitterHandle}`}
               className={clsx(
                 active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                 'group flex items-center px-4 py-2 text-sm',

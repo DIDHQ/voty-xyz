@@ -33,6 +33,7 @@ import {
   documentDescription,
   documentImage,
   domain,
+  twitterHandle,
 } from '../utils/constants'
 import '../styles/globals.css'
 import '../styles/editor.css'
@@ -86,7 +87,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <meta name="twitter:title" content={documentTitle} />
         <meta name="twitter:description" content={documentDescription} />
         <meta name="twitter:image" content={documentImage} />
-        <meta name="twitter:creator" content="@voty_xyz" />
+        <meta name="twitter:creator" content={`@${twitterHandle}`} />
         <meta key="og:type" property="og:type" content="website" />
         <meta key="og:title" property="og:title" content={documentTitle} />
         <meta
