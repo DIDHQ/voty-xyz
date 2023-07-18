@@ -3,7 +3,7 @@ import { compact } from 'lodash-es'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { useCollapse } from 'react-collapsed'
-import SuperJSON from 'superjson'
+import { SuperJSON } from 'superjson'
 import { createServerSideHelpers } from '@trpc/react-query/server'
 import { GetServerSidePropsContext } from 'next'
 

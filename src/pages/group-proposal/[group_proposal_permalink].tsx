@@ -6,7 +6,7 @@ import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { createServerSideHelpers } from '@trpc/react-query/server'
 import { GetServerSidePropsContext } from 'next'
-import SuperJSON from 'superjson'
+import { SuperJSON } from 'superjson'
 
 import { stringifyChoice } from '@/src/utils/choice'
 import {

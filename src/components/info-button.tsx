@@ -7,9 +7,9 @@ import {
 import { clsx } from 'clsx'
 import Link from 'next/link'
 
+import { twitterHandle } from '../utils/constants'
 import Dropdown from './basic/dropdown'
 import { DiscordIcon, DotbitIcon, GitHubIcon, TwitterIcon } from './icons'
-import { twitterHandle } from '../utils/constants'
 
 export default function InfoButton() {
   return (

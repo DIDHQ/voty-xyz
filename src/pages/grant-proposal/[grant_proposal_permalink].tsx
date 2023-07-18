@@ -12,7 +12,7 @@ import pMap from 'p-map'
 import { useQuery } from '@tanstack/react-query'
 import { createServerSideHelpers } from '@trpc/react-query/server'
 import { GetServerSidePropsContext } from 'next'
-import SuperJSON from 'superjson'
+import { SuperJSON } from 'superjson'
 
 import {
   id2Permalink,
