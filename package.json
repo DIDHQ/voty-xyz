@@ -86,6 +86,7 @@
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.3.3",
     "tailwindcss-safe-area": "^0.3.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vercel": "^31.0.4"
   }
 }
