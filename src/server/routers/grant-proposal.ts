@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { compact, indexBy, mapValues, sortBy } from 'remeda'
 import { z } from 'zod'
-import readingTime from 'reading-time'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -94,7 +93,6 @@ export const grantProposalRouter = router({
           images: z.array(z.string()),
           permalink: z.string(),
           votes: z.number(),
-          readingTime: z.number(),
           ts: z.date(),
           funding: z.string().optional(),
         }),
@@ -148,7 +146,6 @@ export const grantProposalRouter = router({
                 selected,
                 images: getImages(grantProposal.content),
                 content: getSummary(grantProposal.content),
-                readingTime: readingTime(grantProposal.content).time,
                 permalink,
                 votes,
                 ts,

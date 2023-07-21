@@ -36,6 +36,8 @@ import { formatDid } from '@/src/utils/did/utils'
 import { getImages, getSummary } from '@/src/utils/markdown'
 import { appRouter } from '@/src/server/routers/_app'
 
+export const runtime = 'experimental-edge'
+
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ group_proposal_permalink: string }>,
 ) {

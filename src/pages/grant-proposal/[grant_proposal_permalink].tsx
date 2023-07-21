@@ -50,6 +50,8 @@ import { checkBoolean } from '@/src/utils/functions/boolean'
 import { getImages, getSummary } from '@/src/utils/markdown'
 import { appRouter } from '@/src/server/routers/_app'
 
+export const runtime = 'experimental-edge'
+
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ grant_proposal_permalink: string }>,
 ) {
