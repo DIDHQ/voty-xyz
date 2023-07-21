@@ -1,33 +1,31 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import getRawBody from 'raw-body'
+import { NextRequest, NextResponse } from 'next/server'
 
 import { database } from '../../utils/database'
 import { id2Permalink, permalink2Gateway } from '../../utils/permalink'
 import { defaultArweaveTags, getUploader } from '../../utils/upload'
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+export const runtime = 'edge'
+
+export default async function handler(req: NextRequest) {
   if (req.method === 'GET') {
-    const key = req.query.key as string
+    const key = req.nextUrl.searchParams.get('key') as string
     const uploadBuffer = await database.uploadBuffer.findUnique({
       where: { key },
     })
     if (uploadBuffer) {
-      res.setHeader('Content-Type', uploadBuffer.type)
-      res.setHeader('Cache-Control', 'max-age=86400')
-      res.send(uploadBuffer.data)
+      const response = new NextResponse(uploadBuffer.data)
+      response.headers.set('Content-Type', uploadBuffer.type)
+      response.headers.set('Cache-Control', 'max-age=86400')
+      return response
     } else {
-      res.redirect(permalink2Gateway(key))
+      return NextResponse.redirect(permalink2Gateway(key))
     }
   } else if (req.method === 'POST') {
-    const type = req.headers['content-type']
+    const type = req.headers.get('content-type')
     if (!type) {
-      res.status(400).send('no content-type header')
-      return
+      return new NextResponse('no content-type header', { status: 400 })
     }
-    const data = await getRawBody(req)
+    const data = Buffer.from(await req.arrayBuffer())
     const uploader = await getUploader(data, {
       ...defaultArweaveTags,
       'Content-Type': type,
@@ -40,14 +38,8 @@ export default async function handler(
       update: { metadata, type, data, ts },
       create: { key, metadata, type, data, ts },
     })
-    res.send(key)
+    return new NextResponse(key)
   } else {
-    res.status(405).send(null)
+    return new NextResponse(null, { status: 405 })
   }
-}
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
 }
