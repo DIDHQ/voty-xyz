@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, mapValues, orderBy } from 'lodash-es'
+import { compact, keyBy, mapValues, orderBy } from 'remeda'
 import { z } from 'zod'
 import readingTime from 'reading-time'
 

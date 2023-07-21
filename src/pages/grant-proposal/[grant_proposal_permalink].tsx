@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { clsx } from 'clsx'
-import { compact } from 'lodash-es'
+import { compact } from 'remeda'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'

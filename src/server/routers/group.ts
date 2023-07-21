@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy } from 'lodash-es'
+import { compact, keyBy } from 'remeda'
 import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'

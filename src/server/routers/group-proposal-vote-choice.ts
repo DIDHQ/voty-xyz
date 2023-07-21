@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { keyBy, mapValues } from 'lodash-es'
+import { keyBy, mapValues } from 'remeda'
 import { z } from 'zod'
 
 import { database } from '../../utils/database'

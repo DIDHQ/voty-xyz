@@ -5,7 +5,7 @@ import { EyeIcon } from '@heroicons/react/20/solid'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
-import { uniq } from 'lodash-es'
+import { uniq } from 'remeda'
 import pMap from 'p-map'
 
 import { trpc } from '../utils/trpc'
@@ -73,10 +73,13 @@ export default function GrantForm(props: {
       const snapshots = await pMap(requiredCoinTypes, getCurrentSnapshot, {
         concurrency: 5,
       })
-      return snapshots.reduce((obj, snapshot, index) => {
-        obj[requiredCoinTypes[index]] = snapshot.toString()
-        return obj
-      }, {} as { [coinType: string]: string })
+      return snapshots.reduce(
+        (obj, snapshot, index) => {
+          obj[requiredCoinTypes[index]] = snapshot.toString()
+          return obj
+        },
+        {} as { [coinType: string]: string },
+      )
     },
     { enabled: !!grant?.permission, refetchInterval: 30000 },
   )

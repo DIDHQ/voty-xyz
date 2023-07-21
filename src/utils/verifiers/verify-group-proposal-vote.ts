@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { uniq } from 'lodash-es'
+import { uniq } from 'remeda'
 
 import { getGroupProposalPhase, GroupProposalPhase } from '../phase'
 import { calculateDecimal } from '../functions/decimal'

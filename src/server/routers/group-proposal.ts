@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, last } from 'lodash-es'
+import { compact, keyBy, last } from 'remeda'
 import { z } from 'zod'
 import dayjs from 'dayjs'
 

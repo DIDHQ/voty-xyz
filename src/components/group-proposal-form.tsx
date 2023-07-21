@@ -3,7 +3,7 @@ import pMap from 'p-map'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
-import { uniq } from 'lodash-es'
+import { uniq } from 'remeda'
 import { EyeIcon } from '@heroicons/react/20/solid'
 import { clsx } from 'clsx'
 import { useAtom } from 'jotai'
@@ -88,10 +88,13 @@ export default function GroupProposalForm(props: {
       const snapshots = await pMap(requiredCoinTypes, getCurrentSnapshot, {
         concurrency: 5,
       })
-      return snapshots.reduce((obj, snapshot, index) => {
-        obj[requiredCoinTypes[index]] = snapshot.toString()
-        return obj
-      }, {} as { [coinType: string]: string })
+      return snapshots.reduce(
+        (obj, snapshot, index) => {
+          obj[requiredCoinTypes[index]] = snapshot.toString()
+          return obj
+        },
+        {} as { [coinType: string]: string },
+      )
     },
     { refetchInterval: 30000 },
   )
@@ -113,10 +116,13 @@ export default function GroupProposalForm(props: {
         (did) => checkBoolean(props.group.permission.proposing, did, snapshots),
         { concurrency: 5 },
       )
-      return dids!.reduce((obj, did, index) => {
-        obj[did] = !booleans[index]
-        return obj
-      }, {} as { [key: string]: boolean })
+      return dids!.reduce(
+        (obj, did, index) => {
+          obj[did] = !booleans[index]
+          return obj
+        },
+        {} as { [key: string]: boolean },
+      )
     },
     { enabled: !!dids },
   )

@@ -1,4 +1,4 @@
-import { mapValues } from 'lodash-es'
+import { mapValues } from 'remeda'
 import {
   verifyMessage,
   getAddress,

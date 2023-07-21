@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { compact, last } from 'lodash-es'
+import { compact, last } from 'remeda'
 import { TRPCError } from '@trpc/server'
 
 import { procedure, router } from '../trpc'

@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { clsx } from 'clsx'
-import { compact, uniqBy } from 'lodash-es'
+import { compact, uniqBy } from 'remeda'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ExoticComponent, useMemo } from 'react'

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { compact } from 'lodash-es'
+import { compact } from 'remeda'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { useCollapse } from 'react-collapsed'
