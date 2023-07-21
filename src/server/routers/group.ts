@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy } from 'remeda'
+import { compact, indexBy } from 'remeda'
 import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
@@ -71,7 +71,7 @@ export const groupRouter = router({
         where: { communityId: input.communityId },
         orderBy: { id: 'desc' },
       })
-      const storages = keyBy(
+      const storages = indexBy(
         await database.storage.findMany({
           where: {
             permalink: { in: groups.map(({ permalink }) => permalink) },

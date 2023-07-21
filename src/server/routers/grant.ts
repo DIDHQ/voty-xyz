@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, last } from 'remeda'
+import { compact, indexBy, last } from 'remeda'
 import { z } from 'zod'
 import dayjs from 'dayjs'
 
@@ -148,7 +148,7 @@ export const grantRouter = router({
         skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
-      const storages = keyBy(
+      const storages = indexBy(
         await database.storage.findMany({
           where: {
             permalink: { in: grants.map(({ permalink }) => permalink) },

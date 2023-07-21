@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, last } from 'remeda'
+import { compact, indexBy, last } from 'remeda'
 import { z } from 'zod'
 import dayjs from 'dayjs'
 
@@ -144,7 +144,7 @@ export const groupProposalRouter = router({
         skip: input.cursor ? 1 : 0,
         orderBy: { ts: 'desc' },
       })
-      const storages = keyBy(
+      const storages = indexBy(
         await database.storage.findMany({
           where: {
             permalink: { in: groupProposals.map(({ permalink }) => permalink) },

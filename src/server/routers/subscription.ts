@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy } from 'remeda'
+import { compact, indexBy } from 'remeda'
 import { z } from 'zod'
 
 import { database } from '../../utils/database'
@@ -50,7 +50,7 @@ export const subscriptionRouter = router({
         where: { subscriber: JSON.stringify(input.subscriber) },
         orderBy: { ts: 'desc' },
       })
-      const communities = keyBy(
+      const communities = indexBy(
         await database.community.findMany({
           where: {
             id: { in: subscriptions.map(({ communityId }) => communityId) },
@@ -58,7 +58,7 @@ export const subscriptionRouter = router({
         }),
         ({ id }) => id,
       )
-      const storages = keyBy(
+      const storages = indexBy(
         await database.storage.findMany({
           where: {
             permalink: {

@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, mapValues, orderBy } from 'remeda'
+import { compact, indexBy, mapValues, sortBy } from 'remeda'
 import { z } from 'zod'
 import readingTime from 'reading-time'
 
@@ -76,7 +76,7 @@ export const grantProposalRouter = router({
       })
 
       return mapValues(
-        keyBy(grantProposals, ({ proposer }) => proposer),
+        indexBy(grantProposals, ({ proposer }) => proposer),
         () => true,
       )
     }),
@@ -128,7 +128,7 @@ export const grantProposalRouter = router({
         where: { grantPermalink: input.grantPermalink },
         orderBy: isEnded ? { votes: 'desc' } : { ts: 'desc' },
       })
-      const storages = keyBy(
+      const storages = indexBy(
         await database.storage.findMany({
           where: {
             permalink: { in: grantProposals.map(({ permalink }) => permalink) },
@@ -167,7 +167,7 @@ export const grantProposalRouter = router({
 
       return isEnded
         ? data
-        : orderBy(
+        : sortBy(
             data,
             [
               (grantProposal) =>
@@ -176,12 +176,15 @@ export const grantProposalRouter = router({
                 )
                   ? 1
                   : 0,
+              'desc',
+            ],
+            [
               // pseudo random order
               (grantProposal) =>
                 grantProposal.permalink.charCodeAt(10) ^
                 (input.viewer?.charCodeAt(10) || 1),
+              'desc',
             ],
-            ['desc', 'desc'],
           )
     }),
   create: procedure

@@ -77,10 +77,13 @@ export default function GrantProposalForm(props: {
           ),
         { concurrency: 5 },
       )
-      return dids!.reduce((obj, did, index) => {
-        obj[did] = !booleans[index]
-        return obj
-      }, {} as { [key: string]: boolean })
+      return dids!.reduce(
+        (obj, did, index) => {
+          obj[did] = !booleans[index]
+          return obj
+        },
+        {} as { [key: string]: boolean },
+      )
     },
     { enabled: !!dids },
   )

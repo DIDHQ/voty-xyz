@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, last, mapValues } from 'remeda'
+import { compact, indexBy, last, mapValues } from 'remeda'
 import { z } from 'zod'
 
 import { uploadToArweave } from '../../utils/upload'
@@ -58,7 +58,7 @@ export const communityRouter = router({
       })
 
       return mapValues(
-        keyBy(communities, ({ id }) => id),
+        indexBy(communities, ({ id }) => id),
         (community) => !!community,
       )
     }),
@@ -94,7 +94,7 @@ export const communityRouter = router({
         orderBy: { ts: 'desc' },
       })
       const communities = [...pinnedCommunities, ...commonCommunities]
-      const storages = keyBy(
+      const storages = indexBy(
         await database.storage.findMany({
           where: {
             permalink: { in: communities.map(({ permalink }) => permalink) },

@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, last, mapValues } from 'remeda'
+import { compact, indexBy, last, mapValues } from 'remeda'
 import { z } from 'zod'
 import { Decimal } from 'decimal.js'
 
@@ -45,7 +45,7 @@ export const groupProposalVoteRouter = router({
         orderBy: { ts: 'desc' },
       })
 
-      const storages = keyBy(
+      const storages = indexBy(
         await database.storage.findMany({
           where: {
             permalink: {
@@ -86,7 +86,7 @@ export const groupProposalVoteRouter = router({
         where: { proposalPermalink: input.groupProposal },
       })
 
-      const storages = keyBy(
+      const storages = indexBy(
         await database.storage.findMany({
           where: {
             permalink: {
@@ -98,7 +98,7 @@ export const groupProposalVoteRouter = router({
       )
 
       return mapValues(
-        keyBy(groupProposalVotes, ({ voter }) => voter),
+        indexBy(groupProposalVotes, ({ voter }) => voter),
         ({ permalink }) => schema.parse(storages[permalink].data).total_power,
       )
     }),

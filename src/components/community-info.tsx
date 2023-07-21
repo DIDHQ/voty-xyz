@@ -47,7 +47,7 @@ export default function CommunityInfo(props: { className?: string }) {
   const previewGroup = useAtomValue(previewGroupAtom)
   const community = previewCommunity || data
   const groups = useMemo(
-    () => uniqBy(compact([...(list || []), previewGroup]), 'id'),
+    () => uniqBy(compact([...(list || []), previewGroup]), ({ id }) => id),
     [list, previewGroup],
   )
   const navigation = useMemo(

@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { keyBy, mapValues } from 'remeda'
+import { indexBy, mapValues } from 'remeda'
 import { z } from 'zod'
 
 import { database } from '../../utils/database'
@@ -20,7 +20,7 @@ export const grantProposalVoteChoiceRouter = router({
       })
 
       return mapValues(
-        keyBy(choices, ({ choice }) => choice),
+        indexBy(choices, ({ choice }) => choice),
         ({ power }) => power.toString(),
       )
     }),
