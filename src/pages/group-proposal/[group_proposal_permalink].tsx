@@ -6,7 +6,7 @@ import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { createServerSideHelpers } from '@trpc/react-query/server'
 import { GetServerSidePropsContext } from 'next'
-import SuperJSON from 'superjson'
+import { SuperJSON } from 'superjson'
 
 import { stringifyChoice } from '@/src/utils/choice'
 import {
@@ -39,9 +39,6 @@ import { appRouter } from '@/src/server/routers/_app'
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ group_proposal_permalink: string }>,
 ) {
-  if (context.req.url?.startsWith('/_next')) {
-    return { props: {} }
-  }
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {},
@@ -52,6 +49,7 @@ export async function getServerSideProps(
       permalink: id2Permalink(context.params?.group_proposal_permalink),
     })
   }
+  context.res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
   return { props: { trpcState: helpers.dehydrate() } }
 }
 

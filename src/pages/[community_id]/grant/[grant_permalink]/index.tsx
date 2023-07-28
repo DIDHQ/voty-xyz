@@ -3,7 +3,7 @@ import { compact } from 'lodash-es'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { useCollapse } from 'react-collapsed'
-import SuperJSON from 'superjson'
+import { SuperJSON } from 'superjson'
 import { createServerSideHelpers } from '@trpc/react-query/server'
 import { GetServerSidePropsContext } from 'next'
 
@@ -42,9 +42,6 @@ import { appRouter } from '@/src/server/routers/_app'
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ grant_permalink: string }>,
 ) {
-  if (context.req.url?.startsWith('/_next')) {
-    return { props: {} }
-  }
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {},
@@ -55,6 +52,7 @@ export async function getServerSideProps(
       permalink: id2Permalink(context.params?.grant_permalink),
     })
   }
+  context.res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
   return { props: { trpcState: helpers.dehydrate() } }
 }
 
