@@ -1,3 +1,5 @@
+import { arweaveHost } from './constants'
+
 export function isPermalink(permalink: string) {
   return permalink.startsWith('ar://')
 }
@@ -15,5 +17,5 @@ export function permalink2Explorer(permalink: string) {
 }
 
 export function permalink2Gateway(permalink: string) {
-  return `https://arweave.net/${permalink2Id(permalink)}`
+  return `https://${arweaveHost}/${permalink2Id(permalink)}`
 }
