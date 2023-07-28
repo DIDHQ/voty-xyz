@@ -33,6 +33,7 @@ export default async function handler(
       'Content-Type': type,
     })
     const metadata = uploader.toJSON()
+    delete metadata.transaction.chunks
     const key = id2Permalink(metadata.transaction.id)
     const ts = new Date()
     await database.uploadBuffer.upsert({
