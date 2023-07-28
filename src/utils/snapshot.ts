@@ -1,4 +1,4 @@
-import { coinTypeToChainId, commonCoinTypes } from './constants'
+import { arweaveHost, coinTypeToChainId, commonCoinTypes } from './constants'
 import { fetchJson } from './fetcher'
 import { permalink2Id } from './permalink'
 
@@ -23,7 +23,7 @@ export async function getSnapshotTimestamp(
 ): Promise<Date> {
   if (coinType === commonCoinTypes.AR) {
     const block = await fetchJson<{ timestamp: number }>(
-      `https://arweave.net/block/height/${snapshot}`,
+      `https://${arweaveHost}/block/height/${snapshot}`,
     )
     return new Date(block.timestamp * 1000)
   }
@@ -43,6 +43,6 @@ export async function getPermalinkSnapshot(permalink: string): Promise<string> {
     block_indep_hash: string
     block_height: number
     number_of_confirmations: number
-  }>(`https://arweave.net/tx/${permalink2Id(permalink)}/status`)
+  }>(`https://${arweaveHost}/tx/${permalink2Id(permalink)}/status`)
   return status.block_height.toString()
 }
