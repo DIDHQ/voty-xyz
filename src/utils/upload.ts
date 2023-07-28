@@ -1,4 +1,4 @@
-import { DataType, arweaveHost, isTestnet } from './constants'
+import { DataType, isTestnet } from './constants'
 import {
   isCommunity,
   isGrant,
@@ -52,9 +52,7 @@ export async function uploadToArweave(
     while (!uploader.isComplete) {
       await uploader.uploadChunk()
     }
-    const id = uploader.toJSON().transaction.id
-    await fetch(`https://${arweaveHost}/task/sync/${id}`, { method: 'POST' })
-    return id2Permalink(id)
+    return id2Permalink(uploader.toJSON().transaction.id)
   } catch (err) {
     console.error(err)
     throw new Error('Arweave API error, please try again later.')

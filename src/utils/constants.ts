@@ -18,7 +18,7 @@ export const subDIDWebsite = isTestnet
   ? 'https://testdata.did.id/sub-accounts/'
   : 'https://data.did.id/sub-accounts/'
 
-export const arweaveHost = 'arseed.web3infra.dev'
+export const arweaveHost = 'arweave.net'
 
 export const commonCoinTypes = {
   ETH: 60,
