@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/nextjs'
+import { captureUnderscoreErrorException } from '@sentry/nextjs'
 import { NextPageContext } from 'next'
 import Link from 'next/link'
 
@@ -28,7 +28,7 @@ function ErrorPage() {
 }
 
 ErrorPage.getInitialProps = async (contextData: NextPageContext) => {
-  await Sentry.captureUnderscoreErrorException(contextData)
+  await captureUnderscoreErrorException(contextData)
 
   return {}
 }
