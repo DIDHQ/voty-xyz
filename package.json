@@ -12,7 +12,8 @@
     "format": "prettier --write .",
     "push": "drizzle-kit push:mysql",
     "pull": "drizzle-kit introspect:mysql",
-    "studio": "drizzle-kit studio"
+    "studio": "drizzle-kit studio",
+    "analyze": "ANALYZE=true yarn build"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.16",
@@ -37,6 +38,7 @@
     "jotai": "^2.2.3",
     "match-url-wildcard": "^0.0.4",
     "nanoid": "^4.0.2",
+    "next-pwa": "^5.6.0",
     "nextjs-google-analytics": "^2.3.3",
     "p-map": "^6.0.0",
     "react-collapsed": "^4.0.4",
@@ -64,6 +66,7 @@
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.5.0",
+    "@next/bundle-analyzer": "^13.4.12",
     "@swc-jotai/react-refresh": "^0.0.8",
     "@tailwindcss/forms": "^0.5.4",
     "@tailwindcss/typography": "^0.5.9",
