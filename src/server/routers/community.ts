@@ -89,17 +89,17 @@ export const communityRouter = router({
               where: inArray(table.community.id, selectedCommunities),
               orderBy: ({ ts }, { desc }) => desc(ts),
             })
-      const commonCommunities = selectedCommunities.length
-        ? await database.query.community.findMany({
-            where: and(
-              notInArray(table.community.id, selectedCommunities),
-              ...(input.cursor ? [lte(table.community.ts, input.cursor)] : []),
-            ),
-            limit: 30,
-            offset: input.cursor ? 1 : 0,
-            orderBy: ({ ts }, { desc }) => desc(ts),
-          })
-        : []
+      const commonCommunities = await database.query.community.findMany({
+        where: and(
+          ...(selectedCommunities.length
+            ? [notInArray(table.community.id, selectedCommunities)]
+            : []),
+          ...(input.cursor ? [lte(table.community.ts, input.cursor)] : []),
+        ),
+        limit: 30,
+        offset: input.cursor ? 1 : 0,
+        orderBy: ({ ts }, { desc }) => desc(ts),
+      })
       const communities = [...pinnedCommunities, ...commonCommunities]
       const storages = communities.length
         ? indexBy(
