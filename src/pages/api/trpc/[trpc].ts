@@ -11,6 +11,16 @@ export default async function handler(req: NextRequest) {
     router: appRouter,
     req,
     createContext: () => ({ req }),
+    responseMeta({ type, errors }) {
+      if (errors.length === 0 && type === 'query') {
+        return {
+          headers: {
+            'Cache-Control': 'maxage=1, stale-while-revalidate',
+          },
+        }
+      }
+      return {}
+    },
     onError({ type, path, input, error }) {
       console.error('TRPC Error:', type, path, input, error)
     },
