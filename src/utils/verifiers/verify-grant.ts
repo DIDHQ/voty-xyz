@@ -15,8 +15,8 @@ export default async function verifyGrant(
 }> {
   const community = communitySchemaProvedAuthorized.parse(
     (
-      await database.storage.findUnique({
-        where: { permalink: grant.community },
+      await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, grant.community),
       })
     )?.data,
   )

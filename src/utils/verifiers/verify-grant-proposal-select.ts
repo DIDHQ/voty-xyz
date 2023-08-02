@@ -28,16 +28,17 @@ export default async function verifyGrantProposalSelect(
 }> {
   const grantProposal = grantProposalSchemaProvedAuthorized.parse(
     (
-      await database.storage.findUnique({
-        where: { permalink: grantProposalSelect.grant_proposal },
+      await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) =>
+          eq(permalink, grantProposalSelect.grant_proposal),
       })
     )?.data,
   )
 
   const grant = grantSchemaProvedAuthorized.parse(
     (
-      await database.storage.findUnique({
-        where: { permalink: grantProposal.grant },
+      await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, grantProposal.grant),
       })
     )?.data,
   )
