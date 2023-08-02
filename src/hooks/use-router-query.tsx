@@ -10,11 +10,11 @@ export default function useRouterQuery<S extends string[] = []>() {
     () =>
       ({
         ...router.query,
-        grant_permalink:
-          typeof router.query.grant_permalink === 'string' &&
-          router.query.grant_permalink &&
-          router.query.grant_permalink !== previewPermalink
-            ? id2Permalink(router.query.grant_permalink)
+        grantPermalink:
+          typeof router.query.grantPermalink === 'string' &&
+          router.query.grantPermalink &&
+          router.query.grantPermalink !== previewPermalink
+            ? id2Permalink(router.query.grantPermalink)
             : undefined,
         grantProposalPermalink:
           typeof router.query.grantProposalPermalink === 'string' &&
