@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps<
     })
   }
   context.res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
-  return { props: { trpcState: helpers.dehydrate() } }
+  return { props: {} }
 }
 
 export default function GroupProposalPage() {

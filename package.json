@@ -7,7 +7,7 @@
     "build": "next build",
     "build:worker": "next-on-pages",
     "start": "next start",
-    "start:worker": "wrangler pages dev .vercel/output/static/ --compatibility-flag=nodejs_compat",
+    "start:worker": "wrangler pages dev .vercel/output/static/ --compatibility-flag=nodejs_compat --port 3000",
     "lint": "next lint",
     "format": "prettier --write .",
     "push": "drizzle-kit push:mysql",
