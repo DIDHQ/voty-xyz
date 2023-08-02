@@ -45,7 +45,7 @@ export const getServerSideProps: GetServerSideProps<
   Record<string, unknown>
 > = async (context) => {
   // @see https://github.com/cloudflare/next-on-pages/issues/32
-  const id = last(context.req.url?.split('/') || [])
+  const id = last(context.req.url?.split('/') || [])?.split('?')[0]
   if (id === previewPermalink) {
     return { props: {} }
   }

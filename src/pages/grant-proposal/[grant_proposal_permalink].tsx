@@ -53,11 +53,10 @@ import { appRouter } from '@/src/server/routers/_app'
 export const runtime = 'experimental-edge'
 
 export const getServerSideProps: GetServerSideProps<
-  Record<string, unknown>,
-  { grant_proposal_permalink: string }
+  Record<string, unknown>
 > = async (context) => {
   // @see https://github.com/cloudflare/next-on-pages/issues/32
-  const id = last(context.req.url?.split('/') || [])
+  const id = last(context.req.url?.split('/') || [])?.split('?')[0]
   if (id === previewPermalink) {
     return { props: {} }
   }
