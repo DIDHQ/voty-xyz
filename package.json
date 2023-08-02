@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:worker": "next-on-pages",
     "start": "next start",
+    "start:worker": "wrangler pages dev .vercel/output/static/ --compatibility-flag=nodejs_compat",
     "lint": "next lint",
     "format": "prettier --write .",
     "push": "drizzle-kit push:mysql",
@@ -63,7 +65,9 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.5.0",
     "@next/bundle-analyzer": "^13.4.12",
+    "@swc-jotai/react-refresh": "^0.0.8",
     "@tailwindcss/forms": "^0.5.4",
     "@tailwindcss/typography": "^0.5.9",
     "@types/lodash-es": "^4.17.8",
