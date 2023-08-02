@@ -12,6 +12,6 @@ export default function useCommunityLogo(permalink?: string) {
       }
       return URL.createObjectURL(await response.blob())
     },
-    { enabled: !!permalink },
+    { enabled: !!permalink, refetchOnWindowFocus: false },
   )
 }
