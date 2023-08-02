@@ -1,12 +1,12 @@
 import { TRPCError } from '@trpc/server'
 import { compact, indexBy, last, mapValues } from 'remeda'
 import { z } from 'zod'
-import { and, inArray, lte, notInArray } from 'drizzle-orm'
+import { and, eq, inArray, lte, notInArray, sql } from 'drizzle-orm'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
 import { authorized } from '../../utils/schemas/basic/authorship'
-import { communitySchema } from '../../utils/schemas/v1/community'
+import { Community, communitySchema } from '../../utils/schemas/v1/community'
 import { procedure, router } from '../trpc'
 import { proved } from '../../utils/schemas/basic/proof'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
@@ -21,12 +21,16 @@ import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(communitySchema))
 
+const schemaWithoutLogo = schema.omit({ logo: true })
+
 const selectedCommunities = process.env.SELECTED_COMMUNITIES?.split(',') || []
+
+type CommunityWithoutLogo = Omit<Community, 'logo'>
 
 export const communityRouter = router({
   getById: procedure
     .input(z.object({ id: z.string().optional() }))
-    .output(schema.extend({ permalink: z.string() }).nullable())
+    .output(schemaWithoutLogo.extend({ permalink: z.string() }).nullable())
     .query(async ({ input }) => {
       if (!input.id) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -38,12 +42,20 @@ export const communityRouter = router({
       if (!community) {
         return null
       }
-      const storage = await database.query.storage.findFirst({
-        where: ({ permalink }, { eq }) => eq(permalink, community.permalink),
-      })
+      const [storage] = await database
+        .select({
+          permalink: table.storage.permalink,
+          data: sql<CommunityWithoutLogo>`JSON_REMOVE(${table.storage.data}, '$.logo')`,
+        })
+        .from(table.storage)
+        .where(eq(table.storage.permalink, community.permalink))
+        .limit(1)
 
       return storage
-        ? { ...schema.parse(storage.data), permalink: storage.permalink }
+        ? {
+            ...schemaWithoutLogo.parse(storage.data),
+            permalink: storage.permalink,
+          }
         : null
     }),
   checkExistences: procedure
@@ -66,21 +78,31 @@ export const communityRouter = router({
     }),
   getByPermalink: procedure
     .input(z.object({ permalink: z.string().optional() }))
-    .output(schema.nullable())
+    .output(schemaWithoutLogo.nullable())
     .query(async ({ input }) => {
       if (!input.permalink) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const storage = await database.query.storage.findFirst({
-        where: ({ permalink }, { eq }) => eq(permalink, input.permalink!),
-      })
+      const [storage] = await database
+        .select({
+          permalink: table.storage.permalink,
+          data: sql<CommunityWithoutLogo>`JSON_REMOVE(${table.storage.data}, '$.logo')`,
+        })
+        .from(table.storage)
+        .where(eq(table.storage.permalink, input.permalink))
+        .limit(1)
 
-      return storage ? schema.parse(storage.data) : null
+      return storage ? schemaWithoutLogo.parse(storage.data) : null
     }),
   list: procedure
     .input(z.object({ cursor: z.date().optional() }))
-    .output(z.object({ data: z.array(schema), next: z.date().optional() }))
+    .output(
+      z.object({
+        data: z.array(schemaWithoutLogo.extend({ permalink: z.string() })),
+        next: z.date().optional(),
+      }),
+    )
     .query(async ({ input }) => {
       const pinnedCommunities =
         input.cursor || !selectedCommunities.length
@@ -103,12 +125,18 @@ export const communityRouter = router({
       const communities = [...pinnedCommunities, ...commonCommunities]
       const storages = communities.length
         ? indexBy(
-            await database.query.storage.findMany({
-              where: inArray(
-                table.storage.permalink,
-                communities.map(({ permalink }) => permalink),
+            await database
+              .select({
+                permalink: table.storage.permalink,
+                data: sql<CommunityWithoutLogo>`JSON_REMOVE(${table.storage.data}, '$.logo')`,
+              })
+              .from(table.storage)
+              .where(
+                inArray(
+                  table.storage.permalink,
+                  communities.map(({ permalink }) => permalink),
+                ),
               ),
-            }),
             ({ permalink }) => permalink,
           )
         : {}
@@ -119,7 +147,10 @@ export const communityRouter = router({
             .filter(({ permalink }) => storages[permalink])
             .map(({ permalink }) => {
               try {
-                return schema.parse(storages[permalink].data)
+                return {
+                  permalink,
+                  ...schemaWithoutLogo.parse(storages[permalink].data),
+                }
               } catch {
                 return
               }

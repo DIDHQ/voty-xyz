@@ -23,6 +23,7 @@ import { documentTitle, domain } from '../utils/constants'
 import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import useIsManager from '../hooks/use-is-manager'
 import { hasEnabledSubDID } from '../utils/sdks/dotbit/subdid'
+import useCommunityLogo from '../hooks/use-community-logo'
 import ShareLinkIcon from './share-link-icon'
 import TextLink from './basic/text-link'
 import Avatar from './basic/avatar'
@@ -46,6 +47,7 @@ export default function CommunityInfo(props: { className?: string }) {
   const previewCommunity = useAtomValue(previewCommunityAtom)
   const previewGroup = useAtomValue(previewGroupAtom)
   const community = previewCommunity || data
+  const { data: logo } = useCommunityLogo(data?.permalink)
   const groups = useMemo(
     () => uniqBy(compact([...(list || []), previewGroup]), ({ id }) => id),
     [list, previewGroup],
@@ -136,7 +138,7 @@ export default function CommunityInfo(props: { className?: string }) {
         )}
         <div className="flex w-full flex-col items-center rounded-md border border-gray-200 pb-4">
           <div className="flex w-full items-center space-x-4 p-6 pb-0 sm:flex-col sm:space-x-0 sm:space-y-4 sm:pt-8">
-            <Avatar value={community?.logo} size={24} className="shrink-0" />
+            <Avatar value={logo} size={24} className="shrink-0" />
             <div className="sm:space-y-2">
               <h3 className="line-clamp-3 w-full break-words text-xl font-bold text-gray-900 sm:text-center sm:text-2xl">
                 {community?.name || '...'}

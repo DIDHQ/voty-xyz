@@ -22,7 +22,7 @@ import Slide from './basic/slide'
 import PermissionCard from './permission-card'
 
 export default function GrantInfo(props: {
-  community?: Community
+  community?: Omit<Community, 'logo'>
   grant?: Grant & {
     permalink: string | PreviewPermalink
     authorship?: { author?: string }

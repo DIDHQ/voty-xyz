@@ -52,9 +52,3 @@ export default async function handler(req: NextRequest) {
     return new Response(null, { status: 405 })
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}

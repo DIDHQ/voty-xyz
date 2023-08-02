@@ -19,7 +19,7 @@ import TextLink from './basic/text-link'
 import { DetailItem, DetailList } from './basic/detail'
 
 export default function GrantProposalInfo(props: {
-  community?: Community
+  community?: Omit<Community, 'logo'>
   grant?: Grant
   grantProposal?: GrantProposal & {
     ts: Date

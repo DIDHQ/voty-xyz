@@ -19,7 +19,7 @@ import TextLink from './basic/text-link'
 import GroupProposalCurrentPhase from './group-proposal-current-phase'
 
 export default function GroupProposalInfo(props: {
-  community?: Community
+  community?: Omit<Community, 'logo'>
   group?: Group
   groupProposal?: GroupProposal & {
     permalink: string | PreviewPermalink
