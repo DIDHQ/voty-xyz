@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { compact, indexBy, mapValues, sortBy } from 'remeda'
 import { z } from 'zod'
+import { eq, inArray, sql } from 'drizzle-orm'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -21,6 +22,7 @@ import { getImages, getSummary } from '../../utils/markdown'
 import { permalink2Id } from '../../utils/permalink'
 import { grantSchema } from '../../utils/schemas/v1/grant'
 import { GrantPhase, getGrantPhase } from '../../utils/phase'
+import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(grantProposalSchema))
 
@@ -45,12 +47,12 @@ export const grantProposalRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const grantProposal = await database.grantProposal.findUnique({
-        where: { permalink: input.permalink },
+      const grantProposal = await database.query.grantProposal.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, input.permalink!),
       })
 
-      const storage = await database.storage.findUnique({
-        where: { permalink: input.permalink },
+      const storage = await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, input.permalink!),
       })
       return storage && grantProposal
         ? {
@@ -69,9 +71,10 @@ export const grantProposalRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const grantProposals = await database.grantProposal.findMany({
-        where: { grantPermalink: input.grantPermalink },
-        select: { proposer: true },
+      const grantProposals = await database.query.grantProposal.findMany({
+        where: ({ grantPermalink }, { eq }) =>
+          eq(grantPermalink, input.grantPermalink!),
+        columns: { proposer: true },
       })
 
       return mapValues(
@@ -105,8 +108,9 @@ export const grantProposalRouter = router({
 
       const grant = grantSchema.parse(
         (
-          await database.storage.findUnique({
-            where: { permalink: input.grantPermalink },
+          await database.query.storage.findFirst({
+            where: ({ permalink }, { eq }) =>
+              eq(permalink, input.grantPermalink!),
           })
         )?.data,
       )
@@ -114,23 +118,26 @@ export const grantProposalRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
       const timestamp = (
-        await database.grant.findUnique({
-          where: { permalink: input.grantPermalink },
+        await database.query.grant.findFirst({
+          where: ({ permalink }, { eq }) =>
+            eq(permalink, input.grantPermalink!),
         })
       )?.ts
       const isEnded =
         getGrantPhase(new Date(), timestamp, grant.duration) ===
         GrantPhase.ENDED
 
-      const grantProposals = await database.grantProposal.findMany({
-        where: { grantPermalink: input.grantPermalink },
-        orderBy: isEnded ? { votes: 'desc' } : { ts: 'desc' },
+      const grantProposals = await database.query.grantProposal.findMany({
+        where: ({ grantPermalink }, { eq }) =>
+          eq(grantPermalink, input.grantPermalink!),
+        orderBy: ({ votes, ts }, { desc }) => desc(isEnded ? votes : ts),
       })
       const storages = indexBy(
-        await database.storage.findMany({
-          where: {
-            permalink: { in: grantProposals.map(({ permalink }) => permalink) },
-          },
+        await database.query.storage.findMany({
+          where: inArray(
+            table.storage.permalink,
+            grantProposals.map(({ permalink }) => permalink),
+          ),
         }),
         ({ permalink }) => permalink,
       )
@@ -197,27 +204,29 @@ export const grantProposalRouter = router({
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
-      await database.$transaction([
-        database.grantProposal.create({
-          data: {
+      await database.transaction((tx) =>
+        Promise.all([
+          tx.insert(table.grantProposal).values({
             permalink,
             proposer: input.authorship.author,
             grantPermalink: input.grant,
             votes: 0,
             ts,
-          },
-        }),
-        database.community.update({
-          where: { id: community.id },
-          data: { grantProposals: { increment: 1 } },
-        }),
-        database.grant.update({
-          where: { permalink: input.grant },
-          data: { proposals: { increment: 1 } },
-        }),
-        database.storage.create({ data: { permalink, data: input } }),
-        database.activity.create({
-          data: {
+          }),
+          tx
+            .update(table.community)
+            .set({
+              grantProposals: sql`${table.community.grantProposals} + 1`,
+            })
+            .where(eq(table.community.id, community.id)),
+          tx
+            .update(table.grant)
+            .set({
+              proposals: sql`${table.grant.proposals} + 1`,
+            })
+            .where(eq(table.grant.permalink, input.grant)),
+          tx.insert(table.storage).values({ permalink, data: input }),
+          tx.insert(table.activity).values({
             communityId: community.id,
             actor: input.authorship.author,
             type: 'create_grant_proposal',
@@ -232,9 +241,9 @@ export const grantProposalRouter = router({
               grant_proposal_title: input.title,
             } satisfies Activity,
             ts,
-          },
-        }),
-      ])
+          }),
+        ]),
+      )
 
       return permalink
     }),

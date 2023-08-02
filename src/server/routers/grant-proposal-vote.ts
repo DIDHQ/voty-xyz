@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { compact, indexBy, last, mapValues } from 'remeda'
 import { z } from 'zod'
 import { Decimal } from 'decimal.js'
+import { and, eq, inArray, lte, sql } from 'drizzle-orm'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -15,6 +16,7 @@ import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGrant from '../../utils/verifiers/verify-grant'
 import { Activity } from '../../utils/schemas/activity'
+import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(grantProposalVoteSchema))
 
@@ -23,13 +25,13 @@ export const grantProposalVoteRouter = router({
     .input(
       z.object({
         grantProposal: z.string().optional(),
-        cursor: z.string().optional(),
+        cursor: z.date().optional(),
       }),
     )
     .output(
       z.object({
         data: z.array(schema.extend({ permalink: z.string() })),
-        next: z.string().optional(),
+        next: z.date().optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -37,21 +39,31 @@ export const grantProposalVoteRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const grantProposalVotes = await database.grantProposalVote.findMany({
-        where: { proposalPermalink: input.grantProposal },
-        cursor: input.cursor ? { permalink: input.cursor } : undefined,
-        take: 50,
-        skip: input.cursor ? 1 : 0,
-        orderBy: { ts: 'desc' },
-      })
+      const grantProposalVotes =
+        await database.query.grantProposalVote.findMany({
+          where: input.cursor
+            ? and(
+                eq(
+                  table.grantProposalVote.proposalPermalink,
+                  input.grantProposal,
+                ),
+                lte(table.grantProposalVote.ts, input.cursor),
+              )
+            : eq(
+                table.grantProposalVote.proposalPermalink,
+                input.grantProposal,
+              ),
+          limit: 50,
+          offset: input.cursor ? 1 : 0,
+          orderBy: ({ ts }, { desc }) => desc(ts),
+        })
 
       const storages = indexBy(
-        await database.storage.findMany({
-          where: {
-            permalink: {
-              in: grantProposalVotes.map(({ permalink }) => permalink),
-            },
-          },
+        await database.query.storage.findMany({
+          where: inArray(
+            table.storage.permalink,
+            grantProposalVotes.map(({ permalink }) => permalink),
+          ),
         }),
         ({ permalink }) => permalink,
       )
@@ -71,7 +83,7 @@ export const grantProposalVoteRouter = router({
               }
             }),
         ),
-        next: last(grantProposalVotes)?.permalink,
+        next: last(grantProposalVotes)?.ts,
       }
     }),
   groupByVoter: procedure
@@ -82,17 +94,18 @@ export const grantProposalVoteRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const grantProposalVotes = await database.grantProposalVote.findMany({
-        where: { grantPermalink: input.grant },
-      })
+      const grantProposalVotes =
+        await database.query.grantProposalVote.findMany({
+          where: ({ grantPermalink }, { eq }) =>
+            eq(grantPermalink, input.grant!),
+        })
 
       const storages = indexBy(
-        await database.storage.findMany({
-          where: {
-            permalink: {
-              in: grantProposalVotes.map(({ permalink }) => permalink),
-            },
-          },
+        await database.query.storage.findMany({
+          where: inArray(
+            table.storage.permalink,
+            grantProposalVotes.map(({ permalink }) => permalink),
+          ),
         }),
         ({ permalink }) => permalink,
       )
@@ -119,51 +132,51 @@ export const grantProposalVoteRouter = router({
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
-      await database.$transaction([
-        database.grantProposalVote.create({
-          data: {
+      await database.transaction((tx) =>
+        Promise.all([
+          tx.insert(table.grantProposalVote).values({
             permalink,
             ts,
             voter: input.authorship.author,
             grantPermalink: grantProposal.grant,
             proposalPermalink: input.grant_proposal,
-          },
-        }),
-        database.storage.create({ data: { permalink, data: input } }),
-        database.grantProposal.update({
-          where: { permalink: input.grant_proposal },
-          data: { votes: { increment: 1 } },
-        }),
-        database.community.update({
-          where: { id: community.id },
-          data: { grantProposalVotes: { increment: 1 } },
-        }),
-        database.grant.update({
-          where: { permalink: grantProposal.grant },
-          data: { votes: { increment: 1 } },
-        }),
-        ...Object.entries(
-          powerOfChoice(input.powers, new Decimal(input.total_power)),
-        ).map(([choice, power = 0]) =>
-          database.grantProposalVoteChoice.upsert({
-            where: {
-              proposalPermalink_choice: {
+          }),
+          tx.insert(table.storage).values({ permalink, data: input }),
+          tx
+            .update(table.grantProposal)
+            .set({
+              votes: sql`${table.grantProposal.votes} + 1`,
+            })
+            .where(eq(table.grantProposal.permalink, input.grant_proposal)),
+          tx
+            .update(table.community)
+            .set({
+              grantProposalVotes: sql`${table.community.grantProposalVotes} + 1`,
+            })
+            .where(eq(table.community.id, community.id)),
+          tx
+            .update(table.grant)
+            .set({
+              votes: sql`${table.grant.votes} + 1`,
+            })
+            .where(eq(table.grant.permalink, grantProposal.grant)),
+          ...Object.entries(
+            powerOfChoice(input.powers, new Decimal(input.total_power)),
+          ).map(([choice, power]) =>
+            tx
+              .insert(table.grantProposalVoteChoice)
+              .values({
                 proposalPermalink: input.grant_proposal,
                 choice,
-              },
-            },
-            create: {
-              proposalPermalink: input.grant_proposal,
-              choice,
-              power,
-            },
-            update: {
-              power: { increment: power },
-            },
-          }),
-        ),
-        database.activity.create({
-          data: {
+                power: power?.toString() || '0',
+              })
+              .onDuplicateKeyUpdate({
+                set: {
+                  power: sql`${table.grantProposalVoteChoice.power} + ${power}`,
+                },
+              }),
+          ),
+          tx.insert(table.activity).values({
             communityId: community.id,
             actor: input.authorship.author,
             type: 'create_grant_proposal_vote',
@@ -179,9 +192,9 @@ export const grantProposalVoteRouter = router({
               grant_proposal_vote_permalink: permalink,
             } satisfies Activity,
             ts,
-          },
-        }),
-      ])
+          }),
+        ]),
+      )
 
       return permalink
     }),

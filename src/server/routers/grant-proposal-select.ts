@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
+import { eq, sql } from 'drizzle-orm'
 
 import { procedure, router } from '../trpc'
 import { grantProposalSelectSchema } from '../../utils/schemas/v1/grant-proposal-select'
@@ -12,6 +13,7 @@ import verifyProof from '../../utils/verifiers/verify-proof'
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
 import { Activity } from '../../utils/schemas/activity'
+import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(grantProposalSelectSchema))
 
@@ -24,8 +26,8 @@ export const grantProposalSelectRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const storage = await database.storage.findUnique({
-        where: { permalink: input.permalink },
+      const storage = await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, input.permalink!),
       })
 
       return storage ? schema.parse(storage.data) : null
@@ -42,27 +44,27 @@ export const grantProposalSelectRouter = router({
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
-      await database.$transaction([
-        database.grantProposalSelect.create({
-          data: {
+      await database.transaction((tx) =>
+        Promise.all([
+          tx.insert(table.grantProposalSelect).values({
             permalink,
             ts,
             selector: input.authorship.author,
             grantPermalink: grantProposal.grant,
             proposalPermalink: input.grant_proposal,
-          },
-        }),
-        database.storage.create({ data: { permalink, data: input } }),
-        database.grantProposal.update({
-          where: { permalink: input.grant_proposal },
-          data: { selected: permalink },
-        }),
-        database.grant.update({
-          where: { permalink: grantProposal.grant },
-          data: { selectedProposals: { increment: 1 } },
-        }),
-        database.activity.create({
-          data: {
+          }),
+          tx.insert(table.storage).values({ permalink, data: input }),
+          tx
+            .update(table.grantProposal)
+            .set({ selected: permalink })
+            .where(eq(table.grantProposal.permalink, input.grant_proposal)),
+          tx
+            .update(table.grant)
+            .set({
+              selectedProposals: sql`${table.grant.selectedProposals} + 1`,
+            })
+            .where(eq(table.grant.permalink, grantProposal.grant)),
+          tx.insert(table.activity).values({
             communityId: community.id,
             actor: input.authorship.author,
             type: 'create_grant_proposal_select',
@@ -78,9 +80,9 @@ export const grantProposalSelectRouter = router({
               grant_proposal_select_permalink: permalink,
             } satisfies Activity,
             ts,
-          },
-        }),
-      ])
+          }),
+        ]),
+      )
 
       return permalink
     }),
