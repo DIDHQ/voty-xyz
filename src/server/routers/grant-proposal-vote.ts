@@ -130,69 +130,67 @@ export const grantProposalVoteRouter = router({
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
-      await database.transaction((tx) =>
-        Promise.all([
-          tx.insert(table.grantProposalVote).values({
-            permalink,
-            ts,
-            voter: input.authorship.author,
-            grantPermalink: grantProposal.grant,
-            proposalPermalink: input.grant_proposal,
-          }),
-          tx.insert(table.storage).values({ permalink, data: input }),
-          tx
-            .update(table.grantProposal)
-            .set({
-              votes: sql`${table.grantProposal.votes} + 1`,
+      await database.transaction(async (tx) => {
+        await tx.insert(table.grantProposalVote).values({
+          permalink,
+          ts,
+          voter: input.authorship.author,
+          grantPermalink: grantProposal.grant,
+          proposalPermalink: input.grant_proposal,
+        })
+        await tx.insert(table.storage).values({ permalink, data: input })
+        await tx
+          .update(table.grantProposal)
+          .set({
+            votes: sql`${table.grantProposal.votes} + 1`,
+          })
+          .where(eq(table.grantProposal.permalink, input.grant_proposal))
+        await tx
+          .update(table.community)
+          .set({
+            grantProposalVotes: sql`${table.community.grantProposalVotes} + 1`,
+          })
+          .where(eq(table.community.id, community.id))
+        await tx
+          .update(table.grant)
+          .set({
+            votes: sql`${table.grant.votes} + 1`,
+          })
+          .where(eq(table.grant.permalink, grantProposal.grant))
+        for (const [choice, power] of Object.entries(
+          powerOfChoice(input.powers, new Decimal(input.total_power)),
+        )) {
+          await tx
+            .insert(table.grantProposalVoteChoice)
+            .values({
+              proposalPermalink: input.grant_proposal,
+              choice,
+              power: power?.toString() || '0',
             })
-            .where(eq(table.grantProposal.permalink, input.grant_proposal)),
-          tx
-            .update(table.community)
-            .set({
-              grantProposalVotes: sql`${table.community.grantProposalVotes} + 1`,
+            .onDuplicateKeyUpdate({
+              set: {
+                power: sql`${table.grantProposalVoteChoice.power} + ${power}`,
+              },
             })
-            .where(eq(table.community.id, community.id)),
-          tx
-            .update(table.grant)
-            .set({
-              votes: sql`${table.grant.votes} + 1`,
-            })
-            .where(eq(table.grant.permalink, grantProposal.grant)),
-          ...Object.entries(
-            powerOfChoice(input.powers, new Decimal(input.total_power)),
-          ).map(([choice, power]) =>
-            tx
-              .insert(table.grantProposalVoteChoice)
-              .values({
-                proposalPermalink: input.grant_proposal,
-                choice,
-                power: power?.toString() || '0',
-              })
-              .onDuplicateKeyUpdate({
-                set: {
-                  power: sql`${table.grantProposalVoteChoice.power} + ${power}`,
-                },
-              }),
-          ),
-          tx.insert(table.activity).values({
-            communityId: community.id,
-            actor: input.authorship.author,
+        }
+        await tx.insert(table.activity).values({
+          communityId: community.id,
+          actor: input.authorship.author,
+          type: 'create_grant_proposal_vote',
+          data: {
             type: 'create_grant_proposal_vote',
-            data: {
-              type: 'create_grant_proposal_vote',
-              community_id: community.id,
-              community_permalink: grant.community,
-              community_name: community.name,
-              grant_permalink: grantProposal.grant,
-              grant_name: grant.name,
-              grant_proposal_permalink: input.grant_proposal,
-              grant_proposal_title: grantProposal.title,
-              grant_proposal_vote_permalink: permalink,
-            } satisfies Activity,
-            ts,
-          }),
-        ]),
-      )
+            community_id: community.id,
+            community_permalink: grant.community,
+            community_name: community.name,
+            grant_permalink: grantProposal.grant,
+            grant_name: grant.name,
+            grant_proposal_permalink: input.grant_proposal,
+            grant_proposal_title: grantProposal.title,
+            grant_proposal_vote_permalink: permalink,
+          } satisfies Activity,
+          ts,
+        })
+      })
 
       return permalink
     }),

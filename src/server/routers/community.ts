@@ -152,27 +152,25 @@ export const communityRouter = router({
         where: ({ id }, { eq }) => eq(id, input.id),
       })
 
-      await database.transaction((tx) =>
-        Promise.all([
-          tx
-            .insert(table.community)
-            .values({ id: input.id, permalink, ts })
-            .onDuplicateKeyUpdate({ set: { permalink, ts } }),
-          tx.insert(table.storage).values({ permalink, data: input }),
-          tx.insert(table.activity).values({
-            communityId: input.id,
-            actor: input.authorship.author,
+      await database.transaction(async (tx) => {
+        await tx
+          .insert(table.community)
+          .values({ id: input.id, permalink, ts })
+          .onDuplicateKeyUpdate({ set: { permalink, ts } })
+        await tx.insert(table.storage).values({ permalink, data: input })
+        await tx.insert(table.activity).values({
+          communityId: input.id,
+          actor: input.authorship.author,
+          type: community ? 'update_community' : 'create_community',
+          data: {
             type: community ? 'update_community' : 'create_community',
-            data: {
-              type: community ? 'update_community' : 'create_community',
-              community_id: input.id,
-              community_permalink: permalink,
-              community_name: input.name,
-            } satisfies Activity,
-            ts,
-          }),
-        ]),
-      )
+            community_id: input.id,
+            community_permalink: permalink,
+            community_name: input.name,
+          } satisfies Activity,
+          ts,
+        })
+      })
 
       return permalink
     }),

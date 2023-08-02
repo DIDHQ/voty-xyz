@@ -129,38 +129,36 @@ export const groupRouter = router({
           and(eq(id, input.id), eq(communityId, community.id)),
       })
 
-      await database.transaction((tx) =>
-        Promise.all([
-          tx
-            .insert(table.group)
-            .values({
-              permalink,
-              id: input.id,
-              communityId: community.id,
-              communityPermalink: input.community,
-              ts,
-            })
-            .onDuplicateKeyUpdate({
-              set: { permalink, communityPermalink: input.community, ts },
-            }),
-          tx.insert(table.storage).values({ permalink, data: input }),
-          tx.insert(table.activity).values({
+      await database.transaction(async (tx) => {
+        await tx
+          .insert(table.group)
+          .values({
+            permalink,
+            id: input.id,
             communityId: community.id,
-            actor: input.authorship.author,
-            type: group ? 'update_group' : 'create_group',
-            data: {
-              type: group ? 'update_group' : 'create_group',
-              community_id: community.id,
-              community_permalink: input.community,
-              community_name: community.name,
-              group_id: input.id,
-              group_permalink: permalink,
-              group_name: input.name,
-            } satisfies Activity,
+            communityPermalink: input.community,
             ts,
-          }),
-        ]),
-      )
+          })
+          .onDuplicateKeyUpdate({
+            set: { permalink, communityPermalink: input.community, ts },
+          })
+        await tx.insert(table.storage).values({ permalink, data: input })
+        await tx.insert(table.activity).values({
+          communityId: community.id,
+          actor: input.authorship.author,
+          type: group ? 'update_group' : 'create_group',
+          data: {
+            type: group ? 'update_group' : 'create_group',
+            community_id: community.id,
+            community_permalink: input.community,
+            community_name: community.name,
+            group_id: input.id,
+            group_permalink: permalink,
+            group_name: input.name,
+          } satisfies Activity,
+          ts,
+        })
+      })
 
       return permalink
     }),
@@ -179,33 +177,31 @@ export const groupRouter = router({
 
     const ts = new Date()
 
-    await database.transaction((tx) =>
-      Promise.all([
-        tx
-          .delete(table.group)
-          .where(
-            and(
-              eq(table.group.communityId, community.id),
-              eq(table.group.id, input.id),
-            ),
+    await database.transaction(async (tx) => {
+      await tx
+        .delete(table.group)
+        .where(
+          and(
+            eq(table.group.communityId, community.id),
+            eq(table.group.id, input.id),
           ),
-        tx.insert(table.activity).values({
-          communityId: community.id,
-          actor: input.authorship.author,
+        )
+      await tx.insert(table.activity).values({
+        communityId: community.id,
+        actor: input.authorship.author,
+        type: 'delete_group',
+        data: {
           type: 'delete_group',
-          data: {
-            type: 'delete_group',
-            community_id: community.id,
-            community_permalink: input.community,
-            community_name: community.name,
-            group_id: input.id,
-            group_permalink: group.permalink,
-            group_name: input.name,
-          } satisfies Activity,
-          ts,
-        }),
-      ]),
-    )
+          community_id: community.id,
+          community_permalink: input.community,
+          community_name: community.name,
+          group_id: input.id,
+          group_permalink: group.permalink,
+          group_name: input.name,
+        } satisfies Activity,
+        ts,
+      })
+    })
   }),
 })
 

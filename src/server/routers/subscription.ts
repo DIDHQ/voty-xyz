@@ -111,40 +111,36 @@ export const subscriptionRouter = router({
         address: input.proof.address,
       })
       if (input.subscribe === true) {
-        await database.transaction((tx) =>
-          Promise.all([
-            tx.insert(table.subscription).values({
-              communityId: input.communityId!,
-              subscriber,
-              ts: new Date(),
-            }),
-            tx
-              .update(table.community)
-              .set({
-                subscribers: sql`${table.community.subscribers} + 1`,
-              })
-              .where(eq(table.community.id, input.communityId!)),
-          ]),
-        )
+        await database.transaction(async (tx) => {
+          await tx.insert(table.subscription).values({
+            communityId: input.communityId!,
+            subscriber,
+            ts: new Date(),
+          })
+          await tx
+            .update(table.community)
+            .set({
+              subscribers: sql`${table.community.subscribers} + 1`,
+            })
+            .where(eq(table.community.id, input.communityId!))
+        })
       } else {
-        await database.transaction((tx) =>
-          Promise.all([
-            tx
-              .delete(table.subscription)
-              .where(
-                and(
-                  eq(table.subscription.communityId, input.communityId!),
-                  eq(table.subscription.subscriber, subscriber),
-                ),
+        await database.transaction(async (tx) => {
+          await tx
+            .delete(table.subscription)
+            .where(
+              and(
+                eq(table.subscription.communityId, input.communityId!),
+                eq(table.subscription.subscriber, subscriber),
               ),
-            tx
-              .update(table.community)
-              .set({
-                subscribers: sql`${table.community.subscribers} - 1`,
-              })
-              .where(eq(table.community.id, input.communityId!)),
-          ]),
-        )
+            )
+          await tx
+            .update(table.community)
+            .set({
+              subscribers: sql`${table.community.subscribers} - 1`,
+            })
+            .where(eq(table.community.id, input.communityId!))
+        })
       }
 
       return input.subscribe

@@ -218,54 +218,52 @@ export const groupProposalRouter = router({
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
-      await database.transaction((tx) =>
-        Promise.all([
-          tx.insert(table.groupProposal).values({
-            permalink,
-            proposer: input.authorship.author,
-            communityId: community.id,
-            groupId: group.id,
-            groupPermalink: input.group,
-            votes: 0,
-            ts,
-          }),
-          tx
-            .update(table.community)
-            .set({
-              groupProposals: sql`${table.community.groupProposals} + 1`,
-            })
-            .where(eq(table.community.id, community.id)),
-          tx
-            .update(table.group)
-            .set({
-              proposals: sql`${table.group.proposals} + 1`,
-            })
-            .where(
-              and(
-                eq(table.group.communityId, community.id),
-                eq(table.group.id, group.id),
-              ),
+      await database.transaction(async (tx) => {
+        await tx.insert(table.groupProposal).values({
+          permalink,
+          proposer: input.authorship.author,
+          communityId: community.id,
+          groupId: group.id,
+          groupPermalink: input.group,
+          votes: 0,
+          ts,
+        })
+        await tx
+          .update(table.community)
+          .set({
+            groupProposals: sql`${table.community.groupProposals} + 1`,
+          })
+          .where(eq(table.community.id, community.id))
+        await tx
+          .update(table.group)
+          .set({
+            proposals: sql`${table.group.proposals} + 1`,
+          })
+          .where(
+            and(
+              eq(table.group.communityId, community.id),
+              eq(table.group.id, group.id),
             ),
-          tx.insert(table.storage).values({ permalink, data: input }),
-          tx.insert(table.activity).values({
-            communityId: community.id,
-            actor: input.authorship.author,
+          )
+        await tx.insert(table.storage).values({ permalink, data: input })
+        await tx.insert(table.activity).values({
+          communityId: community.id,
+          actor: input.authorship.author,
+          type: 'create_group_proposal',
+          data: {
             type: 'create_group_proposal',
-            data: {
-              type: 'create_group_proposal',
-              community_id: community.id,
-              community_permalink: group.community,
-              community_name: community.name,
-              group_id: group.id,
-              group_permalink: input.group,
-              group_name: group.name,
-              group_proposal_permalink: permalink,
-              group_proposal_title: input.title,
-            } satisfies Activity,
-            ts,
-          }),
-        ]),
-      )
+            community_id: community.id,
+            community_permalink: group.community,
+            community_name: community.name,
+            group_id: group.id,
+            group_permalink: input.group,
+            group_name: group.name,
+            group_proposal_permalink: permalink,
+            group_proposal_title: input.title,
+          } satisfies Activity,
+          ts,
+        })
+      })
 
       return permalink
     }),

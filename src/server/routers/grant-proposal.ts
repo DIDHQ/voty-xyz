@@ -206,46 +206,44 @@ export const grantProposalRouter = router({
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
-      await database.transaction((tx) =>
-        Promise.all([
-          tx.insert(table.grantProposal).values({
-            permalink,
-            proposer: input.authorship.author,
-            grantPermalink: input.grant,
-            votes: 0,
-            ts,
-          }),
-          tx
-            .update(table.community)
-            .set({
-              grantProposals: sql`${table.community.grantProposals} + 1`,
-            })
-            .where(eq(table.community.id, community.id)),
-          tx
-            .update(table.grant)
-            .set({
-              proposals: sql`${table.grant.proposals} + 1`,
-            })
-            .where(eq(table.grant.permalink, input.grant)),
-          tx.insert(table.storage).values({ permalink, data: input }),
-          tx.insert(table.activity).values({
-            communityId: community.id,
-            actor: input.authorship.author,
+      await database.transaction(async (tx) => {
+        await tx.insert(table.grantProposal).values({
+          permalink,
+          proposer: input.authorship.author,
+          grantPermalink: input.grant,
+          votes: 0,
+          ts,
+        })
+        await tx
+          .update(table.community)
+          .set({
+            grantProposals: sql`${table.community.grantProposals} + 1`,
+          })
+          .where(eq(table.community.id, community.id))
+        await tx
+          .update(table.grant)
+          .set({
+            proposals: sql`${table.grant.proposals} + 1`,
+          })
+          .where(eq(table.grant.permalink, input.grant))
+        await tx.insert(table.storage).values({ permalink, data: input })
+        await tx.insert(table.activity).values({
+          communityId: community.id,
+          actor: input.authorship.author,
+          type: 'create_grant_proposal',
+          data: {
             type: 'create_grant_proposal',
-            data: {
-              type: 'create_grant_proposal',
-              community_id: community.id,
-              community_permalink: grant.community,
-              community_name: community.name,
-              grant_permalink: input.grant,
-              grant_name: grant.name,
-              grant_proposal_permalink: permalink,
-              grant_proposal_title: input.title,
-            } satisfies Activity,
-            ts,
-          }),
-        ]),
-      )
+            community_id: community.id,
+            community_permalink: grant.community,
+            community_name: community.name,
+            grant_permalink: input.grant,
+            grant_name: grant.name,
+            grant_proposal_permalink: permalink,
+            grant_proposal_title: input.title,
+          } satisfies Activity,
+          ts,
+        })
+      })
 
       return permalink
     }),
