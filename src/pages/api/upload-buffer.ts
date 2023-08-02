@@ -1,34 +1,37 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import getRawBody from 'raw-body'
+import { NextRequest, NextResponse } from 'next/server'
 
 import { database } from '../../utils/database'
 import { id2Permalink, permalink2Gateway } from '../../utils/permalink'
 import { defaultArweaveTags, getUploader } from '../../utils/upload'
 import { table } from '@/src/utils/schema'
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+export const runtime = 'edge'
+
+export default async function handler(req: NextRequest) {
   if (req.method === 'GET') {
-    const key = req.query.key as string
+    const key = req.nextUrl.searchParams.get('key')
+    if (!key) {
+      return new Response(null, { status: 400 })
+    }
     const uploadBuffer = await database.query.uploadBuffer.findFirst({
       where: (uploadBuffer, { eq }) => eq(uploadBuffer.key, key),
     })
     if (uploadBuffer) {
-      res.setHeader('Content-Type', uploadBuffer.type)
-      res.setHeader('Cache-Control', 'max-age=86400')
-      res.send(Buffer.from(uploadBuffer.data, 'base64'))
+      return new Response(Buffer.from(uploadBuffer.data, 'base64'), {
+        headers: {
+          'Content-Type': uploadBuffer.type,
+          'Cache-Control': 'max-age=86400',
+        },
+      })
     } else {
-      res.redirect(permalink2Gateway(key))
+      return NextResponse.redirect(permalink2Gateway(key))
     }
   } else if (req.method === 'POST') {
-    const type = req.headers['content-type']
+    const type = req.headers.get('Content-Type')
     if (!type) {
-      res.status(400).send('no content-type header')
-      return
+      return new Response(null, { status: 400 })
     }
-    const raw = await getRawBody(req)
+    const raw = Buffer.from(await req.arrayBuffer())
     const uploader = await getUploader(raw, {
       ...defaultArweaveTags,
       'Content-Type': type,
@@ -44,9 +47,9 @@ export default async function handler(
       .onDuplicateKeyUpdate({
         set: { metadata, type, data, ts },
       })
-    res.send(key)
+    return new Response(key)
   } else {
-    res.status(405).send(null)
+    return new Response(null, { status: 405 })
   }
 }
 
