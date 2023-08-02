@@ -39,6 +39,8 @@ import GrantInfo from '@/src/components/grant-info'
 import GrantProposalCreateButton from '@/src/components/grant-proposal-create-button'
 import { appRouter } from '@/src/server/routers/_app'
 
+export const runtime = 'experimental-edge'
+
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ grant_permalink: string }>,
 ) {
@@ -52,7 +54,6 @@ export async function getServerSideProps(
       permalink: id2Permalink(context.params?.grant_permalink),
     })
   }
-  context.res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
   return { props: { trpcState: helpers.dehydrate() } }
 }
 
