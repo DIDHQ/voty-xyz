@@ -43,7 +43,7 @@ export default function MarkdownViewer(props: {
           }
           return <>{children}</>
         },
-      } satisfies Components),
+      }) satisfies Components,
     [props.preview],
   )
 

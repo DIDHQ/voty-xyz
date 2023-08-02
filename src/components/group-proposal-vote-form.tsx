@@ -60,10 +60,13 @@ export default function GroupProposalVoteForm(props: {
           ),
         { concurrency: 5 },
       )
-      return dids!.reduce((obj, did, index) => {
-        obj[did] = decimals[index]
-        return obj
-      }, {} as { [key: string]: Decimal })
+      return dids!.reduce(
+        (obj, did, index) => {
+          obj[did] = decimals[index]
+          return obj
+        },
+        {} as { [key: string]: Decimal },
+      )
     },
     { enabled: !!dids },
   )

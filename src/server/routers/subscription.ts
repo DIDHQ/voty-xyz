@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy } from 'lodash-es'
+import { compact, indexBy } from 'remeda'
 import { z } from 'zod'
+import { and, eq, inArray, sql } from 'drizzle-orm'
 
 import { database } from '../../utils/database'
 import { authorized } from '../../utils/schemas/basic/authorship'
@@ -8,6 +9,7 @@ import { communitySchema } from '../../utils/schemas/v1/community'
 import { proofSchema, proved } from '../../utils/schemas/basic/proof'
 import { procedure, router } from '../trpc'
 import verifyProof from '../../utils/verifiers/verify-proof'
+import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(communitySchema))
 
@@ -27,13 +29,12 @@ export const subscriptionRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const subscription = await database.subscription.findUnique({
-        where: {
-          communityId_subscriber: {
-            communityId: input.communityId,
-            subscriber: JSON.stringify(input.subscriber),
-          },
-        },
+      const subscription = await database.query.subscription.findFirst({
+        where: ({ communityId, subscriber }, { and, eq }) =>
+          and(
+            eq(communityId, input.communityId!),
+            eq(subscriber, JSON.stringify(input.subscriber)),
+          ),
       })
 
       return !!subscription
@@ -46,28 +47,33 @@ export const subscriptionRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const subscriptions = await database.subscription.findMany({
-        where: { subscriber: JSON.stringify(input.subscriber) },
-        orderBy: { ts: 'desc' },
+      const subscriptions = await database.query.subscription.findMany({
+        where: ({ subscriber }, { eq }) =>
+          eq(subscriber, JSON.stringify(input.subscriber)),
+        orderBy: ({ ts }, { desc }) => desc(ts),
       })
-      const communities = keyBy(
-        await database.community.findMany({
-          where: {
-            id: { in: subscriptions.map(({ communityId }) => communityId) },
-          },
-        }),
-        ({ id }) => id,
-      )
-      const storages = keyBy(
-        await database.storage.findMany({
-          where: {
-            permalink: {
-              in: Object.values(communities).map(({ permalink }) => permalink),
-            },
-          },
-        }),
-        ({ permalink }) => permalink,
-      )
+      const communities = subscriptions.length
+        ? indexBy(
+            await database.query.community.findMany({
+              where: inArray(
+                table.community.id,
+                subscriptions.map(({ communityId }) => communityId),
+              ),
+            }),
+            ({ id }) => id,
+          )
+        : {}
+      const storages = Object.values(communities).length
+        ? indexBy(
+            await database.query.storage.findMany({
+              where: inArray(
+                table.storage.permalink,
+                Object.values(communities).map(({ permalink }) => permalink),
+              ),
+            }),
+            ({ permalink }) => permalink,
+          )
+        : {}
 
       return compact(
         subscriptions
@@ -105,34 +111,40 @@ export const subscriptionRouter = router({
         address: input.proof.address,
       })
       if (input.subscribe === true) {
-        await database.$transaction([
-          database.subscription.create({
-            data: {
-              communityId: input.communityId,
+        await database.transaction((tx) =>
+          Promise.all([
+            tx.insert(table.subscription).values({
+              communityId: input.communityId!,
               subscriber,
               ts: new Date(),
-            },
-          }),
-          database.community.update({
-            where: { id: input.communityId },
-            data: { subscribers: { increment: 1 } },
-          }),
-        ])
+            }),
+            tx
+              .update(table.community)
+              .set({
+                subscribers: sql`${table.community.subscribers} + 1`,
+              })
+              .where(eq(table.community.id, input.communityId!)),
+          ]),
+        )
       } else {
-        await database.$transaction([
-          database.subscription.delete({
-            where: {
-              communityId_subscriber: {
-                communityId: input.communityId,
-                subscriber,
-              },
-            },
-          }),
-          database.community.update({
-            where: { id: input.communityId },
-            data: { subscribers: { decrement: 1 } },
-          }),
-        ])
+        await database.transaction((tx) =>
+          Promise.all([
+            tx
+              .delete(table.subscription)
+              .where(
+                and(
+                  eq(table.subscription.communityId, input.communityId!),
+                  eq(table.subscription.subscriber, subscriber),
+                ),
+              ),
+            tx
+              .update(table.community)
+              .set({
+                subscribers: sql`${table.community.subscribers} - 1`,
+              })
+              .where(eq(table.community.id, input.communityId!)),
+          ]),
+        )
       }
 
       return input.subscribe

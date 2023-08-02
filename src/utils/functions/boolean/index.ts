@@ -1,4 +1,4 @@
-import { uniq } from 'lodash-es'
+import { uniq } from 'remeda'
 import pMap from 'p-map'
 
 import { BooleanSets, BooleanUnit } from '../../schemas/basic/sets'

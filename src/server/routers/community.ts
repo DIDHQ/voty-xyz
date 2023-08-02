@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, last, mapValues } from 'lodash-es'
+import { compact, indexBy, last, mapValues } from 'remeda'
 import { z } from 'zod'
+import { and, inArray, lte, notInArray } from 'drizzle-orm'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -16,6 +17,7 @@ import {
   flushUploadBuffers,
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
+import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(communitySchema))
 
@@ -30,14 +32,14 @@ export const communityRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const community = await database.community.findUnique({
-        where: { id: input.id },
+      const community = await database.query.community.findFirst({
+        where: ({ id }, { eq }) => eq(id, input.id!),
       })
       if (!community) {
         return null
       }
-      const storage = await database.storage.findUnique({
-        where: { permalink: community.permalink },
+      const storage = await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, community.permalink),
       })
 
       return storage
@@ -52,13 +54,13 @@ export const communityRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const communities = await database.community.findMany({
-        where: { id: { in: input.ids } },
-        select: { id: true },
+      const communities = await database.query.community.findMany({
+        where: inArray(table.community.id, input.ids),
+        columns: { id: true },
       })
 
       return mapValues(
-        keyBy(communities, ({ id }) => id),
+        indexBy(communities, ({ id }) => id),
         (community) => !!community,
       )
     }),
@@ -70,38 +72,46 @@ export const communityRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const storage = await database.storage.findUnique({
-        where: { permalink: input.permalink },
+      const storage = await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, input.permalink!),
       })
 
       return storage ? schema.parse(storage.data) : null
     }),
   list: procedure
-    .input(z.object({ cursor: z.string().optional() }))
-    .output(z.object({ data: z.array(schema), next: z.string().optional() }))
+    .input(z.object({ cursor: z.date().optional() }))
+    .output(z.object({ data: z.array(schema), next: z.date().optional() }))
     .query(async ({ input }) => {
-      const pinnedCommunities = input.cursor
-        ? []
-        : await database.community.findMany({
-            where: { id: { in: selectedCommunities } },
-            orderBy: { ts: 'desc' },
+      const pinnedCommunities =
+        input.cursor || !selectedCommunities.length
+          ? []
+          : await database.query.community.findMany({
+              where: inArray(table.community.id, selectedCommunities),
+              orderBy: ({ ts }, { desc }) => desc(ts),
+            })
+      const commonCommunities = selectedCommunities.length
+        ? await database.query.community.findMany({
+            where: and(
+              notInArray(table.community.id, selectedCommunities),
+              ...(input.cursor ? [lte(table.community.ts, input.cursor)] : []),
+            ),
+            limit: 30,
+            offset: input.cursor ? 1 : 0,
+            orderBy: ({ ts }, { desc }) => desc(ts),
           })
-      const commonCommunities = await database.community.findMany({
-        where: { id: { notIn: selectedCommunities } },
-        cursor: input.cursor ? { id: input.cursor } : undefined,
-        take: 30,
-        skip: input.cursor ? 1 : 0,
-        orderBy: { ts: 'desc' },
-      })
+        : []
       const communities = [...pinnedCommunities, ...commonCommunities]
-      const storages = keyBy(
-        await database.storage.findMany({
-          where: {
-            permalink: { in: communities.map(({ permalink }) => permalink) },
-          },
-        }),
-        ({ permalink }) => permalink,
-      )
+      const storages = communities.length
+        ? indexBy(
+            await database.query.storage.findMany({
+              where: inArray(
+                table.storage.permalink,
+                communities.map(({ permalink }) => permalink),
+              ),
+            }),
+            ({ permalink }) => permalink,
+          )
+        : {}
 
       return {
         data: compact(
@@ -115,7 +125,7 @@ export const communityRouter = router({
               }
             }),
         ),
-        next: last(communities)?.id,
+        next: last(communities)?.ts,
       }
     }),
   create: procedure
@@ -138,19 +148,18 @@ export const communityRouter = router({
       await flushUploadBuffers(getAllUploadBufferKeys(input.about))
       const permalink = await uploadToArweave(input)
       const ts = new Date()
-      const community = await database.community.findUnique({
-        where: { id: input.id },
+      const community = await database.query.community.findFirst({
+        where: ({ id }, { eq }) => eq(id, input.id),
       })
 
-      await database.$transaction([
-        database.community.upsert({
-          where: { id: input.id },
-          create: { id: input.id, permalink, ts },
-          update: { permalink, ts },
-        }),
-        database.storage.create({ data: { permalink, data: input } }),
-        database.activity.create({
-          data: {
+      await database.transaction((tx) =>
+        Promise.all([
+          tx
+            .insert(table.community)
+            .values({ id: input.id, permalink, ts })
+            .onDuplicateKeyUpdate({ set: { permalink, ts } }),
+          tx.insert(table.storage).values({ permalink, data: input }),
+          tx.insert(table.activity).values({
             communityId: input.id,
             actor: input.authorship.author,
             type: community ? 'update_community' : 'create_community',
@@ -161,9 +170,9 @@ export const communityRouter = router({
               community_name: input.name,
             } satisfies Activity,
             ts,
-          },
-        }),
-      ])
+          }),
+        ]),
+      )
 
       return permalink
     }),

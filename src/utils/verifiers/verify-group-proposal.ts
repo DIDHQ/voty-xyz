@@ -18,8 +18,8 @@ export default async function verifyGroupProposal(
 }> {
   const group = groupSchemaProvedAuthorized.parse(
     (
-      await database.storage.findUnique({
-        where: { permalink: groupProposal.group },
+      await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, groupProposal.group),
       })
     )?.data,
   )

@@ -19,7 +19,6 @@ export default function GrantProposalCard(props: {
     images: string[]
     permalink: string
     votes: number
-    readingTime: number
     ts: Date
     funding?: string
   }
@@ -87,10 +86,6 @@ export default function GrantProposalCard(props: {
             </p>
           </div>
         )}
-        <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
-          <p className="text-gray-400">Reading time</p>
-          <p>{formatDurationMs(props.grantProposal.readingTime)}</p>
-        </div>
       </div>
     </Link>
   )

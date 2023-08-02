@@ -1,5 +1,5 @@
 import { Decimal } from 'decimal.js'
-import { mapValues, uniq, without } from 'lodash-es'
+import { mapValues, uniq } from 'remeda'
 
 import { PositiveDecimal } from './schemas/basic/positive-decimal'
 
@@ -8,12 +8,15 @@ export function updateChoice(
   choice: string,
 ): Record<string, PositiveDecimal> {
   const choices = powers?.[choice]
-    ? without(Object.keys(powers), choice)
+    ? Object.keys(powers).filter((c) => c !== choice)
     : uniq([...Object.keys(powers || {}), choice])
-  return choices.reduce((obj, choice) => {
-    obj[choice] = '1'
-    return obj
-  }, {} as Record<string, PositiveDecimal>)
+  return choices.reduce(
+    (obj, choice) => {
+      obj[choice] = '1'
+      return obj
+    },
+    {} as Record<string, PositiveDecimal>,
+  )
 }
 
 export function checkChoice(
@@ -33,7 +36,7 @@ export function powerOfChoice(
         new Decimal(0),
       )
     : new Decimal(1)
-  return mapValues(powers, (power) =>
+  return mapValues(powers || {}, (power) =>
     totalPower.dividedBy(denominator).mul(power),
   )
 }

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { clsx } from 'clsx'
-import { compact } from 'lodash-es'
+import { compact } from 'remeda'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
@@ -11,7 +11,7 @@ import { useWindowSize } from 'usehooks-ts'
 import pMap from 'p-map'
 import { useQuery } from '@tanstack/react-query'
 import { createServerSideHelpers } from '@trpc/react-query/server'
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSideProps } from 'next'
 import { SuperJSON } from 'superjson'
 
 import {
@@ -50,9 +50,12 @@ import { checkBoolean } from '@/src/utils/functions/boolean'
 import { getImages, getSummary } from '@/src/utils/markdown'
 import { appRouter } from '@/src/server/routers/_app'
 
-export async function getServerSideProps(
-  context: GetServerSidePropsContext<{ grant_proposal_permalink: string }>,
-) {
+export const runtime = 'experimental-edge'
+
+export const getServerSideProps: GetServerSideProps<
+  Record<string, unknown>,
+  { grant_proposal_permalink: string }
+> = async (context) => {
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {},

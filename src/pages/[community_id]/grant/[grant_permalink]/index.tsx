@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import { compact } from 'lodash-es'
+import { compact } from 'remeda'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { useCollapse } from 'react-collapsed'
 import { SuperJSON } from 'superjson'
 import { createServerSideHelpers } from '@trpc/react-query/server'
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSideProps } from 'next'
 
 import { trpc } from '@/src/utils/trpc'
 import Article from '@/src/components/basic/article'
@@ -39,9 +39,12 @@ import GrantInfo from '@/src/components/grant-info'
 import GrantProposalCreateButton from '@/src/components/grant-proposal-create-button'
 import { appRouter } from '@/src/server/routers/_app'
 
-export async function getServerSideProps(
-  context: GetServerSidePropsContext<{ grant_permalink: string }>,
-) {
+export const runtime = 'experimental-edge'
+
+export const getServerSideProps: GetServerSideProps<
+  Record<string, unknown>,
+  { grant_permalink: string }
+> = async (context) => {
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {},

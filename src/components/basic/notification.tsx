@@ -5,7 +5,6 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline'
-import { upperFirst } from 'lodash-es'
 
 export default function Notification(props: {
   show: boolean
@@ -52,7 +51,7 @@ export default function Notification(props: {
                   </div>
                   <div className="ml-3 w-0 flex-1 pt-0.5">
                     <p className="text-sm font-medium text-gray-900">
-                      {upperFirst(props.type)}
+                      {props.type}
                     </p>
                     <p className="mt-1 text-sm text-gray-500">
                       {props.children}

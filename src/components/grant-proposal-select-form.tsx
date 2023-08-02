@@ -49,10 +49,13 @@ export default function GrantProposalSelectForm(props: {
           ),
         { concurrency: 5 },
       )
-      return dids!.reduce((obj, did, index) => {
-        obj[did] = booleans[index]
-        return obj
-      }, {} as { [key: string]: boolean })
+      return dids!.reduce(
+        (obj, did, index) => {
+          obj[did] = booleans[index]
+          return obj
+        },
+        {} as { [key: string]: boolean },
+      )
     },
     { enabled: !!dids && !!props.grant.permission.selecting },
   )

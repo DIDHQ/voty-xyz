@@ -1,9 +1,11 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextResponse } from 'next/server'
 
 import { documentTitle } from '../../utils/constants'
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  res.json({
+export const runtime = 'edge'
+
+export default function handler() {
+  return NextResponse.json({
     name: documentTitle,
     short_name: documentTitle,
     icons: [

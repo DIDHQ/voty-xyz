@@ -1,5 +1,5 @@
 import { clsx } from 'clsx'
-import { compact } from 'lodash-es'
+import { compact } from 'remeda'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'

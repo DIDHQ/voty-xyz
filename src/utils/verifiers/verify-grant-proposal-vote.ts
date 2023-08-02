@@ -28,23 +28,26 @@ export default async function verifyGrantProposalVote(
 }> {
   const grantProposal = grantProposalSchemaProvedAuthorized.parse(
     (
-      await database.storage.findUnique({
-        where: { permalink: grantProposalVote.grant_proposal },
+      await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) =>
+          eq(permalink, grantProposalVote.grant_proposal),
       })
     )?.data,
   )
 
   const grant = grantSchemaProvedAuthorized.parse(
     (
-      await database.storage.findUnique({
-        where: { permalink: grantProposal.grant },
+      await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, grantProposal.grant),
       })
     )?.data,
   )
 
-  const grantProposalSelect = await database.grantProposalSelect.findUnique({
-    where: { proposalPermalink: grantProposalVote.grant_proposal },
-  })
+  const grantProposalSelect =
+    await database.query.grantProposalSelect.findFirst({
+      where: ({ proposalPermalink }, { eq }) =>
+        eq(proposalPermalink, grantProposalVote.grant_proposal),
+    })
   if (grant.permission.selecting && !grantProposalSelect) {
     throw new TRPCError({
       code: 'BAD_REQUEST',

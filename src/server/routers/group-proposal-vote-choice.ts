@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { keyBy, mapValues } from 'lodash-es'
+import { indexBy, mapValues } from 'remeda'
 import { z } from 'zod'
 
 import { database } from '../../utils/database'
@@ -15,12 +15,13 @@ export const groupProposalVoteChoiceRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const choices = await database.groupProposalVoteChoice.findMany({
-        where: { proposalPermalink: input.groupProposal },
+      const choices = await database.query.groupProposalVoteChoice.findMany({
+        where: ({ proposalPermalink }, { eq }) =>
+          eq(proposalPermalink, input.groupProposal!),
       })
 
       return mapValues(
-        keyBy(choices, ({ choice }) => choice),
+        indexBy(choices, ({ choice }) => choice),
         ({ power }) => power.toString(),
       )
     }),

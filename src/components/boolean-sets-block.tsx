@@ -1,4 +1,4 @@
-import { compact } from 'lodash-es'
+import { compact } from 'remeda'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { Grant } from '../utils/schemas/v1/grant'

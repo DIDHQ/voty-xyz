@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { uniq } from 'lodash-es'
+import { uniq } from 'remeda'
 
 import { getGroupProposalPhase, GroupProposalPhase } from '../phase'
 import { calculateDecimal } from '../functions/decimal'
@@ -29,16 +29,17 @@ export default async function verifyGroupProposalVote(
 }> {
   const groupProposal = groupProposalSchemaProvedAuthorized.parse(
     (
-      await database.storage.findUnique({
-        where: { permalink: groupProposalVote.group_proposal },
+      await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) =>
+          eq(permalink, groupProposalVote.group_proposal),
       })
     )?.data,
   )
 
   const group = groupSchemaProvedAuthorized.parse(
     (
-      await database.storage.findUnique({
-        where: { permalink: groupProposal.group },
+      await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, groupProposal.group),
       })
     )?.data,
   )

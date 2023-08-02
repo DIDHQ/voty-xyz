@@ -98,10 +98,9 @@ export default function CreateCommunityPage() {
                                       ?.disabled
                                   ) {
                                     router.push(
-                                      `/create/${
-                                        filteredOptions?.[virtualItem.index]
-                                          ?.did
-                                      }`,
+                                      `/create/${filteredOptions?.[
+                                        virtualItem.index
+                                      ]?.did}`,
                                     )
                                   }
                                 }}

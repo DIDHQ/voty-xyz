@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { clsx } from 'clsx'
-import { compact, uniqBy } from 'lodash-es'
+import { compact, uniqBy } from 'remeda'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ExoticComponent, useMemo } from 'react'
@@ -47,7 +47,7 @@ export default function CommunityInfo(props: { className?: string }) {
   const previewGroup = useAtomValue(previewGroupAtom)
   const community = previewCommunity || data
   const groups = useMemo(
-    () => uniqBy(compact([...(list || []), previewGroup]), 'id'),
+    () => uniqBy(compact([...(list || []), previewGroup]), ({ id }) => id),
     [list, previewGroup],
   )
   const navigation = useMemo(

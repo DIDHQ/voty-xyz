@@ -1,5 +1,5 @@
 import { Decimal } from 'decimal.js'
-import { uniq } from 'lodash-es'
+import { uniq } from 'remeda'
 import pMap from 'p-map'
 
 import { DecimalSets, DecimalUnit } from '../../schemas/basic/sets'

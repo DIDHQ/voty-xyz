@@ -1,7 +1,8 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, last, mapValues } from 'lodash-es'
+import { compact, indexBy, last, mapValues } from 'remeda'
 import { z } from 'zod'
 import { Decimal } from 'decimal.js'
+import { and, eq, inArray, lte, sql } from 'drizzle-orm'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -15,6 +16,7 @@ import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGroup from '../../utils/verifiers/verify-group'
 import { Activity } from '../../utils/schemas/activity'
+import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(groupProposalVoteSchema))
 
@@ -23,13 +25,13 @@ export const groupProposalVoteRouter = router({
     .input(
       z.object({
         groupProposal: z.string().optional(),
-        cursor: z.string().optional(),
+        cursor: z.date().optional(),
       }),
     )
     .output(
       z.object({
         data: z.array(schema.extend({ permalink: z.string() })),
-        next: z.string().optional(),
+        next: z.date().optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -37,24 +39,30 @@ export const groupProposalVoteRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const groupProposalVotes = await database.groupProposalVote.findMany({
-        where: { proposalPermalink: input.groupProposal },
-        cursor: input.cursor ? { permalink: input.cursor } : undefined,
-        take: 50,
-        skip: input.cursor ? 1 : 0,
-        orderBy: { ts: 'desc' },
-      })
+      const groupProposalVotes =
+        await database.query.groupProposalVote.findMany({
+          where: and(
+            eq(table.groupProposalVote.proposalPermalink, input.groupProposal),
+            ...(input.cursor
+              ? [lte(table.groupProposalVote.ts, input.cursor)]
+              : []),
+          ),
+          limit: 50,
+          offset: input.cursor ? 1 : 0,
+          orderBy: ({ ts }, { desc }) => desc(ts),
+        })
 
-      const storages = keyBy(
-        await database.storage.findMany({
-          where: {
-            permalink: {
-              in: groupProposalVotes.map(({ permalink }) => permalink),
-            },
-          },
-        }),
-        ({ permalink }) => permalink,
-      )
+      const storages = groupProposalVotes.length
+        ? indexBy(
+            await database.query.storage.findMany({
+              where: inArray(
+                table.storage.permalink,
+                groupProposalVotes.map(({ permalink }) => permalink),
+              ),
+            }),
+            ({ permalink }) => permalink,
+          )
+        : {}
 
       return {
         data: compact(
@@ -71,7 +79,7 @@ export const groupProposalVoteRouter = router({
               }
             }),
         ),
-        next: last(groupProposalVotes)?.permalink,
+        next: last(groupProposalVotes)?.ts,
       }
     }),
   groupByVoter: procedure
@@ -82,23 +90,26 @@ export const groupProposalVoteRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const groupProposalVotes = await database.groupProposalVote.findMany({
-        where: { proposalPermalink: input.groupProposal },
-      })
+      const groupProposalVotes =
+        await database.query.groupProposalVote.findMany({
+          where: ({ proposalPermalink }, { eq }) =>
+            eq(proposalPermalink, input.groupProposal!),
+        })
 
-      const storages = keyBy(
-        await database.storage.findMany({
-          where: {
-            permalink: {
-              in: groupProposalVotes.map(({ permalink }) => permalink),
-            },
-          },
-        }),
-        ({ permalink }) => permalink,
-      )
+      const storages = groupProposalVotes.length
+        ? indexBy(
+            await database.query.storage.findMany({
+              where: inArray(
+                table.storage.permalink,
+                groupProposalVotes.map(({ permalink }) => permalink),
+              ),
+            }),
+            ({ permalink }) => permalink,
+          )
+        : {}
 
       return mapValues(
-        keyBy(groupProposalVotes, ({ voter }) => voter),
+        indexBy(groupProposalVotes, ({ voter }) => voter),
         ({ permalink }) => schema.parse(storages[permalink].data).total_power,
       )
     }),
@@ -118,52 +129,53 @@ export const groupProposalVoteRouter = router({
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
-      await database.$transaction([
-        database.groupProposalVote.create({
-          data: {
+      await database.transaction((tx) =>
+        Promise.all([
+          tx.insert(table.groupProposalVote).values({
             permalink,
             ts,
             voter: input.authorship.author,
             proposalPermalink: input.group_proposal,
-          },
-        }),
-        database.storage.create({ data: { permalink, data: input } }),
-        database.groupProposal.update({
-          where: { permalink: input.group_proposal },
-          data: { votes: { increment: 1 } },
-        }),
-        database.community.update({
-          where: { id: community.id },
-          data: { groupProposalVotes: { increment: 1 } },
-        }),
-        database.group.update({
-          where: {
-            id_communityId: { communityId: community.id, id: group.id },
-          },
-          data: { votes: { increment: 1 } },
-        }),
-        ...Object.entries(
-          powerOfChoice(input.powers, new Decimal(input.total_power)),
-        ).map(([choice, power = 0]) =>
-          database.groupProposalVoteChoice.upsert({
-            where: {
-              proposalPermalink_choice: {
+          }),
+          tx.insert(table.storage).values({ permalink, data: input }),
+          tx
+            .update(table.groupProposal)
+            .set({
+              votes: sql`${table.groupProposal.votes} + 1`,
+            })
+            .where(eq(table.groupProposal.permalink, input.group_proposal)),
+          tx
+            .update(table.community)
+            .set({
+              groupProposalVotes: sql`${table.community.groupProposalVotes} + 1`,
+            })
+            .where(eq(table.community.id, community.id)),
+          tx
+            .update(table.group)
+            .set({
+              votes: sql`${table.group.votes} + 1`,
+            })
+            .where(
+              and(
+                eq(table.group.communityId, community.id),
+                eq(table.group.id, group.id),
+              ),
+            ),
+          ...Object.entries(
+            powerOfChoice(input.powers, new Decimal(input.total_power)),
+          ).map(([choice, power]) =>
+            tx
+              .insert(table.groupProposalVoteChoice)
+              .values({
                 proposalPermalink: input.group_proposal,
                 choice,
-              },
-            },
-            create: {
-              proposalPermalink: input.group_proposal,
-              choice,
-              power,
-            },
-            update: {
-              power: { increment: power },
-            },
-          }),
-        ),
-        database.activity.create({
-          data: {
+                power: power?.toString() || '0',
+              })
+              .onDuplicateKeyUpdate({
+                set: { power: sql`${table.groupProposalVoteChoice.power} + 1` },
+              }),
+          ),
+          tx.insert(table.activity).values({
             communityId: community.id,
             actor: input.authorship.author,
             type: 'create_group_proposal_vote',
@@ -181,9 +193,9 @@ export const groupProposalVoteRouter = router({
               group_proposal_vote_choices: Object.keys(input.powers),
             } satisfies Activity,
             ts,
-          },
-        }),
-      ])
+          }),
+        ]),
+      )
 
       return permalink
     }),

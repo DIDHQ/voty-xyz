@@ -15,8 +15,8 @@ export default async function verifyGroup(
 }> {
   const community = communitySchemaProvedAuthorized.parse(
     (
-      await database.storage.findUnique({
-        where: { permalink: group.community },
+      await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, group.community),
       })
     )?.data,
   )

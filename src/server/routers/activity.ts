@@ -1,10 +1,12 @@
 import { z } from 'zod'
-import { compact, last } from 'lodash-es'
+import { compact, last } from 'remeda'
 import { TRPCError } from '@trpc/server'
+import { and, desc, eq, lte } from 'drizzle-orm'
 
 import { procedure, router } from '../trpc'
 import { activitySchema } from '../../utils/schemas/activity'
 import { database } from '../../utils/database'
+import { table } from '@/src/utils/schema'
 
 const schema = z.object({
   data: activitySchema,
@@ -17,13 +19,13 @@ export const activityRouter = router({
     .input(
       z.object({
         communityId: z.string().optional(),
-        cursor: z.object({ ts: z.date(), actor: z.string() }).optional(),
+        cursor: z.date().optional(),
       }),
     )
     .output(
       z.object({
         data: z.array(schema),
-        next: z.object({ ts: z.date(), actor: z.string() }).optional(),
+        next: z.date().optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -31,12 +33,14 @@ export const activityRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const activities = await database.activity.findMany({
-        where: { communityId: input.communityId },
-        cursor: input.cursor ? { ts_actor: input.cursor } : undefined,
-        take: 30,
-        skip: input.cursor ? 1 : 0,
-        orderBy: { ts: 'desc' },
+      const activities = await database.query.activity.findMany({
+        where: and(
+          eq(table.activity.communityId, input.communityId),
+          ...(input.cursor ? [lte(table.activity.ts, input.cursor)] : []),
+        ),
+        orderBy: desc(table.activity.ts),
+        offset: input.cursor ? 1 : 0,
+        limit: 30,
       })
 
       return {
@@ -49,7 +53,7 @@ export const activityRouter = router({
             }
           }),
         ),
-        next: last(activities),
+        next: last(activities)?.ts,
       }
     }),
 })

@@ -1,7 +1,8 @@
 import { TRPCError } from '@trpc/server'
-import { compact, keyBy, last } from 'lodash-es'
+import { compact, indexBy, last } from 'remeda'
 import { z } from 'zod'
 import dayjs from 'dayjs'
+import { and, eq, gt, inArray, isNull, lte, sql } from 'drizzle-orm'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -24,6 +25,7 @@ import {
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
 import { getImages, getSummary } from '../../utils/markdown'
+import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(grantSchema))
 
@@ -40,11 +42,11 @@ export const grantRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const grant = await database.grant.findUnique({
-        where: { permalink: input.permalink },
+      const grant = await database.query.grant.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, input.permalink!),
       })
-      const storage = await database.storage.findUnique({
-        where: { permalink: input.permalink },
+      const storage = await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, input.permalink!),
       })
 
       const json =
@@ -66,9 +68,9 @@ export const grantRouter = router({
             commonCoinTypes.AR,
             await getPermalinkSnapshot(grant.permalink),
           )
-          await database.grant.update({
-            where: { permalink: grant.permalink },
-            data: {
+          await database
+            .update(table.grant)
+            .set({
               ts: timestamp,
               tsAnnouncing: dayjs(timestamp)
                 .add(json.duration.announcing * 1000)
@@ -82,8 +84,8 @@ export const grantRouter = router({
                 .add(json.duration.proposing * 1000)
                 .add(json.duration.voting * 1000)
                 .toDate(),
-            },
-          })
+            })
+            .where(eq(table.grant.permalink, grant.permalink))
         } catch (err) {
           console.error(err)
         }
@@ -104,7 +106,7 @@ export const grantRouter = router({
             GrantPhase.ENDED,
           ])
           .optional(),
-        cursor: z.string().optional(),
+        cursor: z.date().optional(),
       }),
     )
     .output(
@@ -120,7 +122,7 @@ export const grantRouter = router({
             tsVoting: z.date().nullable(),
           }),
         ),
-        next: z.string().optional(),
+        next: z.date().optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -131,31 +133,40 @@ export const grantRouter = router({
       const now = new Date()
       const filter =
         input.phase === GrantPhase.CONFIRMING
-          ? { tsAnnouncing: null, tsVoting: null }
+          ? [isNull(table.grant.tsAnnouncing), isNull(table.grant.tsVoting)]
           : input.phase === GrantPhase.ANNOUNCING
-          ? { ts: { lte: now }, tsAnnouncing: { gt: now } }
+          ? [lte(table.grant.ts, now), gt(table.grant.tsAnnouncing, now)]
           : input.phase === GrantPhase.PROPOSING
-          ? { tsAnnouncing: { lte: now }, tsProposing: { gt: now } }
+          ? [
+              lte(table.grant.tsAnnouncing, now),
+              gt(table.grant.tsProposing, now),
+            ]
           : input.phase === GrantPhase.VOTING
-          ? { tsProposing: { lte: now }, tsVoting: { gt: now } }
+          ? [lte(table.grant.tsProposing, now), gt(table.grant.tsVoting, now)]
           : input.phase === GrantPhase.ENDED
-          ? { tsVoting: { lte: now } }
-          : {}
-      const grants = await database.grant.findMany({
-        where: { communityId: input.communityId, ...filter },
-        cursor: input.cursor ? { permalink: input.cursor } : undefined,
-        take: 20,
-        skip: input.cursor ? 1 : 0,
-        orderBy: { ts: 'desc' },
+          ? [lte(table.grant.tsVoting, now)]
+          : []
+      const grants = await database.query.grant.findMany({
+        where: and(
+          eq(table.grant.communityId, input.communityId),
+          ...filter,
+          ...(input.cursor ? [lte(table.grant.ts, input.cursor)] : []),
+        ),
+        limit: 20,
+        offset: input.cursor ? 1 : 0,
+        orderBy: ({ ts }, { desc }) => desc(ts),
       })
-      const storages = keyBy(
-        await database.storage.findMany({
-          where: {
-            permalink: { in: grants.map(({ permalink }) => permalink) },
-          },
-        }),
-        ({ permalink }) => permalink,
-      )
+      const storages = grants.length
+        ? indexBy(
+            await database.query.storage.findMany({
+              where: inArray(
+                table.storage.permalink,
+                grants.map(({ permalink }) => permalink),
+              ),
+            }),
+            ({ permalink }) => permalink,
+          )
+        : {}
 
       return {
         data: compact(
@@ -189,7 +200,7 @@ export const grantRouter = router({
               },
             ),
         ),
-        next: last(grants)?.permalink,
+        next: last(grants)?.ts,
       }
     }),
   create: procedure
@@ -229,22 +240,22 @@ export const grantRouter = router({
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
-      await database.$transaction([
-        database.grant.create({
-          data: {
+      await database.transaction((tx) =>
+        Promise.all([
+          tx.insert(table.grant).values({
             permalink,
             communityId: community.id,
             communityPermalink: input.community,
             ts,
-          },
-        }),
-        database.community.update({
-          where: { id: community.id },
-          data: { grants: { increment: 1 } },
-        }),
-        database.storage.create({ data: { permalink, data: input } }),
-        database.activity.create({
-          data: {
+          }),
+          tx
+            .update(table.community)
+            .set({
+              grants: sql`${table.community.grants} + 1`,
+            })
+            .where(eq(table.community.id, community.id)),
+          tx.insert(table.storage).values({ permalink, data: input }),
+          tx.insert(table.activity).values({
             communityId: community.id,
             actor: input.authorship.author,
             type: 'create_grant',
@@ -257,9 +268,9 @@ export const grantRouter = router({
               grant_name: input.name,
             } satisfies Activity,
             ts,
-          },
-        }),
-      ])
+          }),
+        ]),
+      )
 
       return permalink
     }),
