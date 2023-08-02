@@ -23,9 +23,18 @@ const schema = proved(authorized(communitySchema))
 
 const schemaWithoutLogo = schema.omit({ logo: true })
 
+const schemaListItem = schemaWithoutLogo.omit({
+  links: true,
+  about: true,
+  authorship: true,
+  proof: true,
+})
+
 const selectedCommunities = process.env.SELECTED_COMMUNITIES?.split(',') || []
 
 type CommunityWithoutLogo = Omit<Community, 'logo'>
+
+type CommunityListItem = Omit<Community, 'logo' | 'links' | 'about'>
 
 export const communityRouter = router({
   getById: procedure
@@ -99,36 +108,37 @@ export const communityRouter = router({
     .input(z.object({ cursor: z.date().optional() }))
     .output(
       z.object({
-        data: z.array(schemaWithoutLogo.extend({ permalink: z.string() })),
+        data: z.array(schemaListItem.extend({ permalink: z.string() })),
         next: z.date().optional(),
       }),
     )
     .query(async ({ input }) => {
-      const pinnedCommunities =
+      const [pinnedCommunities, commonCommunities] = await Promise.all([
         input.cursor || !selectedCommunities.length
           ? []
-          : await database.query.community.findMany({
+          : database.query.community.findMany({
               where: inArray(table.community.id, selectedCommunities),
               orderBy: ({ ts }, { desc }) => desc(ts),
-            })
-      const commonCommunities = await database.query.community.findMany({
-        where: and(
-          ...(selectedCommunities.length
-            ? [notInArray(table.community.id, selectedCommunities)]
-            : []),
-          ...(input.cursor ? [lte(table.community.ts, input.cursor)] : []),
-        ),
-        limit: 30,
-        offset: input.cursor ? 1 : 0,
-        orderBy: ({ ts }, { desc }) => desc(ts),
-      })
+            }),
+        database.query.community.findMany({
+          where: and(
+            ...(selectedCommunities.length
+              ? [notInArray(table.community.id, selectedCommunities)]
+              : []),
+            ...(input.cursor ? [lte(table.community.ts, input.cursor)] : []),
+          ),
+          limit: 30,
+          offset: input.cursor ? 1 : 0,
+          orderBy: ({ ts }, { desc }) => desc(ts),
+        }),
+      ])
       const communities = [...pinnedCommunities, ...commonCommunities]
       const storages = communities.length
         ? indexBy(
             await database
               .select({
                 permalink: table.storage.permalink,
-                data: sql<CommunityWithoutLogo>`JSON_REMOVE(${table.storage.data}, '$.logo')`,
+                data: sql<CommunityListItem>`JSON_REMOVE(${table.storage.data}, '$.logo', '$.about', '$.links')`,
               })
               .from(table.storage)
               .where(
@@ -149,7 +159,7 @@ export const communityRouter = router({
               try {
                 return {
                   permalink,
-                  ...schemaWithoutLogo.parse(storages[permalink].data),
+                  ...schemaListItem.parse(storages[permalink].data),
                 }
               } catch {
                 return

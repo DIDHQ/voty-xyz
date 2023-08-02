@@ -5,7 +5,7 @@ import useCommunityLogo from '../hooks/use-community-logo'
 import Avatar from './basic/avatar'
 
 export default function CommunityCard(props: {
-  community: Omit<Community, 'logo'> & { permalink: string }
+  community: Omit<Community, 'logo' | 'links' | 'about'> & { permalink: string }
 }) {
   const { community } = props
   const { data: logo } = useCommunityLogo(community.permalink)
