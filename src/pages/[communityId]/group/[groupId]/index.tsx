@@ -13,23 +13,23 @@ import Select from '../../../../components/basic/select'
 import { GroupProposalPhase } from '../../../../utils/phase'
 
 export default function GroupIndexPage() {
-  const query = useRouterQuery<['communityId', 'group_id']>()
+  const query = useRouterQuery<['communityId', 'groupId']>()
   const [phase, setPhase] = useState<GroupProposalPhase | 'All'>('All')
   const { data, fetchNextPage, hasNextPage, isLoading } =
     trpc.groupProposal.list.useInfiniteQuery(
       {
         communityId: query.communityId,
-        groupId: query.group_id,
+        groupId: query.groupId,
         phase: phase === 'All' ? undefined : phase,
       },
       {
-        enabled: !!query.communityId && !!query.group_id,
+        enabled: !!query.communityId && !!query.groupId,
         getNextPageParam: ({ next }) => next,
       },
     )
   const { data: group } = trpc.group.getById.useQuery(
-    { communityId: query.communityId, id: query.group_id },
-    { enabled: !!query.communityId && !!query.group_id },
+    { communityId: query.communityId, id: query.groupId },
+    { enabled: !!query.communityId && !!query.groupId },
   )
   const groupProposals = useMemo(
     () => data?.pages.flatMap(({ data }) => data),

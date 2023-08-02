@@ -34,14 +34,14 @@ const SubscriptionButton = dynamic(() => import('./subscription-button'), {
 
 export default function CommunityInfo(props: { className?: string }) {
   const router = useRouter()
-  const query = useRouterQuery<['community_id', 'group_id']>()
+  const query = useRouterQuery<['communityId', 'groupId']>()
   const { data } = trpc.community.getById.useQuery(
-    { id: query.community_id },
-    { enabled: !!query.community_id },
+    { id: query.communityId },
+    { enabled: !!query.communityId },
   )
   const { data: list } = trpc.group.listByCommunityId.useQuery(
-    { communityId: query.community_id },
-    { enabled: !!query.community_id },
+    { communityId: query.communityId },
+    { enabled: !!query.communityId },
   )
   const previewCommunity = useAtomValue(previewCommunityAtom)
   const previewGroup = useAtomValue(previewGroupAtom)
@@ -54,24 +54,24 @@ export default function CommunityInfo(props: { className?: string }) {
     () => [
       {
         name: 'Activities',
-        href: `/${query.community_id}`,
+        href: `/${query.communityId}`,
         icon: BoltIcon,
-        current: router.pathname === '/[community_id]',
+        current: router.pathname === '/[communityId]',
       },
       {
         name: 'Topic Grants',
-        href: `/${query.community_id}/grant`,
+        href: `/${query.communityId}/grant`,
         icon: TrophyIcon,
-        current: router.pathname === '/[community_id]/grant',
+        current: router.pathname === '/[communityId]/grant',
       },
       {
         name: 'About',
-        href: `/${query.community_id}/about`,
+        href: `/${query.communityId}/about`,
         icon: QuestionMarkCircleIcon,
-        current: router.pathname === '/[community_id]/about',
+        current: router.pathname === '/[communityId]/about',
       },
     ],
-    [query.community_id, router.pathname],
+    [query.communityId, router.pathname],
   )
   const externals = useMemo(
     () =>
@@ -102,7 +102,7 @@ export default function CommunityInfo(props: { className?: string }) {
         : [],
     [community],
   )
-  const isManager = useIsManager(query.community_id)
+  const isManager = useIsManager(query.communityId)
   const title = useMemo(
     () => compact([community?.name, documentTitle]).join(' - '),
     [community?.name],
@@ -112,14 +112,14 @@ export default function CommunityInfo(props: { className?: string }) {
   // const isMember = useMemo(
   //   () =>
   //     !!dids?.find(
-  //       (did) => !!query.community_id && did.endsWith(query.community_id),
+  //       (did) => !!query.communityId && did.endsWith(query.communityId),
   //     ),
-  //   [dids, query.community_id],
+  //   [dids, query.communityId],
   // )
   const { data: enabledSubDID } = useQuery(
-    ['hasEnabledSubDID', query.community_id],
-    () => hasEnabledSubDID(query.community_id!),
-    { enabled: !!query.community_id && isManager },
+    ['hasEnabledSubDID', query.communityId],
+    () => hasEnabledSubDID(query.communityId!),
+    { enabled: !!query.communityId && isManager },
   )
 
   return (
@@ -130,7 +130,7 @@ export default function CommunityInfo(props: { className?: string }) {
       <aside className={clsx('relative', props.className)}>
         {previewCommunity ? null : (
           <ShareLinkIcon
-            link={`${domain}/${query.community_id}`}
+            link={`${domain}/${query.communityId}`}
             className="absolute right-4 top-4"
           />
         )}
@@ -156,7 +156,7 @@ export default function CommunityInfo(props: { className?: string }) {
                 isTestnet
                   ? '​https://test.topdid.com/mint/.'
                   : 'https://topdid.com/mint/.'
-              }${query.community_id?.replace(/\.bit$/, '')}`}
+              }${query.communityId?.replace(/\.bit$/, '')}`}
               className="mt-4"
             >
               <Button primary disabled={isMember}>
@@ -172,7 +172,7 @@ export default function CommunityInfo(props: { className?: string }) {
               Community
               {previewCommunity ? null : (
                 <SubscriptionButton
-                  communityId={query.community_id}
+                  communityId={query.communityId}
                   className="float-right"
                 />
               )}
@@ -197,7 +197,7 @@ export default function CommunityInfo(props: { className?: string }) {
                 enabledSubDID === false ? null : (
                   <TextLink
                     primary
-                    href={`/${query.community_id}/create`}
+                    href={`/${query.communityId}/create`}
                     className="float-right"
                   >
                     <PlusIcon className="h-5 w-5" />
@@ -211,10 +211,10 @@ export default function CommunityInfo(props: { className?: string }) {
                     href={
                       previewCommunity
                         ? undefined
-                        : `/${query.community_id}/group/${group.id}`
+                        : `/${query.communityId}/group/${group.id}`
                     }
                     icon={BriefcaseIcon}
-                    current={query.group_id === group.id}
+                    current={query.groupId === group.id}
                   >
                     {group.name}
                   </LinkListItem>

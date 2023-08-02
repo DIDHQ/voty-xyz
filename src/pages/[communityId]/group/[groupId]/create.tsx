@@ -10,10 +10,10 @@ import { documentTitle } from '../../../../utils/constants'
 import { GroupProposal } from '../../../../utils/schemas/v1/group-proposal'
 
 export default function CreateGroupProposalPage() {
-  const query = useRouterQuery<['communityId', 'group_id']>()
+  const query = useRouterQuery<['communityId', 'groupId']>()
   const { data: group, isLoading } = trpc.group.getById.useQuery(
-    { communityId: query.communityId, id: query.group_id },
-    { enabled: !!query.communityId && !!query.group_id },
+    { communityId: query.communityId, id: query.groupId },
+    { enabled: !!query.communityId && !!query.groupId },
   )
   const initialValue = useMemo<Partial<GroupProposal>>(
     () => ({ voting_type: 'single', choices: ['', ''] }),
@@ -28,8 +28,8 @@ export default function CreateGroupProposalPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextLink
-          disabled={!query.communityId || !query.group_id}
-          href={`/${query.communityId}/group/${query.group_id}`}
+          disabled={!query.communityId || !query.groupId}
+          href={`/${query.communityId}/group/${query.groupId}`}
           className="mt-6 inline-block sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>

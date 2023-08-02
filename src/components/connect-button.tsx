@@ -16,27 +16,27 @@ import Dropdown from './basic/dropdown'
 
 export default function ConnectButton() {
   const { account, displayAddress, disconnect } = useWallet()
-  const query = useRouterQuery<['community_id']>()
-  const isManager = useIsManager(query.community_id)
+  const query = useRouterQuery<['communityId']>()
+  const isManager = useIsManager(query.communityId)
   const { data: dids } = useDids(account)
   const isMember = useMemo(
     () =>
       !!dids?.find(
-        (did) => !!query.community_id && did.startsWith(query.community_id),
+        (did) => !!query.communityId && did.startsWith(query.communityId),
       ),
-    [dids, query.community_id],
+    [dids, query.communityId],
   )
   useEffect(() => {
-    if (account && query.community_id) {
+    if (account && query.communityId) {
       event('connect_wallet', {
         address: account.address,
         coinType: account.coinType,
-        communityId: query.community_id,
+        communityId: query.communityId,
         isManager,
         isMember,
       })
     }
-  }, [account, isManager, isMember, query.community_id])
+  }, [account, isManager, isMember, query.communityId])
 
   return (
     <RainbowKitConnectButton.Custom>
