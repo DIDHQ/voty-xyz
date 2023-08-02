@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { clsx } from 'clsx'
-import { compact } from 'remeda'
+import { compact, last } from 'remeda'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
@@ -56,14 +56,19 @@ export const getServerSideProps: GetServerSideProps<
   Record<string, unknown>,
   { grant_proposal_permalink: string }
 > = async (context) => {
+  // @see https://github.com/cloudflare/next-on-pages/issues/32
+  const id = last(context.req.url?.split('/') || [])
+  if (id === previewPermalink) {
+    return { notFound: true }
+  }
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {},
     transformer: SuperJSON,
   })
-  if (context.params?.grant_proposal_permalink) {
+  if (id) {
     await helpers.grantProposal.getByPermalink.prefetch({
-      permalink: id2Permalink(context.params?.grant_proposal_permalink),
+      permalink: id2Permalink(id),
     })
   }
   context.res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
