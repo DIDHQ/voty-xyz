@@ -59,7 +59,7 @@ export const getServerSideProps: GetServerSideProps<
   // @see https://github.com/cloudflare/next-on-pages/issues/32
   const id = last(context.req.url?.split('/') || [])
   if (id === previewPermalink) {
-    return { notFound: true }
+    return { props: {} }
   }
   const helpers = createServerSideHelpers({
     router: appRouter,
