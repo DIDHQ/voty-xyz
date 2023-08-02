@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:worker": "next-on-pages",
     "start": "next start",
+    "start:worker": "wrangler pages dev .vercel/output/static/ --compatibility-flag=nodejs_compat",
     "lint": "next lint",
     "format": "prettier --write .",
     "push": "drizzle-kit push:mysql",
@@ -14,6 +16,7 @@
     "analyze": "ANALYZE=true yarn build"
   },
   "dependencies": {
+    "@cfworker/sentry": "^1.12.4",
     "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.1.1",
@@ -36,7 +39,6 @@
     "jotai": "^2.2.3",
     "match-url-wildcard": "^0.0.4",
     "nanoid": "^4.0.2",
-    "next-pwa": "^5.6.0",
     "nextjs-google-analytics": "^2.3.3",
     "p-map": "^6.0.0",
     "react-collapsed": "^4.0.4",
@@ -63,7 +65,9 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.5.0",
     "@next/bundle-analyzer": "^13.4.12",
+    "@swc-jotai/react-refresh": "^0.0.8",
     "@tailwindcss/forms": "^0.5.4",
     "@tailwindcss/typography": "^0.5.9",
     "@types/lodash-es": "^4.17.8",

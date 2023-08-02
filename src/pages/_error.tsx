@@ -1,7 +1,14 @@
 import { NextPageContext } from 'next'
 import Link from 'next/link'
+import { captureException, init, withScope } from '@sentry/browser'
 
-import Sentry from '@/src/utils/sentry'
+init({
+  dsn:
+    process.env.NODE_ENV === 'development'
+      ? undefined
+      : process.env.NEXT_PUBLIC_SENTRY_DSN,
+  tracesSampleRate: 1.0,
+})
 
 function ErrorPage() {
   return (
@@ -29,9 +36,9 @@ function ErrorPage() {
 }
 
 ErrorPage.getInitialProps = async (context: NextPageContext) => {
-  Sentry.withScope((scope) => {
+  withScope((scope) => {
     scope.setFingerprint([context.pathname, context.query.toString()])
-    Sentry.captureException(context.err)
+    captureException(context.err)
   })
 
   return {}

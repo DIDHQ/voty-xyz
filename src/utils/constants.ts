@@ -98,9 +98,4 @@ export enum DataType {
   GROUP_PROPOSAL_VOTE = 'GROUP_PROPOSAL_VOTE',
 }
 
-export const cacheControl = [
-  'Cache-Control',
-  'maxage=1, stale-while-revalidate',
-] satisfies [string, string]
-
 export const previewPermalink: PreviewPermalink = 'preview'
