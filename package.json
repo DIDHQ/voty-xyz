@@ -16,6 +16,7 @@
     "analyze": "ANALYZE=true yarn build"
   },
   "dependencies": {
+    "@cfworker/sentry": "^1.12.4",
     "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.1.1",

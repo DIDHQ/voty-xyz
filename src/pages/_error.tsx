@@ -1,6 +1,16 @@
+import { NextPageContext } from 'next'
 import Link from 'next/link'
+import { captureException, init, withScope } from '@sentry/browser'
 
-export default function ErrorPage() {
+init({
+  dsn:
+    process.env.NODE_ENV === 'development'
+      ? undefined
+      : process.env.NEXT_PUBLIC_SENTRY_DSN,
+  tracesSampleRate: 1.0,
+})
+
+function ErrorPage() {
   return (
     <main className="flex w-full grow flex-col">
       <div className="my-auto shrink-0 py-16">
@@ -24,3 +34,14 @@ export default function ErrorPage() {
     </main>
   )
 }
+
+ErrorPage.getInitialProps = async (context: NextPageContext) => {
+  withScope((scope) => {
+    scope.setFingerprint([context.pathname, context.query.toString()])
+    captureException(context.err)
+  })
+
+  return {}
+}
+
+export default ErrorPage

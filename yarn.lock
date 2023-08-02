@@ -31,6 +31,19 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
+"@cfworker/sentry@^1.12.4":
+  version "1.12.4"
+  resolved "https://registry.yarnpkg.com/@cfworker/sentry/-/sentry-1.12.4.tgz#21b383133693cbe9185aae2cbfb5aa47f292fcd3"
+  integrity sha512-20brfZduUBcyZDJHv4gpv+v+ktELxOiuUPkqkQQQEoqRCxkUqsyLV9vIjNfy0MQtN7fqmd4pbN0F8AyC6ju5EQ==
+  dependencies:
+    "@cfworker/worker-types" "^1.12.3"
+    "@cloudflare/workers-types" "^2.2.2"
+
+"@cfworker/worker-types@^1.12.3":
+  version "1.12.3"
+  resolved "https://registry.yarnpkg.com/@cfworker/worker-types/-/worker-types-1.12.3.tgz#869cc62f815fd81454f73440e4e09aad28874d06"
+  integrity sha512-p9wWxB1n+D0Mm9YFYcU80Ea9rUqYDAkuYvSPjKezCSjFKGDm12x9S/8md33h7a4IAzxtO9pfOVoVLvVI2hpR9g==
+
 "@cloudflare/next-on-pages@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@cloudflare/next-on-pages/-/next-on-pages-1.5.0.tgz#6e7d54f01015367ddfd8939d86f95bfaccb586fe"
@@ -47,6 +60,11 @@
     semver "^7.5.2"
     zod "^3.21.4"
     zodcli "^0.0.4"
+
+"@cloudflare/workers-types@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-2.2.2.tgz#1bced16bba801d7af987da835467545bb5cc7ac6"
+  integrity sha512-kaMn2rueJ0PL1TYVGknTCh0X0x0d9G+FNXAFep7/4uqecEZoQb/63o6rOmMuiqI09zLuHV6xhKRXinokV/MY9A==
 
 "@coinbase/wallet-sdk@^3.6.6":
   version "3.7.1"
