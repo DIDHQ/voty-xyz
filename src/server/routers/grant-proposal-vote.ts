@@ -52,15 +52,17 @@ export const grantProposalVoteRouter = router({
           orderBy: ({ ts }, { desc }) => desc(ts),
         })
 
-      const storages = indexBy(
-        await database.query.storage.findMany({
-          where: inArray(
-            table.storage.permalink,
-            grantProposalVotes.map(({ permalink }) => permalink),
-          ),
-        }),
-        ({ permalink }) => permalink,
-      )
+      const storages = grantProposalVotes.length
+        ? indexBy(
+            await database.query.storage.findMany({
+              where: inArray(
+                table.storage.permalink,
+                grantProposalVotes.map(({ permalink }) => permalink),
+              ),
+            }),
+            ({ permalink }) => permalink,
+          )
+        : {}
 
       return {
         data: compact(
@@ -94,15 +96,17 @@ export const grantProposalVoteRouter = router({
             eq(grantPermalink, input.grant!),
         })
 
-      const storages = indexBy(
-        await database.query.storage.findMany({
-          where: inArray(
-            table.storage.permalink,
-            grantProposalVotes.map(({ permalink }) => permalink),
-          ),
-        }),
-        ({ permalink }) => permalink,
-      )
+      const storages = grantProposalVotes.length
+        ? indexBy(
+            await database.query.storage.findMany({
+              where: inArray(
+                table.storage.permalink,
+                grantProposalVotes.map(({ permalink }) => permalink),
+              ),
+            }),
+            ({ permalink }) => permalink,
+          )
+        : {}
 
       return mapValues(
         indexBy(grantProposalVotes, ({ voter }) => voter),

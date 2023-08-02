@@ -52,24 +52,28 @@ export const subscriptionRouter = router({
           eq(subscriber, JSON.stringify(input.subscriber)),
         orderBy: ({ ts }, { desc }) => desc(ts),
       })
-      const communities = indexBy(
-        await database.query.community.findMany({
-          where: inArray(
-            table.community.id,
-            subscriptions.map(({ communityId }) => communityId),
-          ),
-        }),
-        ({ id }) => id,
-      )
-      const storages = indexBy(
-        await database.query.storage.findMany({
-          where: inArray(
-            table.storage.permalink,
-            Object.values(communities).map(({ permalink }) => permalink),
-          ),
-        }),
-        ({ permalink }) => permalink,
-      )
+      const communities = subscriptions.length
+        ? indexBy(
+            await database.query.community.findMany({
+              where: inArray(
+                table.community.id,
+                subscriptions.map(({ communityId }) => communityId),
+              ),
+            }),
+            ({ id }) => id,
+          )
+        : {}
+      const storages = Object.values(communities).length
+        ? indexBy(
+            await database.query.storage.findMany({
+              where: inArray(
+                table.storage.permalink,
+                Object.values(communities).map(({ permalink }) => permalink),
+              ),
+            }),
+            ({ permalink }) => permalink,
+          )
+        : {}
 
       return compact(
         subscriptions

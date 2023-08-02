@@ -156,15 +156,17 @@ export const groupProposalRouter = router({
         offset: input.cursor ? 1 : 0,
         orderBy: ({ ts }, { desc }) => desc(ts),
       })
-      const storages = indexBy(
-        await database.query.storage.findMany({
-          where: inArray(
-            table.storage.permalink,
-            groupProposals.map(({ permalink }) => permalink),
-          ),
-        }),
-        ({ permalink }) => permalink,
-      )
+      const storages = groupProposals.length
+        ? indexBy(
+            await database.query.storage.findMany({
+              where: inArray(
+                table.storage.permalink,
+                groupProposals.map(({ permalink }) => permalink),
+              ),
+            }),
+            ({ permalink }) => permalink,
+          )
+        : {}
 
       return {
         data: compact(

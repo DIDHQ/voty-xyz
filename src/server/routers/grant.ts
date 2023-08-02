@@ -156,15 +156,17 @@ export const grantRouter = router({
         offset: input.cursor ? 1 : 0,
         orderBy: ({ ts }, { desc }) => desc(ts),
       })
-      const storages = indexBy(
-        await database.query.storage.findMany({
-          where: inArray(
-            table.storage.permalink,
-            grants.map(({ permalink }) => permalink),
-          ),
-        }),
-        ({ permalink }) => permalink,
-      )
+      const storages = grants.length
+        ? indexBy(
+            await database.query.storage.findMany({
+              where: inArray(
+                table.storage.permalink,
+                grants.map(({ permalink }) => permalink),
+              ),
+            }),
+            ({ permalink }) => permalink,
+          )
+        : {}
 
       return {
         data: compact(

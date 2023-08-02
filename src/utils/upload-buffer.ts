@@ -13,9 +13,11 @@ export function getAllUploadBufferKeys(markdown: string): string[] {
 }
 
 export async function flushUploadBuffers(keys: string[]): Promise<void> {
-  const uploadBuffers = await database.query.uploadBuffer.findMany({
-    where: inArray(table.uploadBuffer.key, keys),
-  })
+  const uploadBuffers = keys.length
+    ? await database.query.uploadBuffer.findMany({
+        where: inArray(table.uploadBuffer.key, keys),
+      })
+    : []
   await pMap(
     uploadBuffers,
     async ({ key, data, metadata }) => {

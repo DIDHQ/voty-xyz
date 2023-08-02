@@ -72,15 +72,17 @@ export const groupRouter = router({
         where: ({ communityId }, { eq }) => eq(communityId, input.communityId!),
         orderBy: ({ id }, { desc }) => desc(id),
       })
-      const storages = indexBy(
-        await database.query.storage.findMany({
-          where: inArray(
-            table.storage.permalink,
-            groups.map(({ permalink }) => permalink),
-          ),
-        }),
-        ({ permalink }) => permalink,
-      )
+      const storages = groups.length
+        ? indexBy(
+            await database.query.storage.findMany({
+              where: inArray(
+                table.storage.permalink,
+                groups.map(({ permalink }) => permalink),
+              ),
+            }),
+            ({ permalink }) => permalink,
+          )
+        : {}
 
       return compact(
         groups

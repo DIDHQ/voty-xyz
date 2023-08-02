@@ -82,31 +82,36 @@ export const communityRouter = router({
     .input(z.object({ cursor: z.date().optional() }))
     .output(z.object({ data: z.array(schema), next: z.date().optional() }))
     .query(async ({ input }) => {
-      const pinnedCommunities = input.cursor
-        ? []
-        : await database.query.community.findMany({
-            where: inArray(table.community.id, selectedCommunities),
+      const pinnedCommunities =
+        input.cursor || !selectedCommunities.length
+          ? []
+          : await database.query.community.findMany({
+              where: inArray(table.community.id, selectedCommunities),
+              orderBy: ({ ts }, { desc }) => desc(ts),
+            })
+      const commonCommunities = selectedCommunities.length
+        ? await database.query.community.findMany({
+            where: and(
+              notInArray(table.community.id, selectedCommunities),
+              ...(input.cursor ? [lte(table.community.ts, input.cursor)] : []),
+            ),
+            limit: 30,
+            offset: input.cursor ? 1 : 0,
             orderBy: ({ ts }, { desc }) => desc(ts),
           })
-      const commonCommunities = await database.query.community.findMany({
-        where: and(
-          notInArray(table.community.id, selectedCommunities),
-          ...(input.cursor ? [lte(table.community.ts, input.cursor)] : []),
-        ),
-        limit: 30,
-        offset: input.cursor ? 1 : 0,
-        orderBy: ({ ts }, { desc }) => desc(ts),
-      })
+        : []
       const communities = [...pinnedCommunities, ...commonCommunities]
-      const storages = indexBy(
-        await database.query.storage.findMany({
-          where: inArray(
-            table.storage.permalink,
-            communities.map(({ permalink }) => permalink),
-          ),
-        }),
-        ({ permalink }) => permalink,
-      )
+      const storages = communities.length
+        ? indexBy(
+            await database.query.storage.findMany({
+              where: inArray(
+                table.storage.permalink,
+                communities.map(({ permalink }) => permalink),
+              ),
+            }),
+            ({ permalink }) => permalink,
+          )
+        : {}
 
       return {
         data: compact(
