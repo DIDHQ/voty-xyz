@@ -11,7 +11,7 @@ import { useWindowSize } from 'usehooks-ts'
 import pMap from 'p-map'
 import { useQuery } from '@tanstack/react-query'
 import { createServerSideHelpers } from '@trpc/react-query/server'
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSideProps } from 'next'
 import { SuperJSON } from 'superjson'
 
 import {
@@ -52,9 +52,10 @@ import { appRouter } from '@/src/server/routers/_app'
 
 export const runtime = 'experimental-edge'
 
-export async function getServerSideProps(
-  context: GetServerSidePropsContext<{ grant_proposal_permalink: string }>,
-) {
+export const getServerSideProps: GetServerSideProps<
+  Record<string, unknown>,
+  { grant_proposal_permalink: string }
+> = async (context) => {
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {},
@@ -65,6 +66,7 @@ export async function getServerSideProps(
       permalink: id2Permalink(context.params?.grant_proposal_permalink),
     })
   }
+  context.res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
   return { props: { trpcState: helpers.dehydrate() } }
 }
 

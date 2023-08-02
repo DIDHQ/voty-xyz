@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { createServerSideHelpers } from '@trpc/react-query/server'
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSideProps } from 'next'
 import { SuperJSON } from 'superjson'
 
 import { stringifyChoice } from '@/src/utils/choice'
@@ -38,9 +38,10 @@ import { appRouter } from '@/src/server/routers/_app'
 
 export const runtime = 'experimental-edge'
 
-export async function getServerSideProps(
-  context: GetServerSidePropsContext<{ group_proposal_permalink: string }>,
-) {
+export const getServerSideProps: GetServerSideProps<
+  Record<string, unknown>,
+  { group_proposal_permalink: string }
+> = async (context) => {
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {},
@@ -51,6 +52,7 @@ export async function getServerSideProps(
       permalink: id2Permalink(context.params?.group_proposal_permalink),
     })
   }
+  context.res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
   return { props: { trpcState: helpers.dehydrate() } }
 }
 
