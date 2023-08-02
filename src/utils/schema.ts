@@ -4,7 +4,7 @@ import {
   primaryKey,
   varchar,
   json,
-  datetime,
+  timestamp,
   unique,
   int,
   decimal,
@@ -18,7 +18,7 @@ export const activity = mysqlTable(
     type: varchar('type', { length: 191 }).notNull(),
     actor: varchar('actor', { length: 191 }).notNull(),
     data: json('data').notNull(),
-    ts: datetime('ts', { mode: 'date' }).notNull(),
+    ts: timestamp('ts', { mode: 'date' }).notNull(),
   },
   (table) => {
     return {
@@ -43,7 +43,7 @@ export const community = mysqlTable(
     grantProposalVotes: int('grantProposalVotes').default(0).notNull(),
     groupProposals: int('groupProposals').default(0).notNull(),
     groupProposalVotes: int('groupProposalVotes').default(0).notNull(),
-    ts: datetime('ts', { mode: 'date' }).notNull(),
+    ts: timestamp('ts', { mode: 'date' }).notNull(),
   },
   (table) => {
     return {
@@ -63,10 +63,10 @@ export const grant = mysqlTable(
     }).notNull(),
     proposals: int('proposals').default(0).notNull(),
     votes: int('votes').default(0).notNull(),
-    ts: datetime('ts', { mode: 'date' }).notNull(),
-    tsAnnouncing: datetime('tsAnnouncing', { mode: 'date' }),
-    tsProposing: datetime('tsProposing', { mode: 'date' }),
-    tsVoting: datetime('tsVoting', { mode: 'date' }),
+    ts: timestamp('ts', { mode: 'date' }).notNull(),
+    tsAnnouncing: timestamp('tsAnnouncing', { mode: 'date' }),
+    tsProposing: timestamp('tsProposing', { mode: 'date' }),
+    tsVoting: timestamp('tsVoting', { mode: 'date' }),
     selectedProposals: int('selectedProposals').default(0).notNull(),
   },
   (table) => {
@@ -83,7 +83,7 @@ export const grantProposal = mysqlTable(
     grantPermalink: varchar('grantPermalink', { length: 191 }).notNull(),
     proposer: varchar('proposer', { length: 191 }).notNull(),
     votes: int('votes').default(0).notNull(),
-    ts: datetime('ts', { mode: 'date' }).notNull(),
+    ts: timestamp('ts', { mode: 'date' }).notNull(),
     selected: varchar('selected', { length: 191 }),
   },
   (table) => {
@@ -103,7 +103,7 @@ export const grantProposalSelect = mysqlTable(
     grantPermalink: varchar('grantPermalink', { length: 191 }).notNull(),
     proposalPermalink: varchar('proposalPermalink', { length: 191 }).notNull(),
     selector: varchar('selector', { length: 191 }).notNull(),
-    ts: datetime('ts', { mode: 'date' }).notNull(),
+    ts: timestamp('ts', { mode: 'date' }).notNull(),
   },
   (table) => {
     return {
@@ -122,7 +122,7 @@ export const grantProposalVote = mysqlTable(
     grantPermalink: varchar('grantPermalink', { length: 191 }).notNull(),
     proposalPermalink: varchar('proposalPermalink', { length: 191 }).notNull(),
     voter: varchar('voter', { length: 191 }).notNull(),
-    ts: datetime('ts', { mode: 'date' }).notNull(),
+    ts: timestamp('ts', { mode: 'date' }).notNull(),
   },
   (table) => {
     return {
@@ -165,7 +165,7 @@ export const group = mysqlTable(
     }).notNull(),
     proposals: int('proposals').default(0).notNull(),
     votes: int('votes').default(0).notNull(),
-    ts: datetime('ts', { mode: 'date' }).notNull(),
+    ts: timestamp('ts', { mode: 'date' }).notNull(),
   },
   (table) => {
     return {
@@ -187,9 +187,9 @@ export const groupProposal = mysqlTable(
     groupPermalink: varchar('groupPermalink', { length: 191 }).notNull(),
     proposer: varchar('proposer', { length: 191 }).notNull(),
     votes: int('votes').default(0).notNull(),
-    ts: datetime('ts', { mode: 'date' }).notNull(),
-    tsAnnouncing: datetime('tsAnnouncing', { mode: 'date' }),
-    tsVoting: datetime('tsVoting', { mode: 'date' }),
+    ts: timestamp('ts', { mode: 'date' }).notNull(),
+    tsAnnouncing: timestamp('tsAnnouncing', { mode: 'date' }),
+    tsVoting: timestamp('tsVoting', { mode: 'date' }),
   },
   (table) => {
     return {
@@ -208,7 +208,7 @@ export const groupProposalVote = mysqlTable(
     permalink: varchar('permalink', { length: 191 }).notNull(),
     proposalPermalink: varchar('proposalPermalink', { length: 191 }).notNull(),
     voter: varchar('voter', { length: 191 }).notNull(),
-    ts: datetime('ts', { mode: 'date' }).notNull(),
+    ts: timestamp('ts', { mode: 'date' }).notNull(),
   },
   (table) => {
     return {
@@ -255,7 +255,7 @@ export const subscription = mysqlTable(
   {
     communityId: varchar('communityId', { length: 191 }).notNull(),
     subscriber: varchar('subscriber', { length: 191 }).notNull(),
-    ts: datetime('ts', { mode: 'date' }).notNull(),
+    ts: timestamp('ts', { mode: 'date' }).notNull(),
   },
   (table) => {
     return {
@@ -274,7 +274,7 @@ export const uploadBuffer = mysqlTable(
     metadata: json('metadata').notNull(),
     type: varchar('type', { length: 191 }).notNull(),
     data: text('data').notNull(),
-    ts: datetime('ts', { mode: 'date' }).notNull(),
+    ts: timestamp('ts', { mode: 'date' }).notNull(),
   },
   (table) => {
     return {

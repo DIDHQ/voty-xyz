@@ -34,12 +34,10 @@ export const activityRouter = router({
       }
 
       const activities = await database.query.activity.findMany({
-        where: input.cursor
-          ? and(
-              eq(table.activity.communityId, input.communityId),
-              lte(table.activity.ts, input.cursor),
-            )
-          : eq(table.activity.communityId, input.communityId),
+        where: and(
+          eq(table.activity.communityId, input.communityId),
+          ...(input.cursor ? [lte(table.activity.ts, input.cursor)] : []),
+        ),
         orderBy: desc(table.activity.ts),
         offset: input.cursor ? 1 : 0,
         limit: 30,

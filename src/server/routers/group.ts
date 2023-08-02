@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { compact, indexBy } from 'remeda'
 import { z } from 'zod'
+import { and, eq, inArray } from 'drizzle-orm'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -12,6 +13,7 @@ import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import verifyGroup from '../../utils/verifiers/verify-group'
 import { Activity } from '../../utils/schemas/activity'
+import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(groupSchema))
 
@@ -29,16 +31,15 @@ export const groupRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const group = await database.group.findUnique({
-        where: {
-          id_communityId: { communityId: input.communityId, id: input.id },
-        },
+      const group = await database.query.group.findFirst({
+        where: ({ communityId, id }, { and, eq }) =>
+          and(eq(communityId, input.communityId!), eq(id, input.id!)),
       })
       if (!group) {
         return null
       }
-      const storage = await database.storage.findUnique({
-        where: { permalink: group.permalink },
+      const storage = await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, group.permalink),
       })
 
       return storage
@@ -53,8 +54,8 @@ export const groupRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const storage = await database.storage.findUnique({
-        where: { permalink: input.permalink },
+      const storage = await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, input.permalink!),
       })
 
       return storage ? schema.parse(storage.data) : null
@@ -67,15 +68,16 @@ export const groupRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const groups = await database.group.findMany({
-        where: { communityId: input.communityId },
-        orderBy: { id: 'desc' },
+      const groups = await database.query.group.findMany({
+        where: ({ communityId }, { eq }) => eq(communityId, input.communityId!),
+        orderBy: ({ id }, { desc }) => desc(id),
       })
       const storages = indexBy(
-        await database.storage.findMany({
-          where: {
-            permalink: { in: groups.map(({ permalink }) => permalink) },
-          },
+        await database.query.storage.findMany({
+          where: inArray(
+            table.storage.permalink,
+            groups.map(({ permalink }) => permalink),
+          ),
         }),
         ({ permalink }) => permalink,
       )
@@ -120,31 +122,27 @@ export const groupRouter = router({
 
       const permalink = await uploadToArweave(input)
       const ts = new Date()
-      const group = await database.group.findUnique({
-        where: { id_communityId: { id: input.id, communityId: community.id } },
+      const group = await database.query.group.findFirst({
+        where: ({ id, communityId }, { and, eq }) =>
+          and(eq(id, input.id), eq(communityId, community.id)),
       })
 
-      await database.$transaction([
-        database.group.upsert({
-          where: {
-            id_communityId: { id: input.id, communityId: community.id },
-          },
-          create: {
-            permalink,
-            id: input.id,
-            communityId: community.id,
-            communityPermalink: input.community,
-            ts,
-          },
-          update: {
-            permalink,
-            communityPermalink: input.community,
-            ts,
-          },
-        }),
-        database.storage.create({ data: { permalink, data: input } }),
-        database.activity.create({
-          data: {
+      await database.transaction((tx) =>
+        Promise.all([
+          tx
+            .insert(table.group)
+            .values({
+              permalink,
+              id: input.id,
+              communityId: community.id,
+              communityPermalink: input.community,
+              ts,
+            })
+            .onDuplicateKeyUpdate({
+              set: { permalink, communityPermalink: input.community, ts },
+            }),
+          tx.insert(table.storage).values({ permalink, data: input }),
+          tx.insert(table.activity).values({
             communityId: community.id,
             actor: input.authorship.author,
             type: group ? 'update_group' : 'create_group',
@@ -158,9 +156,9 @@ export const groupRouter = router({
               group_name: input.name,
             } satisfies Activity,
             ts,
-          },
-        }),
-      ])
+          }),
+        ]),
+      )
 
       return permalink
     }),
@@ -169,8 +167,9 @@ export const groupRouter = router({
     await verifyAuthorship(input.authorship, input.proof)
     const { community } = await verifyGroup(input)
 
-    const group = await database.group.findUnique({
-      where: { id_communityId: { id: input.id, communityId: community.id } },
+    const group = await database.query.group.findFirst({
+      where: ({ id, communityId }, { and, eq }) =>
+        and(eq(id, input.id), eq(communityId, community.id)),
     })
     if (!group) {
       return
@@ -178,17 +177,17 @@ export const groupRouter = router({
 
     const ts = new Date()
 
-    await database.$transaction([
-      database.group.delete({
-        where: {
-          id_communityId: {
-            communityId: community.id,
-            id: input.id,
-          },
-        },
-      }),
-      database.activity.create({
-        data: {
+    await database.transaction((tx) =>
+      Promise.all([
+        tx
+          .delete(table.group)
+          .where(
+            and(
+              eq(table.group.communityId, community.id),
+              eq(table.group.id, input.id),
+            ),
+          ),
+        tx.insert(table.activity).values({
           communityId: community.id,
           actor: input.authorship.author,
           type: 'delete_group',
@@ -202,9 +201,9 @@ export const groupRouter = router({
             group_name: input.name,
           } satisfies Activity,
           ts,
-        },
-      }),
-    ])
+        }),
+      ]),
+    )
   }),
 })
 

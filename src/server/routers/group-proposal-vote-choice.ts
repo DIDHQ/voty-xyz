@@ -15,8 +15,9 @@ export const groupProposalVoteChoiceRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const choices = await database.groupProposalVoteChoice.findMany({
-        where: { proposalPermalink: input.groupProposal },
+      const choices = await database.query.groupProposalVoteChoice.findMany({
+        where: ({ proposalPermalink }, { eq }) =>
+          eq(proposalPermalink, input.groupProposal!),
       })
 
       return mapValues(

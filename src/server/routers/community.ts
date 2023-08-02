@@ -89,12 +89,10 @@ export const communityRouter = router({
             orderBy: ({ ts }, { desc }) => desc(ts),
           })
       const commonCommunities = await database.query.community.findMany({
-        where: input.cursor
-          ? and(
-              notInArray(table.community.id, selectedCommunities),
-              lte(table.community.ts, input.cursor),
-            )
-          : notInArray(table.community.id, selectedCommunities),
+        where: and(
+          notInArray(table.community.id, selectedCommunities),
+          ...(input.cursor ? [lte(table.community.ts, input.cursor)] : []),
+        ),
         limit: 30,
         offset: input.cursor ? 1 : 0,
         orderBy: ({ ts }, { desc }) => desc(ts),

@@ -41,18 +41,12 @@ export const grantProposalVoteRouter = router({
 
       const grantProposalVotes =
         await database.query.grantProposalVote.findMany({
-          where: input.cursor
-            ? and(
-                eq(
-                  table.grantProposalVote.proposalPermalink,
-                  input.grantProposal,
-                ),
-                lte(table.grantProposalVote.ts, input.cursor),
-              )
-            : eq(
-                table.grantProposalVote.proposalPermalink,
-                input.grantProposal,
-              ),
+          where: and(
+            eq(table.grantProposalVote.proposalPermalink, input.grantProposal),
+            ...(input.cursor
+              ? [lte(table.grantProposalVote.ts, input.cursor)]
+              : []),
+          ),
           limit: 50,
           offset: input.cursor ? 1 : 0,
           orderBy: ({ ts }, { desc }) => desc(ts),

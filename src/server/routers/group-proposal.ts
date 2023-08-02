@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { compact, indexBy, last } from 'remeda'
 import { z } from 'zod'
 import dayjs from 'dayjs'
+import { and, eq, gt, inArray, isNull, lte, sql } from 'drizzle-orm'
 
 import { uploadToArweave } from '../../utils/upload'
 import { database } from '../../utils/database'
@@ -26,6 +27,7 @@ import {
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
 import { getImages, getSummary } from '../../utils/markdown'
+import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(groupProposalSchema))
 
@@ -38,8 +40,8 @@ export const groupProposalRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST' })
       }
 
-      const groupProposal = await database.groupProposal.findUnique({
-        where: { permalink: input.permalink },
+      const groupProposal = await database.query.groupProposal.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, input.permalink!),
       })
 
       if (
@@ -47,8 +49,9 @@ export const groupProposalRouter = router({
         (!groupProposal.tsAnnouncing || !groupProposal.tsVoting)
       ) {
         try {
-          const storage = await database.storage.findUnique({
-            where: { permalink: groupProposal.groupPermalink },
+          const storage = await database.query.storage.findFirst({
+            where: ({ permalink }, { eq }) =>
+              eq(permalink, groupProposal.groupPermalink),
           })
           const group = storage ? groupSchema.parse(storage.data) : null
           if (group) {
@@ -56,9 +59,9 @@ export const groupProposalRouter = router({
               commonCoinTypes.AR,
               await getPermalinkSnapshot(groupProposal.permalink),
             )
-            await database.groupProposal.update({
-              where: { permalink: groupProposal.permalink },
-              data: {
+            await database
+              .update(table.groupProposal)
+              .set({
                 ts: timestamp,
                 tsAnnouncing: dayjs(timestamp)
                   .add(group.duration.announcing * 1000)
@@ -67,16 +70,16 @@ export const groupProposalRouter = router({
                   .add(group.duration.announcing * 1000)
                   .add(group.duration.voting * 1000)
                   .toDate(),
-              },
-            })
+              })
+              .where(eq(table.groupProposal.permalink, groupProposal.permalink))
           }
         } catch (err) {
           console.error(err)
         }
       }
 
-      const storage = await database.storage.findUnique({
-        where: { permalink: input.permalink },
+      const storage = await database.query.storage.findFirst({
+        where: ({ permalink }, { eq }) => eq(permalink, input.permalink!),
       })
       return storage && groupProposal
         ? { ...schema.parse(storage.data), votes: groupProposal.votes }
@@ -95,7 +98,7 @@ export const groupProposalRouter = router({
             GroupProposalPhase.ENDED,
           ])
           .optional(),
-        cursor: z.string().optional(),
+        cursor: z.date().optional(),
       }),
     )
     .output(
@@ -112,7 +115,7 @@ export const groupProposalRouter = router({
             tsVoting: z.date().nullable(),
           }),
         ),
-        next: z.string().optional(),
+        next: z.date().optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -123,32 +126,42 @@ export const groupProposalRouter = router({
       const now = new Date()
       const filter =
         input.phase === GroupProposalPhase.CONFIRMING
-          ? { tsAnnouncing: null, tsVoting: null }
+          ? [
+              isNull(table.groupProposal.tsAnnouncing),
+              isNull(table.groupProposal.tsVoting),
+            ]
           : input.phase === GroupProposalPhase.ANNOUNCING
-          ? { ts: { lte: now }, tsAnnouncing: { gt: now } }
+          ? [
+              lte(table.groupProposal.ts, now),
+              gt(table.groupProposal.tsAnnouncing, now),
+            ]
           : input.phase === GroupProposalPhase.VOTING
-          ? { tsAnnouncing: { lte: now }, tsVoting: { gt: now } }
+          ? [
+              lte(table.groupProposal.tsAnnouncing, now),
+              gt(table.groupProposal.tsVoting, now),
+            ]
           : input.phase === GroupProposalPhase.ENDED
-          ? { tsVoting: { lte: now } }
-          : {}
-      const groupProposals = await database.groupProposal.findMany({
-        where: input.groupId
-          ? {
-              communityId: input.communityId,
-              groupId: input.groupId,
-              ...filter,
-            }
-          : { communityId: input.communityId, ...filter },
-        cursor: input.cursor ? { permalink: input.cursor } : undefined,
-        take: 20,
-        skip: input.cursor ? 1 : 0,
-        orderBy: { ts: 'desc' },
+          ? [lte(table.groupProposal.tsVoting, now)]
+          : []
+      const groupProposals = await database.query.groupProposal.findMany({
+        where: and(
+          eq(table.groupProposal.communityId, input.communityId),
+          ...(input.groupId
+            ? [eq(table.groupProposal.groupId, input.groupId)]
+            : []),
+          ...filter,
+          ...(input.cursor ? [lte(table.groupProposal.ts, input.cursor)] : []),
+        ),
+        limit: 20,
+        offset: input.cursor ? 1 : 0,
+        orderBy: ({ ts }, { desc }) => desc(ts),
       })
       const storages = indexBy(
-        await database.storage.findMany({
-          where: {
-            permalink: { in: groupProposals.map(({ permalink }) => permalink) },
-          },
+        await database.query.storage.findMany({
+          where: inArray(
+            table.storage.permalink,
+            groupProposals.map(({ permalink }) => permalink),
+          ),
         }),
         ({ permalink }) => permalink,
       )
@@ -187,7 +200,7 @@ export const groupProposalRouter = router({
               },
             ),
         ),
-        next: last(groupProposals)?.permalink,
+        next: last(groupProposals)?.ts,
       }
     }),
   create: procedure
@@ -203,9 +216,9 @@ export const groupProposalRouter = router({
       const permalink = await uploadToArweave(input)
       const ts = new Date()
 
-      await database.$transaction([
-        database.groupProposal.create({
-          data: {
+      await database.transaction((tx) =>
+        Promise.all([
+          tx.insert(table.groupProposal).values({
             permalink,
             proposer: input.authorship.author,
             communityId: community.id,
@@ -213,21 +226,26 @@ export const groupProposalRouter = router({
             groupPermalink: input.group,
             votes: 0,
             ts,
-          },
-        }),
-        database.community.update({
-          where: { id: community.id },
-          data: { groupProposals: { increment: 1 } },
-        }),
-        database.group.update({
-          where: {
-            id_communityId: { communityId: community.id, id: group.id },
-          },
-          data: { proposals: { increment: 1 } },
-        }),
-        database.storage.create({ data: { permalink, data: input } }),
-        database.activity.create({
-          data: {
+          }),
+          tx
+            .update(table.community)
+            .set({
+              groupProposals: sql`${table.community.groupProposals} + 1`,
+            })
+            .where(eq(table.community.id, community.id)),
+          tx
+            .update(table.group)
+            .set({
+              proposals: sql`${table.group.proposals} + 1`,
+            })
+            .where(
+              and(
+                eq(table.group.communityId, community.id),
+                eq(table.group.id, group.id),
+              ),
+            ),
+          tx.insert(table.storage).values({ permalink, data: input }),
+          tx.insert(table.activity).values({
             communityId: community.id,
             actor: input.authorship.author,
             type: 'create_group_proposal',
@@ -243,9 +261,9 @@ export const groupProposalRouter = router({
               group_proposal_title: input.title,
             } satisfies Activity,
             ts,
-          },
-        }),
-      ])
+          }),
+        ]),
+      )
 
       return permalink
     }),
