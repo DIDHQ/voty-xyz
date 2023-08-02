@@ -16,7 +16,7 @@ export async function getCurrentSnapshot(coinType: number): Promise<string> {
     const { result } = await fetchJson<{ result: string }>(
       ckb,
       postJson({
-        id: Math.random(),
+        id: 1,
         jsonrpc: '2.0',
         method: 'get_tip_block_number',
         params: [],
@@ -53,10 +53,10 @@ export async function getSnapshotTimestamp(
     }>(
       ckb,
       postJson({
-        id: Math.random(),
+        id: 1,
         jsonrpc: '2.0',
         method: 'get_block_by_number',
-        params: [BigInt(snapshot).toString(16)],
+        params: [`0x${BigInt(snapshot).toString(16)}`],
       }),
     )
     return new Date(parseInt(result.header.timestamp))
