@@ -2,7 +2,6 @@ import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 import { NextRequest } from 'next/server'
 
 import { appRouter } from '../../../server/routers/_app'
-import { cacheControl } from '@/src/utils/constants'
 import Sentry from '@/src/utils/sentry'
 
 export const runtime = 'edge'
@@ -13,12 +12,6 @@ export default async function handler(req: NextRequest) {
     router: appRouter,
     req,
     createContext: () => ({ req }),
-    responseMeta({ type, errors }) {
-      if (errors.length === 0 && type === 'query') {
-        return { headers: { [cacheControl[0]]: cacheControl[1] } }
-      }
-      return {}
-    },
     onError({ type, path, input, error }) {
       Sentry.withScope((scope) => {
         scope.setFingerprint([type, path || ''])
