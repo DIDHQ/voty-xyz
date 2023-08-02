@@ -22,12 +22,12 @@ export const activity = mysqlTable(
   },
   (table) => {
     return {
-      communityIdTsTypeIdx: index('Activity_communityId_ts_type_idx').on(
+      primary: primaryKey(table.ts, table.actor),
+      index: index('Activity_communityId_ts_type_idx').on(
         table.communityId,
         table.ts,
         table.type,
       ),
-      activityActorTs: primaryKey(table.actor, table.ts),
     }
   },
 )
@@ -47,8 +47,8 @@ export const community = mysqlTable(
   },
   (table) => {
     return {
-      communityPermalink: primaryKey(table.permalink),
-      communityIdKey: unique('Community_id_key').on(table.id),
+      primary: primaryKey(table.permalink),
+      unique: unique('Community_id_key').on(table.id),
     }
   },
 )
@@ -71,7 +71,7 @@ export const grant = mysqlTable(
   },
   (table) => {
     return {
-      grantPermalink: primaryKey(table.permalink),
+      primary: primaryKey(table.permalink),
     }
   },
 )
@@ -88,10 +88,11 @@ export const grantProposal = mysqlTable(
   },
   (table) => {
     return {
-      grantProposalPermalink: primaryKey(table.permalink),
-      grantProposalGrantPermalinkProposerKey: unique(
-        'GrantProposal_grantPermalink_proposer_key',
-      ).on(table.grantPermalink, table.proposer),
+      primary: primaryKey(table.permalink),
+      unique: unique('GrantProposal_grantPermalink_proposer_key').on(
+        table.grantPermalink,
+        table.proposer,
+      ),
     }
   },
 )
@@ -107,10 +108,10 @@ export const grantProposalSelect = mysqlTable(
   },
   (table) => {
     return {
-      grantProposalSelectPermalink: primaryKey(table.permalink),
-      grantProposalSelectProposalPermalinkKey: unique(
-        'GrantProposalSelect_proposalPermalink_key',
-      ).on(table.proposalPermalink),
+      primary: primaryKey(table.permalink),
+      unique: unique('GrantProposalSelect_proposalPermalink_key').on(
+        table.proposalPermalink,
+      ),
     }
   },
 )
@@ -126,13 +127,14 @@ export const grantProposalVote = mysqlTable(
   },
   (table) => {
     return {
-      proposalPermalinkIdx: index('GrantProposalVote_proposalPermalink_idx').on(
+      primary: primaryKey(table.permalink),
+      index: index('GrantProposalVote_proposalPermalink_idx').on(
         table.proposalPermalink,
       ),
-      grantProposalVotePermalink: primaryKey(table.permalink),
-      grantProposalVoteGrantPermalinkVoterKey: unique(
-        'GrantProposalVote_grantPermalink_voter_key',
-      ).on(table.grantPermalink, table.voter),
+      unique: unique('GrantProposalVote_grantPermalink_voter_key').on(
+        table.grantPermalink,
+        table.voter,
+      ),
     }
   },
 )
@@ -146,10 +148,7 @@ export const grantProposalVoteChoice = mysqlTable(
   },
   (table) => {
     return {
-      grantProposalVoteChoiceChoiceProposalPermalink: primaryKey(
-        table.choice,
-        table.proposalPermalink,
-      ),
+      primary: primaryKey(table.proposalPermalink, table.choice),
     }
   },
 )
@@ -169,8 +168,8 @@ export const group = mysqlTable(
   },
   (table) => {
     return {
-      groupPermalink: primaryKey(table.permalink),
-      groupIdCommunityIdKey: unique('Group_id_communityId_key').on(
+      primary: primaryKey(table.permalink),
+      unique: unique('Group_id_communityId_key').on(
         table.id,
         table.communityId,
       ),
@@ -193,11 +192,11 @@ export const groupProposal = mysqlTable(
   },
   (table) => {
     return {
-      communityIdGroupIdIdx: index('GroupProposal_communityId_groupId_idx').on(
+      primary: primaryKey(table.permalink),
+      index: index('GroupProposal_communityId_groupId_idx').on(
         table.communityId,
         table.groupId,
       ),
-      groupProposalPermalink: primaryKey(table.permalink),
     }
   },
 )
@@ -212,10 +211,11 @@ export const groupProposalVote = mysqlTable(
   },
   (table) => {
     return {
-      groupProposalVotePermalink: primaryKey(table.permalink),
-      groupProposalVoteProposalPermalinkVoterKey: unique(
-        'GroupProposalVote_proposalPermalink_voter_key',
-      ).on(table.proposalPermalink, table.voter),
+      primary: primaryKey(table.permalink),
+      unique: unique('GroupProposalVote_proposalPermalink_voter_key').on(
+        table.proposalPermalink,
+        table.voter,
+      ),
     }
   },
 )
@@ -229,10 +229,7 @@ export const groupProposalVoteChoice = mysqlTable(
   },
   (table) => {
     return {
-      groupProposalVoteChoiceChoiceProposalPermalink: primaryKey(
-        table.choice,
-        table.proposalPermalink,
-      ),
+      primary: primaryKey(table.proposalPermalink, table.choice),
     }
   },
 )
@@ -245,7 +242,7 @@ export const storage = mysqlTable(
   },
   (table) => {
     return {
-      storagePermalink: primaryKey(table.permalink),
+      primary: primaryKey(table.permalink),
     }
   },
 )
@@ -259,10 +256,7 @@ export const subscription = mysqlTable(
   },
   (table) => {
     return {
-      subscriptionCommunityIdSubscriber: primaryKey(
-        table.communityId,
-        table.subscriber,
-      ),
+      primary: primaryKey(table.communityId, table.subscriber),
     }
   },
 )
@@ -278,7 +272,7 @@ export const uploadBuffer = mysqlTable(
   },
   (table) => {
     return {
-      uploadBufferKey: primaryKey(table.key),
+      primary: primaryKey(table.key),
     }
   },
 )
