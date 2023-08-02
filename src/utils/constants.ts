@@ -3,7 +3,7 @@ import { PreviewPermalink } from './types'
 export const isTestnet = !!process.env.NEXT_PUBLIC_TESTNET
 
 export const domain = isTestnet
-  ? 'https://voty-xyz.vercel.app'
+  ? 'https://votyxyz.vercel.app'
   : 'https://voty.xyz'
 
 export const documentTitle = `Voty ${isTestnet ? 'Testnet' : 'Beta'}`
