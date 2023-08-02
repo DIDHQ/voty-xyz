@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { clsx } from 'clsx'
-import { compact } from 'remeda'
+import { compact, last } from 'remeda'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
@@ -39,21 +39,25 @@ import { appRouter } from '@/src/server/routers/_app'
 export const runtime = 'experimental-edge'
 
 export const getServerSideProps: GetServerSideProps<
-  Record<string, unknown>,
-  { group_proposal_permalink: string }
+  Record<string, unknown>
 > = async (context) => {
+  // @see https://github.com/cloudflare/next-on-pages/issues/32
+  const id = last(context.req.url?.split('/') || [])?.split('?')[0]
+  if (id === previewPermalink) {
+    return { props: {} }
+  }
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {},
     transformer: SuperJSON,
   })
-  if (context.params?.group_proposal_permalink) {
+  if (id) {
     await helpers.groupProposal.getByPermalink.prefetch({
-      permalink: id2Permalink(context.params?.group_proposal_permalink),
+      permalink: id2Permalink(id),
     })
   }
   context.res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
-  return { props: { trpcState: helpers.dehydrate() } }
+  return { props: {} }
 }
 
 export default function GroupProposalPage() {

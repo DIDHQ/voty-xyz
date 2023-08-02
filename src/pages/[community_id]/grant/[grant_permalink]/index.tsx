@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { compact } from 'remeda'
+import { compact, last } from 'remeda'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { useCollapse } from 'react-collapsed'
@@ -42,21 +42,25 @@ import { appRouter } from '@/src/server/routers/_app'
 export const runtime = 'experimental-edge'
 
 export const getServerSideProps: GetServerSideProps<
-  Record<string, unknown>,
-  { grant_permalink: string }
+  Record<string, unknown>
 > = async (context) => {
+  // @see https://github.com/cloudflare/next-on-pages/issues/32
+  const id = last(context.req.url?.split('/') || [])?.split('?')[0]
+  if (id === previewPermalink) {
+    return { props: {} }
+  }
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {},
     transformer: SuperJSON,
   })
-  if (context.params?.grant_permalink) {
+  if (id) {
     await helpers.grant.getByPermalink.prefetch({
-      permalink: id2Permalink(context.params?.grant_permalink),
+      permalink: id2Permalink(id),
     })
   }
   context.res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
-  return { props: { trpcState: helpers.dehydrate() } }
+  return { props: {} }
 }
 
 export default function GrantPage() {

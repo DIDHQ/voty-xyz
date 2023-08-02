@@ -1,14 +1,4 @@
-import { NextPageContext } from 'next'
 import Link from 'next/link'
-import { captureException, init, withScope } from '@sentry/browser'
-
-init({
-  dsn:
-    process.env.NODE_ENV === 'development'
-      ? undefined
-      : process.env.NEXT_PUBLIC_SENTRY_DSN,
-  tracesSampleRate: 1.0,
-})
 
 function ErrorPage() {
   return (
@@ -33,15 +23,6 @@ function ErrorPage() {
       </div>
     </main>
   )
-}
-
-ErrorPage.getInitialProps = async (context: NextPageContext) => {
-  withScope((scope) => {
-    scope.setFingerprint([context.pathname, context.query.toString()])
-    captureException(context.err)
-  })
-
-  return {}
 }
 
 export default ErrorPage

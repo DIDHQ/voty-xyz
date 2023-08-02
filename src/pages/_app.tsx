@@ -23,6 +23,7 @@ import {
   coinbaseWallet,
 } from '@rainbow-me/rainbowkit/wallets'
 import { GoogleAnalytics, event } from 'nextjs-google-analytics'
+import { Provider } from 'jotai'
 
 import ShellLayout from '../components/layouts/shell'
 import { trpc } from '../utils/trpc'
@@ -35,6 +36,7 @@ import {
   domain,
   twitterHandle,
 } from '../utils/constants'
+import { store } from '../utils/atoms'
 import '../styles/globals.css'
 import '../styles/editor.css'
 
@@ -115,9 +117,11 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           modalSize="compact"
           theme={lightTheme({ borderRadius: 'small' })}
         >
-          <ShellLayout>
-            <Component {...pageProps} />
-          </ShellLayout>
+          <Provider store={store}>
+            <ShellLayout>
+              <Component {...pageProps} />
+            </ShellLayout>
+          </Provider>
         </RainbowKitProvider>
       </WagmiConfig>
     </>
