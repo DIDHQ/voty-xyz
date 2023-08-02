@@ -282,3 +282,20 @@ export const uploadBuffer = mysqlTable(
     }
   },
 )
+
+export const table = {
+  activity,
+  community,
+  grant,
+  grantProposal,
+  grantProposalSelect,
+  grantProposalVote,
+  grantProposalVoteChoice,
+  group,
+  groupProposal,
+  groupProposalVote,
+  groupProposalVoteChoice,
+  storage,
+  subscription,
+  uploadBuffer,
+}
