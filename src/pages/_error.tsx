@@ -1,6 +1,7 @@
-import { captureUnderscoreErrorException } from '@sentry/nextjs'
 import { NextPageContext } from 'next'
 import Link from 'next/link'
+
+import Sentry from '@/src/utils/sentry'
 
 function ErrorPage() {
   return (
@@ -27,8 +28,11 @@ function ErrorPage() {
   )
 }
 
-ErrorPage.getInitialProps = async (contextData: NextPageContext) => {
-  await captureUnderscoreErrorException(contextData)
+ErrorPage.getInitialProps = async (context: NextPageContext) => {
+  Sentry.withScope((scope) => {
+    scope.setFingerprint([context.pathname, context.query.toString()])
+    Sentry.captureException(context.err)
+  })
 
   return {}
 }

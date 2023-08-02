@@ -1,9 +1,9 @@
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 import { NextRequest } from 'next/server'
-import { withScope, captureException } from '@sentry/nextjs'
 
 import { appRouter } from '../../../server/routers/_app'
 import { cacheControl } from '@/src/utils/constants'
+import Sentry from '@/src/utils/sentry'
 
 export const runtime = 'edge'
 
@@ -20,10 +20,10 @@ export default async function handler(req: NextRequest) {
       return {}
     },
     onError({ type, path, input, error }) {
-      withScope((scope) => {
+      Sentry.withScope((scope) => {
         scope.setFingerprint([type, path || ''])
         scope.setExtra('input', input)
-        captureException(error)
+        Sentry.captureException(error)
       })
       console.error('TRPC Error:', type, path, input, error)
     },
