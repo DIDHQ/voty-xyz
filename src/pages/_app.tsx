@@ -36,6 +36,7 @@ import {
   domain,
   twitterHandle,
 } from '../utils/constants'
+import { store } from '../utils/atoms'
 import '../styles/globals.css'
 import '../styles/editor.css'
 
@@ -116,7 +117,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           modalSize="compact"
           theme={lightTheme({ borderRadius: 'small' })}
         >
-          <Provider>
+          <Provider store={store}>
             <ShellLayout>
               <Component {...pageProps} />
             </ShellLayout>
