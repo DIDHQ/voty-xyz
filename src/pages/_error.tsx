@@ -1,9 +1,6 @@
-import { NextPageContext } from 'next'
 import Link from 'next/link'
 
-import Sentry from '@/src/utils/sentry'
-
-function ErrorPage() {
+export default function ErrorPage() {
   return (
     <main className="flex w-full grow flex-col">
       <div className="my-auto shrink-0 py-16">
@@ -27,14 +24,3 @@ function ErrorPage() {
     </main>
   )
 }
-
-ErrorPage.getInitialProps = async (context: NextPageContext) => {
-  Sentry.withScope((scope) => {
-    scope.setFingerprint([context.pathname, context.query.toString()])
-    Sentry.captureException(context.err)
-  })
-
-  return {}
-}
-
-export default ErrorPage
