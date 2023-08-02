@@ -1,12 +1,28 @@
-import { arweaveHost, coinTypeToChainId, commonCoinTypes } from './constants'
-import { fetchJson } from './fetcher'
+import {
+  arweaveHost,
+  coinTypeToChainId,
+  commonCoinTypes,
+  isTestnet,
+} from './constants'
+import { fetchJson, postJson } from './fetcher'
 import { permalink2Id } from './permalink'
+
+const ckb = isTestnet
+  ? 'https://test-node-api.did.id/node'
+  : 'https://node-api.did.id/node'
 
 export async function getCurrentSnapshot(coinType: number): Promise<string> {
   if (coinType === commonCoinTypes.CKB) {
-    const { default: ckb } = await import('./sdks/ckb')
-    const blockNumber = await ckb.rpc.getTipBlockNumber()
-    return parseInt(blockNumber).toString()
+    const { result } = await fetchJson<{ result: string }>(
+      ckb,
+      postJson({
+        id: 1,
+        jsonrpc: '2.0',
+        method: 'get_tip_block_number',
+        params: [],
+      }),
+    )
+    return parseInt(result).toString()
   }
   if (!coinTypeToChainId[coinType]) {
     throw new Error('no client')
@@ -28,9 +44,22 @@ export async function getSnapshotTimestamp(
     return new Date(block.timestamp * 1000)
   }
   if (coinType === commonCoinTypes.CKB) {
-    const { default: ckb } = await import('./sdks/ckb')
-    const block = await ckb.rpc.getBlockByNumber(BigInt(snapshot))
-    return new Date(parseInt(block.header.timestamp))
+    const { result } = await fetchJson<{
+      result: {
+        header: {
+          timestamp: string
+        }
+      }
+    }>(
+      ckb,
+      postJson({
+        id: 1,
+        jsonrpc: '2.0',
+        method: 'get_block_by_number',
+        params: [`0x${BigInt(snapshot).toString(16)}`],
+      }),
+    )
+    return new Date(parseInt(result.header.timestamp))
   }
   throw new Error(`current snapshot coin type unsupported: ${coinType}`)
 }
