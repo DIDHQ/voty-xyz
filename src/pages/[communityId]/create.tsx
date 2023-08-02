@@ -11,15 +11,15 @@ import { Group } from '../../utils/schemas/v1/group'
 import TextLink from '../../components/basic/text-link'
 
 export default function CreateGroupPage() {
-  const query = useRouterQuery<['community_id']>()
+  const query = useRouterQuery<['communityId']>()
   const { data: community, isLoading } = trpc.community.getById.useQuery(
-    { id: query.community_id },
-    { enabled: !!query.community_id },
+    { id: query.communityId },
+    { enabled: !!query.communityId },
   )
   const newGroup = useMemo(() => nanoid(), [])
   const initialValue = useMemo(
     () =>
-      community && query.community_id
+      community && query.communityId
         ? ({
             id: newGroup,
             name: '',
@@ -31,7 +31,7 @@ export default function CreateGroupPage() {
                 operands: [
                   {
                     function: 'prefixes_dot_suffix_exact_match',
-                    arguments: [query.community_id, ['']],
+                    arguments: [query.communityId, ['']],
                   },
                 ],
               },
@@ -41,7 +41,7 @@ export default function CreateGroupPage() {
                   {
                     name: '',
                     function: 'prefixes_dot_suffix_fixed_power',
-                    arguments: [query.community_id, [], '1'],
+                    arguments: [query.communityId, [], '1'],
                   },
                 ],
               },
@@ -53,7 +53,7 @@ export default function CreateGroupPage() {
             criteria_for_approval: '',
           } satisfies Group)
         : undefined,
-    [community, newGroup, query.community_id],
+    [community, newGroup, query.communityId],
   )
 
   return (
@@ -64,20 +64,20 @@ export default function CreateGroupPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextLink
-          href={`/${query.community_id}`}
+          href={`/${query.communityId}`}
           className="mt-6 inline-block sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
         </TextLink>
-        {query.community_id && initialValue !== undefined ? (
+        {query.communityId && initialValue !== undefined ? (
           <GroupForm
-            communityId={query.community_id}
+            communityId={query.communityId}
             initialValue={initialValue}
             preview={{
-              from: `/${query.community_id}/create`,
-              to: `/${query.community_id}/group/${newGroup}/about`,
+              from: `/${query.communityId}/create`,
+              to: `/${query.communityId}/group/${newGroup}/about`,
               template: `You are creating workgroup on Voty\n\nhash:\n{keccak256}`,
-              author: query.community_id,
+              author: query.communityId,
             }}
             className="pt-6 sm:pt-8"
           />

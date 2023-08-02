@@ -64,11 +64,11 @@ export const getServerSideProps: GetServerSideProps<
 }
 
 export default function GrantPage() {
-  const query = useRouterQuery<['community_id', 'grant_permalink']>()
+  const query = useRouterQuery<['communityId', 'grantPermalink']>()
   const previewGrant = useAtomValue(previewGrantAtom)
   const { data, isLoading } = trpc.grant.getByPermalink.useQuery(
-    { permalink: query.grant_permalink },
-    { enabled: !!query.grant_permalink },
+    { permalink: query.grantPermalink },
+    { enabled: !!query.grantPermalink },
   )
   const grant = useMemo<
     | (Grant & {
@@ -88,10 +88,10 @@ export default function GrantPage() {
         authorship: { author: previewGrant.preview.author },
       }
     }
-    return query.grant_permalink && data
-      ? { ...data, permalink: query.grant_permalink }
+    return query.grantPermalink && data
+      ? { ...data, permalink: query.grantPermalink }
       : undefined
-  }, [data, previewGrant, query.grant_permalink])
+  }, [data, previewGrant, query.grantPermalink])
   const { data: community, isLoading: isCommunityLoading } =
     trpc.community.getByPermalink.useQuery(
       { permalink: grant?.community },
@@ -99,8 +99,8 @@ export default function GrantPage() {
     )
   const { account } = useWallet()
   const { data: grantProposals } = trpc.grantProposal.list.useQuery(
-    { grantPermalink: query.grant_permalink, viewer: account?.address },
-    { enabled: !!query.grant_permalink },
+    { grantPermalink: query.grantPermalink, viewer: account?.address },
+    { enabled: !!query.grantPermalink },
   )
   const title = useMemo(
     () => compact([grant?.name, community?.name, documentTitle]).join(' - '),
@@ -223,7 +223,7 @@ export default function GrantPage() {
                   />
                 ) : null}
                 <GrantProposalCreateButton
-                  communityId={query.community_id}
+                  communityId={query.communityId}
                   grant={grant}
                   className="ml-5"
                 />
@@ -238,9 +238,9 @@ export default function GrantPage() {
               )
               .map((grantProposal) => (
                 <li key={grantProposal.permalink}>
-                  {query.community_id && grant ? (
+                  {query.communityId && grant ? (
                     <GrantProposalCard
-                      communityId={query.community_id}
+                      communityId={query.communityId}
                       grantProposal={grantProposal}
                       phase={phase}
                     />

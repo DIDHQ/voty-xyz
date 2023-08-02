@@ -10,10 +10,10 @@ import { documentTitle } from '../../../../utils/constants'
 import { GroupProposal } from '../../../../utils/schemas/v1/group-proposal'
 
 export default function CreateGroupProposalPage() {
-  const query = useRouterQuery<['community_id', 'group_id']>()
+  const query = useRouterQuery<['communityId', 'group_id']>()
   const { data: group, isLoading } = trpc.group.getById.useQuery(
-    { communityId: query.community_id, id: query.group_id },
-    { enabled: !!query.community_id && !!query.group_id },
+    { communityId: query.communityId, id: query.group_id },
+    { enabled: !!query.communityId && !!query.group_id },
   )
   const initialValue = useMemo<Partial<GroupProposal>>(
     () => ({ voting_type: 'single', choices: ['', ''] }),
@@ -28,16 +28,16 @@ export default function CreateGroupProposalPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextLink
-          disabled={!query.community_id || !query.group_id}
-          href={`/${query.community_id}/group/${query.group_id}`}
+          disabled={!query.communityId || !query.group_id}
+          href={`/${query.communityId}/group/${query.group_id}`}
           className="mt-6 inline-block sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
         </TextLink>
-        {query.community_id && group ? (
+        {query.communityId && group ? (
           <GroupProposalForm
             initialValue={initialValue}
-            communityId={query.community_id}
+            communityId={query.communityId}
             group={group}
             className="pt-6 sm:pt-8"
           />

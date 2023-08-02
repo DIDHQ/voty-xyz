@@ -8,10 +8,10 @@ import TextLink from '../../components/basic/text-link'
 
 export default function CommunitySettingsPage() {
   const router = useRouter()
-  const query = useRouterQuery<['community_id']>()
+  const query = useRouterQuery<['communityId']>()
   const { data: community, isLoading } = trpc.community.getById.useQuery(
-    { id: query.community_id },
-    { enabled: !!query.community_id },
+    { id: query.communityId },
+    { enabled: !!query.communityId },
   )
 
   return (
@@ -19,20 +19,20 @@ export default function CommunitySettingsPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextLink
-          href={`/${query.community_id}/about`}
+          href={`/${query.communityId}/about`}
           className="mt-6 inline-block sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
         </TextLink>
-        {query.community_id && community !== undefined ? (
+        {query.communityId && community !== undefined ? (
           <CommunityForm
-            communityId={query.community_id}
+            communityId={query.communityId}
             initialValue={community}
             preview={{
               from: router.asPath,
-              to: `/${query.community_id}/about`,
+              to: `/${query.communityId}/about`,
               template: `You are updating community on Voty\n\nhash:\n{keccak256}`,
-              author: query.community_id,
+              author: query.communityId,
             }}
             className="flex w-full flex-col"
           />

@@ -17,11 +17,11 @@ import { hasEnabledSubDID } from '../../utils/sdks/dotbit/subdid'
 import { subDIDWebsite } from '../../utils/constants'
 
 export default function CommunityIndexPage() {
-  const query = useRouterQuery<['community_id']>()
+  const query = useRouterQuery<['communityId']>()
   const { data: groups, isLoading: isGroupsLoading } =
     trpc.group.listByCommunityId.useQuery(
-      { communityId: query.community_id },
-      { enabled: !!query.community_id },
+      { communityId: query.communityId },
+      { enabled: !!query.communityId },
     )
   const {
     data,
@@ -29,8 +29,8 @@ export default function CommunityIndexPage() {
     hasNextPage,
     isLoading: isActivitiesLoading,
   } = trpc.activity.list.useInfiniteQuery(
-    { communityId: query.community_id },
-    { enabled: !!query.community_id, getNextPageParam: ({ next }) => next },
+    { communityId: query.communityId },
+    { enabled: !!query.communityId, getNextPageParam: ({ next }) => next },
   )
   const activities = useMemo(
     () => data?.pages.flatMap(({ data }) => data),
@@ -42,11 +42,11 @@ export default function CommunityIndexPage() {
       fetchNextPage()
     }
   }, [fetchNextPage, hasNextPage, inView])
-  const isManager = useIsManager(query.community_id)
+  const isManager = useIsManager(query.communityId)
   const { data: enabledSubDID } = useQuery(
-    ['hasEnabledSubDID', query.community_id],
-    () => hasEnabledSubDID(query.community_id!),
-    { enabled: !!query.community_id && isManager },
+    ['hasEnabledSubDID', query.communityId],
+    () => hasEnabledSubDID(query.communityId!),
+    { enabled: !!query.communityId && isManager },
   )
 
   return (
@@ -68,7 +68,7 @@ export default function CommunityIndexPage() {
           className="mt-24"
           description="You must enable SubDID for your community."
           footer={
-            <Link href={`${subDIDWebsite}${query.community_id}`}>
+            <Link href={`${subDIDWebsite}${query.communityId}`}>
               <Button primary icon={ArrowUpRightIcon}>
                 Enable SubDID
               </Button>
@@ -81,7 +81,7 @@ export default function CommunityIndexPage() {
           className="mt-24"
           description="Workgroup helps you categorize proposals with different focuses. You can also set up workgroups to your community structure's needs."
           footer={
-            <Link href={`/${query.community_id}/create`}>
+            <Link href={`/${query.communityId}/create`}>
               <Button primary icon={PlusIcon}>
                 Workgroup
               </Button>

@@ -8,10 +8,10 @@ import GrantForm from '../../../components/grant-form'
 import { Grant } from '../../../utils/schemas/v1/grant'
 
 export default function CreateGrantPage() {
-  const query = useRouterQuery<['community_id']>()
+  const query = useRouterQuery<['communityId']>()
   const initialValue = useMemo<Partial<Grant> | null>(
     () =>
-      query.community_id
+      query.communityId
         ? {
             permission: {
               proposing: {
@@ -20,7 +20,7 @@ export default function CreateGrantPage() {
                   {
                     name: 'Any SubDID',
                     function: 'prefixes_dot_suffix_exact_match',
-                    arguments: [query.community_id, []],
+                    arguments: [query.communityId, []],
                   },
                 ],
               },
@@ -30,7 +30,7 @@ export default function CreateGrantPage() {
                   {
                     name: 'Committee',
                     function: 'prefixes_dot_suffix_exact_match',
-                    arguments: [query.community_id, []],
+                    arguments: [query.communityId, []],
                   },
                 ],
               },
@@ -40,7 +40,7 @@ export default function CreateGrantPage() {
                   {
                     name: 'Any SubDID',
                     function: 'prefixes_dot_suffix_fixed_power',
-                    arguments: [query.community_id, [], '1'],
+                    arguments: [query.communityId, [], '1'],
                   },
                 ],
               },
@@ -52,7 +52,7 @@ export default function CreateGrantPage() {
             },
           }
         : null,
-    [query.community_id],
+    [query.communityId],
   )
 
   return (
@@ -62,21 +62,21 @@ export default function CreateGrantPage() {
       </Head>
       <div className="w-full">
         <TextLink
-          disabled={!query.community_id}
-          href={`/${query.community_id}/grant`}
+          disabled={!query.communityId}
+          href={`/${query.communityId}/grant`}
           className="mt-6 inline-block sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
         </TextLink>
-        {query.community_id ? (
+        {query.communityId ? (
           <GrantForm
-            communityId={query.community_id}
+            communityId={query.communityId}
             initialValue={initialValue}
             preview={{
-              from: `/${query.community_id}/grant/create`,
-              to: `/${query.community_id}/grant/${previewPermalink}`,
+              from: `/${query.communityId}/grant/create`,
+              to: `/${query.communityId}/grant/${previewPermalink}`,
               template: `You are creating grant on Voty\n\nhash:\n{keccak256}`,
-              author: query.community_id,
+              author: query.communityId,
             }}
           />
         ) : null}

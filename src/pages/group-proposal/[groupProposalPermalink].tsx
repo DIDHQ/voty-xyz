@@ -61,12 +61,12 @@ export const getServerSideProps: GetServerSideProps<
 }
 
 export default function GroupProposalPage() {
-  const query = useRouterQuery<['group_proposal_permalink']>()
+  const query = useRouterQuery<['groupProposalPermalink']>()
   const previewGroupProposal = useAtomValue(previewGroupProposalAtom)
   const { data, isLoading, refetch } =
     trpc.groupProposal.getByPermalink.useQuery(
-      { permalink: query.group_proposal_permalink },
-      { enabled: !!query.group_proposal_permalink },
+      { permalink: query.groupProposalPermalink },
+      { enabled: !!query.groupProposalPermalink },
     )
   const groupProposal = useMemo<
     | (GroupProposal & {
@@ -84,10 +84,10 @@ export default function GroupProposalPage() {
         authorship: { author: previewGroupProposal.preview.author },
       }
     }
-    return query.group_proposal_permalink && data
-      ? { ...data, permalink: query.group_proposal_permalink }
+    return query.groupProposalPermalink && data
+      ? { ...data, permalink: query.groupProposalPermalink }
       : undefined
-  }, [data, previewGroupProposal, query.group_proposal_permalink])
+  }, [data, previewGroupProposal, query.groupProposalPermalink])
   const { data: group, isLoading: isGroupLoading } =
     trpc.group.getByPermalink.useQuery(
       { permalink: groupProposal?.group },
@@ -104,9 +104,9 @@ export default function GroupProposalPage() {
     hasNextPage,
     refetch: refetchList,
   } = trpc.groupProposalVote.list.useInfiniteQuery(
-    { groupProposal: query.group_proposal_permalink },
+    { groupProposal: query.groupProposalPermalink },
     {
-      enabled: !!query.group_proposal_permalink,
+      enabled: !!query.groupProposalPermalink,
       getNextPageParam: ({ next }) => next,
     },
   )

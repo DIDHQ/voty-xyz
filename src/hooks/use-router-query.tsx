@@ -16,17 +16,17 @@ export default function useRouterQuery<S extends string[] = []>() {
           router.query.grant_permalink !== previewPermalink
             ? id2Permalink(router.query.grant_permalink)
             : undefined,
-        grant_proposal_permalink:
-          typeof router.query.grant_proposal_permalink === 'string' &&
-          router.query.grant_proposal_permalink &&
-          router.query.grant_proposal_permalink !== previewPermalink
-            ? id2Permalink(router.query.grant_proposal_permalink)
+        grantProposalPermalink:
+          typeof router.query.grantProposalPermalink === 'string' &&
+          router.query.grantProposalPermalink &&
+          router.query.grantProposalPermalink !== previewPermalink
+            ? id2Permalink(router.query.grantProposalPermalink)
             : undefined,
-        group_proposal_permalink:
-          typeof router.query.group_proposal_permalink === 'string' &&
-          router.query.group_proposal_permalink &&
-          router.query.group_proposal_permalink !== previewPermalink
-            ? id2Permalink(router.query.group_proposal_permalink)
+        groupProposalPermalink:
+          typeof router.query.groupProposalPermalink === 'string' &&
+          router.query.groupProposalPermalink &&
+          router.query.groupProposalPermalink !== previewPermalink
+            ? id2Permalink(router.query.groupProposalPermalink)
             : undefined,
       }) as Partial<{
         [key in S[number]]: string

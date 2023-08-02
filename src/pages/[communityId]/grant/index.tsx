@@ -15,15 +15,15 @@ import Button from '../../../components/basic/button'
 import useIsManager from '../../../hooks/use-is-manager'
 
 export default function GrantsIndexPage() {
-  const query = useRouterQuery<['community_id']>()
+  const query = useRouterQuery<['communityId']>()
   const [phase, setPhase] = useState<GrantPhase | 'All'>('All')
   const { data, fetchNextPage, hasNextPage, isLoading } =
     trpc.grant.listByCommunityId.useInfiniteQuery(
       {
-        communityId: query.community_id,
+        communityId: query.communityId,
         phase: phase === 'All' ? undefined : phase,
       },
-      { enabled: !!query.community_id, getNextPageParam: ({ next }) => next },
+      { enabled: !!query.communityId, getNextPageParam: ({ next }) => next },
     )
   const grants = useMemo(() => data?.pages.flatMap(({ data }) => data), [data])
   const { ref, inView } = useInView()
@@ -42,7 +42,7 @@ export default function GrantsIndexPage() {
     ],
     [],
   )
-  const isManager = useIsManager(query.community_id)
+  const isManager = useIsManager(query.communityId)
 
   return (
     <CommunityLayout>
@@ -56,7 +56,7 @@ export default function GrantsIndexPage() {
             onChange={(p) => setPhase(p as GrantPhase | 'All')}
           />
           {isManager ? (
-            <Link href={`/${query.community_id}/grant/create`} className="ml-5">
+            <Link href={`/${query.communityId}/grant/create`} className="ml-5">
               <Button primary icon={PlusIcon}>
                 Topic Grant
               </Button>
@@ -74,8 +74,8 @@ export default function GrantsIndexPage() {
         <ul className="mt-5 space-y-5">
           {grants?.map((grant) => (
             <li key={grant.permalink}>
-              {query.community_id ? (
-                <GrantCard communityId={query.community_id} grant={grant} />
+              {query.communityId ? (
+                <GrantCard communityId={query.communityId} grant={grant} />
               ) : null}
             </li>
           ))}

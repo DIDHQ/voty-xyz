@@ -75,12 +75,12 @@ export const getServerSideProps: GetServerSideProps<
 }
 
 export default function GrantProposalPage() {
-  const query = useRouterQuery<['grant_proposal_permalink']>()
+  const query = useRouterQuery<['grantProposalPermalink']>()
   const previewGrantProposal = useAtomValue(previewGrantProposalAtom)
   const { data, isLoading, refetch } =
     trpc.grantProposal.getByPermalink.useQuery(
-      { permalink: query.grant_proposal_permalink },
-      { enabled: !!query.grant_proposal_permalink },
+      { permalink: query.grantProposalPermalink },
+      { enabled: !!query.grantProposalPermalink },
     )
   const grantProposal = useMemo<
     | (GrantProposal & {
@@ -102,10 +102,10 @@ export default function GrantProposalPage() {
         authorship: { author: previewGrantProposal.preview.author },
       }
     }
-    return query.grant_proposal_permalink && data
-      ? { ...data, permalink: query.grant_proposal_permalink }
+    return query.grantProposalPermalink && data
+      ? { ...data, permalink: query.grantProposalPermalink }
       : undefined
-  }, [data, previewGrantProposal, query.grant_proposal_permalink])
+  }, [data, previewGrantProposal, query.grantProposalPermalink])
   const { data: grant, isLoading: isGrantLoading } =
     trpc.grant.getByPermalink.useQuery(
       { permalink: grantProposal?.grant },
@@ -122,9 +122,9 @@ export default function GrantProposalPage() {
     hasNextPage,
     refetch: refetchList,
   } = trpc.grantProposalVote.list.useInfiniteQuery(
-    { grantProposal: query.grant_proposal_permalink },
+    { grantProposal: query.grantProposalPermalink },
     {
-      enabled: !!query.grant_proposal_permalink,
+      enabled: !!query.grantProposalPermalink,
       getNextPageParam: ({ next }) => next,
     },
   )

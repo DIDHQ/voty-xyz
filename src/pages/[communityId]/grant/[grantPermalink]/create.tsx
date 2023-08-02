@@ -11,10 +11,10 @@ import { GrantProposal } from '../../../../utils/schemas/v1/grant-proposal'
 import { permalink2Id } from '../../../../utils/permalink'
 
 export default function CreateGrantProposalPage() {
-  const query = useRouterQuery<['community_id', 'grant_permalink']>()
+  const query = useRouterQuery<['communityId', 'grantPermalink']>()
   const { data: grant, isLoading } = trpc.grant.getByPermalink.useQuery(
-    { permalink: query.grant_permalink },
-    { enabled: !!query.grant_permalink },
+    { permalink: query.grantPermalink },
+    { enabled: !!query.grantPermalink },
   )
   const initialValue = useMemo<Partial<GrantProposal>>(() => ({}), [])
 
@@ -26,20 +26,20 @@ export default function CreateGrantProposalPage() {
       <LoadingBar loading={isLoading} />
       <div className="w-full">
         <TextLink
-          disabled={!query.community_id || !query.grant_permalink}
-          href={`/${query.community_id}/grant/${
-            query.grant_permalink ? permalink2Id(query.grant_permalink) : ''
+          disabled={!query.communityId || !query.grantPermalink}
+          href={`/${query.communityId}/grant/${
+            query.grantPermalink ? permalink2Id(query.grantPermalink) : ''
           }`}
           className="mt-6 inline-block sm:mt-8"
         >
           <h2 className="text-base font-semibold">← Back</h2>
         </TextLink>
-        {query.community_id && query.grant_permalink && grant ? (
+        {query.communityId && query.grantPermalink && grant ? (
           <GrantProposalForm
             initialValue={initialValue}
-            communityId={query.community_id}
+            communityId={query.communityId}
             grant={grant}
-            grantPermalink={query.grant_permalink}
+            grantPermalink={query.grantPermalink}
             className="pt-6 sm:pt-8"
           />
         ) : null}

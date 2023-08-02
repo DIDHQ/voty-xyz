@@ -8,7 +8,7 @@ import { documentTitle } from '../../utils/constants'
 
 export default function CreateEntryPage() {
   const router = useRouter()
-  const query = useRouterQuery<['community_id']>()
+  const query = useRouterQuery<['communityId']>()
 
   return (
     <>
@@ -19,15 +19,15 @@ export default function CreateEntryPage() {
         <TextLink href="/create" className="mt-6 inline-block sm:mt-8">
           <h2 className="text-base font-semibold">← Back</h2>
         </TextLink>
-        {query.community_id ? (
+        {query.communityId ? (
           <CommunityForm
-            communityId={query.community_id}
+            communityId={query.communityId}
             initialValue={null}
             preview={{
               from: router.asPath,
-              to: `/${query.community_id}/about`,
+              to: `/${query.communityId}/about`,
               template: `You are creating community on Voty\n\nhash:\n{keccak256}`,
-              author: query.community_id,
+              author: query.communityId,
             }}
             className="flex w-full flex-col"
           />
