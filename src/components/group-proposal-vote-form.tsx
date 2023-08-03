@@ -65,7 +65,7 @@ export default function GroupProposalVoteForm(props: {
           obj[did] = decimals[index]
           return obj
         },
-        {} as { [key: string]: Decimal },
+        {} as { [key: string]: Decimal | undefined },
       )
     },
     { enabled: !!dids },
@@ -127,7 +127,7 @@ export default function GroupProposalVoteForm(props: {
     () =>
       voted && powers
         ? dids
-            ?.filter((did) => powers[did].gt(0))
+            ?.filter((did) => powers[did]?.gt(0))
             .map((did) => ({
               did,
               label: `${voted[did] ? '(voted) ' : ''}${powers[did]}`,

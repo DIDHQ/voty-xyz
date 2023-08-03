@@ -90,7 +90,10 @@ export default function GroupProposalForm(props: {
       })
       return snapshots.reduce(
         (obj, snapshot, index) => {
-          obj[requiredCoinTypes[index]] = snapshot.toString()
+          const requiredCoinType = requiredCoinTypes[index]
+          if (typeof requiredCoinType === 'number') {
+            obj[requiredCoinType] = snapshot.toString()
+          }
           return obj
         },
         {} as { [coinType: string]: string },

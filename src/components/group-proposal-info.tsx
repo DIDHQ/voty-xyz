@@ -95,7 +95,7 @@ export default function GroupProposalInfo(props: {
             >
               {formatNumber(
                 parseInt(
-                  props.groupProposal.snapshots[commonCoinTypes.CKB],
+                  props.groupProposal.snapshots[commonCoinTypes.CKB] || '0',
                   10,
                 ),
               )}

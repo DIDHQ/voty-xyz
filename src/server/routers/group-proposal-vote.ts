@@ -71,7 +71,7 @@ export const groupProposalVoteRouter = router({
             .map(({ permalink }) => {
               try {
                 return {
-                  ...schema.parse(storages[permalink].data),
+                  ...schema.parse(storages[permalink]!.data),
                   permalink,
                 }
               } catch {
@@ -110,7 +110,7 @@ export const groupProposalVoteRouter = router({
 
       return mapValues(
         indexBy(groupProposalVotes, ({ voter }) => voter),
-        ({ permalink }) => schema.parse(storages[permalink].data).total_power,
+        ({ permalink }) => schema.parse(storages[permalink]!.data).total_power,
       )
     }),
   create: procedure

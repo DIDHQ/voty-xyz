@@ -84,11 +84,11 @@ export default function GrantInfo(props: {
                     >
                       {
                         props.grant?.permission.selecting?.operands[0]
-                          .arguments[1].length
+                          ?.arguments[1].length
                       }{' '}
                       member
                       {props.grant?.permission.selecting?.operands[0]
-                        .arguments[1].length &&
+                        ?.arguments[1].length &&
                       props.grant?.permission.selecting?.operands[0]
                         .arguments[1].length > 1
                         ? 's'
@@ -123,7 +123,10 @@ export default function GrantInfo(props: {
                 }`}
               >
                 {formatNumber(
-                  parseInt(props.grant.snapshots[commonCoinTypes.CKB], 10),
+                  parseInt(
+                    props.grant.snapshots[commonCoinTypes.CKB] || '0',
+                    10,
+                  ),
                 )}
               </TextLink>
             </DetailItem>
@@ -197,9 +200,9 @@ export default function GrantInfo(props: {
               phase.
             </li>
             <li>
-              The top <b>{props.grant?.funding[0][1]}</b> proposal
-              {props.grant?.funding[0][1] === 1 ? '' : 's'} will get{' '}
-              <b>{props.grant?.funding[0][0]}</b> each at the end.
+              The top <b>{props.grant?.funding[0]?.[1]}</b> proposal
+              {props.grant?.funding[0]?.[1] === 1 ? '' : 's'} will get{' '}
+              <b>{props.grant?.funding[0]?.[0]}</b> each at the end.
             </li>
           </ul>
         </Article>

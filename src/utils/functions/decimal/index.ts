@@ -33,7 +33,7 @@ export async function calculateDecimal(
     }
     throw new Error(`unsupported operation: ${data.operation}`)
   }
-  return calculateDecimalFunctions[data.function](...data.arguments).execute(
+  return calculateDecimalFunctions[data.function]!(...data.arguments).execute(
     did,
     snapshots,
   )
@@ -49,6 +49,6 @@ export function requiredCoinTypesOfDecimalSets(
       ),
     )
   }
-  return calculateDecimalFunctions[data.function](...data.arguments)
+  return calculateDecimalFunctions[data.function]!(...data.arguments)
     .requiredCoinTypes
 }

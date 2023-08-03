@@ -182,7 +182,7 @@ export const grantRouter = router({
                 tsVoting,
               }) => {
                 try {
-                  const grant = schema.parse(storages[permalink].data)
+                  const grant = schema.parse(storages[permalink]!.data)
                   return {
                     ...grant,
                     images: getImages(grant.introduction),
@@ -209,14 +209,14 @@ export const grantRouter = router({
         .refine(
           (grant) =>
             grant.permission.proposing.operands.length === 1 &&
-            grant.permission.proposing.operands[0].arguments[0] ===
+            grant.permission.proposing.operands[0]?.arguments[0] ===
               grant.authorship.author &&
             grant.permission.proposing.operands[0].arguments[1].length === 0,
         )
         .refine(
           (grant) =>
             grant.permission.voting.operands.length === 1 &&
-            grant.permission.voting.operands[0].arguments[0] ===
+            grant.permission.voting.operands[0]?.arguments[0] ===
               grant.authorship.author &&
             grant.permission.voting.operands[0].arguments[1].length === 0 &&
             grant.permission.voting.operands[0].arguments[2] === '1',
@@ -225,7 +225,7 @@ export const grantRouter = router({
           (grant) =>
             !grant.permission.selecting ||
             (grant.permission.selecting.operands.length === 1 &&
-              grant.permission.selecting.operands[0].arguments[0] ===
+              grant.permission.selecting.operands[0]?.arguments[0] ===
                 grant.authorship.author &&
               grant.permission.selecting.operands[0].arguments[1].length > 0),
         ),

@@ -32,7 +32,7 @@ export async function checkBoolean(
     }
     throw new Error(`unsupported operation: ${data.operation}`)
   }
-  return checkBooleanFunctions[data.function](...data.arguments).execute(
+  return checkBooleanFunctions[data.function]!(...data.arguments).execute(
     did,
     snapshots,
   )
@@ -48,6 +48,6 @@ export function requiredCoinTypesOfBooleanSets(
       ),
     )
   }
-  return checkBooleanFunctions[data.function](...data.arguments)
+  return checkBooleanFunctions[data.function]!(...data.arguments)
     .requiredCoinTypes
 }

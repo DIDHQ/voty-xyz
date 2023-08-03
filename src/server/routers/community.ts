@@ -159,7 +159,7 @@ export const communityRouter = router({
               try {
                 return {
                   permalink,
-                  ...schemaListItem.parse(storages[permalink].data),
+                  ...schemaListItem.parse(storages[permalink]!.data),
                 }
               } catch {
                 return

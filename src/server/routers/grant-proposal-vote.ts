@@ -71,7 +71,7 @@ export const grantProposalVoteRouter = router({
             .map(({ permalink }) => {
               try {
                 return {
-                  ...schema.parse(storages[permalink].data),
+                  ...schema.parse(storages[permalink]!.data),
                   permalink,
                 }
               } catch {
@@ -110,13 +110,14 @@ export const grantProposalVoteRouter = router({
 
       return mapValues(
         indexBy(grantProposalVotes, ({ voter }) => voter),
-        ({ permalink }) => schema.parse(storages[permalink].data).total_power,
+        ({ permalink }) => schema.parse(storages[permalink]!.data).total_power,
       )
     }),
   create: procedure
     .input(
       schema.refine(
-        (vote) => vote.powers[Object.keys(vote.powers)[0]] === vote.total_power,
+        (vote) =>
+          vote.powers[Object.keys(vote.powers)[0]!] === vote.total_power,
         'Illegal vote',
       ),
     )

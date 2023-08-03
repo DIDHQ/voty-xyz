@@ -78,7 +78,7 @@ export const subscriptionRouter = router({
       return compact(
         subscriptions
           .map(
-            ({ communityId }) => storages[communities[communityId].permalink],
+            ({ communityId }) => storages[communities[communityId]!.permalink]!,
           )
           .filter((community) => community)
           .map(({ permalink, data }) => {

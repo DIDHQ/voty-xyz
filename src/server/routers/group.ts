@@ -89,7 +89,7 @@ export const groupRouter = router({
           .filter(({ permalink }) => storages[permalink])
           .map(({ permalink }) => {
             try {
-              return schema.parse(storages[permalink].data)
+              return schema.parse(storages[permalink]!.data)
             } catch {
               return
             }
@@ -106,7 +106,7 @@ export const groupRouter = router({
         .refine(
           (group) =>
             group.permission.proposing.operands.length === 1 &&
-            group.permission.proposing.operands[0].arguments[0] ===
+            group.permission.proposing.operands[0]?.arguments[0] ===
               group.authorship.author &&
             group.permission.proposing.operands[0].arguments[1].length > 0,
         )

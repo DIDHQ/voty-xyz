@@ -183,7 +183,7 @@ export const groupProposalRouter = router({
                 tsVoting,
               }) => {
                 try {
-                  const groupProposal = schema.parse(storages[permalink].data)
+                  const groupProposal = schema.parse(storages[permalink]!.data)
                   return {
                     ...groupProposal,
                     images: getImages(groupProposal.content),

@@ -149,7 +149,7 @@ export const grantProposalRouter = router({
           .filter(({ permalink }) => storages[permalink])
           .map(({ permalink, selected, votes, ts }, index) => {
             try {
-              const grantProposal = schema.parse(storages[permalink].data)
+              const grantProposal = schema.parse(storages[permalink]!.data)
               return {
                 ...grantProposal,
                 selected,
@@ -160,9 +160,9 @@ export const grantProposalRouter = router({
                 ts,
                 funding:
                   isEnded &&
-                  index < grant.funding[0][1] &&
+                  index < (grant.funding[0]?.[1] || 0) &&
                   (!grant.permission.selecting || selected)
-                    ? grant.funding[0][0]
+                    ? grant.funding[0]?.[0]
                     : undefined,
               }
             } catch {

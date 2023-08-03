@@ -75,7 +75,10 @@ export default function GrantForm(props: {
       })
       return snapshots.reduce(
         (obj, snapshot, index) => {
-          obj[requiredCoinTypes[index]] = snapshot.toString()
+          const requiredCoinType = requiredCoinTypes[index]
+          if (typeof requiredCoinType === 'number') {
+            obj[requiredCoinType] = snapshot.toString()
+          }
           return obj
         },
         {} as { [coinType: string]: string },
@@ -258,7 +261,7 @@ export default function GrantForm(props: {
             icon={EyeIcon}
             onClick={(e) => {
               const argument =
-                getValues().permission.selecting?.operands[0].arguments[1]
+                getValues().permission.selecting?.operands[0]?.arguments[1]
               if (!argument?.join('').length) {
                 setValue('permission.selecting', undefined)
               } else {

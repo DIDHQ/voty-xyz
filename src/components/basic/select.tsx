@@ -5,7 +5,7 @@ import { ReactNode } from 'react'
 
 export default function Select(props: {
   options?: string[]
-  value: string
+  value?: string
   disables?: { [key: string]: boolean }
   renderItem?: (option: string) => ReactNode
   full?: boolean

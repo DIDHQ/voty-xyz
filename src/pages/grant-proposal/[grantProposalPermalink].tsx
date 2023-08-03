@@ -261,7 +261,7 @@ export default function GrantProposalPage() {
                 {currentIndex > 0 ? (
                   <Link
                     href={`/grant-proposal/${permalink2Id(
-                      grantProposals[currentIndex - 1].permalink,
+                      grantProposals[currentIndex - 1]!.permalink,
                     )}`}
                   >
                     <button
@@ -282,7 +282,7 @@ export default function GrantProposalPage() {
                 {currentIndex < grantProposals.length - 1 ? (
                   <Link
                     href={`/grant-proposal/${permalink2Id(
-                      grantProposals[currentIndex + 1].permalink,
+                      grantProposals[currentIndex + 1]!.permalink,
                     )}`}
                   >
                     <button

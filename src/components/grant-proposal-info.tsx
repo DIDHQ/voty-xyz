@@ -131,7 +131,7 @@ export default function GrantProposalInfo(props: {
               }`}
             >
               {formatNumber(
-                parseInt(props.grant.snapshots[commonCoinTypes.CKB], 10),
+                parseInt(props.grant.snapshots[commonCoinTypes.CKB] || '0', 10),
               )}
             </TextLink>
           </DetailItem>

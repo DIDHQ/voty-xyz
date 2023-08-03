@@ -54,7 +54,7 @@ export default function GrantProposalSelectForm(props: {
           obj[did] = booleans[index]
           return obj
         },
-        {} as { [key: string]: boolean },
+        {} as { [key: string]: boolean | undefined },
       )
     },
     { enabled: !!dids && !!props.grant.permission.selecting },
