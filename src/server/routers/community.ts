@@ -39,7 +39,7 @@ type CommunityListItem = Omit<Community, 'logo' | 'links' | 'about'>
 export const communityRouter = router({
   getById: procedure
     .input(z.object({ id: z.string().optional() }))
-    .output(schemaWithoutLogo.extend({ permalink: z.string() }).nullable())
+    .output(schema.extend({ permalink: z.string() }).nullable())
     .query(async ({ input }) => {
       if (!input.id) {
         throw new TRPCError({ code: 'BAD_REQUEST' })
@@ -62,7 +62,7 @@ export const communityRouter = router({
 
       return storage
         ? {
-            ...schemaWithoutLogo.parse(storage.data),
+            ...schema.parse(storage.data),
             permalink: storage.permalink,
           }
         : null
