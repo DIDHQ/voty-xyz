@@ -52,10 +52,7 @@ export const communityRouter = router({
         return null
       }
       const [storage] = await database
-        .select({
-          permalink: table.storage.permalink,
-          data: sql<CommunityWithoutLogo>`JSON_REMOVE(${table.storage.data}, '$.logo')`,
-        })
+        .select()
         .from(table.storage)
         .where(eq(table.storage.permalink, community.permalink))
         .limit(1)
