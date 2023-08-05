@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:worker": "next-on-pages",
+    "build:cf": "next-on-pages",
     "start": "next start",
-    "start:worker": "wrangler pages dev .vercel/output/static/ --compatibility-flag=nodejs_compat --port 3000",
+    "start:cf": "wrangler pages dev .vercel/output/static/ --compatibility-flag=nodejs_compat --port 3000",
     "lint": "next lint",
     "format": "prettier --write .",
     "push": "drizzle-kit push:mysql",
@@ -89,6 +89,6 @@
     "tailwindcss": "^3.3.3",
     "tailwindcss-safe-area": "^0.3.0",
     "typescript": "^5.1.6",
-    "vercel": "^31.2.1"
+    "vercel": "^31.2.2"
   }
 }
