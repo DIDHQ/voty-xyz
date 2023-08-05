@@ -17,7 +17,7 @@ export default async function handler(req: NextRequest) {
       where: (uploadBuffer, { eq }) => eq(uploadBuffer.key, key),
     })
     if (uploadBuffer) {
-      return new Response(Buffer.from(uploadBuffer.data, 'base64'), {
+      return new Response(Buffer.from(uploadBuffer.data as string, 'base64'), {
         headers: {
           'Content-Type': uploadBuffer.type,
           'Cache-Control': 'max-age=86400',

@@ -23,7 +23,7 @@ export async function flushUploadBuffers(keys: string[]): Promise<void> {
     async ({ key, data, metadata }) => {
       const uploader = await arweave.transactions.getUploader(
         metadata as unknown as SerializedUploader,
-        Buffer.from(data, 'base64'),
+        Buffer.from(data as string, 'base64'),
       )
       while (!uploader.isComplete) {
         await uploader.uploadChunk()

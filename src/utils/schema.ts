@@ -8,7 +8,6 @@ import {
   unique,
   int,
   decimal,
-  text,
 } from 'drizzle-orm/mysql-core'
 
 export const activity = mysqlTable(
@@ -267,7 +266,7 @@ export const uploadBuffer = mysqlTable(
     key: varchar('key', { length: 191 }).notNull(),
     metadata: json('metadata').notNull(),
     type: varchar('type', { length: 191 }).notNull(),
-    data: text('data').notNull(),
+    data: json('data').notNull(),
     ts: timestamp('ts', { mode: 'date' }).notNull(),
   },
   (table) => {
