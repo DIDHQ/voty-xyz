@@ -94,5 +94,10 @@
     "tailwindcss-safe-area": "^0.3.0",
     "typescript": "^5.1.6",
     "vercel": "^31.2.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "ws@8": "8.13.0"
+    }
   }
 }
