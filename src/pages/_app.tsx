@@ -37,6 +37,7 @@ import {
   twitterHandle,
 } from '../utils/constants'
 import { store } from '../utils/atoms'
+import { NEXT_PUBLIC_PROJECT_ID } from '@/src/env/client'
 import '../styles/globals.css'
 import '../styles/editor.css'
 
@@ -53,7 +54,7 @@ const { chains, publicClient } = configureChains(
   ],
 )
 
-const projectId = process.env.NEXT_PUBLIC_PROJECT_ID!
+const projectId = NEXT_PUBLIC_PROJECT_ID
 
 const connectors = connectorsForWallets([
   {
