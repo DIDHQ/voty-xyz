@@ -5,6 +5,8 @@ export default {
   out: './drizzle',
   driver: 'mysql2',
   dbCredentials: {
-    connectionString: 'mysql://127.0.0.1:3306/production',
+    connectionString: process.env.LOCAL_DATABASE
+      ? process.env.LOCAL_DATABASE
+      : 'mysql://127.0.0.1:3306/production',
   },
 } satisfies Config
