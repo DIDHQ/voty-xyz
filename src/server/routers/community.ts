@@ -18,6 +18,7 @@ import {
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
 import { table } from '@/src/utils/schema'
+import { SELECTED_COMMUNITIES } from '@/src/env/server'
 
 const schema = proved(authorized(communitySchema))
 
@@ -30,7 +31,7 @@ const schemaListItem = schemaWithoutLogo.omit({
   proof: true,
 })
 
-const selectedCommunities = process.env.SELECTED_COMMUNITIES?.split(',') || []
+const selectedCommunities = SELECTED_COMMUNITIES?.split(',') || []
 
 type CommunityWithoutLogo = Omit<Community, 'logo'>
 

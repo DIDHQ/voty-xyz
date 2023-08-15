@@ -1,6 +1,7 @@
+import { NEXT_PUBLIC_TESTNET } from '../env/client'
 import { PreviewPermalink } from './types'
 
-export const isTestnet = !!process.env.NEXT_PUBLIC_TESTNET
+export const isTestnet = !!NEXT_PUBLIC_TESTNET
 
 export const domain = isTestnet
   ? 'https://votyxyz.vercel.app'

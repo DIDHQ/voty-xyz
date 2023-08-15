@@ -23,12 +23,11 @@ import { permalink2Id } from '../../utils/permalink'
 import { grantSchema } from '../../utils/schemas/v1/grant'
 import { GrantPhase, getGrantPhase } from '../../utils/phase'
 import { table } from '@/src/utils/schema'
+import { SELECTED_GRANT_PROPOSALS } from '@/src/env/server'
 
 const schema = proved(authorized(grantProposalSchema))
 
-const selectedGrantProposals = new Set(
-  process.env.SELECTED_GRANT_PROPOSALS?.split(','),
-)
+const selectedGrantProposals = new Set(SELECTED_GRANT_PROPOSALS?.split(','))
 
 export const grantProposalRouter = router({
   getByPermalink: procedure
