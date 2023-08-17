@@ -7,7 +7,7 @@ import { EXIT, visit } from 'unist-util-visit'
 
 export function getSummary(markdown: string) {
   return (
-    toString(fromMarkdown(markdown.substring(0, 200)), {
+    toString(fromMarkdown(markdown.substring(0, 300)), {
       includeImageAlt: false,
       includeHtml: false,
     }) || ' '
