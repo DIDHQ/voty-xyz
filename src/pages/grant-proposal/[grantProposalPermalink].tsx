@@ -47,7 +47,7 @@ import useWallet from '@/src/hooks/use-wallet'
 import useDids from '@/src/hooks/use-dids'
 import GrantProposalSelectForm from '@/src/components/grant-proposal-select-form'
 import { checkBoolean } from '@/src/utils/functions/boolean'
-import { getImage, getSummary } from '@/src/utils/markdown'
+import { getImage, getRoot, getSummary } from '@/src/utils/markdown'
 import { appRouter } from '@/src/server/routers/_app'
 
 export const runtime = 'experimental-edge'
@@ -148,20 +148,21 @@ export default function GrantProposalPage() {
       ]).join(' - '),
     [community?.name, grantProposal?.title, grant?.name],
   )
-  const description = useMemo(
-    () =>
-      grantProposal?.content
-        ? getSummary(grantProposal?.content)
-        : documentDescription,
+  const root = useMemo(
+    () => getRoot(grantProposal?.content),
     [grantProposal?.content],
   )
+  const description = useMemo(
+    () => getSummary(root) ?? documentDescription,
+    [root],
+  )
   const image = useMemo(() => {
-    const image = getImage(grantProposal?.content)
+    const image = getImage(root)
     if (!image) {
       return documentImage
     }
     return isPermalink(image) ? permalink2Gateway(image) : image
-  }, [grantProposal?.content])
+  }, [root])
   const { account } = useWallet()
   const { data: grantProposals, refetch: refetchProposals } =
     trpc.grantProposal.list.useQuery(

@@ -33,7 +33,7 @@ import GroupProposalInfo from '@/src/components/group-proposal-info'
 import { previewGroupProposalAtom } from '@/src/utils/atoms'
 import { GroupProposal } from '@/src/utils/schemas/v1/group-proposal'
 import { formatDid } from '@/src/utils/did/utils'
-import { getImage, getSummary } from '@/src/utils/markdown'
+import { getImage, getRoot, getSummary } from '@/src/utils/markdown'
 import { appRouter } from '@/src/server/routers/_app'
 
 export const runtime = 'experimental-edge'
@@ -130,20 +130,21 @@ export default function GroupProposalPage() {
       ]).join(' - '),
     [community?.name, groupProposal?.title, group?.name],
   )
-  const description = useMemo(
-    () =>
-      groupProposal?.content
-        ? getSummary(groupProposal?.content)
-        : documentDescription,
+  const root = useMemo(
+    () => getRoot(groupProposal?.content),
     [groupProposal?.content],
   )
+  const description = useMemo(
+    () => getSummary(root) ?? documentDescription,
+    [root],
+  )
   const image = useMemo(() => {
-    const image = getImage(groupProposal?.content)
+    const image = getImage(root)
     if (!image) {
       return documentImage
     }
     return isPermalink(image) ? permalink2Gateway(image) : image
-  }, [groupProposal?.content])
+  }, [root])
   const handleSuccess = useCallback(() => {
     refetch()
     refetchList()

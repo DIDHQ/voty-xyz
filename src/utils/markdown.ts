@@ -1,26 +1,31 @@
-import { fromMarkdown } from 'mdast-util-from-markdown'
 import { toString } from 'mdast-util-to-string'
 import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
+import { Root } from 'remark-parse/lib'
 import { unified } from 'unified'
 import { EXIT, visit } from 'unist-util-visit'
 
-export function getSummary(markdown: string) {
-  return (
-    toString(fromMarkdown(markdown.substring(0, 300)), {
-      includeImageAlt: false,
-      includeHtml: false,
-    }) || ' '
-  )
+export function getRoot(markdown?: string): Root | undefined {
+  return markdown
+    ? unified().use(remarkParse).use(remarkGfm).parse(markdown)
+    : undefined
 }
 
-export function getImage(markdown?: string): string | undefined {
-  if (!markdown) {
+export function getSummary(root?: Root): string | undefined {
+  return root
+    ? toString(root, {
+        includeImageAlt: false,
+        includeHtml: false,
+      }).substring(0, 300)
+    : undefined
+}
+
+export function getImage(root?: Root): string | undefined {
+  if (!root) {
     return undefined
   }
-  const data = unified().use(remarkParse).use(remarkGfm).parse(markdown)
   let image: string | undefined
-  visit(data, (node) => {
+  visit(root, (node) => {
     if (node.type === 'image') {
       image = node.url
       return EXIT
@@ -29,13 +34,12 @@ export function getImage(markdown?: string): string | undefined {
   return image
 }
 
-export function getImages(markdown?: string): string[] {
-  if (!markdown) {
+export function getImages(root?: Root): string[] {
+  if (!root) {
     return []
   }
-  const data = unified().use(remarkParse).use(remarkGfm).parse(markdown)
   const set = new Set<string>()
-  visit(data, (node) => {
+  visit(root, (node) => {
     if (node.type === 'image') {
       set.add(node.url)
     }

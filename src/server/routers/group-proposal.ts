@@ -26,7 +26,7 @@ import {
   flushUploadBuffers,
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
-import { getImage, getSummary } from '../../utils/markdown'
+import { getImage, getRoot, getSummary } from '../../utils/markdown'
 import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(groupProposalSchema))
@@ -184,10 +184,11 @@ export const groupProposalRouter = router({
               }) => {
                 try {
                   const groupProposal = schema.parse(storages[permalink]!.data)
+                  const root = getRoot(groupProposal.content)
                   return {
                     ...groupProposal,
-                    image: getImage(groupProposal.content),
-                    content: getSummary(groupProposal.content),
+                    image: getImage(root),
+                    content: getSummary(root) ?? ' ',
                     permalink,
                     communityId,
                     groupId,
