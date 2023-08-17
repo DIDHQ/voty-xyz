@@ -154,7 +154,7 @@ export const grantProposalRouter = router({
                 ...grantProposal,
                 selected,
                 image: parseImage(root),
-                content: parseContent(root)?.substring(0, 300) ?? ' ',
+                content: parseContent(root)?.substring(0, 300) || ' ',
                 permalink,
                 votes,
                 ts,

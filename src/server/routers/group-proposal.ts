@@ -188,7 +188,7 @@ export const groupProposalRouter = router({
                   return {
                     ...groupProposal,
                     image: parseImage(root),
-                    content: parseContent(root)?.substring(0, 300) ?? ' ',
+                    content: parseContent(root)?.substring(0, 300) || ' ',
                     permalink,
                     communityId,
                     groupId,

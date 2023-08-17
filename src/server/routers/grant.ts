@@ -187,7 +187,7 @@ export const grantRouter = router({
                   return {
                     ...grant,
                     image: parseImage(root),
-                    introduction: parseContent(root)?.substring(0, 300) ?? ' ',
+                    introduction: parseContent(root)?.substring(0, 300) || ' ',
                     permalink,
                     proposals,
                     ts,
