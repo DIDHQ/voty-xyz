@@ -9,6 +9,7 @@ export default function MyDocument() {
         <base target="_blank" />
         <meta name="referrer" content="no-referrer" />
 
+        <meta name="theme-color" content="#1BA57F" />
         <meta name="application-name" content={documentTitle} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
