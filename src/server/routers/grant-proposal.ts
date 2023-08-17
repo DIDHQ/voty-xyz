@@ -18,7 +18,7 @@ import {
   flushUploadBuffers,
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
-import { getImages, getSummary } from '../../utils/markdown'
+import { getImage, getSummary } from '../../utils/markdown'
 import { permalink2Id } from '../../utils/permalink'
 import { grantSchema } from '../../utils/schemas/v1/grant'
 import { GrantPhase, getGrantPhase } from '../../utils/phase'
