@@ -33,7 +33,7 @@ import {
   isPermalink,
   permalink2Gateway,
 } from '@/src/utils/permalink'
-import { getImages, getSummary } from '@/src/utils/markdown'
+import { getImage, getSummary } from '@/src/utils/markdown'
 import MarkdownViewer from '@/src/components/basic/markdown-viewer'
 import GrantInfo from '@/src/components/grant-info'
 import GrantProposalCreateButton from '@/src/components/grant-proposal-create-button'
@@ -114,7 +114,7 @@ export default function GrantPage() {
     [grant?.introduction],
   )
   const image = useMemo(() => {
-    const image = getImages(grant?.introduction || '')[0]
+    const image = getImage(grant?.introduction)
     if (!image) {
       return documentImage
     }

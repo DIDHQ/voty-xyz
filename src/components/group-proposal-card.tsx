@@ -13,7 +13,7 @@ import Thumbnail from './basic/thumbnail'
 
 export default function GroupProposalCard(props: {
   groupProposal: Authorized<GroupProposal> & {
-    images: string[]
+    image?: string
     permalink: string
     communityId: string
     groupId: string
@@ -51,10 +51,7 @@ export default function GroupProposalCard(props: {
             {props.groupProposal.content}
           </p>
         </div>
-        <Thumbnail
-          src={props.groupProposal.images[0]}
-          className="ml-4 shrink-0"
-        />
+        <Thumbnail src={props.groupProposal.image} className="ml-4 shrink-0" />
       </div>
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">

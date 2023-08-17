@@ -26,7 +26,7 @@ import {
   flushUploadBuffers,
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
-import { getImages, getSummary } from '../../utils/markdown'
+import { getImage, getSummary } from '../../utils/markdown'
 import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(groupProposalSchema))
@@ -105,7 +105,7 @@ export const groupProposalRouter = router({
       z.object({
         data: z.array(
           schema.extend({
-            images: z.array(z.string()),
+            image: z.string().optional(),
             permalink: z.string(),
             communityId: z.string(),
             groupId: z.string(),
@@ -186,7 +186,7 @@ export const groupProposalRouter = router({
                   const groupProposal = schema.parse(storages[permalink]!.data)
                   return {
                     ...groupProposal,
-                    images: getImages(groupProposal.content),
+                    image: getImage(groupProposal.content),
                     content: getSummary(groupProposal.content),
                     permalink,
                     communityId,

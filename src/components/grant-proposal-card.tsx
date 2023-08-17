@@ -16,7 +16,7 @@ export default function GrantProposalCard(props: {
   communityId: string
   phase: GrantPhase
   grantProposal: Authorized<GrantProposal> & {
-    images: string[]
+    image?: string
     permalink: string
     votes: number
     ts: Date
@@ -57,10 +57,7 @@ export default function GrantProposalCard(props: {
             {props.grantProposal.content}
           </p>
         </div>
-        <Thumbnail
-          src={props.grantProposal.images[0]}
-          className="ml-4 shrink-0"
-        />
+        <Thumbnail src={props.grantProposal.image} className="ml-4 shrink-0" />
       </div>
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">

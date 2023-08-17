@@ -33,7 +33,7 @@ import GroupProposalInfo from '@/src/components/group-proposal-info'
 import { previewGroupProposalAtom } from '@/src/utils/atoms'
 import { GroupProposal } from '@/src/utils/schemas/v1/group-proposal'
 import { formatDid } from '@/src/utils/did/utils'
-import { getImages, getSummary } from '@/src/utils/markdown'
+import { getImage, getSummary } from '@/src/utils/markdown'
 import { appRouter } from '@/src/server/routers/_app'
 
 export const runtime = 'experimental-edge'
@@ -138,7 +138,7 @@ export default function GroupProposalPage() {
     [groupProposal?.content],
   )
   const image = useMemo(() => {
-    const image = getImages(groupProposal?.content || '')[0]
+    const image = getImage(groupProposal?.content)
     if (!image) {
       return documentImage
     }

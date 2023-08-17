@@ -92,7 +92,7 @@ export const grantProposalRouter = router({
       z.array(
         schema.extend({
           selected: z.string().nullable(),
-          images: z.array(z.string()),
+          image: z.string().optional(),
           permalink: z.string(),
           votes: z.number(),
           ts: z.date(),
@@ -152,7 +152,7 @@ export const grantProposalRouter = router({
               return {
                 ...grantProposal,
                 selected,
-                images: getImages(grantProposal.content),
+                image: getImage(grantProposal.content),
                 content: getSummary(grantProposal.content),
                 permalink,
                 votes,

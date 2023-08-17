@@ -13,7 +13,7 @@ import Thumbnail from './basic/thumbnail'
 export default function GrantCard(props: {
   communityId: string
   grant: Authorized<Grant> & {
-    images: string[]
+    image?: string
     permalink: string
     proposals: number
     ts: Date
@@ -61,7 +61,7 @@ export default function GrantCard(props: {
             {props.grant.introduction}
           </p>
         </div>
-        <Thumbnail src={props.grant.images[0]} className="ml-4 shrink-0" />
+        <Thumbnail src={props.grant.image} className="ml-4 shrink-0" />
       </div>
       <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
         <div className="w-0 flex-1 px-4 py-2">

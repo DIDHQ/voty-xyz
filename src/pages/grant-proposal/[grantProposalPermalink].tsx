@@ -47,7 +47,7 @@ import useWallet from '@/src/hooks/use-wallet'
 import useDids from '@/src/hooks/use-dids'
 import GrantProposalSelectForm from '@/src/components/grant-proposal-select-form'
 import { checkBoolean } from '@/src/utils/functions/boolean'
-import { getImages, getSummary } from '@/src/utils/markdown'
+import { getImage, getSummary } from '@/src/utils/markdown'
 import { appRouter } from '@/src/server/routers/_app'
 
 export const runtime = 'experimental-edge'
@@ -156,7 +156,7 @@ export default function GrantProposalPage() {
     [grantProposal?.content],
   )
   const image = useMemo(() => {
-    const image = getImages(grantProposal?.content || '')[0]
+    const image = getImage(grantProposal?.content)
     if (!image) {
       return documentImage
     }

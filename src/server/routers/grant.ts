@@ -24,7 +24,7 @@ import {
   flushUploadBuffers,
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
-import { getImages, getSummary } from '../../utils/markdown'
+import { getImage, getSummary } from '../../utils/markdown'
 import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(grantSchema))
@@ -113,7 +113,7 @@ export const grantRouter = router({
       z.object({
         data: z.array(
           schema.extend({
-            images: z.array(z.string()),
+            image: z.string().optional(),
             permalink: z.string(),
             proposals: z.number(),
             ts: z.date(),
@@ -185,7 +185,7 @@ export const grantRouter = router({
                   const grant = schema.parse(storages[permalink]!.data)
                   return {
                     ...grant,
-                    images: getImages(grant.introduction),
+                    image: getImage(grant.introduction),
                     introduction: getSummary(grant.introduction),
                     permalink,
                     proposals,
