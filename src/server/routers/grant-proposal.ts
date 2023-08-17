@@ -18,7 +18,7 @@ import {
   flushUploadBuffers,
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
-import { getImage, getRoot, getSummary } from '../../utils/markdown'
+import { parseImage, parseRoot, parseContent } from '../../utils/markdown'
 import { permalink2Id } from '../../utils/permalink'
 import { grantSchema } from '../../utils/schemas/v1/grant'
 import { GrantPhase, getGrantPhase } from '../../utils/phase'
@@ -149,12 +149,12 @@ export const grantProposalRouter = router({
           .map(({ permalink, selected, votes, ts }, index) => {
             try {
               const grantProposal = schema.parse(storages[permalink]!.data)
-              const root = getRoot(grantProposal.content)
+              const root = parseRoot(grantProposal.content)
               return {
                 ...grantProposal,
                 selected,
-                image: getImage(root),
-                content: getSummary(root) ?? ' ',
+                image: parseImage(root),
+                content: parseContent(root)?.substring(0, 300) ?? ' ',
                 permalink,
                 votes,
                 ts,

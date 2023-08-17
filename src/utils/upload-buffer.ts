@@ -5,11 +5,11 @@ import { eq, inArray } from 'drizzle-orm'
 import { isPermalink } from './permalink'
 import { database } from './database'
 import arweave from './sdks/arweave'
-import { getImages, getRoot } from './markdown'
+import { parseImages, parseRoot } from './markdown'
 import { table } from './schema'
 
 export function getAllUploadBufferKeys(markdown: string): string[] {
-  return getImages(getRoot(markdown)).filter(isPermalink)
+  return parseImages(parseRoot(markdown)).filter(isPermalink)
 }
 
 export async function flushUploadBuffers(keys: string[]): Promise<void> {

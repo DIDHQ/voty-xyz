@@ -24,7 +24,7 @@ import {
   flushUploadBuffers,
   getAllUploadBufferKeys,
 } from '../../utils/upload-buffer'
-import { getImage, getRoot, getSummary } from '../../utils/markdown'
+import { parseImage, parseRoot, parseContent } from '../../utils/markdown'
 import { table } from '@/src/utils/schema'
 
 const schema = proved(authorized(grantSchema))
@@ -183,11 +183,11 @@ export const grantRouter = router({
               }) => {
                 try {
                   const grant = schema.parse(storages[permalink]!.data)
-                  const root = getRoot(grant.introduction)
+                  const root = parseRoot(grant.introduction)
                   return {
                     ...grant,
-                    image: getImage(root),
-                    introduction: getSummary(root) ?? ' ',
+                    image: parseImage(root),
+                    introduction: parseContent(root)?.substring(0, 300) ?? ' ',
                     permalink,
                     proposals,
                     ts,

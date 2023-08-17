@@ -5,22 +5,22 @@ import { Root } from 'remark-parse/lib'
 import { unified } from 'unified'
 import { EXIT, visit } from 'unist-util-visit'
 
-export function getRoot(markdown?: string): Root | undefined {
+export function parseRoot(markdown?: string): Root | undefined {
   return markdown
     ? unified().use(remarkParse).use(remarkGfm).parse(markdown)
     : undefined
 }
 
-export function getSummary(root?: Root): string | undefined {
+export function parseContent(root?: Root): string | undefined {
   return root
     ? toString(root, {
         includeImageAlt: false,
         includeHtml: false,
-      }).substring(0, 300)
+      })
     : undefined
 }
 
-export function getImage(root?: Root): string | undefined {
+export function parseImage(root?: Root): string | undefined {
   if (!root) {
     return undefined
   }
@@ -34,7 +34,7 @@ export function getImage(root?: Root): string | undefined {
   return image
 }
 
-export function getImages(root?: Root): string[] {
+export function parseImages(root?: Root): string[] {
   if (!root) {
     return []
   }
