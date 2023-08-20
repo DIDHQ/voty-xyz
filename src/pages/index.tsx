@@ -58,9 +58,9 @@ export default function IndexPage() {
               community={community} />
           ))
         ) : (
-          [...Array(3)].map(item => (
+          [...Array(3)].map((item, index) => (
             <CommunitySkeleton
-              key={item} />
+              key={index} />
           ))
         )}
       </div>

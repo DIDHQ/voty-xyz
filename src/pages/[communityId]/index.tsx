@@ -97,9 +97,9 @@ export default function CommunityIndexPage() {
       ) : (
         <Card>
           {isGroupsLoading || isActivitiesLoading ? (
-            [...Array(3)].map(item => (
+            [...Array(3)].map((item, index) => (
               <ActivitySkeleton
-                key={item} />
+                key={index} />
             ))
           ) : (
             <ul>
