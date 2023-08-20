@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 
 import { Group } from '../utils/schemas/v1/group'
+import { clsxMerge } from '../utils/tailwind-helper'
 import { FormItem } from './basic/form'
 import RadioGroup from './basic/radio-group'
 import TextButton from './basic/text-button'
@@ -103,41 +104,44 @@ function DecimalUnitBlock(props: {
   return (
     <li 
       className={props.open ? 'bg-base' : undefined}>
-      {!props.open ? (
-        <div 
-          className="flex items-center justify-between gap-6 px-4 py-3 text-sm md:px-6">
+      <div 
+        className={clsxMerge(
+          'flex items-center gap-6 px-4 py-3 text-sm md:px-6',
+          props.open ? 'justify-end' : 'justify-between',
+          props.open && !props.disabled ? 'hidden' : ''
+        )}>
+        {!props.open ? (
           <span 
             className="min-w-0 flex-1 truncate text-strong">
             {watch(`permission.${props.name}.operands.${props.index}.name`)}
           </span>
-          
-          <div 
-            className="flex shrink-0 space-x-6">
+        ) : null}
+        
+        <div 
+          className="flex shrink-0 space-x-6">
+          {props.open ? (
+            props.disabled ? (
+              <TextButton
+                onClick={() => setOpen(undefined)}>
+                Hide
+              </TextButton>
+            ) : null
+          ) : (
             <TextButton 
               primary 
               onClick={handleOpen}>
               {props.disabled ? 'View' : 'Edit'}
             </TextButton>
-            {/* {props.open ? (
-              props.disabled ? (
-                <TextButton
-                  disabled={!props.disabled}
-                  onClick={() => setOpen(undefined)}>
-                  {props.disabled ? 'Hide' : 'Editing'}
-                </TextButton>
-              ) : null
-            ) : (
-              <TextButton 
-                primary 
-                onClick={handleOpen}>
-                {props.disabled ? 'View' : 'Edit'}
-              </TextButton>
-            )} */}
-          </div>
+          )}
         </div>
-      ) : (
+      </div>
+        
+      {props.open ? (
         <div 
-          className="grid grid-cols-1 gap-6 px-4 py-6 md:px-6 md:py-8">
+          className={clsxMerge(
+            'grid grid-cols-1 gap-6 px-4 pb-6 md:px-6 md:pb-8',
+            props.disabled ? '' : 'pt-6 md:pt-8'
+          )}>
           <FormItem
             label="Voter group name"
             error={
@@ -274,7 +278,7 @@ function DecimalUnitBlock(props: {
             </div>
           )}
         </div>
-      )}
+      ) : null}
     </li>
   )
 }
