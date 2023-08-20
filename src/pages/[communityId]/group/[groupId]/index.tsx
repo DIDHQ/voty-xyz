@@ -11,6 +11,7 @@ import EmptyState from '../../../../components/empty-state'
 import GroupProposalCreateButton from '../../../../components/group-proposal-create-button'
 import Select from '../../../../components/basic/select'
 import { GroupProposalPhase } from '../../../../utils/phase'
+import { InfoSkeleton } from '@/src/components/basic/skeleton'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['communityId', 'groupId']>()
@@ -54,28 +55,39 @@ export default function GroupIndexPage() {
   return (
     <CommunityLayout>
       <GroupLayout>
-        <LoadingBar loading={isLoading} />
-        <div className="my-5 flex justify-between">
+        <LoadingBar 
+          loading={isLoading} />
+        
+        <div 
+          className="my-5 flex justify-between">
           <Select
             options={options}
             value={phase}
-            onChange={(p) => setPhase(p as GroupProposalPhase | 'All')}
-          />
+            onChange={(p) => setPhase(p as GroupProposalPhase | 'All')}/>
+            
           <GroupProposalCreateButton
             communityId={query.communityId}
-            group={group || undefined}
-          />
+            group={group || undefined}/>
         </div>
+        
         {groupProposals?.length === 0 ? (
-          <EmptyState title="No proposals" className="mt-24" />
+          <EmptyState 
+            title="No proposals" />
         ) : (
-          <ul className="mt-5 space-y-5">
-            {groupProposals?.map((groupProposal) => (
-              <li key={groupProposal.permalink}>
-                <GroupProposalCard groupProposal={groupProposal} />
-              </li>
-            ))}
-          </ul>
+          !isLoading ? (
+            <ul 
+              className="space-y-4 md:space-y-6">
+              {groupProposals?.map((groupProposal) => (
+                <li 
+                  key={groupProposal.permalink}>
+                  <GroupProposalCard 
+                    groupProposal={groupProposal} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <InfoSkeleton />
+          )
         )}
         <div ref={ref} />
       </GroupLayout>

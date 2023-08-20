@@ -6,7 +6,6 @@ import {
   BoltIcon,
 } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
-import { clsx } from 'clsx'
 import { compact, uniqBy } from 'remeda'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -15,6 +14,9 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { useQuery } from '@tanstack/react-query'
+import { tv } from 'tailwind-variants'
+import { clsx } from 'clsx'
+import { clsxMerge } from '../utils/tailwind-helper'
 
 import useRouterQuery from '../hooks/use-router-query'
 import { extractStartEmoji } from '../utils/emoji'
@@ -27,11 +29,21 @@ import useCommunityLogo from '../hooks/use-community-logo'
 import ShareLinkIcon from './share-link-icon'
 import TextLink from './basic/text-link'
 import Avatar from './basic/avatar'
-import { TwitterIcon, DiscordIcon, GitHubIcon } from './icons'
+import { TwitterOutlineIcon, DiscordOutlineIcon, GitHubOutlineIcon } from './icons'
+import Card from './basic/card'
 
 const SubscriptionButton = dynamic(() => import('./subscription-button'), {
   ssr: false,
 })
+
+const navClass = tv({
+  slots: {
+    navHeader: 'mb-2 flex h-5 items-center justify-between',
+    navTitle: 'text-xs uppercase text-subtle',
+  }
+})
+
+const { navHeader: navHeaderClass, navTitle: navTitleClass } = navClass()
 
 export default function CommunityInfo(props: { className?: string }) {
   const router = useRouter()
@@ -85,19 +97,19 @@ export default function CommunityInfo(props: { className?: string }) {
             community.links.twitter
               ? {
                   href: `https://twitter.com/${community.links.twitter}`,
-                  icon: TwitterIcon,
+                  icon: TwitterOutlineIcon,
                 }
               : undefined,
             community.links.discord
               ? {
                   href: `https://discord.com/invite/${community.links.discord}`,
-                  icon: DiscordIcon,
+                  icon: DiscordOutlineIcon,
                 }
               : undefined,
             community.links.github
               ? {
                   href: `https://github.com/${community.links.github}`,
-                  icon: GitHubIcon,
+                  icon: GitHubOutlineIcon,
                 }
               : undefined,
           ])
@@ -129,83 +141,107 @@ export default function CommunityInfo(props: { className?: string }) {
       <Head>
         <title>{title}</title>
       </Head>
-      <aside className={clsx('relative', props.className)}>
-        {previewCommunity ? null : (
-          <ShareLinkIcon
-            link={`${domain}/${query.communityId}`}
-            className="absolute right-4 top-4"
-          />
-        )}
-        <div className="flex w-full flex-col items-center rounded-md border border-gray-200 pb-4">
-          <div className="flex w-full items-center space-x-4 p-6 pb-0 sm:flex-col sm:space-x-0 sm:space-y-4 sm:pt-8">
-            <Avatar value={logo} size={24} className="shrink-0" />
-            <div className="sm:space-y-2">
-              <h3 className="line-clamp-3 w-full break-words text-xl font-bold text-gray-900 sm:text-center sm:text-2xl">
-                {community?.name || '...'}
+      
+      <div
+        className={props.className}>
+        <Card
+          className="relative z-0 !pt-[60px]">
+          <div
+            className="absolute left-0 top-0 z-[-1] h-24 w-full bg-base bg-[url(/images/community-cover.jpg)] bg-cover bg-top bg-no-repeat">
+          </div>
+          
+          {/* Photo by <a href="https://unsplash.com/@scottwebb?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Scott Webb</a> on <a href="https://unsplash.com/photos/mV9-1XjnM4Y?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a> */}
+          
+          {previewCommunity ? null : (
+            <ShareLinkIcon
+              link={`${domain}/${query.communityId}`}
+              className="absolute right-5 top-5"
+            />
+          )}
+          
+          <Avatar 
+            className="shrink-0 ring-4 ring-white"
+            value={logo} 
+            size={16} />
+            
+          <div 
+            className="mt-3">
+            <h3 
+              className="text-lg-semibold text-strong">
+              {community?.name || '...'}
+            </h3>
+            
+            <p 
+              className="mt-1 text-sm-regular text-moderate">
+              {community?.slogan || '...'}
+            </p>
+          </div>
+          
+          {externals.length ? (
+            <>
+              <div 
+                className="mt-4 flex space-x-3">
+                {externals.map((item) => (
+                  <TextLink 
+                    key={item.href} 
+                    href={item.href}>
+                    <item.icon 
+                      className="h-[18px] w-[18px] text-moderate transition hover:text-strong" />
+                  </TextLink>
+                ))}
+              </div>
+            </>
+          ) : null}
+        </Card> 
+        
+        <Card>
+          <div>
+            <div
+              className={navHeaderClass()}>
+              <h3 
+                className={navTitleClass()}>
+                Community
               </h3>
-              <p className="line-clamp-3 w-full text-sm text-gray-500 sm:text-center">
-                {community?.slogan || '...'}
-              </p>
-            </div>
-          </div>
-          {/* {isMember || previewCommunity ? (
-            <Button disabled={isMember} className="mt-4">
-              {isMember ? 'Joined' : 'Join'}
-            </Button>
-          ) : (
-            <Link
-              href={`${
-                isTestnet
-                  ? '​https://test.topdid.com/mint/.'
-                  : 'https://topdid.com/mint/.'
-              }${query.communityId?.replace(/\.bit$/, '')}`}
-              className="mt-4"
-            >
-              <Button primary disabled={isMember}>
-                {isMember ? 'Joined' : 'Join'}
-              </Button>
-            </Link>
-          )} */}
-          <div className="my-6 w-full px-6">
-            <div className="w-full border-t" />
-          </div>
-          <div className="w-full">
-            <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
-              Community
+              
               {previewCommunity ? null : (
                 <SubscriptionButton
-                  communityId={query.communityId}
-                  className="float-right"
-                />
+                  communityId={query.communityId}/>
               )}
-            </h3>
+            </div>
+            
             {navigation.map((item) => (
               <LinkListItem
                 key={item.name}
                 href={previewCommunity ? undefined : item.href}
                 icon={item.icon}
-                current={item.current}
-              >
+                current={item.current}>
                 {item.name}
               </LinkListItem>
             ))}
           </div>
+          
           {isManager || groups?.length ? (
-            <div className="mt-6 w-full">
-              <h3 className="mb-2 px-4 text-sm font-medium text-gray-400">
-                Workgroups
+            <div 
+              className="mt-5">
+              <div
+                className={navHeaderClass()}>
+                <h3 
+                  className={navTitleClass()}>
+                  Workgroups
+                </h3>
+                
                 {previewCommunity ||
-                !isManager ||
-                enabledSubDID === false ? null : (
-                  <TextLink
-                    primary
-                    href={`/${query.communityId}/create`}
-                    className="float-right"
-                  >
-                    <PlusIcon className="h-5 w-5" />
-                  </TextLink>
+                  !isManager ||
+                  enabledSubDID === false ? null : (
+                    <TextLink
+                      primary
+                      href={`/${query.communityId}/create`}>
+                      <PlusIcon 
+                        className="h-5 w-5" />
+                    </TextLink>
                 )}
-              </h3>
+              </div>
+              
               <div>
                 {groups?.map((group) => (
                   <LinkListItem
@@ -216,30 +252,34 @@ export default function CommunityInfo(props: { className?: string }) {
                         : `/${query.communityId}/group/${group.id}`
                     }
                     icon={BriefcaseIcon}
-                    current={query.groupId === group.id}
-                  >
+                    current={query.groupId === group.id}>
                     {group.name}
                   </LinkListItem>
                 ))}
               </div>
             </div>
           ) : null}
-          {externals.length ? (
-            <>
-              <div className="my-6 w-full px-6">
-                <div className="w-full border-t" />
-              </div>
-              <div className="flex space-x-4">
-                {externals.map((item) => (
-                  <TextLink key={item.href} href={item.href}>
-                    <item.icon className="h-7 w-7" />
-                  </TextLink>
-                ))}
-              </div>
-            </>
-          ) : null}
-        </div>
-      </aside>
+        </Card>
+
+        {/* {isMember || previewCommunity ? (
+          <Button disabled={isMember} className="mt-4">
+            {isMember ? 'Joined' : 'Join'}
+          </Button>
+        ) : (
+          <Link
+            href={`${
+              isTestnet
+                ? '​https://test.topdid.com/mint/.'
+                : 'https://topdid.com/mint/.'
+            }${query.communityId?.replace(/\.bit$/, '')}`}
+            className="mt-4"
+          >
+            <Button primary disabled={isMember}>
+              {isMember ? 'Joined' : 'Join'}
+            </Button>
+          </Link>
+        )} */}
+      </div>
     </>
   )
 }
@@ -254,44 +294,61 @@ function LinkListItem(props: {
     () => extractStartEmoji(props.children),
     [props.children],
   )
+  
   const content = useMemo(
     () => (
       <>
         {emoji ? (
-          <span className="mr-2 w-5 shrink-0 text-center text-lg">{emoji}</span>
+          <span 
+            className="shrink-0 text-lg leading-none">
+            {emoji}
+          </span>
         ) : props.icon ? (
           <props.icon
-            className={clsx(
+            className={clsxMerge(
               props.current
                 ? 'text-primary-500'
-                : 'text-gray-300 group-hover:text-gray-400',
-              'mr-2 h-5 w-5 shrink-0',
+                : 'text-moderate',
+              'h-[18px] w-[18px] shrink-0',
             )}
           />
         ) : null}
-        <span className="truncate">
+        
+        <span 
+          className={clsxMerge(
+            'truncate',
+            props.current ? 'text-primary-500' : 'text-moderate'
+          )}>
           {props.children.replace(emoji || '', '')}
         </span>
       </>
     ),
     [emoji, props],
   )
+  
   const className = useMemo(
     () =>
       clsx(
         props.current
-          ? 'text-primary-600'
-          : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-        'group flex h-10 items-center px-6 py-2 text-sm font-medium',
+          ? 'bg-primary-500/5'
+          : 'hover:bg-subtle',
+        'group mb-1 flex h-10 items-center gap-2 rounded-xl px-3 text-sm-medium',
       ),
     [props],
   )
 
   return props.href ? (
-    <Link href={props.href} scroll={false} shallow className={className}>
+    <Link 
+      href={props.href} 
+      scroll={false} 
+      shallow 
+      className={className}>
       {content}
     </Link>
   ) : (
-    <span className={className}>{content}</span>
+    <span 
+      className={className}>
+      {content}
+    </span>
   )
 }

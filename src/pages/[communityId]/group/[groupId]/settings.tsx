@@ -5,7 +5,8 @@ import useRouterQuery from '../../../../hooks/use-router-query'
 import GroupForm from '../../../../components/group-form'
 import { trpc } from '../../../../utils/trpc'
 import LoadingBar from '../../../../components/basic/loading-bar'
-import TextLink from '../../../../components/basic/text-link'
+import { Container } from '@/src/components/basic/container'
+import { BackBar } from '@/src/components/basic/back'
 
 export default function GroupSettingsPage() {
   const router = useRouter()
@@ -27,14 +28,14 @@ export default function GroupSettingsPage() {
 
   return (
     <>
-      <LoadingBar loading={isLoading} />
-      <div className="w-full">
-        <TextLink
-          href={`/${query.communityId}/group/${query.groupId}/about`}
-          className="mt-6 inline-block sm:mt-8"
-        >
-          <h2 className="text-base font-semibold">← Back</h2>
-        </TextLink>
+      <LoadingBar 
+        loading={isLoading} />
+        
+      <Container
+        size="small">
+        <BackBar
+          href={`/${query.communityId}/group/${query.groupId}/about`} />
+        
         {query.communityId && query.groupId && group !== undefined ? (
           <GroupForm
             communityId={query.communityId}
@@ -45,11 +46,9 @@ export default function GroupSettingsPage() {
               to: `/${query.communityId}/group/${query.groupId}/about`,
               template: `You are updating workgroup on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
-            }}
-            className="pt-6 sm:pt-8"
-          />
+            }}/>
         ) : null}
-      </div>
+      </Container>
     </>
   )
 }

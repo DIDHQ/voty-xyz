@@ -1,6 +1,4 @@
-import Link from 'next/link'
 import { clsx } from 'clsx'
-
 import { permalink2Id } from '../utils/permalink'
 import { Authorized } from '../utils/schemas/basic/authorship'
 import { GrantProposal } from '../utils/schemas/v1/grant-proposal'
@@ -10,7 +8,8 @@ import { formatDid } from '../utils/did/utils'
 import { GrantPhase } from '../utils/phase'
 import Tooltip from './basic/tooltip'
 import { CrownIcon } from './icons'
-import Thumbnail from './basic/thumbnail'
+import { InfoCard, InfoItem } from './info-card'
+import Tag from './basic/tag'
 
 export default function GrantProposalCard(props: {
   communityId: string
@@ -26,64 +25,46 @@ export default function GrantProposalCard(props: {
   const now = useNow()
 
   return (
-    <Link
-      shallow
-      href={`/grant-proposal/${permalink2Id(props.grantProposal.permalink)}`}
+    <InfoCard 
       className={clsx(
-        'group block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-offset-2',
         props.grantProposal.funding
-          ? 'focus-within:ring-amber-300 hover:border-amber-500 hover:bg-amber-50'
-          : 'focus-within:ring-primary-300 hover:border-primary-500 hover:bg-gray-50',
+          ? 'hover:ring-amber-500'
+          : '',
       )}
-    >
-      <div className="flex w-full p-4">
-        <div className="w-0 flex-1">
-          {props.grantProposal.funding ? (
-            <Tooltip
-              place="top"
-              text={`This proposal won ${props.grantProposal.funding}`}
-              className="float-right ml-4"
-            >
-              <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/10 transition-colors group-hover:bg-amber-100">
-                <CrownIcon className="mr-0.5 h-4 w-4 text-amber-700" />
-                WON
-              </span>
-            </Tooltip>
-          ) : null}
-          <p className="truncate text-lg font-medium text-gray-800">
-            {props.grantProposal.title}
-          </p>
-          <p className="line-clamp-3 text-gray-600">
-            {props.grantProposal.content}
-          </p>
-        </div>
-        <Thumbnail src={props.grantProposal.image} className="ml-4 shrink-0" />
-      </div>
-      <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
-        <div className="w-0 flex-1 px-4 py-2">
-          <p className="text-gray-400">Proposer</p>
-          <p className="truncate">
-            {formatDid(props.grantProposal.authorship.author)}
-          </p>
-        </div>
-        {props.phase === GrantPhase.VOTING ||
-        props.phase === GrantPhase.ENDED ? (
-          <div className="w-0 flex-1 px-4 py-2">
-            <p className="text-gray-400">Votes</p>
-            <p>{props.grantProposal.votes}</p>
-          </div>
-        ) : (
-          <div className="w-0 flex-1 px-4 py-2">
-            <p className="truncate text-gray-400">Proposed at</p>
-            <p className="truncate">
-              {formatDurationMs(
-                props.grantProposal.ts.getTime() - now.getTime(),
-              )}{' '}
-              ago
-            </p>
-          </div>
-        )}
-      </div>
-    </Link>
+      badge={props.grantProposal.funding ? (
+        <Tooltip
+          place="top"
+          text={`This proposal won ${props.grantProposal.funding}`}>
+          <Tag
+            className="transition-colors group-hover:bg-amber-100"
+            color="highlight"
+            round
+            size="small">
+            <CrownIcon 
+              className="h-4 w-4" />
+            WON
+          </Tag>
+        </Tooltip>
+      ) : null}
+      desc={props.grantProposal.content}
+      href={`/grant-proposal/${permalink2Id(props.grantProposal.permalink)}`}
+      thumbnail={props.grantProposal.image}
+      title={props.grantProposal.title}>
+      <InfoItem 
+        label="Proposer"
+        value={formatDid(props.grantProposal.authorship.author)}/>
+              
+      {props.phase === GrantPhase.VOTING || props.phase === GrantPhase.ENDED ? (
+        <InfoItem 
+          label="Votes"
+          value={props.grantProposal.votes} />
+      ) : (
+        <InfoItem 
+          label="Proposed at"
+          value={formatDurationMs(
+            props.grantProposal.ts.getTime() - now.getTime(),
+          ) + ' ago'} />
+      )}
+    </InfoCard>
   )
 }

@@ -13,6 +13,8 @@ import { GrantPhase } from '../../../utils/phase'
 import GrantCard from '../../../components/grant-card'
 import Button from '../../../components/basic/button'
 import useIsManager from '../../../hooks/use-is-manager'
+import SectionHeader from '@/src/components/basic/section-header'
+import { InfoSkeleton } from '@/src/components/basic/skeleton'
 
 export default function GrantsIndexPage() {
   const query = useRouterQuery<['communityId']>()
@@ -47,39 +49,53 @@ export default function GrantsIndexPage() {
   return (
     <CommunityLayout>
       <LoadingBar loading={isLoading} />
-      <div className="mt-6 flex items-center justify-between sm:mt-8">
-        <h3 className="text-lg font-medium text-gray-900">Topic Grants</h3>
-        <div className="flex items-center">
+      
+      <SectionHeader
+        title="Topic Grants">
+        <div 
+          className="flex items-center">
           <Select
             options={options}
             value={phase}
-            onChange={(p) => setPhase(p as GrantPhase | 'All')}
-          />
+            onChange={(p) => setPhase(p as GrantPhase | 'All')} />
+          
           {isManager ? (
-            <Link href={`/${query.communityId}/grant/create`} className="ml-5">
-              <Button primary icon={PlusIcon}>
+            <Link 
+              href={`/${query.communityId}/grant/create`} 
+              className="ml-5">
+              <Button 
+                primary 
+                icon={PlusIcon}>
                 Topic Grant
               </Button>
             </Link>
           ) : null}
         </div>
-      </div>
+      </SectionHeader>
+      
       {grants?.length === 0 ? (
         <EmptyState
           title="No Topic Grants"
           description="Topic Grant helps you automate your project's funding process with ease, while also elevating member's engagement."
-          className="mt-24"
         />
       ) : (
-        <ul className="mt-5 space-y-5">
-          {grants?.map((grant) => (
-            <li key={grant.permalink}>
-              {query.communityId ? (
-                <GrantCard communityId={query.communityId} grant={grant} />
-              ) : null}
-            </li>
-          ))}
-        </ul>
+        !isLoading ? (
+          <ul 
+            className="space-y-4 md:space-y-6">
+            {grants?.map((grant) => (
+              <li 
+                key={grant.permalink}>
+                {query.communityId ? (
+                  <GrantCard 
+                    communityId={query.communityId} 
+                    grant={grant} />
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <InfoSkeleton />
+        )
       )}
       <div ref={ref} />
     </CommunityLayout>

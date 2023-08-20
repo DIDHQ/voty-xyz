@@ -1,5 +1,5 @@
-import { clsx } from 'clsx'
 import { forwardRef, InputHTMLAttributes, useCallback, WheelEvent } from 'react'
+import { clsxMerge } from '@/src/utils/tailwind-helper'
 
 export default forwardRef<
   HTMLInputElement,
@@ -22,12 +22,12 @@ export default forwardRef<
       type="text"
       onWheel={handleWheel}
       {...restProps}
-      className={clsx(
-        'block w-full rounded-md border placeholder:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder:text-gray-400 sm:text-sm',
+      className={clsxMerge(
+        'block w-full rounded-xl border py-[11px] text-sm text-strong transition placeholder:text-subtle focus:ring-0 disabled:cursor-not-allowed disabled:bg-subtle disabled:text-subtle',
         error
-          ? 'border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500'
-          : 'border-gray-200 focus:border-primary-500 focus:ring-primary-300',
-        className,
+          ? 'border-red-300 focus:border-red-500'
+          : 'border-base focus:border-strong',
+        className
       )}
     />
   )

@@ -15,6 +15,9 @@ import useIsManager from '../../hooks/use-is-manager'
 import ActivityListItem from '../../components/activity-list-item'
 import { hasEnabledSubDID } from '../../utils/sdks/dotbit/subdid'
 import { subDIDWebsite } from '../../utils/constants'
+import Card from '@/src/components/basic/card'
+import SectionHeader from '@/src/components/basic/section-header'
+import { ActivitySkeleton } from '@/src/components/basic/skeleton'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['communityId']>()
@@ -51,21 +54,19 @@ export default function CommunityIndexPage() {
 
   return (
     <CommunityLayout>
-      <LoadingBar loading={isGroupsLoading || isActivitiesLoading} />
-      <div className="mt-6 flex items-center justify-between sm:mt-8">
-        {enabledSubDID === false ? (
-          <div className="h-[38px]" />
-        ) : (
-          <h3 className="text-lg font-medium text-gray-900">Activities</h3>
-        )}
-      </div>
+      <LoadingBar 
+        loading={isGroupsLoading || isActivitiesLoading} />
+        
+      <SectionHeader 
+        title="Activities"/>
+      
       {enabledSubDID === false ? (
         <EmptyState
           icon={
-            <ExclamationTriangleIcon className="h-9 w-9 rounded-lg bg-amber-100 p-1.5 text-amber-600" />
+            <ExclamationTriangleIcon 
+              className="h-9 w-9 rounded-lg bg-amber-100 p-1.5 text-amber-600" />
           }
           title="Last step"
-          className="mt-24"
           description="You must enable SubDID for your community."
           footer={
             <Link href={`${subDIDWebsite}${query.communityId}`}>
@@ -78,26 +79,38 @@ export default function CommunityIndexPage() {
       ) : groups?.length === 0 && isManager ? (
         <EmptyState
           title="No workgroup"
-          className="mt-24"
           description="Workgroup helps you categorize proposals with different focuses. You can also set up workgroups to your community structure's needs."
           footer={
-            <Link href={`/${query.communityId}/create`}>
-              <Button primary icon={PlusIcon}>
+            <Link 
+              href={`/${query.communityId}/create`}>
+              <Button 
+                primary 
+                icon={PlusIcon}>
                 Workgroup
               </Button>
             </Link>
           }
         />
       ) : activities?.length === 0 ? (
-        <EmptyState title="No activities" className="mt-24" />
+        <EmptyState 
+          title="No activities" />
       ) : (
-        <ul className="mt-5 space-y-5">
-          {activities?.map((activity) => (
-            <li key={activity.ts + activity.actor}>
-              <ActivityListItem activity={activity} />
-            </li>
-          ))}
-        </ul>
+        <Card>
+          {isGroupsLoading || isActivitiesLoading ? (
+            [...Array(3)].map(item => (
+              <ActivitySkeleton
+                key={item} />
+            ))
+          ) : (
+            <ul>
+              {activities?.map((activity) => (
+                <li key={activity.ts + activity.actor}>
+                  <ActivityListItem activity={activity} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
       )}
       <div ref={ref} />
     </CommunityLayout>

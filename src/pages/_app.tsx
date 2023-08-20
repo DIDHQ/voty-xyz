@@ -1,5 +1,6 @@
 import type { AppType, NextWebVitalsMetric } from 'next/app'
 import Head from 'next/head'
+import { Poppins } from 'next/font/google' 
 import { Chain, configureChains, createConfig, WagmiConfig } from 'wagmi'
 import {
   mainnet,
@@ -40,6 +41,12 @@ import { store } from '../utils/atoms'
 import { NEXT_PUBLIC_PROJECT_ID } from '@/src/env/client'
 import '../styles/globals.css'
 import '../styles/editor.css'
+
+const poppins = Poppins({ 
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600', '700']
+})
 
 const { chains, publicClient } = configureChains(
   (isTestnet
@@ -111,6 +118,13 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           content="minimum-scale=1, maximum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
         />
       </Head>
+      <style jsx global>
+        {`
+          html {
+            font-family: ${poppins.style.fontFamily};
+          }
+        `}
+      </style>
       <GoogleAnalytics trackPageViews />
       <WagmiConfig config={wagmiConfig}>
         <RainbowKitProvider

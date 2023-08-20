@@ -12,15 +12,23 @@ export default function CommunityCard(props: {
 
   return (
     <Link
+      className="flex h-28 items-center rounded-base bg-white p-4 shadow-base transition hover:ring-2 hover:ring-primary-500 md:h-32 md:p-5"
       href={`/${community.id}`}
-      className="flex items-center overflow-hidden rounded-md border border-gray-200 p-6 transition-colors focus-within:ring-2 focus-within:ring-primary-300 focus-within:ring-offset-2 hover:border-primary-500 hover:bg-gray-50"
-    >
-      <Avatar size={24} value={logo} className="shrink-0" />
-      <div className="ml-4 flex h-24 w-0 flex-1 flex-col">
-        <h3 className="w-full truncate break-words text-lg font-medium text-gray-900">
+      title={community.name}>
+      <Avatar 
+        className="ring-offset-2"
+        size={15} 
+        value={logo} />
+        
+      <div 
+        className="ml-4 min-w-0 flex-1">
+        <h3 
+          className="truncate break-words text-lg-semibold text-strong">
           {community.name}
         </h3>
-        <p className="line-clamp-3 w-full text-sm text-gray-500">
+        
+        <p 
+          className="mt-0.5 line-clamp-2 text-sm-regular text-moderate">
           {community.slogan}
         </p>
       </div>

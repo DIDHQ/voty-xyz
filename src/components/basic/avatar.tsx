@@ -1,24 +1,22 @@
-import { clsx } from 'clsx'
 import { useMemo } from 'react'
+import { clsxMerge } from '@/src/utils/tailwind-helper'
 
 export default function Avatar(props: {
-  size: number
+  size?: number
   value?: string | null
   variant?: 'marble' | 'beam' | 'pixel' | 'sunset' | 'ring' | 'bauhaus'
   className?: string
 }) {
-  const size = `${props.size / 4}rem`
-  const borderRadius = `${props.size / 8}rem`
+  const size = props.size ? `${props.size / 4}rem` : ''
   const style = useMemo(
     () => ({
       width: size,
-      height: size,
-      borderRadius,
+      height: size
     }),
-    [borderRadius, size],
+    [size],
   )
-  const className = clsx(
-    'overflow-hidden bg-gray-50 object-cover ring-1 ring-gray-200',
+  const className = clsxMerge(
+    'overflow-hidden bg-base object-cover ring-1 ring-base shrink-0 rounded-full',
     props.className,
   )
 

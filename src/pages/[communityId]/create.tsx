@@ -8,7 +8,8 @@ import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
 import { documentTitle } from '../../utils/constants'
 import { Group } from '../../utils/schemas/v1/group'
-import TextLink from '../../components/basic/text-link'
+import { BackBar } from '@/src/components/basic/back'
+import { Container } from '@/src/components/basic/container'
 
 export default function CreateGroupPage() {
   const query = useRouterQuery<['communityId']>()
@@ -61,14 +62,15 @@ export default function CreateGroupPage() {
       <Head>
         <title>{`New workgroup - ${documentTitle}`}</title>
       </Head>
-      <LoadingBar loading={isLoading} />
-      <div className="w-full">
-        <TextLink
-          href={`/${query.communityId}`}
-          className="mt-6 inline-block sm:mt-8"
-        >
-          <h2 className="text-base font-semibold">← Back</h2>
-        </TextLink>
+      
+      <LoadingBar 
+        loading={isLoading} />
+        
+      <Container
+        size="small">
+        <BackBar
+          href={`/${query.communityId}`} />
+        
         {query.communityId && initialValue !== undefined ? (
           <GroupForm
             communityId={query.communityId}
@@ -78,11 +80,9 @@ export default function CreateGroupPage() {
               to: `/${query.communityId}/group/${newGroup}/about`,
               template: `You are creating workgroup on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
-            }}
-            className="pt-6 sm:pt-8"
-          />
+            }} />
         ) : null}
-      </div>
+      </Container>
     </>
   )
 }

@@ -1,5 +1,6 @@
-import { clsx } from 'clsx'
 import { InputHTMLAttributes, ReactNode } from 'react'
+import Card from './card'
+import { clsxMerge } from '@/src/utils/tailwind-helper'
 
 export function Form(props: {
   title: string
@@ -8,15 +9,25 @@ export function Form(props: {
   children: ReactNode
 }) {
   return (
-    <div className={clsx('space-y-16', props.className)}>
-      <h2 className="text-center text-3xl font-semibold text-gray-900">
-        {props.title}
+    <div 
+      className={clsxMerge(
+        props.className
+      )}>
+      <div
+        className="mb-6 text-center">
+        <h2 
+          className="text-display-xs-semibold text-strong">
+          {props.title}
+        </h2>
+        
         {props.description ? (
-          <p className="mt-4 text-center text-sm font-normal text-gray-500">
+          <p 
+            className="mx-auto mt-2 max-w-2xl text-sm-regular text-subtle">
             {props.description}
           </p>
         ) : null}
-      </h2>
+      </div>
+      
       {props.children}
     </div>
   )
@@ -29,17 +40,39 @@ export function FormSection(props: {
   className?: string
 }) {
   return (
-    <div className={props.className}>
-      <h3 className="text-xl font-semibold text-gray-900">{props.title}</h3>
-      <p className="mb-6 mt-2 text-sm text-gray-500">{props.description}</p>
+    <Card
+      className={props.className}
+      size="large">
+      <div
+        className="mb-6">
+        <h3 
+          className="text-xl-semibold text-strong">
+          {props.title}
+        </h3>
+        
+        {props.description ? (
+          <p 
+            className="mt-1 text-sm text-subtle">
+            {props.description}
+          </p>
+        ) : null}
+      </div>
+      
       {props.children}
-    </div>
+    </Card>
   )
 }
 
-export function FormFooter(props: { children: ReactNode }) {
+export function FormFooter(props: { 
+  className?: string
+  children: ReactNode 
+}) {
   return (
-    <div className="flex flex-row-reverse justify-between">
+    <div 
+      className={clsxMerge(
+        'mt-8 flex justify-end gap-6',
+        props.className
+      )}>
       {props.children}
     </div>
   )
@@ -48,27 +81,45 @@ export function FormFooter(props: { children: ReactNode }) {
 export function FormItem(
   props: {
     label?: string
+    labelClassName?: string
     optional?: boolean
     description?: ReactNode
     error?: string
   } & InputHTMLAttributes<HTMLInputElement>,
 ) {
-  const { label, optional, description, error, children, ...restProps } = props
+  const { label, labelClassName, optional, description, error, children, ...restProps } = props
 
   return (
-    <div {...restProps}>
+    <div 
+      {...restProps}>
       {label ? (
-        <label className="mb-2 block text-sm font-medium text-gray-700">
+        <label 
+          className={clsxMerge(
+            'mb-2 block text-sm font-medium text-semistrong',
+            labelClassName
+          )}>
           {label}
+          
           {optional ? (
-            <span className="text-xs text-gray-400"> (optional)</span>
+            <span 
+              className="ml-0.5 text-xs text-subtle">
+              (optional)
+            </span>
           ) : null}
         </label>
       ) : null}
+      
       {children}
-      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
+      
+      {error ? (
+        <p 
+          className="mt-2 text-xs text-red-600">
+          {error}
+        </p>
+      ) : null}
+      
       {description ? (
-        <p className="mt-2 text-sm text-gray-500">{description}</p>
+        <p className="mt-2 text-sm text-subtle">{description}</p>
       ) : null}
     </div>
   )

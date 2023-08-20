@@ -1,5 +1,5 @@
 import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { clsx } from 'clsx'
 import { ReactNode } from 'react'
 
@@ -20,17 +20,20 @@ export default function Select(props: {
           <div className="relative">
             <Listbox.Button
               className={clsx(
-                'relative w-full cursor-default rounded-md border border-gray-200 bg-white py-2 pl-3 pr-10 text-left focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-300 sm:text-sm',
+                'flex h-9 min-w-[148px] cursor-pointer items-center justify-between gap-4 rounded-xl bg-white pl-3 pr-2 text-left shadow-base focus:outline-none',
                 props.className,
-              )}
-            >
-              <span className="block h-5 truncate text-sm text-gray-800">
+              )}>
+              <span 
+                className="block truncate text-sm-medium text-moderate">
                 {props.value}
               </span>
-              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                <ChevronUpDownIcon className="h-5 w-5 text-gray-400" />
+              
+              <span>
+                <ChevronDownIcon 
+                  className="h-5 w-5 text-subtle" />
               </span>
             </Listbox.Button>
+            
             <Transition
               show={open}
               as="div"
@@ -39,11 +42,11 @@ export default function Select(props: {
               leaveTo="opacity-0"
               className={clsx(
                 'absolute z-50',
-                props.top ? 'bottom-full mb-1' : 'top-full mt-1',
+                props.top ? 'bottom-full mb-2' : 'top-full mt-2',
                 props.full ? 'w-full' : undefined,
-              )}
-            >
-              <Listbox.Options className="z-10 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+              )}>
+              <Listbox.Options 
+                className="z-10 max-h-60 min-w-[148px] overflow-auto rounded-xl bg-white p-3 text-sm-medium shadow-lg focus:outline-none">
                 {props.renderItem
                   ? props.options?.map(props.renderItem)
                   : props.options?.map((option) => (
@@ -51,39 +54,22 @@ export default function Select(props: {
                         key={option}
                         value={option}
                         disabled={props.disables?.[option]}
-                        className={({ active, disabled }) =>
+                        className={({ active, selected, disabled }) =>
                           clsx(
-                            active
-                              ? 'bg-primary-600 text-white'
+                            selected
+                              ? 'bg-primary-500/5 text-primary-500'
+                              : active
+                              ? 'text-primary-500'
                               : disabled
-                              ? 'cursor-not-allowed text-gray-400'
-                              : 'text-gray-900',
-                            'relative cursor-default select-none py-2 pl-3 pr-9',
+                              ? 'cursor-not-allowed opacity-80'
+                              : 'text-moderate',
+                            'relative cursor-pointer select-none rounded-md px-3 py-2 transition',
                           )
-                        }
-                      >
-                        {({ selected, active }) => (
-                          <>
-                            <span
-                              className={clsx(
-                                selected ? 'font-semibold' : 'font-normal',
-                                'block truncate',
-                              )}
-                            >
-                              {option}
-                            </span>
-                            {selected ? (
-                              <span
-                                className={clsx(
-                                  active ? 'text-white' : 'text-primary-600',
-                                  'absolute inset-y-0 right-0 flex items-center pr-4',
-                                )}
-                              >
-                                <CheckIcon className="h-5 w-5" />
-                              </span>
-                            ) : null}
-                          </>
-                        )}
+                        }>
+                        <span
+                          className="block truncate">
+                          {option}
+                        </span>
                       </Listbox.Option>
                     ))}
               </Listbox.Options>

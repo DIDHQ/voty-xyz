@@ -5,7 +5,8 @@ import { Group } from '../utils/schemas/v1/group'
 import { format2Time, formatTime } from '../utils/time'
 import { GroupProposalPhase, getGroupProposalPhase } from '../utils/phase'
 import useNow from '../hooks/use-now'
-import { DetailList } from './basic/detail'
+import Card from './basic/card'
+import { PhaseInfo, PhaseInfoSection } from './phase-info'
 
 export default function GroupProposalCurrentPhase(props: {
   groupProposalPermalink?: string
@@ -19,75 +20,73 @@ export default function GroupProposalCurrentPhase(props: {
   )
 
   return (
-    <DetailList title="Proposal phase">
-      <div className="flex flex-col space-y-2 py-2 text-sm font-medium">
-        {!status ? (
-          <>
-            <span className="text-gray-600">...</span>
-            <span className="text-gray-600">...</span>
-          </>
-        ) : phase === GroupProposalPhase.CONFIRMING ? (
-          <>
-            <span className="text-amber-600">
-              Awaiting blockchain confirmation
-            </span>
-            <span className="text-gray-600">about 5 minutes</span>
-          </>
-        ) : phase === GroupProposalPhase.ANNOUNCING ? (
-          <>
-            <span className="text-sky-600">Announcing for publicity</span>
-            <span className="text-gray-600">
+    <Card 
+      title="Proposal phase">
+      {!status ? (
+        <div 
+          className="text-strong">
+          ...
+        </div>
+      ) : phase === GroupProposalPhase.CONFIRMING ? (
+        <PhaseInfo
+          status="Awaiting blockchain confirmation"
+          statusColor="yellow"
+          time="about 5 minutes"
+          timeLabel="Estimated Time" />
+      ) : phase === GroupProposalPhase.ANNOUNCING ? (
+        <PhaseInfo
+          status="Announcing for publicity"
+          statusColor="blue"
+          time={status?.timestamp && props.duration
+            ? format2Time(
+                status.timestamp.getTime(),
+                status.timestamp.getTime() +
+                  props.duration.announcing * 1000,
+              )
+            : '...'}
+          timeLabel="Duration">
+          <PhaseInfoSection
+            title="Upcoming: Proposing">
+            <div
+              className="mt-2 text-sm font-medium text-strong">
               {status?.timestamp && props.duration
-                ? format2Time(
-                    status.timestamp.getTime(),
-                    status.timestamp.getTime() +
-                      props.duration.announcing * 1000,
-                  )
-                : '...'}
-            </span>
-            <span className="text-gray-400">Upcoming: Proposing</span>
-            <span className="text-gray-400">
-              {status?.timestamp && props.duration
-                ? format2Time(
-                    status.timestamp.getTime() +
-                      props.duration.announcing * 1000,
-                    status.timestamp.getTime() +
-                      (props.duration.announcing + props.duration.voting) *
-                        1000,
-                  )
-                : '...'}
-            </span>
-          </>
-        ) : phase === GroupProposalPhase.VOTING ? (
-          <>
-            <span className="text-lime-600">Voting</span>
-            <span className="text-gray-600">
-              {status?.timestamp && props.duration
-                ? format2Time(
-                    status.timestamp.getTime() +
-                      props.duration.announcing * 1000,
-                    status.timestamp.getTime() +
-                      (props.duration.announcing + props.duration.voting) *
-                        1000,
-                  )
-                : '...'}
-            </span>
-          </>
-        ) : phase === GroupProposalPhase.ENDED ? (
-          <>
-            <span className="text-gray-600">Ended</span>
-            <span className="text-gray-600">
-              {status?.timestamp && props.duration
-                ? `at ${formatTime(
-                    status.timestamp.getTime() +
-                      (props.duration.announcing + props.duration.voting) *
-                        1000,
-                  )}`
-                : '...'}
-            </span>
-          </>
-        ) : null}
-      </div>
-    </DetailList>
+              ? format2Time(
+                  status.timestamp.getTime() +
+                    props.duration.announcing * 1000,
+                  status.timestamp.getTime() +
+                    (props.duration.announcing + props.duration.voting) *
+                      1000,
+                )
+              : '...'}
+            </div>
+          </PhaseInfoSection>
+        </PhaseInfo>
+      ) : phase === GroupProposalPhase.VOTING ? (
+        <PhaseInfo
+          status="Voting"
+          statusColor="green"
+          time={status?.timestamp && props.duration
+            ? format2Time(
+                status.timestamp.getTime() +
+                  props.duration.announcing * 1000,
+                status.timestamp.getTime() +
+                  (props.duration.announcing + props.duration.voting) *
+                    1000,
+              )
+            : '...'} 
+          timeLabel="Duration"/>
+      ) : phase === GroupProposalPhase.ENDED ? (
+        <PhaseInfo
+          status="Ended"
+          time={status?.timestamp && props.duration
+            ? `${formatTime(
+                status.timestamp.getTime() +
+                  (props.duration.announcing + props.duration.voting) *
+                    1000,
+              )}`
+            : '...'}
+          timeLabel="Ended at"/>
+      ) : null}
+    </Card>
   )
 }

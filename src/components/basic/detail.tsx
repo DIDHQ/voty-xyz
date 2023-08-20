@@ -1,5 +1,5 @@
-import { clsx } from 'clsx'
 import { ReactNode } from 'react'
+import { clsxMerge } from '@/src/utils/tailwind-helper';
 
 export function DetailList(props: { title: string; children: ReactNode }) {
   return (
@@ -16,16 +16,20 @@ export function DetailItem(props: {
   className?: string
 }) {
   return (
-    <div className="flex justify-between py-2 text-sm font-medium">
-      <dt className="mr-4 shrink-0 truncate text-gray-400">{props.title}</dt>
+    <dl 
+      className="flex justify-between gap-8 py-[6px]">
+      <dt 
+        className="shrink-0 truncate text-sm-regular text-subtle">
+        {props.title}
+      </dt>
+      
       <dd
-        className={clsx(
-          'w-0 flex-1 overflow-visible break-words text-right text-gray-600',
+        className={clsxMerge(
+          'min-w-0 flex-1 break-words text-right text-sm font-medium text-strong',
           props.className,
-        )}
-      >
+        )}>
         {props.children}
       </dd>
-    </div>
+    </dl>
   )
 }

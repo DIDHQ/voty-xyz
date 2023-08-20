@@ -25,6 +25,7 @@ import DidCombobox from './did-combobox'
 import Button from './basic/button'
 import Notification from './basic/notification'
 import Tooltip from './basic/tooltip'
+import Card from './basic/card'
 
 export default function GrantProposalSelectForm(props: {
   grant: Grant
@@ -121,14 +122,18 @@ export default function GrantProposalSelectForm(props: {
       <Notification type="error" show={handleSubmit.isError}>
         {handleSubmit.error?.message}
       </Notification>
+      
       <Notification type="success" show={handleSubmit.isSuccess}>
         Your selection has been submitted successfully
       </Notification>
+      
       {phase === GrantPhase.ENDED ? null : (
-        <div className={clsx('mt-6 border-t border-gray-200', props.className)}>
+        <Card
+          className={clsx(props.className)}>
           {props.grantProposal.permalink === previewPermalink ? null : (
-            <div className="mt-6 flex w-full flex-col items-end">
-              <div className="w-full flex-1 sm:w-64 sm:flex-none">
+            <div>
+              <div 
+                className="w-full sm:w-64">
                 <DidCombobox
                   top
                   label="Choose a DID as committee"
@@ -138,18 +143,16 @@ export default function GrantProposalSelectForm(props: {
                   onClick={connect}
                 />
               </div>
+              
               {phase === GrantPhase.PROPOSING ? (
                 <Button
-                  large
-                  primary
+                  className="mt-6 min-w-[96px]"
                   onClick={onSubmit(
                     (value) => handleSubmit.mutate(value),
                     console.error,
                   )}
                   disabled={disables(did)}
-                  loading={handleSubmit.isLoading}
-                  className="mt-6"
-                >
+                  loading={handleSubmit.isLoading}>
                   Select
                 </Button>
               ) : (
@@ -160,25 +163,22 @@ export default function GrantProposalSelectForm(props: {
                       ? 'Waiting for proposal confirming (in about 5 minutes)'
                       : 'Waiting for select starting'
                   }
-                  className="mt-6"
-                >
+                  className="mt-6">
                   <Button
-                    large
-                    primary
+                    className="min-w-[96px]"
                     onClick={onSubmit(
                       (value) => handleSubmit.mutate(value),
                       console.error,
                     )}
                     disabled={disables(did)}
-                    loading={handleSubmit.isLoading}
-                  >
+                    loading={handleSubmit.isLoading}>
                     Select
                   </Button>
                 </Tooltip>
               )}
             </div>
           )}
-        </div>
+        </Card>
       )}
     </>
   )
