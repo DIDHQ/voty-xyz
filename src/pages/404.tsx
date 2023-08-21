@@ -8,14 +8,14 @@ export default function NotFoundPage() {
     <Container
       size="small">
       <Card
-        className="flex flex-col items-center py-20 md:py-20">
+        className="flex flex-col items-center py-20 text-center md:py-20">
         <p 
-          className="mb-2 text-8xl font-bold text-primary-500">
+          className="mb-2 text-6xl font-bold text-primary-500 sm:text-8xl">
           404
         </p>
         
         <h1 
-          className="text-display-md-bold tracking-tight text-strong">
+          className="text-display-xs-bold tracking-tight text-strong sm:text-display-md-bold">
           Page not found
         </h1>
         
