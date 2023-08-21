@@ -32,7 +32,7 @@ export default function RadioGroup2(props: {
                   : ''
               )
             }>
-            {({ active, checked, disabled }) => (
+            {({ checked, disabled }) => (
               <>
                 <span
                   className={clsxMerge(
