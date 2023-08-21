@@ -1,12 +1,32 @@
 import { ReactNode } from 'react'
 
 import CommunityInfo from '../community-info'
+import { Container, Main, Sidebar } from '../basic/container'
+import LoadingBar from '../basic/loading-bar'
 
-export default function CommunityLayout(props: { children: ReactNode }) {
+export default function CommunityLayout(props: { 
+  loading?: boolean
+  children: ReactNode
+}) {
+  const {
+    loading = false,
+    children
+  } = props
+  
   return (
-    <>
-      <CommunityInfo className="mt-6 block w-full shrink-0 sm:mt-8 sm:w-60" />
-      <div className="w-full flex-1 sm:w-0 sm:pl-10">{props.children}</div>
-    </>
+    <Container
+      hasSidebar>
+      <LoadingBar 
+        loading={loading} />
+         
+      <Sidebar>
+        <CommunityInfo
+          loading={loading} />
+      </Sidebar>  
+      
+      <Main>
+        {children}
+      </Main>
+    </Container>
   )
 }

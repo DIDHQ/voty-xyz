@@ -25,7 +25,7 @@ import { permalink2Id } from '../utils/permalink'
 import sleep from '../utils/sleep'
 import Button from './basic/button'
 import Notification from './basic/notification'
-import TextLink from './basic/text-link'
+import { Back } from './basic/back'
 
 export default function PreviewBar() {
   const router = useRouter()
@@ -203,21 +203,24 @@ export default function PreviewBar() {
           ? `Your ${handleSubmit.data} has been submitted successfully`
           : 'Submitted successfully'}
       </Notification>
+      
       {preview?.to === router.asPath ? (
-        <footer className="fixed inset-x-0 bottom-0 h-18 border-t bg-primary-600 pb-safe">
-          <div className="mx-auto flex h-18 max-w-5xl items-center justify-between px-6">
-            <TextLink white href={preview.from}>
-              ← Back
-            </TextLink>
+        <div 
+          className="fixed bottom-0 w-full border-t border-base bg-white shadow-base pb-safe">
+          <div 
+            className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-3 md:px-6 lg:px-8">
+            <Back
+              href={preview.from} />
+            
             <Button
+              primary
               disabled={!preview}
               loading={handleSubmit.isLoading}
-              onClick={() => (document ? handleSubmit.mutate(document) : null)}
-            >
+              onClick={() => (document ? handleSubmit.mutate(document) : null)}>
               {previewCommunity && community === null ? 'Import' : 'Submit'}
             </Button>
           </div>
-        </footer>
+        </div>
       ) : null}
     </>
   )

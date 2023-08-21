@@ -5,6 +5,8 @@
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::-webkit-scrollbar {
@@ -36,4 +38,18 @@ input:disabled {
 .prose span > iframe {
   width: 100%;
   height: 100%;
+}
+
+.prose * {
+  color: #1E2022;
+}
+
+.prose a,
+.prose-sm a {
+  color: #22C493;
+}
+
+.prose a:hover,
+.prose-sm a:hover {
+  color: #1BA57F;
 }

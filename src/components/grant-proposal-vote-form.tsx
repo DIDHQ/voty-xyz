@@ -30,6 +30,7 @@ import Notification from './basic/notification'
 import Tooltip from './basic/tooltip'
 import Slide from './basic/slide'
 import PermissionCard from './permission-card'
+import Card from './basic/card'
 
 export default function GrantProposalVoteForm(props: {
   grant: Grant
@@ -161,17 +162,25 @@ export default function GrantProposalVoteForm(props: {
 
   return (
     <>
-      <Notification type="error" show={handleSubmit.isError}>
+      <Notification 
+        type="error" 
+        show={handleSubmit.isError}>
         {handleSubmit.error?.message}
       </Notification>
-      <Notification type="success" show={handleSubmit.isSuccess}>
+      
+      <Notification 
+        type="success" 
+        show={handleSubmit.isSuccess}>
         Your vote has been submitted successfully
       </Notification>
+      
       {phase === GrantPhase.ENDED ? null : (
-        <div className={clsx('mt-6 border-t border-gray-200', props.className)}>
+        <Card
+          className={clsx(props.className)}>
           {props.grantProposal.permalink === previewPermalink ? null : (
-            <div className="mt-6 flex w-full flex-col items-end">
-              <div className="w-full flex-1 sm:w-64 sm:flex-none">
+            <div>
+              <div 
+                className="w-full sm:w-64">
                 <DidCombobox
                   top
                   label="Choose a DID as voter"
@@ -180,19 +189,18 @@ export default function GrantProposalVoteForm(props: {
                   onChange={setDid}
                   onClick={connect}
                 />
+                
                 {!defaultDid && props.grant ? (
                   <Slide
                     title={`Voters of ${props.grant.name}`}
                     trigger={({ handleOpen }) => (
                       <TextButton
-                        secondary
+                        primary
                         onClick={handleOpen}
-                        className="text-sm"
-                      >
+                        className="mt-2">
                         Why I&#39;m not eligible to vote?
                       </TextButton>
-                    )}
-                  >
+                    )}>
                     {() => (
                       <PermissionCard
                         title="Voters"
@@ -203,18 +211,16 @@ export default function GrantProposalVoteForm(props: {
                   </Slide>
                 ) : null}
               </div>
+              
               {phase === GrantPhase.VOTING ? (
                 <Button
-                  large
-                  primary
+                  className="mt-6 min-w-[96px]"
                   onClick={onSubmit(
                     (value) => handleSubmit.mutate(value),
                     console.error,
                   )}
                   disabled={disables(did)}
-                  loading={handleSubmit.isLoading}
-                  className="mt-6"
-                >
+                  loading={handleSubmit.isLoading}>
                   Vote{totalPower ? ` (${totalPower})` : null}
                 </Button>
               ) : (
@@ -232,25 +238,22 @@ export default function GrantProposalVoteForm(props: {
                         )})`
                       : 'Waiting for vote starting'
                   }
-                  className="mt-6"
-                >
+                  className="mt-6">
                   <Button
-                    large
-                    primary
+                    className="min-w-[96px]"
                     onClick={onSubmit(
                       (value) => handleSubmit.mutate(value),
                       console.error,
                     )}
                     disabled={disables(did)}
-                    loading={handleSubmit.isLoading}
-                  >
+                    loading={handleSubmit.isLoading}>
                     Vote{totalPower ? ` (${totalPower})` : null}
                   </Button>
                 </Tooltip>
               )}
             </div>
           )}
-        </div>
+        </Card>
       )}
     </>
   )

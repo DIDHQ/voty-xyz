@@ -45,7 +45,8 @@ export default function DurationInput(props: {
   }, [props.value])
 
   return (
-    <div className={clsx('relative', props.className)}>
+    <div 
+      className={clsx('relative', props.className)}>
       <input
         ref={props.inputRef}
         type="number"
@@ -55,20 +56,21 @@ export default function DurationInput(props: {
         disabled={props.disabled}
         aria-invalid={props.error ? 'true' : 'false'}
         className={clsx(
-          'block w-full rounded-md border pl-4 pr-24 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm',
+          'block w-full rounded-xl border py-[11px] pr-24 text-sm text-strong transition placeholder:text-subtle focus:ring-0 disabled:cursor-not-allowed disabled:bg-subtle disabled:text-subtle',
           props.error
-            ? 'border-red-300 text-red-900 placeholder:text-red-300 focus:border-red-500 focus:outline-none focus:ring-red-500'
-            : 'border-gray-200 focus:border-primary-500 focus:ring-primary-300',
+            ? 'border-red-300 focus:border-red-500'
+            : 'border-base focus:border-strong'
         )}
       />
-      <div className="absolute inset-y-0 right-0 flex items-center">
+      
+      <div 
+        className="absolute inset-y-0 right-0 flex items-center">
         <select
           value={type}
           onChange={handleTypeChange}
           onBlur={handleBlur}
           disabled={props.disabled}
-          className="h-full rounded-md border-transparent bg-transparent py-0 pl-2 pr-7 text-gray-500 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed sm:text-sm"
-        >
+          className="h-full rounded-xl border-transparent bg-transparent py-0 pl-2 pr-8 text-sm text-subtle focus:border-transparent focus:ring-0 disabled:cursor-not-allowed">
           <option value={PhaseType.MINUTE}>Minutes</option>
           <option value={PhaseType.HOUR}>Hours</option>
           <option value={PhaseType.DAY}>Days</option>

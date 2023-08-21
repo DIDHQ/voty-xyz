@@ -5,6 +5,8 @@ import { event } from 'nextjs-google-analytics'
 import { useEffect, useMemo } from 'react'
 import '@rainbow-me/rainbowkit/styles.css'
 
+import { PowerIcon } from '@heroicons/react/20/solid'
+import { ArrowsRightLeftIcon, WalletIcon } from '@heroicons/react/24/outline'
 import useWallet from '../hooks/use-wallet'
 import { coinTypeLogos, coinTypeNames } from '../utils/constants'
 import useRouterQuery from '../hooks/use-router-query'
@@ -55,46 +57,83 @@ export default function ConnectButton() {
                   <img
                     src={coinTypeLogos[account.coinType]}
                     alt="logo"
-                    className="h-9 w-9"
+                    className="h-8 w-8 sm:h-9 sm:w-9"
                   />
                 ) : (
-                  <Avatar size={9} variant="beam" />
+                  <Avatar 
+                    className="h-8 w-8 sm:h-9 sm:w-9"
+                    variant="beam" />
                 )}
-                <div className="group ml-2 hidden text-start sm:block">
-                  <p className="text-start text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                
+                <div 
+                  className="group ml-2 hidden text-left sm:block">
+                  <p 
+                    className="text-sm-medium text-moderate transition-colors group-hover:text-strong">
                     {coinTypeNames[account.coinType]}
                   </p>
-                  <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
+                  
+                  <p 
+                    className="text-xs-medium text-subtle transition-colors group-hover:text-moderate">
                     {displayAddress}
                   </p>
                 </div>
               </>
-            }
-          >
-            <div className="py-1">
+            }>
+              
+            <div>
               <Menu.Item>
                 {({ active }) => (
-                  <button
-                    onClick={disconnect}
+                  <div
                     className={clsx(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block w-full px-4 py-2 text-start text-sm',
+                      'flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm-medium transition',
+                      active ? 'bg-primary-500/5 text-primary-500' : 'text-moderate'
                     )}
-                  >
-                    Disconnect
-                  </button>
+                    onClick={disconnect}>
+                    <PowerIcon 
+                      className="h-5 w-5" />
+                      
+                    <span>
+                      Disconnect
+                    </span>
+                  </div>
                 )}
               </Menu.Item>
             </div>
           </Dropdown>
         ) : chain?.unsupported ? (
-          <Button primary loading={chainModalOpen} onClick={openChainModal}>
-            Switch Network
-          </Button>
+          <>
+            <Button 
+              className="hidden sm:flex"
+              loading={chainModalOpen} 
+              onClick={openChainModal}>
+              Switch Network
+            </Button>
+            
+            <Button 
+              className="flex sm:hidden"
+              icon={ArrowsRightLeftIcon}
+              loading={chainModalOpen} 
+              size="small"
+              onClick={openChainModal}>
+            </Button>
+          </>
         ) : (
-          <Button primary loading={connectModalOpen} onClick={openConnectModal}>
-            Connect Wallet
-          </Button>
+          <>
+            <Button 
+              className="hidden sm:flex"
+              loading={connectModalOpen} 
+              onClick={openConnectModal}>
+              Connect Wallet
+            </Button>
+            
+            <Button 
+              className="flex sm:hidden"
+              icon={WalletIcon}
+              loading={connectModalOpen} 
+              size="small"
+              onClick={openConnectModal}>
+            </Button>
+          </>
         )
       }
     </RainbowKitConnectButton.Custom>

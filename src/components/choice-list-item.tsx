@@ -1,7 +1,6 @@
 import { clsx } from 'clsx'
 import { Decimal } from 'decimal.js'
 import { useMemo } from 'react'
-import { gray } from 'tailwindcss/colors'
 
 import { GroupProposal } from '../utils/schemas/v1/group-proposal'
 import {
@@ -52,40 +51,42 @@ export function ChoiceListItem(props: {
   return (
     <li
       className={clsx(
-        'group flex items-start justify-between bg-no-repeat px-4 py-3 text-sm',
-        props.disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+        'group flex items-center justify-between gap-3 rounded-xl border border-base bg-gradient-to-r bg-no-repeat p-4 transition',
+        props.disabled ? 'cursor-not-allowed opacity-80' : 'cursor-pointer hover:border-primary-500 hover:from-primary-500/5 hover:to-primary-500/5',
+        checkChoice(value, choice) ? 'border-primary-500 from-primary-500/5 to-primary-500/5 ring-2 ring-primary-500/10' : 'from-[#F8FAFC] to-[#F8FAFC]'
       )}
       style={{
         transition: 'background-size 0.3s ease-out',
-        backgroundImage: `linear-gradient(90deg, ${gray['100']} 100%, transparent 100%)`,
         backgroundSize: `${percentage.toFixed(3)}% 100%`,
       }}
       onClick={() => {
         if (!props.disabled) {
           onChange(updateChoice(value, choice))
         }
-      }}
-    >
-      <span className="w-0 flex-1">{choice}</span>
+      }}>
+      <input
+        type={type === 'single' ? 'radio' : 'checkbox'}
+        checked={checkChoice(value, choice)}
+        disabled={props.disabled}
+        onChange={() => null}
+        className={clsx(
+          'h-4 w-4 shrink-0 cursor-pointer border border-base text-primary-500 focus:outline-none focus:ring-0 focus:ring-transparent disabled:cursor-not-allowed',
+          props.disabled ? undefined : 'group-hover:border-primary-500',
+          type === 'single' ? undefined : 'rounded',
+        )} />
+      
+      <span 
+        className="min-w-0 flex-1 text-sm-regular text-strong">
+        {choice}
+      </span>
+      
       {choices?.[choice] || newPower.gt(0) ? (
-        <span className="mt-[0.09375rem] text-xs text-gray-800">
+        <span 
+          className="mt-[0.09375rem] text-xs text-moderate">
           {newPower.add(choices?.[choice] || 0).toString()} (
           {percentage.toFixed(1)}%)
         </span>
       ) : null}
-      <div className="ml-4 mt-[0.09375rem] shrink-0 leading-none">
-        <input
-          type={type === 'single' ? 'radio' : 'checkbox'}
-          checked={checkChoice(value, choice)}
-          disabled={props.disabled}
-          onChange={() => null}
-          className={clsx(
-            'h-4 w-4 cursor-pointer border border-gray-300 text-primary-600 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600',
-            props.disabled ? undefined : 'group-hover:border-primary-400',
-            type === 'single' ? undefined : 'rounded',
-          )}
-        />
-      </div>
     </li>
   )
 }

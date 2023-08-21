@@ -1,5 +1,5 @@
-import { clsx } from 'clsx'
 import { ButtonHTMLAttributes } from 'react'
+import { clsxMerge } from '@/src/utils/tailwind-helper'
 
 export default function TextButton(
   props: ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -14,15 +14,15 @@ export default function TextButton(
     <button
       type="button"
       {...restProps}
-      className={clsx(
-        'rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-gray-400',
+      className={clsxMerge(
+        'inline-flex items-center rounded-md text-sm font-medium focus:outline-none disabled:cursor-not-allowed disabled:opacity-80 transition',
         primary
-          ? 'text-primary-600 hover:text-primary-500 focus:ring-primary-300'
+          ? 'text-primary-500 enabled:hover:text-primary-600'
           : secondary
-          ? 'text-secondary-600 hover:text-secondary-500 focus:ring-secondary-300'
+          ? 'text-secondary-600 enabled:hover:text-secondary-500'
           : white
-          ? 'text-gray-100 hover:text-gray-50 focus:ring-gray-300'
-          : 'text-gray-600 hover:text-gray-500 focus:ring-gray-300',
+          ? 'text-gray-100 enabled:hover:text-gray-50'
+          : 'text-moderate enabled:hover:text-strong',
         restProps.className,
       )}
     />

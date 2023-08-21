@@ -1,6 +1,6 @@
-import { clsx } from 'clsx'
 import Link from 'next/link'
 import { AnchorHTMLAttributes, useMemo } from 'react'
+import { clsxMerge } from '@/src/utils/tailwind-helper'
 
 export default function TextLink(
   props: AnchorHTMLAttributes<HTMLAnchorElement> & {
@@ -16,17 +16,17 @@ export default function TextLink(
     props
   const className = useMemo(
     () =>
-      clsx(
-        'break-words rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
+      clsxMerge(
+        'break-words rounded-md font-medium transition focus:outline-none',
         primary
-          ? 'text-primary-600 hover:text-primary-500 focus:ring-primary-300'
+          ? 'text-primary-500 hover:text-primary-600'
           : secondary
-          ? 'text-secondary-600 hover:text-secondary-500 focus:ring-secondary-300'
+          ? 'text-secondary-600 hover:text-secondary-500'
           : white
-          ? 'text-gray-100 hover:text-gray-50 focus:ring-gray-300'
-          : 'text-gray-600 hover:text-gray-500 focus:ring-gray-300',
+          ? 'text-gray-100 hover:text-gray-50'
+          : 'text-strong hover:text-primary-500',
         underline ? 'underline' : 'no-underline',
-        disabled ? 'cursor-not-allowed text-gray-400' : undefined,
+        disabled ? 'cursor-not-allowed opacity-80' : undefined,
         restProps.className,
       ),
     [disabled, primary, restProps.className, secondary, underline, white],
