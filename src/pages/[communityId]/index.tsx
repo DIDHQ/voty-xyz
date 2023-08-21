@@ -8,7 +8,6 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import useRouterQuery from '../../hooks/use-router-query'
 import CommunityLayout from '../../components/layouts/community'
 import { trpc } from '../../utils/trpc'
-import LoadingBar from '../../components/basic/loading-bar'
 import Button from '../../components/basic/button'
 import EmptyState from '../../components/empty-state'
 import useIsManager from '../../hooks/use-is-manager'
@@ -53,10 +52,8 @@ export default function CommunityIndexPage() {
   )
 
   return (
-    <CommunityLayout>
-      <LoadingBar 
-        loading={isGroupsLoading || isActivitiesLoading} />
-        
+    <CommunityLayout
+      loading={isGroupsLoading || isActivitiesLoading}>
       <SectionHeader 
         title="Activities"/>
       

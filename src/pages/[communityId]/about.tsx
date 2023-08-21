@@ -4,7 +4,6 @@ import { useAtomValue } from 'jotai'
 import CommunityLayout from '../../components/layouts/community'
 import Article from '../../components/basic/article'
 import { trpc } from '../../utils/trpc'
-import LoadingBar from '../../components/basic/loading-bar'
 import Button from '../../components/basic/button'
 import useRouterQuery from '../../hooks/use-router-query'
 import useIsManager from '../../hooks/use-is-manager'
@@ -24,10 +23,8 @@ export default function CommunityAboutPage() {
   const community = previewCommunity || data
 
   return (
-    <CommunityLayout>
-      <LoadingBar 
-        loading={isLoading} />
-        
+    <CommunityLayout
+      loading={isLoading}>
       {community?.about ? (
         <>
           <SectionHeader

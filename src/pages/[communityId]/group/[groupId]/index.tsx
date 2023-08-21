@@ -6,12 +6,11 @@ import GroupProposalCard from '../../../../components/group-proposal-card'
 import CommunityLayout from '../../../../components/layouts/community'
 import GroupLayout from '../../../../components/layouts/group'
 import { trpc } from '../../../../utils/trpc'
-import LoadingBar from '../../../../components/basic/loading-bar'
 import EmptyState from '../../../../components/empty-state'
 import GroupProposalCreateButton from '../../../../components/group-proposal-create-button'
 import Select from '../../../../components/basic/select'
 import { GroupProposalPhase } from '../../../../utils/phase'
-import { InfoSkeleton } from '@/src/components/basic/skeleton'
+import { InfoCardSkeleton } from '@/src/components/basic/skeleton'
 
 export default function GroupIndexPage() {
   const query = useRouterQuery<['communityId', 'groupId']>()
@@ -53,11 +52,9 @@ export default function GroupIndexPage() {
   )
 
   return (
-    <CommunityLayout>
+    <CommunityLayout
+      loading={isLoading}>
       <GroupLayout>
-        <LoadingBar 
-          loading={isLoading} />
-        
         <div 
           className="my-5 flex justify-between">
           <Select
@@ -86,7 +83,7 @@ export default function GroupIndexPage() {
               ))}
             </ul>
           ) : (
-            <InfoSkeleton />
+            <InfoCardSkeleton />
           )
         )}
         <div ref={ref} />

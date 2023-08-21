@@ -6,7 +6,6 @@ import Link from 'next/link'
 import useRouterQuery from '../../../hooks/use-router-query'
 import CommunityLayout from '../../../components/layouts/community'
 import { trpc } from '../../../utils/trpc'
-import LoadingBar from '../../../components/basic/loading-bar'
 import EmptyState from '../../../components/empty-state'
 import Select from '../../../components/basic/select'
 import { GrantPhase } from '../../../utils/phase'
@@ -14,7 +13,7 @@ import GrantCard from '../../../components/grant-card'
 import Button from '../../../components/basic/button'
 import useIsManager from '../../../hooks/use-is-manager'
 import SectionHeader from '@/src/components/basic/section-header'
-import { InfoSkeleton } from '@/src/components/basic/skeleton'
+import { InfoCardSkeleton } from '@/src/components/basic/skeleton'
 
 export default function GrantsIndexPage() {
   const query = useRouterQuery<['communityId']>()
@@ -47,9 +46,8 @@ export default function GrantsIndexPage() {
   const isManager = useIsManager(query.communityId)
 
   return (
-    <CommunityLayout>
-      <LoadingBar loading={isLoading} />
-      
+    <CommunityLayout
+      loading={isLoading}>
       <SectionHeader
         title="Topic Grants">
         <div 
@@ -94,7 +92,7 @@ export default function GrantsIndexPage() {
             ))}
           </ul>
         ) : (
-          <InfoSkeleton />
+          <InfoCardSkeleton />
         )
       )}
       <div ref={ref} />
