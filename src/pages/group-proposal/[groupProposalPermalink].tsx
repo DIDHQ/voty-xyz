@@ -38,7 +38,7 @@ import { Container, Main, Sidebar } from '@/src/components/basic/container'
 import Card from '@/src/components/basic/card'
 import { BackBar } from '@/src/components/basic/back'
 import { Table, TableCell, TableRow } from '@/src/components/basic/table'
-import { ArticleSkeleton } from '@/src/components/basic/skeleton'
+import { ArticleSkeleton, SidebarInfoSkeleton } from '@/src/components/basic/skeleton'
 
 export const runtime = 'experimental-edge'
 
@@ -257,10 +257,14 @@ export default function GroupProposalPage() {
         
         <Sidebar
           className="hidden sm:block">
-          <GroupProposalInfo
-            community={community || undefined}
-            group={group || undefined}
-            groupProposal={groupProposal} />
+          {(isLoading || isGroupLoading || isCommunityLoading) ? (
+            <SidebarInfoSkeleton />
+          ) : (
+            <GroupProposalInfo
+              community={community || undefined}
+              group={group || undefined}
+              groupProposal={groupProposal} />
+          )}
         </Sidebar>
       </Container>
     </>

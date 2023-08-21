@@ -55,7 +55,7 @@ import { Back } from '@/src/components/basic/back'
 import Button from '@/src/components/basic/button'
 import { Table, TableCell, TableRow } from '@/src/components/basic/table'
 import Tag from '@/src/components/basic/tag'
-import { ArticleSkeleton } from '@/src/components/basic/skeleton'
+import { ArticleSkeleton, SidebarInfoSkeleton } from '@/src/components/basic/skeleton'
 
 const pagingButtonClass = tv({
   base: 'border-white bg-white text-moderate enabled:hover:bg-white enabled:hover:text-strong disabled:text-subtle disabled:opacity-60'
@@ -449,11 +449,15 @@ export default function GrantProposalPage() {
         
         <Sidebar
           className="hidden sm:block">
-          <GrantProposalInfo
-            community={community || undefined}
-            grant={grant || undefined}
-            grantProposal={grantProposal}/>
-          </Sidebar>
+          {(isLoading || isGrantLoading || isCommunityLoading) ? (
+            <SidebarInfoSkeleton />
+          ) : (
+            <GrantProposalInfo
+              community={community || undefined}
+              grant={grant || undefined}
+              grantProposal={grantProposal}/>
+          )}
+        </Sidebar>
       </Container>
     </>
   )

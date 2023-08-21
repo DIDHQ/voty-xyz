@@ -42,7 +42,7 @@ import { Container, Main, Sidebar } from '@/src/components/basic/container'
 import Card from '@/src/components/basic/card'
 import SectionHeader from '@/src/components/basic/section-header'
 import { BackBar } from '@/src/components/basic/back'
-import { ArticleSkeleton } from '@/src/components/basic/skeleton'
+import { ArticleSkeleton, SidebarInfoSkeleton } from '@/src/components/basic/skeleton'
 
 export const runtime = 'experimental-edge'
 
@@ -294,9 +294,13 @@ export default function GrantPage() {
         
         <Sidebar
           className="hidden sm:block">
-          <GrantInfo
-            community={community || undefined}
-            grant={grant} />
+          {(isLoading || isCommunityLoading) ? (
+            <SidebarInfoSkeleton />
+          ) : (
+            <GrantInfo
+              community={community || undefined}
+              grant={grant} />
+          )}
         </Sidebar>
       </Container>
     </>
