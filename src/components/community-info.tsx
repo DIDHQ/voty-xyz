@@ -31,6 +31,7 @@ import TextLink from './basic/text-link'
 import Avatar from './basic/avatar'
 import { TwitterOutlineIcon, DiscordOutlineIcon, GitHubOutlineIcon } from './icons'
 import Card from './basic/card'
+import { CommunityInfoSkeleton } from './basic/skeleton'
 
 const SubscriptionButton = dynamic(() => import('./subscription-button'), {
   ssr: false,
@@ -45,7 +46,15 @@ const navClass = tv({
 
 const { navHeader: navHeaderClass, navTitle: navTitleClass } = navClass()
 
-export default function CommunityInfo(props: { className?: string }) {
+export default function CommunityInfo(props: { 
+  loading?: boolean
+  className?: string 
+}) {
+  const {
+    loading = false,
+    className
+  } = props
+  
   const router = useRouter()
   const query = useRouterQuery<['communityId', 'groupId']>()
   const { data } = trpc.community.getById.useQuery(
@@ -143,7 +152,7 @@ export default function CommunityInfo(props: { className?: string }) {
       </Head>
       
       <div
-        className={props.className}>
+        className={className}>
         <Card
           className="relative z-0 !pt-[60px]">
           <div
@@ -163,19 +172,23 @@ export default function CommunityInfo(props: { className?: string }) {
             className="shrink-0 ring-4 ring-white"
             value={logo} 
             size={16} />
-            
-          <div 
-            className="mt-3">
-            <h3 
-              className="text-lg-semibold text-strong">
-              {community?.name || '...'}
-            </h3>
-            
-            <p 
-              className="mt-1 text-sm-regular text-moderate">
-              {community?.slogan || '...'}
-            </p>
-          </div>
+          
+            {!loading ? (
+              <div 
+                className="mt-3">
+                <h3 
+                  className="text-lg-semibold text-strong">
+                  {community?.name || '...'}
+                </h3>
+                
+                <p 
+                  className="mt-1 text-sm-regular text-moderate">
+                  {community?.slogan || '...'}
+                </p>
+              </div>
+            ) : (
+              <CommunityInfoSkeleton />
+            )}
           
           {externals.length ? (
             <>
