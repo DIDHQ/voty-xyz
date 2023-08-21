@@ -1,13 +1,29 @@
 import Card from "./card"
 import { clsxMerge } from "@/src/utils/tailwind-helper"
 
+export function AboutSkeleton() {
+  return (
+    <Card>
+      <SkeletonLine 
+        className="mb-4 h-6 w-1/3"/>
+      
+      <div
+        className="space-y-2">
+        <SkeletonLine />
+        
+        <SkeletonLine 
+          className="w-2/3"/>
+      </div>
+    </Card>
+  )
+}
+
 export function ArticleSkeleton() {
   return (
     <Card
-      className="space-y-6"
       size="medium">
       <SkeletonLine
-        className="h-8 w-1/2" />
+        className="mb-6 h-8 w-1/2" />
       
       <div
         className="space-y-3">
@@ -39,6 +55,18 @@ export function CommunitySkeleton() {
   )
 }
 
+export function CommunityInfoSkeleton() {
+  return (
+    <div
+      className="mt-3 space-y-2">
+      <SkeletonLine 
+        className="w-1/2"/>
+      
+      <SkeletonLine />
+    </div>
+  )
+}
+
 export function ActivitySkeleton() {
   return (
     <div
@@ -58,7 +86,7 @@ export function ActivitySkeleton() {
   )
 }
 
-export function InfoSkeleton() {
+export function InfoCardSkeleton() {
   return (
     <div
       className="overflow-hidden rounded-base bg-white shadow-base">
@@ -77,6 +105,31 @@ export function InfoSkeleton() {
           className="h-10 w-1/4"/>
       </div>
     </div>
+  )
+}
+
+export function SidebarInfoSkeleton() {
+  return (
+    <Card>
+      <SkeletonLine 
+        className="mb-4 h-6 w-1/3"/>
+      
+      <div
+        className="mb-5 space-y-2">
+        <SkeletonLine />
+          
+        <SkeletonLine
+          className="w-2/3" />
+      </div>
+      
+      <div
+        className="space-y-2">
+        <SkeletonLine />
+        
+        <SkeletonLine
+          className="w-2/3"/>
+      </div>
+    </Card>
   )
 }
 
