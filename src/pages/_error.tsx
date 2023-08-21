@@ -8,15 +8,20 @@ function ErrorPage() {
     <Container
       size="small">
       <Card
-        className="flex flex-col items-center py-20 md:py-20">
+        className="flex flex-col items-center py-20 text-center md:py-20">
+        <p 
+          className="mb-2 text-6xl font-bold text-primary-500 sm:text-8xl">
+          OOPS!
+        </p>
+        
         <h1 
-          className="text-display-md-bold tracking-tight text-strong">
-          Oops!
+          className="text-display-xs-bold tracking-tight text-strong sm:text-display-md-bold">
+          Error Occurred
         </h1>
         
         <p 
           className="mt-2 text-md-regular text-subtle">
-          An unexpected error occurred.
+          Our apologies for the trouble. Please try again later.
         </p>
         
         <div 
