@@ -87,11 +87,11 @@ export default function MarkdownEditor(props: {
         style={{ height: 600 }}
         htmlClass="prose"
         markdownClass={
-          'focus:ring-0 placeholder:text-subtle read-only:cursor-not-allowed read-only:bg-subtle read-only:text-subtle sm:text-sm'
+          'bg-transparent focus:ring-0 placeholder:text-subtle read-only:cursor-not-allowed read-only:text-subtle sm:text-sm'
         }
         className={clsx(
           'block w-full overflow-hidden rounded-xl border',
-          props.disabled ? 'pointer-events-none' : undefined,
+          props.disabled ? 'disabled cursor-not-allowed bg-subtle' : 'bg-white',
           props.error ? 'border-red-300' : 'border-base',
         )}
         placeholder="Markdown is supported"
