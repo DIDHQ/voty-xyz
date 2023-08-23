@@ -4,7 +4,6 @@ import { Controller, useForm } from 'react-hook-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import type { Decimal } from 'decimal.js'
 import pMap from 'p-map'
-import { clsx } from 'clsx'
 
 import { calculateDecimal } from '../utils/functions/decimal'
 import {
@@ -32,6 +31,7 @@ import Notification from './basic/notification'
 import Tooltip from './basic/tooltip'
 import Slide from './basic/slide'
 import PermissionCard from './permission-card'
+import Card from './basic/card'
 
 export default function GroupProposalVoteForm(props: {
   group: Group
@@ -167,23 +167,29 @@ export default function GroupProposalVoteForm(props: {
 
   return (
     <>
-      <Notification type="error" show={handleSubmit.isError}>
+      <Notification 
+        type="error" 
+        show={handleSubmit.isError}>
         {handleSubmit.error?.message}
       </Notification>
-      <Notification type="success" show={handleSubmit.isSuccess}>
+      
+      <Notification 
+        type="success" 
+        show={handleSubmit.isSuccess}>
         Your vote has been submitted successfully
       </Notification>
-      <div className={clsx('mt-6 border-t border-gray-200', props.className)}>
-        <h2 className="pt-6 text-2xl font-bold">Choices</h2>
-        <FormItem error={errors.powers?.message?.message}>
+      
+      <Card
+        title="Choices">
+        <FormItem 
+          error={errors.powers?.message?.message}>
           <Controller
             control={control}
             name="powers"
             render={({ field: { ref, value, onChange } }) => (
               <ul
-                ref={ref}
-                className="mt-6 divide-y divide-gray-200 rounded-md border border-gray-200"
-              >
+                className="space-y-3"
+                ref={ref}>
                 {props.groupProposal.choices.map((choice) => (
                   <ChoiceListItem
                     key={choice}
@@ -200,10 +206,13 @@ export default function GroupProposalVoteForm(props: {
             )}
           />
         </FormItem>
+        
         {props.groupProposal.permalink === previewPermalink ||
         phase === GroupProposalPhase.ENDED ? null : (
-          <div className="mt-6 flex w-full flex-col items-end">
-            <div className="w-full flex-1 sm:w-64 sm:flex-none">
+          <div 
+            className="mt-6 flex w-full flex-col items-end">
+            <div 
+              className="w-full sm:w-64">
               <DidCombobox
                 top
                 label="Choose a DID as voter"
@@ -212,19 +221,19 @@ export default function GroupProposalVoteForm(props: {
                 onChange={setDid}
                 onClick={connect}
               />
+              
               {!defaultDid && props.group ? (
                 <Slide
                   title={`Voters of ${props.group.name}`}
                   trigger={({ handleOpen }) => (
                     <TextButton
-                      secondary
+                      primary
                       onClick={handleOpen}
-                      className="text-sm"
-                    >
+                      className="mt-2">
                       Why I&#39;m not eligible to vote?
                     </TextButton>
-                  )}
-                >
+                  )}>
+                    
                   {() => (
                     <PermissionCard
                       title="Voters"
@@ -235,18 +244,16 @@ export default function GroupProposalVoteForm(props: {
                 </Slide>
               ) : null}
             </div>
+            
             {phase === GroupProposalPhase.VOTING ? (
               <Button
-                large
-                primary
+                className="mt-6 min-w-[96px]"
                 onClick={onSubmit(
                   (value) => handleSubmit.mutate(value),
                   console.error,
                 )}
                 disabled={disables(did)}
-                loading={handleSubmit.isLoading}
-                className="mt-6"
-              >
+                loading={handleSubmit.isLoading}>
                 Vote{totalPower ? ` (${totalPower})` : null}
               </Button>
             ) : (
@@ -263,25 +270,22 @@ export default function GroupProposalVoteForm(props: {
                       )})`
                     : 'Waiting for vote starting'
                 }
-                className="mt-6"
-              >
+                className="mt-6">
                 <Button
-                  large
-                  primary
+                  className="min-w-[96px]"
                   onClick={onSubmit(
                     (value) => handleSubmit.mutate(value),
                     console.error,
                   )}
                   disabled={disables(did)}
-                  loading={handleSubmit.isLoading}
-                >
+                  loading={handleSubmit.isLoading}>
                   Vote{totalPower ? ` (${totalPower})` : null}
                 </Button>
               </Tooltip>
             )}
           </div>
         )}
-      </div>
+      </Card>
     </>
   )
 }

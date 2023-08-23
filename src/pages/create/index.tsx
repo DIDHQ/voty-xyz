@@ -15,6 +15,9 @@ import TextInput from '../../components/basic/text-input'
 import TextLink from '../../components/basic/text-link'
 import Button from '../../components/basic/button'
 import { isSubDID } from '../../utils/did/utils'
+import Card from '@/src/components/basic/card'
+import { Container } from '@/src/components/basic/container'
+import { BackBar } from '@/src/components/basic/back'
 
 export default function CreateCommunityPage() {
   const router = useRouter()
@@ -49,143 +52,165 @@ export default function CreateCommunityPage() {
       <Head>
         <title>{`Import community - ${documentTitle}`}</title>
       </Head>
+      
       <LoadingBar
-        loading={isLoading || (!!dids?.length && isExistencesLoading)}
-      />
-      <div className="w-full bg-white">
-        <TextLink href="/" className="mt-6 inline-block sm:mt-8">
-          <h2 className="text-base font-semibold">← Back</h2>
-        </TextLink>
-        <div className="pt-8 sm:px-6 sm:pt-16">
-          <div className="mx-auto text-center">
-            <h2 className="text-3xl font-semibold text-gray-900">
-              Import your community
-              <p className="mt-4 text-center text-sm font-normal text-gray-500">
-                to hear the real voices from your community members.
-              </p>
-            </h2>
-            <div className="mt-8 flex flex-col items-center space-y-8">
-              {account ? (
-                didOptions?.length ? (
-                  <>
-                    <div className="sm:min-w-[500px]">
-                      <span className="mb-1 block text-sm font-medium text-gray-700">
-                        Choose a .bit as your community entry on Voty
-                      </span>
-                      <TextInput
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search"
-                        className="rounded-b-none"
-                      />
-                      <div
-                        ref={parentRef}
-                        className="relative max-h-80 overflow-auto rounded-md rounded-t-none border border-t-0 text-base focus:outline-none sm:text-sm"
-                      >
-                        <div
-                          style={{
-                            height: `${rowVirtualizer.getTotalSize()}px`,
-                          }}
-                        >
-                          {rowVirtualizer
-                            .getVirtualItems()
-                            .map((virtualItem) => (
-                              <div
-                                key={filteredOptions?.[virtualItem.index]?.did}
-                                onClick={() => {
-                                  if (
-                                    !filteredOptions?.[virtualItem.index]
-                                      ?.disabled
-                                  ) {
-                                    router.push(
-                                      `/create/${filteredOptions?.[
-                                        virtualItem.index
-                                      ]?.did}`,
-                                    )
-                                  }
-                                }}
-                                className={clsx(
-                                  'absolute left-0 top-0 flex w-full items-center px-3 py-2',
-                                  filteredOptions?.[virtualItem.index]?.disabled
-                                    ? 'cursor-not-allowed'
-                                    : 'cursor-pointer hover:bg-gray-100',
-                                )}
-                                style={{
-                                  height: `${virtualItem.size}px`,
-                                  transform: `translateY(${virtualItem.start}px)`,
-                                }}
-                              >
-                                <DidOption
-                                  disabled={
-                                    filteredOptions?.[virtualItem.index]
-                                      ?.disabled
-                                  }
-                                  text={
-                                    filteredOptions?.[virtualItem.index]?.did
-                                  }
-                                  label={
-                                    filteredOptions?.[virtualItem.index]
-                                      ?.disabled
-                                      ? '(used)'
-                                      : undefined
-                                  }
-                                />
-                              </div>
-                            ))}
-                        </div>
-                      </div>
+        loading={isLoading || (!!dids?.length && isExistencesLoading)} />
+        
+      <Container
+        size="small">
+        <BackBar 
+          href="/" />
+        
+        <div
+          className="mb-6 text-center">
+          <h2 
+            className="text-display-xs-semibold text-strong">
+            Import your community
+          </h2>
+          
+          <p 
+            className="mx-auto mt-2 max-w-2xl text-sm-regular text-subtle">
+            to hear the real voices from your community members.
+          </p>
+        </div>
+          
+        <Card
+          className="md:py-18"
+          size="large">
+          <div 
+            className="mx-auto max-w-sm">
+            {account ? (
+              didOptions?.length ? (
+                <>
+                  <div 
+                    className="mb-2 text-sm font-medium text-strong">
+                    Choose a .bit as your community entry on Voty
+                  </div>
+                  
+                  <TextInput
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search"
+                    className="rounded-b-none"/>
+                    
+                  <div
+                    ref={parentRef}
+                    className="relative max-h-80 overflow-auto rounded-xl rounded-t-none border border-t-0 border-base text-base focus:outline-none">
+                    <div
+                      style={{
+                        height: `${rowVirtualizer.getTotalSize()}px`,
+                      }}>
+                      {rowVirtualizer
+                        .getVirtualItems()
+                        .map((virtualItem) => (
+                          <div
+                            key={filteredOptions?.[virtualItem.index]?.did}
+                            onClick={() => {
+                              if (
+                                !filteredOptions?.[virtualItem.index]
+                                  ?.disabled
+                              ) {
+                                router.push(
+                                  `/create/${filteredOptions?.[
+                                    virtualItem.index
+                                  ]?.did}`,
+                                )
+                              }
+                            }}
+                            className={clsx(
+                              'absolute left-0 top-0 flex w-full items-center px-3 py-2',
+                              filteredOptions?.[virtualItem.index]?.disabled
+                                ? 'cursor-not-allowed'
+                                : 'cursor-pointer hover:bg-subtle',
+                            )}
+                            style={{
+                              height: `${virtualItem.size}px`,
+                              transform: `translateY(${virtualItem.start}px)`,
+                            }}>
+                            <DidOption
+                              disabled={
+                                filteredOptions?.[virtualItem.index]
+                                  ?.disabled
+                              }
+                              text={
+                                filteredOptions?.[virtualItem.index]?.did
+                              }
+                              label={
+                                filteredOptions?.[virtualItem.index]
+                                  ?.disabled
+                                  ? 'used'
+                                  : undefined
+                              }
+                            />
+                          </div>
+                        ))}
                     </div>
-                    <span className="mb-1 block text-sm font-medium text-gray-400">
-                      or{' '}
-                      <TextLink
-                        secondary
-                        href={
-                          isTestnet
-                            ? 'https://test2f7a872b.did.id/explorer'
-                            : 'https://app.did.id/explorer'
-                        }
-                      >
-                        Register a new .bit →
-                      </TextLink>
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-sm font-medium text-gray-700">
-                      You need a .bit as your community entry
-                    </p>
-                    <a
+                  </div>
+                  
+                  <div 
+                    className="mt-4 text-sm-medium text-subtle">
+                    or{' '}
+                    <TextLink
                       href={
                         isTestnet
                           ? 'https://test2f7a872b.did.id/explorer'
                           : 'https://app.did.id/explorer'
                       }
-                    >
-                      <Button primary>Register →</Button>
-                    </a>
-                  </>
-                )
+                      primary>
+                      Register a new .bit →
+                    </TextLink>
+                  </div>
+                </>
               ) : (
-                <ConnectButton />
-              )}
-              <hr className="w-full max-w-xl border-t border-gray-200" />
-              <p className="mx-auto max-w-xl text-sm text-gray-500">
+                <>
+                  <p 
+                    className="mb-4 text-sm font-medium text-strong">
+                    You need a .bit as your community entry
+                  </p>
+                  
+                  <a
+                    href={
+                      isTestnet
+                        ? 'https://test2f7a872b.did.id/explorer'
+                        : 'https://app.did.id/explorer'
+                    }>
+                    <Button 
+                      primary
+                      size="large">
+                      Register
+                    </Button>
+                  </a>
+                </>
+              )
+            ) : (
+              <ConnectButton />
+            )}
+            
+            <ul
+              className="mt-8 space-y-2 border-t border-dashed border-base pt-4 text-xs-regular text-moderate">
+              <li>
                 Voty is a DID-based, free and open-sourced community management
                 platform.
-                <br />
+              </li>
+              
+              <li>
                 We are dedicated to achieving a DID-based governance future.
-                <br />
+              </li>
+
+              <li>
                 Learn more about how Voty works and the thoughts behind
                 DID-based governance{' '}
-                <TextLink href="/about" secondary>
+                <TextLink 
+                  href="/about"
+                  primary>
                   here
                 </TextLink>
                 .
-              </p>
-            </div>
+              </li>
+            </ul>
           </div>
-        </div>
-      </div>
+        </Card>
+      </Container>
     </>
   )
 }

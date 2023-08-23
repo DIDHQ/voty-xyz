@@ -16,18 +16,21 @@ export default function GroupProposalCreateButton(props: {
   return status?.timestamp && props.group ? (
     <Link
       href={`/${props.communityId}/group/${props.group.id}/create`}
-      className={props.className}
-    >
-      <Button primary icon={PlusIcon}>
+      className={props.className}>
+      <Button 
+        className="gap-1"
+        icon={PlusIcon}>
         Proposal
       </Button>
     </Link>
   ) : (
     <Tooltip
       place="top"
-      text="Waiting for workgroup to be confirmed (in about 5 minutes)"
-    >
-      <Button primary disabled icon={PlusIcon}>
+      text="Waiting for workgroup to be confirmed (in about 5 minutes)">
+      <Button 
+        className="gap-1"
+        disabled 
+        icon={PlusIcon}>
         Proposal
       </Button>
     </Tooltip>

@@ -1,5 +1,3 @@
-import { clsx } from 'clsx'
-
 import {
   coinTypeExplorers,
   commonCoinTypes,
@@ -16,7 +14,8 @@ import { trpc } from '../utils/trpc'
 import { formatTime } from '../utils/time'
 import GrantCurrentPhase from './grant-current-phase'
 import TextLink from './basic/text-link'
-import { DetailItem, DetailList } from './basic/detail'
+import { DetailItem } from './basic/detail'
+import Card from './basic/card'
 
 export default function GrantProposalInfo(props: {
   community?: Omit<Community, 'logo'>
@@ -42,30 +41,31 @@ export default function GrantProposalInfo(props: {
 
   return (
     <div
-      className={clsx(
-        'w-full shrink-0 space-y-6 rounded-md border border-gray-200 p-6 sm:mt-8 sm:w-80',
-        props.className,
-      )}
-    >
+      className={props.className}>
       <GrantCurrentPhase
         grantPermalink={props.grantProposal?.grant}
-        duration={props.grant?.duration}
-      />
-      <DetailList title="Grant package">
-        <p className="py-2 text-sm font-medium text-gray-600">
+        duration={props.grant?.duration}/>
+        
+      <Card 
+        title="Grant package">
+        <p 
+          className="text-sm font-bold text-highlight">
           {props.grant?.funding[0] ? (
             <>
               {props.grant.funding[0][0]}{' '}
-              <span className="text-gray-400">✕</span>{' '}
+              <span>✕</span>{' '}
               {props.grant.funding[0][1]}
             </>
           ) : (
             '...'
           )}
         </p>
-      </DetailList>
-      <DetailList title="Information">
-        <DetailItem title="Community">
+      </Card>
+      
+      <Card 
+        title="Information">
+        <DetailItem 
+          title="Community">
           {props.community ? (
             <TextLink
               underline
@@ -79,7 +79,9 @@ export default function GrantProposalInfo(props: {
             '...'
           )}
         </DetailItem>
-        <DetailItem title="Topic Grant">
+        
+        <DetailItem 
+          title="Topic Grant">
           {props.community && props.grant && props.grantProposal ? (
             <TextLink
               underline
@@ -95,33 +97,35 @@ export default function GrantProposalInfo(props: {
             '...'
           )}
         </DetailItem>
+        
         <DetailItem
           title="Proposer"
-          className="block truncate whitespace-nowrap"
-        >
+          className="block truncate whitespace-nowrap">
           {props.grantProposal?.authorship?.author
             ? formatDid(props.grantProposal.authorship.author)
             : '...'}
         </DetailItem>
+        
         <DetailItem
           title="Proposed at"
-          className="block truncate whitespace-nowrap"
-        >
+          className="block truncate whitespace-nowrap">
           {props.grantProposal?.ts ? formatTime(props.grantProposal.ts) : '...'}
         </DetailItem>
+        
         {grantProposalSelect ? (
           <DetailItem
             title="Selected by"
-            className="block truncate whitespace-nowrap"
-          >
+            className="block truncate whitespace-nowrap">
             {grantProposalSelect?.authorship?.author
               ? formatDid(grantProposalSelect.authorship.author)
               : '...'}
           </DetailItem>
         ) : null}
-      </DetailList>
+      </Card>
+      
       {props.grant?.snapshots && props.grantProposal ? (
-        <DetailList title="On-chain verification">
+        <Card 
+          title="On-chain verification">
           <DetailItem title="Snapshot">
             <TextLink
               underline
@@ -144,7 +148,7 @@ export default function GrantProposalInfo(props: {
               {props.grantProposal?.permalink.substring(40) || '...'}
             </TextLink>
           </DetailItem>
-        </DetailList>
+        </Card>
       ) : null}
     </div>
   )

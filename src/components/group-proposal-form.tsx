@@ -9,6 +9,7 @@ import { clsx } from 'clsx'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 
+import { MinusCircleIcon } from '@heroicons/react/24/outline'
 import {
   GroupProposal,
   groupProposalSchema,
@@ -29,8 +30,7 @@ import { previewPermalink } from '../utils/constants'
 import Button from './basic/button'
 import RadioGroup2 from './basic/radio-group2'
 import DidCombobox from './did-combobox'
-import { Grid6, GridItem2, GridItem6 } from './basic/grid'
-import { Form, FormItem, FormSection } from './basic/form'
+import { Form, FormFooter, FormItem, FormSection } from './basic/form'
 import TextButton from './basic/text-button'
 import MarkdownEditor from './basic/markdown-editor'
 import TextInput from './basic/text-input'
@@ -175,153 +175,150 @@ export default function GroupProposalForm(props: {
   return (
     <Form
       title={`New proposal for ${props.group.name}`}
-      className={props.className}
-    >
-      <FormSection title="Proposer" description="Author of the proposal.">
-        <Grid6>
-          <GridItem2>
-            <FormItem>
-              <DidCombobox
-                top
-                options={didOptions}
-                value={did}
-                onChange={setDid}
-                onClick={connect}
-              />
-              {!defaultDid && props.group ? (
-                <Slide
-                  title={`Proposers of ${props.group.name}`}
-                  trigger={({ handleOpen }) => (
-                    <TextButton
-                      secondary
-                      onClick={handleOpen}
-                      className="text-sm"
-                    >
-                      Why I&#39;m not eligible to propose?
-                    </TextButton>
-                  )}
-                >
-                  {() =>
-                    props.group ? (
-                      <PermissionCard
-                        title="Proposers"
-                        description="SubDIDs who can initiate proposals in this workgroup."
-                        value={props.group.permission.proposing}
-                      />
-                    ) : null
-                  }
-                </Slide>
-              ) : null}
-            </FormItem>
-          </GridItem2>
-        </Grid6>
+      className={props.className}>
+      <FormSection 
+        title="Proposer" 
+        description="Author of the proposal.">
+        <FormItem>
+          <DidCombobox
+            top
+            options={didOptions}
+            value={did}
+            onChange={setDid}
+            onClick={connect} />
+          
+          {!defaultDid && props.group ? (
+            <Slide
+              title={`Proposers of ${props.group.name}`}
+              trigger={({ handleOpen }) => (
+                <TextButton
+                  className="ml-2 mt-2"
+                  primary
+                  onClick={handleOpen}>
+                  Why I&#39;m not eligible to propose?
+                </TextButton>
+              )}>
+              {() =>
+                props.group ? (
+                  <PermissionCard
+                    title="Proposers"
+                    description="SubDIDs who can initiate proposals in this workgroup."
+                    value={props.group.permission.proposing}
+                  />
+                ) : null
+              }
+            </Slide>
+          ) : null}
+        </FormItem>
       </FormSection>
+      
       <FormSection
         title="Proposal"
-        description="Proposals that include a concise title and detailed content are more likely to capture member's attention."
-      >
-        <Grid6>
-          <GridItem6>
-            <FormItem label="Title" error={errors.title?.message}>
-              <TextInput
-                {...register('title')}
-                disabled={disabled}
-                error={!!errors.title?.message}
-              />
-            </FormItem>
-          </GridItem6>
-          <GridItem6>
-            <FormItem label="Content" error={errors?.content?.message}>
-              <Controller
-                control={control}
-                name="content"
-                render={({ field: { value, onChange } }) => (
-                  <MarkdownEditor
-                    value={value}
-                    onChange={onChange}
-                    disabled={disabled}
-                    error={!!errors?.content?.message}
-                  />
-                )}
-              />
-            </FormItem>
-          </GridItem6>
-        </Grid6>
-      </FormSection>
-      <FormSection title="Voting config">
-        <Grid6>
-          <GridItem6>
-            <FormItem label="Voting type" error={errors.voting_type?.message}>
-              <Controller
-                control={control}
-                name="voting_type"
-                render={({ field: { value, onChange } }) => (
-                  <RadioGroup2
-                    options={votingTypes}
-                    value={value}
-                    onChange={onChange}
-                    disabled={disabled}
-                  />
-                )}
-              />
-            </FormItem>
-          </GridItem6>
-          <GridItem6>
-            <FormItem
-              label="Options"
-              error={
-                errors.choices?.message ||
-                errors.choices?.find?.((choice) => choice?.message)?.message
-              }
-            >
-              <div className="space-y-[-1px]">
-                {choices.map((_, index) => (
-                  <div
-                    key={index}
-                    className="relative flex items-center justify-between text-sm"
-                  >
-                    <input
-                      type="text"
-                      placeholder={`Choice ${index + 1}`}
-                      {...register(`choices.${index}`)}
-                      disabled={disabled}
-                      className={clsx(
-                        'peer block w-full border-gray-200 py-3 pl-3 focus:z-10 focus:border-primary-500 focus:ring-primary-300 disabled:cursor-not-allowed disabled:bg-gray-50 checked:disabled:bg-primary-600 sm:text-sm',
-                        choices.length > 1 ? 'pr-20' : 'pr-3',
-                        index === 0 ? 'rounded-t-md' : undefined,
-                        index === choices.length - 1
-                          ? 'rounded-b-md'
-                          : undefined,
-                      )}
-                    />
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 peer-focus:z-10">
-                      {choices.length > 2 ? (
-                        <ChoiceRemove
-                          index={index}
-                          onDelete={handleChoiceDelete}
-                        />
-                      ) : null}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {disabled ? null : (
-                <Button
-                  onClick={() => {
-                    setValue('choices', [...choices, ''])
-                  }}
-                  className="mt-4"
-                >
-                  Add
-                </Button>
+        description="Proposals that include a concise title and detailed content are more likely to capture member's attention.">
+        <div
+          className="grid grid-cols-1 gap-6">
+          <FormItem 
+            label="Title" 
+            error={errors.title?.message}>
+            <TextInput
+              {...register('title')}
+              disabled={disabled}
+              error={!!errors.title?.message}
+            />
+          </FormItem>
+
+          <FormItem 
+            label="Content" 
+            error={errors?.content?.message}>
+            <Controller
+              control={control}
+              name="content"
+              render={({ field: { value, onChange } }) => (
+                <MarkdownEditor
+                  value={value}
+                  onChange={onChange}
+                  disabled={disabled}
+                  error={!!errors?.content?.message}
+                />
               )}
-            </FormItem>
-          </GridItem6>
-        </Grid6>
+            />
+          </FormItem>
+        </div>
       </FormSection>
-      <div className="flex w-full flex-col items-end space-y-6">
+      
+      <FormSection 
+        title="Voting config">
+        <div
+          className="grid grid-cols-1 gap-6">
+          <FormItem 
+            label="Voting type" 
+            error={errors.voting_type?.message}>
+            <Controller
+              control={control}
+              name="voting_type"
+              render={({ field: { value, onChange } }) => (
+                <RadioGroup2
+                  options={votingTypes}
+                  value={value}
+                  onChange={onChange}
+                  disabled={disabled}
+                />
+              )}
+            />
+          </FormItem>
+
+          <FormItem
+            label="Options"
+            error={
+              errors.choices?.message ||
+              errors.choices?.find?.((choice) => choice?.message)?.message
+            }>
+            <div 
+              className="space-y-3">
+              {choices.map((_, index) => (
+                <div
+                  key={index}
+                  className="relative flex items-center justify-between text-sm">
+                  <input
+                    type="text"
+                    placeholder={`Choice ${index + 1}`}
+                    {...register(`choices.${index}`)}
+                    disabled={disabled}
+                    className={clsx(
+                      'peer block w-full rounded-xl border border-base py-[11px] text-sm text-strong transition placeholder:text-subtle focus:border-strong focus:ring-0 disabled:cursor-not-allowed disabled:bg-subtle disabled:text-subtle',
+                      choices.length > 2 ? 'pr-11' : ''
+                    )} />
+                  
+                  <div 
+                    className="absolute inset-y-0 right-3 flex items-center peer-focus:z-10">
+                    {choices.length > 2 ? (
+                      <ChoiceRemove
+                        index={index}
+                        onDelete={handleChoiceDelete}
+                      />
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {disabled ? null : (
+              <Button
+                onClick={() => {
+                  setValue('choices', [...choices, ''])
+                }}
+                className="mt-4">
+                Add
+              </Button>
+            )}
+          </FormItem>
+        </div>
+      </FormSection>
+      
+      <FormFooter>
         <Button
           primary
+          size="large"
           icon={EyeIcon}
           disabled={disabled}
           onClick={onSubmit((value) => {
@@ -335,11 +332,10 @@ export default function GroupProposalForm(props: {
               },
             })
             router.push(`/group-proposal/${previewPermalink}`)
-          }, console.error)}
-        >
+          }, console.error)}>
           Preview
         </Button>
-      </div>
+      </FormFooter>
     </Form>
   )
 }
@@ -354,8 +350,10 @@ function ChoiceRemove(props: {
   }, [onDelete, props.index])
 
   return (
-    <TextButton secondary onClick={handleDelete}>
-      Remove
+    <TextButton 
+      onClick={handleDelete}>
+      <MinusCircleIcon 
+        className="h-5 w-5"/>
     </TextButton>
   )
 }

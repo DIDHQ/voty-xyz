@@ -4,7 +4,8 @@ import CommunityForm from '../../components/community-form'
 import useRouterQuery from '../../hooks/use-router-query'
 import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
-import TextLink from '../../components/basic/text-link'
+import { Container } from '@/src/components/basic/container'
+import { BackBar } from '@/src/components/basic/back'
 
 export default function CommunitySettingsPage() {
   const router = useRouter()
@@ -16,14 +17,14 @@ export default function CommunitySettingsPage() {
 
   return (
     <>
-      <LoadingBar loading={isLoading} />
-      <div className="w-full">
-        <TextLink
-          href={`/${query.communityId}/about`}
-          className="mt-6 inline-block sm:mt-8"
-        >
-          <h2 className="text-base font-semibold">← Back</h2>
-        </TextLink>
+      <LoadingBar 
+        loading={isLoading} />
+        
+      <Container
+        size="small">
+        <BackBar
+          href={`/${query.communityId}/about`} />
+        
         {query.communityId && community !== undefined ? (
           <CommunityForm
             communityId={query.communityId}
@@ -37,7 +38,7 @@ export default function CommunitySettingsPage() {
             className="flex w-full flex-col"
           />
         ) : null}
-      </div>
+      </Container>
     </>
   )
 }

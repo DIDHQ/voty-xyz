@@ -54,6 +54,7 @@ export default function MarkdownEditor(props: {
       <Notification type="error" show={isError}>
         {error?.message}
       </Notification>
+      
       <MdEditor
         value={props.value}
         onChange={handleEditorChange}
@@ -86,12 +87,12 @@ export default function MarkdownEditor(props: {
         style={{ height: 600 }}
         htmlClass="prose"
         markdownClass={
-          'focus:ring-0 placeholder:text-gray-400 read-only:cursor-not-allowed read-only:border-gray-200 read-only:bg-gray-50 read-only:text-gray-500 sm:text-sm'
+          'focus:ring-0 placeholder:text-subtle read-only:cursor-not-allowed read-only:bg-subtle read-only:text-subtle sm:text-sm'
         }
         className={clsx(
-          'block w-full overflow-hidden rounded-md border',
+          'block w-full overflow-hidden rounded-xl border',
           props.disabled ? 'pointer-events-none' : undefined,
-          props.error ? 'border-red-300' : 'border-gray-200',
+          props.error ? 'border-red-300' : 'border-base',
         )}
         placeholder="Markdown is supported"
       />

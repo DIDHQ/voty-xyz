@@ -26,9 +26,11 @@ export default function GrantProposalCreateButton(props: {
   return phase === GrantPhase.CONFIRMING ? (
     <Tooltip
       place="top"
-      text="Waiting for grant to be confirmed (in about 5 minutes)"
-    >
-      <Button primary disabled icon={PlusIcon} className={props.className}>
+      text="Waiting for grant to be confirmed (in about 5 minutes)">
+      <Button 
+        disabled 
+        icon={PlusIcon} 
+        className={props.className}>
         Proposal
       </Button>
     </Tooltip>
@@ -39,19 +41,22 @@ export default function GrantProposalCreateButton(props: {
         status.timestamp.getTime() +
           props.grant.duration.announcing * 1000 -
           now.getTime(),
-      )})`}
-    >
-      <Button primary disabled icon={PlusIcon} className={props.className}>
+      )})`}>
+      <Button
+        disabled 
+        icon={PlusIcon} 
+        className={props.className}>
         Proposal
       </Button>
     </Tooltip>
   ) : props.communityId && props.grant && phase === GrantPhase.PROPOSING ? (
     <Link
+      className={props.className}
       href={`/${props.communityId}/grant/${permalink2Id(
         props.grant.permalink,
-      )}/create`}
-    >
-      <Button primary icon={PlusIcon} className={props.className}>
+      )}/create`}>
+      <Button 
+        icon={PlusIcon}>
         Proposal
       </Button>
     </Link>

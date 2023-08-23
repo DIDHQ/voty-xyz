@@ -6,6 +6,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 
+import { clsx } from 'clsx'
 import useSignDocument from '../hooks/use-sign-document'
 import { trpc } from '../utils/trpc'
 import useIsManager from '../hooks/use-is-manager'
@@ -18,7 +19,6 @@ import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import DecimalSetsBlock from './decimal-sets-block'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
-import { Grid6, GridItem3, GridItem6 } from './basic/grid'
 import Button from './basic/button'
 import Notification from './basic/notification'
 
@@ -75,141 +75,135 @@ export default function GroupForm(props: {
       <Notification type="error" show={handleArchive.isError}>
         {handleArchive.error?.message}
       </Notification>
+      
       <Form
         title={`${isNewGroup ? 'Create' : 'Edit'} workgroup${
           community?.name ? ` of ${community.name}` : ''
         }`}
         description="Workgroup helps you categorize proposals with different focuses. You can also set up workgroups to your community structure's needs."
-        className={props.className}
-      >
-        <FormSection title="Basic information">
-          <Grid6>
-            <GridItem6>
-              <FormItem label="Workgroup name" error={errors.name?.message}>
-                <TextInput
-                  {...register('name')}
-                  placeholder="e.g. Marketing Team"
-                  error={!!errors.name?.message}
-                  disabled={disabled}
-                />
-              </FormItem>
-            </GridItem6>
-            <GridItem6>
-              <FormItem
-                label="Introduction"
-                description="The purpose of this workgroup."
-                error={errors?.introduction?.message}
-              >
-                <TextInput
-                  {...register('introduction')}
-                  error={!!errors?.introduction?.message}
-                  disabled={disabled}
-                />
-              </FormItem>
-            </GridItem6>
-          </Grid6>
+        className={props.className}>
+        <FormSection 
+          title="Basic information">
+          <div
+            className="grid grid-cols-1 gap-6">
+            <FormItem 
+              label="Workgroup name" 
+              error={errors.name?.message}>
+              <TextInput
+                {...register('name')}
+                placeholder="e.g. Marketing Team"
+                error={!!errors.name?.message}
+                disabled={disabled}
+              />
+            </FormItem>
+            
+            <FormItem
+              label="Introduction"
+              description="The purpose of this workgroup."
+              error={errors?.introduction?.message}>
+              <TextInput
+                {...register('introduction')}
+                error={!!errors?.introduction?.message}
+                disabled={disabled}
+              />
+            </FormItem>
+          </div>
         </FormSection>
+        
         <FormSection
           title="Proposers"
-          description="SubDIDs who can initiate proposals in this workgroup."
-        >
-          <Grid6>
-            <GridItem6>
-              <FormItem
-                error={
-                  errors.permission?.proposing?.operands?.[0]
-                    ?.arguments?.[1]?.[0]?.message
-                }
-              >
-                <FormProvider {...methods}>
-                  <BooleanSetsBlock
-                    name="proposing"
-                    communityId={props.communityId}
-                    disabled={disabled}
-                  />
-                </FormProvider>
-              </FormItem>
-            </GridItem6>
-          </Grid6>
+          description="SubDIDs who can initiate proposals in this workgroup.">
+          <FormItem
+            error={
+              errors.permission?.proposing?.operands?.[0]
+                ?.arguments?.[1]?.[0]?.message
+            }>
+            <FormProvider {...methods}>
+              <BooleanSetsBlock
+                name="proposing"
+                communityId={props.communityId}
+                disabled={disabled}
+              />
+            </FormProvider>
+          </FormItem>
         </FormSection>
+        
         <FormSection
           title="Voters"
-          description="SubDIDs who can vote in this workgroup. You can create multiple voter groups with different voting power assigned to each group. The greatest voting power will be allocated when a SubDID has multiple occurrence."
-        >
-          <Grid6>
-            <GridItem6>
-              <FormItem error={errors.permission?.voting?.operands?.message}>
-                <FormProvider {...methods}>
-                  <DecimalSetsBlock
-                    name="voting"
-                    communityId={props.communityId}
+          description="SubDIDs who can vote in this workgroup. You can create multiple voter groups with different voting power assigned to each group. The greatest voting power will be allocated when a SubDID has multiple occurrence.">
+          <FormItem 
+            error={errors.permission?.voting?.operands?.message}>
+            <FormProvider {...methods}>
+              <DecimalSetsBlock
+                name="voting"
+                communityId={props.communityId}
+                disabled={disabled}
+              />
+            </FormProvider>
+          </FormItem>
+        </FormSection>
+        
+        <FormSection 
+          title="Proposal rules">
+          <div
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <FormItem
+              label="Announcing phase"
+              error={errors.duration?.announcing?.message}>
+              <Controller
+                control={control}
+                name="duration.announcing"
+                render={({ field: { ref, value, onChange } }) => (
+                  <DurationInput
+                    inputRef={ref}
+                    value={value}
+                    onChange={onChange}
                     disabled={disabled}
+                    error={!!errors.duration?.announcing}
                   />
-                </FormProvider>
-              </FormItem>
-            </GridItem6>
-          </Grid6>
+                )}
+              />
+            </FormItem>
+
+            <FormItem
+              label="Voting phase"
+              error={errors.duration?.voting?.message}>
+              <Controller
+                control={control}
+                name="duration.voting"
+                render={({ field: { ref, value, onChange } }) => (
+                  <DurationInput
+                    inputRef={ref}
+                    value={value}
+                    onChange={onChange}
+                    disabled={disabled}
+                    error={!!errors.duration?.voting}
+                  />
+                )}
+              />
+            </FormItem>
+
+            <FormItem
+              className="sm:col-span-2"
+              label="Criteria for approval"
+              error={errors?.criteria_for_approval?.message}>
+              <Textarea
+                {...register('criteria_for_approval')}
+                error={!!errors?.criteria_for_approval?.message}
+                disabled={disabled}
+              />
+            </FormItem>
+          </div>
         </FormSection>
-        <FormSection title="Proposal rules">
-          <Grid6>
-            <GridItem3>
-              <FormItem
-                label="Announcing phase"
-                error={errors.duration?.announcing?.message}
-              >
-                <Controller
-                  control={control}
-                  name="duration.announcing"
-                  render={({ field: { ref, value, onChange } }) => (
-                    <DurationInput
-                      inputRef={ref}
-                      value={value}
-                      onChange={onChange}
-                      disabled={disabled}
-                      error={!!errors.duration?.announcing}
-                    />
-                  )}
-                />
-              </FormItem>
-            </GridItem3>
-            <GridItem3>
-              <FormItem
-                label="Voting phase"
-                error={errors.duration?.voting?.message}
-              >
-                <Controller
-                  control={control}
-                  name="duration.voting"
-                  render={({ field: { ref, value, onChange } }) => (
-                    <DurationInput
-                      inputRef={ref}
-                      value={value}
-                      onChange={onChange}
-                      disabled={disabled}
-                      error={!!errors.duration?.voting}
-                    />
-                  )}
-                />
-              </FormItem>
-            </GridItem3>
-            <GridItem6>
-              <FormItem
-                label="Criteria for approval"
-                error={errors?.criteria_for_approval?.message}
-              >
-                <Textarea
-                  {...register('criteria_for_approval')}
-                  error={!!errors?.criteria_for_approval?.message}
-                  disabled={disabled}
-                />
-              </FormItem>
-            </GridItem6>
-          </Grid6>
-        </FormSection>
+        
         {isManager ? (
-          <FormFooter>
+          <FormFooter
+            className={clsx(
+              isNewGroup ? '' : 'max-[425px]:justify-center'
+            )}>
             <Button
               primary
+              size="large"
               icon={EyeIcon}
               onClick={onSubmit((value) => {
                 setPreviewGroup({
@@ -217,19 +211,19 @@ export default function GroupForm(props: {
                   preview: props.preview,
                 })
                 router.push(props.preview.to)
-              }, console.error)}
-            >
+              }, console.error)}>
               Preview
             </Button>
+            
             {isNewGroup ? null : (
               <Button
                 icon={ArchiveBoxIcon}
                 loading={handleArchive.isLoading}
+                size="large"
                 onClick={onSubmit(
                   (value) => handleArchive.mutate(value),
                   console.error,
-                )}
-              >
+                )}>
                 Archive
               </Button>
             )}

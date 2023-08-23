@@ -1,10 +1,11 @@
-import { clsx } from 'clsx'
 import { useMemo } from 'react'
 
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
 import { BooleanSets, DecimalSets } from '../utils/schemas/basic/sets'
 import { formatDid } from '../utils/did/utils'
+import Card from './basic/card'
+import Tag from './basic/tag'
 
 export default function PermissionCard(props: {
   title: string
@@ -16,69 +17,59 @@ export default function PermissionCard(props: {
   const didSet = useMemo(() => new Set(dids || []), [dids])
 
   return (
-    <div className="rounded-md border p-6">
-      <h3 className="text-xl font-semibold">{props.title}</h3>
-      <p className="mt-1 text-sm text-gray-500">{props.description}</p>
-      <ul className="mt-4 space-y-4 divide-y border-t">
+    <Card
+      title={props.title}
+      subtitle={props.description}>
+      <ul>
         {props.value.operands.map((operand, index) => (
-          <li key={index} className="pt-4">
+          <li 
+            key={index}>
             {props.value.operands.length === 1 || !operand.name ? null : (
-              <h4 className="mb-3 text-sm font-semibold">{operand.name}</h4>
+              <h4 
+                className="mb-3 text-sm-semibold text-strong">
+                {operand.name}
+              </h4>
             )}
+            
             {operand.arguments[1].length ? (
-              <div className="-m-1">
+              <div 
+                className="flex flex-wrap gap-3">
                 {operand.arguments[1].map((argument) => (
                   <Tag
                     key={argument}
-                    primary={didSet.has(`${argument}.${operand.arguments[0]}`)}
-                    className="m-1"
-                  >
+                    size="large"
+                    color={didSet.has(`${argument}.${operand.arguments[0]}`) ? 'green' : 'default'}>
                     {formatDid(`${argument}.${operand.arguments[0]}`)}
                   </Tag>
                 ))}
               </div>
             ) : (
-              <span className="text-sm text-gray-600">
+              <div 
+                className="text-sm-regular text-strong">
                 {operand.arguments[0] === 'bit' ? (
-                  'All .bit accounts'
+                  <Tag
+                    size="large">
+                    All .bit accounts
+                  </Tag>
                 ) : (
-                  <>
-                    All SubDIDs of{' '}
-                    <Tag primary={didSet.has(operand.arguments[0])}>
-                      {operand.arguments[0]}
-                    </Tag>
-                  </>
+                  <Tag 
+                    color={didSet.has(operand.arguments[0]) ? 'green' : 'default'}
+                    size="large">
+                    All SubDIDs of {operand.arguments[0]}
+                  </Tag>
                 )}
-              </span>
+              </div>
             )}
+            
             {operand.arguments[2] ? (
-              <p className="mt-3 text-sm text-gray-600">
+              <p 
+                className="mt-4 text-sm-medium text-semistrong">
                 Voting power: {operand.arguments[2]}
               </p>
             ) : null}
           </li>
         ))}
       </ul>
-    </div>
-  )
-}
-
-function Tag(props: {
-  primary?: boolean
-  children: string
-  className?: string
-}) {
-  return (
-    <span
-      className={clsx(
-        'inline-flex items-center rounded-full px-3 py-0.5 text-sm',
-        props.primary
-          ? 'bg-primary-100 text-primary-700'
-          : 'bg-gray-100 text-gray-700',
-        props.className,
-      )}
-    >
-      {props.children}
-    </span>
+    </Card>
   )
 }

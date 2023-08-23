@@ -1,5 +1,6 @@
 import { clsx } from 'clsx'
 import { RadioGroup } from '@headlessui/react'
+import { clsxMerge } from '@/src/utils/tailwind-helper';
 
 export default function RadioGroup2(props: {
   options: { value: string; name: string; description?: string }[]
@@ -13,61 +14,54 @@ export default function RadioGroup2(props: {
       disabled={props.disabled}
       value={props.value}
       onChange={props.onChange}
-      className={props.className}
-    >
-      <div className="-space-y-px rounded-md bg-white">
-        {props.options.map((option, index) => (
+      className={props.className}>
+      <div 
+        className="space-y-3">
+        {props.options.map(option => (
           <RadioGroup.Option
             key={option.name}
             value={option.value}
             className={({ checked }) =>
-              clsx(
-                index === 0 ? 'rounded-t-md' : '',
-                index === props.options.length - 1 ? 'rounded-b-md' : '',
-                checked
-                  ? 'z-10 border-primary-200 bg-primary-50'
-                  : 'border-gray-200',
+              clsxMerge(
+                'group flex items-center justify-between gap-3 rounded-xl border border-base p-4 transition',
                 props.disabled
-                  ? 'cursor-not-allowed bg-gray-50'
-                  : 'cursor-pointer',
-                'relative flex border p-4 focus:outline-none',
+                  ? 'cursor-not-allowed opacity-80'
+                  : 'cursor-pointer hover:border-strong',
+                checked
+                  ? 'border-primary-500 hover:border-primary-500'
+                  : ''
               )
-            }
-          >
-            {({ active, checked, disabled }) => (
+            }>
+            {({ checked, disabled }) => (
               <>
                 <span
-                  className={clsx(
+                  className={clsxMerge(
+                    'flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition',
+                    disabled ? 'cursor-not-allowed' : 'cursor-pointer group-hover:border-strong',
                     checked
-                      ? 'border-transparent bg-primary-600'
-                      : 'border-gray-300 bg-white',
-                    active ? 'ring-2 ring-primary-600 ring-offset-2' : '',
-                    'mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border',
-                    disabled ? 'cursor-not-allowed' : 'cursor-pointer',
-                  )}
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-white" />
+                      ? 'border-transparent bg-primary-500 group-hover:border-transparent'
+                      : 'border-base bg-white'
+                  )}>
+                  <span 
+                    className="h-1.5 w-1.5 rounded-full bg-white" />
                 </span>
-                <span className="ml-3 flex flex-col">
+                
+                <div
+                  className="flex-1">
                   <RadioGroup.Label
-                    as="span"
                     className={clsx(
-                      checked ? 'text-primary-900' : 'text-gray-900',
-                      'block text-sm font-medium',
-                    )}
-                  >
+                      'text-sm text-strong',
+                    )}>
                     {option.name}
                   </RadioGroup.Label>
+                  
                   <RadioGroup.Description
-                    as="span"
                     className={clsx(
-                      checked ? 'text-primary-700' : 'text-gray-500',
-                      'block text-sm',
-                    )}
-                  >
+                      'text-xs-regular text-subtle',
+                    )}>
                     {option.description}
                   </RadioGroup.Description>
-                </span>
+                </div>
               </>
             )}
           </RadioGroup.Option>

@@ -98,18 +98,18 @@ export default function SubscriptionButton(props: {
           primary
           disabled={isFetching || isSetting || handleUnsubscribe.isLoading}
           onClick={handleUnsubscribe.mutate}
-          className={props.className}
-        >
-          <BookmarkSolidIcon className="h-5 w-5" />
+          className={props.className}>
+          <BookmarkSolidIcon 
+            className="h-5 w-5" />
         </TextButton>
       ) : (
         <TextButton
           primary
           disabled={isFetching || isSetting || handleSubscribe.isLoading}
           onClick={handleSubscribe.mutate}
-          className={props.className}
-        >
-          <BookmarkOutlineIcon className="h-5 w-5" />
+          className={props.className}>
+          <BookmarkOutlineIcon 
+          className="h-5 w-5" />
         </TextButton>
       )}
     </>

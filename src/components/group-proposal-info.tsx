@@ -1,5 +1,3 @@
-import { clsx } from 'clsx'
-
 import {
   coinTypeExplorers,
   commonCoinTypes,
@@ -13,10 +11,11 @@ import { permalink2Explorer } from '../utils/permalink'
 import { formatNumber } from '../utils/number'
 import { formatDid } from '../utils/did/utils'
 import Article from './basic/article'
-import { DetailItem, DetailList } from './basic/detail'
+import { DetailItem } from './basic/detail'
 import MarkdownViewer from './basic/markdown-viewer'
 import TextLink from './basic/text-link'
 import GroupProposalCurrentPhase from './group-proposal-current-phase'
+import Card from './basic/card'
 
 export default function GroupProposalInfo(props: {
   community?: Omit<Community, 'logo'>
@@ -31,60 +30,62 @@ export default function GroupProposalInfo(props: {
 
   return (
     <div
-      className={clsx(
-        'w-full shrink-0 space-y-6 rounded-md border border-gray-200 p-6 sm:mt-8 sm:w-80',
-        props.className,
-      )}
-    >
+      className={props.className}>
       <GroupProposalCurrentPhase
         groupProposalPermalink={props.groupProposal?.permalink}
-        duration={props.group?.duration}
-      />
-      <DetailList title="Criteria for approval">
+        duration={props.group?.duration}/>
+        
+      <Card
+        title="Criteria for approval">
         <Article small className="pt-2">
           <MarkdownViewer>{props.group?.criteria_for_approval}</MarkdownViewer>
         </Article>
-      </DetailList>
-      <DetailList title="Information">
-        <DetailItem title="Community">
+      </Card>
+      
+      <Card
+        title="Information">
+        <DetailItem 
+          title="Community">
           {props.community ? (
             <TextLink
               underline
               disabled={disabled}
               href={`/${props.community.id}`}
-              className="block truncate whitespace-nowrap"
-            >
+              className="block truncate whitespace-nowrap">
               {props.community.name}
             </TextLink>
           ) : (
             '...'
           )}
         </DetailItem>
-        <DetailItem title="Workgroup">
+        
+        <DetailItem 
+          title="Workgroup">
           {props.group && props.community ? (
             <TextLink
               underline
               disabled={disabled}
               href={`/${props.community.id}/group/${props.group.id}`}
-              className="block truncate whitespace-nowrap"
-            >
+              className="block truncate whitespace-nowrap">
               {props.group.name}
             </TextLink>
           ) : (
             '...'
           )}
         </DetailItem>
+        
         <DetailItem
           title="Proposer"
-          className="block truncate whitespace-nowrap"
-        >
+          className="block truncate whitespace-nowrap">
           {props.groupProposal?.authorship?.author
             ? formatDid(props.groupProposal.authorship.author)
             : '...'}
         </DetailItem>
-      </DetailList>
+      </Card>
+        
       {props.groupProposal?.snapshots ? (
-        <DetailList title="On-chain verification">
+        <Card 
+          title="On-chain verification">
           <DetailItem title="Snapshot">
             <TextLink
               underline
@@ -101,6 +102,7 @@ export default function GroupProposalInfo(props: {
               )}
             </TextLink>
           </DetailItem>
+          
           <DetailItem title="Arweave TX">
             <TextLink
               underline
@@ -110,7 +112,7 @@ export default function GroupProposalInfo(props: {
               {props.groupProposal?.permalink.substring(40) || '...'}
             </TextLink>
           </DetailItem>
-        </DetailList>
+        </Card>
       ) : null}
     </div>
   )

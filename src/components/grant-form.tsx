@@ -19,7 +19,6 @@ import { requiredCoinTypesOfBooleanSets } from '../utils/functions/boolean'
 import { requiredCoinTypesOfDecimalSets } from '../utils/functions/decimal'
 import MarkdownEditor from './basic/markdown-editor'
 import Button from './basic/button'
-import { Grid6, GridItem2, GridItem3, GridItem6 } from './basic/grid'
 import { Form, FormFooter, FormSection, FormItem } from './basic/form'
 import TextInput from './basic/text-input'
 import DurationInput from './basic/duration-input'
@@ -100,164 +99,161 @@ export default function GrantForm(props: {
         community?.name ? ` of ${community.name}` : ''
       }`}
       description="Topic Grant helps you automate your project's funding process with ease, while also elevating member's engagement."
-      className={props.className}
-    >
-      <FormSection title="Basic information">
-        <Grid6>
-          <GridItem6>
-            <FormItem label="Grant topic" error={errors.name?.message}>
+      className={props.className}>
+      <FormSection 
+        title="Basic information">
+        <div
+          className="grid grid-cols-1 gap-6">
+          <FormItem label="Grant topic" error={errors.name?.message}>
+            <TextInput
+              {...register('name')}
+              placeholder="e.g. Hackathon Season 1"
+              error={!!errors.name?.message}
+              disabled={disabled}/>
+          </FormItem>
+          
+          <FormItem
+            label="Introduction"
+            description="The purpose of this grant."
+            error={errors?.introduction?.message}>
+            <Controller
+              control={control}
+              name={'introduction'}
+              render={({ field: { value, onChange } }) => (
+                <MarkdownEditor
+                  value={value}
+                  onChange={onChange}
+                  error={!!errors?.introduction?.message}
+                  disabled={disabled}
+                />
+              )}
+            />
+          </FormItem>
+        </div>
+      </FormSection>
+
+      <FormSection 
+        title="Rules">
+        <div
+          className="grid grid-cols-6 gap-6">
+          <FormItem
+            className="col-span-6 sm:col-span-2"
+            label="Announcing phase"
+            error={errors.duration?.announcing?.message}>
+            <Controller
+              control={control}
+              name="duration.announcing"
+              render={({ field: { ref, value, onChange } }) => (
+                <DurationInput
+                  inputRef={ref}
+                  value={value}
+                  onChange={onChange}
+                  disabled={disabled}
+                  error={!!errors.duration?.announcing}
+                />
+              )}
+            />
+          </FormItem>
+          
+          <FormItem
+            className="col-span-6 sm:col-span-2"
+            label="Proposing phase"
+            error={errors.duration?.proposing?.message}>
+            <Controller
+              control={control}
+              name="duration.proposing"
+              render={({ field: { ref, value, onChange } }) => (
+                <DurationInput
+                  inputRef={ref}
+                  value={value}
+                  onChange={onChange}
+                  disabled={disabled}
+                  error={!!errors.duration?.proposing}
+                />
+              )}
+            />
+          </FormItem>
+
+          <FormItem
+            className="col-span-6 sm:col-span-2"
+            label="Voting phase"
+            error={errors.duration?.voting?.message}>
+            <Controller
+              control={control}
+              name="duration.voting"
+              render={({ field: { ref, value, onChange } }) => (
+                <DurationInput
+                  inputRef={ref}
+                  value={value}
+                  onChange={onChange}
+                  disabled={disabled}
+                  error={!!errors.duration?.voting}
+                />
+              )}
+            />
+          </FormItem>
+          
+          <FormItem
+            className="col-span-6 sm:col-span-3"
+            label="Grant package"
+            error={
+              errors?.funding?.[0]?.[0]?.message ||
+              errors?.funding?.[0]?.[1]?.message
+            }>
+            <div 
+              className="flex w-full items-center gap-2">
               <TextInput
-                {...register('name')}
-                placeholder="e.g. Hackathon Season 1"
-                error={!!errors.name?.message}
+                disabled={disabled}
+                {...register('funding.0.0')}
+                error={!!errors?.funding?.[0]?.[0]}
+                placeholder="e.g. 100 USD"
+                className="min-w-0 flex-1"/>
+              
+              <span className="text-gray-400">✕</span>
+              
+              <Controller
+                control={control}
+                name="funding.0.1"
+                render={({ field: { value, onChange } }) => (
+                  <TextInput
+                    disabled={disabled}
+                    type="number"
+                    value={value || ''}
+                    onChange={(e) => onChange(e.target.valueAsNumber)}
+                    error={!!errors?.funding?.[0]?.[1]}
+                    placeholder="count"
+                    className="shrink-0 basis-20"
+                  />
+                )}
+              />
+            </div>
+          </FormItem>
+
+          <FormItem
+            className="col-span-6"
+            label="Committee"
+            description="If set, only proposals selected by committee members are eligible to be voted on."
+            optional
+            error={
+              errors.permission?.selecting?.operands?.[0]?.arguments?.[1]?.[0]
+                ?.message
+            }>
+            <FormProvider {...methods}>
+              <BooleanSetsBlock
+                name="selecting"
+                communityId={props.communityId}
                 disabled={disabled}
               />
-            </FormItem>
-          </GridItem6>
-          <GridItem6>
-            <FormItem
-              label="Introduction"
-              description="The purpose of this grant."
-              error={errors?.introduction?.message}
-            >
-              <Controller
-                control={control}
-                name={'introduction'}
-                render={({ field: { value, onChange } }) => (
-                  <MarkdownEditor
-                    value={value}
-                    onChange={onChange}
-                    error={!!errors?.introduction?.message}
-                    disabled={disabled}
-                  />
-                )}
-              />
-            </FormItem>
-          </GridItem6>
-        </Grid6>
+            </FormProvider>
+          </FormItem>
+        </div>
       </FormSection>
-      <FormSection title="Rules">
-        <Grid6>
-          <GridItem2>
-            <FormItem
-              label="Announcing phase"
-              error={errors.duration?.announcing?.message}
-            >
-              <Controller
-                control={control}
-                name="duration.announcing"
-                render={({ field: { ref, value, onChange } }) => (
-                  <DurationInput
-                    inputRef={ref}
-                    value={value}
-                    onChange={onChange}
-                    disabled={disabled}
-                    error={!!errors.duration?.announcing}
-                  />
-                )}
-              />
-            </FormItem>
-          </GridItem2>
-          <GridItem2>
-            <FormItem
-              label="Proposing phase"
-              error={errors.duration?.proposing?.message}
-            >
-              <Controller
-                control={control}
-                name="duration.proposing"
-                render={({ field: { ref, value, onChange } }) => (
-                  <DurationInput
-                    inputRef={ref}
-                    value={value}
-                    onChange={onChange}
-                    disabled={disabled}
-                    error={!!errors.duration?.proposing}
-                  />
-                )}
-              />
-            </FormItem>
-          </GridItem2>
-          <GridItem2>
-            <FormItem
-              label="Voting phase"
-              error={errors.duration?.voting?.message}
-            >
-              <Controller
-                control={control}
-                name="duration.voting"
-                render={({ field: { ref, value, onChange } }) => (
-                  <DurationInput
-                    inputRef={ref}
-                    value={value}
-                    onChange={onChange}
-                    disabled={disabled}
-                    error={!!errors.duration?.voting}
-                  />
-                )}
-              />
-            </FormItem>
-          </GridItem2>
-          <GridItem3>
-            <FormItem
-              label="Grant package"
-              error={
-                errors?.funding?.[0]?.[0]?.message ||
-                errors?.funding?.[0]?.[1]?.message
-              }
-            >
-              <div className="flex w-full items-center space-x-2">
-                <TextInput
-                  disabled={disabled}
-                  {...register('funding.0.0')}
-                  error={!!errors?.funding?.[0]?.[0]}
-                  placeholder="e.g. 100 USD"
-                  className="w-0 flex-1"
-                />
-                <span className="text-gray-400">✕</span>
-                <Controller
-                  control={control}
-                  name="funding.0.1"
-                  render={({ field: { value, onChange } }) => (
-                    <TextInput
-                      disabled={disabled}
-                      type="number"
-                      value={value || ''}
-                      onChange={(e) => onChange(e.target.valueAsNumber)}
-                      error={!!errors?.funding?.[0]?.[1]}
-                      placeholder="count"
-                      className="shrink-0 basis-16"
-                    />
-                  )}
-                />
-              </div>
-            </FormItem>
-          </GridItem3>
-          <GridItem6>
-            <FormItem
-              label="Committee"
-              description="If set, only proposals selected by committee members are eligible to be voted on."
-              optional
-              error={
-                errors.permission?.selecting?.operands?.[0]?.arguments?.[1]?.[0]
-                  ?.message
-              }
-            >
-              <FormProvider {...methods}>
-                <BooleanSetsBlock
-                  name="selecting"
-                  communityId={props.communityId}
-                  disabled={disabled}
-                />
-              </FormProvider>
-            </FormItem>
-          </GridItem6>
-        </Grid6>
-      </FormSection>
+      
       {isManager ? (
         <FormFooter>
           <Button
             primary
+            size="large"
             icon={EyeIcon}
             onClick={(e) => {
               const argument =
@@ -283,8 +279,7 @@ export default function GrantForm(props: {
                 })
                 router.push(props.preview.to)
               }, console.error)(e)
-            }}
-          >
+            }}>
             Preview
           </Button>
         </FormFooter>

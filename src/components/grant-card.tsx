@@ -1,5 +1,3 @@
-import { clsx } from 'clsx'
-import Link from 'next/link'
 import { useMemo } from 'react'
 
 import { GrantPhase } from '../utils/phase'
@@ -8,7 +6,7 @@ import { Authorized } from '../utils/schemas/basic/authorship'
 import { Grant } from '../utils/schemas/v1/grant'
 import { formatDurationMs } from '../utils/time'
 import useNow from '../hooks/use-now'
-import Thumbnail from './basic/thumbnail'
+import { InfoCard, InfoItem } from './info-card'
 
 export default function GrantCard(props: {
   communityId: string
@@ -45,117 +43,49 @@ export default function GrantCard(props: {
   )
 
   return (
-    <Link
-      shallow
+    <InfoCard
+      desc={props.grant.introduction}
       href={`/${props.communityId}/grant/${permalink2Id(
         props.grant.permalink,
       )}`}
-      className="block divide-y rounded-md border transition-colors focus-within:ring-2 focus-within:ring-primary-300 focus-within:ring-offset-2 hover:border-primary-500 hover:bg-gray-50"
-    >
-      <div className="flex w-full p-4">
-        <div className="w-0 flex-1">
-          <p className="truncate text-lg font-medium text-gray-800">
-            {props.grant.name}
-          </p>
-          <p className="line-clamp-3 text-gray-600">
-            {props.grant.introduction}
-          </p>
-        </div>
-        <Thumbnail src={props.grant.image} className="ml-4 shrink-0" />
-      </div>
-      <div className="flex w-full divide-x rounded-b-md bg-gray-50 text-sm">
-        <div className="w-0 flex-1 px-4 py-2">
-          <p className="text-gray-400">Grant package</p>
-          <p className="truncate">
-            {props.grant.funding[0]?.[0]}{' '}
-            <span className="text-gray-400">✕</span>{' '}
-            {props.grant.funding[0]?.[1]}
-          </p>
-        </div>
-        <div className="w-0 flex-1 px-4 py-2">
-          {phase === GrantPhase.CONFIRMING ? (
-            <>
-              <p className="truncate text-gray-400">Transaction confirming</p>
-              <p className="truncate">
-                <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                in about 5 minutes
-              </p>
-            </>
-          ) : phase === GrantPhase.ANNOUNCING && props.grant.tsAnnouncing ? (
-            <>
-              <p className="text-gray-400">Proposing starts</p>
-              <p>
-                <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                in{' '}
-                {formatDurationMs(
-                  props.grant.tsAnnouncing.getTime() - now.getTime(),
-                )}
-              </p>
-            </>
-          ) : phase === GrantPhase.PROPOSING && props.grant.tsProposing ? (
-            <>
-              <p className="text-gray-400">Proposing ends</p>
-              <p>
-                <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                in{' '}
-                {formatDurationMs(
-                  props.grant.tsProposing.getTime() - now.getTime(),
-                )}
-              </p>
-            </>
-          ) : phase === GrantPhase.VOTING && props.grant.tsVoting ? (
-            <>
-              <p className="text-gray-400">Voting ends</p>
-              <p>
-                <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                in{' '}
-                {formatDurationMs(
-                  props.grant.tsVoting.getTime() - now.getTime(),
-                )}
-              </p>
-            </>
-          ) : phase === GrantPhase.ENDED && props.grant.tsVoting ? (
-            <>
-              <p className="text-gray-400">Voting ended</p>
-              <p>
-                <PhaseDot value={phase} className="mb-0.5 mr-1.5" />
-                {formatDurationMs(
-                  props.grant.tsVoting.getTime() - now.getTime(),
-                )}{' '}
-                ago
-              </p>
-            </>
-          ) : null}
-        </div>
-        <div className="hidden w-0 flex-1 px-4 py-2 sm:block">
-          <p className="text-gray-400">Proposals</p>
-          <p>{props.grant.proposals}</p>
-        </div>
-      </div>
-    </Link>
-  )
-}
-
-function PhaseDot(props: { value?: GrantPhase; className?: string }) {
-  return (
-    <svg
-      className={clsx(
-        'mb-0.5 mr-1.5 inline h-2 w-2',
-        props.value
-          ? {
-              [GrantPhase.CONFIRMING]: 'text-amber-400',
-              [GrantPhase.ANNOUNCING]: 'text-sky-400',
-              [GrantPhase.PROPOSING]: 'text-indigo-400',
-              [GrantPhase.VOTING]: 'text-lime-400',
-              [GrantPhase.ENDED]: 'text-gray-400',
-            }[props.value]
-          : undefined,
-        props.className,
-      )}
-      fill="currentColor"
-      viewBox="0 0 8 8"
-    >
-      {props.value ? <circle cx={4} cy={4} r={3} /> : null}
-    </svg>
+      thumbnail={props.grant.image}
+      title={props.grant.name}>
+      <InfoItem
+        hightlight
+        label="Grant package"
+        value={props.grant.funding[0]?.[0] + ' x ' + props.grant.funding[0]?.[1]} />
+        
+      {phase === GrantPhase.CONFIRMING ? (
+        <InfoItem
+          label="Transaction confirming"
+          phaseColor="yellow"
+          value="in about 5 minutes" />
+      ) : phase === GrantPhase.ANNOUNCING && props.grant.tsAnnouncing ? (
+        <InfoItem
+          label="Proposing starts"
+          phaseColor="blue"
+          value={'in ' + formatDurationMs(props.grant.tsAnnouncing.getTime() - now.getTime())} />
+      ) : phase === GrantPhase.PROPOSING && props.grant.tsProposing ? (
+        <InfoItem
+          label="Proposing ends"
+          phaseColor="purple"
+          value={'in ' + formatDurationMs(props.grant.tsProposing.getTime() - now.getTime())} />
+      ) : phase === GrantPhase.VOTING && props.grant.tsVoting ? (
+        <InfoItem
+          label="Voting ends"
+          phaseColor="green"
+          value={'in ' + formatDurationMs(props.grant.tsVoting.getTime() - now.getTime())} />
+      ) : phase === GrantPhase.ENDED && props.grant.tsVoting ? (
+        <InfoItem
+          label="Voting ended"
+          phaseColor="gray"
+          value={formatDurationMs(props.grant.tsVoting.getTime() - now.getTime()) + ' ago'} />
+      ) : null}
+        
+      <InfoItem
+        className="hidden min-[802px]:block"
+        label="Proposals"
+        value={props.grant.proposals} />
+    </InfoCard>
   )
 }

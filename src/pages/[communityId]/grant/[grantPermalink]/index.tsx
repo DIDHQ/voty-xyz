@@ -7,9 +7,9 @@ import { SuperJSON } from 'superjson'
 import { createServerSideHelpers } from '@trpc/react-query/server'
 import { GetServerSideProps } from 'next'
 
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 import { trpc } from '@/src/utils/trpc'
 import Article from '@/src/components/basic/article'
-import TextLink from '@/src/components/basic/text-link'
 import LoadingBar from '@/src/components/basic/loading-bar'
 import {
   documentDescription,
@@ -38,6 +38,11 @@ import MarkdownViewer from '@/src/components/basic/markdown-viewer'
 import GrantInfo from '@/src/components/grant-info'
 import GrantProposalCreateButton from '@/src/components/grant-proposal-create-button'
 import { appRouter } from '@/src/server/routers/_app'
+import { Container, Main, Sidebar } from '@/src/components/basic/container'
+import Card from '@/src/components/basic/card'
+import SectionHeader from '@/src/components/basic/section-header'
+import { BackBar } from '@/src/components/basic/back'
+import { ArticleSkeleton, SidebarInfoSkeleton } from '@/src/components/basic/skeleton'
 
 export const runtime = 'experimental-edge'
 
@@ -158,64 +163,98 @@ export default function GrantPage() {
         <meta key="og:site_name" property="og:site_name" content={title} />
         <meta key="og:image" property="og:image" content={image} />
       </Head>
-      <LoadingBar loading={isFetching || isCommunityLoading} />
-      <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
-        <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
-          <TextLink
+      
+      <LoadingBar 
+        loading={isFetching || isCommunityLoading} />
+        
+      <Container
+        hasSidebar>
+        <Main>
+          <BackBar
             disabled={!community || !!previewGrant}
-            href={`/${community?.id}/grant`}
-            className="inline-block"
-          >
-            <h2 className="text-base font-semibold">← Back</h2>
-          </TextLink>
-          {grant && grant?.introduction.split('\n').length >= 4 ? (
-            <>
-              <section {...getCollapseProps()}>
-                <Article className="my-6 sm:my-8">
-                  <h1>{grant?.name || '...'}</h1>
-                  <MarkdownViewer preview={!!previewGrant}>
+            href={`/${community?.id}/grant`} />
+          
+          {isFetching || isCommunityLoading ? (
+            <ArticleSkeleton />
+          ) : (
+            grant && grant?.introduction.split('\n').length >= 4 ? (
+              <Card
+                size="medium">
+                <section 
+                  {...getCollapseProps()}>
+                  <Article >
+                    <h1>
+                      {grant?.name || '...'}
+                    </h1>
+                    
+                    <MarkdownViewer 
+                      preview={!!previewGrant}>
+                      {grant?.introduction}
+                    </MarkdownViewer>
+                  </Article>
+                </section>
+                
+                <TextButton
+                  className="mt-6 gap-1"
+                  primary
+                  {...getToggleProps({
+                    onClick: () => setExpanded((prevExpanded) => !prevExpanded),
+                  })}>
+                  {isExpanded ? (
+                    <>
+                      <ChevronUpIcon 
+                        className="h-4 w-4 stroke-2" />
+                    
+                      <span>
+                        Collapse
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDownIcon
+                        className="h-4 w-4 stroke-2" />
+                    
+                      <span>
+                        Expand
+                      </span>
+                    </>
+                  )}
+                </TextButton>
+              </Card>
+            ) : (
+              <Card
+                size="medium">
+                <Article>
+                  <h1>
+                    {grant?.name || '...'}
+                  </h1>
+                  
+                  <MarkdownViewer 
+                    preview={!!previewGrant}>
                     {grant?.introduction}
                   </MarkdownViewer>
                 </Article>
-              </section>
-              <TextButton
-                secondary
-                {...getToggleProps({
-                  onClick: () => setExpanded((prevExpanded) => !prevExpanded),
-                })}
-              >
-                {isExpanded ? '↑ Collapse' : '↓ Expand'}
-              </TextButton>
-            </>
-          ) : (
-            <Article className="my-6 sm:my-8">
-              <h1>{grant?.name || '...'}</h1>
-              <MarkdownViewer preview={!!previewGrant}>
-                {grant?.introduction}
-              </MarkdownViewer>
-            </Article>
+              </Card>
+            )
           )}
+          
           <GrantInfo
             community={community || undefined}
             grant={grant}
-            className="mb-6 block sm:hidden"
-          />
+            className="block sm:hidden" />
+            
           {previewGrant ? null : (
-            <div className="my-6 flex items-center justify-between border-t border-gray-200 pt-6">
-              {grant?.proposals ? (
-                <h2 className="text-2xl font-bold">
-                  {option === options[0]
+            <SectionHeader
+              title={grant?.proposals ? (option === options[0]
                     ? grant.proposals === 1
                       ? '1 Proposal'
                       : `${grant.proposals} Proposals`
                     : grant.selectedProposals === 1
                     ? '1 Selected proposal'
-                    : `${grant.selectedProposals} Selected proposals`}
-                </h2>
-              ) : (
-                <h2 />
-              )}
-              <div className="flex items-center">
+                    : `${grant.selectedProposals} Selected proposals`) : ''}>
+              
+              <div 
+                className="flex items-center">
                 {grant?.permission.selecting && grant?.proposals ? (
                   <Select
                     options={options}
@@ -223,15 +262,17 @@ export default function GrantPage() {
                     onChange={setOption}
                   />
                 ) : null}
+                
                 <GrantProposalCreateButton
                   communityId={query.communityId}
                   grant={grant}
-                  className="ml-5"
-                />
+                  className="ml-4"/>
               </div>
-            </div>
+            </SectionHeader>
           )}
-          <ul className="mt-5 space-y-5">
+          
+          <ul 
+            className="space-y-4 md:space-y-6">
             {grantProposals
               ?.filter(
                 (grantProposal) =>
@@ -249,13 +290,19 @@ export default function GrantPage() {
                 </li>
               ))}
           </ul>
-        </div>
-        <GrantInfo
-          community={community || undefined}
-          grant={grant}
-          className="hidden sm:block"
-        />
-      </div>
+        </Main>
+        
+        <Sidebar
+          className="hidden sm:block">
+          {(isFetching || isCommunityLoading) ? (
+            <SidebarInfoSkeleton />
+          ) : (
+            <GrantInfo
+              community={community || undefined}
+              grant={grant} />
+          )}
+        </Sidebar>
+      </Container>
     </>
   )
 }

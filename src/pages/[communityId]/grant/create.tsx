@@ -2,10 +2,11 @@ import Head from 'next/head'
 import { useMemo } from 'react'
 
 import useRouterQuery from '../../../hooks/use-router-query'
-import TextLink from '../../../components/basic/text-link'
 import { documentTitle, previewPermalink } from '../../../utils/constants'
 import GrantForm from '../../../components/grant-form'
 import { Grant } from '../../../utils/schemas/v1/grant'
+import { BackBar } from '@/src/components/basic/back'
+import { Container } from '@/src/components/basic/container'
 
 export default function CreateGrantPage() {
   const query = useRouterQuery<['communityId']>()
@@ -60,14 +61,13 @@ export default function CreateGrantPage() {
       <Head>
         <title>{`New grant - ${documentTitle}`}</title>
       </Head>
-      <div className="w-full">
-        <TextLink
+      
+      <Container
+        size="small">
+        <BackBar
           disabled={!query.communityId}
-          href={`/${query.communityId}/grant`}
-          className="mt-6 inline-block sm:mt-8"
-        >
-          <h2 className="text-base font-semibold">← Back</h2>
-        </TextLink>
+          href={`/${query.communityId}/grant`} />
+          
         {query.communityId ? (
           <GrantForm
             communityId={query.communityId}
@@ -80,7 +80,7 @@ export default function CreateGrantPage() {
             }}
           />
         ) : null}
-      </div>
+      </Container>
     </>
   )
 }

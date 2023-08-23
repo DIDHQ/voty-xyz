@@ -24,8 +24,7 @@ import Slide from './basic/slide'
 import PermissionCard from './permission-card'
 import Button from './basic/button'
 import DidCombobox from './did-combobox'
-import { Grid6, GridItem2, GridItem6 } from './basic/grid'
-import { Form, FormItem, FormSection } from './basic/form'
+import { Form, FormFooter, FormItem, FormSection } from './basic/form'
 import TextButton from './basic/text-button'
 import MarkdownEditor from './basic/markdown-editor'
 import TextInput from './basic/text-input'
@@ -113,82 +112,79 @@ export default function GrantProposalForm(props: {
   return (
     <Form
       title={`New proposal for ${props.grant.name}`}
-      className={props.className}
-    >
-      <FormSection title="Proposer" description="Author of the proposal.">
-        <Grid6>
-          <GridItem2>
-            <FormItem>
-              <DidCombobox
-                top
-                options={didOptions}
-                value={did}
-                onChange={setDid}
-                onClick={connect}
-              />
-              {!defaultDid && props.grant ? (
-                <Slide
-                  title={`Proposers of ${props.grant.name}`}
-                  trigger={({ handleOpen }) => (
-                    <TextButton
-                      secondary
-                      onClick={handleOpen}
-                      className="text-sm"
-                    >
-                      Why I&#39;m not eligible to propose?
-                    </TextButton>
-                  )}
-                >
-                  {() =>
-                    props.grant ? (
-                      <PermissionCard
-                        title="Proposers"
-                        description="SubDIDs who can initiate proposals in this grant."
-                        value={props.grant.permission.proposing}
-                      />
-                    ) : null
-                  }
-                </Slide>
-              ) : null}
-            </FormItem>
-          </GridItem2>
-        </Grid6>
+      className={props.className}>
+      <FormSection 
+        title="Proposer" 
+        description="Author of the proposal.">
+        <FormItem>
+          <DidCombobox
+            top
+            options={didOptions}
+            value={did}
+            onChange={setDid}
+            onClick={connect} />
+            
+          {!defaultDid && props.grant ? (
+            <Slide
+              title={`Proposers of ${props.grant.name}`}
+              trigger={({ handleOpen }) => (
+                <TextButton
+                  className="ml-2 mt-2"
+                  primary
+                  onClick={handleOpen}>
+                  Why I&#39;m not eligible to propose?
+                </TextButton>
+              )}>
+              {() =>
+                props.grant ? (
+                  <PermissionCard
+                    title="Proposers"
+                    description="SubDIDs who can initiate proposals in this grant."
+                    value={props.grant.permission.proposing}
+                  />
+                ) : null
+              }
+            </Slide>
+          ) : null}
+        </FormItem>
       </FormSection>
+      
       <FormSection
         title="Proposal"
-        description="Proposals that include a concise title and detailed content are more likely to capture member's attention."
-      >
-        <Grid6>
-          <GridItem6>
-            <FormItem label="Title" error={errors.title?.message}>
-              <TextInput
-                {...register('title')}
-                disabled={disabled}
-                error={!!errors.title?.message}
-              />
-            </FormItem>
-          </GridItem6>
-          <GridItem6>
-            <FormItem label="Content" error={errors?.content?.message}>
-              <Controller
-                control={control}
-                name="content"
-                render={({ field: { value, onChange } }) => (
-                  <MarkdownEditor
-                    value={value}
-                    onChange={onChange}
-                    disabled={disabled}
-                    error={!!errors?.content?.message}
-                  />
-                )}
-              />
-            </FormItem>
-          </GridItem6>
-        </Grid6>
+        description="Proposals that include a concise title and detailed content are more likely to capture member's attention.">
+        <div
+          className="grid grid-cols-1 gap-6">
+          <FormItem label="Title" error={errors.title?.message}>
+            <TextInput
+              {...register('title')}
+              disabled={disabled}
+              error={!!errors.title?.message}
+            />
+          </FormItem>
+          
+          <FormItem 
+            label="Content" 
+            error={errors?.content?.message}>
+            <Controller
+              control={control}
+              name="content"
+              render={({ field: { value, onChange } }) => (
+                <MarkdownEditor
+                  value={value}
+                  onChange={onChange}
+                  disabled={disabled}
+                  error={!!errors?.content?.message}
+                />
+              )}
+            />
+          </FormItem>
+        </div>
       </FormSection>
-      <div className="flex w-full flex-col items-end space-y-6">
+      
+      <FormFooter>
         <Button
           primary
+          size="large"
           icon={EyeIcon}
           disabled={disabled}
           onClick={onSubmit((value) => {
@@ -205,11 +201,10 @@ export default function GrantProposalForm(props: {
               },
             })
             router.push(`/grant-proposal/${previewPermalink}`)
-          }, console.error)}
-        >
+          }, console.error)}>
           Preview
         </Button>
-      </div>
+      </FormFooter>
     </Form>
   )
 }

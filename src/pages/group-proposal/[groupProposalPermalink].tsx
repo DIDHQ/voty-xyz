@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { clsx } from 'clsx'
 import { compact, last } from 'remeda'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
@@ -35,6 +34,11 @@ import { GroupProposal } from '@/src/utils/schemas/v1/group-proposal'
 import { formatDid } from '@/src/utils/did/utils'
 import { parseImage, parseRoot, parseContent } from '@/src/utils/markdown'
 import { appRouter } from '@/src/server/routers/_app'
+import { Container, Main, Sidebar } from '@/src/components/basic/container'
+import Card from '@/src/components/basic/card'
+import { BackBar } from '@/src/components/basic/back'
+import { Table, TableCell, TableRow } from '@/src/components/basic/table'
+import { ArticleSkeleton, SidebarInfoSkeleton } from '@/src/components/basic/skeleton'
 
 export const runtime = 'experimental-edge'
 
@@ -114,7 +118,7 @@ export default function GroupProposalPage() {
     () => list?.pages.flatMap(({ data }) => data),
     [list],
   )
-  const { ref, inView } = useInView()
+  const { inView } = useInView()
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage()
@@ -170,107 +174,99 @@ export default function GroupProposalPage() {
         <meta key="og:site_name" property="og:site_name" content={title} />
         <meta key="og:image" property="og:image" content={image} />
       </Head>
-      <LoadingBar
-        loading={isFetching || isGroupLoading || isCommunityLoading}
-      />
-      <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
-        <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
-          <TextLink
+      
+      <LoadingBar 
+        loading={isFetching || isGroupLoading || isCommunityLoading} />
+        
+      <Container
+        hasSidebar>
+        <Main>
+          <BackBar
             disabled={!community || !group || !!previewGroupProposal}
-            href={`/${community?.id}/group/${group?.id}`}
-            className="inline-block"
-          >
-            <h2 className="text-base font-semibold">← Back</h2>
-          </TextLink>
-          <Article className="my-6 sm:my-8">
-            <h1>{groupProposal?.title || '...'}</h1>
-            <MarkdownViewer preview={!!previewGroupProposal}>
-              {groupProposal?.content}
-            </MarkdownViewer>
-          </Article>
+            href={`/${community?.id}/group/${group?.id}`} />
+          
+          {(isFetching || isGroupLoading || isCommunityLoading) ? (
+            <ArticleSkeleton />
+          ) : (
+            <Card
+              size="medium">
+              <Article>
+                <h1>
+                  {groupProposal?.title || '...'}
+                </h1>
+                
+                <MarkdownViewer preview={!!previewGroupProposal}>
+                  {groupProposal?.content}
+                </MarkdownViewer>
+              </Article>
+            </Card>
+          )}
+          
           <GroupProposalInfo
             community={community || undefined}
             group={group || undefined}
             groupProposal={groupProposal}
-            className="mb-6 block sm:hidden"
-          />
+            className="block sm:hidden"/>
+            
           {group && groupProposal ? (
             <GroupProposalVoteForm
               group={group}
               groupProposal={groupProposal}
-              onSuccess={handleSuccess}
-            />
+              onSuccess={handleSuccess} />
           ) : null}
-          {groupProposal?.votes ? (
-            <h2 className="my-6 border-t border-gray-200 pt-6 text-2xl font-bold">
-              {groupProposal.votes === 1
-                ? '1 Vote'
-                : `${groupProposal.votes} Votes`}
-            </h2>
-          ) : null}
+          
           {groupProposalVotes?.length ? (
-            <table className="my-6 w-full table-fixed border-separate border-spacing-0">
-              <thead>
-                <tr>
-                  <th className="rounded-t-md border-b border-gray-200 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
-                    Voter
-                  </th>
-                  <th className="border-b border-gray-200 px-3 py-2 text-left text-sm font-semibold text-gray-900">
-                    Choice
-                  </th>
-                  <th className="rounded-t-md border-b border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-semibold text-gray-900">
-                    Power
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {groupProposalVotes.map((groupProposalVote, index) => (
-                  <tr key={groupProposalVote.permalink}>
-                    <td
-                      className={clsx(
-                        index === 0 ? undefined : 'border-t',
-                        'truncate whitespace-nowrap border-gray-200 py-2 pl-4 pr-3 text-sm font-medium text-gray-900',
-                      )}
-                    >
+            <Card
+              title={groupProposal ? (groupProposal.votes === 1 ? '1 Vote': `${groupProposal.votes} Votes`) : ''}>
+              <Table
+                headers={[{
+                  label: 'Voter'
+                }, {
+                  label: 'Choice'
+                }, {
+                  label: 'Power',
+                  className: 'text-right'
+                }]}>
+                {groupProposalVotes.map(groupProposalVote => (
+                  <TableRow 
+                    key={groupProposalVote.permalink}>
+                    <TableCell>
                       {formatDid(groupProposalVote.authorship.author)}
-                    </td>
-                    <td
-                      title={stringifyChoice(groupProposalVote.powers)}
-                      className={clsx(
-                        index === 0 ? undefined : 'border-t',
-                        'truncate whitespace-nowrap border-gray-200 px-3 py-2 text-sm text-gray-500',
-                      )}
-                    >
+                    </TableCell>
+                    
+                    <TableCell
+                      title={stringifyChoice(groupProposalVote.powers)}>
                       {stringifyChoice(groupProposalVote.powers)}
-                    </td>
-                    <td
-                      className={clsx(
-                        index === 0 ? undefined : 'border-t',
-                        'truncate whitespace-nowrap border-gray-200 py-2 pl-3 pr-4 text-right text-sm font-medium',
-                      )}
-                    >
+                    </TableCell>
+                    
+                    <TableCell
+                      className="text-right">
                       <TextLink
                         primary
                         disabled={!!previewGroupProposal}
-                        href={permalink2Explorer(groupProposalVote.permalink)}
-                      >
+                        href={permalink2Explorer(groupProposalVote.permalink)}>
                         {groupProposalVote.total_power}
                       </TextLink>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-              <tfoot ref={ref} />
-            </table>
+              </Table>
+            </Card>
           ) : null}
-        </div>
-        <GroupProposalInfo
-          community={community || undefined}
-          group={group || undefined}
-          groupProposal={groupProposal}
-          className="hidden sm:block"
-        />
-      </div>
+        </Main>
+        
+        <Sidebar
+          className="hidden sm:block">
+          {(isFetching || isGroupLoading || isCommunityLoading) ? (
+            <SidebarInfoSkeleton />
+          ) : (
+            <GroupProposalInfo
+              community={community || undefined}
+              group={group || undefined}
+              groupProposal={groupProposal} />
+          )}
+        </Sidebar>
+      </Container>
     </>
   )
 }
