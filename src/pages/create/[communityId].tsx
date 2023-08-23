@@ -28,7 +28,7 @@ export default function CreateEntryPage() {
             initialValue={null}
             preview={{
               from: router.asPath,
-              to: `/${query.communityId}/about`,
+              to: `/${query.communityId}/about?preview=true`,
               template: `You are creating community on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
             }}/>

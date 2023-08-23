@@ -31,7 +31,7 @@ export default function CommunitySettingsPage() {
             initialValue={community}
             preview={{
               from: router.asPath,
-              to: `/${query.communityId}/about`,
+              to: `/${query.communityId}/about?preview=true`,
               template: `You are updating community on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
             }}
