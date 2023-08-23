@@ -1,12 +1,12 @@
 import { ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 
+import { useRouter } from 'next/router'
 import PreviewBar from '../preview-bar'
 import Header from '../header'
 import Footer from '../footer'
 import useRouterQuery from '@/src/hooks/use-router-query'
 import { clsxMerge } from '@/src/utils/tailwind-helper'
-import { useRouter } from 'next/router'
 
 const Banner = dynamic(() => import('../banner'), { ssr: false })
 
