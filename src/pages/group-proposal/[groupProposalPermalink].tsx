@@ -67,7 +67,7 @@ export const getServerSideProps: GetServerSideProps<
 export default function GroupProposalPage() {
   const query = useRouterQuery<['groupProposalPermalink']>()
   const previewGroupProposal = useAtomValue(previewGroupProposalAtom)
-  const { data, isLoading, refetch } =
+  const { data, isFetching, refetch } =
     trpc.groupProposal.getByPermalink.useQuery(
       { permalink: query.groupProposalPermalink },
       { enabled: !!query.groupProposalPermalink },
@@ -176,7 +176,7 @@ export default function GroupProposalPage() {
       </Head>
       
       <LoadingBar 
-        loading={isLoading || isGroupLoading || isCommunityLoading} />
+        loading={isFetching || isGroupLoading || isCommunityLoading} />
         
       <Container
         hasSidebar>
@@ -185,7 +185,7 @@ export default function GroupProposalPage() {
             disabled={!community || !group || !!previewGroupProposal}
             href={`/${community?.id}/group/${group?.id}`} />
           
-          {(isLoading || isGroupLoading || isCommunityLoading) ? (
+          {(isFetching || isGroupLoading || isCommunityLoading) ? (
             <ArticleSkeleton />
           ) : (
             <Card
@@ -257,7 +257,7 @@ export default function GroupProposalPage() {
         
         <Sidebar
           className="hidden sm:block">
-          {(isLoading || isGroupLoading || isCommunityLoading) ? (
+          {(isFetching || isGroupLoading || isCommunityLoading) ? (
             <SidebarInfoSkeleton />
           ) : (
             <GroupProposalInfo

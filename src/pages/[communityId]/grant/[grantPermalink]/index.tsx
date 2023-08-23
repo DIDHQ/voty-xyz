@@ -71,7 +71,7 @@ export const getServerSideProps: GetServerSideProps<
 export default function GrantPage() {
   const query = useRouterQuery<['communityId', 'grantPermalink']>()
   const previewGrant = useAtomValue(previewGrantAtom)
-  const { data, isLoading } = trpc.grant.getByPermalink.useQuery(
+  const { data, isFetching } = trpc.grant.getByPermalink.useQuery(
     { permalink: query.grantPermalink },
     { enabled: !!query.grantPermalink },
   )
@@ -165,7 +165,7 @@ export default function GrantPage() {
       </Head>
       
       <LoadingBar 
-        loading={isLoading || isCommunityLoading} />
+        loading={isFetching || isCommunityLoading} />
         
       <Container
         hasSidebar>
@@ -174,7 +174,7 @@ export default function GrantPage() {
             disabled={!community || !!previewGrant}
             href={`/${community?.id}/grant`} />
           
-          {isLoading || isCommunityLoading ? (
+          {isFetching || isCommunityLoading ? (
             <ArticleSkeleton />
           ) : (
             grant && grant?.introduction.split('\n').length >= 4 ? (
@@ -294,7 +294,7 @@ export default function GrantPage() {
         
         <Sidebar
           className="hidden sm:block">
-          {(isLoading || isCommunityLoading) ? (
+          {(isFetching || isCommunityLoading) ? (
             <SidebarInfoSkeleton />
           ) : (
             <GrantInfo

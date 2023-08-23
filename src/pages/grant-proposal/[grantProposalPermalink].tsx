@@ -88,7 +88,7 @@ export const getServerSideProps: GetServerSideProps<
 export default function GrantProposalPage() {
   const query = useRouterQuery<['grantProposalPermalink']>()
   const previewGrantProposal = useAtomValue(previewGrantProposalAtom)
-  const { data, isLoading, refetch } =
+  const { data, isFetching, refetch } =
     trpc.grantProposal.getByPermalink.useQuery(
       { permalink: query.grantProposalPermalink },
       { enabled: !!query.grantProposalPermalink },
@@ -250,10 +250,9 @@ export default function GrantProposalPage() {
         <meta key="og:site_name" property="og:site_name" content={title} />
         <meta key="og:image" property="og:image" content={image} />
       </Head>
-      
-      <LoadingBar 
-        loading={isLoading || isGrantLoading || isCommunityLoading} />
-        
+      <LoadingBar
+        loading={isFetching || isGrantLoading || isCommunityLoading}
+      />
       {funding && isAuthor ? (
         <Confetti
           width={width}
@@ -327,7 +326,7 @@ export default function GrantProposalPage() {
             ) : null}
           </div>
           
-          {(isLoading || isGrantLoading || isCommunityLoading) ? (
+          {(isFetching || isGrantLoading || isCommunityLoading) ? (
             <ArticleSkeleton />
           ) : (
             <Card
@@ -449,7 +448,7 @@ export default function GrantProposalPage() {
         
         <Sidebar
           className="hidden sm:block">
-          {(isLoading || isGrantLoading || isCommunityLoading) ? (
+          {(isFetching || isGrantLoading || isCommunityLoading) ? (
             <SidebarInfoSkeleton />
           ) : (
             <GrantProposalInfo
