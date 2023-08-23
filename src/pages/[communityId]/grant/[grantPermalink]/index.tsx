@@ -66,7 +66,7 @@ export const getServerSideProps: GetServerSideProps<
 export default function GrantPage() {
   const query = useRouterQuery<['communityId', 'grantPermalink']>()
   const previewGrant = useAtomValue(previewGrantAtom)
-  const { data, isLoading } = trpc.grant.getByPermalink.useQuery(
+  const { data, isFetching } = trpc.grant.getByPermalink.useQuery(
     { permalink: query.grantPermalink },
     { enabled: !!query.grantPermalink },
   )
@@ -158,7 +158,7 @@ export default function GrantPage() {
         <meta key="og:site_name" property="og:site_name" content={title} />
         <meta key="og:image" property="og:image" content={image} />
       </Head>
-      <LoadingBar loading={isLoading || isCommunityLoading} />
+      <LoadingBar loading={isFetching || isCommunityLoading} />
       <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
         <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
           <TextLink

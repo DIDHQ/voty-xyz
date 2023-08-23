@@ -63,7 +63,7 @@ export const getServerSideProps: GetServerSideProps<
 export default function GroupProposalPage() {
   const query = useRouterQuery<['groupProposalPermalink']>()
   const previewGroupProposal = useAtomValue(previewGroupProposalAtom)
-  const { data, isLoading, refetch } =
+  const { data, isFetching, refetch } =
     trpc.groupProposal.getByPermalink.useQuery(
       { permalink: query.groupProposalPermalink },
       { enabled: !!query.groupProposalPermalink },
@@ -170,7 +170,9 @@ export default function GroupProposalPage() {
         <meta key="og:site_name" property="og:site_name" content={title} />
         <meta key="og:image" property="og:image" content={image} />
       </Head>
-      <LoadingBar loading={isLoading || isGroupLoading || isCommunityLoading} />
+      <LoadingBar
+        loading={isFetching || isGroupLoading || isCommunityLoading}
+      />
       <div className="flex w-full flex-1 flex-col items-start sm:flex-row">
         <div className="w-full flex-1 pt-6 sm:mr-10 sm:w-0 sm:pt-8">
           <TextLink
