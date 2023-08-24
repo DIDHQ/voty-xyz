@@ -68,7 +68,7 @@ export default function DidCombobox(props: {
           }
           displayValue={formatDid}
           onChange={(event) => setQuery(event.target.value)}
-          className="w-full rounded-xl border border-base bg-white py-[11px] pl-3 pr-10 text-sm-regular transition focus:border-strong focus:outline-none focus:ring-0 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-80"/>
+          className="w-full rounded-xl border border-base bg-white py-[11px] pl-3 pr-10 text-sm-regular transition focus:border-strong focus:outline-none focus:ring-0 focus:ring-offset-0 disabled:cursor-not-allowed disabled:bg-subtle"/>
         
         <Combobox.Button 
           className="absolute inset-y-0 right-0 flex items-center rounded-r-xl px-2 focus:outline-none">

@@ -266,7 +266,8 @@ module.exports = {
         strong: '#1E2022',
         semistrong: '#313131',
         moderate: '#71818B',
-        subtle: '#9098A4'
+        subtle: '#9098A4',
+        'footer-color': '#647087'
       }
     },
   },

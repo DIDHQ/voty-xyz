@@ -43,7 +43,7 @@ export default function GroupSettingsPage() {
             onArchive={handleArchive}
             preview={{
               from: `/${query.communityId}/group/${query.groupId}/settings`,
-              to: `/${query.communityId}/group/${query.groupId}/about`,
+              to: `/${query.communityId}/group/${query.groupId}/about?preview=true`,
               template: `You are updating workgroup on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
             }}/>

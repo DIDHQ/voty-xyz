@@ -77,7 +77,7 @@ export default function CreateGroupPage() {
             initialValue={initialValue}
             preview={{
               from: `/${query.communityId}/create`,
-              to: `/${query.communityId}/group/${newGroup}/about`,
+              to: `/${query.communityId}/group/${newGroup}/about?preview=true`,
               template: `You are creating workgroup on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
             }} />

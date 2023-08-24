@@ -29,7 +29,7 @@ export default function Header(props: { className?: string }) {
           title='Voty'>
           <h1>
             <VotyIcon
-              className="h-6 text-[#121314] transition group-hover:text-primary-500 sm:h-[27px]" />
+              className="h-6 text-[#121314] transition group-hover:text-primary-500 sm:h-full" />
           </h1>
           
           {/* {isTestnet ? (

@@ -41,15 +41,15 @@ input:disabled {
 }
 
 .prose * {
-  color: #1E2022;
+  @apply text-strong;
 }
 
 .prose a,
 .prose-sm a {
-  color: #22C493;
+  @apply text-primary-500;
 }
 
 .prose a:hover,
 .prose-sm a:hover {
-  color: #1BA57F;
+  @apply text-primary-600;
 }

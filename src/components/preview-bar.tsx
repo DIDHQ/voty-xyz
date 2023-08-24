@@ -208,12 +208,14 @@ export default function PreviewBar() {
         <div 
           className="fixed bottom-0 w-full border-t border-base bg-white shadow-base pb-safe">
           <div 
-            className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-3 md:px-6 lg:px-8">
+            className="mx-auto flex h-18 w-full max-w-7xl items-center justify-between gap-4 px-3 md:px-6 lg:px-8">
             <Back
               href={preview.from} />
             
             <Button
+              className="w-32"
               primary
+              size="large"
               disabled={!preview}
               loading={handleSubmit.isLoading}
               onClick={() => (document ? handleSubmit.mutate(document) : null)}>
