@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-})
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { PerfseePlugin } = require('@perfsee/webpack')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -15,6 +13,17 @@ const nextConfig = {
       transform: '@heroicons/react/24/outline/{{member}}',
     },
   },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.plugins.push(
+        new PerfseePlugin({
+          project: 'voty-xyz',
+          platform: 'https://perfsee.did.id',
+        }),
+      )
+    }
+    return config
+  },
 }
 
-module.exports = withBundleAnalyzer(nextConfig)
+module.exports = nextConfig
