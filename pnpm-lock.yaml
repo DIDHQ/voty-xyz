@@ -25,7 +25,7 @@ dependencies:
     version: 1.10.0
   '@rainbow-me/rainbowkit':
     specifier: ^1.0.8
-    version: 1.0.8(@types/react@18.2.19)(react-dom@18.2.0)(react@18.2.0)(viem@1.5.3)(wagmi@1.3.9)
+    version: 1.0.8(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(viem@1.5.3)(wagmi@1.3.9)
   '@t3-oss/env-nextjs':
     specifier: ^0.6.0
     version: 0.6.0(typescript@5.1.6)(zod@3.21.4)
@@ -70,7 +70,7 @@ dependencies:
     version: 10.2.1
   jotai:
     specifier: ^2.3.1
-    version: 2.3.1(@types/react@18.2.19)(react@18.2.0)
+    version: 2.3.1(@types/react@18.2.21)(react@18.2.0)
   match-url-wildcard:
     specifier: ^0.0.4
     version: 0.0.4
@@ -103,7 +103,7 @@ dependencies:
     version: 9.5.2(react@18.2.0)
   react-markdown:
     specifier: ^8.0.7
-    version: 8.0.7(@types/react@18.2.19)(react@18.2.0)
+    version: 8.0.7(@types/react@18.2.21)(react@18.2.0)
   react-markdown-editor-lite:
     specifier: ^1.3.4
     version: 1.3.4(react@18.2.0)
@@ -112,7 +112,7 @@ dependencies:
     version: 2.0.2
   react-textarea-autosize:
     specifier: ^8.5.2
-    version: 8.5.2(@types/react@18.2.19)(react@18.2.0)
+    version: 8.5.2(@types/react@18.2.21)(react@18.2.0)
   react-tooltip:
     specifier: ^5.20.0
     version: 5.20.0(react-dom@18.2.0)(react@18.2.0)
@@ -127,7 +127,7 @@ dependencies:
     version: 6.1.1
   rehype-react:
     specifier: ^7.2.0
-    version: 7.2.0(@types/react@18.2.19)
+    version: 7.2.0(@types/react@18.2.21)
   rehype-sanitize:
     specifier: ^5.0.1
     version: 5.0.1
@@ -163,7 +163,7 @@ dependencies:
     version: 1.5.3(typescript@5.1.6)(zod@3.21.4)
   wagmi:
     specifier: ^1.3.9
-    version: 1.3.9(@types/react@18.2.19)(react-dom@18.2.0)(react@18.2.0)(typescript@5.1.6)(viem@1.5.3)(zod@3.21.4)
+    version: 1.3.9(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(typescript@5.1.6)(viem@1.5.3)(zod@3.21.4)
   zod:
     specifier: ^3.21.4
     version: 3.21.4
@@ -191,8 +191,8 @@ devDependencies:
     specifier: ^20.4.8
     version: 20.4.8
   '@types/react':
-    specifier: ^18.2.19
-    version: 18.2.19
+    specifier: ^18.2.21
+    version: 18.2.21
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.3.0
     version: 6.3.0(@typescript-eslint/parser@6.3.0)(eslint@8.46.0)(typescript@5.1.6)
@@ -1585,7 +1585,7 @@ packages:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: true
 
-  /@rainbow-me/rainbowkit@1.0.8(@types/react@18.2.19)(react-dom@18.2.0)(react@18.2.0)(viem@1.5.3)(wagmi@1.3.9):
+  /@rainbow-me/rainbowkit@1.0.8(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(viem@1.5.3)(wagmi@1.3.9):
     resolution: {integrity: sha512-m1B9/X3p8MLmj4fDfs2NpJlFRmKz7vOR0jmcdBw2SMFzXqP1FQFQc4pjvtLEeyfEUGSNNceGrecFZRVS0Qk//A==}
     engines: {node: '>=12.4'}
     peerDependencies:
@@ -1601,9 +1601,9 @@ packages:
       qrcode: 1.5.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      react-remove-scroll: 2.5.4(@types/react@18.2.19)(react@18.2.0)
+      react-remove-scroll: 2.5.4(@types/react@18.2.21)(react@18.2.0)
       viem: 1.5.3(typescript@5.1.6)(zod@3.21.4)
-      wagmi: 1.3.9(@types/react@18.2.19)(react-dom@18.2.0)(react@18.2.0)(typescript@5.1.6)(viem@1.5.3)(zod@3.21.4)
+      wagmi: 1.3.9(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(typescript@5.1.6)(viem@1.5.3)(zod@3.21.4)
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -2090,8 +2090,8 @@ packages:
   /@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
 
-  /@types/react@18.2.19:
-    resolution: {integrity: sha512-e2S8wmY1ePfM517PqCG80CcE48Xs5k0pwJzuDZsfE8IZRRBfOMCF+XqnFxu6mWtyivum1MQm4aco+WIt6Coimw==}
+  /@types/react@18.2.21:
+    resolution: {integrity: sha512-neFKG/sBAwGxHgXiIxnbm3/AAVQ/cMRS93hvBpg8xYRbeQSPVABp9U2bRnPf0iI4+Ucdv3plSxKK+3CW2ENJxA==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
@@ -2492,7 +2492,7 @@ packages:
       - zod
     dev: false
 
-  /@wagmi/core@1.3.8(@types/react@18.2.19)(react@18.2.0)(typescript@5.1.6)(viem@1.5.3)(zod@3.21.4):
+  /@wagmi/core@1.3.8(@types/react@18.2.21)(react@18.2.0)(typescript@5.1.6)(viem@1.5.3)(zod@3.21.4):
     resolution: {integrity: sha512-OYSxikoMizqVnpSkFTwGE7PwFaz2k0PXteSiI0W2Mtk4j4sZzRFdP+9AWeDB6AYm0yU3WvgN1IATx0EEBKUe3w==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -2507,7 +2507,7 @@ packages:
       eventemitter3: 4.0.7
       typescript: 5.1.6
       viem: 1.5.3(typescript@5.1.6)(zod@3.21.4)
-      zustand: 4.4.1(@types/react@18.2.19)(react@18.2.0)
+      zustand: 4.4.1(@types/react@18.2.21)(react@18.2.0)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - '@types/react'
@@ -6076,7 +6076,7 @@ packages:
     resolution: {integrity: sha512-oVhqoRDaBXf7sjkll95LHVS6Myyyb1zaunVwk4Z0+WPSW4gjS0pl01zYKHScTuyEhQsFxV5L4DR5r+YqSyqyyg==}
     hasBin: true
 
-  /jotai@2.3.1(@types/react@18.2.19)(react@18.2.0):
+  /jotai@2.3.1(@types/react@18.2.21)(react@18.2.0):
     resolution: {integrity: sha512-pXhx8/MeRUAHbzayerEUf9NHvP+Ba3q9WAvIMjaSwwuSCKEFhb8UW4XuZPC+Bv4u2ufvlyrxIZ+vy5UJ3f8JsQ==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
@@ -6088,7 +6088,7 @@ packages:
       react:
         optional: true
     dependencies:
-      '@types/react': 18.2.19
+      '@types/react': 18.2.21
       react: 18.2.0
     dev: false
 
@@ -7925,7 +7925,7 @@ packages:
       uuid: 8.3.2
     dev: false
 
-  /react-markdown@8.0.7(@types/react@18.2.19)(react@18.2.0):
+  /react-markdown@8.0.7(@types/react@18.2.21)(react@18.2.0):
     resolution: {integrity: sha512-bvWbzG4MtOU62XqBx3Xx+zB2raaFFsq4mYiAzfjXJMEz2sixgeAfraA3tvzULF02ZdOMUOKTBFFaZJDDrq+BJQ==}
     peerDependencies:
       '@types/react': '>=16'
@@ -7933,7 +7933,7 @@ packages:
     dependencies:
       '@types/hast': 2.3.5
       '@types/prop-types': 15.7.5
-      '@types/react': 18.2.19
+      '@types/react': 18.2.21
       '@types/unist': 2.0.7
       comma-separated-tokens: 2.0.3
       hast-util-whitespace: 2.0.1
@@ -7956,7 +7956,7 @@ packages:
     resolution: {integrity: sha512-V5BGTwGa2r+/t0A/BZMS6L7VPXY0CU8xtAhkT3XUoI1WJJhhtvulvoiZkJ5Jt9YAW23m4xFWmhQ+C5HwjtTFhQ==}
     dev: false
 
-  /react-remove-scroll-bar@2.3.4(@types/react@18.2.19)(react@18.2.0):
+  /react-remove-scroll-bar@2.3.4(@types/react@18.2.21)(react@18.2.0):
     resolution: {integrity: sha512-63C4YQBUt0m6ALadE9XV56hV8BgJWDmmTPY758iIJjfQKt2nYwoUrPk0LXRXcB/yIj82T1/Ixfdpdk68LwIB0A==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -7966,13 +7966,13 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.19
+      '@types/react': 18.2.21
       react: 18.2.0
-      react-style-singleton: 2.2.1(@types/react@18.2.19)(react@18.2.0)
+      react-style-singleton: 2.2.1(@types/react@18.2.21)(react@18.2.0)
       tslib: 2.6.1
     dev: false
 
-  /react-remove-scroll@2.5.4(@types/react@18.2.19)(react@18.2.0):
+  /react-remove-scroll@2.5.4(@types/react@18.2.21)(react@18.2.0):
     resolution: {integrity: sha512-xGVKJJr0SJGQVirVFAUZ2k1QLyO6m+2fy0l8Qawbp5Jgrv3DeLalrfMNBFSlmz5kriGGzsVBtGVnf4pTKIhhWA==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -7982,13 +7982,13 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.19
+      '@types/react': 18.2.21
       react: 18.2.0
-      react-remove-scroll-bar: 2.3.4(@types/react@18.2.19)(react@18.2.0)
-      react-style-singleton: 2.2.1(@types/react@18.2.19)(react@18.2.0)
+      react-remove-scroll-bar: 2.3.4(@types/react@18.2.21)(react@18.2.0)
+      react-style-singleton: 2.2.1(@types/react@18.2.21)(react@18.2.0)
       tslib: 2.6.1
-      use-callback-ref: 1.3.0(@types/react@18.2.19)(react@18.2.0)
-      use-sidecar: 1.1.2(@types/react@18.2.19)(react@18.2.0)
+      use-callback-ref: 1.3.0(@types/react@18.2.21)(react@18.2.0)
+      use-sidecar: 1.1.2(@types/react@18.2.21)(react@18.2.0)
     dev: false
 
   /react-ssr-prepass@1.5.0(react@18.2.0):
@@ -7999,7 +7999,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-style-singleton@2.2.1(@types/react@18.2.19)(react@18.2.0):
+  /react-style-singleton@2.2.1(@types/react@18.2.21)(react@18.2.0):
     resolution: {integrity: sha512-ZWj0fHEMyWkHzKYUr2Bs/4zU6XLmq9HsgBURm7g5pAVfyn49DgUiNgY2d4lXRlYSiCif9YBGpQleewkcqddc7g==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -8009,14 +8009,14 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.19
+      '@types/react': 18.2.21
       get-nonce: 1.0.1
       invariant: 2.2.4
       react: 18.2.0
       tslib: 2.6.1
     dev: false
 
-  /react-textarea-autosize@8.5.2(@types/react@18.2.19)(react@18.2.0):
+  /react-textarea-autosize@8.5.2(@types/react@18.2.21)(react@18.2.0):
     resolution: {integrity: sha512-uOkyjkEl0ByEK21eCJMHDGBAAd/BoFQBawYK5XItjAmCTeSbjxghd8qnt7nzsLYzidjnoObu6M26xts0YGKsGg==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -8025,7 +8025,7 @@ packages:
       '@babel/runtime': 7.22.10
       react: 18.2.0
       use-composed-ref: 1.3.0(react@18.2.0)
-      use-latest: 1.2.1(@types/react@18.2.19)(react@18.2.0)
+      use-latest: 1.2.1(@types/react@18.2.21)(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -8114,14 +8114,14 @@ packages:
       unified: 10.1.2
     dev: false
 
-  /rehype-react@7.2.0(@types/react@18.2.19):
+  /rehype-react@7.2.0(@types/react@18.2.21):
     resolution: {integrity: sha512-MHYyCHka+3TtzBMKtcuvVOBAbI1HrfoYA+XH9m7/rlrQQATCPwtJnPdkxKKcIGF8vc9mxqQja9r9f+FHItQeWg==}
     peerDependencies:
       '@types/react': '>=17'
     dependencies:
       '@mapbox/hast-util-table-cell-style': 0.2.0
       '@types/hast': 2.3.5
-      '@types/react': 18.2.19
+      '@types/react': 18.2.21
       hast-to-hyperscript: 10.0.3
       hast-util-whitespace: 2.0.1
       unified: 10.1.2
@@ -9208,7 +9208,7 @@ packages:
       punycode: 2.3.0
     dev: true
 
-  /use-callback-ref@1.3.0(@types/react@18.2.19)(react@18.2.0):
+  /use-callback-ref@1.3.0(@types/react@18.2.21)(react@18.2.0):
     resolution: {integrity: sha512-3FT9PRuRdbB9HfXhEq35u4oZkvpJ5kuYbpqhCfmiZyReuRgpnhDlbr2ZEnnuS0RrJAPn6l23xjFg9kpDM+Ms7w==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -9218,7 +9218,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.19
+      '@types/react': 18.2.21
       react: 18.2.0
       tslib: 2.6.1
     dev: false
@@ -9231,7 +9231,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /use-isomorphic-layout-effect@1.1.2(@types/react@18.2.19)(react@18.2.0):
+  /use-isomorphic-layout-effect@1.1.2(@types/react@18.2.21)(react@18.2.0):
     resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}
     peerDependencies:
       '@types/react': '*'
@@ -9240,11 +9240,11 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.19
+      '@types/react': 18.2.21
       react: 18.2.0
     dev: false
 
-  /use-latest@1.2.1(@types/react@18.2.19)(react@18.2.0):
+  /use-latest@1.2.1(@types/react@18.2.21)(react@18.2.0):
     resolution: {integrity: sha512-xA+AVm/Wlg3e2P/JiItTziwS7FK92LWrDB0p+hgXloIMuVCeJJ8v6f0eeHyPZaJrM+usM1FkFfbNCrJGs8A/zw==}
     peerDependencies:
       '@types/react': '*'
@@ -9253,12 +9253,12 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.19
+      '@types/react': 18.2.21
       react: 18.2.0
-      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.19)(react@18.2.0)
+      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.21)(react@18.2.0)
     dev: false
 
-  /use-sidecar@1.1.2(@types/react@18.2.19)(react@18.2.0):
+  /use-sidecar@1.1.2(@types/react@18.2.21)(react@18.2.0):
     resolution: {integrity: sha512-epTbsLuzZ7lPClpz2TyryBfztm7m+28DlEv2ZCQ3MDr5ssiwyOwGH/e5F9CkfWjJ1t4clvI58yF822/GUkjjhw==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -9268,7 +9268,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.19
+      '@types/react': 18.2.21
       detect-node-es: 1.1.0
       react: 18.2.0
       tslib: 2.6.1
@@ -9426,7 +9426,7 @@ packages:
       - zod
     dev: false
 
-  /wagmi@1.3.9(@types/react@18.2.19)(react-dom@18.2.0)(react@18.2.0)(typescript@5.1.6)(viem@1.5.3)(zod@3.21.4):
+  /wagmi@1.3.9(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(typescript@5.1.6)(viem@1.5.3)(zod@3.21.4):
     resolution: {integrity: sha512-BQbl+vWLNpLraXd/MWsl1P3I41l7DHrujx6qshIa1HDV7Mdh0GNrDuluRYBtuK2bBx9WM/Fjw45Ef2aKADan9A==}
     peerDependencies:
       react: '>=17.0.0'
@@ -9439,7 +9439,7 @@ packages:
       '@tanstack/query-sync-storage-persister': 4.32.6
       '@tanstack/react-query': 4.32.6(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query-persist-client': 4.32.6(@tanstack/react-query@4.32.6)
-      '@wagmi/core': 1.3.8(@types/react@18.2.19)(react@18.2.0)(typescript@5.1.6)(viem@1.5.3)(zod@3.21.4)
+      '@wagmi/core': 1.3.8(@types/react@18.2.21)(react@18.2.0)(typescript@5.1.6)(viem@1.5.3)(zod@3.21.4)
       abitype: 0.8.7(typescript@5.1.6)(zod@3.21.4)
       react: 18.2.0
       typescript: 5.1.6
@@ -9741,7 +9741,7 @@ packages:
       zod: 3.21.4
     dev: true
 
-  /zustand@4.4.1(@types/react@18.2.19)(react@18.2.0):
+  /zustand@4.4.1(@types/react@18.2.21)(react@18.2.0):
     resolution: {integrity: sha512-QCPfstAS4EBiTQzlaGP1gmorkh/UL1Leaj2tdj+zZCZ/9bm0WS7sI2wnfD5lpOszFqWJ1DcPnGoY8RDL61uokw==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
@@ -9756,7 +9756,7 @@ packages:
       react:
         optional: true
     dependencies:
-      '@types/react': 18.2.19
+      '@types/react': 18.2.21
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
