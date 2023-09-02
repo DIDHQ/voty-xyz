@@ -52,39 +52,33 @@ export default function GroupIndexPage() {
   )
 
   return (
-    <CommunityLayout
-      loading={isLoading}>
+    <CommunityLayout loading={isLoading}>
       <GroupLayout>
-        <div 
-          className="my-5 flex justify-between">
+        <div className="my-5 flex justify-between">
           <Select
             options={options}
             value={phase}
-            onChange={(p) => setPhase(p as GroupProposalPhase | 'All')}/>
-            
+            onChange={(p) => setPhase(p as GroupProposalPhase | 'All')}
+          />
+
           <GroupProposalCreateButton
             communityId={query.communityId}
-            group={group || undefined}/>
+            group={group || undefined}
+          />
         </div>
-        
+
         {groupProposals?.length === 0 ? (
-          <EmptyState 
-            title="No proposals" />
+          <EmptyState title="No proposals" />
+        ) : !isLoading ? (
+          <ul className="space-y-4 md:space-y-6">
+            {groupProposals?.map((groupProposal) => (
+              <li key={groupProposal.permalink}>
+                <GroupProposalCard groupProposal={groupProposal} />
+              </li>
+            ))}
+          </ul>
         ) : (
-          !isLoading ? (
-            <ul 
-              className="space-y-4 md:space-y-6">
-              {groupProposals?.map((groupProposal) => (
-                <li 
-                  key={groupProposal.permalink}>
-                  <GroupProposalCard 
-                    groupProposal={groupProposal} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <InfoCardSkeleton />
-          )
+          <InfoCardSkeleton />
         )}
         <div ref={ref} />
       </GroupLayout>

@@ -2,7 +2,7 @@ import { forwardRef, Fragment, KeyboardEvent, useCallback } from 'react'
 import TextareaAutosize, {
   TextareaAutosizeProps,
 } from 'react-textarea-autosize'
-import { clsxMerge } from '@/src/utils/tailwind-helper';
+import { clsxMerge } from '@/src/utils/tailwind-helper'
 
 export default forwardRef<
   HTMLTextAreaElement,
@@ -23,11 +23,9 @@ export default forwardRef<
   }, [])
 
   return (
-    <div 
-      className={clsxMerge('relative', className)}>
+    <div className={clsxMerge('relative', className)}>
       {shadow && props.value ? (
-        <span 
-          className="pointer-events-none absolute z-0 select-none border border-transparent px-3 py-[10px] text-sm text-subtle">
+        <span className="pointer-events-none absolute z-0 select-none border border-transparent px-3 py-[10px] text-sm text-subtle">
           {(props.value as string | undefined)
             ?.split('\n')
             .map((line, index) => (
@@ -39,7 +37,7 @@ export default forwardRef<
             ))}
         </span>
       ) : null}
-      
+
       <TextareaAutosize
         ref={ref}
         aria-invalid={error ? 'true' : 'false'}

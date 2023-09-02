@@ -55,21 +55,18 @@ export default function CommunityForm(props: {
           ? 'Import your community'
           : `Edit community of ${props.communityId}`
       }
-      className={props.className}>
-      <FormSection 
-        title="Basic information">
-        <div
-          className="grid grid-cols-1 gap-6">
-          <FormItem 
-            label="Community entry link">
+      className={props.className}
+    >
+      <FormSection title="Basic information">
+        <div className="grid grid-cols-1 gap-6">
+          <FormItem label="Community entry link">
             <TextInput
               placeholder={`${domain}/${props.communityId}`}
-              disabled />
+              disabled
+            />
           </FormItem>
-            
-          <FormItem 
-            label="Logo" 
-            error={errors?.logo?.message}>
+
+          <FormItem label="Logo" error={errors?.logo?.message}>
             <Controller
               control={control}
               name="logo"
@@ -80,33 +77,33 @@ export default function CommunityForm(props: {
                   onChange={onChange}
                   disabled={!isManager}
                 />
-              )} />
+              )}
+            />
           </FormItem>
-          
-          <FormItem 
-            label="Community name" 
-            error={errors.name?.message}>
+
+          <FormItem label="Community name" error={errors.name?.message}>
             <TextInput
               {...register('name')}
               placeholder="e.g. Bankless DAO"
               error={!!errors.name?.message}
-              disabled={!isManager} />
+              disabled={!isManager}
+            />
           </FormItem>
-          
-          <FormItem 
-            label="Slogan" 
-            error={errors?.slogan?.message}>
+
+          <FormItem label="Slogan" error={errors?.slogan?.message}>
             <TextInput
               {...register('slogan')}
               placeholder="e.g. Media and Social DAO onboarding 1 billion people to crypto."
               error={!!errors?.slogan?.message}
-              disabled={!isManager} />
+              disabled={!isManager}
+            />
           </FormItem>
-          
+
           <FormItem
             label="About"
             description="Provide a detailed description of your community to leave a lasting impression on people."
-            error={errors?.about?.message}>
+            error={errors?.about?.message}
+          >
             <Controller
               control={control}
               name="about"
@@ -115,30 +112,33 @@ export default function CommunityForm(props: {
                   value={value}
                   onChange={onChange}
                   error={!!errors?.about?.message}
-                  disabled={!isManager} />
-              )} />
+                  disabled={!isManager}
+                />
+              )}
+            />
           </FormItem>
         </div>
       </FormSection>
-      
-      <FormSection 
-        title="Links">
-        <div
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+
+      <FormSection title="Links">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <FormItem
             label="Website"
             optional
-            error={errors.links?.website?.message}>
+            error={errors.links?.website?.message}
+          >
             <TextInput
               {...register('links.website')}
               error={!!errors.links?.website?.message}
-              disabled={!isManager} />
+              disabled={!isManager}
+            />
           </FormItem>
-          
+
           <FormItem
             label="Twitter"
             optional
-            error={errors.links?.twitter?.message}>
+            error={errors.links?.twitter?.message}
+          >
             <TextInput
               {...register('links.twitter')}
               onBlur={(e) =>
@@ -148,13 +148,15 @@ export default function CommunityForm(props: {
                 )
               }
               error={!!errors.links?.twitter?.message}
-              disabled={!isManager} />
+              disabled={!isManager}
+            />
           </FormItem>
-          
+
           <FormItem
             label="Discord"
             optional
-            error={errors.links?.discord?.message}>
+            error={errors.links?.discord?.message}
+          >
             <TextInput
               {...register('links.discord')}
               onBlur={(e) =>
@@ -166,13 +168,15 @@ export default function CommunityForm(props: {
                 )
               }
               error={!!errors.links?.discord?.message}
-              disabled={!isManager} />
+              disabled={!isManager}
+            />
           </FormItem>
-          
+
           <FormItem
             label="GitHub"
             optional
-            error={errors.links?.github?.message}>
+            error={errors.links?.github?.message}
+          >
             <TextInput
               {...register('links.github')}
               onBlur={(e) =>
@@ -182,11 +186,12 @@ export default function CommunityForm(props: {
                 )
               }
               error={!!errors.links?.github?.message}
-              disabled={!isManager} />
+              disabled={!isManager}
+            />
           </FormItem>
         </div>
       </FormSection>
-      
+
       {isManager ? (
         <FormFooter>
           <Button
@@ -196,7 +201,8 @@ export default function CommunityForm(props: {
             onClick={onSubmit((value) => {
               setPreviewCommunity({ ...value, preview: props.preview })
               router.push(props.preview.to)
-            }, console.error)}>
+            }, console.error)}
+          >
             Preview
           </Button>
         </FormFooter>

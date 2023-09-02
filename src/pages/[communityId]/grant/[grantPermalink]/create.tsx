@@ -24,23 +24,24 @@ export default function CreateGrantProposalPage() {
       <Head>
         <title>{`New proposal - ${documentTitle}`}</title>
       </Head>
-      
+
       <LoadingBar loading={isLoading} />
-      
-      <Container
-        size="small">
+
+      <Container size="small">
         <BackBar
           disabled={!query.communityId || !query.grantPermalink}
           href={`/${query.communityId}/grant/${
             query.grantPermalink ? permalink2Id(query.grantPermalink) : ''
-          }`} />
-          
+          }`}
+        />
+
         {query.communityId && query.grantPermalink && grant ? (
           <GrantProposalForm
             initialValue={initialValue}
             communityId={query.communityId}
             grant={grant}
-            grantPermalink={query.grantPermalink} />
+            grantPermalink={query.grantPermalink}
+          />
         ) : null}
       </Container>
     </>

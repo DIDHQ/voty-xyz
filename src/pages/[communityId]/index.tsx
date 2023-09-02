@@ -52,16 +52,13 @@ export default function CommunityIndexPage() {
   )
 
   return (
-    <CommunityLayout
-      loading={isGroupsLoading || isActivitiesLoading}>
-      <SectionHeader 
-        title="Activities"/>
-      
+    <CommunityLayout loading={isGroupsLoading || isActivitiesLoading}>
+      <SectionHeader title="Activities" />
+
       {enabledSubDID === false ? (
         <EmptyState
           icon={
-            <ExclamationTriangleIcon 
-              className="h-9 w-9 rounded-lg bg-amber-100 p-1.5 text-amber-600" />
+            <ExclamationTriangleIcon className="h-9 w-9 rounded-lg bg-amber-100 p-1.5 text-amber-600" />
           }
           title="Last step"
           description="You must enable SubDID for your community."
@@ -78,26 +75,19 @@ export default function CommunityIndexPage() {
           title="No workgroup"
           description="Workgroup helps you categorize proposals with different focuses. You can also set up workgroups to your community structure's needs."
           footer={
-            <Link 
-              href={`/${query.communityId}/create`}>
-              <Button 
-                primary 
-                icon={PlusIcon}>
+            <Link href={`/${query.communityId}/create`}>
+              <Button primary icon={PlusIcon}>
                 Workgroup
               </Button>
             </Link>
           }
         />
       ) : activities?.length === 0 ? (
-        <EmptyState 
-          title="No activities" />
+        <EmptyState title="No activities" />
       ) : (
         <Card>
           {isGroupsLoading || isActivitiesLoading ? (
-            [...Array(3)].map((item, index) => (
-              <ActivitySkeleton
-                key={index} />
-            ))
+            [...Array(3)].map((item, index) => <ActivitySkeleton key={index} />)
           ) : (
             <ul>
               {activities?.map((activity) => (

@@ -24,29 +24,25 @@ export default function GroupAboutPage() {
   const isManager = useIsManager(query.communityId)
 
   return (
-    <CommunityLayout
-      loading={isLoading}>
+    <CommunityLayout loading={isLoading}>
       <GroupLayout>
-        {isLoading ? (
-          <AboutSkeleton />
-        ) : null}
-        
+        {isLoading ? <AboutSkeleton /> : null}
+
         {group?.introduction ? (
-          <Card
-            title="Introduction">
-            <p 
-              className="break-words text-sm-regular text-strong">
+          <Card title="Introduction">
+            <p className="break-words text-sm-regular text-strong">
               {group.introduction}
             </p>
           </Card>
         ) : null}
-        
+
         {group ? <GroupAbout group={group} className="mt-6" /> : null}
-        
+
         {isManager && !previewGroup ? (
           <Link
             href={`/${query.communityId}/group/${query.groupId}/settings`}
-            className="mt-6 block w-fit sm:mt-8">
+            className="mt-6 block w-fit sm:mt-8"
+          >
             <Button icon={PencilIcon}>Edit</Button>
           </Link>
         ) : null}

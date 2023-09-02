@@ -60,41 +60,36 @@ export default function ConnectButton() {
                     className="h-8 w-8 sm:h-9 sm:w-9"
                   />
                 ) : (
-                  <Avatar 
-                    className="h-8 w-8 sm:h-9 sm:w-9"
-                    variant="beam" />
+                  <Avatar className="h-8 w-8 sm:h-9 sm:w-9" variant="beam" />
                 )}
-                
-                <div 
-                  className="group ml-2 hidden text-left sm:block">
-                  <p 
-                    className="text-sm-medium text-moderate transition-colors group-hover:text-strong">
+
+                <div className="group ml-2 hidden text-left sm:block">
+                  <p className="text-sm-medium text-moderate transition-colors group-hover:text-strong">
                     {coinTypeNames[account.coinType]}
                   </p>
-                  
-                  <p 
-                    className="text-xs-medium text-subtle transition-colors group-hover:text-moderate">
+
+                  <p className="text-xs-medium text-subtle transition-colors group-hover:text-moderate">
                     {displayAddress}
                   </p>
                 </div>
               </>
-            }>
-              
+            }
+          >
             <div>
               <Menu.Item>
                 {({ active }) => (
                   <div
                     className={clsx(
                       'flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm-medium transition',
-                      active ? 'bg-primary-500/5 text-primary-500' : 'text-moderate'
+                      active
+                        ? 'bg-primary-500/5 text-primary-500'
+                        : 'text-moderate',
                     )}
-                    onClick={disconnect}>
-                    <PowerIcon 
-                      className="h-5 w-5" />
-                      
-                    <span>
-                      Disconnect
-                    </span>
+                    onClick={disconnect}
+                  >
+                    <PowerIcon className="h-5 w-5" />
+
+                    <span>Disconnect</span>
                   </div>
                 )}
               </Menu.Item>
@@ -102,37 +97,39 @@ export default function ConnectButton() {
           </Dropdown>
         ) : chain?.unsupported ? (
           <>
-            <Button 
+            <Button
               className="hidden sm:flex"
-              loading={chainModalOpen} 
-              onClick={openChainModal}>
+              loading={chainModalOpen}
+              onClick={openChainModal}
+            >
               Switch Network
             </Button>
-            
-            <Button 
+
+            <Button
               className="flex sm:hidden"
               icon={ArrowsRightLeftIcon}
-              loading={chainModalOpen} 
+              loading={chainModalOpen}
               size="small"
-              onClick={openChainModal}>
-            </Button>
+              onClick={openChainModal}
+            ></Button>
           </>
         ) : (
           <>
-            <Button 
+            <Button
               className="hidden sm:flex"
-              loading={connectModalOpen} 
-              onClick={openConnectModal}>
+              loading={connectModalOpen}
+              onClick={openConnectModal}
+            >
               Connect Wallet
             </Button>
-            
-            <Button 
+
+            <Button
               className="flex sm:hidden"
               icon={WalletIcon}
-              loading={connectModalOpen} 
+              loading={connectModalOpen}
               size="small"
-              onClick={openConnectModal}>
-            </Button>
+              onClick={openConnectModal}
+            ></Button>
           </>
         )
       }

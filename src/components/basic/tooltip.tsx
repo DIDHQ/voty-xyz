@@ -20,13 +20,12 @@ export default function Tooltip(props: {
       <div
         data-tooltip-id={id}
         data-tooltip-place={props.place}
-        className={props.className}>
+        className={props.className}
+      >
         {props.children}
       </div>
-      
-      <ReactTooltip 
-        className="z-50 !rounded-xl"
-        id={id}>
+
+      <ReactTooltip className="z-50 !rounded-xl" id={id}>
         {props.text}
       </ReactTooltip>
     </>

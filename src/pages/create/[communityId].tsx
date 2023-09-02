@@ -16,12 +16,10 @@ export default function CreateEntryPage() {
       <Head>
         <title>{`New community - ${documentTitle}`}</title>
       </Head>
-      
-      <Container
-        size="small">
-        <BackBar
-          href="/create" /> 
-        
+
+      <Container size="small">
+        <BackBar href="/create" />
+
         {query.communityId ? (
           <CommunityForm
             communityId={query.communityId}
@@ -31,7 +29,8 @@ export default function CreateEntryPage() {
               to: `/${query.communityId}/about?preview=true`,
               template: `You are creating community on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
-            }}/>
+            }}
+          />
         ) : null}
       </Container>
     </>

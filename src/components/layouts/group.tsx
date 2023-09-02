@@ -6,7 +6,7 @@ export default function GroupLayout(props: { children: ReactNode }) {
   return (
     <>
       <GroupInfo />
-        
+
       {props.children}
     </>
   )

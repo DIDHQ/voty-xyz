@@ -99,23 +99,24 @@ export default function GrantForm(props: {
         community?.name ? ` of ${community.name}` : ''
       }`}
       description="Topic Grant helps you automate your project's funding process with ease, while also elevating member's engagement."
-      className={props.className}>
-      <FormSection 
-        title="Basic information">
-        <div
-          className="grid grid-cols-1 gap-6">
+      className={props.className}
+    >
+      <FormSection title="Basic information">
+        <div className="grid grid-cols-1 gap-6">
           <FormItem label="Grant topic" error={errors.name?.message}>
             <TextInput
               {...register('name')}
               placeholder="e.g. Hackathon Season 1"
               error={!!errors.name?.message}
-              disabled={disabled}/>
+              disabled={disabled}
+            />
           </FormItem>
-          
+
           <FormItem
             label="Introduction"
             description="The purpose of this grant."
-            error={errors?.introduction?.message}>
+            error={errors?.introduction?.message}
+          >
             <Controller
               control={control}
               name={'introduction'}
@@ -132,14 +133,13 @@ export default function GrantForm(props: {
         </div>
       </FormSection>
 
-      <FormSection 
-        title="Rules">
-        <div
-          className="grid grid-cols-6 gap-6">
+      <FormSection title="Rules">
+        <div className="grid grid-cols-6 gap-6">
           <FormItem
             className="col-span-6 sm:col-span-2"
             label="Announcing phase"
-            error={errors.duration?.announcing?.message}>
+            error={errors.duration?.announcing?.message}
+          >
             <Controller
               control={control}
               name="duration.announcing"
@@ -154,11 +154,12 @@ export default function GrantForm(props: {
               )}
             />
           </FormItem>
-          
+
           <FormItem
             className="col-span-6 sm:col-span-2"
             label="Proposing phase"
-            error={errors.duration?.proposing?.message}>
+            error={errors.duration?.proposing?.message}
+          >
             <Controller
               control={control}
               name="duration.proposing"
@@ -177,7 +178,8 @@ export default function GrantForm(props: {
           <FormItem
             className="col-span-6 sm:col-span-2"
             label="Voting phase"
-            error={errors.duration?.voting?.message}>
+            error={errors.duration?.voting?.message}
+          >
             <Controller
               control={control}
               name="duration.voting"
@@ -192,25 +194,26 @@ export default function GrantForm(props: {
               )}
             />
           </FormItem>
-          
+
           <FormItem
             className="col-span-6 sm:col-span-3"
             label="Grant package"
             error={
               errors?.funding?.[0]?.[0]?.message ||
               errors?.funding?.[0]?.[1]?.message
-            }>
-            <div 
-              className="flex w-full items-center gap-2">
+            }
+          >
+            <div className="flex w-full items-center gap-2">
               <TextInput
                 disabled={disabled}
                 {...register('funding.0.0')}
                 error={!!errors?.funding?.[0]?.[0]}
                 placeholder="e.g. 100 USD"
-                className="min-w-0 flex-1"/>
-              
+                className="min-w-0 flex-1"
+              />
+
               <span className="text-gray-400">✕</span>
-              
+
               <Controller
                 control={control}
                 name="funding.0.1"
@@ -237,7 +240,8 @@ export default function GrantForm(props: {
             error={
               errors.permission?.selecting?.operands?.[0]?.arguments?.[1]?.[0]
                 ?.message
-            }>
+            }
+          >
             <FormProvider {...methods}>
               <BooleanSetsBlock
                 name="selecting"
@@ -248,7 +252,7 @@ export default function GrantForm(props: {
           </FormItem>
         </div>
       </FormSection>
-      
+
       {isManager ? (
         <FormFooter>
           <Button
@@ -279,7 +283,8 @@ export default function GrantForm(props: {
                 })
                 router.push(props.preview.to)
               }, console.error)(e)
-            }}>
+            }}
+          >
             Preview
           </Button>
         </FormFooter>

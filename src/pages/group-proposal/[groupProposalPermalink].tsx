@@ -38,7 +38,10 @@ import { Container, Main, Sidebar } from '@/src/components/basic/container'
 import Card from '@/src/components/basic/card'
 import { BackBar } from '@/src/components/basic/back'
 import { Table, TableCell, TableRow } from '@/src/components/basic/table'
-import { ArticleSkeleton, SidebarInfoSkeleton } from '@/src/components/basic/skeleton'
+import {
+  ArticleSkeleton,
+  SidebarInfoSkeleton,
+} from '@/src/components/basic/skeleton'
 
 export const runtime = 'experimental-edge'
 
@@ -174,77 +177,89 @@ export default function GroupProposalPage() {
         <meta key="og:site_name" property="og:site_name" content={title} />
         <meta key="og:image" property="og:image" content={image} />
       </Head>
-      
-      <LoadingBar 
-        loading={isFetching || isGroupLoading || isCommunityLoading} />
-        
-      <Container
-        hasSidebar>
+
+      <LoadingBar
+        loading={isFetching || isGroupLoading || isCommunityLoading}
+      />
+
+      <Container hasSidebar>
         <Main>
           <BackBar
             disabled={!community || !group || !!previewGroupProposal}
-            href={`/${community?.id}/group/${group?.id}`} />
-          
-          {(isFetching || isGroupLoading || isCommunityLoading) ? (
+            href={`/${community?.id}/group/${group?.id}`}
+          />
+
+          {isFetching || isGroupLoading || isCommunityLoading ? (
             <ArticleSkeleton />
           ) : (
-            <Card
-              size="medium">
+            <Card size="medium">
               <Article>
-                <h1>
-                  {groupProposal?.title || '...'}
-                </h1>
-                
+                <h1>{groupProposal?.title || '...'}</h1>
+
                 <MarkdownViewer preview={!!previewGroupProposal}>
                   {groupProposal?.content}
                 </MarkdownViewer>
               </Article>
             </Card>
           )}
-          
+
           <GroupProposalInfo
             community={community || undefined}
             group={group || undefined}
             groupProposal={groupProposal}
-            className="block sm:hidden"/>
-            
+            className="block sm:hidden"
+          />
+
           {group && groupProposal ? (
             <GroupProposalVoteForm
               group={group}
               groupProposal={groupProposal}
-              onSuccess={handleSuccess} />
+              onSuccess={handleSuccess}
+            />
           ) : null}
-          
+
           {groupProposalVotes?.length ? (
             <Card
-              title={groupProposal ? (groupProposal.votes === 1 ? '1 Vote': `${groupProposal.votes} Votes`) : ''}>
+              title={
+                groupProposal
+                  ? groupProposal.votes === 1
+                    ? '1 Vote'
+                    : `${groupProposal.votes} Votes`
+                  : ''
+              }
+            >
               <Table
-                headers={[{
-                  label: 'Voter'
-                }, {
-                  label: 'Choice'
-                }, {
-                  label: 'Power',
-                  className: 'text-right'
-                }]}>
-                {groupProposalVotes.map(groupProposalVote => (
-                  <TableRow 
-                    key={groupProposalVote.permalink}>
+                headers={[
+                  {
+                    label: 'Voter',
+                  },
+                  {
+                    label: 'Choice',
+                  },
+                  {
+                    label: 'Power',
+                    className: 'text-right',
+                  },
+                ]}
+              >
+                {groupProposalVotes.map((groupProposalVote) => (
+                  <TableRow key={groupProposalVote.permalink}>
                     <TableCell>
                       {formatDid(groupProposalVote.authorship.author)}
                     </TableCell>
-                    
+
                     <TableCell
-                      title={stringifyChoice(groupProposalVote.powers)}>
+                      title={stringifyChoice(groupProposalVote.powers)}
+                    >
                       {stringifyChoice(groupProposalVote.powers)}
                     </TableCell>
-                    
-                    <TableCell
-                      className="text-right">
+
+                    <TableCell className="text-right">
                       <TextLink
                         primary
                         disabled={!!previewGroupProposal}
-                        href={permalink2Explorer(groupProposalVote.permalink)}>
+                        href={permalink2Explorer(groupProposalVote.permalink)}
+                      >
                         {groupProposalVote.total_power}
                       </TextLink>
                     </TableCell>
@@ -254,16 +269,16 @@ export default function GroupProposalPage() {
             </Card>
           ) : null}
         </Main>
-        
-        <Sidebar
-          className="hidden sm:block">
-          {(isFetching || isGroupLoading || isCommunityLoading) ? (
+
+        <Sidebar className="hidden sm:block">
+          {isFetching || isGroupLoading || isCommunityLoading ? (
             <SidebarInfoSkeleton />
           ) : (
             <GroupProposalInfo
               community={community || undefined}
               group={group || undefined}
-              groupProposal={groupProposal} />
+              groupProposal={groupProposal}
+            />
           )}
         </Sidebar>
       </Container>

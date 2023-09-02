@@ -46,54 +46,42 @@ export default function GrantsIndexPage() {
   const isManager = useIsManager(query.communityId)
 
   return (
-    <CommunityLayout
-      loading={isLoading}>
-      <SectionHeader
-        title="Topic Grants">
-        <div 
-          className="flex items-center">
+    <CommunityLayout loading={isLoading}>
+      <SectionHeader title="Topic Grants">
+        <div className="flex items-center">
           <Select
             options={options}
             value={phase}
-            onChange={(p) => setPhase(p as GrantPhase | 'All')} />
-          
+            onChange={(p) => setPhase(p as GrantPhase | 'All')}
+          />
+
           {isManager ? (
-            <Link 
-              href={`/${query.communityId}/grant/create`} 
-              className="ml-5">
-              <Button 
-                primary 
-                icon={PlusIcon}>
+            <Link href={`/${query.communityId}/grant/create`} className="ml-5">
+              <Button primary icon={PlusIcon}>
                 Topic Grant
               </Button>
             </Link>
           ) : null}
         </div>
       </SectionHeader>
-      
+
       {grants?.length === 0 ? (
         <EmptyState
           title="No Topic Grants"
           description="Topic Grant helps you automate your project's funding process with ease, while also elevating member's engagement."
         />
+      ) : !isLoading ? (
+        <ul className="space-y-4 md:space-y-6">
+          {grants?.map((grant) => (
+            <li key={grant.permalink}>
+              {query.communityId ? (
+                <GrantCard communityId={query.communityId} grant={grant} />
+              ) : null}
+            </li>
+          ))}
+        </ul>
       ) : (
-        !isLoading ? (
-          <ul 
-            className="space-y-4 md:space-y-6">
-            {grants?.map((grant) => (
-              <li 
-                key={grant.permalink}>
-                {query.communityId ? (
-                  <GrantCard 
-                    communityId={query.communityId} 
-                    grant={grant} />
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <InfoCardSkeleton />
-        )
+        <InfoCardSkeleton />
       )}
       <div ref={ref} />
     </CommunityLayout>

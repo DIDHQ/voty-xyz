@@ -21,7 +21,7 @@ import { formatDid } from '../utils/did/utils'
 import TextLink from './basic/text-link'
 
 const activityLinkClass = tv({
-  base: 'font-normal'
+  base: 'font-normal',
 })
 
 export default function ActivityListItem(props: {
@@ -63,7 +63,8 @@ export default function ActivityListItem(props: {
                 href={`/${activity.data.community_id}/grant/${permalink2Id(
                   activity.data.grant_permalink,
                 )}`}
-                className={activityLinkClass()}>
+                className={activityLinkClass()}
+              >
                 {activity.data.grant_name}
               </TextLink>
             </>
@@ -82,7 +83,8 @@ export default function ActivityListItem(props: {
                 href={`/grant-proposal/${permalink2Id(
                   activity.data.grant_proposal_permalink,
                 )}`}
-                className={activityLinkClass()}>
+                className={activityLinkClass()}
+              >
                 {activity.data.grant_proposal_title}
               </TextLink>{' '}
               {/* in Topic Grant{' '}
@@ -109,7 +111,8 @@ export default function ActivityListItem(props: {
                 href={`/grant-proposal/${permalink2Id(
                   activity.data.grant_proposal_permalink,
                 )}`}
-                className={activityLinkClass()}>
+                className={activityLinkClass()}
+              >
                 {activity.data.grant_proposal_title}
               </TextLink>{' '}
               {/* in Topic Grant{' '}
@@ -136,7 +139,8 @@ export default function ActivityListItem(props: {
                 href={`/grant-proposal/${permalink2Id(
                   activity.data.grant_proposal_permalink,
                 )}`}
-                className={activityLinkClass()}>
+                className={activityLinkClass()}
+              >
                 {activity.data.grant_proposal_title}
               </TextLink>{' '}
               {/* in Topic Grant{' '}
@@ -161,7 +165,8 @@ export default function ActivityListItem(props: {
               created workgroup{' '}
               <TextLink
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
-                className={activityLinkClass()}>
+                className={activityLinkClass()}
+              >
                 {activity.data.group_name}
               </TextLink>
             </>
@@ -178,7 +183,8 @@ export default function ActivityListItem(props: {
               updated workgroup{' '}
               <TextLink
                 href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
-                className={activityLinkClass()}>
+                className={activityLinkClass()}
+              >
                 {activity.data.group_name}
               </TextLink>
             </>
@@ -193,10 +199,7 @@ export default function ActivityListItem(props: {
           children: (
             <>
               archived workgroup{' '}
-              <span 
-                className="text-strong">
-                {activity.data.group_name}
-              </span>
+              <span className="text-strong">{activity.data.group_name}</span>
             </>
           ),
         }
@@ -212,7 +215,8 @@ export default function ActivityListItem(props: {
                 href={`/group-proposal/${permalink2Id(
                   activity.data.group_proposal_permalink,
                 )}`}
-                className={activityLinkClass()}>
+                className={activityLinkClass()}
+              >
                 {activity.data.group_proposal_title}
               </TextLink>{' '}
               {/* in workgroup{' '}
@@ -233,8 +237,7 @@ export default function ActivityListItem(props: {
           children: (
             <>
               voted for{' '}
-              <span 
-                className="text-strong">
+              <span className="text-strong">
                 {activity.data.group_proposal_vote_choices.length === 1
                   ? activity.data.group_proposal_vote_choices[0]
                   : `${activity.data.group_proposal_vote_choices.length} choices`}
@@ -244,7 +247,8 @@ export default function ActivityListItem(props: {
                 href={`/group-proposal/${permalink2Id(
                   activity.data.group_proposal_permalink,
                 )}`}
-                className={activityLinkClass()}>
+                className={activityLinkClass()}
+              >
                 {activity.data.group_proposal_title}
               </TextLink>{' '}
               {/* of workgroup{' '}
@@ -269,39 +273,32 @@ export default function ActivityListItem(props: {
   }, [activity.data])
 
   return (
-    <div 
-      className="flex items-start gap-4 py-4 md:px-3">
+    <div className="flex items-start gap-4 py-4 md:px-3">
       <div
         className={clsx(
           'mt-1 flex h-8 w-8 items-center justify-center rounded-xl',
           action.color,
-        )}>
+        )}
+      >
         {<action.icon className="h-4 w-4" />}
       </div>
-      
-      <div 
-        className="flex-1 whitespace-normal break-words">
-        <div
-          className="text-sm-regular text-moderate">
-          <span 
-            className="text-strong">
-            {formatDid(activity.actor)}
-          </span>{' '}
-          
+
+      <div className="flex-1 whitespace-normal break-words">
+        <div className="text-sm-regular text-moderate">
+          <span className="text-strong">{formatDid(activity.actor)}</span>{' '}
           {action.children}
         </div>
-        
-        <div
-          className="mt-1 text-xs-regular text-subtle">
+
+        <div className="mt-1 text-xs-regular text-subtle">
           {action.permalink ? (
             <a
               href={permalink2Explorer(action.permalink)}
-              className="whitespace-nowrap">
+              className="whitespace-nowrap"
+            >
               {formatDurationMs(now.getTime() - activity.ts.getTime())} ago
             </a>
           ) : (
-            <span 
-              className="whitespace-nowrap">
+            <span className="whitespace-nowrap">
               {formatDurationMs(now.getTime() - activity.ts.getTime())} ago
             </span>
           )}

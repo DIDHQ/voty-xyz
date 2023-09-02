@@ -57,20 +57,21 @@ export default function GroupInfo(props: { className?: string }) {
       <Head>
         <title>{title}</title>
       </Head>
-      
-      <SectionHeader 
-        title={name || '...'} />
-      
-      <nav 
+
+      <SectionHeader title={name || '...'} />
+
+      <nav
         className={clsxMerge(
-          'mb-5 flex space-x-5 border-b border-base', 
-          props.className
-        )}>
+          'mb-5 flex space-x-5 border-b border-base',
+          props.className,
+        )}
+      >
         {tabs.map((tab) => (
           <Tab
             key={tab.name}
             href={previewGroup ? undefined : tab.href}
-            current={tab.current}>
+            current={tab.current}
+          >
             {tab.name}
           </Tab>
         ))}
@@ -92,17 +93,10 @@ function Tab(props: { href?: string; current: boolean; children: string }) {
   )
 
   return props.href ? (
-    <Link 
-      href={props.href} 
-      scroll={false} 
-      shallow 
-      className={className}>
+    <Link href={props.href} scroll={false} shallow className={className}>
       {props.children}
     </Link>
   ) : (
-    <span 
-      className={className}>
-      {props.children}
-    </span>
+    <span className={className}>{props.children}</span>
   )
 }

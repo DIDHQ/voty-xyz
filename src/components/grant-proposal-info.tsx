@@ -40,20 +40,17 @@ export default function GrantProposalInfo(props: {
     )
 
   return (
-    <div
-      className={props.className}>
+    <div className={props.className}>
       <GrantCurrentPhase
         grantPermalink={props.grantProposal?.grant}
-        duration={props.grant?.duration}/>
-        
-      <Card 
-        title="Grant package">
-        <p 
-          className="text-sm font-bold text-highlight">
+        duration={props.grant?.duration}
+      />
+
+      <Card title="Grant package">
+        <p className="text-sm font-bold text-highlight">
           {props.grant?.funding[0] ? (
             <>
-              {props.grant.funding[0][0]}{' '}
-              <span>✕</span>{' '}
+              {props.grant.funding[0][0]} <span>✕</span>{' '}
               {props.grant.funding[0][1]}
             </>
           ) : (
@@ -61,11 +58,9 @@ export default function GrantProposalInfo(props: {
           )}
         </p>
       </Card>
-      
-      <Card 
-        title="Information">
-        <DetailItem 
-          title="Community">
+
+      <Card title="Information">
+        <DetailItem title="Community">
           {props.community ? (
             <TextLink
               underline
@@ -79,9 +74,8 @@ export default function GrantProposalInfo(props: {
             '...'
           )}
         </DetailItem>
-        
-        <DetailItem 
-          title="Topic Grant">
+
+        <DetailItem title="Topic Grant">
           {props.community && props.grant && props.grantProposal ? (
             <TextLink
               underline
@@ -97,35 +91,37 @@ export default function GrantProposalInfo(props: {
             '...'
           )}
         </DetailItem>
-        
+
         <DetailItem
           title="Proposer"
-          className="block truncate whitespace-nowrap">
+          className="block truncate whitespace-nowrap"
+        >
           {props.grantProposal?.authorship?.author
             ? formatDid(props.grantProposal.authorship.author)
             : '...'}
         </DetailItem>
-        
+
         <DetailItem
           title="Proposed at"
-          className="block truncate whitespace-nowrap">
+          className="block truncate whitespace-nowrap"
+        >
           {props.grantProposal?.ts ? formatTime(props.grantProposal.ts) : '...'}
         </DetailItem>
-        
+
         {grantProposalSelect ? (
           <DetailItem
             title="Selected by"
-            className="block truncate whitespace-nowrap">
+            className="block truncate whitespace-nowrap"
+          >
             {grantProposalSelect?.authorship?.author
               ? formatDid(grantProposalSelect.authorship.author)
               : '...'}
           </DetailItem>
         ) : null}
       </Card>
-      
+
       {props.grant?.snapshots && props.grantProposal ? (
-        <Card 
-          title="On-chain verification">
+        <Card title="On-chain verification">
           <DetailItem title="Snapshot">
             <TextLink
               underline

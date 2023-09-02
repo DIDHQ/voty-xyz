@@ -75,20 +75,17 @@ export default function GroupForm(props: {
       <Notification type="error" show={handleArchive.isError}>
         {handleArchive.error?.message}
       </Notification>
-      
+
       <Form
         title={`${isNewGroup ? 'Create' : 'Edit'} workgroup${
           community?.name ? ` of ${community.name}` : ''
         }`}
         description="Workgroup helps you categorize proposals with different focuses. You can also set up workgroups to your community structure's needs."
-        className={props.className}>
-        <FormSection 
-          title="Basic information">
-          <div
-            className="grid grid-cols-1 gap-6">
-            <FormItem 
-              label="Workgroup name" 
-              error={errors.name?.message}>
+        className={props.className}
+      >
+        <FormSection title="Basic information">
+          <div className="grid grid-cols-1 gap-6">
+            <FormItem label="Workgroup name" error={errors.name?.message}>
               <TextInput
                 {...register('name')}
                 placeholder="e.g. Marketing Team"
@@ -96,11 +93,12 @@ export default function GroupForm(props: {
                 disabled={disabled}
               />
             </FormItem>
-            
+
             <FormItem
               label="Introduction"
               description="The purpose of this workgroup."
-              error={errors?.introduction?.message}>
+              error={errors?.introduction?.message}
+            >
               <TextInput
                 {...register('introduction')}
                 error={!!errors?.introduction?.message}
@@ -109,15 +107,17 @@ export default function GroupForm(props: {
             </FormItem>
           </div>
         </FormSection>
-        
+
         <FormSection
           title="Proposers"
-          description="SubDIDs who can initiate proposals in this workgroup.">
+          description="SubDIDs who can initiate proposals in this workgroup."
+        >
           <FormItem
             error={
-              errors.permission?.proposing?.operands?.[0]
-                ?.arguments?.[1]?.[0]?.message
-            }>
+              errors.permission?.proposing?.operands?.[0]?.arguments?.[1]?.[0]
+                ?.message
+            }
+          >
             <FormProvider {...methods}>
               <BooleanSetsBlock
                 name="proposing"
@@ -127,12 +127,12 @@ export default function GroupForm(props: {
             </FormProvider>
           </FormItem>
         </FormSection>
-        
+
         <FormSection
           title="Voters"
-          description="SubDIDs who can vote in this workgroup. You can create multiple voter groups with different voting power assigned to each group. The greatest voting power will be allocated when a SubDID has multiple occurrence.">
-          <FormItem 
-            error={errors.permission?.voting?.operands?.message}>
+          description="SubDIDs who can vote in this workgroup. You can create multiple voter groups with different voting power assigned to each group. The greatest voting power will be allocated when a SubDID has multiple occurrence."
+        >
+          <FormItem error={errors.permission?.voting?.operands?.message}>
             <FormProvider {...methods}>
               <DecimalSetsBlock
                 name="voting"
@@ -142,14 +142,13 @@ export default function GroupForm(props: {
             </FormProvider>
           </FormItem>
         </FormSection>
-        
-        <FormSection 
-          title="Proposal rules">
-          <div
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+
+        <FormSection title="Proposal rules">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <FormItem
               label="Announcing phase"
-              error={errors.duration?.announcing?.message}>
+              error={errors.duration?.announcing?.message}
+            >
               <Controller
                 control={control}
                 name="duration.announcing"
@@ -167,7 +166,8 @@ export default function GroupForm(props: {
 
             <FormItem
               label="Voting phase"
-              error={errors.duration?.voting?.message}>
+              error={errors.duration?.voting?.message}
+            >
               <Controller
                 control={control}
                 name="duration.voting"
@@ -186,7 +186,8 @@ export default function GroupForm(props: {
             <FormItem
               className="sm:col-span-2"
               label="Criteria for approval"
-              error={errors?.criteria_for_approval?.message}>
+              error={errors?.criteria_for_approval?.message}
+            >
               <Textarea
                 {...register('criteria_for_approval')}
                 error={!!errors?.criteria_for_approval?.message}
@@ -195,12 +196,11 @@ export default function GroupForm(props: {
             </FormItem>
           </div>
         </FormSection>
-        
+
         {isManager ? (
           <FormFooter
-            className={clsx(
-              isNewGroup ? '' : 'max-[425px]:justify-center'
-            )}>
+            className={clsx(isNewGroup ? '' : 'max-[425px]:justify-center')}
+          >
             <Button
               primary
               size="large"
@@ -211,10 +211,11 @@ export default function GroupForm(props: {
                   preview: props.preview,
                 })
                 router.push(props.preview.to)
-              }, console.error)}>
+              }, console.error)}
+            >
               Preview
             </Button>
-            
+
             {isNewGroup ? null : (
               <Button
                 icon={ArchiveBoxIcon}
@@ -223,7 +224,8 @@ export default function GroupForm(props: {
                 onClick={onSubmit(
                   (value) => handleArchive.mutate(value),
                   console.error,
-                )}>
+                )}
+              >
                 Archive
               </Button>
             )}

@@ -25,45 +25,48 @@ export default function GrantProposalCard(props: {
   const now = useNow()
 
   return (
-    <InfoCard 
+    <InfoCard
       className={clsx(
-        props.grantProposal.funding
-          ? 'hover:ring-amber-500'
-          : '',
+        props.grantProposal.funding ? 'hover:ring-amber-500' : '',
       )}
-      badge={props.grantProposal.funding ? (
-        <Tooltip
-          place="top"
-          text={`This proposal won ${props.grantProposal.funding}`}>
-          <Tag
-            className="transition-colors group-hover:bg-amber-100"
-            color="highlight"
-            round
-            size="small">
-            <CrownIcon 
-              className="h-4 w-4" />
-            WON
-          </Tag>
-        </Tooltip>
-      ) : null}
+      badge={
+        props.grantProposal.funding ? (
+          <Tooltip
+            place="top"
+            text={`This proposal won ${props.grantProposal.funding}`}
+          >
+            <Tag
+              className="transition-colors group-hover:bg-amber-100"
+              color="highlight"
+              round
+              size="small"
+            >
+              <CrownIcon className="h-4 w-4" />
+              WON
+            </Tag>
+          </Tooltip>
+        ) : null
+      }
       desc={props.grantProposal.content}
       href={`/grant-proposal/${permalink2Id(props.grantProposal.permalink)}`}
       thumbnail={props.grantProposal.image}
-      title={props.grantProposal.title}>
-      <InfoItem 
+      title={props.grantProposal.title}
+    >
+      <InfoItem
         label="Proposer"
-        value={formatDid(props.grantProposal.authorship.author)}/>
-              
+        value={formatDid(props.grantProposal.authorship.author)}
+      />
+
       {props.phase === GrantPhase.VOTING || props.phase === GrantPhase.ENDED ? (
-        <InfoItem 
-          label="Votes"
-          value={props.grantProposal.votes} />
+        <InfoItem label="Votes" value={props.grantProposal.votes} />
       ) : (
-        <InfoItem 
+        <InfoItem
           label="Proposed at"
-          value={formatDurationMs(
-            props.grantProposal.ts.getTime() - now.getTime(),
-          ) + ' ago'} />
+          value={
+            formatDurationMs(props.grantProposal.ts.getTime() - now.getTime()) +
+            ' ago'
+          }
+        />
       )}
     </InfoCard>
   )

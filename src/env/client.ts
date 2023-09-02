@@ -4,10 +4,10 @@ import { z } from 'zod'
 export const { NEXT_PUBLIC_TESTNET, NEXT_PUBLIC_PROJECT_ID } = createEnv({
   client: {
     NEXT_PUBLIC_TESTNET: z.string().optional(),
-    NEXT_PUBLIC_PROJECT_ID: z.string()
+    NEXT_PUBLIC_PROJECT_ID: z.string(),
   },
   runtimeEnv: {
     NEXT_PUBLIC_TESTNET: process.env.NEXT_PUBLIC_TESTNET,
-    NEXT_PUBLIC_PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID
+    NEXT_PUBLIC_PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID,
   },
 })

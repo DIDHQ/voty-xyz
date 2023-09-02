@@ -17,53 +17,51 @@ export default function PermissionCard(props: {
   const didSet = useMemo(() => new Set(dids || []), [dids])
 
   return (
-    <Card
-      title={props.title}
-      subtitle={props.description}>
+    <Card title={props.title} subtitle={props.description}>
       <ul>
         {props.value.operands.map((operand, index) => (
-          <li 
-            key={index}>
+          <li key={index}>
             {props.value.operands.length === 1 || !operand.name ? null : (
-              <h4 
-                className="mb-3 text-sm-semibold text-strong">
+              <h4 className="mb-3 text-sm-semibold text-strong">
                 {operand.name}
               </h4>
             )}
-            
+
             {operand.arguments[1].length ? (
-              <div 
-                className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3">
                 {operand.arguments[1].map((argument) => (
                   <Tag
                     key={argument}
                     size="large"
-                    color={didSet.has(`${argument}.${operand.arguments[0]}`) ? 'green' : 'default'}>
+                    color={
+                      didSet.has(`${argument}.${operand.arguments[0]}`)
+                        ? 'green'
+                        : 'default'
+                    }
+                  >
                     {formatDid(`${argument}.${operand.arguments[0]}`)}
                   </Tag>
                 ))}
               </div>
             ) : (
-              <div 
-                className="text-sm-regular text-strong">
+              <div className="text-sm-regular text-strong">
                 {operand.arguments[0] === 'bit' ? (
-                  <Tag
-                    size="large">
-                    All .bit accounts
-                  </Tag>
+                  <Tag size="large">All .bit accounts</Tag>
                 ) : (
-                  <Tag 
-                    color={didSet.has(operand.arguments[0]) ? 'green' : 'default'}
-                    size="large">
+                  <Tag
+                    color={
+                      didSet.has(operand.arguments[0]) ? 'green' : 'default'
+                    }
+                    size="large"
+                  >
                     All SubDIDs of {operand.arguments[0]}
                   </Tag>
                 )}
               </div>
             )}
-            
+
             {operand.arguments[2] ? (
-              <p 
-                className="mt-4 text-sm-medium text-semistrong">
+              <p className="mt-4 text-sm-medium text-semistrong">
                 Voting power: {operand.arguments[2]}
               </p>
             ) : null}

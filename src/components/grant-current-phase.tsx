@@ -20,35 +20,32 @@ export default function GrantCurrentPhase(props: {
   )
 
   return (
-    <Card
-      title="Grant phase">
+    <Card title="Grant phase">
       {!status ? (
-        <div 
-          className="text-strong">
-          ...
-        </div>
+        <div className="text-strong">...</div>
       ) : phase === GrantPhase.CONFIRMING ? (
         <PhaseInfo
           status="Awaiting blockchain confirmation"
           statusColor="yellow"
           time="about 5 minutes"
-          timeLabel="Estimated Time"/>
+          timeLabel="Estimated Time"
+        />
       ) : phase === GrantPhase.ANNOUNCING ? (
         <PhaseInfo
           status="Announcing for publicity"
           statusColor="blue"
-          time={status?.timestamp && props.duration
-            ? format2Time(
-                status.timestamp.getTime(),
-                status.timestamp.getTime() +
-                  props.duration.announcing * 1000,
-              )
-            : '...'}
-          timeLabel="Duration">
-          <PhaseInfoSection
-            title="Upcoming: Proposing">
-            <div
-              className="mt-2 text-sm font-medium text-strong">
+          time={
+            status?.timestamp && props.duration
+              ? format2Time(
+                  status.timestamp.getTime(),
+                  status.timestamp.getTime() + props.duration.announcing * 1000,
+                )
+              : '...'
+          }
+          timeLabel="Duration"
+        >
+          <PhaseInfoSection title="Upcoming: Proposing">
+            <div className="mt-2 text-sm font-medium text-strong">
               {status?.timestamp && props.duration
                 ? format2Time(
                     status.timestamp.getTime() +
@@ -62,24 +59,24 @@ export default function GrantCurrentPhase(props: {
           </PhaseInfoSection>
         </PhaseInfo>
       ) : phase === GrantPhase.PROPOSING ? (
-          <PhaseInfo
-            status="Proposing"
-            statusColor="blue"
-            time={status?.timestamp && props.duration
+        <PhaseInfo
+          status="Proposing"
+          statusColor="blue"
+          time={
+            status?.timestamp && props.duration
               ? format2Time(
-                  status.timestamp.getTime() +
-                    props.duration.announcing * 1000,
+                  status.timestamp.getTime() + props.duration.announcing * 1000,
                   status.timestamp.getTime() +
                     (props.duration.announcing + props.duration.proposing) *
                       1000,
                 )
-              : '...'}
-            timeLabel="Duration">
-            <PhaseInfoSection
-              title="Upcoming: Voting">
-              <div
-                className="mt-2 text-sm font-medium text-strong">
-                {status?.timestamp && props.duration
+              : '...'
+          }
+          timeLabel="Duration"
+        >
+          <PhaseInfoSection title="Upcoming: Voting">
+            <div className="mt-2 text-sm font-medium text-strong">
+              {status?.timestamp && props.duration
                 ? format2Time(
                     status.timestamp.getTime() +
                       (props.duration.announcing + props.duration.proposing) *
@@ -91,39 +88,45 @@ export default function GrantCurrentPhase(props: {
                         1000,
                   )
                 : '...'}
-              </div>
-            </PhaseInfoSection>
-          </PhaseInfo>
+            </div>
+          </PhaseInfoSection>
+        </PhaseInfo>
       ) : phase === GrantPhase.VOTING ? (
         <PhaseInfo
           status="Voting"
           statusColor="green"
-          time={status?.timestamp && props.duration
-            ? format2Time(
-                status.timestamp.getTime() +
-                  (props.duration.announcing + props.duration.proposing) *
-                    1000,
-                status.timestamp.getTime() +
-                  (props.duration.announcing +
-                    props.duration.proposing +
-                    props.duration.voting) *
-                    1000,
-              )
-            : '...'}
-          timeLabel="Duration"/>
+          time={
+            status?.timestamp && props.duration
+              ? format2Time(
+                  status.timestamp.getTime() +
+                    (props.duration.announcing + props.duration.proposing) *
+                      1000,
+                  status.timestamp.getTime() +
+                    (props.duration.announcing +
+                      props.duration.proposing +
+                      props.duration.voting) *
+                      1000,
+                )
+              : '...'
+          }
+          timeLabel="Duration"
+        />
       ) : phase === GrantPhase.ENDED ? (
         <PhaseInfo
           status="Ended"
-          time={status?.timestamp && props.duration
-            ? `${formatTime(
-                status.timestamp.getTime() +
-                  (props.duration.announcing +
-                    props.duration.proposing +
-                    props.duration.voting) *
-                    1000,
-              )}`
-            : '...'}
-          timeLabel="Ended at"/>
+          time={
+            status?.timestamp && props.duration
+              ? `${formatTime(
+                  status.timestamp.getTime() +
+                    (props.duration.announcing +
+                      props.duration.proposing +
+                      props.duration.voting) *
+                      1000,
+                )}`
+              : '...'
+          }
+          timeLabel="Ended at"
+        />
       ) : null}
     </Card>
   )

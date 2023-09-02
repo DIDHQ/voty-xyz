@@ -1,9 +1,15 @@
-import { clsxMerge } from "../utils/tailwind-helper"
-import Tag from "./basic/tag"
+import { clsxMerge } from '../utils/tailwind-helper'
+import Tag from './basic/tag'
 
 export function PhaseInfo(props: {
   status: string
-  statusColor?: 'default' | 'primary' | 'highlight' | 'blue' | 'green' | 'yellow'
+  statusColor?:
+    | 'default'
+    | 'primary'
+    | 'highlight'
+    | 'blue'
+    | 'green'
+    | 'yellow'
   statusLabel?: string
   time: string
   timeLabel?: string
@@ -17,31 +23,19 @@ export function PhaseInfo(props: {
     time,
     timeLabel = 'Time',
     className,
-    children
+    children,
   } = props
-  
+
   return (
-    <div
-      className={clsxMerge(
-        'space-y-5',
-        className
-      )}>
-      <PhaseInfoSection
-        title={statusLabel}>
-        <Tag
-          color={statusColor}>
-          {status}
-        </Tag>
+    <div className={clsxMerge('space-y-5', className)}>
+      <PhaseInfoSection title={statusLabel}>
+        <Tag color={statusColor}>{status}</Tag>
       </PhaseInfoSection>
-      
-      <PhaseInfoSection
-        title={timeLabel}>
-        <div
-          className="text-sm font-medium text-strong">
-          {time}
-        </div>
+
+      <PhaseInfoSection title={timeLabel}>
+        <div className="text-sm font-medium text-strong">{time}</div>
       </PhaseInfoSection>
-      
+
       {children}
     </div>
   )
@@ -52,20 +46,12 @@ export function PhaseInfoSection(props: {
   className?: string
   children?: React.ReactNode
 }) {
-  const {
-    title,
-    className,
-    children
-  } = props
-  
+  const { title, className, children } = props
+
   return (
-    <div 
-      className={className}>
-      <h4
-        className="mb-2 text-sm font-medium text-moderate">
-        {title}
-      </h4>
-    
+    <div className={className}>
+      <h4 className="mb-2 text-sm font-medium text-moderate">{title}</h4>
+
       {children}
     </div>
   )

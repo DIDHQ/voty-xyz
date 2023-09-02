@@ -22,18 +22,17 @@ export default function Select(props: {
               className={clsx(
                 'flex h-9 min-w-[148px] cursor-pointer items-center justify-between gap-4 rounded-xl bg-white pl-3 pr-2 text-left shadow-base focus:outline-none',
                 props.className,
-              )}>
-              <span 
-                className="block truncate text-sm-medium text-moderate">
+              )}
+            >
+              <span className="block truncate text-sm-medium text-moderate">
                 {props.value}
               </span>
-              
+
               <span>
-                <ChevronDownIcon 
-                  className="h-5 w-5 text-subtle" />
+                <ChevronDownIcon className="h-5 w-5 text-subtle" />
               </span>
             </Listbox.Button>
-            
+
             <Transition
               show={open}
               as="div"
@@ -44,9 +43,9 @@ export default function Select(props: {
                 'absolute z-50',
                 props.top ? 'bottom-full mb-2' : 'top-full mt-2',
                 props.full ? 'w-full' : undefined,
-              )}>
-              <Listbox.Options 
-                className="z-10 max-h-60 min-w-[148px] overflow-auto rounded-xl bg-white p-3 text-sm-medium shadow-lg focus:outline-none">
+              )}
+            >
+              <Listbox.Options className="z-10 max-h-60 min-w-[148px] overflow-auto rounded-xl bg-white p-3 text-sm-medium shadow-lg focus:outline-none">
                 {props.renderItem
                   ? props.options?.map(props.renderItem)
                   : props.options?.map((option) => (
@@ -65,11 +64,9 @@ export default function Select(props: {
                               : 'text-moderate',
                             'relative cursor-pointer select-none rounded-md px-3 py-2 transition',
                           )
-                        }>
-                        <span
-                          className="block truncate">
-                          {option}
-                        </span>
+                        }
+                      >
+                        <span className="block truncate">{option}</span>
                       </Listbox.Option>
                     ))}
               </Listbox.Options>

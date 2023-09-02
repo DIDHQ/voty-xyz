@@ -13,25 +13,20 @@ export default function EmptyState(props: {
   return (
     <Card
       className={clsxMerge(
-        'flex flex-col items-center space-y-6', 
-        props.className
+        'flex flex-col items-center space-y-6',
+        props.className,
       )}
-      size="medium">
+      size="medium"
+    >
       {props.icon || (
-        <div
-          className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-500/10 text-primary-500">
-          <Bars3BottomLeftIcon
-            className="h-8 w-8" />
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-500/10 text-primary-500">
+          <Bars3BottomLeftIcon className="h-8 w-8" />
         </div>
       )}
-      
-      <div 
-        className="flex max-w-xl flex-col items-center space-y-2">
-        <h3 
-          className="text-md-semibold text-strong">
-          {props.title}
-        </h3>
-        
+
+      <div className="flex max-w-xl flex-col items-center space-y-2">
+        <h3 className="text-md-semibold text-strong">{props.title}</h3>
+
         {props.description ? (
           <p className="text-center text-sm-regular text-subtle">
             {props.description}

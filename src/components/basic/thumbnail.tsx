@@ -1,6 +1,5 @@
 import { isPermalink, permalink2Gateway } from '../../utils/permalink'
-import { clsxMerge } from '@/src/utils/tailwind-helper'; 
-
+import { clsxMerge } from '@/src/utils/tailwind-helper'
 
 export default function Thumbnail(props: { src?: string; className?: string }) {
   return props.src ? (

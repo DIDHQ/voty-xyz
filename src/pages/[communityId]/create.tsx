@@ -62,15 +62,12 @@ export default function CreateGroupPage() {
       <Head>
         <title>{`New workgroup - ${documentTitle}`}</title>
       </Head>
-      
-      <LoadingBar 
-        loading={isLoading} />
-        
-      <Container
-        size="small">
-        <BackBar
-          href={`/${query.communityId}`} />
-        
+
+      <LoadingBar loading={isLoading} />
+
+      <Container size="small">
+        <BackBar href={`/${query.communityId}`} />
+
         {query.communityId && initialValue !== undefined ? (
           <GroupForm
             communityId={query.communityId}
@@ -80,7 +77,8 @@ export default function CreateGroupPage() {
               to: `/${query.communityId}/group/${newGroup}/about?preview=true`,
               template: `You are creating workgroup on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
-            }} />
+            }}
+          />
         ) : null}
       </Container>
     </>

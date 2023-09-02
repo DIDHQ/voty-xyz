@@ -112,29 +112,27 @@ export default function GrantProposalForm(props: {
   return (
     <Form
       title={`New proposal for ${props.grant.name}`}
-      className={props.className}>
-      <FormSection 
-        title="Proposer" 
-        description="Author of the proposal.">
+      className={props.className}
+    >
+      <FormSection title="Proposer" description="Author of the proposal.">
         <FormItem>
           <DidCombobox
             top
             options={didOptions}
             value={did}
             onChange={setDid}
-            onClick={connect} />
-            
+            onClick={connect}
+          />
+
           {!defaultDid && props.grant ? (
             <Slide
               title={`Proposers of ${props.grant.name}`}
               trigger={({ handleOpen }) => (
-                <TextButton
-                  className="ml-2 mt-2"
-                  primary
-                  onClick={handleOpen}>
+                <TextButton className="ml-2 mt-2" primary onClick={handleOpen}>
                   Why I&#39;m not eligible to propose?
                 </TextButton>
-              )}>
+              )}
+            >
               {() =>
                 props.grant ? (
                   <PermissionCard
@@ -148,12 +146,12 @@ export default function GrantProposalForm(props: {
           ) : null}
         </FormItem>
       </FormSection>
-      
+
       <FormSection
         title="Proposal"
-        description="Proposals that include a concise title and detailed content are more likely to capture member's attention.">
-        <div
-          className="grid grid-cols-1 gap-6">
+        description="Proposals that include a concise title and detailed content are more likely to capture member's attention."
+      >
+        <div className="grid grid-cols-1 gap-6">
           <FormItem label="Title" error={errors.title?.message}>
             <TextInput
               {...register('title')}
@@ -161,10 +159,8 @@ export default function GrantProposalForm(props: {
               error={!!errors.title?.message}
             />
           </FormItem>
-          
-          <FormItem 
-            label="Content" 
-            error={errors?.content?.message}>
+
+          <FormItem label="Content" error={errors?.content?.message}>
             <Controller
               control={control}
               name="content"
@@ -180,7 +176,7 @@ export default function GrantProposalForm(props: {
           </FormItem>
         </div>
       </FormSection>
-      
+
       <FormFooter>
         <Button
           primary
@@ -201,7 +197,8 @@ export default function GrantProposalForm(props: {
               },
             })
             router.push(`/grant-proposal/${previewPermalink}`)
-          }, console.error)}>
+          }, console.error)}
+        >
           Preview
         </Button>
       </FormFooter>

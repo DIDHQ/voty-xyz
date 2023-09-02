@@ -52,8 +52,12 @@ export function ChoiceListItem(props: {
     <li
       className={clsx(
         'group flex items-center justify-between gap-3 rounded-xl border border-base bg-gradient-to-r bg-no-repeat p-4 transition',
-        props.disabled ? 'cursor-not-allowed opacity-80' : 'cursor-pointer hover:border-primary-500 hover:from-primary-500/5 hover:to-primary-500/5',
-        checkChoice(value, choice) ? 'border-primary-500 from-primary-500/5 to-primary-500/5 ring-2 ring-primary-500/10' : 'from-[#F8FAFC] to-[#F8FAFC]'
+        props.disabled
+          ? 'cursor-not-allowed opacity-80'
+          : 'cursor-pointer hover:border-primary-500 hover:from-primary-500/5 hover:to-primary-500/5',
+        checkChoice(value, choice)
+          ? 'border-primary-500 from-primary-500/5 to-primary-500/5 ring-2 ring-primary-500/10'
+          : 'from-[#F8FAFC] to-[#F8FAFC]',
       )}
       style={{
         transition: 'background-size 0.3s ease-out',
@@ -63,7 +67,8 @@ export function ChoiceListItem(props: {
         if (!props.disabled) {
           onChange(updateChoice(value, choice))
         }
-      }}>
+      }}
+    >
       <input
         type={type === 'single' ? 'radio' : 'checkbox'}
         checked={checkChoice(value, choice)}
@@ -73,16 +78,15 @@ export function ChoiceListItem(props: {
           'h-4 w-4 shrink-0 cursor-pointer border border-base text-primary-500 focus:outline-none focus:ring-0 focus:ring-transparent disabled:cursor-not-allowed',
           props.disabled ? undefined : 'group-hover:border-primary-500',
           type === 'single' ? undefined : 'rounded',
-        )} />
-      
-      <span 
-        className="min-w-0 flex-1 text-sm-regular text-strong">
+        )}
+      />
+
+      <span className="min-w-0 flex-1 text-sm-regular text-strong">
         {choice}
       </span>
-      
+
       {choices?.[choice] || newPower.gt(0) ? (
-        <span 
-          className="mt-[0.09375rem] text-xs text-moderate">
+        <span className="mt-[0.09375rem] text-xs text-moderate">
           {newPower.add(choices?.[choice] || 0).toString()} (
           {percentage.toFixed(1)}%)
         </span>

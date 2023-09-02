@@ -1,11 +1,15 @@
 @font-face {
   font-family: 'remixicon';
   src: url('./remixicon/remixicon.eot?t=1692285596377'); /* IE9*/
-  src: url('./remixicon/remixicon.eot?t=1692285596377#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('./remixicon/remixicon.woff2?t=1692285596377') format('woff2'),
-  url('./remixicon/remixicon.woff?t=1692285596377') format('woff'),
-  url('./remixicon/remixicon.ttf?t=1692285596377') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('./remixicon/remixicon.svg?t=1692285596377#remixicon') format('svg'); /* iOS 4.1- */
+  src:
+    url('./remixicon/remixicon.eot?t=1692285596377#iefix')
+      format('embedded-opentype'),
+    /* IE6-IE8 */ url('./remixicon/remixicon.woff2?t=1692285596377')
+      format('woff2'),
+    url('./remixicon/remixicon.woff?t=1692285596377') format('woff'),
+    url('./remixicon/remixicon.ttf?t=1692285596377') format('truetype'),
+    /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+      url('./remixicon/remixicon.svg?t=1692285596377#remixicon') format('svg'); /* iOS 4.1- */
   font-display: swap;
 }
 
@@ -393,10 +397,13 @@
   cursor: pointer;
   line-height: 28px;
   text-align: center;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   @apply text-moderate;
 }
-.rc-md-editor:not(.disabled) .rc-md-navigation .button-wrap .button:not(.disabled):hover {
+.rc-md-editor:not(.disabled)
+  .rc-md-navigation
+  .button-wrap
+  .button:not(.disabled):hover {
   @apply text-semistrong;
 }
 .rc-md-editor .rc-md-navigation .button-wrap .button.disabled,
@@ -491,7 +498,7 @@
   display: inline-block;
   width: 20px;
   height: 20px;
-  background-color: #F6F6F9;
+  background-color: #f6f6f9;
   border-radius: 4px;
 }
 .rc-md-editor .table-list.wrap .list-item.active {
@@ -516,5 +523,5 @@
   border-radius: 8px;
 }
 .rc-md-editor .header-list .list-item:hover {
-  background: #F9F9FB;
+  background: #f9f9fb;
 }

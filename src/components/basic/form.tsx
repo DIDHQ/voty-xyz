@@ -9,25 +9,17 @@ export function Form(props: {
   children: ReactNode
 }) {
   return (
-    <div 
-      className={clsxMerge(
-        props.className
-      )}>
-      <div
-        className="mb-6 text-center">
-        <h2 
-          className="text-display-xs-semibold text-strong">
-          {props.title}
-        </h2>
-        
+    <div className={clsxMerge(props.className)}>
+      <div className="mb-6 text-center">
+        <h2 className="text-display-xs-semibold text-strong">{props.title}</h2>
+
         {props.description ? (
-          <p 
-            className="mx-auto mt-2 max-w-2xl text-sm-regular text-subtle">
+          <p className="mx-auto mt-2 max-w-2xl text-sm-regular text-subtle">
             {props.description}
           </p>
         ) : null}
       </div>
-      
+
       {props.children}
     </div>
   )
@@ -40,39 +32,23 @@ export function FormSection(props: {
   className?: string
 }) {
   return (
-    <Card
-      className={props.className}
-      size="large">
-      <div
-        className="mb-6">
-        <h3 
-          className="text-xl-semibold text-strong">
-          {props.title}
-        </h3>
-        
+    <Card className={props.className} size="large">
+      <div className="mb-6">
+        <h3 className="text-xl-semibold text-strong">{props.title}</h3>
+
         {props.description ? (
-          <p 
-            className="mt-1 text-sm text-subtle">
-            {props.description}
-          </p>
+          <p className="mt-1 text-sm text-subtle">{props.description}</p>
         ) : null}
       </div>
-      
+
       {props.children}
     </Card>
   )
 }
 
-export function FormFooter(props: { 
-  className?: string
-  children: ReactNode 
-}) {
+export function FormFooter(props: { className?: string; children: ReactNode }) {
   return (
-    <div 
-      className={clsxMerge(
-        'mt-8 flex justify-end gap-6',
-        props.className
-      )}>
+    <div className={clsxMerge('mt-8 flex justify-end gap-6', props.className)}>
       {props.children}
     </div>
   )
@@ -87,37 +63,37 @@ export function FormItem(
     error?: string
   } & InputHTMLAttributes<HTMLInputElement>,
 ) {
-  const { label, labelClassName, optional, description, error, children, ...restProps } = props
+  const {
+    label,
+    labelClassName,
+    optional,
+    description,
+    error,
+    children,
+    ...restProps
+  } = props
 
   return (
-    <div 
-      {...restProps}>
+    <div {...restProps}>
       {label ? (
-        <label 
+        <label
           className={clsxMerge(
             'mb-2 block text-sm font-medium text-semistrong',
-            labelClassName
-          )}>
+            labelClassName,
+          )}
+        >
           {label}
-          
+
           {optional ? (
-            <span 
-              className="ml-0.5 text-xs text-subtle">
-              (optional)
-            </span>
+            <span className="ml-0.5 text-xs text-subtle">(optional)</span>
           ) : null}
         </label>
       ) : null}
-      
+
       {children}
-      
-      {error ? (
-        <p 
-          className="mt-2 text-xs text-red-600">
-          {error}
-        </p>
-      ) : null}
-      
+
+      {error ? <p className="mt-2 text-xs text-red-600">{error}</p> : null}
+
       {description ? (
         <p className="mt-2 text-sm text-subtle">{description}</p>
       ) : null}

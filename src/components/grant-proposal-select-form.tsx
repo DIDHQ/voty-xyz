@@ -122,18 +122,16 @@ export default function GrantProposalSelectForm(props: {
       <Notification type="error" show={handleSubmit.isError}>
         {handleSubmit.error?.message}
       </Notification>
-      
+
       <Notification type="success" show={handleSubmit.isSuccess}>
         Your selection has been submitted successfully
       </Notification>
-      
+
       {phase === GrantPhase.ENDED ? null : (
-        <Card
-          className={clsx(props.className)}>
+        <Card className={clsx(props.className)}>
           {props.grantProposal.permalink === previewPermalink ? null : (
             <div>
-              <div 
-                className="w-full sm:w-64">
+              <div className="w-full sm:w-64">
                 <DidCombobox
                   top
                   label="Choose a DID as committee"
@@ -143,7 +141,7 @@ export default function GrantProposalSelectForm(props: {
                   onClick={connect}
                 />
               </div>
-              
+
               {phase === GrantPhase.PROPOSING ? (
                 <Button
                   className="mt-6 min-w-[96px]"
@@ -152,7 +150,8 @@ export default function GrantProposalSelectForm(props: {
                     console.error,
                   )}
                   disabled={disables(did)}
-                  loading={handleSubmit.isLoading}>
+                  loading={handleSubmit.isLoading}
+                >
                   Select
                 </Button>
               ) : (
@@ -163,7 +162,8 @@ export default function GrantProposalSelectForm(props: {
                       ? 'Waiting for proposal confirming (in about 5 minutes)'
                       : 'Waiting for select starting'
                   }
-                  className="mt-6">
+                  className="mt-6"
+                >
                   <Button
                     className="min-w-[96px]"
                     onClick={onSubmit(
@@ -171,7 +171,8 @@ export default function GrantProposalSelectForm(props: {
                       console.error,
                     )}
                     disabled={disables(did)}
-                    loading={handleSubmit.isLoading}>
+                    loading={handleSubmit.isLoading}
+                  >
                     Select
                   </Button>
                 </Tooltip>

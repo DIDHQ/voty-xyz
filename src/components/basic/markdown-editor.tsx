@@ -54,7 +54,7 @@ export default function MarkdownEditor(props: {
       <Notification type="error" show={isError}>
         {error?.message}
       </Notification>
-      
+
       <MdEditor
         value={props.value}
         onChange={handleEditorChange}

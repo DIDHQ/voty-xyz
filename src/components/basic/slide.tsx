@@ -43,8 +43,7 @@ export default function Slide(props: {
                             {props.title}
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
-                            <TextButton
-                              onClick={() => setOpen(false)}>
+                            <TextButton onClick={() => setOpen(false)}>
                               <XMarkIcon className="h-6 w-6" />
                             </TextButton>
                           </div>

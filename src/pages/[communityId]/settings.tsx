@@ -17,14 +17,11 @@ export default function CommunitySettingsPage() {
 
   return (
     <>
-      <LoadingBar 
-        loading={isLoading} />
-        
-      <Container
-        size="small">
-        <BackBar
-          href={`/${query.communityId}/about`} />
-        
+      <LoadingBar loading={isLoading} />
+
+      <Container size="small">
+        <BackBar href={`/${query.communityId}/about`} />
+
         {query.communityId && community !== undefined ? (
           <CommunityForm
             communityId={query.communityId}

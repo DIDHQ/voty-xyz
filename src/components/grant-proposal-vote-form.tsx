@@ -162,25 +162,19 @@ export default function GrantProposalVoteForm(props: {
 
   return (
     <>
-      <Notification 
-        type="error" 
-        show={handleSubmit.isError}>
+      <Notification type="error" show={handleSubmit.isError}>
         {handleSubmit.error?.message}
       </Notification>
-      
-      <Notification 
-        type="success" 
-        show={handleSubmit.isSuccess}>
+
+      <Notification type="success" show={handleSubmit.isSuccess}>
         Your vote has been submitted successfully
       </Notification>
-      
+
       {phase === GrantPhase.ENDED ? null : (
-        <Card
-          className={clsx(props.className)}>
+        <Card className={clsx(props.className)}>
           {props.grantProposal.permalink === previewPermalink ? null : (
             <div>
-              <div 
-                className="w-full sm:w-64">
+              <div className="w-full sm:w-64">
                 <DidCombobox
                   top
                   label="Choose a DID as voter"
@@ -189,18 +183,16 @@ export default function GrantProposalVoteForm(props: {
                   onChange={setDid}
                   onClick={connect}
                 />
-                
+
                 {!defaultDid && props.grant ? (
                   <Slide
                     title={`Voters of ${props.grant.name}`}
                     trigger={({ handleOpen }) => (
-                      <TextButton
-                        primary
-                        onClick={handleOpen}
-                        className="mt-2">
+                      <TextButton primary onClick={handleOpen} className="mt-2">
                         Why I&#39;m not eligible to vote?
                       </TextButton>
-                    )}>
+                    )}
+                  >
                     {() => (
                       <PermissionCard
                         title="Voters"
@@ -211,7 +203,7 @@ export default function GrantProposalVoteForm(props: {
                   </Slide>
                 ) : null}
               </div>
-              
+
               {phase === GrantPhase.VOTING ? (
                 <Button
                   className="mt-6 min-w-[96px]"
@@ -220,7 +212,8 @@ export default function GrantProposalVoteForm(props: {
                     console.error,
                   )}
                   disabled={disables(did)}
-                  loading={handleSubmit.isLoading}>
+                  loading={handleSubmit.isLoading}
+                >
                   Vote{totalPower ? ` (${totalPower})` : null}
                 </Button>
               ) : (
@@ -238,7 +231,8 @@ export default function GrantProposalVoteForm(props: {
                         )})`
                       : 'Waiting for vote starting'
                   }
-                  className="mt-6">
+                  className="mt-6"
+                >
                   <Button
                     className="min-w-[96px]"
                     onClick={onSubmit(
@@ -246,7 +240,8 @@ export default function GrantProposalVoteForm(props: {
                       console.error,
                     )}
                     disabled={disables(did)}
-                    loading={handleSubmit.isLoading}>
+                    loading={handleSubmit.isLoading}
+                  >
                     Vote{totalPower ? ` (${totalPower})` : null}
                   </Button>
                 </Tooltip>

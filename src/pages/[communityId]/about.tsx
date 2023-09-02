@@ -23,28 +23,23 @@ export default function CommunityAboutPage() {
   const community = previewCommunity || data
 
   return (
-    <CommunityLayout
-      loading={isLoading}>
+    <CommunityLayout loading={isLoading}>
       {community?.about ? (
         <>
-          <SectionHeader
-            title="About">
+          <SectionHeader title="About">
             {isManager && !previewCommunity ? (
               <Link
                 href={`/${query.communityId}/settings`}
-                className="block w-fit">
-                <Button>
-                  Edit
-                </Button>
+                className="block w-fit"
+              >
+                <Button>Edit</Button>
               </Link>
             ) : null}
           </SectionHeader>
-          
-          <Card
-            className="md:py-8">
+
+          <Card className="md:py-8">
             <Article>
-              <MarkdownViewer 
-                preview={!!previewCommunity}>
+              <MarkdownViewer preview={!!previewCommunity}>
                 {community?.about}
               </MarkdownViewer>
             </Article>

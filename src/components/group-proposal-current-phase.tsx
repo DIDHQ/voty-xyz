@@ -20,44 +20,41 @@ export default function GroupProposalCurrentPhase(props: {
   )
 
   return (
-    <Card 
-      title="Proposal phase">
+    <Card title="Proposal phase">
       {!status ? (
-        <div 
-          className="text-strong">
-          ...
-        </div>
+        <div className="text-strong">...</div>
       ) : phase === GroupProposalPhase.CONFIRMING ? (
         <PhaseInfo
           status="Awaiting blockchain confirmation"
           statusColor="yellow"
           time="about 5 minutes"
-          timeLabel="Estimated Time" />
+          timeLabel="Estimated Time"
+        />
       ) : phase === GroupProposalPhase.ANNOUNCING ? (
         <PhaseInfo
           status="Announcing for publicity"
           statusColor="blue"
-          time={status?.timestamp && props.duration
-            ? format2Time(
-                status.timestamp.getTime(),
-                status.timestamp.getTime() +
-                  props.duration.announcing * 1000,
-              )
-            : '...'}
-          timeLabel="Duration">
-          <PhaseInfoSection
-            title="Upcoming: Proposing">
-            <div
-              className="mt-2 text-sm font-medium text-strong">
-              {status?.timestamp && props.duration
+          time={
+            status?.timestamp && props.duration
               ? format2Time(
-                  status.timestamp.getTime() +
-                    props.duration.announcing * 1000,
-                  status.timestamp.getTime() +
-                    (props.duration.announcing + props.duration.voting) *
-                      1000,
+                  status.timestamp.getTime(),
+                  status.timestamp.getTime() + props.duration.announcing * 1000,
                 )
-              : '...'}
+              : '...'
+          }
+          timeLabel="Duration"
+        >
+          <PhaseInfoSection title="Upcoming: Proposing">
+            <div className="mt-2 text-sm font-medium text-strong">
+              {status?.timestamp && props.duration
+                ? format2Time(
+                    status.timestamp.getTime() +
+                      props.duration.announcing * 1000,
+                    status.timestamp.getTime() +
+                      (props.duration.announcing + props.duration.voting) *
+                        1000,
+                  )
+                : '...'}
             </div>
           </PhaseInfoSection>
         </PhaseInfo>
@@ -65,27 +62,30 @@ export default function GroupProposalCurrentPhase(props: {
         <PhaseInfo
           status="Voting"
           statusColor="green"
-          time={status?.timestamp && props.duration
-            ? format2Time(
-                status.timestamp.getTime() +
-                  props.duration.announcing * 1000,
-                status.timestamp.getTime() +
-                  (props.duration.announcing + props.duration.voting) *
-                    1000,
-              )
-            : '...'} 
-          timeLabel="Duration"/>
+          time={
+            status?.timestamp && props.duration
+              ? format2Time(
+                  status.timestamp.getTime() + props.duration.announcing * 1000,
+                  status.timestamp.getTime() +
+                    (props.duration.announcing + props.duration.voting) * 1000,
+                )
+              : '...'
+          }
+          timeLabel="Duration"
+        />
       ) : phase === GroupProposalPhase.ENDED ? (
         <PhaseInfo
           status="Ended"
-          time={status?.timestamp && props.duration
-            ? `${formatTime(
-                status.timestamp.getTime() +
-                  (props.duration.announcing + props.duration.voting) *
-                    1000,
-              )}`
-            : '...'}
-          timeLabel="Ended at"/>
+          time={
+            status?.timestamp && props.duration
+              ? `${formatTime(
+                  status.timestamp.getTime() +
+                    (props.duration.announcing + props.duration.voting) * 1000,
+                )}`
+              : '...'
+          }
+          timeLabel="Ended at"
+        />
       ) : null}
     </Card>
   )

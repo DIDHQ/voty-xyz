@@ -13,11 +13,9 @@ export default function AboutPage() {
       <Head>
         <title>{`About - ${documentTitle}`}</title>
       </Head>
-      
-      <Container
-        size="small">
-        <Card
-          size="large">
+
+      <Container size="small">
+        <Card size="large">
           <Article>
             <MarkdownViewer>{`# Introduction
 

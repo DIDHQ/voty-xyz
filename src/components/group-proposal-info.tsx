@@ -29,63 +29,61 @@ export default function GroupProposalInfo(props: {
   const disabled = props.groupProposal?.permalink === previewPermalink
 
   return (
-    <div
-      className={props.className}>
+    <div className={props.className}>
       <GroupProposalCurrentPhase
         groupProposalPermalink={props.groupProposal?.permalink}
-        duration={props.group?.duration}/>
-        
-      <Card
-        title="Criteria for approval">
+        duration={props.group?.duration}
+      />
+
+      <Card title="Criteria for approval">
         <Article small className="pt-2">
           <MarkdownViewer>{props.group?.criteria_for_approval}</MarkdownViewer>
         </Article>
       </Card>
-      
-      <Card
-        title="Information">
-        <DetailItem 
-          title="Community">
+
+      <Card title="Information">
+        <DetailItem title="Community">
           {props.community ? (
             <TextLink
               underline
               disabled={disabled}
               href={`/${props.community.id}`}
-              className="block truncate whitespace-nowrap">
+              className="block truncate whitespace-nowrap"
+            >
               {props.community.name}
             </TextLink>
           ) : (
             '...'
           )}
         </DetailItem>
-        
-        <DetailItem 
-          title="Workgroup">
+
+        <DetailItem title="Workgroup">
           {props.group && props.community ? (
             <TextLink
               underline
               disabled={disabled}
               href={`/${props.community.id}/group/${props.group.id}`}
-              className="block truncate whitespace-nowrap">
+              className="block truncate whitespace-nowrap"
+            >
               {props.group.name}
             </TextLink>
           ) : (
             '...'
           )}
         </DetailItem>
-        
+
         <DetailItem
           title="Proposer"
-          className="block truncate whitespace-nowrap">
+          className="block truncate whitespace-nowrap"
+        >
           {props.groupProposal?.authorship?.author
             ? formatDid(props.groupProposal.authorship.author)
             : '...'}
         </DetailItem>
       </Card>
-        
+
       {props.groupProposal?.snapshots ? (
-        <Card 
-          title="On-chain verification">
+        <Card title="On-chain verification">
           <DetailItem title="Snapshot">
             <TextLink
               underline
@@ -102,7 +100,7 @@ export default function GroupProposalInfo(props: {
               )}
             </TextLink>
           </DetailItem>
-          
+
           <DetailItem title="Arweave TX">
             <TextLink
               underline

@@ -19,15 +19,17 @@ export default function ShareLinkIcon(props: {
   }, [props.link])
 
   return (
-    <TextButton 
-      onClick={handleClick} 
+    <TextButton
+      onClick={handleClick}
       className={clsxMerge(
         'text-white justify-center enabled:hover:text-white enabled:hover:scale-105',
-        props.className
-      )}>
+        props.className,
+      )}
+    >
       <Tooltip
         place="top"
-        text={copied ? 'Copied to your clipboard' : 'Click to copy share link'}>
+        text={copied ? 'Copied to your clipboard' : 'Click to copy share link'}
+      >
         {copied ? (
           <CheckCircleIcon className="h-5 w-5 stroke-2" />
         ) : (

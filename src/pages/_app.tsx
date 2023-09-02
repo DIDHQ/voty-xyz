@@ -1,6 +1,6 @@
 import type { AppType, NextWebVitalsMetric } from 'next/app'
 import Head from 'next/head'
-import { Poppins } from 'next/font/google' 
+import { Poppins } from 'next/font/google'
 import { Chain, configureChains, createConfig, WagmiConfig } from 'wagmi'
 import {
   mainnet,
@@ -42,10 +42,10 @@ import { NEXT_PUBLIC_PROJECT_ID } from '@/src/env/client'
 import '../styles/globals.css'
 import '../styles/editor.css'
 
-const poppins = Poppins({ 
+const poppins = Poppins({
   subsets: ['latin'],
   display: 'swap',
-  weight: ['400', '500', '600', '700']
+  weight: ['400', '500', '600', '700'],
 })
 
 const { chains, publicClient } = configureChains(

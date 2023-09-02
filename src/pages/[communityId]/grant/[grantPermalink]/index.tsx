@@ -42,7 +42,10 @@ import { Container, Main, Sidebar } from '@/src/components/basic/container'
 import Card from '@/src/components/basic/card'
 import SectionHeader from '@/src/components/basic/section-header'
 import { BackBar } from '@/src/components/basic/back'
-import { ArticleSkeleton, SidebarInfoSkeleton } from '@/src/components/basic/skeleton'
+import {
+  ArticleSkeleton,
+  SidebarInfoSkeleton,
+} from '@/src/components/basic/skeleton'
 
 export const runtime = 'experimental-edge'
 
@@ -163,98 +166,85 @@ export default function GrantPage() {
         <meta key="og:site_name" property="og:site_name" content={title} />
         <meta key="og:image" property="og:image" content={image} />
       </Head>
-      
-      <LoadingBar 
-        loading={isFetching || isCommunityLoading} />
-        
-      <Container
-        hasSidebar>
+
+      <LoadingBar loading={isFetching || isCommunityLoading} />
+
+      <Container hasSidebar>
         <Main>
           <BackBar
             disabled={!community || !!previewGrant}
-            href={`/${community?.id}/grant`} />
-          
+            href={`/${community?.id}/grant`}
+          />
+
           {isFetching || isCommunityLoading ? (
             <ArticleSkeleton />
-          ) : (
-            grant && grant?.introduction.split('\n').length >= 4 ? (
-              <Card
-                size="medium">
-                <section 
-                  {...getCollapseProps()}>
-                  <Article >
-                    <h1>
-                      {grant?.name || '...'}
-                    </h1>
-                    
-                    <MarkdownViewer 
-                      preview={!!previewGrant}>
-                      {grant?.introduction}
-                    </MarkdownViewer>
-                  </Article>
-                </section>
-                
-                <TextButton
-                  className="mt-6 gap-1"
-                  primary
-                  {...getToggleProps({
-                    onClick: () => setExpanded((prevExpanded) => !prevExpanded),
-                  })}>
-                  {isExpanded ? (
-                    <>
-                      <ChevronUpIcon 
-                        className="h-4 w-4 stroke-2" />
-                    
-                      <span>
-                        Collapse
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDownIcon
-                        className="h-4 w-4 stroke-2" />
-                    
-                      <span>
-                        Expand
-                      </span>
-                    </>
-                  )}
-                </TextButton>
-              </Card>
-            ) : (
-              <Card
-                size="medium">
+          ) : grant && grant?.introduction.split('\n').length >= 4 ? (
+            <Card size="medium">
+              <section {...getCollapseProps()}>
                 <Article>
-                  <h1>
-                    {grant?.name || '...'}
-                  </h1>
-                  
-                  <MarkdownViewer 
-                    preview={!!previewGrant}>
+                  <h1>{grant?.name || '...'}</h1>
+
+                  <MarkdownViewer preview={!!previewGrant}>
                     {grant?.introduction}
                   </MarkdownViewer>
                 </Article>
-              </Card>
-            )
+              </section>
+
+              <TextButton
+                className="mt-6 gap-1"
+                primary
+                {...getToggleProps({
+                  onClick: () => setExpanded((prevExpanded) => !prevExpanded),
+                })}
+              >
+                {isExpanded ? (
+                  <>
+                    <ChevronUpIcon className="h-4 w-4 stroke-2" />
+
+                    <span>Collapse</span>
+                  </>
+                ) : (
+                  <>
+                    <ChevronDownIcon className="h-4 w-4 stroke-2" />
+
+                    <span>Expand</span>
+                  </>
+                )}
+              </TextButton>
+            </Card>
+          ) : (
+            <Card size="medium">
+              <Article>
+                <h1>{grant?.name || '...'}</h1>
+
+                <MarkdownViewer preview={!!previewGrant}>
+                  {grant?.introduction}
+                </MarkdownViewer>
+              </Article>
+            </Card>
           )}
-          
+
           <GrantInfo
             community={community || undefined}
             grant={grant}
-            className="block sm:hidden" />
-            
+            className="block sm:hidden"
+          />
+
           {previewGrant ? null : (
             <SectionHeader
-              title={grant?.proposals ? (option === options[0]
+              title={
+                grant?.proposals
+                  ? option === options[0]
                     ? grant.proposals === 1
                       ? '1 Proposal'
                       : `${grant.proposals} Proposals`
                     : grant.selectedProposals === 1
                     ? '1 Selected proposal'
-                    : `${grant.selectedProposals} Selected proposals`) : ''}>
-              
-              <div 
-                className="flex items-center">
+                    : `${grant.selectedProposals} Selected proposals`
+                  : ''
+              }
+            >
+              <div className="flex items-center">
                 {grant?.permission.selecting && grant?.proposals ? (
                   <Select
                     options={options}
@@ -262,17 +252,17 @@ export default function GrantPage() {
                     onChange={setOption}
                   />
                 ) : null}
-                
+
                 <GrantProposalCreateButton
                   communityId={query.communityId}
                   grant={grant}
-                  className="ml-4"/>
+                  className="ml-4"
+                />
               </div>
             </SectionHeader>
           )}
-          
-          <ul 
-            className="space-y-4 md:space-y-6">
+
+          <ul className="space-y-4 md:space-y-6">
             {grantProposals
               ?.filter(
                 (grantProposal) =>
@@ -291,15 +281,12 @@ export default function GrantPage() {
               ))}
           </ul>
         </Main>
-        
-        <Sidebar
-          className="hidden sm:block">
-          {(isFetching || isCommunityLoading) ? (
+
+        <Sidebar className="hidden sm:block">
+          {isFetching || isCommunityLoading ? (
             <SidebarInfoSkeleton />
           ) : (
-            <GrantInfo
-              community={community || undefined}
-              grant={grant} />
+            <GrantInfo community={community || undefined} grant={grant} />
           )}
         </Sidebar>
       </Container>

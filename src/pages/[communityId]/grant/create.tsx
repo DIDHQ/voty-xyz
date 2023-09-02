@@ -61,13 +61,13 @@ export default function CreateGrantPage() {
       <Head>
         <title>{`New grant - ${documentTitle}`}</title>
       </Head>
-      
-      <Container
-        size="small">
+
+      <Container size="small">
         <BackBar
           disabled={!query.communityId}
-          href={`/${query.communityId}/grant`} />
-          
+          href={`/${query.communityId}/grant`}
+        />
+
         {query.communityId ? (
           <GrantForm
             communityId={query.communityId}

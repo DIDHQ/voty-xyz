@@ -32,41 +32,28 @@ export default function IndexPage() {
 
   return (
     <Container>
-      <SubscriptionList 
-        className="mb-8"/>
-      
-      <SectionHeader
-        className="mb-5 md:mb-6"
-        title="Communities">
+      <SubscriptionList className="mb-8" />
+
+      <SectionHeader className="mb-5 md:mb-6" title="Communities">
         {account ? (
-          <Link
-            href="/create"
-            title="Import Community">
-            <Button>
-              Import Community
-            </Button>
+          <Link href="/create" title="Import Community">
+            <Button>Import Community</Button>
           </Link>
         ) : null}
       </SectionHeader>
-      
-      <div
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
-        {!isLoading ? (
-          communities?.map((community) => (
-            <CommunityCard 
-              key={community.id}
-              community={community} />
-          ))
-        ) : (
-          [...Array(3)].map((item, index) => (
-            <CommunitySkeleton
-              key={index} />
-          ))
-        )}
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
+        {!isLoading
+          ? communities?.map((community) => (
+              <CommunityCard key={community.id} community={community} />
+            ))
+          : [...Array(3)].map((item, index) => (
+              <CommunitySkeleton key={index} />
+            ))}
       </div>
-      
+
       <LoadingBar loading={isLoading} />
-      
+
       <div ref={ref} />
     </Container>
   )

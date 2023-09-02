@@ -167,29 +167,21 @@ export default function GroupProposalVoteForm(props: {
 
   return (
     <>
-      <Notification 
-        type="error" 
-        show={handleSubmit.isError}>
+      <Notification type="error" show={handleSubmit.isError}>
         {handleSubmit.error?.message}
       </Notification>
-      
-      <Notification 
-        type="success" 
-        show={handleSubmit.isSuccess}>
+
+      <Notification type="success" show={handleSubmit.isSuccess}>
         Your vote has been submitted successfully
       </Notification>
-      
-      <Card
-        title="Choices">
-        <FormItem 
-          error={errors.powers?.message?.message}>
+
+      <Card title="Choices">
+        <FormItem error={errors.powers?.message?.message}>
           <Controller
             control={control}
             name="powers"
             render={({ field: { ref, value, onChange } }) => (
-              <ul
-                className="space-y-3"
-                ref={ref}>
+              <ul className="space-y-3" ref={ref}>
                 {props.groupProposal.choices.map((choice) => (
                   <ChoiceListItem
                     key={choice}
@@ -206,13 +198,11 @@ export default function GroupProposalVoteForm(props: {
             )}
           />
         </FormItem>
-        
+
         {props.groupProposal.permalink === previewPermalink ||
         phase === GroupProposalPhase.ENDED ? null : (
-          <div 
-            className="mt-6 flex w-full flex-col items-end">
-            <div 
-              className="w-full sm:w-64">
+          <div className="mt-6 flex w-full flex-col items-end">
+            <div className="w-full sm:w-64">
               <DidCombobox
                 top
                 label="Choose a DID as voter"
@@ -221,19 +211,16 @@ export default function GroupProposalVoteForm(props: {
                 onChange={setDid}
                 onClick={connect}
               />
-              
+
               {!defaultDid && props.group ? (
                 <Slide
                   title={`Voters of ${props.group.name}`}
                   trigger={({ handleOpen }) => (
-                    <TextButton
-                      primary
-                      onClick={handleOpen}
-                      className="mt-2">
+                    <TextButton primary onClick={handleOpen} className="mt-2">
                       Why I&#39;m not eligible to vote?
                     </TextButton>
-                  )}>
-                    
+                  )}
+                >
                   {() => (
                     <PermissionCard
                       title="Voters"
@@ -244,7 +231,7 @@ export default function GroupProposalVoteForm(props: {
                 </Slide>
               ) : null}
             </div>
-            
+
             {phase === GroupProposalPhase.VOTING ? (
               <Button
                 className="mt-6 min-w-[96px]"
@@ -253,7 +240,8 @@ export default function GroupProposalVoteForm(props: {
                   console.error,
                 )}
                 disabled={disables(did)}
-                loading={handleSubmit.isLoading}>
+                loading={handleSubmit.isLoading}
+              >
                 Vote{totalPower ? ` (${totalPower})` : null}
               </Button>
             ) : (
@@ -270,7 +258,8 @@ export default function GroupProposalVoteForm(props: {
                       )})`
                     : 'Waiting for vote starting'
                 }
-                className="mt-6">
+                className="mt-6"
+              >
                 <Button
                   className="min-w-[96px]"
                   onClick={onSubmit(
@@ -278,7 +267,8 @@ export default function GroupProposalVoteForm(props: {
                     console.error,
                   )}
                   disabled={disables(did)}
-                  loading={handleSubmit.isLoading}>
+                  loading={handleSubmit.isLoading}
+                >
                   Vote{totalPower ? ` (${totalPower})` : null}
                 </Button>
               </Tooltip>

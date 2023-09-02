@@ -27,7 +27,7 @@ export default forwardRef<
         error
           ? 'border-red-300 focus:border-red-500'
           : 'border-base focus:border-strong',
-        className
+        className,
       )}
     />
   )

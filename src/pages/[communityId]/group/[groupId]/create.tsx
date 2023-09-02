@@ -26,16 +26,15 @@ export default function CreateGroupProposalPage() {
       <Head>
         <title>{`New proposal - ${documentTitle}`}</title>
       </Head>
-      
-      <LoadingBar 
-        loading={isLoading} />
-        
-      <Container
-        size="small">
+
+      <LoadingBar loading={isLoading} />
+
+      <Container size="small">
         <BackBar
           disabled={!query.communityId || !query.groupId}
-          href={`/${query.communityId}/group/${query.groupId}`} />
-        
+          href={`/${query.communityId}/group/${query.groupId}`}
+        />
+
         {query.communityId && group ? (
           <GroupProposalForm
             initialValue={initialValue}

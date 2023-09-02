@@ -28,14 +28,11 @@ export default function GroupSettingsPage() {
 
   return (
     <>
-      <LoadingBar 
-        loading={isLoading} />
-        
-      <Container
-        size="small">
-        <BackBar
-          href={`/${query.communityId}/group/${query.groupId}/about`} />
-        
+      <LoadingBar loading={isLoading} />
+
+      <Container size="small">
+        <BackBar href={`/${query.communityId}/group/${query.groupId}/about`} />
+
         {query.communityId && query.groupId && group !== undefined ? (
           <GroupForm
             communityId={query.communityId}
@@ -46,7 +43,8 @@ export default function GroupSettingsPage() {
               to: `/${query.communityId}/group/${query.groupId}/about?preview=true`,
               template: `You are updating workgroup on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
-            }}/>
+            }}
+          />
         ) : null}
       </Container>
     </>

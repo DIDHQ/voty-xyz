@@ -45,8 +45,7 @@ export default function DurationInput(props: {
   }, [props.value])
 
   return (
-    <div 
-      className={clsx('relative', props.className)}>
+    <div className={clsx('relative', props.className)}>
       <input
         ref={props.inputRef}
         type="number"
@@ -59,18 +58,18 @@ export default function DurationInput(props: {
           'block w-full rounded-xl border py-[11px] pr-24 text-sm text-strong transition placeholder:text-subtle focus:ring-0 disabled:cursor-not-allowed disabled:bg-subtle disabled:text-subtle',
           props.error
             ? 'border-red-300 focus:border-red-500'
-            : 'border-base focus:border-strong'
+            : 'border-base focus:border-strong',
         )}
       />
-      
-      <div 
-        className="absolute inset-y-0 right-0 flex items-center">
+
+      <div className="absolute inset-y-0 right-0 flex items-center">
         <select
           value={type}
           onChange={handleTypeChange}
           onBlur={handleBlur}
           disabled={props.disabled}
-          className="h-full rounded-xl border-transparent bg-transparent py-0 pl-2 pr-8 text-sm text-subtle focus:border-transparent focus:ring-0 disabled:cursor-not-allowed">
+          className="h-full rounded-xl border-transparent bg-transparent py-0 pl-2 pr-8 text-sm text-subtle focus:border-transparent focus:ring-0 disabled:cursor-not-allowed"
+        >
           <option value={PhaseType.MINUTE}>Minutes</option>
           <option value={PhaseType.HOUR}>Hours</option>
           <option value={PhaseType.DAY}>Days</option>

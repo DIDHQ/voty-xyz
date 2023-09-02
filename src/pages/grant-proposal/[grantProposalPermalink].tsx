@@ -55,10 +55,13 @@ import { Back } from '@/src/components/basic/back'
 import Button from '@/src/components/basic/button'
 import { Table, TableCell, TableRow } from '@/src/components/basic/table'
 import Tag from '@/src/components/basic/tag'
-import { ArticleSkeleton, SidebarInfoSkeleton } from '@/src/components/basic/skeleton'
+import {
+  ArticleSkeleton,
+  SidebarInfoSkeleton,
+} from '@/src/components/basic/skeleton'
 
 const pagingButtonClass = tv({
-  base: 'border-white bg-white text-moderate enabled:hover:bg-white enabled:hover:text-strong disabled:text-subtle disabled:opacity-60'
+  base: 'border-white bg-white text-moderate enabled:hover:bg-white enabled:hover:text-strong disabled:text-subtle disabled:opacity-60',
 })
 
 export const runtime = 'experimental-edge'
@@ -262,137 +265,121 @@ export default function GrantProposalPage() {
           recycle={false}
         />
       ) : null}
-      
-      <Container
-        hasSidebar>
+
+      <Container hasSidebar>
         <Main>
-          <div
-            className="mb-5 flex items-end justify-between">
+          <div className="mb-5 flex items-end justify-between">
             <Back
               disabled={!community || !grantProposal || !!previewGrantProposal}
               href={`/${community?.id}/grant/${
                 grantProposal ? permalink2Id(grantProposal.grant) : ''
-              }`} />
-            
+              }`}
+            />
+
             {grantProposals && currentIndex !== -1 && !previewGrantProposal ? (
-              <div 
-                className="flex items-center gap-4">
+              <div className="flex items-center gap-4">
                 {currentIndex >= 0 ? (
-                  <p 
-                    className="text-sm-regular text-subtle">
+                  <p className="text-sm-regular text-subtle">
                     {currentIndex + 1} of {grantProposals.length}
                   </p>
                 ) : null}
-                
-                <span 
-                  className="flex items-center gap-2">
+
+                <span className="flex items-center gap-2">
                   {currentIndex > 0 ? (
                     <Link
                       href={`/grant-proposal/${permalink2Id(
                         grantProposals[currentIndex - 1]!.permalink,
-                      )}`}>
-                      <Button 
+                      )}`}
+                    >
+                      <Button
                         className={pagingButtonClass()}
-                        icon={ChevronLeftIcon} 
-                        outline />
+                        icon={ChevronLeftIcon}
+                        outline
+                      />
                     </Link>
                   ) : (
-                    <Button 
+                    <Button
                       className={pagingButtonClass()}
                       disabled
-                      icon={ChevronLeftIcon} 
-                      outline />
+                      icon={ChevronLeftIcon}
+                      outline
+                    />
                   )}
-                  
+
                   {currentIndex < grantProposals.length - 1 ? (
                     <Link
                       href={`/grant-proposal/${permalink2Id(
                         grantProposals[currentIndex + 1]!.permalink,
-                      )}`}>
-                      <Button 
+                      )}`}
+                    >
+                      <Button
                         className={pagingButtonClass()}
-                        icon={ChevronRightIcon} 
-                        outline />
+                        icon={ChevronRightIcon}
+                        outline
+                      />
                     </Link>
                   ) : (
-                    <Button 
+                    <Button
                       className={pagingButtonClass()}
                       disabled
-                      icon={ChevronRightIcon} 
-                      outline />
+                      icon={ChevronRightIcon}
+                      outline
+                    />
                   )}
                 </span>
               </div>
             ) : null}
           </div>
-          
-          {(isFetching || isGrantLoading || isCommunityLoading) ? (
+
+          {isFetching || isGrantLoading || isCommunityLoading ? (
             <ArticleSkeleton />
           ) : (
-            <Card
-              size="medium">
+            <Card size="medium">
               <Article>
                 <h1>{grantProposal?.title || '...'}</h1>
-                
+
                 {funding ? (
-                  <div 
-                    className="flex items-center">
-                    <Tag
-                      className="mr-2"
-                      color="highlight"
-                      round>
-                      <CrownIcon 
-                        className="h-5 w-5" />
-                      
-                      <span>
-                        WON
-                      </span>
+                  <div className="flex items-center">
+                    <Tag className="mr-2" color="highlight" round>
+                      <CrownIcon className="h-5 w-5" />
+
+                      <span>WON</span>
                     </Tag>
-                      
-                    <div
-                      className="space-x-1 text-sm">
-                      <span>
-                        This proposal won
-                      </span>
-                      
-                      <span 
-                        className="font-bold text-highlight">
+
+                    <div className="space-x-1 text-sm">
+                      <span>This proposal won</span>
+
+                      <span className="font-bold text-highlight">
                         {funding}
                       </span>
                     </div>
                   </div>
                 ) : null}
-                    
+
                 {grant && grantProposal ? (
                   phase === GrantPhase.PROPOSING &&
                   grant.permission.selecting &&
                   !grantProposal.selected ? (
-                    <Tag
-                      round>
-                      Awaiting Selection
-                    </Tag>
+                    <Tag round>Awaiting Selection</Tag>
                   ) : grant.permission.selecting && !grantProposal.selected ? (
-                    <Tag
-                      round>
-                      Not Selected
-                    </Tag>
+                    <Tag round>Not Selected</Tag>
                   ) : null
                 ) : null}
-                
-                <MarkdownViewer 
-                  preview={!!previewGrantProposal}>
+
+                <MarkdownViewer preview={!!previewGrantProposal}>
                   {grantProposal?.content}
                 </MarkdownViewer>
               </Article>
             </Card>
           )}
-          
+
           <GrantProposalInfo
             community={community || undefined}
             grant={grant || undefined}
             grantProposal={grantProposal}
-            className="block sm:hidden"/>
-            
+            className="block sm:hidden"
+          />
+
           {grant && grantProposal ? (
             phase === GrantPhase.PROPOSING &&
             grant.permission.selecting &&
@@ -412,30 +399,40 @@ export default function GrantProposalPage() {
               />
             )
           ) : null}
-          
+
           {grantProposalVotes?.length ? (
             <Card
-              title={grantProposal ? (grantProposal.votes === 1 ? '1 Vote' : `${grantProposal.votes} Votes`) : ''}>
+              title={
+                grantProposal
+                  ? grantProposal.votes === 1
+                    ? '1 Vote'
+                    : `${grantProposal.votes} Votes`
+                  : ''
+              }
+            >
               <Table
-                headers={[{
-                  label: 'Voter'
-                }, {
-                  label: 'Power',
-                  className: 'text-right'
-                }]}>
-                {grantProposalVotes.map(grantProposalVote => (
-                  <TableRow
-                    key={grantProposalVote.permalink}>
+                headers={[
+                  {
+                    label: 'Voter',
+                  },
+                  {
+                    label: 'Power',
+                    className: 'text-right',
+                  },
+                ]}
+              >
+                {grantProposalVotes.map((grantProposalVote) => (
+                  <TableRow key={grantProposalVote.permalink}>
                     <TableCell>
                       {formatDid(grantProposalVote.authorship.author)}
                     </TableCell>
-                    
-                    <TableCell
-                      className="text-right">
+
+                    <TableCell className="text-right">
                       <TextLink
                         primary
                         disabled={!!previewGrantProposal}
-                        href={permalink2Explorer(grantProposalVote.permalink)}>
+                        href={permalink2Explorer(grantProposalVote.permalink)}
+                      >
                         {grantProposalVote.total_power}
                       </TextLink>
                     </TableCell>
@@ -445,16 +442,16 @@ export default function GrantProposalPage() {
             </Card>
           ) : null}
         </Main>
-        
-        <Sidebar
-          className="hidden sm:block">
-          {(isFetching || isGrantLoading || isCommunityLoading) ? (
+
+        <Sidebar className="hidden sm:block">
+          {isFetching || isGrantLoading || isCommunityLoading ? (
             <SidebarInfoSkeleton />
           ) : (
             <GrantProposalInfo
               community={community || undefined}
               grant={grant || undefined}
-              grantProposal={grantProposal}/>
+              grantProposal={grantProposal}
+            />
           )}
         </Sidebar>
       </Container>

@@ -11,7 +11,7 @@ export default function Avatar(props: {
   const style = useMemo(
     () => ({
       width: size,
-      height: size
+      height: size,
     }),
     [size],
   )

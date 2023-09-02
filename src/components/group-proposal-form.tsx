@@ -175,29 +175,27 @@ export default function GroupProposalForm(props: {
   return (
     <Form
       title={`New proposal for ${props.group.name}`}
-      className={props.className}>
-      <FormSection 
-        title="Proposer" 
-        description="Author of the proposal.">
+      className={props.className}
+    >
+      <FormSection title="Proposer" description="Author of the proposal.">
         <FormItem>
           <DidCombobox
             top
             options={didOptions}
             value={did}
             onChange={setDid}
-            onClick={connect} />
-          
+            onClick={connect}
+          />
+
           {!defaultDid && props.group ? (
             <Slide
               title={`Proposers of ${props.group.name}`}
               trigger={({ handleOpen }) => (
-                <TextButton
-                  className="ml-2 mt-2"
-                  primary
-                  onClick={handleOpen}>
+                <TextButton className="ml-2 mt-2" primary onClick={handleOpen}>
                   Why I&#39;m not eligible to propose?
                 </TextButton>
-              )}>
+              )}
+            >
               {() =>
                 props.group ? (
                   <PermissionCard
@@ -211,15 +209,13 @@ export default function GroupProposalForm(props: {
           ) : null}
         </FormItem>
       </FormSection>
-      
+
       <FormSection
         title="Proposal"
-        description="Proposals that include a concise title and detailed content are more likely to capture member's attention.">
-        <div
-          className="grid grid-cols-1 gap-6">
-          <FormItem 
-            label="Title" 
-            error={errors.title?.message}>
+        description="Proposals that include a concise title and detailed content are more likely to capture member's attention."
+      >
+        <div className="grid grid-cols-1 gap-6">
+          <FormItem label="Title" error={errors.title?.message}>
             <TextInput
               {...register('title')}
               disabled={disabled}
@@ -227,9 +223,7 @@ export default function GroupProposalForm(props: {
             />
           </FormItem>
 
-          <FormItem 
-            label="Content" 
-            error={errors?.content?.message}>
+          <FormItem label="Content" error={errors?.content?.message}>
             <Controller
               control={control}
               name="content"
@@ -245,14 +239,10 @@ export default function GroupProposalForm(props: {
           </FormItem>
         </div>
       </FormSection>
-      
-      <FormSection 
-        title="Voting config">
-        <div
-          className="grid grid-cols-1 gap-6">
-          <FormItem 
-            label="Voting type" 
-            error={errors.voting_type?.message}>
+
+      <FormSection title="Voting config">
+        <div className="grid grid-cols-1 gap-6">
+          <FormItem label="Voting type" error={errors.voting_type?.message}>
             <Controller
               control={control}
               name="voting_type"
@@ -272,13 +262,14 @@ export default function GroupProposalForm(props: {
             error={
               errors.choices?.message ||
               errors.choices?.find?.((choice) => choice?.message)?.message
-            }>
-            <div 
-              className="space-y-3">
+            }
+          >
+            <div className="space-y-3">
               {choices.map((_, index) => (
                 <div
                   key={index}
-                  className="relative flex items-center justify-between text-sm">
+                  className="relative flex items-center justify-between text-sm"
+                >
                   <input
                     type="text"
                     placeholder={`Choice ${index + 1}`}
@@ -286,11 +277,11 @@ export default function GroupProposalForm(props: {
                     disabled={disabled}
                     className={clsx(
                       'peer block w-full rounded-xl border border-base py-[11px] text-sm text-strong transition placeholder:text-subtle focus:border-strong focus:ring-0 disabled:cursor-not-allowed disabled:bg-subtle disabled:text-subtle',
-                      choices.length > 2 ? 'pr-11' : ''
-                    )} />
-                  
-                  <div 
-                    className="absolute inset-y-0 right-3 flex items-center peer-focus:z-10">
+                      choices.length > 2 ? 'pr-11' : '',
+                    )}
+                  />
+
+                  <div className="absolute inset-y-0 right-3 flex items-center peer-focus:z-10">
                     {choices.length > 2 ? (
                       <ChoiceRemove
                         index={index}
@@ -301,20 +292,21 @@ export default function GroupProposalForm(props: {
                 </div>
               ))}
             </div>
-            
+
             {disabled ? null : (
               <Button
                 onClick={() => {
                   setValue('choices', [...choices, ''])
                 }}
-                className="mt-4">
+                className="mt-4"
+              >
                 Add
               </Button>
             )}
           </FormItem>
         </div>
       </FormSection>
-      
+
       <FormFooter>
         <Button
           primary
@@ -332,7 +324,8 @@ export default function GroupProposalForm(props: {
               },
             })
             router.push(`/group-proposal/${previewPermalink}`)
-          }, console.error)}>
+          }, console.error)}
+        >
           Preview
         </Button>
       </FormFooter>
@@ -350,10 +343,8 @@ function ChoiceRemove(props: {
   }, [onDelete, props.index])
 
   return (
-    <TextButton 
-      onClick={handleDelete}>
-      <MinusCircleIcon 
-        className="h-5 w-5"/>
+    <TextButton onClick={handleDelete}>
+      <MinusCircleIcon className="h-5 w-5" />
     </TextButton>
   )
 }

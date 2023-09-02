@@ -39,37 +39,60 @@ export default function GroupProposalCard(props: {
       desc={props.groupProposal.content}
       href={`/group-proposal/${permalink2Id(props.groupProposal.permalink)}`}
       thumbnail={props.groupProposal.image}
-      title={props.groupProposal.title}>
+      title={props.groupProposal.title}
+    >
       <InfoItem
         label="Proposer"
-        value={formatDid(props.groupProposal.authorship.author)} />
-        
+        value={formatDid(props.groupProposal.authorship.author)}
+      />
+
       {phase === GroupProposalPhase.CONFIRMING ? (
         <InfoItem
-        label="Transaction confirming"
-        phaseColor="yellow"
-        value="in about 5 minutes" />
-      ) : phase === GroupProposalPhase.ANNOUNCING && props.groupProposal.tsAnnouncing ? (
+          label="Transaction confirming"
+          phaseColor="yellow"
+          value="in about 5 minutes"
+        />
+      ) : phase === GroupProposalPhase.ANNOUNCING &&
+        props.groupProposal.tsAnnouncing ? (
         <InfoItem
           label="Voting starts"
           phaseColor="blue"
-          value={'in ' + formatDurationMs(props.groupProposal.tsAnnouncing.getTime() - now.getTime())} />
-      ) : phase === GroupProposalPhase.VOTING && props.groupProposal.tsVoting ? (
+          value={
+            'in ' +
+            formatDurationMs(
+              props.groupProposal.tsAnnouncing.getTime() - now.getTime(),
+            )
+          }
+        />
+      ) : phase === GroupProposalPhase.VOTING &&
+        props.groupProposal.tsVoting ? (
         <InfoItem
           label="Voting ends"
           phaseColor="green"
-          value={'in ' + formatDurationMs(props.groupProposal.tsVoting.getTime() - now.getTime())} />
+          value={
+            'in ' +
+            formatDurationMs(
+              props.groupProposal.tsVoting.getTime() - now.getTime(),
+            )
+          }
+        />
       ) : phase === GroupProposalPhase.ENDED && props.groupProposal.tsVoting ? (
         <InfoItem
           label="Voting ended"
           phaseColor="gray"
-          value={formatDurationMs(props.groupProposal.tsVoting.getTime() - now.getTime()) + ' ago'} />
+          value={
+            formatDurationMs(
+              props.groupProposal.tsVoting.getTime() - now.getTime(),
+            ) + ' ago'
+          }
+        />
       ) : null}
-        
+
       <InfoItem
         className="hidden sm:block"
         label="Votes"
-        value={props.groupProposal.votes} />
+        value={props.groupProposal.votes}
+      />
     </InfoCard>
   )
 }
