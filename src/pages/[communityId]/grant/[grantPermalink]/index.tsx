@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { compact, last } from 'remeda'
+import { compact } from 'remeda'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
 import { useCollapse } from 'react-collapsed'
@@ -52,8 +52,7 @@ export const runtime = 'experimental-edge'
 export const getServerSideProps: GetServerSideProps<
   Record<string, unknown>
 > = async (context) => {
-  // @see https://github.com/cloudflare/next-on-pages/issues/32
-  const id = last(context.req.url?.split('/') || [])?.split('?')[0]
+  const id = context.query.grantPermalink as string
   if (id === previewPermalink) {
     return { props: {} }
   }

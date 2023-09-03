@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { compact, last } from 'remeda'
+import { compact } from 'remeda'
 import { useInView } from 'react-intersection-observer'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
@@ -48,8 +48,7 @@ export const runtime = 'experimental-edge'
 export const getServerSideProps: GetServerSideProps<
   Record<string, unknown>
 > = async (context) => {
-  // @see https://github.com/cloudflare/next-on-pages/issues/32
-  const id = last(context.req.url?.split('/') || [])?.split('?')[0]
+  const id = context.query.groupProposalPermalink as string
   if (id === previewPermalink) {
     return { props: {} }
   }
