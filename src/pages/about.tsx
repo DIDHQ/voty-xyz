@@ -11,7 +11,7 @@ export default function AboutPage() {
   return (
     <>
       <Head>
-        <title>{`About - ${documentTitle}`}</title>
+        <title>{`Lite Paper - ${documentTitle}`}</title>
       </Head>
 
       <Container size="small">
