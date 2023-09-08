@@ -53,9 +53,9 @@ export default function Header(props: { className?: string }) {
           <a
             className={navItemClass()}
             href="https://voty.gitbook.io/"
-            title="Lite Paper"
+            title="Document"
           >
-            Lite Paper
+            Document
           </a>
         </nav>
 

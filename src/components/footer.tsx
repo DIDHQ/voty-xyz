@@ -51,7 +51,7 @@ const developerLinks = [
     href: 'https://github.com/DIDHQ/voty-xyz',
   },
   {
-    title: 'Lite Paper',
+    title: 'Documents',
     external: true,
     href: 'https://voty.gitbook.io/',
   },
