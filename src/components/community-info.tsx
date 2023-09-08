@@ -24,7 +24,7 @@ import { trpc } from '../utils/trpc'
 import { documentTitle, domain } from '../utils/constants'
 import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import useIsManager from '../hooks/use-is-manager'
-import { hasEnabledSubDID } from '../utils/sdks/dotbit/subdid'
+import { hasEnabledSecondLevel } from '../utils/sdks/dotbit/second-level'
 import useCommunityLogo from '../hooks/use-community-logo'
 import ShareLinkIcon from './share-link-icon'
 import TextLink from './basic/text-link'
@@ -140,9 +140,9 @@ export default function CommunityInfo(props: {
   //     ),
   //   [dids, query.communityId],
   // )
-  const { data: enabledSubDID } = useQuery(
-    ['hasEnabledSubDID', query.communityId],
-    () => hasEnabledSubDID(query.communityId!),
+  const { data: enabledSecondLevel } = useQuery(
+    ['hasEnabledSecondLevel', query.communityId],
+    () => hasEnabledSecondLevel(query.communityId!),
     { enabled: !!query.communityId && isManager },
   )
 
@@ -227,7 +227,7 @@ export default function CommunityInfo(props: {
 
                 {previewCommunity ||
                 !isManager ||
-                enabledSubDID === false ? null : (
+                enabledSecondLevel === false ? null : (
                   <TextLink primary href={`/${query.communityId}/create`}>
                     <PlusIcon className="h-5 w-5" />
                   </TextLink>

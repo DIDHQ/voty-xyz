@@ -15,7 +15,7 @@ export const documentImage = `${domain}/images/og.png`
 
 export const twitterHandle = 'VotyHQ'
 
-export const subDIDWebsite = isTestnet
+export const secondLevelDIDWebsite = isTestnet
   ? 'https://testdata.did.id/sub-accounts/'
   : 'https://data.did.id/sub-accounts/'
 

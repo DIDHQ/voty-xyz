@@ -19,7 +19,7 @@ export default function CreateGrantPage() {
                 operation: 'or',
                 operands: [
                   {
-                    name: 'Any SubDID',
+                    name: 'Any Second-Level DID',
                     function: 'prefixes_dot_suffix_exact_match',
                     arguments: [query.communityId, []],
                   },
@@ -39,7 +39,7 @@ export default function CreateGrantPage() {
                 operation: 'max',
                 operands: [
                   {
-                    name: 'Any SubDID',
+                    name: 'Any Second-Level DID',
                     function: 'prefixes_dot_suffix_fixed_power',
                     arguments: [query.communityId, [], '1'],
                   },

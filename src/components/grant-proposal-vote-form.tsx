@@ -196,7 +196,7 @@ export default function GrantProposalVoteForm(props: {
                     {() => (
                       <PermissionCard
                         title="Voters"
-                        description="SubDIDs who can vote in this grant, minted before the creation of this round of Topic Grant"
+                        description="Second-Level DIDs who can vote in this grant, minted before the creation of this round of Topic Grant"
                         value={props.grant.permission.voting}
                       />
                     )}

@@ -54,7 +54,7 @@ export default function PermissionCard(props: {
                     }
                     size="large"
                   >
-                    All SubDIDs of {operand.arguments[0]}
+                    All Second-Level DIDs of {operand.arguments[0]}
                   </Tag>
                 )}
               </div>

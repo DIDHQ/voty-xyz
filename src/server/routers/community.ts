@@ -12,7 +12,7 @@ import { proved } from '../../utils/schemas/basic/proof'
 import verifyAuthorship from '../../utils/verifiers/verify-authorship'
 import verifyProof from '../../utils/verifiers/verify-proof'
 import { Activity } from '../../utils/schemas/activity'
-import { isSubDID } from '../../utils/did/utils'
+import { isSecondLevelDID } from '../../utils/did/utils'
 import {
   flushUploadBuffers,
   getAllUploadBufferKeys,
@@ -175,8 +175,8 @@ export const communityRouter = router({
           'Permission denied',
         )
         .refine(
-          (community) => !isSubDID(community.id),
-          'Cannot create community with SubDID',
+          (community) => !isSecondLevelDID(community.id),
+          'Cannot create community with Second-Level DID',
         ),
     )
     .output(z.string())

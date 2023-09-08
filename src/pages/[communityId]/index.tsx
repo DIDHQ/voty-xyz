@@ -12,8 +12,8 @@ import Button from '../../components/basic/button'
 import EmptyState from '../../components/empty-state'
 import useIsManager from '../../hooks/use-is-manager'
 import ActivityListItem from '../../components/activity-list-item'
-import { hasEnabledSubDID } from '../../utils/sdks/dotbit/subdid'
-import { subDIDWebsite } from '../../utils/constants'
+import { hasEnabledSecondLevel } from '../../utils/sdks/dotbit/second-level'
+import { secondLevelDIDWebsite } from '../../utils/constants'
 import Card from '@/src/components/basic/card'
 import SectionHeader from '@/src/components/basic/section-header'
 import { ActivitySkeleton } from '@/src/components/basic/skeleton'
@@ -45,9 +45,9 @@ export default function CommunityIndexPage() {
     }
   }, [fetchNextPage, hasNextPage, inView])
   const isManager = useIsManager(query.communityId)
-  const { data: enabledSubDID } = useQuery(
-    ['hasEnabledSubDID', query.communityId],
-    () => hasEnabledSubDID(query.communityId!),
+  const { data: enabledSecondLevel } = useQuery(
+    ['hasEnabledSecondLevel', query.communityId],
+    () => hasEnabledSecondLevel(query.communityId!),
     { enabled: !!query.communityId && isManager },
   )
 
@@ -55,17 +55,17 @@ export default function CommunityIndexPage() {
     <CommunityLayout loading={isGroupsLoading || isActivitiesLoading}>
       <SectionHeader title="Activities" />
 
-      {enabledSubDID === false ? (
+      {enabledSecondLevel === false ? (
         <EmptyState
           icon={
             <ExclamationTriangleIcon className="h-9 w-9 rounded-lg bg-amber-100 p-1.5 text-amber-600" />
           }
           title="Last step"
-          description="You must enable SubDID for your community."
+          description="You must enable Second-Level DID for your community."
           footer={
-            <Link href={`${subDIDWebsite}${query.communityId}`}>
+            <Link href={`${secondLevelDIDWebsite}${query.communityId}`}>
               <Button primary icon={ArrowUpRightIcon}>
-                Enable SubDID
+                Enable Second-Level DID
               </Button>
             </Link>
           }

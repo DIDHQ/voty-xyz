@@ -14,7 +14,7 @@ import ConnectButton from '../../components/connect-button'
 import TextInput from '../../components/basic/text-input'
 import TextLink from '../../components/basic/text-link'
 import Button from '../../components/basic/button'
-import { isSubDID } from '../../utils/did/utils'
+import { isSecondLevelDID } from '../../utils/did/utils'
 import Card from '@/src/components/basic/card'
 import { Container } from '@/src/components/basic/container'
 import { BackBar } from '@/src/components/basic/back'
@@ -23,7 +23,10 @@ export default function CreateCommunityPage() {
   const router = useRouter()
   const { account } = useWallet()
   const { data, isLoading } = useDids(account)
-  const dids = useMemo(() => data?.filter((did) => !isSubDID(did)), [data])
+  const dids = useMemo(
+    () => data?.filter((did) => !isSecondLevelDID(did)),
+    [data],
+  )
   const { data: existences, isLoading: isExistencesLoading } =
     trpc.community.checkExistences.useQuery(
       { ids: dids },

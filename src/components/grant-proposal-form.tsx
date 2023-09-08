@@ -137,7 +137,7 @@ export default function GrantProposalForm(props: {
                 props.grant ? (
                   <PermissionCard
                     title="Proposers"
-                    description="SubDIDs who can initiate proposals in this grant."
+                    description="Second-Level DIDs who can initiate proposals in this grant."
                     value={props.grant.permission.proposing}
                   />
                 ) : null

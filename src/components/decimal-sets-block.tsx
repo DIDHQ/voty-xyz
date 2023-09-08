@@ -158,7 +158,7 @@ function DecimalUnitBlock(props: {
 
           <FormItem
             label="Voting power"
-            description="Each SubDID in this voter group has an equal voting power."
+            description="Each Second-Level DID in this voter group has an equal voting power."
             error={
               errors.permission?.[props.name]?.operands?.[props.index]
                 ?.arguments?.[2]?.message
@@ -186,11 +186,11 @@ function DecimalUnitBlock(props: {
                   options={[
                     {
                       value: 'all',
-                      name: `All of ${suffix}'s SubDIDs`,
+                      name: `All of ${suffix}'s Second-Level DIDs`,
                     },
                     {
                       value: 'allowlist',
-                      name: `Some of ${suffix}'s SubDIDs`,
+                      name: `Some of ${suffix}'s Second-Level DIDs`,
                     },
                   ]}
                   value={value.length ? 'allowlist' : 'all'}

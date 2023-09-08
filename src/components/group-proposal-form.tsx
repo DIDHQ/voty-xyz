@@ -200,7 +200,7 @@ export default function GroupProposalForm(props: {
                 props.group ? (
                   <PermissionCard
                     title="Proposers"
-                    description="SubDIDs who can initiate proposals in this workgroup."
+                    description="Second-Level DIDs who can initiate proposals in this workgroup."
                     value={props.group.permission.proposing}
                   />
                 ) : null
