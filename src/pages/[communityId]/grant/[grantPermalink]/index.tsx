@@ -173,7 +173,7 @@ export default function GrantPage() {
         <Main>
           <BackBar
             disabled={!community || !!previewGrant}
-            href={community?.id ? `/${formatDid(community.id)}/grant` : '/'}
+            href={community?.id ? `/${formatDid(community.id)}/grant` : '#'}
           />
 
           {isFetching || isCommunityLoading ? (

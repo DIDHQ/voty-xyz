@@ -36,7 +36,7 @@ export default function CreateGroupProposalPage() {
           href={
             query.communityId
               ? `/${formatDid(query.communityId)}/group/${query.groupId}`
-              : '/'
+              : '#'
           }
         />
 

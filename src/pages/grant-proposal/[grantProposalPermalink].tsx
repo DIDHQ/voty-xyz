@@ -275,7 +275,7 @@ export default function GrantProposalPage() {
                   ? `/${formatDid(community.id)}/grant/${
                       grantProposal ? permalink2Id(grantProposal.grant) : ''
                     }`
-                  : '/'
+                  : '#'
               }
             />
 

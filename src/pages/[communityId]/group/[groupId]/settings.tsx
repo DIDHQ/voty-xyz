@@ -36,7 +36,7 @@ export default function GroupSettingsPage() {
           href={
             query.communityId
               ? `/${formatDid(query.communityId)}/group/${query.groupId}/about`
-              : '/'
+              : '#'
           }
         />
 

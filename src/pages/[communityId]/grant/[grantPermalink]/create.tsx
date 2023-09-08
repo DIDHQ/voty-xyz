@@ -36,7 +36,7 @@ export default function CreateGrantProposalPage() {
               ? `/${formatDid(query.communityId)}/grant/${
                   query.grantPermalink ? permalink2Id(query.grantPermalink) : ''
                 }`
-              : '/'
+              : '#'
           }
         />
 

@@ -23,7 +23,7 @@ export default function CommunitySettingsPage() {
       <Container size="small">
         <BackBar
           href={
-            query.communityId ? `/${formatDid(query.communityId)}/about` : '/'
+            query.communityId ? `/${formatDid(query.communityId)}/about` : '#'
           }
         />
 

@@ -67,7 +67,7 @@ export default function CreateGrantPage() {
         <BackBar
           disabled={!query.communityId}
           href={
-            query.communityId ? `/${formatDid(query.communityId)}/grant` : '/'
+            query.communityId ? `/${formatDid(query.communityId)}/grant` : '#'
           }
         />
 

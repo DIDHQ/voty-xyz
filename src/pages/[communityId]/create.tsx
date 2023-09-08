@@ -68,7 +68,7 @@ export default function CreateGroupPage() {
 
       <Container size="small">
         <BackBar
-          href={query.communityId ? `/${formatDid(query.communityId)}` : '/'}
+          href={query.communityId ? `/${formatDid(query.communityId)}` : '#'}
         />
 
         {query.communityId && initialValue !== undefined ? (

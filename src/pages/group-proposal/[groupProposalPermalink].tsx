@@ -188,7 +188,7 @@ export default function GroupProposalPage() {
             href={
               community?.id
                 ? `/${formatDid(community.id)}/group/${group?.id}`
-                : '/'
+                : '#'
             }
           />
 
