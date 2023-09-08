@@ -5,7 +5,7 @@ export function isSecondLevelDID(did: string) {
 export function formatDid(did: string, enabledSecondLevel: boolean = true) {
   return isSecondLevelDID(did)
     ? did.substring(0, did.length - 4)
-    : enabledSecondLevel
+    : enabledSecondLevel && did
     ? `.${did.split('.')[0]}`
     : did
 }
