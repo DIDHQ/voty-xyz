@@ -13,7 +13,7 @@ import EmptyState from '../../components/empty-state'
 import useIsManager from '../../hooks/use-is-manager'
 import ActivityListItem from '../../components/activity-list-item'
 import { hasEnabledSecondLevel } from '../../utils/sdks/dotbit/second-level'
-import { secondLevelDIDWebsite } from '../../utils/constants'
+import { isTestnet } from '../../utils/constants'
 import Card from '@/src/components/basic/card'
 import SectionHeader from '@/src/components/basic/section-header'
 import { ActivitySkeleton } from '@/src/components/basic/skeleton'
@@ -64,7 +64,11 @@ export default function CommunityIndexPage() {
           title="Last step"
           description="You must enable Second-Level DID for your community."
           footer={
-            <Link href={`${secondLevelDIDWebsite}${query.communityId}`}>
+            <Link
+              href={`${
+                isTestnet ? 'https://test.topdid.com/' : 'https://topdid.com/'
+              }${query.communityId}`}
+            >
               <Button primary icon={ArrowUpRightIcon}>
                 Enable Second-Level DID
               </Button>

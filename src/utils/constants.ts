@@ -15,10 +15,6 @@ export const documentImage = `${domain}/images/og.png`
 
 export const twitterHandle = 'VotyHQ'
 
-export const secondLevelDIDWebsite = isTestnet
-  ? 'https://testdata.did.id/sub-accounts/'
-  : 'https://data.did.id/sub-accounts/'
-
 export const arweaveHost = 'arweave.net'
 
 export const commonCoinTypes = {
