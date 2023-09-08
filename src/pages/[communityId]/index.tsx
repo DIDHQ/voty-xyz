@@ -51,7 +51,7 @@ export default function CommunityIndexPage() {
     <CommunityLayout loading={isGroupsLoading || isActivitiesLoading}>
       <SectionHeader title="Activities" />
 
-      {enabledSecondLevel === false ? (
+      {enabledSecondLevel === false && query.communityId ? (
         <EmptyState
           icon={
             <ExclamationTriangleIcon className="h-9 w-9 rounded-lg bg-amber-100 p-1.5 text-amber-600" />
@@ -62,7 +62,7 @@ export default function CommunityIndexPage() {
             <Link
               href={`${
                 isTestnet ? 'https://test.topdid.com/' : 'https://topdid.com/'
-              }${query.communityId}`}
+              }mint/${formatDid(query.communityId)}`}
             >
               <Button primary icon={ArrowUpRightIcon}>
                 Enable Second-Level DID

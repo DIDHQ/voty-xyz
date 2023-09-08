@@ -141,15 +141,6 @@ export default function CommunityInfo(props: {
     () => compact([community?.name, documentTitle]).join(' - '),
     [community?.name],
   )
-  // const { account } = useWallet()
-  // const { data: dids } = useDids(account)
-  // const isMember = useMemo(
-  //   () =>
-  //     !!dids?.find(
-  //       (did) => !!query.communityId && did.endsWith(query.communityId),
-  //     ),
-  //   [dids, query.communityId],
-  // )
 
   return (
     <>
@@ -268,25 +259,6 @@ export default function CommunityInfo(props: {
             </div>
           ) : null}
         </Card>
-
-        {/* {isMember || previewCommunity ? (
-          <Button disabled={isMember} className="mt-4">
-            {isMember ? 'Joined' : 'Join'}
-          </Button>
-        ) : (
-          <Link
-            href={`${
-              isTestnet
-                ? '​https://test.topdid.com/mint/.'
-                : 'https://topdid.com/mint/.'
-            }${query.communityId?.replace(/\.bit$/, '')}`}
-            className="mt-4"
-          >
-            <Button primary disabled={isMember}>
-              {isMember ? 'Joined' : 'Join'}
-            </Button>
-          </Link>
-        )} */}
       </div>
     </>
   )
