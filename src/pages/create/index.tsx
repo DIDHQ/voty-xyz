@@ -180,8 +180,8 @@ export default function CreateCommunityPage() {
                   <a
                     href={
                       isTestnet
-                        ? 'https://test2f7a872b.did.id/explorer'
-                        : 'https://app.did.id/explorer'
+                        ? 'https://test.d.id/bit/reg'
+                        : 'https://d.id/bit/reg'
                     }
                   >
                     <Button primary size="large">

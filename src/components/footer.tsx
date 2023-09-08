@@ -20,7 +20,7 @@ const productLinks = [
     title: '.bit',
     icon: DotbitTextIcon,
     external: true,
-    href: 'https://www.did.id/',
+    href: 'https://d.id/bit',
   },
   {
     title: 'Voty',
@@ -61,13 +61,13 @@ const companyLinks = [
   {
     title: 'Join Us',
     external: true,
-    href: 'https://docs.did.id/we-are-hiring/position-list',
+    href: 'https://docs.d.id/we-are-hiring/position-list',
     hasArrow: true,
   },
   {
     title: 'Terms',
     external: true,
-    href: 'https://docs.did.id/',
+    href: 'https://docs.d.id/',
     hasArrow: true,
   },
 ]
@@ -80,7 +80,7 @@ const socialLinks = [
     subtitle: ' on Twitter',
   },
   {
-    href: 'https://blog.did.id/',
+    href: 'https://blog.d.id/',
     icon: SubscriptionIcon,
     title: 'Subscribe blog',
     subtitle: ' for updates',
