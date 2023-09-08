@@ -207,7 +207,7 @@ export default function CreateCommunityPage() {
               <li>
                 Learn more about how Voty works and the thoughts behind
                 DID-based governance{' '}
-                <TextLink href="/about" primary>
+                <TextLink href="/lite-paper" primary>
                   here
                 </TextLink>
                 .

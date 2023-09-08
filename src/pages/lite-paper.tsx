@@ -7,11 +7,11 @@ import { documentTitle } from '../utils/constants'
 import Card from '../components/basic/card'
 import { Container } from '../components/basic/container'
 
-export default function AboutPage() {
+export default function LitePaperPage() {
   return (
     <>
       <Head>
-        <title>{`About - ${documentTitle}`}</title>
+        <title>{`Lite Paper - ${documentTitle}`}</title>
       </Head>
 
       <Container size="small">
@@ -31,7 +31,7 @@ export default function AboutPage() {
   - Inability to benefit organizations and communities who haven't issued tokens;
   - Powers can be easily transferred as voting rights are based on tokens.
 
-  ![](/about/0.png)
+  ![](/lite-paper/0.png)
 
   It's evident that the number of communities that have issued tokens is significantly lower than those that haven't. Issuing tokens in the early stages of a community can be a burden rather than an advantage. These communities will face challenges such as: token distribution, token pricing, liquidity, and preventing speculations from disrupting the community's dynamics and relationships.
 
@@ -69,7 +69,7 @@ export default function AboutPage() {
 
   ### 2. "Workgroup" structure design
 
-  ![](/about/1.png)
+  ![](/lite-paper/1.png)
 
   In Voty, a community is composed of one to many Workgroups. Administrators can set different purposes, voting rules, eligible proposal initiators, and eligible voters for each Workgroup.
 

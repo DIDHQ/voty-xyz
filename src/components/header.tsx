@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { clsxMerge } from '../utils/tailwind-helper'
 // import { isTestnet } from '../utils/constants'
 import { VotyIcon } from './icons'
+import { isTestnet } from '../utils/constants'
 
 const ConnectButton = dynamic(() => import('./connect-button'), { ssr: false })
 
@@ -39,15 +40,27 @@ export default function Header(props: { className?: string }) {
         </Link>
 
         <nav className="flex flex-1 items-center gap-4 sm:gap-8">
-          <Link
-            className={clsxMerge(
-              navItemClass(),
-              pathname === '/about' ? 'text-strong' : '',
-            )}
-            href="/about"
+          <a
+            className={navItemClass()}
+            href={
+              isTestnet
+                ? 'https://test.d.id/products/voty'
+                : 'https://d.id/products/voty'
+            }
             title="About"
           >
             About
+          </a>
+
+          <Link
+            className={clsxMerge(
+              navItemClass(),
+              pathname === '/lite-paper' ? 'text-strong' : '',
+            )}
+            href="/lite-paper"
+            title="Lite Paper"
+          >
+            Lite Paper
           </Link>
 
           <a
