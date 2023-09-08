@@ -26,6 +26,7 @@ import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import useIsManager from '../hooks/use-is-manager'
 import { hasEnabledSecondLevel } from '../utils/sdks/dotbit/second-level'
 import useCommunityLogo from '../hooks/use-community-logo'
+import { formatDid } from '../utils/did/utils'
 import ShareLinkIcon from './share-link-icon'
 import TextLink from './basic/text-link'
 import Avatar from './basic/avatar'
@@ -75,26 +76,29 @@ export default function CommunityInfo(props: {
     [list, previewGroup],
   )
   const navigation = useMemo(
-    () => [
-      {
-        name: 'Activities',
-        href: `/${query.communityId}`,
-        icon: BoltIcon,
-        current: router.pathname === '/[communityId]',
-      },
-      {
-        name: 'Topic Grants',
-        href: `/${query.communityId}/grant`,
-        icon: TrophyIcon,
-        current: router.pathname === '/[communityId]/grant',
-      },
-      {
-        name: 'About',
-        href: `/${query.communityId}/about`,
-        icon: QuestionMarkCircleIcon,
-        current: router.pathname === '/[communityId]/about',
-      },
-    ],
+    () =>
+      query.communityId
+        ? [
+            {
+              name: 'Activities',
+              href: `/${formatDid(query.communityId)}`,
+              icon: BoltIcon,
+              current: router.pathname === '/[communityId]',
+            },
+            {
+              name: 'Topic Grants',
+              href: `/${formatDid(query.communityId)}/grant`,
+              icon: TrophyIcon,
+              current: router.pathname === '/[communityId]/grant',
+            },
+            {
+              name: 'About',
+              href: `/${formatDid(query.communityId)}/about`,
+              icon: QuestionMarkCircleIcon,
+              current: router.pathname === '/[communityId]/about',
+            },
+          ]
+        : [],
     [query.communityId, router.pathname],
   )
   const externals = useMemo(
@@ -227,8 +231,12 @@ export default function CommunityInfo(props: {
 
                 {previewCommunity ||
                 !isManager ||
-                enabledSecondLevel === false ? null : (
-                  <TextLink primary href={`/${query.communityId}/create`}>
+                enabledSecondLevel === false ||
+                !query.communityId ? null : (
+                  <TextLink
+                    primary
+                    href={`/${formatDid(query.communityId)}/create`}
+                  >
                     <PlusIcon className="h-5 w-5" />
                   </TextLink>
                 )}
@@ -239,9 +247,9 @@ export default function CommunityInfo(props: {
                   <LinkListItem
                     key={group.id}
                     href={
-                      previewCommunity
+                      previewCommunity || !query.communityId
                         ? undefined
-                        : `/${query.communityId}/group/${group.id}`
+                        : `/${formatDid(query.communityId)}/group/${group.id}`
                     }
                     icon={BriefcaseIcon}
                     current={query.groupId === group.id}

@@ -14,6 +14,7 @@ import Button from '../../../components/basic/button'
 import useIsManager from '../../../hooks/use-is-manager'
 import SectionHeader from '@/src/components/basic/section-header'
 import { InfoCardSkeleton } from '@/src/components/basic/skeleton'
+import { formatDid } from '@/src/utils/did/utils'
 
 export default function GrantsIndexPage() {
   const query = useRouterQuery<['communityId']>()
@@ -55,8 +56,11 @@ export default function GrantsIndexPage() {
             onChange={(p) => setPhase(p as GrantPhase | 'All')}
           />
 
-          {isManager ? (
-            <Link href={`/${query.communityId}/grant/create`} className="ml-5">
+          {isManager && query.communityId ? (
+            <Link
+              href={`/${formatDid(query.communityId)}/grant/create`}
+              className="ml-5"
+            >
               <Button primary icon={PlusIcon}>
                 Topic Grant
               </Button>

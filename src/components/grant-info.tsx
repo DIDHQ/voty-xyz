@@ -10,6 +10,7 @@ import { permalink2Explorer } from '../utils/permalink'
 import { formatNumber } from '../utils/number'
 import { format2Time } from '../utils/time'
 import useStatus from '../hooks/use-status'
+import { formatDid } from '../utils/did/utils'
 import { DetailItem } from './basic/detail'
 import TextLink from './basic/text-link'
 import GrantCurrentPhase from './grant-current-phase'
@@ -57,7 +58,7 @@ export default function GrantInfo(props: {
             <TextLink
               underline
               disabled={disabled}
-              href={`/${props.community.id}`}
+              href={`/${formatDid(props.community.id)}`}
               className="block truncate whitespace-nowrap"
             >
               {props.community.name}

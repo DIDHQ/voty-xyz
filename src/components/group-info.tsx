@@ -12,6 +12,7 @@ import { extractStartEmoji } from '../utils/emoji'
 import { trpc } from '../utils/trpc'
 import { documentTitle } from '../utils/constants'
 import { previewGroupAtom } from '../utils/atoms'
+import { formatDid } from '../utils/did/utils'
 import SectionHeader from './basic/section-header'
 
 export default function GroupInfo(props: { className?: string }) {
@@ -28,18 +29,24 @@ export default function GroupInfo(props: { className?: string }) {
   const group = previewGroup || data
   const router = useRouter()
   const tabs = useMemo(
-    () => [
-      {
-        name: 'Proposals',
-        href: `/${query.communityId}/group/${query.groupId}`,
-        current: router.pathname === '/[communityId]/group/[groupId]',
-      },
-      {
-        name: 'About',
-        href: `/${query.communityId}/group/${query.groupId}/about`,
-        current: router.pathname === '/[communityId]/group/[groupId]/about',
-      },
-    ],
+    () =>
+      query.communityId
+        ? [
+            {
+              name: 'Proposals',
+              href: `/${formatDid(query.communityId)}/group/${query.groupId}`,
+              current: router.pathname === '/[communityId]/group/[groupId]',
+            },
+            {
+              name: 'About',
+              href: `/${formatDid(query.communityId)}/group/${
+                query.groupId
+              }/about`,
+              current:
+                router.pathname === '/[communityId]/group/[groupId]/about',
+            },
+          ]
+        : [],
     [query.communityId, query.groupId, router.pathname],
   )
   const emoji = useMemo(() => extractStartEmoji(group?.name), [group?.name])

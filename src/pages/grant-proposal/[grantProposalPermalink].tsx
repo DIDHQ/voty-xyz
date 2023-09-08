@@ -270,9 +270,13 @@ export default function GrantProposalPage() {
           <div className="mb-5 flex items-end justify-between">
             <Back
               disabled={!community || !grantProposal || !!previewGrantProposal}
-              href={`/${community?.id}/grant/${
-                grantProposal ? permalink2Id(grantProposal.grant) : ''
-              }`}
+              href={
+                community?.id
+                  ? `/${formatDid(community.id)}/grant/${
+                      grantProposal ? permalink2Id(grantProposal.grant) : ''
+                    }`
+                  : '/'
+              }
             />
 
             {grantProposals && currentIndex !== -1 && !previewGrantProposal ? (

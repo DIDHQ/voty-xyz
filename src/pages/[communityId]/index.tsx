@@ -17,6 +17,7 @@ import { secondLevelDIDWebsite } from '../../utils/constants'
 import Card from '@/src/components/basic/card'
 import SectionHeader from '@/src/components/basic/section-header'
 import { ActivitySkeleton } from '@/src/components/basic/skeleton'
+import { formatDid } from '@/src/utils/did/utils'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['communityId']>()
@@ -70,12 +71,12 @@ export default function CommunityIndexPage() {
             </Link>
           }
         />
-      ) : groups?.length === 0 && isManager ? (
+      ) : groups?.length === 0 && isManager && query.communityId ? (
         <EmptyState
           title="No workgroup"
           description="Workgroup helps you categorize proposals with different focuses. You can also set up workgroups to your community structure's needs."
           footer={
-            <Link href={`/${query.communityId}/create`}>
+            <Link href={`/${formatDid(query.communityId)}/create`}>
               <Button primary icon={PlusIcon}>
                 Workgroup
               </Button>

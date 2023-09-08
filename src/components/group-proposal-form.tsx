@@ -27,6 +27,7 @@ import {
 import { requiredCoinTypesOfDecimalSets } from '../utils/functions/decimal'
 import { previewGroupProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
+import { formatDid } from '../utils/did/utils'
 import Button from './basic/button'
 import RadioGroup2 from './basic/radio-group2'
 import DidCombobox from './did-combobox'
@@ -317,7 +318,9 @@ export default function GroupProposalForm(props: {
             setPreviewGroupProposal({
               ...value,
               preview: {
-                from: `/${props.communityId}/group/${props.group.id}/create`,
+                from: `/${formatDid(props.communityId)}/group/${
+                  props.group.id
+                }/create`,
                 to: `/group-proposal/${previewPermalink}`,
                 template: `You are creating proposal on Voty\n\nhash:\n{keccak256}`,
                 author: did,

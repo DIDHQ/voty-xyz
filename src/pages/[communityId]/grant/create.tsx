@@ -7,6 +7,7 @@ import GrantForm from '../../../components/grant-form'
 import { Grant } from '../../../utils/schemas/v1/grant'
 import { BackBar } from '@/src/components/basic/back'
 import { Container } from '@/src/components/basic/container'
+import { formatDid } from '@/src/utils/did/utils'
 
 export default function CreateGrantPage() {
   const query = useRouterQuery<['communityId']>()
@@ -65,7 +66,9 @@ export default function CreateGrantPage() {
       <Container size="small">
         <BackBar
           disabled={!query.communityId}
-          href={`/${query.communityId}/grant`}
+          href={
+            query.communityId ? `/${formatDid(query.communityId)}/grant` : '/'
+          }
         />
 
         {query.communityId ? (
@@ -73,8 +76,10 @@ export default function CreateGrantPage() {
             communityId={query.communityId}
             initialValue={initialValue}
             preview={{
-              from: `/${query.communityId}/grant/create`,
-              to: `/${query.communityId}/grant/${previewPermalink}?preview=true`,
+              from: `/${formatDid(query.communityId)}/grant/create`,
+              to: `/${formatDid(
+                query.communityId,
+              )}/grant/${previewPermalink}?preview=true`,
               template: `You are creating grant on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
             }}

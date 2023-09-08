@@ -23,6 +23,7 @@ import { Preview } from '../utils/types'
 import { previewPermalink } from '../utils/constants'
 import { permalink2Id } from '../utils/permalink'
 import sleep from '../utils/sleep'
+import { formatDid } from '../utils/did/utils'
 import Button from './basic/button'
 import Notification from './basic/notification'
 import { Back } from './basic/back'
@@ -102,7 +103,7 @@ export default function PreviewBar() {
         }),
       ])
       setPreviewCommunity(undefined)
-      router.push(`/${signed.id}`)
+      router.push(`/${formatDid(signed.id)}`)
       return 'community'
     }
     if (isGrant(document)) {
@@ -117,7 +118,9 @@ export default function PreviewBar() {
       ])
       setPreviewGrant(undefined)
       router.push(
-        `/${signed.authorship.author}/grant/${permalink2Id(permalink)}`,
+        `/${formatDid(signed.authorship.author)}/grant/${permalink2Id(
+          permalink,
+        )}`,
       )
       return 'grant'
     }
@@ -157,7 +160,7 @@ export default function PreviewBar() {
         }),
       ])
       setPreviewGroup(undefined)
-      router.push(`/${signed.authorship.author}/group/${signed.id}`)
+      router.push(`/${formatDid(signed.authorship.author)}/group/${signed.id}`)
       return 'workgroup'
     }
     if (isGroupProposal(document)) {

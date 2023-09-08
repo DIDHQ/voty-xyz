@@ -65,7 +65,7 @@ export default function GrantProposalInfo(props: {
             <TextLink
               underline
               disabled={disabled}
-              href={`/${props.community.id}`}
+              href={`/${formatDid(props.community.id)}`}
               className="block truncate whitespace-nowrap"
             >
               {props.community.name}
@@ -80,7 +80,7 @@ export default function GrantProposalInfo(props: {
             <TextLink
               underline
               disabled={disabled}
-              href={`/${props.community.id}/grant/${permalink2Id(
+              href={`/${formatDid(props.community.id)}/grant/${permalink2Id(
                 props.grantProposal.grant,
               )}`}
               className="block truncate whitespace-nowrap"

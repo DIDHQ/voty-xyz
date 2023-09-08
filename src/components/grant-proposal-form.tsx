@@ -20,6 +20,7 @@ import { previewGrantProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
 import { permalink2Id } from '../utils/permalink'
 import { trpc } from '../utils/trpc'
+import { formatDid } from '../utils/did/utils'
 import Slide from './basic/slide'
 import PermissionCard from './permission-card'
 import Button from './basic/button'
@@ -187,7 +188,7 @@ export default function GrantProposalForm(props: {
             setPreviewGrantProposal({
               ...value,
               preview: {
-                from: `/${props.communityId}/grant/${permalink2Id(
+                from: `/${formatDid(props.communityId)}/grant/${permalink2Id(
                   props.grantPermalink,
                 )}/create`,
                 to: `/grant-proposal/${previewPermalink}`,

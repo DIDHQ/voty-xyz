@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import useStatus from '../hooks/use-status'
 import { Group } from '../utils/schemas/v1/group'
+import { formatDid } from '../utils/did/utils'
 import Button from './basic/button'
 import Tooltip from './basic/tooltip'
 
@@ -13,9 +14,9 @@ export default function GroupProposalCreateButton(props: {
 }) {
   const { data: status } = useStatus(props.group?.permalink)
 
-  return status?.timestamp && props.group ? (
+  return status?.timestamp && props.group && props.communityId ? (
     <Link
-      href={`/${props.communityId}/group/${props.group.id}/create`}
+      href={`/${formatDid(props.communityId)}/group/${props.group.id}/create`}
       className={props.className}
     >
       <Button className="gap-1" icon={PlusIcon}>

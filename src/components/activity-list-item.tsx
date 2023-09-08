@@ -60,9 +60,9 @@ export default function ActivityListItem(props: {
             <>
               created Topic Grant{' '}
               <TextLink
-                href={`/${activity.data.community_id}/grant/${permalink2Id(
-                  activity.data.grant_permalink,
-                )}`}
+                href={`/${formatDid(
+                  activity.data.community_id,
+                )}/grant/${permalink2Id(activity.data.grant_permalink)}`}
                 className={activityLinkClass()}
               >
                 {activity.data.grant_name}
@@ -89,7 +89,7 @@ export default function ActivityListItem(props: {
               </TextLink>{' '}
               {/* in Topic Grant{' '}
               <TextLink
-                href={`/${activity.data.community_id}/grant/${permalink2Id(
+                href={`/${formatDid(activity.data.community_id)}/grant/${permalink2Id(
                   activity.data.grant_permalink,
                 )}`}
                 className={activityLinkClass()}>
@@ -145,7 +145,7 @@ export default function ActivityListItem(props: {
               </TextLink>{' '}
               {/* in Topic Grant{' '}
               <TextLink
-                href={`/${activity.data.community_id}/grant/${permalink2Id(
+                href={`/${formatDid(activity.data.community_id)}/grant/${permalink2Id(
                   activity.data.grant_permalink,
                 )}`}
                 className={activityLinkClass()}>
@@ -164,7 +164,9 @@ export default function ActivityListItem(props: {
             <>
               created workgroup{' '}
               <TextLink
-                href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
+                href={`/${formatDid(activity.data.community_id)}/group/${
+                  activity.data.group_id
+                }`}
                 className={activityLinkClass()}
               >
                 {activity.data.group_name}
@@ -182,7 +184,9 @@ export default function ActivityListItem(props: {
             <>
               updated workgroup{' '}
               <TextLink
-                href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
+                href={`/${formatDid(activity.data.community_id)}/group/${
+                  activity.data.group_id
+                }`}
                 className={activityLinkClass()}
               >
                 {activity.data.group_name}
@@ -221,7 +225,7 @@ export default function ActivityListItem(props: {
               </TextLink>{' '}
               {/* in workgroup{' '}
               <TextLink
-                href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
+                href={`/${formatDid(activity.data.community_id)}/group/${activity.data.group_id}`}
                 className={activityLinkClass()}>
                 {activity.data.group_name}
               </TextLink> */}
@@ -253,7 +257,7 @@ export default function ActivityListItem(props: {
               </TextLink>{' '}
               {/* of workgroup{' '}
               <TextLink
-                href={`/${activity.data.community_id}/group/${activity.data.group_id}`}
+                href={`/${formatDid(activity.data.community_id)}/group/${activity.data.group_id}`}
                 className={activityLinkClass()}>
                 {activity.data.group_name}
               </TextLink> */}

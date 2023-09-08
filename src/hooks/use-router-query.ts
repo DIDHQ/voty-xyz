@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 
 import { id2Permalink } from '../utils/permalink'
 import { previewPermalink } from '../utils/constants'
+import { unFormatDid } from '../utils/did/utils'
 
 export default function useRouterQuery<S extends string[] = []>() {
   const router = useRouter()
@@ -10,6 +11,11 @@ export default function useRouterQuery<S extends string[] = []>() {
     () =>
       ({
         ...router.query,
+        communityId:
+          typeof router.query.communityId === 'string' &&
+          router.query.communityId
+            ? unFormatDid(router.query.communityId)
+            : undefined,
         grantPermalink:
           typeof router.query.grantPermalink === 'string' &&
           router.query.grantPermalink &&
