@@ -76,7 +76,7 @@ export default function CreateCommunityPage() {
               didOptions?.length ? (
                 <>
                   <div className="mb-2 text-sm font-medium text-strong">
-                    Choose a .bit as your community entry on Voty
+                    Choose a Top-Level DID as your community entry on Voty
                   </div>
 
                   <TextInput
@@ -136,23 +136,35 @@ export default function CreateCommunityPage() {
                   </div>
 
                   <div className="mt-4 text-sm-medium text-subtle">
-                    or{' '}
+                    Or{' '}
                     <TextLink
                       href={
                         isTestnet
-                          ? 'https://test2f7a872b.did.id/explorer'
-                          : 'https://app.did.id/explorer'
+                          ? 'https://test.d.id/bit/reg'
+                          : 'https://d.id/bit/reg'
                       }
                       primary
                     >
-                      Register a new .bit →
+                      Register a .bit{' '}
                     </TextLink>
+                    and{' '}
+                    <TextLink
+                      href={
+                        isTestnet
+                          ? 'https://test.topdid.com/'
+                          : 'https://topdid.com/'
+                      }
+                      primary
+                    >
+                      Upgrade it to Top-Level DID
+                    </TextLink>{' '}
+                    →
                   </div>
                 </>
               ) : (
                 <>
                   <p className="mb-4 text-sm font-medium text-strong">
-                    You need a .bit as your community entry
+                    You need a Top-Level DID as your community entry
                   </p>
 
                   <a
