@@ -21,6 +21,7 @@ import { previewPermalink } from '../utils/constants'
 import sleep from '../utils/sleep'
 import useNow from '../hooks/use-now'
 import { checkBoolean } from '../utils/functions/boolean'
+import { useEnabledSecondLevels } from '../hooks/use-second-level-dids'
 import DidCombobox from './did-combobox'
 import Button from './basic/button'
 import Notification from './basic/notification'
@@ -116,6 +117,7 @@ export default function GrantProposalSelectForm(props: {
   useEffect(() => {
     setDid(defaultDid || '')
   }, [defaultDid])
+  const { data: enabledSecondLevels } = useEnabledSecondLevels(dids)
 
   return (
     <>
@@ -136,6 +138,7 @@ export default function GrantProposalSelectForm(props: {
                   top
                   label="Choose a DID as committee"
                   options={didOptions}
+                  enabledSecondLevels={enabledSecondLevels}
                   value={did}
                   onChange={setDid}
                   onClick={connect}

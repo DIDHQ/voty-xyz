@@ -13,7 +13,6 @@ import { ExoticComponent, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
-import { useQuery } from '@tanstack/react-query'
 import { tv } from 'tailwind-variants'
 import { clsx } from 'clsx'
 import { clsxMerge } from '../utils/tailwind-helper'
@@ -24,9 +23,9 @@ import { trpc } from '../utils/trpc'
 import { documentTitle, domain } from '../utils/constants'
 import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import useIsManager from '../hooks/use-is-manager'
-import { hasEnabledSecondLevel } from '../utils/sdks/dotbit/second-level'
 import useCommunityLogo from '../hooks/use-community-logo'
 import { formatDid } from '../utils/did/utils'
+import { useEnabledSecondLevel } from '../hooks/use-second-level-dids'
 import ShareLinkIcon from './share-link-icon'
 import TextLink from './basic/text-link'
 import Avatar from './basic/avatar'
@@ -75,31 +74,39 @@ export default function CommunityInfo(props: {
     () => uniqBy(compact([...(list || []), previewGroup]), ({ id }) => id),
     [list, previewGroup],
   )
+  const isManager = useIsManager(query.communityId)
+  const { data: enabledSecondLevel } = useEnabledSecondLevel(query.communityId)
   const navigation = useMemo(
     () =>
       query.communityId
         ? [
             {
               name: 'Activities',
-              href: `/${formatDid(query.communityId)}`,
+              href: `/${formatDid(query.communityId, enabledSecondLevel)}`,
               icon: BoltIcon,
               current: router.pathname === '/[communityId]',
             },
             {
               name: 'Topic Grants',
-              href: `/${formatDid(query.communityId)}/grant`,
+              href: `/${formatDid(
+                query.communityId,
+                enabledSecondLevel,
+              )}/grant`,
               icon: TrophyIcon,
               current: router.pathname === '/[communityId]/grant',
             },
             {
               name: 'About',
-              href: `/${formatDid(query.communityId)}/about`,
+              href: `/${formatDid(
+                query.communityId,
+                enabledSecondLevel,
+              )}/about`,
               icon: QuestionMarkCircleIcon,
               current: router.pathname === '/[communityId]/about',
             },
           ]
         : [],
-    [query.communityId, router.pathname],
+    [enabledSecondLevel, query.communityId, router.pathname],
   )
   const externals = useMemo(
     () =>
@@ -130,7 +137,6 @@ export default function CommunityInfo(props: {
         : [],
     [community],
   )
-  const isManager = useIsManager(query.communityId)
   const title = useMemo(
     () => compact([community?.name, documentTitle]).join(' - '),
     [community?.name],
@@ -144,11 +150,6 @@ export default function CommunityInfo(props: {
   //     ),
   //   [dids, query.communityId],
   // )
-  const { data: enabledSecondLevel } = useQuery(
-    ['hasEnabledSecondLevel', query.communityId],
-    () => hasEnabledSecondLevel(query.communityId!),
-    { enabled: !!query.communityId && isManager },
-  )
 
   return (
     <>
@@ -235,7 +236,10 @@ export default function CommunityInfo(props: {
                 !query.communityId ? null : (
                   <TextLink
                     primary
-                    href={`/${formatDid(query.communityId)}/create`}
+                    href={`/${formatDid(
+                      query.communityId,
+                      enabledSecondLevel,
+                    )}/create`}
                   >
                     <PlusIcon className="h-5 w-5" />
                   </TextLink>
@@ -249,7 +253,10 @@ export default function CommunityInfo(props: {
                     href={
                       previewCommunity || !query.communityId
                         ? undefined
-                        : `/${formatDid(query.communityId)}/group/${group.id}`
+                        : `/${formatDid(
+                            query.communityId,
+                            enabledSecondLevel,
+                          )}/group/${group.id}`
                     }
                     icon={BriefcaseIcon}
                     current={query.groupId === group.id}

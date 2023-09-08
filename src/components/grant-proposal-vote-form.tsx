@@ -23,6 +23,7 @@ import { formatDurationMs } from '../utils/time'
 import { previewPermalink } from '../utils/constants'
 import sleep from '../utils/sleep'
 import useNow from '../hooks/use-now'
+import { useEnabledSecondLevels } from '../hooks/use-second-level-dids'
 import DidCombobox from './did-combobox'
 import Button from './basic/button'
 import TextButton from './basic/text-button'
@@ -159,6 +160,7 @@ export default function GrantProposalVoteForm(props: {
       })
     }
   }, [props.grantProposal.permalink, setValue, totalPower])
+  const { data: enabledSecondLevels } = useEnabledSecondLevels(dids)
 
   return (
     <>
@@ -179,6 +181,7 @@ export default function GrantProposalVoteForm(props: {
                   top
                   label="Choose a DID as voter"
                   options={didOptions}
+                  enabledSecondLevels={enabledSecondLevels}
                   value={did}
                   onChange={setDid}
                   onClick={connect}

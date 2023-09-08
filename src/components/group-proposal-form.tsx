@@ -28,6 +28,7 @@ import { requiredCoinTypesOfDecimalSets } from '../utils/functions/decimal'
 import { previewGroupProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
 import { formatDid } from '../utils/did/utils'
+import { useEnabledSecondLevels } from '../hooks/use-second-level-dids'
 import Button from './basic/button'
 import RadioGroup2 from './basic/radio-group2'
 import DidCombobox from './did-combobox'
@@ -172,6 +173,7 @@ export default function GroupProposalForm(props: {
     ],
     [],
   )
+  const { data: enabledSecondLevels } = useEnabledSecondLevels(dids)
 
   return (
     <Form
@@ -183,6 +185,7 @@ export default function GroupProposalForm(props: {
           <DidCombobox
             top
             options={didOptions}
+            enabledSecondLevels={enabledSecondLevels}
             value={did}
             onChange={setDid}
             onClick={connect}

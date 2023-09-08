@@ -18,6 +18,7 @@ import { isSecondLevelDID } from '../../utils/did/utils'
 import Card from '@/src/components/basic/card'
 import { Container } from '@/src/components/basic/container'
 import { BackBar } from '@/src/components/basic/back'
+import { useEnabledSecondLevels } from '@/src/hooks/use-second-level-dids'
 
 export default function CreateCommunityPage() {
   const router = useRouter()
@@ -49,6 +50,7 @@ export default function CreateCommunityPage() {
     getScrollElement: () => parentRef.current,
     estimateSize: () => 40,
   })
+  const { data: enabledSecondLevels } = useEnabledSecondLevels(dids)
 
   return (
     <>
@@ -125,6 +127,11 @@ export default function CreateCommunityPage() {
                           <DidOption
                             disabled={
                               filteredOptions?.[virtualItem.index]?.disabled
+                            }
+                            enabledSecondLevel={
+                              enabledSecondLevels?.[
+                                filteredOptions?.[virtualItem.index]?.did ?? ''
+                              ]
                             }
                             text={filteredOptions?.[virtualItem.index]?.did}
                             label={

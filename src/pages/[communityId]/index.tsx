@@ -2,7 +2,6 @@ import { useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 import Link from 'next/link'
 import { ArrowUpRightIcon, PlusIcon } from '@heroicons/react/20/solid'
-import { useQuery } from '@tanstack/react-query'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 import useRouterQuery from '../../hooks/use-router-query'
@@ -12,12 +11,12 @@ import Button from '../../components/basic/button'
 import EmptyState from '../../components/empty-state'
 import useIsManager from '../../hooks/use-is-manager'
 import ActivityListItem from '../../components/activity-list-item'
-import { hasEnabledSecondLevel } from '../../utils/sdks/dotbit/second-level'
 import { isTestnet } from '../../utils/constants'
 import Card from '@/src/components/basic/card'
 import SectionHeader from '@/src/components/basic/section-header'
 import { ActivitySkeleton } from '@/src/components/basic/skeleton'
 import { formatDid } from '@/src/utils/did/utils'
+import { useEnabledSecondLevel } from '@/src/hooks/use-second-level-dids'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['communityId']>()
@@ -46,11 +45,7 @@ export default function CommunityIndexPage() {
     }
   }, [fetchNextPage, hasNextPage, inView])
   const isManager = useIsManager(query.communityId)
-  const { data: enabledSecondLevel } = useQuery(
-    ['hasEnabledSecondLevel', query.communityId],
-    () => hasEnabledSecondLevel(query.communityId!),
-    { enabled: !!query.communityId && isManager },
-  )
+  const { data: enabledSecondLevel } = useEnabledSecondLevel(query.communityId!)
 
   return (
     <CommunityLayout loading={isGroupsLoading || isActivitiesLoading}>
@@ -80,7 +75,12 @@ export default function CommunityIndexPage() {
           title="No workgroup"
           description="Workgroup helps you categorize proposals with different focuses. You can also set up workgroups to your community structure's needs."
           footer={
-            <Link href={`/${formatDid(query.communityId)}/create`}>
+            <Link
+              href={`/${formatDid(
+                query.communityId,
+                enabledSecondLevel,
+              )}/create`}
+            >
               <Button primary icon={PlusIcon}>
                 Workgroup
               </Button>

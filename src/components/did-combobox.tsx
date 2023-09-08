@@ -17,6 +17,7 @@ type Option = {
 export default function DidCombobox(props: {
   top?: boolean
   options?: Option[]
+  enabledSecondLevels?: Record<string, boolean>
   label?: string
   value: string
   onChange(value: string): void
@@ -115,6 +116,11 @@ export default function DidCombobox(props: {
                   {({ active, selected, disabled }) => (
                     <DidOption
                       active={active}
+                      enabledSecondLevel={
+                        props.enabledSecondLevels?.[
+                          props.options?.[virtualItem.index]?.did ?? ''
+                        ]
+                      }
                       selected={selected}
                       disabled={disabled}
                       text={props.options?.[virtualItem.index]?.did}
@@ -133,6 +139,7 @@ export default function DidCombobox(props: {
 
 export function DidOption(props: {
   active?: boolean
+  enabledSecondLevel?: boolean
   selected?: boolean
   disabled?: boolean
   text?: string
@@ -161,7 +168,7 @@ export function DidOption(props: {
           props.selected && 'font-medium text-primary-500',
         )}
       >
-        {props.text ? formatDid(props.text) : null}
+        {props.text ? formatDid(props.text, props.enabledSecondLevel) : null}
       </span>
 
       {props.label ? (
