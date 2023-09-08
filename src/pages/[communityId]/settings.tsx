@@ -6,6 +6,7 @@ import { trpc } from '../../utils/trpc'
 import LoadingBar from '../../components/basic/loading-bar'
 import { Container } from '@/src/components/basic/container'
 import { BackBar } from '@/src/components/basic/back'
+import { formatDid } from '@/src/utils/did/utils'
 
 export default function CommunitySettingsPage() {
   const router = useRouter()
@@ -20,7 +21,11 @@ export default function CommunitySettingsPage() {
       <LoadingBar loading={isLoading} />
 
       <Container size="small">
-        <BackBar href={`/${query.communityId}/about`} />
+        <BackBar
+          href={
+            query.communityId ? `/${formatDid(query.communityId)}/about` : '#'
+          }
+        />
 
         {query.communityId && community !== undefined ? (
           <CommunityForm
@@ -28,7 +33,7 @@ export default function CommunitySettingsPage() {
             initialValue={community}
             preview={{
               from: router.asPath,
-              to: `/${query.communityId}/about?preview=true`,
+              to: `/${formatDid(query.communityId)}/about?preview=true`,
               template: `You are updating community on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
             }}

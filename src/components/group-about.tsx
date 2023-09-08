@@ -17,13 +17,13 @@ export default function GroupAbout(props: {
     <div className={clsx('space-y-6', props.className)}>
       <PermissionCard
         title="Proposers"
-        description="SubDIDs who can initiate proposals in this workgroup."
+        description="Second-Level DIDs who can initiate proposals in this workgroup."
         value={props.group.permission.proposing}
       />
 
       <PermissionCard
         title="Voters"
-        description="SubDIDs who can vote in this workgroup. The greatest voting power will be allocated when a SubDID has multiple occurrence."
+        description="Second-Level DIDs who can vote in this workgroup. The greatest voting power will be allocated when a Second-Level DID has multiple occurrence."
         value={props.group.permission.voting}
       />
 

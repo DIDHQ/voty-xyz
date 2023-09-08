@@ -110,7 +110,7 @@ export default function GroupForm(props: {
 
         <FormSection
           title="Proposers"
-          description="SubDIDs who can initiate proposals in this workgroup."
+          description="Second-Level DIDs who can initiate proposals in this workgroup."
         >
           <FormItem
             error={
@@ -130,7 +130,7 @@ export default function GroupForm(props: {
 
         <FormSection
           title="Voters"
-          description="SubDIDs who can vote in this workgroup. You can create multiple voter groups with different voting power assigned to each group. The greatest voting power will be allocated when a SubDID has multiple occurrence."
+          description="Second-Level DIDs who can vote in this workgroup. You can create multiple voter groups with different voting power assigned to each group. The greatest voting power will be allocated when a Second-Level DID has multiple occurrence."
         >
           <FormItem error={errors.permission?.voting?.operands?.message}>
             <FormProvider {...methods}>

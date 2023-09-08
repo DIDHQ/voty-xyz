@@ -101,7 +101,7 @@ export const groupRouter = router({
       schema
         .refine(
           (group) => group.id.indexOf('.') === group.id.lastIndexOf('.'),
-          'Cannot create group with SubDID',
+          'Cannot create group with Second-Level DID',
         )
         .refine(
           (group) =>

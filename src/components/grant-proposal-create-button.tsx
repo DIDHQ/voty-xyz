@@ -8,6 +8,7 @@ import { permalink2Id } from '../utils/permalink'
 import { GrantPhase, getGrantPhase } from '../utils/phase'
 import { formatDurationMs } from '../utils/time'
 import useNow from '../hooks/use-now'
+import { formatDid } from '../utils/did/utils'
 import Tooltip from './basic/tooltip'
 import Button from './basic/button'
 
@@ -48,7 +49,7 @@ export default function GrantProposalCreateButton(props: {
   ) : props.communityId && props.grant && phase === GrantPhase.PROPOSING ? (
     <Link
       className={props.className}
-      href={`/${props.communityId}/grant/${permalink2Id(
+      href={`/${formatDid(props.communityId)}/grant/${permalink2Id(
         props.grant.permalink,
       )}/create`}
     >

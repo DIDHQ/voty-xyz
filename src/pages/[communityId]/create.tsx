@@ -10,6 +10,7 @@ import { documentTitle } from '../../utils/constants'
 import { Group } from '../../utils/schemas/v1/group'
 import { BackBar } from '@/src/components/basic/back'
 import { Container } from '@/src/components/basic/container'
+import { formatDid } from '@/src/utils/did/utils'
 
 export default function CreateGroupPage() {
   const query = useRouterQuery<['communityId']>()
@@ -66,15 +67,19 @@ export default function CreateGroupPage() {
       <LoadingBar loading={isLoading} />
 
       <Container size="small">
-        <BackBar href={`/${query.communityId}`} />
+        <BackBar
+          href={query.communityId ? `/${formatDid(query.communityId)}` : '#'}
+        />
 
         {query.communityId && initialValue !== undefined ? (
           <GroupForm
             communityId={query.communityId}
             initialValue={initialValue}
             preview={{
-              from: `/${query.communityId}/create`,
-              to: `/${query.communityId}/group/${newGroup}/about?preview=true`,
+              from: `/${formatDid(query.communityId)}/create`,
+              to: `/${formatDid(
+                query.communityId,
+              )}/group/${newGroup}/about?preview=true`,
               template: `You are creating workgroup on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
             }}

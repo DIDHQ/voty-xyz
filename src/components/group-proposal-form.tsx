@@ -27,6 +27,8 @@ import {
 import { requiredCoinTypesOfDecimalSets } from '../utils/functions/decimal'
 import { previewGroupProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
+import { formatDid } from '../utils/did/utils'
+import { useEnabledSecondLevels } from '../hooks/use-second-level-dids'
 import Button from './basic/button'
 import RadioGroup2 from './basic/radio-group2'
 import DidCombobox from './did-combobox'
@@ -171,6 +173,7 @@ export default function GroupProposalForm(props: {
     ],
     [],
   )
+  const { data: enabledSecondLevels } = useEnabledSecondLevels(dids)
 
   return (
     <Form
@@ -182,6 +185,7 @@ export default function GroupProposalForm(props: {
           <DidCombobox
             top
             options={didOptions}
+            enabledSecondLevels={enabledSecondLevels}
             value={did}
             onChange={setDid}
             onClick={connect}
@@ -200,7 +204,7 @@ export default function GroupProposalForm(props: {
                 props.group ? (
                   <PermissionCard
                     title="Proposers"
-                    description="SubDIDs who can initiate proposals in this workgroup."
+                    description="Second-Level DIDs who can initiate proposals in this workgroup."
                     value={props.group.permission.proposing}
                   />
                 ) : null
@@ -317,7 +321,9 @@ export default function GroupProposalForm(props: {
             setPreviewGroupProposal({
               ...value,
               preview: {
-                from: `/${props.communityId}/group/${props.group.id}/create`,
+                from: `/${formatDid(props.communityId)}/group/${
+                  props.group.id
+                }/create`,
                 to: `/group-proposal/${previewPermalink}`,
                 template: `You are creating proposal on Voty\n\nhash:\n{keccak256}`,
                 author: did,

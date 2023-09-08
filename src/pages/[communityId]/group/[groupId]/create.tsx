@@ -9,6 +9,7 @@ import { documentTitle } from '../../../../utils/constants'
 import { GroupProposal } from '../../../../utils/schemas/v1/group-proposal'
 import { Container } from '@/src/components/basic/container'
 import { BackBar } from '@/src/components/basic/back'
+import { formatDid } from '@/src/utils/did/utils'
 
 export default function CreateGroupProposalPage() {
   const query = useRouterQuery<['communityId', 'groupId']>()
@@ -32,7 +33,11 @@ export default function CreateGroupProposalPage() {
       <Container size="small">
         <BackBar
           disabled={!query.communityId || !query.groupId}
-          href={`/${query.communityId}/group/${query.groupId}`}
+          href={
+            query.communityId
+              ? `/${formatDid(query.communityId)}/group/${query.groupId}`
+              : '#'
+          }
         />
 
         {query.communityId && group ? (

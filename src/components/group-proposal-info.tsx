@@ -47,7 +47,7 @@ export default function GroupProposalInfo(props: {
             <TextLink
               underline
               disabled={disabled}
-              href={`/${props.community.id}`}
+              href={`/${formatDid(props.community.id)}`}
               className="block truncate whitespace-nowrap"
             >
               {props.community.name}
@@ -62,7 +62,7 @@ export default function GroupProposalInfo(props: {
             <TextLink
               underline
               disabled={disabled}
-              href={`/${props.community.id}/group/${props.group.id}`}
+              href={`/${formatDid(props.community.id)}/group/${props.group.id}`}
               className="block truncate whitespace-nowrap"
             >
               {props.group.name}

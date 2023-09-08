@@ -12,6 +12,7 @@ import { previewGroupAtom } from '../../../../utils/atoms'
 import GroupAbout from '../../../../components/group-about'
 import Card from '@/src/components/basic/card'
 import { AboutSkeleton } from '@/src/components/basic/skeleton'
+import { formatDid } from '@/src/utils/did/utils'
 
 export default function GroupAboutPage() {
   const query = useRouterQuery<['communityId', 'groupId']>()
@@ -38,9 +39,11 @@ export default function GroupAboutPage() {
 
         {group ? <GroupAbout group={group} className="mt-6" /> : null}
 
-        {isManager && !previewGroup ? (
+        {isManager && !previewGroup && query.communityId ? (
           <Link
-            href={`/${query.communityId}/group/${query.groupId}/settings`}
+            href={`/${formatDid(query.communityId)}/group/${
+              query.groupId
+            }/settings`}
             className="mt-6 block w-fit sm:mt-8"
           >
             <Button icon={PencilIcon}>Edit</Button>

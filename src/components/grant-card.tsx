@@ -6,6 +6,7 @@ import { Authorized } from '../utils/schemas/basic/authorship'
 import { Grant } from '../utils/schemas/v1/grant'
 import { formatDurationMs } from '../utils/time'
 import useNow from '../hooks/use-now'
+import { formatDid } from '../utils/did/utils'
 import { InfoCard, InfoItem } from './info-card'
 
 export default function GrantCard(props: {
@@ -45,7 +46,7 @@ export default function GrantCard(props: {
   return (
     <InfoCard
       desc={props.grant.introduction}
-      href={`/${props.communityId}/grant/${permalink2Id(
+      href={`/${formatDid(props.communityId)}/grant/${permalink2Id(
         props.grant.permalink,
       )}`}
       thumbnail={props.grant.image}

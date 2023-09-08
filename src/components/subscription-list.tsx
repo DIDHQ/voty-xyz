@@ -3,6 +3,7 @@ import Link from 'next/link'
 import useWallet from '../hooks/use-wallet'
 import { Community } from '../utils/schemas/v1/community'
 import { trpc } from '../utils/trpc'
+import { formatDid } from '../utils/did/utils'
 import Avatar from './basic/avatar'
 import Tooltip from './basic/tooltip'
 import SectionHeader from './basic/section-header'
@@ -43,7 +44,7 @@ function SubscriptionListItem(props: { value: Community }) {
   return (
     <li className="snap-start rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-[#F8FAFC] transition hover:ring-primary-500">
       <Tooltip place="top" text={props.value.name}>
-        <Link href={`/${props.value.id}`}>
+        <Link href={`/${formatDid(props.value.id)}`}>
           <Avatar size={16} value={props.value.logo} />
         </Link>
       </Tooltip>

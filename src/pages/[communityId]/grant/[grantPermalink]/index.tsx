@@ -46,6 +46,7 @@ import {
   ArticleSkeleton,
   SidebarInfoSkeleton,
 } from '@/src/components/basic/skeleton'
+import { formatDid } from '@/src/utils/did/utils'
 
 export const runtime = 'experimental-edge'
 
@@ -172,7 +173,7 @@ export default function GrantPage() {
         <Main>
           <BackBar
             disabled={!community || !!previewGrant}
-            href={`/${community?.id}/grant`}
+            href={community?.id ? `/${formatDid(community.id)}/grant` : '#'}
           />
 
           {isFetching || isCommunityLoading ? (

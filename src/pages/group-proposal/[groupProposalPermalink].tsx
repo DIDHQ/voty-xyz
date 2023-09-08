@@ -185,7 +185,11 @@ export default function GroupProposalPage() {
         <Main>
           <BackBar
             disabled={!community || !group || !!previewGroupProposal}
-            href={`/${community?.id}/group/${group?.id}`}
+            href={
+              community?.id
+                ? `/${formatDid(community.id)}/group/${group?.id}`
+                : '#'
+            }
           />
 
           {isFetching || isGroupLoading || isCommunityLoading ? (

@@ -14,16 +14,20 @@ import ConnectButton from '../../components/connect-button'
 import TextInput from '../../components/basic/text-input'
 import TextLink from '../../components/basic/text-link'
 import Button from '../../components/basic/button'
-import { isSubDID } from '../../utils/did/utils'
+import { isSecondLevelDID } from '../../utils/did/utils'
 import Card from '@/src/components/basic/card'
 import { Container } from '@/src/components/basic/container'
 import { BackBar } from '@/src/components/basic/back'
+import { useEnabledSecondLevels } from '@/src/hooks/use-second-level-dids'
 
 export default function CreateCommunityPage() {
   const router = useRouter()
   const { account } = useWallet()
   const { data, isLoading } = useDids(account)
-  const dids = useMemo(() => data?.filter((did) => !isSubDID(did)), [data])
+  const dids = useMemo(
+    () => data?.filter((did) => !isSecondLevelDID(did)),
+    [data],
+  )
   const { data: existences, isLoading: isExistencesLoading } =
     trpc.community.checkExistences.useQuery(
       { ids: dids },
@@ -46,6 +50,7 @@ export default function CreateCommunityPage() {
     getScrollElement: () => parentRef.current,
     estimateSize: () => 40,
   })
+  const { data: enabledSecondLevels } = useEnabledSecondLevels(dids)
 
   return (
     <>
@@ -76,7 +81,7 @@ export default function CreateCommunityPage() {
               didOptions?.length ? (
                 <>
                   <div className="mb-2 text-sm font-medium text-strong">
-                    Choose a .bit as your community entry on Voty
+                    Choose a Top-Level DID as your community entry on Voty
                   </div>
 
                   <TextInput
@@ -123,6 +128,11 @@ export default function CreateCommunityPage() {
                             disabled={
                               filteredOptions?.[virtualItem.index]?.disabled
                             }
+                            enabledSecondLevel={
+                              enabledSecondLevels?.[
+                                filteredOptions?.[virtualItem.index]?.did ?? ''
+                              ]
+                            }
                             text={filteredOptions?.[virtualItem.index]?.did}
                             label={
                               filteredOptions?.[virtualItem.index]?.disabled
@@ -136,30 +146,42 @@ export default function CreateCommunityPage() {
                   </div>
 
                   <div className="mt-4 text-sm-medium text-subtle">
-                    or{' '}
+                    Or{' '}
                     <TextLink
                       href={
                         isTestnet
-                          ? 'https://test2f7a872b.did.id/explorer'
-                          : 'https://app.did.id/explorer'
+                          ? 'https://test.d.id/bit/reg'
+                          : 'https://d.id/bit/reg'
                       }
                       primary
                     >
-                      Register a new .bit →
+                      Register a .bit{' '}
                     </TextLink>
+                    and{' '}
+                    <TextLink
+                      href={
+                        isTestnet
+                          ? 'https://test.topdid.com/'
+                          : 'https://topdid.com/'
+                      }
+                      primary
+                    >
+                      Upgrade it to Top-Level DID
+                    </TextLink>{' '}
+                    →
                   </div>
                 </>
               ) : (
                 <>
                   <p className="mb-4 text-sm font-medium text-strong">
-                    You need a .bit as your community entry
+                    You need a Top-Level DID as your community entry
                   </p>
 
                   <a
                     href={
                       isTestnet
-                        ? 'https://test2f7a872b.did.id/explorer'
-                        : 'https://app.did.id/explorer'
+                        ? 'https://test.d.id/bit/reg'
+                        : 'https://d.id/bit/reg'
                     }
                   >
                     <Button primary size="large">

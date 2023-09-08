@@ -13,7 +13,6 @@ import { ExoticComponent, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useAtomValue } from 'jotai'
-import { useQuery } from '@tanstack/react-query'
 import { tv } from 'tailwind-variants'
 import { clsx } from 'clsx'
 import { clsxMerge } from '../utils/tailwind-helper'
@@ -24,8 +23,9 @@ import { trpc } from '../utils/trpc'
 import { documentTitle, domain } from '../utils/constants'
 import { previewCommunityAtom, previewGroupAtom } from '../utils/atoms'
 import useIsManager from '../hooks/use-is-manager'
-import { hasEnabledSubDID } from '../utils/sdks/dotbit/subdid'
 import useCommunityLogo from '../hooks/use-community-logo'
+import { formatDid } from '../utils/did/utils'
+import { useEnabledSecondLevel } from '../hooks/use-second-level-dids'
 import ShareLinkIcon from './share-link-icon'
 import TextLink from './basic/text-link'
 import Avatar from './basic/avatar'
@@ -74,28 +74,39 @@ export default function CommunityInfo(props: {
     () => uniqBy(compact([...(list || []), previewGroup]), ({ id }) => id),
     [list, previewGroup],
   )
+  const isManager = useIsManager(query.communityId)
+  const { data: enabledSecondLevel } = useEnabledSecondLevel(query.communityId)
   const navigation = useMemo(
-    () => [
-      {
-        name: 'Activities',
-        href: `/${query.communityId}`,
-        icon: BoltIcon,
-        current: router.pathname === '/[communityId]',
-      },
-      {
-        name: 'Topic Grants',
-        href: `/${query.communityId}/grant`,
-        icon: TrophyIcon,
-        current: router.pathname === '/[communityId]/grant',
-      },
-      {
-        name: 'About',
-        href: `/${query.communityId}/about`,
-        icon: QuestionMarkCircleIcon,
-        current: router.pathname === '/[communityId]/about',
-      },
-    ],
-    [query.communityId, router.pathname],
+    () =>
+      query.communityId
+        ? [
+            {
+              name: 'Activities',
+              href: `/${formatDid(query.communityId, enabledSecondLevel)}`,
+              icon: BoltIcon,
+              current: router.pathname === '/[communityId]',
+            },
+            {
+              name: 'Topic Grants',
+              href: `/${formatDid(
+                query.communityId,
+                enabledSecondLevel,
+              )}/grant`,
+              icon: TrophyIcon,
+              current: router.pathname === '/[communityId]/grant',
+            },
+            {
+              name: 'About',
+              href: `/${formatDid(
+                query.communityId,
+                enabledSecondLevel,
+              )}/about`,
+              icon: QuestionMarkCircleIcon,
+              current: router.pathname === '/[communityId]/about',
+            },
+          ]
+        : [],
+    [enabledSecondLevel, query.communityId, router.pathname],
   )
   const externals = useMemo(
     () =>
@@ -126,24 +137,9 @@ export default function CommunityInfo(props: {
         : [],
     [community],
   )
-  const isManager = useIsManager(query.communityId)
   const title = useMemo(
     () => compact([community?.name, documentTitle]).join(' - '),
     [community?.name],
-  )
-  // const { account } = useWallet()
-  // const { data: dids } = useDids(account)
-  // const isMember = useMemo(
-  //   () =>
-  //     !!dids?.find(
-  //       (did) => !!query.communityId && did.endsWith(query.communityId),
-  //     ),
-  //   [dids, query.communityId],
-  // )
-  const { data: enabledSubDID } = useQuery(
-    ['hasEnabledSubDID', query.communityId],
-    () => hasEnabledSubDID(query.communityId!),
-    { enabled: !!query.communityId && isManager },
   )
 
   return (
@@ -227,8 +223,15 @@ export default function CommunityInfo(props: {
 
                 {previewCommunity ||
                 !isManager ||
-                enabledSubDID === false ? null : (
-                  <TextLink primary href={`/${query.communityId}/create`}>
+                enabledSecondLevel === false ||
+                !query.communityId ? null : (
+                  <TextLink
+                    primary
+                    href={`/${formatDid(
+                      query.communityId,
+                      enabledSecondLevel,
+                    )}/create`}
+                  >
                     <PlusIcon className="h-5 w-5" />
                   </TextLink>
                 )}
@@ -239,9 +242,12 @@ export default function CommunityInfo(props: {
                   <LinkListItem
                     key={group.id}
                     href={
-                      previewCommunity
+                      previewCommunity || !query.communityId
                         ? undefined
-                        : `/${query.communityId}/group/${group.id}`
+                        : `/${formatDid(
+                            query.communityId,
+                            enabledSecondLevel,
+                          )}/group/${group.id}`
                     }
                     icon={BriefcaseIcon}
                     current={query.groupId === group.id}
@@ -253,25 +259,6 @@ export default function CommunityInfo(props: {
             </div>
           ) : null}
         </Card>
-
-        {/* {isMember || previewCommunity ? (
-          <Button disabled={isMember} className="mt-4">
-            {isMember ? 'Joined' : 'Join'}
-          </Button>
-        ) : (
-          <Link
-            href={`${
-              isTestnet
-                ? '​https://test.topdid.com/mint/.'
-                : 'https://topdid.com/mint/.'
-            }${query.communityId?.replace(/\.bit$/, '')}`}
-            className="mt-4"
-          >
-            <Button primary disabled={isMember}>
-              {isMember ? 'Joined' : 'Join'}
-            </Button>
-          </Link>
-        )} */}
       </div>
     </>
   )

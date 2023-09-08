@@ -61,7 +61,7 @@ export default function AboutPage() {
 
   ### 1. DID based
 
-  There's no doubt that using SubDID of .bit (or a SubDomain of ENS) as a system for recognizing community identity is an unavoidable trend. Whether it's a DAO, a brand, a celebrity, or any type of community, they can bring their members/fans together by distributing SubDID, creating a highly recognizable community.
+  There's no doubt that using Second-Level DID of .bit (or a SubDomain of ENS) as a system for recognizing community identity is an unavoidable trend. Whether it's a DAO, a brand, a celebrity, or any type of community, they can bring their members/fans together by distributing Second-Level DID, creating a highly recognizable community.
 
   Using the Nike community as an example (a hypothetical case), possession of alice.nike.bit is direct evidence of Alice's membership in the Nike community. By owning alice.nike.bit, Alice has the right to participate in governance and express her opinions within the community, even if she doesn't hold any tokens from the community (or in other words, there's no need for the community to issue any tokens)
 
@@ -83,7 +83,7 @@ export default function AboutPage() {
 
   Each Workgroup has a set of "Proposers" and a set of "Voters." The "Proposers" set is composed of one or more Member Sets, while the "Voters" set is composed of one or more Member Sets, along with the weights of votes that are tied to each Member Set.
 
-  The filtering criteria for each Member Set in a Workgroup can be configured by administrators. This enables them to determine who can propose and who can vote in that Workgroup. The criteria can be diverse and may include a whitelist, holding a specific SubDID or SBT, holding a SubDID associated with a particular NFT/Token, or custom code, among others.
+  The filtering criteria for each Member Set in a Workgroup can be configured by administrators. This enables them to determine who can propose and who can vote in that Workgroup. The criteria can be diverse and may include a whitelist, holding a specific Second-Level DID or SBT, holding a Second-Level DID associated with a particular NFT/Token, or custom code, among others.
 
   For "Voters", administrators can assign weightings to each Member Set when it's created, and the weighting assigned applies to all members in the Member Set. Community members can also delegate their voting rights to other members.
 

@@ -22,6 +22,7 @@ import { formatDurationMs } from '../utils/time'
 import { previewPermalink } from '../utils/constants'
 import sleep from '../utils/sleep'
 import useNow from '../hooks/use-now'
+import { useEnabledSecondLevels } from '../hooks/use-second-level-dids'
 import { FormItem } from './basic/form'
 import { ChoiceListItem } from './choice-list-item'
 import DidCombobox from './did-combobox'
@@ -164,6 +165,7 @@ export default function GroupProposalVoteForm(props: {
   useEffect(() => {
     setDid(defaultDid || '')
   }, [defaultDid])
+  const { data: enabledSecondLevels } = useEnabledSecondLevels(dids)
 
   return (
     <>
@@ -207,6 +209,7 @@ export default function GroupProposalVoteForm(props: {
                 top
                 label="Choose a DID as voter"
                 options={didOptions}
+                enabledSecondLevels={enabledSecondLevels}
                 value={did}
                 onChange={setDid}
                 onClick={connect}
@@ -224,7 +227,7 @@ export default function GroupProposalVoteForm(props: {
                   {() => (
                     <PermissionCard
                       title="Voters"
-                      description="SubDIDs who can vote in this workgroup. The greatest voting power will be allocated when a SubDID has multiple occurrence."
+                      description="Second-Level DIDs who can vote in this workgroup. The greatest voting power will be allocated when a Second-Level DID has multiple occurrence."
                       value={props.group.permission.voting}
                     />
                   )}

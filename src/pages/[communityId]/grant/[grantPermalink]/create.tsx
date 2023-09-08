@@ -10,6 +10,7 @@ import { GrantProposal } from '../../../../utils/schemas/v1/grant-proposal'
 import { permalink2Id } from '../../../../utils/permalink'
 import { BackBar } from '@/src/components/basic/back'
 import { Container } from '@/src/components/basic/container'
+import { formatDid } from '@/src/utils/did/utils'
 
 export default function CreateGrantProposalPage() {
   const query = useRouterQuery<['communityId', 'grantPermalink']>()
@@ -30,9 +31,13 @@ export default function CreateGrantProposalPage() {
       <Container size="small">
         <BackBar
           disabled={!query.communityId || !query.grantPermalink}
-          href={`/${query.communityId}/grant/${
-            query.grantPermalink ? permalink2Id(query.grantPermalink) : ''
-          }`}
+          href={
+            query.communityId
+              ? `/${formatDid(query.communityId)}/grant/${
+                  query.grantPermalink ? permalink2Id(query.grantPermalink) : ''
+                }`
+              : '#'
+          }
         />
 
         {query.communityId && query.grantPermalink && grant ? (

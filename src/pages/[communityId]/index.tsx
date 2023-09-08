@@ -2,7 +2,6 @@ import { useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 import Link from 'next/link'
 import { ArrowUpRightIcon, PlusIcon } from '@heroicons/react/20/solid'
-import { useQuery } from '@tanstack/react-query'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 import useRouterQuery from '../../hooks/use-router-query'
@@ -12,11 +11,12 @@ import Button from '../../components/basic/button'
 import EmptyState from '../../components/empty-state'
 import useIsManager from '../../hooks/use-is-manager'
 import ActivityListItem from '../../components/activity-list-item'
-import { hasEnabledSubDID } from '../../utils/sdks/dotbit/subdid'
-import { subDIDWebsite } from '../../utils/constants'
+import { isTestnet } from '../../utils/constants'
 import Card from '@/src/components/basic/card'
 import SectionHeader from '@/src/components/basic/section-header'
 import { ActivitySkeleton } from '@/src/components/basic/skeleton'
+import { formatDid } from '@/src/utils/did/utils'
+import { useEnabledSecondLevel } from '@/src/hooks/use-second-level-dids'
 
 export default function CommunityIndexPage() {
   const query = useRouterQuery<['communityId']>()
@@ -45,37 +45,42 @@ export default function CommunityIndexPage() {
     }
   }, [fetchNextPage, hasNextPage, inView])
   const isManager = useIsManager(query.communityId)
-  const { data: enabledSubDID } = useQuery(
-    ['hasEnabledSubDID', query.communityId],
-    () => hasEnabledSubDID(query.communityId!),
-    { enabled: !!query.communityId && isManager },
-  )
+  const { data: enabledSecondLevel } = useEnabledSecondLevel(query.communityId!)
 
   return (
     <CommunityLayout loading={isGroupsLoading || isActivitiesLoading}>
       <SectionHeader title="Activities" />
 
-      {enabledSubDID === false ? (
+      {enabledSecondLevel === false && query.communityId ? (
         <EmptyState
           icon={
             <ExclamationTriangleIcon className="h-9 w-9 rounded-lg bg-amber-100 p-1.5 text-amber-600" />
           }
           title="Last step"
-          description="You must enable SubDID for your community."
+          description="You must enable Second-Level DID for your community."
           footer={
-            <Link href={`${subDIDWebsite}${query.communityId}`}>
+            <Link
+              href={`${
+                isTestnet ? 'https://test.topdid.com/' : 'https://topdid.com/'
+              }mint/${formatDid(query.communityId)}`}
+            >
               <Button primary icon={ArrowUpRightIcon}>
-                Enable SubDID
+                Enable Second-Level DID
               </Button>
             </Link>
           }
         />
-      ) : groups?.length === 0 && isManager ? (
+      ) : groups?.length === 0 && isManager && query.communityId ? (
         <EmptyState
           title="No workgroup"
           description="Workgroup helps you categorize proposals with different focuses. You can also set up workgroups to your community structure's needs."
           footer={
-            <Link href={`/${query.communityId}/create`}>
+            <Link
+              href={`/${formatDid(
+                query.communityId,
+                enabledSecondLevel,
+              )}/create`}
+            >
               <Button primary icon={PlusIcon}>
                 Workgroup
               </Button>

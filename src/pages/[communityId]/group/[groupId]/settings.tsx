@@ -7,6 +7,7 @@ import { trpc } from '../../../../utils/trpc'
 import LoadingBar from '../../../../components/basic/loading-bar'
 import { Container } from '@/src/components/basic/container'
 import { BackBar } from '@/src/components/basic/back'
+import { formatDid } from '@/src/utils/did/utils'
 
 export default function GroupSettingsPage() {
   const router = useRouter()
@@ -22,7 +23,7 @@ export default function GroupSettingsPage() {
   const handleArchive = useCallback(() => {
     refetch()
     if (query.communityId) {
-      router.push(`/${query.communityId}`)
+      router.push(`/${formatDid(query.communityId)}`)
     }
   }, [query.communityId, refetch, router])
 
@@ -31,7 +32,13 @@ export default function GroupSettingsPage() {
       <LoadingBar loading={isLoading} />
 
       <Container size="small">
-        <BackBar href={`/${query.communityId}/group/${query.groupId}/about`} />
+        <BackBar
+          href={
+            query.communityId
+              ? `/${formatDid(query.communityId)}/group/${query.groupId}/about`
+              : '#'
+          }
+        />
 
         {query.communityId && query.groupId && group !== undefined ? (
           <GroupForm
@@ -39,8 +46,12 @@ export default function GroupSettingsPage() {
             initialValue={group}
             onArchive={handleArchive}
             preview={{
-              from: `/${query.communityId}/group/${query.groupId}/settings`,
-              to: `/${query.communityId}/group/${query.groupId}/about?preview=true`,
+              from: `/${formatDid(query.communityId)}/group/${
+                query.groupId
+              }/settings`,
+              to: `/${formatDid(query.communityId)}/group/${
+                query.groupId
+              }/about?preview=true`,
               template: `You are updating workgroup on Voty\n\nhash:\n{keccak256}`,
               author: query.communityId,
             }}

@@ -20,6 +20,8 @@ import { previewGrantProposalAtom } from '../utils/atoms'
 import { previewPermalink } from '../utils/constants'
 import { permalink2Id } from '../utils/permalink'
 import { trpc } from '../utils/trpc'
+import { formatDid } from '../utils/did/utils'
+import { useEnabledSecondLevels } from '../hooks/use-second-level-dids'
 import Slide from './basic/slide'
 import PermissionCard from './permission-card'
 import Button from './basic/button'
@@ -102,12 +104,12 @@ export default function GrantProposalForm(props: {
   useEffect(() => {
     setDid(defaultDid || '')
   }, [defaultDid])
-
   const { data: status } = useStatus(props.grantPermalink)
   const disabled = useMemo(
     () => !status?.timestamp || !did,
     [did, status?.timestamp],
   )
+  const { data: enabledSecondLevels } = useEnabledSecondLevels(dids)
 
   return (
     <Form
@@ -119,6 +121,7 @@ export default function GrantProposalForm(props: {
           <DidCombobox
             top
             options={didOptions}
+            enabledSecondLevels={enabledSecondLevels}
             value={did}
             onChange={setDid}
             onClick={connect}
@@ -137,7 +140,7 @@ export default function GrantProposalForm(props: {
                 props.grant ? (
                   <PermissionCard
                     title="Proposers"
-                    description="SubDIDs who can initiate proposals in this grant."
+                    description="Second-Level DIDs who can initiate proposals in this grant."
                     value={props.grant.permission.proposing}
                   />
                 ) : null
@@ -187,7 +190,7 @@ export default function GrantProposalForm(props: {
             setPreviewGrantProposal({
               ...value,
               preview: {
-                from: `/${props.communityId}/grant/${permalink2Id(
+                from: `/${formatDid(props.communityId)}/grant/${permalink2Id(
                   props.grantPermalink,
                 )}/create`,
                 to: `/grant-proposal/${previewPermalink}`,

@@ -11,6 +11,7 @@ import MarkdownViewer from '../../components/basic/markdown-viewer'
 import { previewCommunityAtom } from '../../utils/atoms'
 import Card from '@/src/components/basic/card'
 import SectionHeader from '@/src/components/basic/section-header'
+import { formatDid } from '@/src/utils/did/utils'
 
 export default function CommunityAboutPage() {
   const query = useRouterQuery<['communityId']>()
@@ -27,9 +28,9 @@ export default function CommunityAboutPage() {
       {community?.about ? (
         <>
           <SectionHeader title="About">
-            {isManager && !previewCommunity ? (
+            {isManager && !previewCommunity && query.communityId ? (
               <Link
-                href={`/${query.communityId}/settings`}
+                href={`/${formatDid(query.communityId)}/settings`}
                 className="block w-fit"
               >
                 <Button>Edit</Button>
