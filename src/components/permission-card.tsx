@@ -46,7 +46,7 @@ export default function PermissionCard(props: {
             ) : (
               <div className="text-sm-regular text-strong">
                 {operand.arguments[0] === 'bit' ? (
-                  <Tag size="large">All .bit accounts</Tag>
+                  <Tag size="large">All DIDs</Tag>
                 ) : (
                   <Tag
                     color={
