@@ -37,7 +37,7 @@
     "drizzle-orm": "^0.28.6",
     "emoji-regex": "^10.2.1",
     "jotai": "^2.4.2",
-    "match-url-wildcard": "^0.0.4",
+    "match-url-wildcard": "^0.0.5",
     "mdast-util-from-markdown": "^2.0.0",
     "mdast-util-to-string": "^4.0.0",
     "nanoid": "^4.0.2",
@@ -74,7 +74,7 @@
     "@cloudflare/next-on-pages": "^1.6.0",
     "@next/bundle-analyzer": "^13.4.19",
     "@perfsee/webpack": "^1.8.4",
-    "@swc-jotai/react-refresh": "^0.0.8",
+    "@swc-jotai/react-refresh": "^0.1.0",
     "@tailwindcss/forms": "^0.5.6",
     "@tailwindcss/typography": "^0.5.10",
     "@types/node": "^20.5.9",
@@ -96,13 +96,29 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.3.3",
-    "tailwindcss-safe-area": "^0.3.0",
-    "typescript": "^5.2.2",
-    "vercel": "^31.4.0"
+    "tailwindcss-safe-area": "^0.4.0",
+    "typescript": "^5.2.2"
   },
   "pnpm": {
     "overrides": {
-      "ws@8": "8.13.0"
+      "array-includes": "npm:@nolyfill/array-includes@latest",
+      "array.prototype.findlastindex": "npm:@nolyfill/array.prototype.findlastindex@latest",
+      "array.prototype.flat": "npm:@nolyfill/array.prototype.flat@latest",
+      "array.prototype.flatmap": "npm:@nolyfill/array.prototype.flatmap@latest",
+      "array.prototype.tosorted": "npm:@nolyfill/array.prototype.tosorted@latest",
+      "es-iterator-helpers": "npm:@nolyfill/es-iterator-helpers@latest",
+      "has": "npm:@nolyfill/has@latest",
+      "is-arguments": "npm:@nolyfill/is-arguments@latest",
+      "is-generator-function": "npm:@nolyfill/is-generator-function@latest",
+      "object.assign": "npm:@nolyfill/object.assign@latest",
+      "object.entries": "npm:@nolyfill/object.entries@latest",
+      "object.fromentries": "npm:@nolyfill/object.fromentries@latest",
+      "object.groupby": "npm:@nolyfill/object.groupby@latest",
+      "object.hasown": "npm:@nolyfill/object.hasown@latest",
+      "object.values": "npm:@nolyfill/object.values@latest",
+      "side-channel": "npm:@nolyfill/side-channel@latest",
+      "string.prototype.matchall": "npm:@nolyfill/string.prototype.matchall@latest",
+      "which-typed-array": "npm:@nolyfill/which-typed-array@latest"
     }
   }
 }
