@@ -117,7 +117,7 @@ export default function Footer(props: { className?: string }) {
 
             <img
               className="mt-6"
-              src="/images/web3-accessibility-badge.svg"
+              src="/images/web3-accessibility-badge.png"
               alt="Web3 Accessibility"
             />
           </div>
