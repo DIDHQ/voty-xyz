@@ -1,21 +1,23 @@
-import { VerifyMessageParameters, VerifyMessageReturnType } from 'viem'
-
+import { VerifyMessageReturnType } from 'viem'
 import { Proof } from './schemas/basic/proof'
-import { getAddress, keccak256 } from './sdks/ethers'
+import { keccak256 } from './sdks/ethers'
 
 export async function signDocument(
   document: object,
   address: string,
-  signMessage: (message: string) => Buffer | Promise<Buffer>,
+  signMessage: (message: string) => Promise<string>,
+  coinType: string,
+  backup_addr?: string,
   template?: string,
 ): Promise<Proof> {
   const message = encodeDocument(document, template)
-  const buffer = await signMessage(message)
+  const signature = await signMessage(message)
   return {
-    type: 'eth_personal_sign',
-    address: getAddress(address),
+    type: coinType,
+    address,
     template,
-    signature: buffer.toString('base64'),
+    backup_addr,
+    signature,
   }
 }
 
@@ -23,18 +25,21 @@ export async function verifyDocument(
   document: object,
   proof: Proof,
   verifyMessage: (
-    parameters: VerifyMessageParameters,
+    parameters: {
+      address: string
+      message: string
+      signature: string
+    },
   ) => Promise<VerifyMessageReturnType>,
 ): Promise<boolean> {
-  if (proof.type !== 'eth_personal_sign') {
-    return false
-  }
   const message = encodeDocument(document, proof.template)
-  return verifyMessage({
+  console.log('server signature', proof)
+  const result = await verifyMessage({
     message,
-    address: proof.address as `0x${string}`,
-    signature: Buffer.from(proof.signature, 'base64'),
+    address: proof.address,
+    signature: proof.signature,
   })
+  return result
 }
 
 function encodeDocument(
@@ -46,8 +51,8 @@ function encodeDocument(
   const textEncoder = new TextEncoder()
   return template
     ? template.replace(
-        '{keccak256}',
-        keccak256(textEncoder.encode(JSON.stringify(rest))),
-      )
+      '{keccak256}',
+      keccak256(textEncoder.encode(JSON.stringify(rest))),
+    )
     : JSON.stringify(rest)
 }

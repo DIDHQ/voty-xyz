@@ -26,7 +26,7 @@ export type DecimalFunction<T> = (...args: T) => {
 }
 
 export type Account = {
-  coinType: number
+  coinType: string
   address: string
 }
 

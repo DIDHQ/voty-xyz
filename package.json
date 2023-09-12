@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@cfworker/sentry": "^1.12.4",
+    "@didhq/did-utils": "^0.0.9",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.3.1",
@@ -29,6 +30,7 @@
     "@trpc/next": "^10.38.1",
     "@trpc/react-query": "^10.38.1",
     "@trpc/server": "^10.38.1",
+    "@wagmi/core": "^1.4.1",
     "arweave": "^1.14.4",
     "browser-image-compression": "^2.0.2",
     "clsx": "^2.0.0",
@@ -36,7 +38,9 @@
     "decimal.js": "^10.4.3",
     "drizzle-orm": "^0.28.6",
     "emoji-regex": "^10.2.1",
+    "foxact": "^0.2.20",
     "jotai": "^2.4.2",
+    "lodash-es": "^4.17.21",
     "match-url-wildcard": "^0.0.5",
     "mdast-util-from-markdown": "^2.0.0",
     "mdast-util-to-string": "^4.0.0",
@@ -68,6 +72,7 @@
     "usehooks-ts": "^2.9.1",
     "viem": "^1.10.7",
     "wagmi": "^1.4.1",
+    "wallet-bridge": "^0.1.46",
     "zod": "^3.22.2"
   },
   "devDependencies": {
@@ -77,6 +82,7 @@
     "@swc-jotai/react-refresh": "^0.1.0",
     "@tailwindcss/forms": "^0.5.6",
     "@tailwindcss/typography": "^0.5.10",
+    "@types/lodash-es": "^4.17.9",
     "@types/node": "^20.5.9",
     "@types/react": "^18.2.21",
     "@typescript-eslint/eslint-plugin": "^6.6.0",

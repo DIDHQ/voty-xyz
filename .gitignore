@@ -49,3 +49,6 @@ public/*.js.map
 sentry.properties
 
 /drizzle
+
+.env
+.env.*

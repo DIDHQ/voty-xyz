@@ -22,10 +22,11 @@ export default function useSignDocumentWithoutAuthorship(
         document,
         account.address,
         signMessage,
+        account.coinType,
         template,
       )
       return { ...document, proof }
     },
-    [account?.address, connect, signMessage, template],
+    [account?.address, connect, signMessage, template, account?.coinType],
   )
 }

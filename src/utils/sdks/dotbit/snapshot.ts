@@ -29,7 +29,7 @@ export async function snapshotPermissionsInfo(
 }
 
 export async function snapshotAddressAccounts(
-  coinType: number,
+  coinType: number | string,
   address: string,
   snapshot: string,
 ): Promise<string[]> {

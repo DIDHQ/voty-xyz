@@ -2,10 +2,10 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { tv } from 'tailwind-variants'
 import { usePathname } from 'next/navigation'
-import { clsxMerge } from '../utils/tailwind-helper'
-// import { isTestnet } from '../utils/constants'
-import { VotyIcon } from './icons'
 import { isTestnet } from '../utils/constants'
+import { clsxMerge } from '../utils/tailwind-helper'
+import { VotyIcon } from './icons'
+
 
 const ConnectButton = dynamic(() => import('./connect-button'), { ssr: false })
 

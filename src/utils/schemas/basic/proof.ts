@@ -1,10 +1,11 @@
 import { z } from 'zod'
 
 export const proofSchema = z.object({
-  type: z.literal('eth_personal_sign'),
+  type: z.string(),
   address: z.string().min(1),
   template: z.string().min(1).optional(),
   signature: z.string().min(1),
+  backup_addr: z.string().optional().nullable()
 })
 
 export type Proof = z.infer<typeof proofSchema>

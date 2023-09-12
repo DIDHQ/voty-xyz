@@ -44,10 +44,13 @@ export default function useSignDocument(
         { ...document, authorship },
         account.address,
         signMessage,
+        account.coinType,
+        account?.deviceAddress,
         template,
+        
       )
       return { ...document, authorship, proof }
     },
-    [did, account?.address, snapshots, signMessage, template, connect],
+    [did, account?.address, snapshots, signMessage, template, connect, account?.coinType, account?.deviceAddress],
   )
 }
