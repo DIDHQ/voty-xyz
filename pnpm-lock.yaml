@@ -188,8 +188,8 @@ dependencies:
     specifier: ^1.10.7
     version: 1.10.7(typescript@5.2.2)(zod@3.22.2)
   wallet-bridge:
-    specifier: ^0.1.46
-    version: 0.1.46(@babel/runtime@7.22.15)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(zod@3.22.2)
+    specifier: ^0.1.47
+    version: 0.1.47(@babel/runtime@7.22.15)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(zod@3.22.2)
   zod:
     specifier: ^3.22.2
     version: 3.22.2
@@ -8928,8 +8928,8 @@ packages:
       - zod
     dev: false
 
-  /wallet-bridge@0.1.46(@babel/runtime@7.22.15)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(zod@3.22.2):
-    resolution: {integrity: sha512-O1/DXuSkDRB5/Fov7QZ9Ay/McKy7t7U7u2Of1paSB1IyHgtuYwnpRiUYSLNjOJz+MnNmbE4g31pNtZTYjWIAcA==}
+  /wallet-bridge@0.1.47(@babel/runtime@7.22.15)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(zod@3.22.2):
+    resolution: {integrity: sha512-SWUNoTowaEPZ0iRY8K6OSkl7W+WdI3JXY5bAcm73pUF3Kixk8j08LvIhkPqINyOfTAJApnKwrKXgPnv6ywVWfA==}
     engines: {node: '>=16'}
     peerDependencies:
       react: ^18.2.0
