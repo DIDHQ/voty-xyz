@@ -47,14 +47,15 @@ export default async function verifyProof<T extends object>(
 ): Promise<void> {
   const { proof, ...rest } = document
   const verifyMessage = async ({ message }: { message: string }) => {
+    const signature = atob(proof.signature)
     if (proof.type === commonCoinTypes.ETH.toString()) {
-      return verifyEvmMessage(proof.address, message, proof.signature as Hex)
+      return verifyEvmMessage(proof.address, message, signature as Hex)
     }
     if (proof.type === commonCoinTypes.TRX.toString()) {
-      return verifyTronMessage(proof.address, message, proof.signature as Hex)
+      return verifyTronMessage(proof.address, message, signature as Hex)
     }
     if(proof.type === commonCoinTypes.CKB.toString()) {
-      return verifyPasskey(proof.address, proof.backup_addr!, message, proof.signature as Hex)
+      return verifyPasskey(proof.address, proof.backup_addr!, message, signature as Hex)
     }
     return false
   }

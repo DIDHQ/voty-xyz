@@ -17,7 +17,7 @@ export default function useWallet() {
         : undefined,
     signMessage: async (message: string) => {
       if (coinType) {
-        return signMessageAsync(message) || ''
+        return btoa(await signMessageAsync(message) || '')
       }
       throw new Error(`sign message unsupported coin type: ${coinType}`)
     },
