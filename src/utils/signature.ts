@@ -33,7 +33,6 @@ export async function verifyDocument(
   ) => Promise<VerifyMessageReturnType>,
 ): Promise<boolean> {
   const message = encodeDocument(document, proof.template)
-  console.log('server signature', proof)
   const result = await verifyMessage({
     message,
     address: proof.address,
