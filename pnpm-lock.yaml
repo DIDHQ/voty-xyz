@@ -29,8 +29,8 @@ dependencies:
     specifier: ^1.12.4
     version: 1.12.4
   '@didhq/did-utils':
-    specifier: ^0.0.9
-    version: 0.0.9(viem@1.10.7)
+    specifier: ^0.0.10
+    version: 0.0.10(viem@1.10.7)
   '@headlessui/react':
     specifier: ^1.7.17
     version: 1.7.17(react-dom@18.2.0)(react@18.2.0)
@@ -430,8 +430,8 @@ packages:
       '@jridgewell/trace-mapping': 0.3.9
     dev: true
 
-  /@didhq/did-utils@0.0.9(viem@1.10.7):
-    resolution: {integrity: sha512-kNSJ0g3KymkK2hF/elDGYrBF9h1zZ/23iC/VAZC2vb7LG3QIUsFHZ5nuVqdUac2LeryYNCKrAiksbIq8sf1tPw==}
+  /@didhq/did-utils@0.0.10(viem@1.10.7):
+    resolution: {integrity: sha512-805D0aPKYV2XaM0MZPkp8XVM59zUBtSVlfQqp5XBoB/jj5TmDVeKE5F4YykPG38urUxp5VCqRRE2baGEmarK6Q==}
     peerDependencies:
       viem: ^1.9.3
     dependencies:
