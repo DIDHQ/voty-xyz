@@ -1,16 +1,14 @@
 import { TRPCError } from '@trpc/server'
-import { verifyEvmMessage } from '@didhq/did-utils/verify-message/evm'
-import { verifyTronMessage } from '@didhq/did-utils/verify-message/tron'
+import { verifyMessage as vfm } from '@didhq/did-utils'
 import { Hex } from 'viem'
 import { Proved } from '../schemas/basic/proof'
 import { verifyDocument } from '../signature'
-import { commonCoinTypes, isTestnet } from '../constants'
 
-const endPoint = isTestnet
+/* const endPoint = isTestnet
     ? 'https://test-webauthn-api.did.id'
     : 'https://webauthn-api.did.id'
 
-const verifyPasskey = (
+ const verifyPasskey = (
   address: string,
   backup_addr: string,
   message: string,
@@ -40,7 +38,7 @@ const verifyPasskey = (
       }
       return v.data.is_valid
     })
-    .catch(() => false)
+    .catch(() => false)*/
 
 export default async function verifyProof<T extends object>(
   document: Proved<T>,
@@ -48,16 +46,7 @@ export default async function verifyProof<T extends object>(
   const { proof, ...rest } = document
   const verifyMessage = async ({ message }: { message: string }) => {
     const signature = atob(proof.signature)
-    if (proof.type === commonCoinTypes.ETH.toString()) {
-      return verifyEvmMessage(proof.address, message, signature as Hex)
-    }
-    if (proof.type === commonCoinTypes.TRX.toString()) {
-      return verifyTronMessage(proof.address, message, signature as Hex)
-    }
-    if(proof.type === commonCoinTypes.CKB.toString()) {
-      return verifyPasskey(proof.address, proof.backup_addr!, message, signature as Hex)
-    }
-    return false
+    return vfm(proof.address, message, signature as Hex)
   }
   if (!(await verifyDocument(rest, proof, verifyMessage))) {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'Invalid proof' })

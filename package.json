@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@cfworker/sentry": "^1.12.4",
-    "@didhq/did-utils": "^0.0.10",
+    "@didhq/did-utils": "^0.0.11",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.3.1",
