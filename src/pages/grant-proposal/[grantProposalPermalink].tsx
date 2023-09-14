@@ -90,7 +90,7 @@ export const getServerSideProps: GetServerSideProps<
 export default function GrantProposalPage() {
   const query = useRouterQuery<['grantProposalPermalink']>()
   const previewGrantProposal = useAtomValue(previewGrantProposalAtom)
-  const { data, isFetching, refetch } =
+  const { data, isLoading: isFetching, refetch } =
     trpc.grantProposal.getByPermalink.useQuery(
       { permalink: query.grantProposalPermalink },
       { enabled: !!query.grantProposalPermalink },

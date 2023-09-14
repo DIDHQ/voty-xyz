@@ -23,6 +23,7 @@ export const commonCoinTypes = {
   AR: 472,
   MATIC: 966,
   BSC: 9006,
+  TRX: 195
 }
 
 export const commonChainIds = {
@@ -66,9 +67,10 @@ export const coinTypeToChainId: { [coinType: number]: number | undefined } = {
 
 export const coinTypeNames: { [coinType: number]: string | undefined } = {
   [commonCoinTypes.ETH]: 'Ethereum',
-  [commonCoinTypes.CKB]: 'Nervos CKB',
+  [commonCoinTypes.CKB]: 'Passkey',
   [commonCoinTypes.MATIC]: 'Polygon',
   [commonCoinTypes.BSC]: 'BNB Chain',
+  [commonCoinTypes.TRX]: 'Tron',
 }
 
 export const coinTypeExplorers: { [coinType: number]: string | undefined } = {
@@ -82,6 +84,8 @@ export const coinTypeLogos: { [coinType: number]: string | undefined } = {
   [commonCoinTypes.ETH]: `/chains/${commonCoinTypes.ETH}.svg`,
   [commonCoinTypes.MATIC]: `/chains/${commonCoinTypes.MATIC}.svg`,
   [commonCoinTypes.BSC]: `/chains/${commonCoinTypes.BSC}.svg`,
+  [commonCoinTypes.CKB]: `/chains/passkey.svg`,
+  [commonCoinTypes.TRX]: `/chains/${commonCoinTypes.TRX}.svg`,
 }
 
 export enum DataType {

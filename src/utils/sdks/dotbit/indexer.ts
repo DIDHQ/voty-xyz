@@ -5,7 +5,7 @@ const endpoint = isTestnet
   ? 'https://test-indexer.did.id'
   : 'https://indexer-v1.did.id'
 
-export async function getAccountList(coinType: number, address: string) {
+export async function getAccountList(coinType: number | string, address: string) {
   const json = await fetchJson<{
     errno: number
     errmsg: string

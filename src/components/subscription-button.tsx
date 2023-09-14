@@ -33,7 +33,7 @@ export default function SubscriptionButton(props: {
   const {
     data: subscribed = data,
     refetch,
-    isFetching,
+    isLoading: isFetching,
   } = trpc.subscription.get.useQuery(
     {
       subscriber: { type: 'eth_personal_sign', address: account?.address! },
