@@ -69,7 +69,7 @@ export const getServerSideProps: GetServerSideProps<
 export default function GroupProposalPage() {
   const query = useRouterQuery<['groupProposalPermalink']>()
   const previewGroupProposal = useAtomValue(previewGroupProposalAtom)
-  const { data, isFetching, refetch } =
+  const { data, isLoading: isFetching, refetch } =
     trpc.groupProposal.getByPermalink.useQuery(
       { permalink: query.groupProposalPermalink },
       { enabled: !!query.groupProposalPermalink },
