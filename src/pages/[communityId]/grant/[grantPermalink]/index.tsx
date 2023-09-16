@@ -74,10 +74,11 @@ export const getServerSideProps: GetServerSideProps<
 export default function GrantPage() {
   const query = useRouterQuery<['communityId', 'grantPermalink']>()
   const previewGrant = useAtomValue(previewGrantAtom)
-  const { data, isLoading: isFetching } = trpc.grant.getByPermalink.useQuery(
+  const { data, isLoading: loading } = trpc.grant.getByPermalink.useQuery(
     { permalink: query.grantPermalink },
     { enabled: !!query.grantPermalink },
   )
+  const isFetching = (!!query.grantPermalink) ? loading : false
   const grant = useMemo<
     | (Grant & {
         permalink: string

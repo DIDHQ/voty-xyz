@@ -68,12 +68,15 @@ export const getServerSideProps: GetServerSideProps<
 
 export default function GroupProposalPage() {
   const query = useRouterQuery<['groupProposalPermalink']>()
+
   const previewGroupProposal = useAtomValue(previewGroupProposalAtom)
-  const { data, isLoading: isFetching, refetch } =
+  const { data, isLoading: loading, refetch } =
     trpc.groupProposal.getByPermalink.useQuery(
       { permalink: query.groupProposalPermalink },
       { enabled: !!query.groupProposalPermalink },
     )
+  // FIXME: React Query Bug https://github.com/TanStack/query/issues/3584
+  const isFetching = (!!query.groupProposalPermalink) ? loading : false
   const groupProposal = useMemo<
     | (GroupProposal & {
         votes: number
@@ -94,16 +97,18 @@ export default function GroupProposalPage() {
       ? { ...data, permalink: query.groupProposalPermalink }
       : undefined
   }, [data, previewGroupProposal, query.groupProposalPermalink])
-  const { data: group, isLoading: isGroupLoading } =
+  const { data: group, isLoading: groupLoading } =
     trpc.group.getByPermalink.useQuery(
       { permalink: groupProposal?.group },
       { enabled: !!groupProposal?.group, refetchOnWindowFocus: false },
     )
-  const { data: community, isLoading: isCommunityLoading } =
+  const isGroupLoading = (!!groupProposal?.group) ? groupLoading : false
+  const { data: community, isLoading: communityLoading } =
     trpc.community.getByPermalink.useQuery(
       { permalink: group?.community },
       { enabled: !!group?.community, refetchOnWindowFocus: false },
     )
+  const isCommunityLoading = (!!group?.community) ? communityLoading : false
   const {
     data: list,
     fetchNextPage,
