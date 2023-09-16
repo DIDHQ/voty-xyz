@@ -33,7 +33,7 @@ export default function SubscriptionButton(props: {
   const {
     data: subscribed = data,
     refetch,
-    isLoading: isFetching,
+    isLoading: loading,
   } = trpc.subscription.get.useQuery(
     {
       subscriber: { type: 'eth_personal_sign', address: account?.address! },
@@ -41,6 +41,7 @@ export default function SubscriptionButton(props: {
     },
     { enabled: !!account?.address && !!props.communityId },
   )
+  const isFetching = (!!account?.address && !!props.communityId) ? loading : false
   const signSubscribe = useSignDocumentWithoutAuthorship(
     `You are subscribing community on Voty\n\nhash:\n{keccak256}`,
   )
