@@ -65,7 +65,7 @@ export default function Header(props: { className?: string }) {
 
           <a
             className={navItemClass()}
-            href="https://voty.gitbook.io/"
+            href="https://community.d.id/c/knowledge-base-voty/"
             title="Document"
           >
             Document
