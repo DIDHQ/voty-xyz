@@ -27,20 +27,20 @@ const productLinks = [
     className: 'h-[26px] w-full pt-1',
     icon: VotyIcon,
     external: true,
-    href: 'https://voty.xyz/',
+    href: 'https://d.id/products/voty',
   },
   {
     title: 'SoulFrag',
     icon: SoulFragIcon,
     external: true,
-    href: 'https://www.soulfrag.xyz/',
+    href: 'https://d.id/products/soulfrag',
   },
   {
     title: 'd.id Profile',
     suffix: 'Profile',
     icon: DidIcon,
     external: true,
-    href: 'https://d.id/',
+    href: 'https://d.id/products/d-id-profile',
   },
 ]
 
@@ -53,22 +53,7 @@ const developerLinks = [
   {
     title: 'Documents',
     external: true,
-    href: 'https://voty.gitbook.io/',
-  },
-]
-
-const companyLinks = [
-  {
-    title: 'Join Us',
-    external: true,
-    href: 'https://docs.d.id/we-are-hiring/position-list',
-    hasArrow: true,
-  },
-  {
-    title: 'Terms',
-    external: true,
-    href: 'https://docs.d.id/',
-    hasArrow: true,
+    href: 'https://community.d.id/c/knowledge-base-voty/',
   },
 ]
 
@@ -124,12 +109,9 @@ export default function Footer(props: { className?: string }) {
 
           <div className="flex gap-12 max-[370px]:flex-col min-[370px]:max-sm:grid min-[370px]:max-sm:grid-cols-2 sm:max-lg:justify-between lg:gap-18 min-[1160px]:gap-24">
             <FooterNav title="Developer" links={developerLinks} />
-
-            <FooterNav title="Company" links={companyLinks} />
-
             <FooterColumn
               className="min-[370px]:max-sm:col-span-2"
-              title="Find Us"
+              title="Find us"
             >
               <ul className="space-y-2">
                 {socialLinks.map((item, index) => (
