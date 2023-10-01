@@ -29,7 +29,7 @@
     "@trpc/next": "^10.38.1",
     "@trpc/react-query": "^10.38.1",
     "@trpc/server": "^10.38.1",
-    "@wagmi/core": "^1.4.1",
+    "@wagmi/core": "^1.4.2",
     "arweave": "^1.14.4",
     "browser-image-compression": "^2.0.2",
     "clsx": "^2.0.0",
