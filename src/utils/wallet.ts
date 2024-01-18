@@ -29,7 +29,7 @@ const { chains, publicClient } = configureChains(
         return { http: chainIdToRpc[chain.id] || '' }
       },
     }),
-  ]
+  ],
 )
 
 const connector = new WalletConnectConnector({

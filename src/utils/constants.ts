@@ -23,7 +23,7 @@ export const commonCoinTypes = {
   AR: 472,
   MATIC: 966,
   BSC: 9006,
-  TRX: 195
+  TRX: 195,
 }
 
 export const commonChainIds = {

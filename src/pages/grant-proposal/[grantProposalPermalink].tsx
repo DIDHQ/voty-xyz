@@ -90,20 +90,23 @@ export const getServerSideProps: GetServerSideProps<
 export default function GrantProposalPage() {
   const query = useRouterQuery<['grantProposalPermalink']>()
   const previewGrantProposal = useAtomValue(previewGrantProposalAtom)
-  const { data, isLoading: fetching, refetch } =
-    trpc.grantProposal.getByPermalink.useQuery(
-      { permalink: query.grantProposalPermalink },
-      { enabled: !!query.grantProposalPermalink },
-    )
-  const isFetching = (!!query.grantProposalPermalink) ? fetching : false
+  const {
+    data,
+    isLoading: fetching,
+    refetch,
+  } = trpc.grantProposal.getByPermalink.useQuery(
+    { permalink: query.grantProposalPermalink },
+    { enabled: !!query.grantProposalPermalink },
+  )
+  const isFetching = !!query.grantProposalPermalink ? fetching : false
   const grantProposal = useMemo<
     | (GrantProposal & {
-      ts: Date
-      selected: string | null
-      votes: number
-      permalink: string
-      authorship?: { author?: string }
-    })
+        ts: Date
+        selected: string | null
+        votes: number
+        permalink: string
+        authorship?: { author?: string }
+      })
     | undefined
   >(() => {
     if (previewGrantProposal) {
@@ -125,13 +128,13 @@ export default function GrantProposalPage() {
       { permalink: grantProposal?.grant },
       { enabled: !!grantProposal?.grant, refetchOnWindowFocus: false },
     )
-  const isGrantLoading = (!!grantProposal?.grant) ? grantLoading : false
+  const isGrantLoading = !!grantProposal?.grant ? grantLoading : false
   const { data: community, isLoading: communityLoading } =
     trpc.community.getByPermalink.useQuery(
       { permalink: grant?.community },
       { enabled: !!grant?.community, refetchOnWindowFocus: false },
     )
-  const isCommunityLoading = (!!grant?.community) ? communityLoading : false
+  const isCommunityLoading = !!grant?.community ? communityLoading : false
   const {
     data: list,
     fetchNextPage,
@@ -194,10 +197,10 @@ export default function GrantProposalPage() {
     () =>
       grantProposals
         ? grantProposals.findIndex(
-          ({ permalink, selected }) =>
-            (grant?.permission.selecting ? selected : true) &&
-            permalink === grantProposal?.permalink,
-        )
+            ({ permalink, selected }) =>
+              (grant?.permission.selecting ? selected : true) &&
+              permalink === grantProposal?.permalink,
+          )
         : -1,
     [grant?.permission.selecting, grantProposal?.permalink, grantProposals],
   )
@@ -275,8 +278,9 @@ export default function GrantProposalPage() {
               disabled={!community || !grantProposal || !!previewGrantProposal}
               href={
                 community?.id
-                  ? `/${formatDid(community.id)}/grant/${grantProposal ? permalink2Id(grantProposal.grant) : ''
-                  }`
+                  ? `/${formatDid(community.id)}/grant/${
+                      grantProposal ? permalink2Id(grantProposal.grant) : ''
+                    }`
                   : '#'
               }
             />
@@ -363,8 +367,8 @@ export default function GrantProposalPage() {
 
                 {grant && grantProposal ? (
                   phase === GrantPhase.PROPOSING &&
-                    grant.permission.selecting &&
-                    !grantProposal.selected ? (
+                  grant.permission.selecting &&
+                  !grantProposal.selected ? (
                     <Tag round>Awaiting Selection</Tag>
                   ) : grant.permission.selecting && !grantProposal.selected ? (
                     <Tag round>Not Selected</Tag>
@@ -387,8 +391,8 @@ export default function GrantProposalPage() {
 
           {grant && grantProposal ? (
             phase === GrantPhase.PROPOSING &&
-              grant.permission.selecting &&
-              !grantProposal.selected ? (
+            grant.permission.selecting &&
+            !grantProposal.selected ? (
               showSelect ? (
                 <GrantProposalSelectForm
                   grant={grant}

@@ -1,5 +1,8 @@
 import { useMemo } from 'react'
-import { useWalletBridgeAddress, useWalletInstance } from '../hooks/use-wallet-bridge'
+import {
+  useWalletBridgeAddress,
+  useWalletInstance,
+} from '../hooks/use-wallet-bridge'
 import { WalletInfoContext, WalletMethodInfo } from '../utils/wallet-context'
 
 const WalletInfoProvider = ({ children }: { children: React.ReactNode }) => {
@@ -10,7 +13,6 @@ const WalletInfoProvider = ({ children }: { children: React.ReactNode }) => {
     </WalletInfoContext.Provider>
   )
 }
-
 
 const WalletMethodProvider = ({ children }: { children: React.ReactNode }) => {
   const [walletRef, isMounted] = useWalletInstance()
@@ -48,11 +50,7 @@ const WalletMethodProvider = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-const WalletBridgeProvider = ({
-  children,
-}: {
-  children: React.ReactNode
-}) => {
+const WalletBridgeProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <WalletInfoProvider>
       <WalletMethodProvider>{children}</WalletMethodProvider>

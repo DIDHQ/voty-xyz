@@ -41,7 +41,7 @@ export default function SubscriptionButton(props: {
     },
     { enabled: !!account?.address && !!props.communityId },
   )
-  const isFetching = (!!account?.address && !!props.communityId) ? loading : false
+  const isFetching = !!account?.address && !!props.communityId ? loading : false
   const signSubscribe = useSignDocumentWithoutAuthorship(
     `You are subscribing community on Voty\n\nhash:\n{keccak256}`,
   )

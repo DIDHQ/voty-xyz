@@ -35,44 +35,39 @@ export default function ConnectButton() {
 
   return (
     <>
-      {
-        account ? (
-          <button className='flex items-center' onClick={disconnect}>
-            {coinTypeLogos[parseInt(account.coinType,10)] ? (
-              <img
-                src={coinTypeLogos[parseInt(account.coinType, 10)]}
-                alt="logo"
-                className="h-8 w-8 sm:h-9 sm:w-9"
-              />
-            ) : (
-              <Avatar className="h-8 w-8 sm:h-9 sm:w-9" variant="beam" />
-            )}
-            <div className="group ml-2 hidden text-left sm:block">
-              <p className="text-sm-medium text-moderate transition-colors group-hover:text-strong">
-                {coinTypeNames[parseInt(account.coinType, 10)]}
-              </p>
-              <p className="text-xs-medium text-subtle transition-colors group-hover:text-moderate">
-                {displayAddress}
-              </p>
-            </div>
-          </button>
-        ) : (
-          <>
-            <Button
-              className="hidden sm:flex"
-              onClick={connect}
-            >
-              Connect Wallet
-            </Button>
-            <Button
-              className="flex sm:hidden"
-              icon={WalletIcon}
-              size="small"
-              onClick={connect}
-            ></Button>
-          </>
-        )
-      }
+      {account ? (
+        <button className="flex items-center" onClick={disconnect}>
+          {coinTypeLogos[parseInt(account.coinType, 10)] ? (
+            <img
+              src={coinTypeLogos[parseInt(account.coinType, 10)]}
+              alt="logo"
+              className="h-8 w-8 sm:h-9 sm:w-9"
+            />
+          ) : (
+            <Avatar className="h-8 w-8 sm:h-9 sm:w-9" variant="beam" />
+          )}
+          <div className="group ml-2 hidden text-left sm:block">
+            <p className="text-sm-medium text-moderate transition-colors group-hover:text-strong">
+              {coinTypeNames[parseInt(account.coinType, 10)]}
+            </p>
+            <p className="text-xs-medium text-subtle transition-colors group-hover:text-moderate">
+              {displayAddress}
+            </p>
+          </div>
+        </button>
+      ) : (
+        <>
+          <Button className="hidden sm:flex" onClick={connect}>
+            Connect Wallet
+          </Button>
+          <Button
+            className="flex sm:hidden"
+            icon={WalletIcon}
+            size="small"
+            onClick={connect}
+          ></Button>
+        </>
+      )}
     </>
   )
 }

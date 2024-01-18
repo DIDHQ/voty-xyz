@@ -78,7 +78,7 @@ export default function GrantPage() {
     { permalink: query.grantPermalink },
     { enabled: !!query.grantPermalink },
   )
-  const isFetching = (!!query.grantPermalink) ? loading : false
+  const isFetching = !!query.grantPermalink ? loading : false
   const grant = useMemo<
     | (Grant & {
         permalink: string

@@ -24,13 +24,11 @@ export async function signDocument(
 export async function verifyDocument(
   document: object,
   proof: Proof,
-  verifyMessage: (
-    parameters: {
-      address: string
-      message: string
-      signature: string
-    },
-  ) => Promise<VerifyMessageReturnType>,
+  verifyMessage: (parameters: {
+    address: string
+    message: string
+    signature: string
+  }) => Promise<VerifyMessageReturnType>,
 ): Promise<boolean> {
   const message = encodeDocument(document, proof.template)
   const result = await verifyMessage({
@@ -50,8 +48,8 @@ function encodeDocument(
   const textEncoder = new TextEncoder()
   return template
     ? template.replace(
-      '{keccak256}',
-      keccak256(textEncoder.encode(JSON.stringify(rest))),
-    )
+        '{keccak256}',
+        keccak256(textEncoder.encode(JSON.stringify(rest))),
+      )
     : JSON.stringify(rest)
 }

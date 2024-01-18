@@ -5,7 +5,7 @@ export const proofSchema = z.object({
   address: z.string().min(1),
   template: z.string().min(1).optional(),
   signature: z.string().min(1),
-  backup_addr: z.string().optional().nullable()
+  backup_addr: z.string().optional().nullable(),
 })
 
 export type Proof = z.infer<typeof proofSchema>

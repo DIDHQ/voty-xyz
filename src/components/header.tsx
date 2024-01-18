@@ -6,7 +6,6 @@ import { isTestnet } from '../utils/constants'
 import { clsxMerge } from '../utils/tailwind-helper'
 import { VotyIcon } from './icons'
 
-
 const ConnectButton = dynamic(() => import('./connect-button'), { ssr: false })
 
 const navItemClass = tv({

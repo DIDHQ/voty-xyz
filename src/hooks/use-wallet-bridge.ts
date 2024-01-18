@@ -1,21 +1,15 @@
 import type { Wallet } from 'wallet-bridge'
 import { useIsomorphicLayoutEffect } from 'foxact/use-isomorphic-layout-effect'
-import {
-  useCallback,
-  useState,
-  useSyncExternalStore,
-  useRef,
-} from 'react'
+import { useCallback, useState, useSyncExternalStore, useRef } from 'react'
 import memo from 'lodash-es/memoize'
 import { defaultResult } from '../utils/wallet-context'
-
 
 const generateWalletState = memo(
   (
     hydrated: boolean,
     address?: string,
     coinType?: string,
-    deviceAddress?: string
+    deviceAddress?: string,
   ) => {
     return {
       hydrated,
@@ -26,7 +20,7 @@ const generateWalletState = memo(
     }
   },
   (isHydrated, address, coinType, deviceAddress) =>
-    `${isHydrated}-${address}-${coinType}-${deviceAddress}`
+    `${isHydrated}-${address}-${coinType}-${deviceAddress}`,
 )
 
 export const useWalletInstance = () => {
@@ -46,29 +40,29 @@ export const useWalletBridgeAddress = () => {
   const [walletRef, isMounted] = useWalletInstance()
   const subscribe = useCallback(
     (cb: () => void) => {
-      if (!isMounted) return () => { }
+      if (!isMounted) return () => {}
       walletRef.current?.walletSDK.context.addEventListener('walletConnect', cb)
       walletRef.current?.walletSDK.context.addEventListener(
         'walletDisconnect',
-        cb
+        cb,
       )
       walletRef.current?.walletSDK.context.addEventListener('walletChange', cb)
       return () => {
         walletRef.current?.walletSDK.context.removeEventListener(
           'walletConnect',
-          cb
+          cb,
         )
         walletRef.current?.walletSDK.context.removeEventListener(
           'walletDisconnect',
-          cb
+          cb,
         )
         walletRef.current?.walletSDK.context.removeEventListener(
           'walletChange',
-          cb
+          cb,
         )
       }
     },
-    [isMounted, walletRef]
+    [isMounted, walletRef],
   )
   const getClientSnapShot = useCallback(() => {
     if (!isMounted) return defaultResult

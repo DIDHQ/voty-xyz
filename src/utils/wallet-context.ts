@@ -17,11 +17,14 @@ export const WalletMethodInfo = createContext<{
   disconnect: () => void
   loggedInfo: () => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  sign: (data: string, options?: Record<string, any> | undefined) => Promise<string>
+  sign: (
+    data: string,
+    options?: Record<string, any> | undefined,
+  ) => Promise<string>
 }>({
-  connect: () => { },
-  disconnect: () => { },
-  loggedInfo: () => { },
+  connect: () => {},
+  disconnect: () => {},
+  loggedInfo: () => {},
   sign: () => Promise.resolve(''),
 })
 

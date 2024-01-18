@@ -17,16 +17,18 @@ import { store } from '../utils/atoms'
 import '../styles/globals.css'
 import '../styles/editor.css'
 
-const WalletBridgeProvider = dynamic(() => import('../components/wallet-bridge-provider'), {
-  ssr: false,
-})
+const WalletBridgeProvider = dynamic(
+  () => import('../components/wallet-bridge-provider'),
+  {
+    ssr: false,
+  },
+)
 
 const poppins = Poppins({
   subsets: ['latin'],
   display: 'swap',
   weight: ['400', '500', '600', '700'],
 })
-
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
