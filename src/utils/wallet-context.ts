@@ -19,7 +19,7 @@ export const WalletMethodInfo = createContext<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sign: (
     data: string,
-    options?: Record<string, any> | undefined,
+    options?: Record<string, unknown> | undefined,
   ) => Promise<string>
 }>({
   connect: () => {},
