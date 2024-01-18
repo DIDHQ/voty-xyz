@@ -170,7 +170,9 @@ export const grantProposalVoteRouter = router({
             })
             .onDuplicateKeyUpdate({
               set: {
-                power: sql`${table.grantProposalVoteChoice.power} + ${power}`,
+                power: sql`${table.grantProposalVoteChoice.power} + ${
+                  power ?? 0
+                }`,
               },
             })
         }

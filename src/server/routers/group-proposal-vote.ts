@@ -171,7 +171,11 @@ export const groupProposalVoteRouter = router({
               power: power?.toString() || '0',
             })
             .onDuplicateKeyUpdate({
-              set: { power: sql`${table.groupProposalVoteChoice.power} + 1` },
+              set: {
+                power: sql`${table.groupProposalVoteChoice.power} + ${
+                  power ?? 0
+                }`,
+              },
             })
         }
         await tx.insert(table.activity).values({
