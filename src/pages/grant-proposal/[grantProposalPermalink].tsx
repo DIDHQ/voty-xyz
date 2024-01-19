@@ -151,7 +151,7 @@ export default function GrantProposalPage() {
     () => list?.pages.flatMap(({ data }) => data),
     [list],
   )
-  const { inView } = useInView()
+  const { ref, inView } = useInView()
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage()
@@ -448,6 +448,7 @@ export default function GrantProposalPage() {
                   </TableRow>
                 ))}
               </Table>
+              <div ref={ref} />
             </Card>
           ) : null}
         </Main>

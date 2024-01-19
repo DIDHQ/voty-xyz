@@ -128,7 +128,7 @@ export default function GroupProposalPage() {
     () => list?.pages.flatMap(({ data }) => data),
     [list],
   )
-  const { inView } = useInView()
+  const { ref, inView } = useInView()
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage()
@@ -277,6 +277,7 @@ export default function GroupProposalPage() {
                   </TableRow>
                 ))}
               </Table>
+              <div ref={ref} />
             </Card>
           ) : null}
         </Main>
