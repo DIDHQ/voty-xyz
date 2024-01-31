@@ -29,6 +29,20 @@ export default function GroupAboutPage() {
       <GroupLayout>
         {isLoading ? <AboutSkeleton /> : null}
 
+        {isManager && !previewGroup && query.communityId ? (
+          <div
+            className="mb-6 flex items-center justify-end">
+            <Link
+              href={`/${formatDid(query.communityId)}/group/${
+                query.groupId
+              }/settings`}
+              className="block w-fit"
+            >
+              <Button icon={PencilIcon}>Edit</Button>
+            </Link>
+          </div>
+        ) : null}
+        
         {group?.introduction ? (
           <Card title="Introduction">
             <p className="break-words text-sm-regular text-strong">
@@ -38,17 +52,6 @@ export default function GroupAboutPage() {
         ) : null}
 
         {group ? <GroupAbout group={group} className="mt-6" /> : null}
-
-        {isManager && !previewGroup && query.communityId ? (
-          <Link
-            href={`/${formatDid(query.communityId)}/group/${
-              query.groupId
-            }/settings`}
-            className="mt-6 block w-fit sm:mt-8"
-          >
-            <Button icon={PencilIcon}>Edit</Button>
-          </Link>
-        ) : null}
       </GroupLayout>
     </CommunityLayout>
   )

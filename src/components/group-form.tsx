@@ -201,6 +201,20 @@ export default function GroupForm(props: {
           <FormFooter
             className={clsx(isNewGroup ? '' : 'max-[425px]:justify-center')}
           >
+            {isNewGroup ? null : (
+              <Button
+                icon={ArchiveBoxIcon}
+                loading={handleArchive.isLoading}
+                size="large"
+                onClick={onSubmit(
+                  (value) => handleArchive.mutate(value),
+                  console.error,
+                )}
+              >
+                Archive
+              </Button>
+            )}
+            
             <Button
               primary
               size="large"
@@ -215,20 +229,6 @@ export default function GroupForm(props: {
             >
               Preview
             </Button>
-
-            {isNewGroup ? null : (
-              <Button
-                icon={ArchiveBoxIcon}
-                loading={handleArchive.isLoading}
-                size="large"
-                onClick={onSubmit(
-                  (value) => handleArchive.mutate(value),
-                  console.error,
-                )}
-              >
-                Archive
-              </Button>
-            )}
           </FormFooter>
         ) : null}
       </Form>

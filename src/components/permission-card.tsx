@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState} from 'react'
 
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
@@ -6,6 +6,7 @@ import { BooleanSets, DecimalSets } from '../utils/schemas/basic/sets'
 import { formatDid } from '../utils/did/utils'
 import Card from './basic/card'
 import Tag from './basic/tag'
+import TextButton from './basic/text-button'
 
 export default function PermissionCard(props: {
   title: string
@@ -18,7 +19,8 @@ export default function PermissionCard(props: {
 
   return (
     <Card title={props.title} subtitle={props.description}>
-      <ul>
+      <ul
+        className="space-y-8">
         {props.value.operands.map((operand, index) => (
           <li key={index}>
             {props.value.operands.length === 1 || !operand.name ? null : (
@@ -28,21 +30,9 @@ export default function PermissionCard(props: {
             )}
 
             {operand.arguments[1].length ? (
-              <div className="flex flex-wrap gap-3">
-                {operand.arguments[1].map((argument) => (
-                  <Tag
-                    key={argument}
-                    size="large"
-                    color={
-                      didSet.has(`${argument}.${operand.arguments[0]}`)
-                        ? 'green'
-                        : 'default'
-                    }
-                  >
-                    {formatDid(`${argument}.${operand.arguments[0]}`)}
-                  </Tag>
-                ))}
-              </div>
+              <PermissionCardTagList
+                operand={operand}
+                didSet={didSet} />
             ) : (
               <div className="text-sm-regular text-strong">
                 {operand.arguments[0] === 'bit' ? (
@@ -69,5 +59,40 @@ export default function PermissionCard(props: {
         ))}
       </ul>
     </Card>
+  )
+}
+
+export function PermissionCardTagList(props: {
+  operand: BooleanSets['operands'][number],
+  didSet: Set<string>
+}) {
+  const [showMore, setShowMore] = useState(false)
+  
+  const handleShowMore = () => {
+    setShowMore(true)
+  }
+  
+  return (
+    <div className="flex flex-wrap gap-3">
+      {props.operand.arguments[1].slice(0, showMore ? props.operand.arguments[1].length : 10).map((argument) => (
+        <Tag
+          key={argument}
+          size="large"
+          color={
+            props.didSet.has(`${argument}.${props.operand.arguments[0]}`)
+              ? 'green'
+              : 'default'
+          }>
+          {formatDid(`${argument}.${props.operand.arguments[0]}`)}
+        </Tag>
+      ))}
+      
+      {!showMore && props.operand.arguments[1].length > 10 && (
+        <TextButton 
+          onClick={handleShowMore}>
+          Show More
+        </TextButton>
+      )}
+    </div>
   )
 }
