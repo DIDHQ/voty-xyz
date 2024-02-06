@@ -30,8 +30,7 @@ export default function GroupAboutPage() {
         {isLoading ? <AboutSkeleton /> : null}
 
         {isManager && !previewGroup && query.communityId ? (
-          <div
-            className="mb-6 flex items-center justify-end">
+          <div className="mb-6 flex items-center justify-end">
             <Link
               href={`/${formatDid(query.communityId)}/group/${
                 query.groupId
@@ -42,7 +41,7 @@ export default function GroupAboutPage() {
             </Link>
           </div>
         ) : null}
-        
+
         {group?.introduction ? (
           <Card title="Introduction">
             <p className="break-words text-sm-regular text-strong">

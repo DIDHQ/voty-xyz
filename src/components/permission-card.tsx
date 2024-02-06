@@ -1,4 +1,4 @@
-import { useMemo, useState} from 'react'
+import { useMemo, useState } from 'react'
 
 import useDids from '../hooks/use-dids'
 import useWallet from '../hooks/use-wallet'
@@ -19,8 +19,7 @@ export default function PermissionCard(props: {
 
   return (
     <Card title={props.title} subtitle={props.description}>
-      <ul
-        className="space-y-8">
+      <ul className="space-y-8">
         {props.value.operands.map((operand, index) => (
           <li key={index}>
             {props.value.operands.length === 1 || !operand.name ? null : (
@@ -30,9 +29,7 @@ export default function PermissionCard(props: {
             )}
 
             {operand.arguments[1].length ? (
-              <PermissionCardTagList
-                operand={operand}
-                didSet={didSet} />
+              <PermissionCardTagList operand={operand} didSet={didSet} />
             ) : (
               <div className="text-sm-regular text-strong">
                 {operand.arguments[0] === 'bit' ? (
@@ -63,35 +60,35 @@ export default function PermissionCard(props: {
 }
 
 export function PermissionCardTagList(props: {
-  operand: BooleanSets['operands'][number],
+  operand: BooleanSets['operands'][number]
   didSet: Set<string>
 }) {
   const [showMore, setShowMore] = useState(false)
-  
+
   const handleShowMore = () => {
     setShowMore(true)
   }
-  
+
   return (
     <div className="flex flex-wrap gap-3">
-      {props.operand.arguments[1].slice(0, showMore ? props.operand.arguments[1].length : 10).map((argument) => (
-        <Tag
-          key={argument}
-          size="large"
-          color={
-            props.didSet.has(`${argument}.${props.operand.arguments[0]}`)
-              ? 'green'
-              : 'default'
-          }>
-          {formatDid(`${argument}.${props.operand.arguments[0]}`)}
-        </Tag>
-      ))}
-      
+      {props.operand.arguments[1]
+        .slice(0, showMore ? props.operand.arguments[1].length : 10)
+        .map((argument) => (
+          <Tag
+            key={argument}
+            size="large"
+            color={
+              props.didSet.has(`${argument}.${props.operand.arguments[0]}`)
+                ? 'green'
+                : 'default'
+            }
+          >
+            {formatDid(`${argument}.${props.operand.arguments[0]}`)}
+          </Tag>
+        ))}
+
       {!showMore && props.operand.arguments[1].length > 10 && (
-        <TextButton 
-          onClick={handleShowMore}>
-          Show More
-        </TextButton>
+        <TextButton onClick={handleShowMore}>Show More</TextButton>
       )}
     </div>
   )
