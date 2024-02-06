@@ -1,26 +1,26 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
-import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { ArchiveBoxIcon, EyeIcon } from '@heroicons/react/20/solid'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 
 import { clsx } from 'clsx'
-import useSignDocument from '../hooks/use-sign-document'
-import { trpc } from '../utils/trpc'
 import useIsManager from '../hooks/use-is-manager'
-import { Group, groupSchema } from '../utils/schemas/v1/group'
+import useSignDocument from '../hooks/use-sign-document'
 import { previewGroupAtom } from '../utils/atoms'
+import { Group, groupSchema } from '../utils/schemas/v1/group'
+import { trpc } from '../utils/trpc'
 import { Preview } from '../utils/types'
+import Button from './basic/button'
 import DurationInput from './basic/duration-input'
+import { Form, FormFooter, FormItem, FormSection } from './basic/form'
+import Notification from './basic/notification'
 import TextInput from './basic/text-input'
 import Textarea from './basic/textarea'
 import BooleanSetsBlock from './boolean-sets-block'
 import DecimalSetsBlock from './decimal-sets-block'
-import { Form, FormFooter, FormSection, FormItem } from './basic/form'
-import Button from './basic/button'
-import Notification from './basic/notification'
 
 export default function GroupForm(props: {
   communityId: string
@@ -214,7 +214,6 @@ export default function GroupForm(props: {
                 Archive
               </Button>
             )}
-
             <Button
               primary
               size="large"
