@@ -28,7 +28,7 @@ export const commonCoinTypes = {
 
 export const commonChainIds = {
   ETH: 1,
-  ETH_GOERLI: 5,
+  ETH_HOLESKY: 17000,
   BSC: 56,
   BSC_CHAPEL: 97,
   POLYGON: 137,
@@ -37,7 +37,7 @@ export const commonChainIds = {
 
 export const chainIdToRpc: { [chainId: number]: string | undefined } = {
   [commonChainIds.ETH]: 'https://rpc.ankr.com/eth',
-  [commonChainIds.ETH_GOERLI]: 'https://rpc.ankr.com/eth_goerli',
+  [commonChainIds.ETH_HOLESKY]: 'https://rpc.ankr.com/eth_holesky',
   [commonChainIds.BSC]: 'https://rpc.ankr.com/bsc',
   [commonChainIds.BSC_CHAPEL]: 'https://rpc.ankr.com/bsc_testnet_chapel',
   [commonChainIds.POLYGON]: 'https://rpc.ankr.com/polygon',
@@ -45,7 +45,7 @@ export const chainIdToRpc: { [chainId: number]: string | undefined } = {
 }
 
 export const chainIdToCoinType: { [chainId: number]: number | undefined } = {
-  [isTestnet ? commonChainIds.ETH_GOERLI : commonChainIds.ETH]:
+  [isTestnet ? commonChainIds.ETH_HOLESKY : commonChainIds.ETH]:
     commonCoinTypes.ETH,
   [isTestnet ? commonChainIds.BSC_CHAPEL : commonChainIds.BSC]:
     commonCoinTypes.BSC,
@@ -55,7 +55,7 @@ export const chainIdToCoinType: { [chainId: number]: number | undefined } = {
 
 export const coinTypeToChainId: { [coinType: number]: number | undefined } = {
   [commonCoinTypes.ETH]: isTestnet
-    ? commonChainIds.ETH_GOERLI
+    ? commonChainIds.ETH_HOLESKY
     : commonChainIds.ETH,
   [commonCoinTypes.MATIC]: isTestnet
     ? commonChainIds.POLYGON_MUMBAI
@@ -84,7 +84,7 @@ export const coinTypeLogos: { [coinType: number]: string | undefined } = {
   [commonCoinTypes.ETH]: `/chains/${commonCoinTypes.ETH}.svg`,
   [commonCoinTypes.MATIC]: `/chains/${commonCoinTypes.MATIC}.svg`,
   [commonCoinTypes.BSC]: `/chains/${commonCoinTypes.BSC}.svg`,
-  [commonCoinTypes.CKB]: `/chains/passkey.svg`,
+  [commonCoinTypes.CKB]: '/chains/passkey.svg',
   [commonCoinTypes.TRX]: `/chains/${commonCoinTypes.TRX}.svg`,
 }
 
