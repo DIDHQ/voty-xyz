@@ -131,7 +131,7 @@ export default function Footer(props: { className?: string }) {
 
         <div className="mt-[100px] flex flex-col-reverse items-center gap-6 lg:flex-row lg:justify-between">
           <div className="text-sm font-medium text-footer-color">
-            Copyright © 2023 Built by d.id Team
+            Copyright © {new Date().getFullYear()} Built by d.id Team
           </div>
 
           <div className="flex flex-col items-center gap-6 sm:flex-row">
