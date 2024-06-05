@@ -5,10 +5,9 @@ import { clsxMerge } from '../utils/tailwind-helper'
 import { twitterHandle } from '../utils/constants'
 import {
   ArrowRightUpIcon,
-  DidIcon,
   DiscordIcon,
   DotbitTextIcon,
-  SoulFragIcon,
+  PadgeIcon,
   SubscriptionIcon,
   TwitterIcon,
   VotyFirstLetterIcon,
@@ -20,27 +19,13 @@ const productLinks = [
     title: '.bit',
     icon: DotbitTextIcon,
     external: true,
-    href: 'https://d.id/bit',
+    href: 'https://d.id/id-protocol/bit',
   },
   {
-    title: 'Voty',
-    className: 'h-[26px] w-full pt-1',
-    icon: VotyIcon,
+    title: 'Padge',
+    icon: PadgeIcon,
     external: true,
-    href: 'https://d.id/products/voty',
-  },
-  {
-    title: 'SoulFrag',
-    icon: SoulFragIcon,
-    external: true,
-    href: 'https://d.id/products/soulfrag',
-  },
-  {
-    title: 'd.id Profile',
-    suffix: 'Profile',
-    icon: DidIcon,
-    external: true,
-    href: 'https://d.id/products/d-id-profile',
+    href: 'https://padge.com',
   },
 ]
 
@@ -147,17 +132,7 @@ export default function Footer(props: { className?: string }) {
                 target="_blank"
                 title={item.title}
               >
-                <item.icon className={item.className} />
-
-                {item.suffix ? (
-                  <>
-                    <span className="mx-[5px] text-[#D9D9D9]">|</span>
-
-                    <span className="text-lg font-semibold leading-[22px]">
-                      {item.suffix}
-                    </span>
-                  </>
-                ) : null}
+                <item.icon />
               </a>
             ))}
           </div>
